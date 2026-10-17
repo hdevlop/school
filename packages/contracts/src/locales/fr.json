@@ -949,6 +949,11 @@
     }
   },
   "settings": {
+    "receipts": {
+      "title": "Reçus de paiement",
+      "description": "Choisissez la langue utilisée pour imprimer tous les reçus de paiement, y compris les réimpressions.",
+      "language": "Langue des reçus"
+    },
     "editor": {
       "schoolTab": "Établissement",
       "academicTab": "Scolarité",
@@ -2401,7 +2406,8 @@
       "noSections": "Aucune section",
       "selectClass": "Sélectionner une classe",
       "filterByStatus": "Filtrer par statut",
-      "searchByStudent": "Search By Student"
+      "searchByStudent": "Rechercher un élève...",
+      "allSections": "Toutes les sections"
     },
     "dialogs": {
       "createButton": "Créer",
@@ -4625,7 +4631,8 @@
       "deleteButton": "Supprimer",
       "editTitle": "Modifier",
       "updateButton": "Mettre à jour",
-      "viewTitle": "Détails"
+      "viewTitle": "Détails",
+      "endAssignmentButton": "Mettre fin à l'affectation"
     },
     "filters": {
       "searchByLicensePlate": "Rechercher par plaque...",
@@ -4658,7 +4665,9 @@
       "type": "Type",
       "vehicleInformation": "Informations sur le véhicule",
       "year": "Année",
-      "yearPlaceholder": "Entrez l'année"
+      "yearPlaceholder": "Entrez l'année",
+      "endDate": "Date de fin",
+      "drivingSince": "{{driver}} conduit ce véhicule depuis le {{date}}."
     },
     "status": {
       "active": "Actif",
@@ -4709,6 +4718,12 @@
       "invalidMileage": "Le kilométrage doit être un nombre positif",
       "invalidFuelCapacity": "La capacité du réservoir doit être un nombre positif",
       "invalidPurchasePrice": "Le prix d'achat doit être un nombre positif"
+    },
+    "actions": {
+      "endDriverAssignment": "Mettre fin à l'affectation du conducteur"
+    },
+    "validation": {
+      "endAfterStart": "La date de fin doit suivre la date de début"
     }
   },
   "events": {
@@ -5638,6 +5653,36 @@
       "created": "Demande de visite envoyée avec succès",
       "updated": "Demande de visite mise à jour avec succès",
       "deleted": "Demande de visite supprimée avec succès"
+    }
+  },
+  "paymentReceipt": {
+    "title": "REÇU DE PAIEMENT",
+    "documentTitle": "Reçu",
+    "number": "N°",
+    "student": "Élève",
+    "studentCode": "Code élève",
+    "paymentDate": "Date de paiement",
+    "paymentMethod": "Mode de paiement",
+    "paymentSection": "Paiement",
+    "amountPaid": "MONTANT PAYÉ",
+    "schoolYear": "Année scolaire",
+    "yearAmount": "Affecté à cette année",
+    "transactionReference": "Référence de transaction",
+    "checkNumber": "N° de chèque",
+    "notes": "Notes",
+    "details": "Détails",
+    "thankYou": "Merci",
+    "keepReceipt": "Veuillez conserver ce reçu.",
+    "schoolFallback": "École Privée",
+    "phone": "Tél",
+    "methods": {
+      "cash": "Espèces",
+      "bankTransfer": "Virement bancaire",
+      "check": "Chèque",
+      "creditCard": "Carte de crédit",
+      "debitCard": "Carte de débit",
+      "online": "Paiement en ligne",
+      "mobilePayment": "Paiement mobile"
     }
   }
 }

@@ -12,6 +12,7 @@ export const useVehicles = (options?) => {
     update: vehicleApi.updateVehicleApi,
     delete: vehicleApi.deleteVehicleApi,
     assignDriver: vehicleApi.assignDriverApi,
+    unassignDriver: ({ id, unassignmentDate }) => vehicleApi.unassignDriverApi(id, unassignmentDate),
   });
 
   const { data: vehicles, isLoading: isVehiclesLoading, isError, error, refetch } = crud.useGetAll(enabled);
@@ -21,6 +22,7 @@ export const useVehicles = (options?) => {
   const { mutateAsync: updateVehicle, isLoading: isUpdating } = crud.useUpdate();
   const { mutateAsync: deleteVehicle, isLoading: isDeleting } = crud.useDelete();
   const { mutateAsync: assignDriver, isLoading: isAssigningDriver } = crud.useCustomMutation('assignDriver');
+  const { mutateAsync: unassignDriver } = crud.useCustomMutation('unassignDriver');
 
   return {
     // Data
@@ -43,6 +45,7 @@ export const useVehicles = (options?) => {
 
     // Custom Mutations
     assignDriver,
+    unassignDriver,
 
     // Loading States
     isVehiclesLoading,

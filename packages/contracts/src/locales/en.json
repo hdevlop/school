@@ -1003,6 +1003,11 @@
     "closed": "Closed"
   },
   "settings": {
+    "receipts": {
+      "title": "Payment receipts",
+      "description": "Choose the language used to print all payment receipts, including reprints.",
+      "language": "Receipt language"
+    },
     "editor": {
       "schoolTab": "School",
       "academicTab": "Academic",
@@ -1609,6 +1614,7 @@
       "searchByStudent": "Search by student name...",
       "searchByStudentCode": "Search by student code...",
       "filterByFeeType": "Filter by fee type...",
+      "allSections": "All sections",
       "filterByStatus": "Filter by status...",
       "filterBySchedule": "Filter by schedule...",
       "filterByAcademicYear": "Filter by academic year...",
@@ -4402,7 +4408,8 @@
       "modelRequired": "Model is required",
       "yearRequired": "Year is required",
       "licensePlateRequired": "License plate is required",
-      "typeRequired": "Vehicle type is required"
+      "typeRequired": "Vehicle type is required",
+      "endAfterStart": "The end date must follow the start date"
     },
     "form": {
       "vehicleInformation": "Vehicle Information",
@@ -4447,7 +4454,9 @@
       "currentMileagePlaceholder": "Enter current mileage",
       "notes": "Notes",
       "notesPlaceholder": "Enter additional notes",
-      "image": "Vehicle Image"
+      "image": "Vehicle Image",
+      "endDate": "End date",
+      "drivingSince": "{{driver}} has driven this vehicle since {{date}}."
     },
     "types": {
       "fullbus": "Full Bus",
@@ -4488,7 +4497,8 @@
       "viewTitle": "Vehicle Details",
       "editTitle": "Edit Vehicle",
       "updateButton": "Update Vehicle",
-      "deleteButton": "Delete Vehicle"
+      "deleteButton": "Delete Vehicle",
+      "endAssignmentButton": "End assignment"
     },
     "table": {
       "id": "ID",
@@ -4528,6 +4538,9 @@
       "notes": "Notes",
       "purchaseInformation": "Purchase Information",
       "mileageInformation": "Mileage Information"
+    },
+    "actions": {
+      "endDriverAssignment": "End driver assignment"
     }
   },
   "vehicleAssignments": {
@@ -6266,6 +6279,36 @@
       "created": "Visit request sent successfully",
       "updated": "Visit request updated successfully",
       "deleted": "Visit request deleted successfully"
+    }
+  },
+  "paymentReceipt": {
+    "title": "PAYMENT RECEIPT",
+    "documentTitle": "Receipt",
+    "number": "No.",
+    "student": "Student",
+    "studentCode": "Student code",
+    "paymentDate": "Payment date",
+    "paymentMethod": "Payment method",
+    "paymentSection": "Payment",
+    "amountPaid": "AMOUNT PAID",
+    "schoolYear": "Academic year",
+    "yearAmount": "Allocated to this year",
+    "transactionReference": "Transaction reference",
+    "checkNumber": "Check number",
+    "notes": "Notes",
+    "details": "Details",
+    "thankYou": "Thank you",
+    "keepReceipt": "Please keep this receipt.",
+    "schoolFallback": "Private school",
+    "phone": "Phone",
+    "methods": {
+      "cash": "Cash",
+      "bankTransfer": "Bank transfer",
+      "check": "Check",
+      "creditCard": "Credit card",
+      "debitCard": "Debit card",
+      "online": "Online payment",
+      "mobilePayment": "Mobile payment"
     }
   }
 }

@@ -1700,7 +1700,8 @@
       "noSections": "لا توجد شعب",
       "selectClass": "اختر قسماً",
       "filterByStatus": "تصفية حسب الحالة",
-      "searchByStudent": "Search By Student"
+      "searchByStudent": "البحث عن طالب...",
+      "allSections": "جميع الشعب"
     },
     "dialogs": {
       "createButton": "إنشاء",
@@ -2069,6 +2070,11 @@
       "recalculate": "هل تريد إعادة حساب المبلغ المخصص لهذا الرسم؟"
     },
     "settings": {
+    "receipts": {
+      "title": "وصولات الأداء",
+      "description": "اختر اللغة المستخدمة لطباعة جميع وصولات الأداء، بما في ذلك إعادة الطباعة.",
+      "language": "لغة الوصولات"
+    },
       "create": "هل تريد إنشاء الإعدادات؟",
       "update": "هل تريد تحديث الإعدادات؟"
     },
@@ -4529,7 +4535,8 @@
       "deleteButton": "حذف",
       "editTitle": "تعديل",
       "updateButton": "تحديث",
-      "viewTitle": "التفاصيل"
+      "viewTitle": "التفاصيل",
+      "endAssignmentButton": "إنهاء الإسناد"
     },
     "filters": {
       "searchByLicensePlate": "ابحث بلوحة التسجيل...",
@@ -4562,7 +4569,9 @@
       "type": "النوع",
       "vehicleInformation": "معلومات المركبة",
       "year": "السنة",
-      "yearPlaceholder": "أدخل السنة"
+      "yearPlaceholder": "أدخل السنة",
+      "endDate": "تاريخ الانتهاء",
+      "drivingSince": "يقود {{driver}} هذه المركبة منذ {{date}}."
     },
     "status": {
       "active": "نشط",
@@ -4613,6 +4622,12 @@
       "invalidMileage": "يجب أن يكون عدد الكيلومترات عددًا موجبًا",
       "invalidFuelCapacity": "يجب أن تكون سعة الخزان عددًا موجبًا",
       "invalidPurchasePrice": "يجب أن يكون ثمن الشراء عددًا موجبًا"
+    },
+    "actions": {
+      "endDriverAssignment": "إنهاء إسناد السائق"
+    },
+    "validation": {
+      "endAfterStart": "يجب أن يكون تاريخ الانتهاء بعد تاريخ البدء"
     }
   },
   "events": {
@@ -5542,6 +5557,36 @@
       "created": "تم إرسال طلب الزيارة بنجاح",
       "updated": "تم تحديث طلب الزيارة بنجاح",
       "deleted": "تم حذف طلب الزيارة بنجاح"
+    }
+  },
+  "paymentReceipt": {
+    "title": "وصل أداء",
+    "documentTitle": "وصل",
+    "number": "رقم",
+    "student": "التلميذ",
+    "studentCode": "رمز التلميذ",
+    "paymentDate": "تاريخ الأداء",
+    "paymentMethod": "طريقة الأداء",
+    "paymentSection": "الأداء",
+    "amountPaid": "المبلغ المدفوع",
+    "schoolYear": "السنة الدراسية",
+    "yearAmount": "المخصص لهذه السنة",
+    "transactionReference": "مرجع المعاملة",
+    "checkNumber": "رقم الشيك",
+    "notes": "ملاحظات",
+    "details": "التفاصيل",
+    "thankYou": "شكراً لكم",
+    "keepReceipt": "يرجى الاحتفاظ بهذا الوصل.",
+    "schoolFallback": "مؤسسة تعليمية خاصة",
+    "phone": "الهاتف",
+    "methods": {
+      "cash": "نقداً",
+      "bankTransfer": "تحويل بنكي",
+      "check": "شيك",
+      "creditCard": "بطاقة ائتمان",
+      "debitCard": "بطاقة سحب",
+      "online": "دفع إلكتروني",
+      "mobilePayment": "دفع هاتفي"
     }
   }
 }

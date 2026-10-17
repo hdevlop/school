@@ -4,10 +4,12 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Bus, Plus, SearchX } from 'lucide-react';
+import { Bus, CalendarX, Eye, Pencil, Plus, SearchX, Trash2, UserRound } from 'lucide-react';
 import React from 'react';
 import VehicleForm from './VehicleForm';
 import AssignDriverForm from '@/features/Drivers/components/AssignDriverForm';
+import EndDriverAssignmentForm from './EndDriverAssignmentForm';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useVehicles } from '../hooks/useVehicles';
 import { useTranslation } from 'najm-i18n/react';
 import VehicleCard from './VehicleCard';
@@ -22,6 +24,8 @@ import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 function VehiclesTable() {
 
   const { t } = useTranslation();
+  const { can } = useViewerRole();
+  const canUpdate = can('update:vehicles');
   const { academicYear } = useAcademicYearScope();
   const columns = useVehiclesTableColumns();
   const rawFilters = useVehiclesTableFilters();
@@ -34,6 +38,7 @@ function VehiclesTable() {
     updateVehicle,
     deleteVehicle,
     assignDriver,
+    unassignDriver,
     error,
     isVehiclesLoading,
     isUpdating,
@@ -96,23 +101,53 @@ function VehiclesTable() {
     });
   };
 
-  const handleCellClick = async (vehicle, columnId) => {
-    if (columnId === 'driver_name') {
-      const openedYear = academicYear;
-      openDialog({
-        title: `${t('drivers.form.assignDriver') || 'Assign Driver'} - ${vehicle.name}`,
-        children: <AssignDriverForm drivers={drivers} vehicle={vehicle} />,
-        primaryButton: {
-          form: 'assign-driver-form',
-          text: t('common.save') || 'Save',
-          loading: isUpdating,
-          onClick: async (assignmentData) => {
-            await withAcademicYear(openedYear, () => assignDriver(assignmentData));
-          }
+  const handleAssignDriver = (vehicle) => {
+    const openedYear = academicYear;
+    openDialog({
+      title: `${t('drivers.form.assignDriver')} - ${vehicle.name}`,
+      children: <AssignDriverForm drivers={drivers} vehicle={vehicle} />,
+      primaryButton: {
+        form: 'assign-driver-form',
+        text: t('common.save'),
+        loading: isUpdating,
+        onClick: async (assignmentData) => {
+          await withAcademicYear(openedYear, () => assignDriver(assignmentData));
         }
-      });
-    }
+      }
+    });
   };
+
+  const handleCellClick = (vehicle, columnId) => {
+    if (columnId === 'driver_name') handleAssignDriver(vehicle);
+  };
+
+  // Ends the current driver's assignment; the history stays with the vehicle.
+  const handleEndAssignment = (vehicle) => {
+    const openedYear = academicYear;
+    openDialog({
+      title: `${t('vehicles.actions.endDriverAssignment')} - ${vehicle.name}`,
+      children: <EndDriverAssignmentForm vehicle={vehicle} />,
+      primaryButton: {
+        form: 'end-driver-assignment-form',
+        text: t('vehicles.dialogs.endAssignmentButton'),
+        variant: 'destructive',
+        onClick: async (data) => {
+          await withAcademicYear(openedYear, () => unassignDriver(data));
+        }
+      }
+    });
+  };
+
+  // NTable's built-in View/Edit/Delete exist only while no `menu.row` is
+  // supplied, so they are restated beside the driver actions. The menu also
+  // reaches the driver in card view, where there is no driver cell to click.
+  const rowMenu = (vehicle) => [
+    { label: t('common.view'), icon: Eye, onSelect: () => handleView(vehicle) },
+    { label: t('common.edit'), icon: Pencil, onSelect: () => handleEdit(vehicle) },
+    ...(canUpdate ? [{ label: t('drivers.form.assignDriver'), icon: UserRound, onSelect: () => handleAssignDriver(vehicle) }] : []),
+    ...(canUpdate && vehicle.activeAssignment ? [{ label: t('vehicles.actions.endDriverAssignment'), icon: CalendarX, onSelect: () => handleEndAssignment(vehicle) }] : []),
+    { label: t('common.delete'), icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(vehicle) },
+  ];
 
   const total = vehicles?.length ?? 0;
 
@@ -137,6 +172,7 @@ function VehiclesTable() {
         onView={handleView}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        menu={{ row: rowMenu }}
         loading={isVehiclesLoading}
         error={hasFailedToLoad(error, vehicles) ? error : null}
         renderError={(currentError) => (

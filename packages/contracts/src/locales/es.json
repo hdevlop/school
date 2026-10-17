@@ -1686,7 +1686,8 @@
       "noSections": "Sin secciones",
       "selectClass": "Seleccionar clase",
       "filterByStatus": "Filtrar por estado",
-      "searchByStudent": "Search By Student"
+      "searchByStudent": "Buscar estudiante...",
+      "allSections": "Todas las secciones"
     },
     "dialogs": {
       "createButton": "Crear",
@@ -2055,6 +2056,11 @@
       "recalculate": "¿Recalcular el monto asignado de esta tarifa?"
     },
     "settings": {
+    "receipts": {
+      "title": "Recibos de pago",
+      "description": "Elija el idioma utilizado para imprimir todos los recibos de pago, incluidas las reimpresiones.",
+      "language": "Idioma de los recibos"
+    },
       "create": "¿Crear la configuración?",
       "update": "¿Actualizar la configuración?"
     },
@@ -4515,7 +4521,8 @@
       "deleteButton": "Eliminar",
       "editTitle": "Editar",
       "updateButton": "Actualizar",
-      "viewTitle": "Detalles"
+      "viewTitle": "Detalles",
+      "endAssignmentButton": "Finalizar asignación"
     },
     "filters": {
       "searchByLicensePlate": "Buscar por matrícula...",
@@ -4548,7 +4555,9 @@
       "type": "Tipo",
       "vehicleInformation": "Información del vehículo",
       "year": "Año",
-      "yearPlaceholder": "Ingrese el año"
+      "yearPlaceholder": "Ingrese el año",
+      "endDate": "Fecha de fin",
+      "drivingSince": "{{driver}} conduce este vehículo desde el {{date}}."
     },
     "status": {
       "active": "Activo",
@@ -4599,6 +4608,12 @@
       "invalidMileage": "El kilometraje debe ser un número positivo",
       "invalidFuelCapacity": "La capacidad del depósito debe ser un número positivo",
       "invalidPurchasePrice": "El precio de compra debe ser un número positivo"
+    },
+    "actions": {
+      "endDriverAssignment": "Finalizar asignación del conductor"
+    },
+    "validation": {
+      "endAfterStart": "La fecha de fin debe ser posterior a la fecha de inicio"
     }
   },
   "events": {
@@ -5528,6 +5543,36 @@
       "created": "Solicitud de visita enviada correctamente",
       "updated": "Solicitud de visita actualizada correctamente",
       "deleted": "Solicitud de visita eliminada correctamente"
+    }
+  },
+  "paymentReceipt": {
+    "title": "RECIBO DE PAGO",
+    "documentTitle": "Recibo",
+    "number": "N.º",
+    "student": "Estudiante",
+    "studentCode": "Código del estudiante",
+    "paymentDate": "Fecha de pago",
+    "paymentMethod": "Método de pago",
+    "paymentSection": "Pago",
+    "amountPaid": "IMPORTE PAGADO",
+    "schoolYear": "Año escolar",
+    "yearAmount": "Asignado a este año",
+    "transactionReference": "Referencia de la transacción",
+    "checkNumber": "Número de cheque",
+    "notes": "Notas",
+    "details": "Detalles",
+    "thankYou": "Gracias",
+    "keepReceipt": "Conserve este recibo.",
+    "schoolFallback": "Escuela privada",
+    "phone": "Tel.",
+    "methods": {
+      "cash": "Efectivo",
+      "bankTransfer": "Transferencia bancaria",
+      "check": "Cheque",
+      "creditCard": "Tarjeta de crédito",
+      "debitCard": "Tarjeta de débito",
+      "online": "Pago en línea",
+      "mobilePayment": "Pago móvil"
     }
   }
 }

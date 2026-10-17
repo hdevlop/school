@@ -42,3 +42,14 @@ export const vehicleSchema = z.object({
 });
 
 export type VehicleFormValues = z.input<typeof vehicleSchema>;
+
+/**
+ * Ending a vehicle's current driver assignment. The server takes an end date
+ * after the start, inside the viewed year and not in the future; the form
+ * checks the first and defaults to the others.
+ */
+export const createEndDriverAssignmentSchema = (t: (key: string) => string, assignmentDate: string) => z.object({
+  unassignmentDate: z.string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, t('staff.validation.dateInvalid'))
+    .refine((date) => date > assignmentDate, t('vehicles.validation.endAfterStart')),
+});
