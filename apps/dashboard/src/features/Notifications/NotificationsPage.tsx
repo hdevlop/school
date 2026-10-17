@@ -6,14 +6,18 @@ import { useMemo } from 'react';
 import {
   NButton,
   NEmptyState,
+  NErrorState,
+  NForbiddenState,
   NNotifyItem,
   NPageHeader,
   NPageHeaderActions,
+  NSkeleton,
   type NNotifyItemData,
 } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { toast } from 'sonner';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { isAuthorizationError } from '@/services/apiError';
 import { useNotificationCommands, useNotifications } from './useNotifications';
 import type { NotificationRecord } from './types';
 
@@ -59,6 +63,8 @@ export default function NotificationsPage() {
             onClick={() => markAll.mutateAsync().catch(report)}
             aria-label={t('notifications.markAll')}
             title={t('notifications.markAll')}
+            disabled={list.isPending || list.isError || items.length === 0 || markAll.isPending}
+            loading={markAll.isPending}
           >
             <CheckCheck size={16} aria-hidden />
             <span className="max-sm:hidden">{t('notifications.markAll')}</span>
@@ -66,11 +72,19 @@ export default function NotificationsPage() {
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
       </NPageHeader>
-      {list.isSuccess && items.length === 0 ? (
+      {list.isPending ? (
+        <div role="status" aria-label={t('notifications.loading')}>
+          <NSkeleton className="h-24 rounded-lg" />
+        </div>
+      ) : list.isError ? (
+        isAuthorizationError(list.error)
+          ? <NForbiddenState surface="panel" />
+          : <NErrorState surface="panel" title={t('notifications.loadError')} onRetry={() => void list.refetch()} />
+      ) : items.length === 0 ? (
         <NEmptyState icon={Bell} title={t('notifications.empty')} />
       ) : null}
       <div className="space-y-2">
-        {items.map((item) => (
+        {list.isSuccess && items.map((item) => (
           <NNotifyItem
             item={item}
             key={item.id}
