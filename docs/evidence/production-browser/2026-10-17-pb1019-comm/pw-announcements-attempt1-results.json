@@ -1,0 +1,48 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "38997fe4c194ac66e9b88de17fbb068edfdd7ab8",
+  "completedUtc": "2026-10-17T14:30:54.517Z",
+  "browser": "Chrome 155 via standalone Playwright explicitly requested by owner",
+  "results": [
+    {
+      "case": "announcements-R02-admin-create-visible",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-M01-one-create-persists-draft",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-M01-create-reloads",
+      "outcome": "PASS"
+    },
+    {
+      "case": "locator.click: Timeout 30000ms exceeded.",
+      "outcome": "FAIL"
+    },
+    {
+      "case": "cleanup-owned-draft-absent",
+      "outcome": "PASS"
+    },
+    {
+      "case": "serving-revision-stable",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/announcements"
+    }
+  ],
+  "failure": {
+    "case": "locator.click: Timeout 30000ms exceeded."
+  },
+  "cleanup": {
+    "created": 1,
+    "remaining": 0
+  },
+  "published": 0
+}

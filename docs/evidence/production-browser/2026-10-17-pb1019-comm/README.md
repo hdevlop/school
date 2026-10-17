@@ -1,6 +1,6 @@
-# PB1019-COMM: Communication API/MCP and isolated database acceptance
+# PB1019-COMM: Communication release and browser acceptance
 
-Status: **PARTIAL; notification clock fixed and retested locally; deployment and browser acceptance OPEN**. Tested the demo at
+Status: **PARTIAL; notification clock fix deployed; targeted Playwright checks PASS; 21 of 25 complete checklist cases still BLOCKED**. Tested the demo at
 `https://myscolai.com` on 2026-10-17. Tester: Codex. Finance was assigned to
 another coder; no live financial records, settings or roles were changed by this
 run. The subsequent fix changes the two notification read timestamps and adds
@@ -9,10 +9,9 @@ database regression coverage.
 The [handoff](../../../tests/production-browser/handoffs/2026-10-17-communication.md)
 names 26 cases, but its five linked checklists contain **25 unique case IDs**:
 announcements 6, alerts 8, notifications 5, reminders 3, push preferences 3.
-The [case-by-case coverage](checklist-coverage.json) records every one. None is
-promoted to a complete browser PASS from transport or local test evidence.
+The [case-by-case coverage](checklist-coverage.json) records every one. Four cases now have complete browser PASS; partial checks remain BLOCKED. Transport and local test evidence stay separate.
 
-## Revision and execution boundary
+## Historical API revision and execution boundary
 
 Every final live script began and ended on full serving revision
 `041697afcf6bc4eaa8aa2347d8516019c2deecfc`. Login and public readiness returned
@@ -228,7 +227,7 @@ remain only under ignored `.cache/production-browser/pb1019-comm/`. The committe
 evidence candidate contains aliases and sanitized outcomes, with no response
 bodies or runtime identities. No screenshots, trace, HAR or video were captured.
 
-## Remaining owner / next run
+## Historical handoff before browser continuation
 
 Connect a supported browser, verify the intended serving revision, and execute
 the 25 browser cases from the existing checklists using the per-case map. A
@@ -241,3 +240,62 @@ The local notification fix and regression test are now part of this change.
 Lint, typecheck and root tests passed; production build status is recorded in
 the fix validation artifact. Source, local PostgreSQL, deployed transport,
 browser, delivery, image/replica and full-promotion statuses remain separate.
+
+
+## Release and Playwright continuation
+
+The owner requested commit, deploy, clean tree and continued Playwright testing.
+The Communication fix and evidence were committed and pushed as `38997fe4c194ac66e9b88de17fbb068edfdd7ab8`.
+The other coder's Finance edits and local Claude skill changes remain unstaged;
+this release does not claim a clean shared worktree or Finance acceptance.
+
+`bun run check` passed before publication, including lint, typecheck, translations,
+root tests, workspace boundaries, production build and database checks.
+[GitHub release run](https://github.com/hdevlop/school/actions/runs/39040254743)
+passed verification, image publication and deployment/readiness.
+[Exact runtime proof](deployment-proof.json) records both app and notification
+worker healthy on the full source SHA, matching image digest
+`sha256:79121e2688defdfa3c06fba917cd6ea7025ab9ee918984c223d6e4d2b19d7e0e`.
+The storage mount is retained; apex/www login and health endpoints return 200.
+
+The in-app browser discovery still returned no sessions. Following the owner's
+explicit Playwright request, standalone Playwright launched Chrome 155.0.8059.80
+using Node and dedicated per-account profiles. Final serial runs checked the
+public full serving SHA before and after. French desktop used 1440 x 900; Arabic
+phone used 390 x 844. Scoped setup and exact-ID cleanup used internal MCP/REST.
+No production SQL, seed/reset, Finance write, broad publication or delivery ran.
+
+| Final standalone browser run | PASS assertions | FAIL | Supplemental blocked subchecks | Evidence |
+| --- | ---: | ---: | ---: | --- |
+| pw-announcements | 27 | 0 | 2 | [Results](pw-announcements-results.json) |
+| pw-alerts | 44 | 0 | 3 | [Results](pw-alerts-results.json) |
+| pw-inbox-preferences-reminders | 40 | 0 | 8 | [Results](pw-inbox-preferences-reminders-results.json) |
+
+The 111 passing assertions include fixture cleanup, revision and diagnostic
+checks; they are not 111 complete checklist cases. The 25-case map records
+**4 PASS, 21 BLOCKED, 0 FAIL**. Complete passes are announcements-R02,
+announcements-M01, announcements-M04 and alerts-M04. Other cases retain their
+missing mandatory parts even where browser subchecks pass. All three runs have
+zero unexpected page/console/request/HTTP diagnostics. Proven Next route
+prefetch cancellations are retained explicitly and excluded only using method,
+origin, route, prefetch headers, non-navigation and exact cancellation code.
+
+Draft create/edit/delete, parent A/B alert isolation, allowed status transitions,
+year switching, Arabic RTL labels and phone overflow checks pass. Inbox and bell
+empty states agree for four identities; empty mark-all persists zero. Push
+unavailability is accurately explained by the disabled accessible switch.
+The controlled reminder button displays its coming-soon toast without any API
+write; actual delivery remains unimplemented.
+
+Final browser writes were exactly three owned announcement writes, eight owned
+alert writes and one empty-inbox mark-all. Final runs removed their one draft
+and three personal alerts; earlier attempts also cleaned their exact fixtures.
+[All browser attempts](browser-attempts.json) retain preliminary TEST failures,
+corrections and successful reruns. API prefetch/refetch failures were never
+blanket ignored. No application code changed to resolve harness failures.
+
+Remaining work requires an entirely controlled class, student/teacher-B and
+supervisor identities, a supported recipient-only notification trigger and an
+enabled push test installation. Publication controls, reminder navigation/send
+implementation, full keyboard/accessibility and broader permission matrices
+remain open. Finance reconciliation belongs to the Finance coder.

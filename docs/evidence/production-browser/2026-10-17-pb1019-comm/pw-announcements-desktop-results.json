@@ -1,0 +1,133 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "38997fe4c194ac66e9b88de17fbb068edfdd7ab8",
+  "completedUtc": "2026-10-17T14:32:35.326Z",
+  "browser": "Chrome 155 via standalone Playwright explicitly requested by owner",
+  "results": [
+    {
+      "case": "announcements-R02-admin-create-visible",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-M01-one-create-persists-draft",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-M01-create-reloads",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-R02-edit-and-delete-exposed",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-R02-no-publishing-action",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-M01-update-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-R01-title-content-audience-and-draft-reconcile",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-R02-create-hidden-teacher-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-R01-draft-hidden-teacher-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-draft-transport-denied-teacher-a",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "announcements-R02-create-hidden-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-R01-draft-hidden-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-draft-transport-denied-parent-a",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "announcements-R02-create-hidden-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-R01-draft-hidden-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-draft-transport-denied-parent-b",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "announcements-M04-cancel-delete-preserves-draft",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-M04-confirm-delete-once",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-M04-deleted-row-gone",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-M04-deleted-transport-404",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-M02",
+      "outcome": "BLOCKED",
+      "reason": "No publish control; class has 13 students and only two controlled. No live publication attempted."
+    },
+    {
+      "case": "announcements-M03",
+      "outcome": "BLOCKED",
+      "reason": "No unpublish control; active publication intentionally not attempted."
+    },
+    {
+      "case": "cleanup-owned-draft-absent",
+      "outcome": "PASS"
+    },
+    {
+      "case": "serving-revision-stable",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/announcements"
+    },
+    {
+      "actor": "admin",
+      "method": "PUT",
+      "path": "/api/announcements/:owned-id"
+    },
+    {
+      "actor": "admin",
+      "method": "DELETE",
+      "path": "/api/announcements/:owned-id"
+    }
+  ],
+  "failure": null,
+  "cleanup": {
+    "created": 1,
+    "remaining": 0
+  },
+  "published": 0
+}

@@ -2,204 +2,237 @@
   "run": "PB1019-COMM",
   "target": "https://myscolai.com",
   "selectedCases": 25,
-  "browserAvailable": false,
-  "browserExecuted": 0,
+  "browserAvailable": true,
+  "browserExecuted": 18,
   "browserOutcomes": {
-    "PASS": 0,
+    "PASS": 4,
     "FAIL": 0,
-    "BLOCKED": 25,
+    "BLOCKED": 21,
     "NOT_RUN": 0
   },
   "cases": [
     {
       "id": "announcements-R01",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "French desktop and Arabic phone draft title/content/audience/status reconcile. Author/date projection not exhaustively accepted.",
       "transportEvidence": "announcements-results.json",
-      "detail": "API list/detail/audience checks pass; browser labels and layout untested."
+      "detail": "French desktop and Arabic phone draft title/content/audience/status reconcile. Author/date projection not exhaustively accepted.",
+      "browserEvidence": "pw-announcements-results.json"
     },
     {
       "id": "announcements-R02",
-      "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "browserOutcome": "PASS",
+      "reason": null,
       "transportEvidence": "announcements-results.json",
-      "detail": "Effective grants verified: teacher and parents read-only; UI controls untested."
+      "detail": "Admin create/edit/delete and missing publish/unpublish controls observed. Teacher and both parents cannot create or read the private draft.",
+      "browserEvidence": "pw-announcements-results.json"
     },
     {
       "id": "announcements-M01",
-      "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "browserOutcome": "PASS",
+      "reason": null,
       "transportEvidence": "announcements-results.json",
-      "detail": "MCP create/edit plus REST rereads pass. Browser save not exercised."
+      "detail": "Browser creates and edits one unpublished class-targeted draft; reload and supported reads confirm persistence.",
+      "browserEvidence": "pw-announcements-results.json"
     },
     {
       "id": "announcements-M02",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "Browser confirms no publish control; class audience includes uncontrolled students. No publication or calendar acceptance.",
       "transportEvidence": "announcements-results.json",
-      "detail": "Source has no publish control. Entire class has 13 students, only two controlled; no live publication."
+      "detail": "Browser confirms no publish control; class audience includes uncontrolled students. No publication or calendar acceptance.",
+      "browserEvidence": "pw-announcements-results.json"
     },
     {
       "id": "announcements-M03",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "Browser confirms no unpublish control; no active publication created.",
       "transportEvidence": "announcements-results.json",
-      "detail": "Source has no unpublish control. Refusal to unpublish a draft verified via MCP; published lifecycle remains open."
+      "detail": "Browser confirms no unpublish control; no active publication created.",
+      "browserEvidence": "pw-announcements-results.json"
     },
     {
       "id": "announcements-M04",
-      "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "browserOutcome": "PASS",
+      "reason": null,
       "transportEvidence": "announcements-results.json",
-      "detail": "Exact-ID API deletion and absence pass; browser cancel/confirm untested."
+      "detail": "Browser cancellation preserves the draft; confirmation deletes it once; reload and supported read confirm absence.",
+      "browserEvidence": "pw-announcements-results.json"
     },
     {
       "id": "alerts-R01",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "Desktop and Arabic phone identify owned alerts; class/section filters and translated status pass. Full priority/date/navigation matrix remains open.",
       "transportEvidence": "alerts-results.json",
-      "detail": "MCP/REST list/detail/status/priority and student filters checked; browser layout/translation untested."
+      "detail": "Desktop and Arabic phone identify owned alerts; class/section filters and translated status pass. Full priority/date/navigation matrix remains open.",
+      "browserEvidence": "pw-alerts-results.json"
     },
     {
       "id": "alerts-R02",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "Parent A/B row isolation and teacher audience filtering pass in browser; earlier scoped transport denials retained. Student login and teacher-B absent.",
       "transportEvidence": "alerts-results.json",
-      "detail": "Parent A/B list/detail/write isolation and teacher audience checks pass. Student login and teacher-B absent."
+      "detail": "Parent A/B row isolation and teacher audience filtering pass in browser; earlier scoped transport denials retained. Student login and teacher-B absent.",
+      "browserEvidence": "pw-alerts-results.json"
     },
     {
       "id": "alerts-R03",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "Parent sees acknowledge only; teacher and admin supported person-alert actions observed. Shared class notice, student and supervisor unavailable.",
       "transportEvidence": "alerts-results.json",
-      "detail": "Own-child acknowledgement and parent content/resolve/dismiss refusals pass via transport; controlled shared class fixture unavailable."
+      "detail": "Parent sees acknowledge only; teacher and admin supported person-alert actions observed. Shared class notice, student and supervisor unavailable.",
+      "browserEvidence": "pw-alerts-results.json"
     },
     {
       "id": "alerts-R04",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "Admin historical selection hides current fixtures and switching back restores them; parent has no year switch; active year unchanged. Shared-notice and complete error/filtered-empty matrix remain open.",
       "transportEvidence": "alerts-results.json",
-      "detail": "Two registered years, cross-year reads/writes, restricted parent history and conflicting selection pass via transport."
+      "detail": "Admin historical selection hides current fixtures and switching back restores them; parent has no year switch; active year unchanged. Shared-notice and complete error/filtered-empty matrix remain open.",
+      "browserEvidence": "pw-alerts-results.json"
     },
     {
       "id": "alerts-M01",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "Both parents acknowledge own child and reload persistence passes. Student-self half remains unavailable.",
       "transportEvidence": "alerts-results.json",
-      "detail": "Parent A/B acknowledgement persists, forbidden transitions refused; student self and UI cases remain open."
+      "detail": "Both parents acknowledge own child and reload persistence passes. Student-self half remains unavailable.",
+      "browserEvidence": "pw-alerts-results.json"
     },
     {
       "id": "alerts-M02",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "Teacher acknowledge/resolve/dismiss each persist on a controlled person alert. Shared class notice half remains unavailable.",
       "transportEvidence": "alerts-results.json",
-      "detail": "Teacher own-assigned-child acknowledgement/resolve/dismiss persist via MCP/REST; shared-class notice and browser action untested."
+      "detail": "Teacher acknowledge/resolve/dismiss each persist on a controlled person alert. Shared class notice half remains unavailable.",
+      "browserEvidence": "pw-alerts-results.json"
     },
     {
       "id": "alerts-M03",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "Admin resolves/dismisses controlled person alert and reloads; unrelated alerts unchanged. Separate class/supervisor/acknowledge matrix remains open.",
       "transportEvidence": "alerts-results.json",
-      "detail": "Admin status transitions persist via MCP/REST; class notice, supervisor and browser action remain open."
+      "detail": "Admin resolves/dismisses controlled person alert and reloads; unrelated alerts unchanged. Separate class/supervisor/acknowledge matrix remains open.",
+      "browserEvidence": "pw-alerts-results.json"
     },
     {
       "id": "alerts-M04",
-      "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "browserOutcome": "PASS",
+      "reason": null,
       "transportEvidence": "alerts-results.json",
-      "detail": "Exact-ID cleanup and denied parent deletion pass; browser cancellation/confirmation untested."
+      "detail": "Cancel preserves controlled alert; one confirmed browser delete persists after reload. Parent delete UI absent and prior transport refusals retained; unrelated alerts unchanged.",
+      "browserEvidence": "pw-alerts-results.json"
     },
     {
       "id": "notifications-R01",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "Four controlled accounts show empty inbox, zero API count and bell footer; Arabic phone labels pass. Nonempty ordering/destinations unavailable.",
       "transportEvidence": "notifications-push-results.json",
-      "detail": "Four controlled empty inboxes and unread/read/count projections pass; bell/order/destinations need nonempty inbox and browser."
+      "detail": "Four controlled accounts show empty inbox, zero API count and bell footer; Arabic phone labels pass. Nonempty ordering/destinations unavailable.",
+      "browserEvidence": "pw-inbox-preferences-reminders-results.json"
     },
     {
       "id": "notifications-R02",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "No owned deployed notification destination to follow; no broad trigger invoked.",
       "transportEvidence": "notifications-push-results.json",
-      "detail": "No controlled notification destination available. Browser link and positive cross-recipient tests remain open."
+      "detail": "No owned deployed notification destination to follow; no broad trigger invoked.",
+      "browserEvidence": "pw-inbox-preferences-reminders-results.json"
     },
     {
       "id": "notifications-R03",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "Alert status transitions passed separately and inboxes remain empty; positive independent bell/read state requires a real owned message.",
       "transportEvidence": "notifications-push-results.json",
-      "detail": "Alert transitions leave controlled inboxes empty; distinct APIs confirmed. Browser bell behavior untested."
+      "detail": "Alert status transitions passed separately and inboxes remain empty; positive independent bell/read state requires a real owned message.",
+      "browserEvidence": "pw-inbox-preferences-reminders-results.json"
     },
     {
       "id": "notifications-M01",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "Parent empty mark-all returns zero and reload stays zero. Fresh positive read/read-all regression passes locally; deployed positive lifecycle remains unavailable.",
       "transportEvidence": "notifications-push-results.json",
-      "detail": "Empty controlled-account mark-all returns zero and nonexistent read returns 404; positive read requires owned notification. Continuation: fresh local notifications fail read/read-all due clock mismatch; old-fixture replay/mark-all isolation succeeds. Product defect remains open. Fix attempt: both read methods now use database time; fresh local lifecycle passes. Browser/deployed acceptance remains open."
+      "detail": "Parent empty mark-all returns zero and reload stays zero. Fresh positive read/read-all regression passes locally; deployed positive lifecycle remains unavailable.",
+      "browserEvidence": "pw-inbox-preferences-reminders-results.json"
     },
     {
       "id": "notifications-M02",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "No controlled nonfinancial recipient-only live trigger; no real delivery, duplicate or cross-recipient browser acceptance.",
       "transportEvidence": "notifications-push-results.json",
-      "detail": "Controlled-recipient trigger unavailable without finance job/broad visit-request notification. No dispatch invoked."
+      "detail": "No controlled nonfinancial recipient-only live trigger; no real delivery, duplicate or cross-recipient browser acceptance.",
+      "browserEvidence": "pw-inbox-preferences-reminders-results.json"
     },
     {
       "id": "reminders-R01",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "Overdue page loads; controlled-student filtering and filtered-empty state pass. Independent financial record reconciliation stays with finance coder.",
       "transportEvidence": "reminders-results.json",
-      "detail": "Live overdue projection validation, history and denied identities pass; browser filters and independent finance reconciliation remain open."
+      "detail": "Overdue page loads; controlled-student filtering and filtered-empty state pass. Independent financial record reconciliation stays with finance coder.",
+      "browserEvidence": "pw-inbox-preferences-reminders-results.json"
     },
     {
       "id": "reminders-R02",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "Inspected reminder row has no student/fee link; navigation case blocked.",
       "transportEvidence": "reminders-results.json",
-      "detail": "No browser navigation tested; financial state belongs to concurrent finance run."
+      "detail": "Inspected reminder row has no student/fee link; navigation case blocked.",
+      "browserEvidence": "pw-inbox-preferences-reminders-results.json"
     },
     {
       "id": "reminders-M01",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "Controlled row button displays SMS-coming-soon toast and makes zero delivery requests. Actual send and duplicate handling are unimplemented.",
       "transportEvidence": "reminders-results.json",
-      "detail": "Source handlers update client state/toast SMS coming soon without delivery request. No actual send attempted."
+      "detail": "Controlled row button displays SMS-coming-soon toast and makes zero delivery requests. Actual send and duplicate handling are unimplemented.",
+      "browserEvidence": "pw-inbox-preferences-reminders-results.json"
     },
     {
       "id": "push-preferences-R01",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "All four accounts show a disabled switch with accessible unavailability reason; Arabic phone labels pass. Server push disabled; undecided/denied/unsupported permission matrix remains open.",
       "transportEvidence": "notifications-push-results.json",
-      "detail": "Push API reports enabled=false/publicKey=null. Browser permission/unsupported states untested."
+      "detail": "All four accounts show a disabled switch with accessible unavailability reason; Arabic phone labels pass. Server push disabled; undecided/denied/unsupported permission matrix remains open.",
+      "browserEvidence": "pw-inbox-preferences-reminders-results.json"
     },
     {
       "id": "push-preferences-M01",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "Server enabled=false/publicKey=null; real opt-in and reload persistence unavailable.",
       "transportEvidence": "notifications-push-results.json",
-      "detail": "Push disabled and browser unavailable at API execution; no real subscription registered. Continuation: synthetic subscription REST lifecycle, encryption and recipient-scoped unsubscribe pass on isolated local PostgreSQL; no browser permission or push delivery proof."
+      "detail": "Server enabled=false/publicKey=null; real opt-in and reload persistence unavailable.",
+      "browserEvidence": "pw-inbox-preferences-reminders-results.json"
     },
     {
       "id": "push-preferences-M02",
       "browserOutcome": "BLOCKED",
-      "reason": "No browser connection during API attempt; additional prerequisites described in detail.",
+      "reason": "No live subscription or delivery; real opt-out persistence and nondelivery unavailable.",
       "transportEvidence": "notifications-push-results.json",
-      "detail": "Unknown subscription delete returns 404. Real opt-out persistence and nondelivery require enabled push and browser subscription. Continuation: synthetic subscription REST lifecycle, encryption and recipient-scoped unsubscribe pass on isolated local PostgreSQL; no browser permission or push delivery proof."
+      "detail": "No live subscription or delivery; real opt-out persistence and nondelivery unavailable.",
+      "browserEvidence": "pw-inbox-preferences-reminders-results.json"
     }
   ],
   "continuation": {
     "additionalPassingRepositoryTests": 7,
     "olderNotificationFixtureLifecycleAssertions": 30,
     "newNotificationClockDefect": "Both markRead and markAllRead violate notifications_read_after_create_check under Africa/Casablanca database timezone.",
-    "productOutcome": "Historical failure retained; fixed locally in subsequent attempt, deployment unverified.",
+    "productOutcome": "Historical failure retained; fixed locally and deployed at 38997fe4c194ac66e9b88de17fbb068edfdd7ab8. Positive fresh notification lifecycle proved locally; deployed controlled inboxes empty.",
     "evidence": "notification-clock-repro-results.json",
-    "browserStillBlocked": true
+    "browserStillBlocked": false
   },
   "fix": {
     "fixedLocally": true,
-    "deployed": false,
+    "deployed": true,
     "evidence": "fix-validation.json",
     "freshNotifications": "Both database regression cases and 30 fresh-fixture lifecycle assertions pass.",
-    "browserAvailable": false
-  }
+    "browserAvailable": true
+  },
+  "browserSurface": "Standalone Playwright and Chrome 155, explicitly requested by owner",
+  "executionDefinition": "18 cases have substantive browser execution, including partial cases; missing lifecycle controls/prerequisites do not count as execution. Case PASS requires all mandatory parts.",
+  "browserAssertions": {
+    "PASS": 111,
+    "FAIL": 0,
+    "BLOCKED": 13
+  },
+  "servingRevision": "38997fe4c194ac66e9b88de17fbb068edfdd7ab8"
 }

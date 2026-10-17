@@ -58,9 +58,18 @@
       "status": "PASS",
       "distDir": ".next-communication-clock",
       "exitCode": 0
+    },
+    {
+      "command": "bun run check",
+      "exitCode": 0,
+      "distDir": ".next-release-comm",
+      "startedUtc": "2026-10-17T14:14:32.857Z"
     }
   ],
   "fixedLocally": true,
-  "deployed": false,
-  "browserAvailable": false
+  "deployed": true,
+  "browserAvailable": true,
+  "sourceCommit": "38997fe4c194ac66e9b88de17fbb068edfdd7ab8",
+  "releaseProof": "deployment-proof.json",
+  "continuation": "Historical local proof above is retained. Full bun run check passed before publication; independent GitHub verification and exact app/worker runtime proof passed. Browser continuation remains partial per checklist-coverage.json."
 }

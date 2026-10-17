@@ -1,0 +1,195 @@
+{
+  "finalAssertions": {
+    "PASS": 111,
+    "FAIL": 0,
+    "BLOCKED": 13
+  },
+  "attempts": [
+    {
+      "evidence": "pw-alerts-initial-observer-results.json",
+      "completedUtc": "2026-10-17T14:35:32.157Z",
+      "counts": {
+        "PASS": 42,
+        "BLOCKED": 3
+      },
+      "failure": null,
+      "cleanup": {
+        "created": 3,
+        "remaining": 0
+      },
+      "classification": "PASS",
+      "countsTowardFinalAssertions": false
+    },
+    {
+      "evidence": "pw-alerts-observer-attempt-results.json",
+      "completedUtc": "2026-10-17T14:43:20.843Z",
+      "counts": {
+        "PASS": 43,
+        "BLOCKED": 3,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "browser-diagnostics-or-write-list"
+      },
+      "cleanup": {
+        "created": 3,
+        "remaining": 0
+      },
+      "classification": "TEST",
+      "countsTowardFinalAssertions": false
+    },
+    {
+      "evidence": "pw-alerts-results.json",
+      "completedUtc": "2026-10-17T14:45:31.033Z",
+      "counts": {
+        "PASS": 44,
+        "BLOCKED": 3
+      },
+      "failure": null,
+      "cleanup": {
+        "created": 3,
+        "remaining": 0
+      },
+      "classification": "PASS",
+      "countsTowardFinalAssertions": true
+    },
+    {
+      "evidence": "pw-announcements-attempt1-results.json",
+      "completedUtc": "2026-10-17T14:30:54.517Z",
+      "counts": {
+        "PASS": 5,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "locator.click: Timeout 30000ms exceeded."
+      },
+      "cleanup": {
+        "created": 1,
+        "remaining": 0
+      },
+      "classification": "TEST",
+      "countsTowardFinalAssertions": false
+    },
+    {
+      "evidence": "pw-announcements-desktop-results.json",
+      "completedUtc": "2026-10-17T14:32:35.326Z",
+      "counts": {
+        "PASS": 22,
+        "BLOCKED": 2
+      },
+      "failure": null,
+      "cleanup": {
+        "created": 1,
+        "remaining": 0
+      },
+      "classification": "PASS",
+      "countsTowardFinalAssertions": false
+    },
+    {
+      "evidence": "pw-announcements-initial-observer-results.json",
+      "completedUtc": "2026-10-17T14:34:43.199Z",
+      "counts": {
+        "PASS": 25,
+        "BLOCKED": 2
+      },
+      "failure": null,
+      "cleanup": {
+        "created": 1,
+        "remaining": 0
+      },
+      "classification": "PASS",
+      "countsTowardFinalAssertions": false
+    },
+    {
+      "evidence": "pw-announcements-observer-attempt-results.json",
+      "completedUtc": "2026-10-17T14:39:29.342Z",
+      "counts": {
+        "PASS": 26,
+        "BLOCKED": 2,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "browser-diagnostics-or-write-list"
+      },
+      "cleanup": {
+        "created": 1,
+        "remaining": 0
+      },
+      "classification": "TEST",
+      "countsTowardFinalAssertions": false
+    },
+    {
+      "evidence": "pw-announcements-results.json",
+      "completedUtc": "2026-10-17T14:42:17.704Z",
+      "counts": {
+        "PASS": 27,
+        "BLOCKED": 2
+      },
+      "failure": null,
+      "cleanup": {
+        "created": 1,
+        "remaining": 0
+      },
+      "classification": "PASS",
+      "countsTowardFinalAssertions": true
+    },
+    {
+      "evidence": "pw-inbox-preferences-reminders-initial-observer-results.json",
+      "completedUtc": "2026-10-17T14:36:53.269Z",
+      "counts": {
+        "PASS": 38,
+        "BLOCKED": 8
+      },
+      "failure": null,
+      "cleanup": "No fixtures created",
+      "classification": "PASS",
+      "countsTowardFinalAssertions": false
+    },
+    {
+      "evidence": "pw-inbox-preferences-reminders-observer-attempt-results.json",
+      "completedUtc": "2026-10-17T14:46:26.725Z",
+      "counts": {
+        "PASS": 39,
+        "BLOCKED": 8,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "browser-diagnostics-or-write-list"
+      },
+      "cleanup": "No fixtures created",
+      "classification": "TEST",
+      "countsTowardFinalAssertions": false
+    },
+    {
+      "evidence": "pw-inbox-preferences-reminders-results.json",
+      "completedUtc": "2026-10-17T14:47:58.404Z",
+      "counts": {
+        "PASS": 40,
+        "BLOCKED": 8
+      },
+      "failure": null,
+      "cleanup": "No fixtures created",
+      "classification": "PASS",
+      "countsTowardFinalAssertions": true
+    }
+  ],
+  "explanations": [
+    {
+      "evidence": "pw-announcements-attempt1-results.json",
+      "cause": "Harness searched for aria-haspopup=menu; actual row button accessible name is Actions de la ligne. Correct locator used on rerun; draft cleaned."
+    },
+    {
+      "evidence": "pw-announcements-observer-attempt-results.json",
+      "cause": "Observer initially treated proven cancelled Next route prefetches as unexpected. Only same-origin allowlisted GET routes, explicit prefetch headers, non-navigation and ERR_ABORTED qualify; API failures remain unexpected."
+    },
+    {
+      "evidence": "pw-alerts-observer-attempt-results.json",
+      "cause": "Harness reloaded while mutation-triggered GET /api/alerts refetch was pending. Kept as unexpected, settled network before reload, then reran successfully."
+    },
+    {
+      "evidence": "pw-inbox-preferences-reminders-observer-attempt-results.json",
+      "cause": "Observer allowlist did not include /notifications Next prefetch; four proven non-navigation prefetch cancellations recorded. Added only that route with existing strict predicates; rerun successful."
+    }
+  ],
+  "retention": "All sanitized standalone Playwright attempts retained, including successful partial observers. Intermediate assertions are not added to final totals."
+}

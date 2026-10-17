@@ -1,0 +1,342 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "38997fe4c194ac66e9b88de17fbb068edfdd7ab8",
+  "completedUtc": "2026-10-17T14:46:26.725Z",
+  "browser": "Chrome 155 via standalone Playwright explicitly requested by owner",
+  "results": [
+    {
+      "case": "notifications-R01-empty-inbox-API-admin",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-R01-empty-inbox-visible-admin",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-R01-bell-footer-admin",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-preferences-R01-disabled-switch-admin",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-preferences-R01-accessible-reason-admin",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-R01-empty-inbox-API-teacher-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-R01-empty-inbox-visible-teacher-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-R01-bell-footer-teacher-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-preferences-R01-disabled-switch-teacher-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-preferences-R01-accessible-reason-teacher-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-R01-empty-inbox-API-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-R01-empty-inbox-visible-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-R01-bell-footer-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-M01-empty-mark-all-noop",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-M01-empty-count-remains-zero",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-preferences-R01-disabled-switch-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-preferences-R01-accessible-reason-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-R01-empty-inbox-API-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-R01-empty-inbox-visible-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-R01-bell-footer-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-preferences-R01-disabled-switch-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-preferences-R01-accessible-reason-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic-phone-RTL-/notifications",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic-phone-no-overflow-/notifications",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic-phone-notification-labels",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic-phone-RTL-/preferences",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic-phone-no-overflow-/preferences",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic-phone-push-labels",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic-phone-RTL-/announcements",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic-phone-no-overflow-/announcements",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic-phone-announcement-create-label",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic-phone-RTL-/alerts",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic-phone-no-overflow-/alerts",
+      "outcome": "PASS"
+    },
+    {
+      "case": "reminders-R01-overdue-loads",
+      "outcome": "PASS"
+    },
+    {
+      "case": "reminders-R01-owned-filter-matches-read",
+      "outcome": "PASS"
+    },
+    {
+      "case": "reminders-M01-placeholder-makes-no-delivery-request",
+      "outcome": "PASS"
+    },
+    {
+      "case": "reminders-M01",
+      "outcome": "BLOCKED",
+      "reason": "Browser confirms SMS-coming-soon UI with no send request; actual delivery implementation absent."
+    },
+    {
+      "case": "reminders-R02",
+      "outcome": "BLOCKED",
+      "reason": "Reminder row has no student/fee link in the current UI."
+    },
+    {
+      "case": "reminders-R01-filtered-empty-shows-no-rows",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-R01-nonempty-order-and-destinations",
+      "outcome": "BLOCKED",
+      "reason": "Controlled inboxes empty; empty-state and bell coverage passed."
+    },
+    {
+      "case": "notifications-R02",
+      "outcome": "BLOCKED",
+      "reason": "No owned notification link to follow."
+    },
+    {
+      "case": "notifications-M01-positive-message",
+      "outcome": "BLOCKED",
+      "reason": "Positive fresh read verified locally; no controlled deployed message available."
+    },
+    {
+      "case": "notifications-M02",
+      "outcome": "BLOCKED",
+      "reason": "No nonfinancial recipient-specific live trigger; no broad trigger invoked."
+    },
+    {
+      "case": "push-preferences-M01",
+      "outcome": "BLOCKED",
+      "reason": "Push disabled on serving installation; no opt-in attempted."
+    },
+    {
+      "case": "push-preferences-M02",
+      "outcome": "BLOCKED",
+      "reason": "No real push subscription or delivery; disabled state observed only."
+    },
+    {
+      "case": "serving-revision-stable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "exact-browser-write-list",
+      "outcome": "PASS"
+    },
+    {
+      "case": "no-unexpected-browser-diagnostics",
+      "outcome": "FAIL"
+    }
+  ],
+  "diagnostics": [
+    {
+      "actor": "admin",
+      "type": "requestfailed",
+      "method": "GET",
+      "path": "/notifications",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "navigation": false,
+      "resourceType": "fetch"
+    },
+    {
+      "actor": "teacher-a",
+      "type": "requestfailed",
+      "method": "GET",
+      "path": "/notifications",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "navigation": false,
+      "resourceType": "fetch"
+    },
+    {
+      "actor": "parent-a",
+      "type": "requestfailed",
+      "method": "GET",
+      "path": "/notifications",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "navigation": false,
+      "resourceType": "fetch"
+    },
+    {
+      "actor": "parent-b",
+      "type": "requestfailed",
+      "method": "GET",
+      "path": "/notifications",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "navigation": false,
+      "resourceType": "fetch"
+    },
+    {
+      "actor": "admin",
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "path": "/forgot-password",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "navigation": false,
+      "resourceType": "fetch"
+    },
+    {
+      "actor": "admin",
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "path": "/register",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "navigation": false,
+      "resourceType": "fetch"
+    },
+    {
+      "actor": "admin",
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "path": "/",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "navigation": false,
+      "resourceType": "fetch"
+    },
+    {
+      "actor": "admin",
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "path": "/",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "navigation": false,
+      "resourceType": "fetch"
+    },
+    {
+      "actor": "admin",
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "path": "/register",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "navigation": false,
+      "resourceType": "fetch"
+    },
+    {
+      "actor": "admin",
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "path": "/register",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "navigation": false,
+      "resourceType": "fetch"
+    },
+    {
+      "actor": "admin",
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "path": "/forgot-password",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "navigation": false,
+      "resourceType": "fetch"
+    },
+    {
+      "actor": "admin",
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "path": "/",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "navigation": false,
+      "resourceType": "fetch"
+    }
+  ],
+  "writes": [
+    {
+      "actor": "parent-a",
+      "method": "PATCH",
+      "path": "/api/notifications/read-all"
+    }
+  ],
+  "failure": {
+    "case": "browser-diagnostics-or-write-list"
+  },
+  "financialWrites": 0,
+  "deliveryAttempts": 0
+}

@@ -1,6 +1,6 @@
 {
   "artifactJsonParse": "PASS",
-  "jsonFilesValidated": 14,
+  "jsonFilesValidated": 27,
   "secretAndRuntimeIdentityScan": "PASS",
   "readmeLinks": "PASS",
   "missingLinks": [],
@@ -14,9 +14,9 @@
   "productDefectFixed": true,
   "applicationChanges": 1,
   "ledgerContinuationPresent": true,
-  "browserCasesStillBlocked": 25,
+  "browserCasesStillBlocked": 21,
   "fixedLocally": true,
-  "deployed": false,
+  "deployed": true,
   "regressionTestsAdded": 2,
   "currentFreshNotificationOperations": "PASS",
   "historicalFailingFreshNotificationOperations": 2,
@@ -28,5 +28,15 @@
     "rootTests": "PASS",
     "productionBuild": "PASS"
   },
-  "fixSourceFingerprintsMatch": true
+  "fixSourceFingerprintsMatch": true,
+  "verifiedUtc": "2026-10-17T14:49:41.452Z",
+  "browserAvailable": true,
+  "browserCasesPassed": 4,
+  "browserAssertionsPassed": 111,
+  "browserAssertionsFailed": 0,
+  "sourceCommit": "38997fe4c194ac66e9b88de17fbb068edfdd7ab8",
+  "releaseProof": "deployment-proof.json",
+  "browserAttempts": "browser-attempts.json",
+  "fullReleaseGate": "bun run check PASS",
+  "unexpectedFinalBrowserDiagnostics": 0
 }
