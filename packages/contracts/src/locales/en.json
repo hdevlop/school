@@ -6280,7 +6280,7 @@
       "updated": "Visit request updated successfully",
       "deleted": "Visit request deleted successfully"
     }
-  },
+  },
   "paymentReceipt": {
     "title": "PAYMENT RECEIPT",
     "documentTitle": "Receipt",
