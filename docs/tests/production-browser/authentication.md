@@ -1,6 +1,6 @@
 # Authentication and sessions
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PARTIAL** (1/11 PASS; the rest NOT RUN) on `440c060`, 2026-10-17. Evidence: [PB1018](../../evidence/production-browser/2026-10-17-pb1018/README.md).
 
 Entry point: `/login`, `/forgot-password`, `/reset-password`, `/change-password`. Original coverage: A.
 
@@ -40,7 +40,7 @@ Run only within the recorded production fixture scope; otherwise mark these case
 
 - [ ] **authentication-M01**: Use only owned accounts for wrong-password, inactive and revoked-session cases; record actual status codes without provoking a live user's lockout.
 - [ ] **authentication-M02**: Complete an owned temporary-credential setup; protected pages remain inaccessible until replacement and fresh login. Old credentials, cancellation and replay must fail.
-- [ ] **authentication-M03**: Send recovery/invite mail only to the controlled recipient; test weak/mismatched replacements, single use and old-password refusal. Record delivery separately from simulated transport.
+- [x] **authentication-M03**: Send recovery/invite mail only to the controlled recipient; test weak/mismatched replacements, single use and old-password refusal. Record delivery separately from simulated transport. Result: **PASS** — recovery mail (AUTH-07) to the controlled mailbox in French, weak/mismatched refused, single use, old password refused; invitation mail not run.
 
 ## Finish and evidence
 

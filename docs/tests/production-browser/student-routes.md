@@ -1,6 +1,6 @@
 # Student transport routes
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PARTIAL** (2/3 PASS) on `65b15ec`, 2026-10-17. Evidence: [PB1017](../../evidence/production-browser/2026-10-16-pb1017/README.md).
 
 Entry point: `/transport` and student transport controls. Original coverage: H04.
 
@@ -12,14 +12,14 @@ Owned student, vehicle and route/pickup details. Use an identity allowed by the 
 
 ## Browser checks
 
-- [ ] **student-routes-R01**: Inspect route/vehicle list and assigned students; pickup details and capacity information agree.
+- [ ] **student-routes-R01**: Inspect route/vehicle list and assigned students; pickup details and capacity information agree. Result: **NOT RUN** — not covered by case ID in PB1017.
 
 ## Owned-fixture mutations
 
 Run only within the recorded production fixture scope; otherwise mark these cases BLOCKED.
 
-- [ ] **student-routes-M01**: Assign only the owned student, reload transport and student profile; both show the same active route.
-- [ ] **student-routes-M02**: Change/end the assignment using supported controls; exact history and active state agree, with no duplicate active assignment.
+- [x] **student-routes-M01**: Assign only the owned student, reload transport and student profile; both show the same active route. Result: **PASS** — assign/unassign the owned student-A.
+- [x] **student-routes-M02**: Change/end the assignment using supported controls; exact history and active state agree, with no duplicate active assignment. Result: **PASS**.
 
 ## Finish and evidence
 

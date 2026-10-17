@@ -1,6 +1,6 @@
 # Financial reminders
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PARTIAL** (2/3 PASS; the rest BLOCKED by missing controls or fixtures), last rechecked on `37147d7`, 2026-10-17. Evidence: [PB1019 Communication](../../evidence/production-browser/2026-10-17-pb1019-comm-continuation/README.md).
 
 Entry point: `/reminders`. Original coverage: G15.
 
@@ -12,14 +12,14 @@ Owned due/overdue records and controlled recipients. Use an identity allowed by 
 
 ## Browser checks
 
-- [ ] **reminders-R01**: Filter/list due reminders; due dates and status agree with owning financial records.
-- [ ] **reminders-R02**: Follow a reminder to its student/fee; identity and permissions are preserved.
+- [x] **reminders-R01**: Filter/list due reminders; due dates and status agree with owning financial records. Result: **PASS** — Controlled overdue amount, oldest due date and age independently reconcile with the owning fee installments; desktop and French/Arabic phone views identify the same record.
+- [x] **reminders-R02**: Follow a reminder to its student/fee; identity and permissions are preserved. Result: **PASS** — Keyboard navigation follows the exact controlled student fee link on desktop and phone; destination identity persists and denied actors retain transport refusals.
 
 ## Owned-fixture mutations
 
 Run only within the recorded production fixture scope; otherwise mark these cases BLOCKED.
 
-- [ ] **reminders-M01**: If a send action exists, use only a controlled recipient and authorized delivery scope; record delivery and duplicate handling. No bulk reminders to live families.
+- [ ] **reminders-M01**: If a send action exists, use only a controlled recipient and authorized delivery scope; record delivery and duplicate handling. No bulk reminders to live families. Result: **BLOCKED** — Controlled row button displays SMS-coming-soon toast and makes zero delivery requests.
 
 ## Finish and evidence
 

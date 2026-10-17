@@ -1,6 +1,6 @@
 # Staff roles and zones
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PASS** (4/4 PASS) on `65b15ec`, 2026-10-17. Evidence: [PB1017](../../evidence/production-browser/2026-10-16-pb1017/README.md).
 
 Entry point: Selectors in `/staff` forms; management controls only if exposed. Original coverage: D08.
 
@@ -12,15 +12,15 @@ Owned custom staff role/zone with a known dependent fixture. Use an identity all
 
 ## Browser checks
 
-- [ ] **staff-roles-zones-R01**: Verify role/zone selectors load and saved selections reopen correctly.
-- [ ] **staff-roles-zones-R02**: If management has no browser surface, record its lifecycle as API-only; do not invent a route.
+- [x] **staff-roles-zones-R01**: Verify role/zone selectors load and saved selections reopen correctly. Result: **PASS**.
+- [x] **staff-roles-zones-R02**: If management has no browser surface, record its lifecycle as API-only; do not invent a route. Result: **PASS**.
 
 ## Owned-fixture mutations
 
 Run only within the recorded production fixture scope; otherwise mark these cases BLOCKED.
 
-- [ ] **staff-roles-zones-M01**: If management controls exist, create/edit an owned role/zone; duplicate names fail and referenced deletion is refused.
-- [ ] **staff-roles-zones-M02**: Remove owned references and delete the disposable role/zone.
+- [x] **staff-roles-zones-M01**: If management controls exist, create/edit an owned role/zone; duplicate names fail and referenced deletion is refused. Result: **PASS** — zones, job titles, cleaner/security creation.
+- [x] **staff-roles-zones-M02**: Remove owned references and delete the disposable role/zone. Result: **PASS**.
 
 ## Finish and evidence
 

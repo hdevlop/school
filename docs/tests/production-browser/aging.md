@@ -1,6 +1,6 @@
 # Aging report
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PASS** (3/3) on `ff7d571`, 2026-10-17. Evidence: [PB1020-FIN](../../evidence/production-browser/2026-10-17-pb1020-fin/README.md).
 
 Entry point: `/aging`. Original coverage: G14.
 
@@ -12,9 +12,9 @@ Owned fees with known due dates and payments. Use an identity allowed by the dep
 
 ## Browser checks
 
-- [ ] **aging-R01**: Open aging report and available filters/drilldowns; buckets use the correct as-of date/year.
-- [ ] **aging-R02**: Reconcile bucket totals and grand total to owned remaining balances; paid fees are not overdue.
-- [ ] **aging-R03**: Check empty state, phone layout and unauthorized role refusal.
+- [x] **aging-R01**: Open aging report and available filters/drilldowns; buckets use the correct as-of date/year. Result: **PASS**.
+- [x] **aging-R02**: Reconcile bucket totals and grand total to owned remaining balances; paid fees are not overdue. Result: **PASS**.
+- [x] **aging-R03**: Check empty state, phone layout and unauthorized role refusal. Result: **PASS**.
 
 ## Owned-fixture mutations
 

@@ -1,6 +1,6 @@
 # Payroll
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PASS** (3/3) on `ff7d571`, 2026-10-17. Evidence: [PB1020-FIN](../../evidence/production-browser/2026-10-17-pb1020-fin/README.md).
 
 Entry point: `/payroll`. Original coverage: G09.
 
@@ -12,14 +12,14 @@ Owned staff and isolated payroll period; no real payout. Use an identity allowed
 
 ## Browser checks
 
-- [ ] **payroll-R01**: Load/filter payroll; staff identity, period and calculation components agree.
+- [x] **payroll-R01**: Load/filter payroll; staff identity, period and calculation components agree. Result: **PASS**.
 
 ## Owned-fixture mutations
 
 Run only within the recorded production fixture scope; otherwise mark these cases BLOCKED.
 
-- [ ] **payroll-M01**: Create/edit only an owned payroll record if supported; check calculated total and protected transitions.
-- [ ] **payroll-M02**: A denied role cannot change payroll. No real payout or irreversible posting is authorized by this checklist.
+- [x] **payroll-M01**: Create/edit only an owned payroll record if supported; check calculated total and protected transitions. Result: **PASS** — pay, repeat refused, undo asks first, payslip back to pending.
+- [x] **payroll-M02**: A denied role cannot change payroll. No real payout or irreversible posting is authorized by this checklist. Result: **PASS** — teacher-A refused (403) and stays signed in.
 
 ## Finish and evidence
 

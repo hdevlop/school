@@ -1,6 +1,6 @@
 # Financial operations
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PASS** (4/4 browser cases) on `752e1bd`, 2026-10-17; M02 stays an API/database obligation. Evidence: [PB1020-FIN](../../evidence/production-browser/2026-10-17-pb1020-fin/README.md).
 
 Entry point: `/financial-operations`. Original coverage: G11, G13.
 
@@ -12,16 +12,16 @@ Accounting-capable identity, denied role, owned financial fixtures. Use an ident
 
 ## Browser checks
 
-- [ ] **financial-operations-R01**: Load checks, credits, rollover, financial notifications and audit panels; each total agrees with supported reads.
-- [ ] **financial-operations-R02**: Audit projection identifies authorized actions and has no edit/delete affordance; private metadata remains protected.
-- [ ] **financial-operations-R03**: Unauthorized reads/writes are denied while the account stays signed in.
+- [x] **financial-operations-R01**: Load checks, credits, rollover, financial notifications and audit panels; each total agrees with supported reads. Result: **PASS**.
+- [x] **financial-operations-R02**: Audit projection identifies authorized actions and has no edit/delete affordance; private metadata remains protected. Result: **PASS**.
+- [x] **financial-operations-R03**: Unauthorized reads/writes are denied while the account stays signed in. Result: **PASS**.
 
 ## Owned-fixture mutations
 
 Run only within the recorded production fixture scope; otherwise mark these cases BLOCKED.
 
-- [ ] **financial-operations-M01**: Execute check transitions, credits and rollover only through their dedicated checklists; refresh affected panels after each approved action.
-- [ ] **financial-operations-M02**: Notification generation, audit append-only enforcement, concurrency and rollback stay separately tracked API/database obligations.
+- [x] **financial-operations-M01**: Execute check transitions, credits and rollover only through their dedicated checklists; refresh affected panels after each approved action. Result: **PASS** — cheque transitions on owned cheques, panels refreshed.
+- [ ] **financial-operations-M02**: Notification generation, audit append-only enforcement, concurrency and rollback stay separately tracked API/database obligations. Result: **NOT RUN** — API/database obligation; concurrency covered locally in the Finance concurrency run.
 
 ## Finish and evidence
 

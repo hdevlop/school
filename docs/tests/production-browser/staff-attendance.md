@@ -1,6 +1,6 @@
 # Staff attendance
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PARTIAL** (1/3 PASS; the rest NOT RUN) on `440c060`, 2026-10-17. Evidence: [PB1018](../../evidence/production-browser/2026-10-17-pb1018/README.md).
 
 Entry point: `/attendance/staff`. Original coverage: E02.
 
@@ -25,7 +25,7 @@ not satisfy this prerequisite.
 
 Run only within the recorded production fixture scope after the full-roster prerequisite passes; otherwise mark these cases BLOCKED.
 
-- [ ] **staff-attendance-M01**: On the entirely owned roster, save and update marks through allowed transitions; reload after each. Reconcile every submitted person, including unchanged-looking rows that had no saved mark.
+- [x] **staff-attendance-M01**: On the entirely owned roster, save and update marks through allowed transitions; reload after each. Reconcile every submitted person, including unchanged-looking rows that had no saved mark. Result: **PASS** — owned 30 June roster saved, corrected and reloaded; 18 marks removed.
 - [ ] **staff-attendance-M02**: Invalid transitions or denied identities cannot modify records; clean up only through supported owned-fixture operations.
 
 ## Finish and evidence

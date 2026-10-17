@@ -1,6 +1,6 @@
 # Expenses
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PASS** (3/3) on `ff7d571`, 2026-10-17. Evidence: [PB1020-FIN](../../evidence/production-browser/2026-10-17-pb1020-fin/README.md).
 
 Entry point: `/expenses`. Original coverage: G08.
 
@@ -12,14 +12,14 @@ Explicitly authorized owned expense and controlled accounting scope. Use an iden
 
 ## Browser checks
 
-- [ ] **expenses-R01**: Filter/list expenses; amount, date, category, code and status match in rows/cards.
+- [x] **expenses-R01**: Filter/list expenses; amount, date, category, code and status match in rows/cards. Result: **PASS** — list, header count, failed-list state, French rows, no raw ID column, phone card.
 
 ## Owned-fixture mutations
 
 Run only within the recorded production fixture scope; otherwise mark these cases BLOCKED.
 
-- [ ] **expenses-M01**: Create/edit an owned expense; method-specific check/reference fields validate and persist.
-- [ ] **expenses-M02**: Cancel deletion then remove only the disposable expense if supported; posted/irreversible records require an agreed reversal or isolated testing.
+- [x] **expenses-M01**: Create/edit an owned expense; method-specific check/reference fields validate and persist. Result: **PASS** — create/edit with cheque fields, reloaded; paid expenses refuse edits (409).
+- [x] **expenses-M02**: Cancel deletion then remove only the disposable expense if supported; posted/irreversible records require an agreed reversal or isolated testing. Result: **PASS** — cancel keeps it, delete removes it; a paid expense cannot be deleted (409).
 
 ## Finish and evidence
 

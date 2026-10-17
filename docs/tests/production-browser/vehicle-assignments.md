@@ -1,6 +1,6 @@
 # Vehicle assignments
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PASS** (3/3 PASS) on `65b15ec`, 2026-10-17. Evidence: [PB1017](../../evidence/production-browser/2026-10-16-pb1017/README.md).
 
 Entry point: Driver assignment controls in `/drivers` and transport surfaces. Original coverage: H03.
 
@@ -12,14 +12,14 @@ Owned driver and two owned vehicles with agreed periods. Use an identity allowed
 
 ## Browser checks
 
-- [ ] **vehicle-assignments-R01**: Inspect current assignment and availability; driver/vehicle identity agrees across views.
+- [x] **vehicle-assignments-R01**: Inspect current assignment and availability; driver/vehicle identity agrees across views. Result: **PASS**.
 
 ## Owned-fixture mutations
 
 Run only within the recorded production fixture scope; otherwise mark these cases BLOCKED.
 
-- [ ] **vehicle-assignments-M01**: Assign the owned driver to a vehicle, reload, then try a conflicting active assignment; reject overlap.
-- [ ] **vehicle-assignments-M02**: End/unassign the owned assignment; vehicle and driver views refresh and history remains consistent.
+- [x] **vehicle-assignments-M01**: Assign the owned driver to a vehicle, reload, then try a conflicting active assignment; reject overlap. Result: **PASS**.
+- [x] **vehicle-assignments-M02**: End/unassign the owned assignment; vehicle and driver views refresh and history remains consistent. Result: **PASS** — ending an assignment is API-only.
 
 ## Finish and evidence
 

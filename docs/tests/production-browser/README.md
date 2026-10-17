@@ -1,6 +1,6 @@
 # Production browser feature tests
 
-Status: **NOT RUN**. Prepared from the repository on 2026-09-25 for `https://myscolai.com`; the deployed revision and feature availability have not been inspected in this documentation change.
+Status: **IN PROGRESS**. Prepared on 2026-09-25 for `https://myscolai.com`. Each feature page carries its own status and ticked cases; the [evidence ledger](evidence-ledger.md) lists every run.
 
 This folder replaces the root School connected acceptance plan. Each feature has a browser checklist with an entry point, fixtures, expected results and stable case IDs. These are execution guides, not implemented automated tests or evidence of a production pass.
 
@@ -9,7 +9,7 @@ This folder replaces the root School connected acceptance plan. Each feature has
 For the ordered live run requested on 2026-10-15, use the
 [real browser execution plan](execution-plan.md): authentication and controlled
 [security checks](security.md), then people CRUD, remaining modules and finance.
-It supplements these feature guides; all execution outcomes remain NOT RUN.
+It supplements these feature guides; outcomes are recorded on each feature page.
 
 Source applicability reviewed on 2026-10-15: use the current role inventory and
 viewport-specific landing checks in [Authentication](authentication.md), the
@@ -23,6 +23,7 @@ These corrections establish no production result.
 4. Test the relevant feature below. Read-only smoke and fixture mutations have separate outcomes. Use the same revision and dependent fixtures: academic structure, people, teaching/conduct, finance, then transport/communications. Follow each guide's dependencies.
 5. Run the [shared responsive, locale and accessibility matrix](responsive-accessibility.md) over the selected features.
 6. Record cleanup and remaining [API/database obligations](api-database-boundaries.md). Use [automation and release status](automation-and-release.md) before attempting any old command.
+7. Update each feature page you ran: set its Status line (PASS, PARTIAL or BLOCKED, the serving revision, the date and an evidence link), tick `[x]` every case that passed, and add `Result:` with the outcome to every case you ran. Leave a case unticked when it is BLOCKED, NOT RUN or NOT EXPOSED, and say why. A ledger row alone leaves the checklist reading NOT RUN.
 
 For a single production inspection, record exactly what was checked even if a full local gate is unavailable. Mark the result as **smoke only; promotion blocked** until the preserved prerequisites pass. Never turn a partial observation into whole-feature acceptance.
 

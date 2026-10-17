@@ -1,6 +1,6 @@
 # Reports
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PASS** (2/2 runnable) on `ff7d571`, 2026-10-17; export NOT EXPOSED. Evidence: [PB1020-FIN](../../evidence/production-browser/2026-10-17-pb1020-fin/README.md).
 
 Entry point: `/reports`. Original coverage: G16.
 
@@ -12,9 +12,9 @@ Known financial period and role-scoped fixture totals. Use an identity allowed b
 
 ## Browser checks
 
-- [ ] **reports-R01**: Check academic-year heading and income/expense trend, expense breakdown and collection-by-class charts.
-- [ ] **reports-R02**: Compare totals with supported reads for the same period; distinguish empty results from failed queries.
-- [ ] **reports-R03**: Use filters/export only if exposed; a download must contain the selected scope and authorized fields. Record absent export as not exposed, not passed.
+- [x] **reports-R01**: Check academic-year heading and income/expense trend, expense breakdown and collection-by-class charts. Result: **PASS**.
+- [x] **reports-R02**: Compare totals with supported reads for the same period; distinguish empty results from failed queries. Result: **PASS**.
+- [ ] **reports-R03**: Use filters/export only if exposed; a download must contain the selected scope and authorized fields. Record absent export as not exposed, not passed. Result: **NOT EXPOSED** — the reports page offers no filter or export control.
 
 ## Owned-fixture mutations
 

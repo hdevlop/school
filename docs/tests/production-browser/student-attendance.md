@@ -1,6 +1,6 @@
 # Student attendance
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PASS** (4/4 PASS) on `65b15ec`, 2026-10-17. Evidence: [PB1017](../../evidence/production-browser/2026-10-16-pb1017/README.md).
 
 Entry point: `/attendance/students`. Original coverage: E01.
 
@@ -12,8 +12,8 @@ Owned section roster/date; no real attendance edits. Use an identity allowed by 
 
 ## Browser checks
 
-- [ ] **student-attendance-R01**: Select section/date; roster and saved marks belong to that selection.
-- [ ] **student-attendance-R02**: Change a draft then reset it; saved attendance stays unchanged.
+- [x] **student-attendance-R01**: Select section/date; roster and saved marks belong to that selection. Result: **PASS**.
+- [x] **student-attendance-R02**: Change a draft then reset it; saved attendance stays unchanged. Result: **PASS**.
 
 ## Owned-fixture mutations
 
@@ -23,8 +23,8 @@ Every student in the loaded section/roster must be owned: Save can create defaul
 present marks for unrecorded rows hidden by filters. A mixed roster makes these
 browser save cases BLOCKED; use an owned section or an isolated environment.
 
-- [ ] **student-attendance-M01**: Mark owned students, save once and reload; one persisted mark per student/date remains.
-- [ ] **student-attendance-M02**: Update the mark and switch sections/dates; drafts and results must not leak. Check phone-card parity and role denial.
+- [x] **student-attendance-M01**: Mark owned students, save once and reload; one persisted mark per student/date remains. Result: **PASS**.
+- [x] **student-attendance-M02**: Update the mark and switch sections/dates; drafts and results must not leak. Check phone-card parity and role denial. Result: **PASS**.
 
 ## Finish and evidence
 

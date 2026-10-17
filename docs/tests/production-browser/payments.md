@@ -1,6 +1,6 @@
 # Payments and allocations
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PARTIAL** (1/6 PASS; the rest NOT RUN) on `440c060`, 2026-10-17. Evidence: [PB1018](../../evidence/production-browser/2026-10-17-pb1018/README.md).
 
 Entry point: Student fee payment controls and `/financial-operations` check controls. Original coverage: G04, G06.
 
@@ -14,7 +14,7 @@ Owned charges/installments and explicitly authorized test payments. Use an ident
 
 - [ ] **payments-R01**: Open single/multi-fee payment controls; outstanding amounts and allocation preview reconcile.
 - [ ] **payments-R02**: Inspect cash/bank/check-specific required fields; invalid amounts and missing fields cannot submit.
-- [ ] **payments-R03**: Print an existing completed payment using the saved school receipt language. French has French labels and left-to-right layout; Arabic has Arabic labels and right-to-left layout. The exact school logo, receipt number, student code, total and year allocation remain intact. Check long Arabic/French names and references on 80 mm paper.
+- [x] **payments-R03**: Print an existing completed payment using the saved school receipt language. French has French labels and left-to-right layout; Arabic has Arabic labels and right-to-left layout. The exact school logo, receipt number, student code, total and year allocation remain intact. Check long Arabic/French names and references on 80 mm paper. Result: **PASS** — receipts, fee names, filters and statistics.
 
 ## Owned-fixture mutations
 

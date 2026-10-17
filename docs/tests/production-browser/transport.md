@@ -1,6 +1,6 @@
 # Transport workspace
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PASS** (4/4 PASS) on `65b15ec`, 2026-10-17. Evidence: [PB1017](../../evidence/production-browser/2026-10-16-pb1017/README.md).
 
 Entry point: `/transport`. Original coverage: H07.
 
@@ -12,15 +12,15 @@ Owned vehicle, driver, route and assigned students. Use an identity allowed by t
 
 ## Browser checks
 
-- [ ] **transport-R01**: Open the routes workspace; vehicle panels and assigned student counts reconcile with Students/Vehicles/Drivers.
-- [ ] **transport-R02**: Check unassigned/empty vehicles, search where exposed, and phone layouts.
-- [ ] **transport-R03**: Follow available detail links and verify role denial for forbidden records.
+- [x] **transport-R01**: Open the routes workspace; vehicle panels and assigned student counts reconcile with Students/Vehicles/Drivers. Result: **PASS**.
+- [x] **transport-R02**: Check unassigned/empty vehicles, search where exposed, and phone layouts. Result: **PASS**.
+- [x] **transport-R03**: Follow available detail links and verify role denial for forbidden records. Result: **PASS**.
 
 ## Owned-fixture mutations
 
 Run only within the recorded production fixture scope; otherwise mark these cases BLOCKED.
 
-- [ ] **transport-M01**: Run vehicle assignment and student route checklists, then reload the workspace; all aggregate panels reflect those changes.
+- [x] **transport-M01**: Run vehicle assignment and student route checklists, then reload the workspace; all aggregate panels reflect those changes. Result: **PASS**.
 
 ## Finish and evidence
 
