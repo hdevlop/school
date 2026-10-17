@@ -18,9 +18,11 @@ const ClassForm = ({ classData = null}) => {
 
    const defaultValues = {
       ...(classData?.id && { id: classData.id }),
-      name: classData?.name || 'CE1',
-      level: classData?.level || 'Middle',
-      description: classData?.description || 'asdasd',
+      // A new class starts blank; these held development sample values
+      // ("CE1", "Middle", "asdasd") that a quick Create submitted as real.
+      name: classData?.name ?? '',
+      level: classData?.level ?? '',
+      description: classData?.description ?? '',
    }
 
    const handleSubmit = async (formData) => {
