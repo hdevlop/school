@@ -46,6 +46,7 @@ const PaymentCard = ({ data, feeYear }: { data: any; feeYear?: string }) => {
           iconColor="text-muted-foreground"
           label={t('payments.table.paymentMethod')}
           value={payment.paymentMethod ? t(`payments.methods.${payment.paymentMethod}`) : t('common.notAvailable')}
+          maxChars={32}
         />
 
         {payment.transactionRef && (

@@ -59,6 +59,7 @@ const ExpenseCard = ({ data: expense }) => {
                   label={t('expenses.form.paymentMethod')}
                   value={expense.paymentMethod ? t(`expenses.paymentMethods.${expense.paymentMethod}`) : t('expenses.table.notSpecified')}
                   valueColor="text-foreground font-medium"
+                  maxChars={32}
                />
 
                {expense.invoiceNumber && <NSectionInfo
