@@ -31,13 +31,15 @@ const ReportsPage: React.FC = () => {
         </NPageHeaderActions>
       </NPageHeader>
 
-      {/* Row 1: Income vs Expenses trend (full width) */}
-      <div className="h-[320px]">
+      {/* Row 1: Income vs Expenses trend (full width). shrink-0: in this
+          scrolling column a flex item shrinks, and the chart has no minimum
+          height of its own, so it collapsed to its legend. */}
+      <div className="h-[320px] shrink-0">
         <IncomeExpensesTrend academicYear={year} />
       </div>
 
       {/* Row 2: Expense breakdown + Collection by class */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div className="grid shrink-0 grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="min-h-[460px]">
           <ExpenseBreakdownChart academicYear={year} />
         </div>
