@@ -8,10 +8,13 @@ import { DollarSign, FileText, Calendar, CreditCard, Receipt, Hash, CalendarCloc
 import { useDialog } from '@/shared/useDialog'
 import { useTranslation } from 'najm-i18n/react'
 import { useWatch } from 'react-hook-form'
-import { paymentEditSchema } from '../config/paymentSchemas'
+import { useMemo } from 'react'
+import { createPaymentSchemas } from '../config/paymentSchemas'
 import { buildPaymentMethodOptionsFor } from '../config/paymentOptions'
 
 const PaymentEditForm = ({ payment }) => {
+  const { t } = useTranslation();
+  const paymentEditSchema = useMemo(() => createPaymentSchemas(t).paymentEdit, [t]);
   const { pop } = useDialog();
 
   const defaultValues = {

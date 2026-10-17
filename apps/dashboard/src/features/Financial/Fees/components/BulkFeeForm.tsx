@@ -7,7 +7,7 @@ import { useEffect, useMemo } from 'react'
 import { IdCard, User, DollarSign, CalendarClock, CalendarDays, BadgeMinus, Wallet } from 'lucide-react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { Label } from 'najm-kit';import { Badge } from 'najm-kit';import { useTranslation } from 'najm-i18n/react'
-import { bulkFeeFormSchema } from '../config/feeSchemas'
+import { createFeeSchemas } from '../config/feeSchemas'
 import { buildScheduleOptions } from '../config/feeOptions'
 import { useDialog } from '@/shared/useDialog'
 import { getFeeTypeDisplayName, injectStudentIdToFees } from '../utils/feeUtils'
@@ -214,6 +214,7 @@ export const BulkFeeFormContent = ({
 // ==================== MAIN FORM ====================
 const BulkFeeForm = ({ students = [], feeTypes = [] }) => {
    const { t } = useTranslation()
+   const bulkFeeFormSchema = useMemo(() => createFeeSchemas(t).bulkFeeForm, [t])
    const { pop } = useDialog()
 
    const handleSubmit = async (feeData) => {

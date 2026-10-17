@@ -7,11 +7,14 @@ import { useTranslation } from 'najm-i18n/react'
 import { useDialog } from '@/shared/useDialog'
 import { localDateInput } from 'najm-kit/format'
 import { buildPaymentMethodOptions } from '@/features/Financial/Payment/config/paymentOptions'
-import { expensePaymentSchema } from '../config/expenseSchemas'
+import { useMemo } from 'react'
+import { createExpenseSchemas } from '../config/expenseSchemas'
 
 /** Records the payment of an approved expense through its payment route. */
 const ExpensePaymentForm = ({ expense }) => {
   const { pop } = useDialog()
+  const { t } = useTranslation()
+  const expensePaymentSchema = useMemo(() => createExpenseSchemas(t).payment, [t])
   const defaultValues = {
     paymentMethod: expense?.paymentMethod || 'cash',
     paymentDate: localDateInput(),

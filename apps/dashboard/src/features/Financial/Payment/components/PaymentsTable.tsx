@@ -1,7 +1,8 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NButton, NEmptyState } from 'najm-kit';
+import { NButton, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { usePayments } from '../hooks/usePayments';
@@ -34,6 +35,8 @@ function PaymentsTable({studentId}) {
     studentPayments,
     isPaymentsLoading,
     isStudentPaymentsLoading,
+    error: paymentsError,
+    studentPaymentsError,
     isUpdating,
     updatePayment,
     refetch,
@@ -43,6 +46,7 @@ function PaymentsTable({studentId}) {
 
   const data = studentId ? studentPayments : payments;
   const isLoading = studentId ? isStudentPaymentsLoading : isPaymentsLoading;
+  const error = studentId ? studentPaymentsError : paymentsError;
 
   const handlePrint = (payment) => {
     printReceipt({
@@ -153,6 +157,12 @@ function PaymentsTable({studentId}) {
       onEdit={handleEdit}
       onDelete={handleDelete}
       loading={isLoading}
+      error={hasFailedToLoad(error, data) ? error : null}
+      renderError={(currentError) => (
+        isAuthorizationError(currentError)
+          ? <NForbiddenState surface="panel" />
+          : <NErrorState surface="panel" />
+      )}
       renderCard={(props: any) => <PaymentCard {...props} feeYear={feeYear} />}
       renderEmpty={() => (
         <NEmptyState

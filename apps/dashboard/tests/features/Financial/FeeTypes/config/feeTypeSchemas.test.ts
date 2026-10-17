@@ -2,7 +2,9 @@ import { describe, expect, it } from 'bun:test';
 import { FEE_CATEGORY_VALUES, FEE_TYPE_STATUS_VALUES, PAYMENT_TYPE_VALUES } from '@sms/contracts';
 
 import { buildFeeCategoryOptionsFor, buildPaymentTypeOptions } from '@/features/Financial/FeeTypes/config/feeTypeOptions';
-import { feeTypeSchema } from '@/features/Financial/FeeTypes/config/feeTypeSchemas';
+import { createFeeTypeSchema } from '@/features/Financial/FeeTypes/config/feeTypeSchemas';
+
+const feeTypeSchema = createFeeTypeSchema((key: string) => key);
 
 const echo = (key: string) => key;
 

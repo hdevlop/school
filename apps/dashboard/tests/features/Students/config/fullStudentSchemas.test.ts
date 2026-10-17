@@ -1,10 +1,15 @@
 import { describe, expect, it } from 'bun:test';
 
-import { feesSchema } from '@/features/Financial/Fees/config/feeSchemas';
 import { parentsSchema } from '@/features/Parents/config/parentSchemas';
 
-import { fullStudentSchema, studentWithoutFeesSchema, studentWithTransportSchema } from '@/features/Students/config/fullStudentSchemas';
+import { createFullStudentSchemas, studentWithTransportSchema } from '@/features/Students/config/fullStudentSchemas';
 import { studentSchema } from '@/features/Students/config/studentSchemas';
+
+const {
+  fees: feesSchema,
+  fullStudent: fullStudentSchema,
+  studentWithoutFees: studentWithoutFeesSchema,
+} = createFullStudentSchemas((key: string) => key);
 
 const somewhere = { address: '12 Rue des Écoles', latitude: 33.57, longitude: -7.59 };
 

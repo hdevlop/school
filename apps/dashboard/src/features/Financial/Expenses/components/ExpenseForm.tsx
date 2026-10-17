@@ -7,16 +7,20 @@ import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { DollarSign, FileText, Layers, Calendar, CreditCard, Receipt, Hash, Activity } from 'lucide-react'
 import { useDialog } from '@/shared/useDialog'
 import { useTranslation } from 'najm-i18n/react'
-import { expenseSchema } from '../config/expenseSchemas'
+import { useMemo } from 'react'
+import { createExpenseSchemas } from '../config/expenseSchemas'
 import { buildEditableExpenseStatusOptions, buildExpenseCategoryOptions } from '../config/expenseOptions'
 import { buildPaymentMethodOptions } from '@/features/Financial/Payment/config/paymentOptions'
 import { useWatch } from 'react-hook-form'
 
 // Payment dates are recorded in the payment workflow; this form uses one date and receipt reference.
-const expenseFormSchema = expenseSchema.omit({ paymentDate: true, invoiceNumber: true });
-
 const ExpenseForm = ({ expense = null }) => {
    const { pop } = useDialog();
+   const { t } = useTranslation();
+   const expenseFormSchema = useMemo(
+      () => createExpenseSchemas(t).expense.omit({ paymentDate: true, invoiceNumber: true }),
+      [t],
+   );
    const isEdit = Boolean(expense?.id);
 
    const defaultValues = {

@@ -19,7 +19,7 @@ export const usePayments = (options?) => {
 
   const { data: payments, isLoading: isPaymentsLoading, isError, error, refetch } = useYearScopedList({ resource: 'payments', fetch: paymentApi.getAllPaymentsApi, enabled: enabled });
   const { data: payment, isLoading: isPaymentLoading } = crud.useGetById(paymentId, !!paymentId);
-  const { data: studentPayments, isLoading: isStudentPaymentsLoading } = crud.useGetByParam('student', studentId, !!studentId);
+  const { data: studentPayments, isLoading: isStudentPaymentsLoading, error: studentPaymentsError } = crud.useGetByParam('student', studentId, !!studentId);
   const { data: feePayments, isLoading: isFeePaymentsLoading } = crud.useGetByParam('fee', feeId, !!feeId);
   const { mutateAsync: createPayment, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updatePayment, isLoading: isUpdating } = crud.useUpdate();
@@ -35,6 +35,7 @@ export const usePayments = (options?) => {
     // Status
     isError,
     error,
+    studentPaymentsError,
     refetch,
 
     // Query Functions

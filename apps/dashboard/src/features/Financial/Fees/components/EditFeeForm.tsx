@@ -7,8 +7,8 @@ import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { DollarSign, FileText, Tag, CalendarClock, BadgeMinus, Activity, Wallet } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
 import { useFormContext, useWatch } from 'react-hook-form'
-import { useCallback, useEffect } from 'react'
-import { feeSchema } from '../config/feeSchemas'
+import { useCallback, useEffect, useMemo } from 'react'
+import { createFeeSchemas } from '../config/feeSchemas'
 import { buildFeeStatusOptions, buildScheduleOptions } from '../config/feeOptions'
 import { useDialog } from '@/shared/useDialog'
 import { calculateFeeAmounts, getFeeDiscountPerPeriod, getFeeTypeDisplayName } from '@/features/Financial/Fees/utils/feeUtils'
@@ -17,6 +17,8 @@ import { usePrefix } from 'najm-kit';
 
 const EditFeeForm = ({ fee, feeTypes = [] }) => {
    const { pop } = useDialog();
+   const { t } = useTranslation();
+   const feeSchema = useMemo(() => createFeeSchemas(t).fee, [t]);
 
    const defaultValues = {
       id: fee?.id || undefined,

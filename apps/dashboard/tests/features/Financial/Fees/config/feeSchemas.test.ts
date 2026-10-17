@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'bun:test';
 import { SCHEDULE_VALUES } from '@sms/contracts';
 
-import {
-  bulkFeeFormSchema,
-  classBulkFeeFormSchema,
-  feeSchema,
-  feesSchema,
-} from '@/features/Financial/Fees/config/feeSchemas';
+import { createFeeSchemas } from '@/features/Financial/Fees/config/feeSchemas';
+
+const {
+  bulkFeeForm: bulkFeeFormSchema,
+  classBulkFeeForm: classBulkFeeFormSchema,
+  fee: feeSchema,
+  fees: feesSchema,
+} = createFeeSchemas((key: string) => key);
 
 const item = { feeTypeId: 'ft1', schedule: 'monthly' };
 const fee = { studentId: 'st1', ...item };

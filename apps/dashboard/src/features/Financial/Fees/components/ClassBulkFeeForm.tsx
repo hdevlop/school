@@ -6,7 +6,7 @@ import { FormInput } from 'najm-kit';
 import { GraduationCap, LayoutGrid, Tag, CalendarClock, DollarSign, BadgeMinus, FileText } from 'lucide-react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { Label } from 'najm-kit';import { Badge } from 'najm-kit';import { useTranslation } from 'najm-i18n/react'
-import { classBulkFeeFormSchema } from '../config/feeSchemas'
+import { createFeeSchemas } from '../config/feeSchemas'
 import { buildScheduleOptions } from '../config/feeOptions'
 import { useDialog } from '@/shared/useDialog'
 import { calculateFeeAmounts, buildInstallmentsPreview, getFeeTypeDisplayName } from '@/features/Financial/Fees/utils/feeUtils'
@@ -61,6 +61,8 @@ const StudentCount = ({ classId, sectionId, academicYear, effectiveDate }) => {
 
 const ClassBulkFeeForm = ({ classes = [], feeTypes = [] }) => {
    const { pop } = useDialog()
+   const { t } = useTranslation()
+   const classBulkFeeFormSchema = useMemo(() => createFeeSchemas(t).classBulkFeeForm, [t])
    const { viewingYear } = useViewingAcademicYear()
    const yearCalendar = useViewingYearCalendar()
 

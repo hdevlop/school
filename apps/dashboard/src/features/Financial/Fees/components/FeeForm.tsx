@@ -1,18 +1,19 @@
 'use client'
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import { NForm } from 'najm-kit';
 import { FormInput } from 'najm-kit';
 import { User } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
 import { useDialog } from '@/shared/useDialog'
-import { bulkFeeFormSchema } from '../config/feeSchemas'
+import { createFeeSchemas } from '../config/feeSchemas'
 import { BulkFeeFormContent } from './BulkFeeForm'
 import { injectStudentIdToFees } from '../utils/feeUtils'
 import SimpleFeeForm from './EditFeeForm'
 
 const FeeForm = ({ fee = null, students = [], feeTypes = [] }) => {
    const { t } = useTranslation()
+   const bulkFeeFormSchema = useMemo(() => createFeeSchemas(t).bulkFeeForm, [t])
    const { pop } = useDialog()
 
    if (fee) {

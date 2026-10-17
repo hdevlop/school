@@ -2076,7 +2076,8 @@
       "paid": "Payé",
       "rate": "Taux",
       "students": "{{count}} élève(s)",
-      "class": "Classe"
+      "class": "Classe",
+      "studentsColumn": "Élèves"
     }
   },
   "attendance": {
@@ -2341,11 +2342,15 @@
     },
     "validation": {
       "titleRequired": "Le titre de la dépense est obligatoire",
-      "titleMinLength": "Le titre doit contenir au moins 2 caractères",
+      "titleMinLength": "Le titre doit contenir au moins 3 caractères",
       "categoryRequired": "La catégorie est obligatoire",
       "amountRequired": "Le montant est obligatoire",
       "amountPositive": "Le montant doit être supérieur à 0",
-      "expenseDateRequired": "La date de dépense est obligatoire"
+      "expenseDateRequired": "La date de dépense est obligatoire",
+      "tooLong": "Ce texte est trop long",
+      "dateInvalid": "Saisissez une date valide",
+      "amountTooLarge": "Ce montant est trop élevé",
+      "checkNumberRequired": "Saisissez le numéro du chèque"
     },
     "actions": {
       "approve": "Approuver",
@@ -2592,6 +2597,18 @@
       "paidGroup": "Payés ({{count}})",
       "remaining": "Reste à payer",
       "overdueAmount": "En retard"
+    },
+    "validation": {
+      "required": "Ce champ est obligatoire",
+      "tooLong": "Ce texte est trop long",
+      "dateInvalid": "Saisissez une date valide",
+      "academicYearInvalid": "Saisissez l’année scolaire au format AAAA-AAAA",
+      "amountInvalid": "Saisissez un montant valide",
+      "baseAmountPositive": "Le montant doit être supérieur à 0",
+      "discountNegative": "La remise ne peut pas être négative",
+      "feesRequired": "Ajoutez au moins un frais",
+      "chargeDateRequired": "Choisissez la date de la liste de classe dans cette année scolaire",
+      "chargeDateInTerm": "Choisissez une date de facturation entre septembre et juin"
     }
   },
   "behaviorRewards": {
@@ -3570,6 +3587,13 @@
       "notFound": "Type de frais introuvable",
       "invalidAmount": "Le montant doit être supérieur à 0",
       "amountTooLarge": "Le montant ne peut pas dépasser 1 000 000"
+    },
+    "validation": {
+      "nameMinLength": "Le nom doit contenir au moins 2 caractères",
+      "tooLong": "Ce texte est trop long",
+      "amountRequired": "Le montant est obligatoire",
+      "amountPositive": "Le montant doit être supérieur à 0",
+      "amountTooLarge": "Ce montant est trop élevé"
     }
   },
   "grades": {
@@ -4047,6 +4071,16 @@
       "payAllOverdue": "Payer tout le retard ({{amount}})",
       "oldestFirst": "Plus anciens d’abord",
       "clearAll": "Tout effacer"
+    },
+    "validation": {
+      "tooLong": "Ce texte est trop long",
+      "dateInvalid": "Saisissez une date valide",
+      "amountInvalid": "Saisissez un montant valide",
+      "amountPositive": "Le montant doit être supérieur à 0",
+      "amountTooLarge": "Ce montant est trop élevé",
+      "checkNumberRequired": "Saisissez le numéro du chèque",
+      "checkDueDateRequired": "Saisissez la date d’échéance du chèque",
+      "paymentDateRequired": "Saisissez la date du paiement"
     }
   },
   "sections": {

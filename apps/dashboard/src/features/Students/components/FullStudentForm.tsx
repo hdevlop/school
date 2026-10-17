@@ -8,10 +8,9 @@ import type { StepConfig } from 'najm-kit'
 import { Loader2 } from 'lucide-react'
 import { getStudentDefaultValues, StudentFormContent } from './SimpleStudentForm'
 import { BulkParentFormContent } from '@/features/Parents/components/BulkParentForm'
-import { fullStudentSchema, studentWithoutFeesSchema, studentWithTransportSchema } from '../config/fullStudentSchemas'
+import { createFullStudentSchemas, studentWithTransportSchema } from '../config/fullStudentSchemas'
 import { firstYearEnrolledOn } from '../config/newStudentEnrollment'
 import { parentsSchema } from '@/features/Parents/config/parentSchemas'
-import { feesSchema } from '@/features/Financial/Fees/config/feeSchemas'
 import { transportSchema } from '@/features/Transport/config/transportSchemas'
 import { BulkFeeFormContent } from '@/features/Financial/Fees/components/BulkFeeForm'
 import { FeeFactory } from '@/features/Financial/Fees/utils/feeUtils'
@@ -37,7 +36,8 @@ const FullStudentForm = ({
   const { isSchoolWide, can } = useViewerRole()
   const canCreateFees = isSchoolWide && can('create:fees')
   const canAssignTransport = isSchoolWide && can('create:student-routes')
-  const formSchema = canCreateFees ? fullStudentSchema : studentWithoutFeesSchema
+  const { fees: feesSchema, fullStudent, studentWithoutFees } = useMemo(() => createFullStudentSchemas(t), [t])
+  const formSchema = canCreateFees ? fullStudent : studentWithoutFees
   const [transportSelected, setTransportSelected] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const submissionPromiseRef = useRef<Promise<unknown> | null>(null)
@@ -106,7 +106,7 @@ const FullStudentForm = ({
         <StudentTransportFormContent feeTypes={feeTypes} />
       ),
     }] : []),
-  ], [canCreateFees, canAssignTransport, classes, feeTypes, feesStepTitle, parentsStepTitle, studentStepTitle, transportSelected, transportStepTitle])
+  ], [canCreateFees, canAssignTransport, classes, feeTypes, feesSchema, feesStepTitle, parentsStepTitle, studentStepTitle, transportSelected, transportStepTitle])
 
   const defaultValues = useMemo(() => ({
     ...initialStudentValues,

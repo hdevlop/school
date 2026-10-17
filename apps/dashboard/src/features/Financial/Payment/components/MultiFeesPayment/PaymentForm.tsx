@@ -1,57 +1,21 @@
 'use client'
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { NForm } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { FormInput } from 'najm-kit';
 import { DollarSign, CreditCard, Calendar, Hash, CalendarClock, FileText } from 'lucide-react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { feePaymentSchema } from '../../config/paymentSchemas';
+import { createPaymentSchemas } from '../../config/paymentSchemas';
 import { buildDeskPaymentMethodOptions } from '../../config/paymentOptions';
 import { usePaymentStore } from '../../store/paymentStore';
 import { toast } from 'sonner';
-import { z } from 'zod';
 import { useTranslation } from 'najm-i18n/react';
-
-const paymentDetailsSchema = feePaymentSchema.pick({
-    amount: true,
-    paymentMethod: true,
-    paymentDate: true,
-    transactionRef: true,
-    notes: true,
-}).extend({
-    checkNumber: z.string().optional().or(z.literal('')),
-    checkDueDate: z.string().optional().or(z.literal('')),
-    checkBank: z.string().optional().or(z.literal('')),
-}).refine(
-    (data) => {
-        // Only validate check fields if payment method is check
-        if (data.paymentMethod === 'check') {
-            return data.checkNumber && data.checkNumber.trim() !== '';
-        }
-        return true;
-    },
-    {
-        message: 'Check number is required when payment method is check',
-        path: ['checkNumber'],
-    }
-).refine(
-    (data) => {
-        // Only validate check due date if payment method is check
-        if (data.paymentMethod === 'check') {
-            return data.checkDueDate && /^\d{4}-\d{2}-\d{2}$/.test(data.checkDueDate);
-        }
-        return true;
-    },
-    {
-        message: 'Check due date is required when payment method is check',
-        path: ['checkDueDate'],
-    }
-);
 
 export const PaymentForm = ({ studentId }) => {
     const { t } = useTranslation();
+    const paymentDetailsSchema = useMemo(() => createPaymentSchemas(t).details, [t]);
     const { pop } = useDialog();
     const paymentDetails = usePaymentStore((state) => state.paymentDetails);
     const selectedInstallments = usePaymentStore((state) => state.selectedInstallments);

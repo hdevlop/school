@@ -1,7 +1,8 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NEmptyState, NButton, NErrorState, NForbiddenState } from 'najm-kit';
+import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Receipt, Plus, SearchX, Eye, Pencil, Trash2, Check, X, Banknote } from 'lucide-react';
@@ -27,6 +28,7 @@ function ExpensesTable() {
 
   const {
     expenses,
+    error,
     academicYear,
     createExpense,
     updateExpense,
@@ -154,7 +156,7 @@ function ExpensesTable() {
       <NPageHeader
         icon={Receipt}
         title={t('navigation.expenses')}
-        subtitle={t('expenses.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, expenses, isExpensesLoading) ? undefined : t('expenses.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -172,6 +174,12 @@ function ExpensesTable() {
         onDelete={handleDelete}
         menu={{ row: rowMenu }}
         loading={isExpensesLoading}
+        error={hasFailedToLoad(error, expenses) ? error : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         renderCard={ExpenseCard}
         addButtonText={t('expenses.dialogs.createButton')}
         renderEmpty={() => (

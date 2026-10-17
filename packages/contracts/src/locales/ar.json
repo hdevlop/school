@@ -1886,6 +1886,18 @@
       "paidGroup": "مدفوعة ({{count}})",
       "remaining": "المتبقي",
       "overdueAmount": "متأخر"
+    },
+    "validation": {
+      "required": "هذا الحقل مطلوب",
+      "tooLong": "هذا النص طويل جدًا",
+      "dateInvalid": "أدخل تاريخًا صحيحًا",
+      "academicYearInvalid": "أدخل السنة الدراسية بصيغة YYYY-YYYY",
+      "amountInvalid": "أدخل مبلغًا صحيحًا",
+      "baseAmountPositive": "يجب أن يكون المبلغ أكبر من 0",
+      "discountNegative": "لا يمكن أن يكون الخصم سالبًا",
+      "feesRequired": "أضف رسمًا واحدًا على الأقل",
+      "chargeDateRequired": "اختر تاريخ لائحة القسم في هذه السنة الدراسية",
+      "chargeDateInTerm": "اختر تاريخ فوترة بين شتنبر ويونيو"
     }
   },
   "behaviorRewards": {
@@ -2864,6 +2876,16 @@
       "recordPayment": "تسجيل الدفع",
       "rejectReason": "سبب رفض هذا المصروف (10 أحرف على الأقل)",
       "paymentTitle": "تسجيل دفع المصروف"
+    },
+    "validation": {
+      "tooLong": "هذا النص طويل جدًا",
+      "dateInvalid": "أدخل تاريخًا صحيحًا",
+      "categoryRequired": "الفئة مطلوبة",
+      "titleMinLength": "يجب أن يتكون العنوان من 3 أحرف على الأقل",
+      "amountRequired": "المبلغ مطلوب",
+      "amountPositive": "يجب أن يكون المبلغ أكبر من 0",
+      "amountTooLarge": "هذا المبلغ كبير جدًا",
+      "checkNumberRequired": "أدخل رقم الشيك"
     }
   },
   "feeTypes": {
@@ -2936,6 +2958,13 @@
       "notFound": "نوع الرسوم غير موجود",
       "invalidAmount": "يجب أن يكون المبلغ أكبر من 0",
       "amountTooLarge": "لا يمكن أن يتجاوز المبلغ 1,000,000"
+    },
+    "validation": {
+      "nameMinLength": "يجب أن يتكون الاسم من حرفين على الأقل",
+      "tooLong": "هذا النص طويل جدًا",
+      "amountRequired": "المبلغ مطلوب",
+      "amountPositive": "يجب أن يكون المبلغ أكبر من 0",
+      "amountTooLarge": "هذا المبلغ كبير جدًا"
     }
   },
   "grades": {
@@ -3413,6 +3442,16 @@
       "payAllOverdue": "دفع كل المتأخرات ({{amount}})",
       "oldestFirst": "الأقدم أولًا",
       "clearAll": "مسح الكل"
+    },
+    "validation": {
+      "tooLong": "هذا النص طويل جدًا",
+      "dateInvalid": "أدخل تاريخًا صحيحًا",
+      "amountInvalid": "أدخل مبلغًا صحيحًا",
+      "amountPositive": "يجب أن يكون المبلغ أكبر من 0",
+      "amountTooLarge": "هذا المبلغ كبير جدًا",
+      "checkNumberRequired": "أدخل رقم الشيك",
+      "checkDueDateRequired": "أدخل تاريخ استحقاق الشيك",
+      "paymentDateRequired": "أدخل تاريخ الدفع"
     }
   },
   "reports": {
@@ -3435,8 +3474,9 @@
       "noData": "لا توجد بيانات",
       "paid": "مدفوع",
       "rate": "النسبة",
-      "students": "التلاميذ",
-      "title": "العنوان"
+      "students": "{{count}} تلميذ",
+      "title": "نسبة التحصيل حسب القسم",
+      "studentsColumn": "التلاميذ"
     },
     "reminders": {
       "daysOverdue": "أيام التأخر",

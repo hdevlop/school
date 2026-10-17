@@ -113,7 +113,7 @@ const CollectionByClassChart: React.FC<Props> = ({ academicYear, className = '' 
                 <th className="text-right py-1 font-medium">{t('reports.collection.due')}</th>
                 <th className="text-right py-1 font-medium">{t('reports.collection.paid')}</th>
                 <th className="text-right py-1 font-medium">{t('reports.collection.rate')}</th>
-                <th className="text-right py-1 font-medium">{t('students.title')}</th>
+                <th className="text-right py-1 font-medium">{t('reports.collection.studentsColumn')}</th>
               </tr>
             </thead>
             <tbody>

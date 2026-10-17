@@ -1,7 +1,8 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NEmptyState, NButton, NErrorState, NForbiddenState } from 'najm-kit';
+import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Tag, Plus, SearchX } from 'lucide-react';
@@ -23,6 +24,7 @@ function FeeTypesTable() {
 
   const {
     feeTypes,
+    error,
     createFeeType,
     updateFeeType,
     deleteFeeType,
@@ -93,7 +95,7 @@ function FeeTypesTable() {
       <NPageHeader
         icon={Tag}
         title={t('navigation.feeTypes')}
-        subtitle={t('feeTypes.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, feeTypes, isFeeTypesLoading) ? undefined : t('feeTypes.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -110,6 +112,12 @@ function FeeTypesTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isFeeTypesLoading}
+        error={hasFailedToLoad(error, feeTypes) ? error : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         renderCard={FeeTypeCard}
         addButtonText={t('feeTypes.dialogs.createButton')}
         renderEmpty={() => (

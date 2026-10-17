@@ -20,7 +20,7 @@ import { useFeeTypes } from "@/features/Financial/FeeTypes/hooks/useFeeTypes";
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from "@/features/Financial/Payment/store/paymentStore";
 import { useSchoolFormat } from "@/hooks/useSchoolFormat";
 import { FeeTypeDialogContent } from "@/features/Financial/FeeTypes/components/FeeTypeDialog";
-import { feesSchema } from "@/features/Financial/Fees/config/feeSchemas";
+import { createFeeSchemas } from "@/features/Financial/Fees/config/feeSchemas";
 import { sortFeesByCategory } from "@/features/Financial/Fees/config/feeOrder";
 import { FeeFactory, withFeeYear } from "@/features/Financial/Fees/utils/feeUtils";
 import { useActiveAcademicYear } from "@/features/Settings/hooks/useSettings";
@@ -234,7 +234,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
         <SelectStudentFeeTypes
           feeTypes={addableFeeTypes}
           onAdd={async (selectedIds) => {
-            const { fees } = feesSchema.parse(withFeeYear({
+            const { fees } = createFeeSchemas(t).fees.parse(withFeeYear({
               fees: addableFeeTypes
                 .filter((feeType) => selectedIds.includes(feeType.id))
                 .map((feeType) => ({

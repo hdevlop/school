@@ -1872,6 +1872,18 @@
       "paidGroup": "Pagados ({{count}})",
       "remaining": "Pendiente",
       "overdueAmount": "Vencido"
+    },
+    "validation": {
+      "required": "Este campo es obligatorio",
+      "tooLong": "Este texto es demasiado largo",
+      "dateInvalid": "Introduce una fecha válida",
+      "academicYearInvalid": "Introduce el curso escolar con el formato AAAA-AAAA",
+      "amountInvalid": "Introduce un importe válido",
+      "baseAmountPositive": "El importe debe ser mayor que 0",
+      "discountNegative": "El descuento no puede ser negativo",
+      "feesRequired": "Añade al menos una cuota",
+      "chargeDateRequired": "Elige la fecha de la lista de clase en este curso escolar",
+      "chargeDateInTerm": "Elige una fecha de cobro entre septiembre y junio"
     }
   },
   "behaviorRewards": {
@@ -2850,6 +2862,16 @@
       "recordPayment": "Registrar pago",
       "rejectReason": "Motivo del rechazo de este gasto (al menos 10 caracteres)",
       "paymentTitle": "Registrar el pago del gasto"
+    },
+    "validation": {
+      "tooLong": "Este texto es demasiado largo",
+      "dateInvalid": "Introduce una fecha válida",
+      "categoryRequired": "La categoría es obligatoria",
+      "titleMinLength": "El título debe tener al menos 3 caracteres",
+      "amountRequired": "El importe es obligatorio",
+      "amountPositive": "El importe debe ser mayor que 0",
+      "amountTooLarge": "Este importe es demasiado alto",
+      "checkNumberRequired": "Introduce el número del cheque"
     }
   },
   "feeTypes": {
@@ -2922,6 +2944,13 @@
       "notFound": "Tipo de cuota no encontrado",
       "invalidAmount": "El importe debe ser mayor que 0",
       "amountTooLarge": "El importe no puede superar 1.000.000"
+    },
+    "validation": {
+      "nameMinLength": "El nombre debe tener al menos 2 caracteres",
+      "tooLong": "Este texto es demasiado largo",
+      "amountRequired": "El importe es obligatorio",
+      "amountPositive": "El importe debe ser mayor que 0",
+      "amountTooLarge": "Este importe es demasiado alto"
     }
   },
   "grades": {
@@ -3399,6 +3428,16 @@
       "payAllOverdue": "Pagar todo lo vencido ({{amount}})",
       "oldestFirst": "Más antiguas primero",
       "clearAll": "Borrar todo"
+    },
+    "validation": {
+      "tooLong": "Este texto es demasiado largo",
+      "dateInvalid": "Introduce una fecha válida",
+      "amountInvalid": "Introduce un importe válido",
+      "amountPositive": "El importe debe ser mayor que 0",
+      "amountTooLarge": "Este importe es demasiado alto",
+      "checkNumberRequired": "Introduce el número del cheque",
+      "checkDueDateRequired": "Introduce la fecha de vencimiento del cheque",
+      "paymentDateRequired": "Introduce la fecha del pago"
     }
   },
   "reports": {
@@ -3421,8 +3460,9 @@
       "noData": "No hay datos disponibles",
       "paid": "Pagado",
       "rate": "Tasa",
-      "students": "Estudiantes",
-      "title": "Título"
+      "students": "{{count}} estudiante(s)",
+      "title": "Tasa de cobro por clase",
+      "studentsColumn": "Estudiantes"
     },
     "reminders": {
       "daysOverdue": "Días de retraso",

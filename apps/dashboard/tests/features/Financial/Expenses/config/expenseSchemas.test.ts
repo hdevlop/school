@@ -2,9 +2,10 @@ import { describe, expect, it } from 'bun:test';
 import { EXPENSE_CATEGORY_VALUES, EXPENSE_STATUS_VALUES } from '@sms/contracts';
 
 import { buildEditableExpenseStatusOptions, buildExpenseCategoryOptions, buildExpenseStatusOptions } from '@/features/Financial/Expenses/config/expenseOptions';
-import { expenseSchema } from '@/features/Financial/Expenses/config/expenseSchemas';
+import { createExpenseSchemas } from '@/features/Financial/Expenses/config/expenseSchemas';
 
 const echo = (key: string) => key;
+const { expense: expenseSchema, payment: expensePaymentSchema } = createExpenseSchemas(echo);
 
 const expense = {
   category: 'utilities',
@@ -83,5 +84,18 @@ describe('expense edit status select', () => {
     expect(values('paid')).toEqual(['paid']);
     expect(values('rejected')).toEqual(['rejected']);
     expect(values('cancelled')).toEqual(['cancelled']);
+  });
+});
+
+// A French page showed Zod's and the schema's English messages.
+describe('expense messages', () => {
+  const message = (result: { success: boolean; error?: { issues: { message: string }[] } }) => result.error?.issues[0]?.message;
+
+  it('names every refusal by a catalog key', () => {
+    expect(message(expenseSchema.safeParse({ ...expense, title: 'ab' }))).toBe('expenses.validation.titleMinLength');
+    expect(message(expenseSchema.safeParse({ ...expense, amount: '' }))).toBe('expenses.validation.amountRequired');
+    expect(message(expenseSchema.safeParse({ ...expense, amount: 0 }))).toBe('expenses.validation.amountPositive');
+    expect(message(expensePaymentSchema.safeParse({ paymentMethod: 'check', paymentDate: '2026-03-02', checkNumber: ' ' })))
+      .toBe('expenses.validation.checkNumberRequired');
   });
 });

@@ -2,23 +2,8 @@ import { z } from 'zod';
 import { SCHEDULE_VALUES } from '@sms/contracts';
 import { defaultSchoolYearCalendar, isDateOnly, parseSchoolYearLabel } from '@sms/contracts/academic-years';
 
-const optionalId = z.preprocess(
-  (value) => (value === '' ? undefined : value),
-  z.string().min(1, 'ID cannot be empty').nullish().optional(),
-);
-const requiredId = z.preprocess(
-  (value) => value ?? '',
-  z.string().min(1, 'ID is required'),
-);
-const optionalDateField = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
-  .nullable()
-  .optional();
-const academicYearField = z
-  .string()
-  .min(9, 'Academic year is required')
-  .regex(/^\d{4}-\d{4}$/, 'Academic year must be in YYYY-YYYY format');
+type T = (key: string) => string;
+
 const numberField = (schema: z.ZodNumber): any =>
   z.preprocess((value) => {
     if (typeof value !== 'string') return value;
@@ -31,18 +16,10 @@ const optionalNumberField = (schema: z.ZodNumber): any =>
   z.preprocess((value) => (value === null ? undefined : value), numberField(schema).optional());
 
 /**
- * A discount left empty is no discount. A cleared number field reports
- * `undefined`, which an optional field would drop from the payload, and on an
- * edit a dropped discount keeps the old one while the form shows none.
- */
-const discountField = () =>
-  z.preprocess(
-    (value) => (value === undefined || value === null || (typeof value === 'string' && value.trim() === '') ? 0 : value),
-    numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Discount cannot be negative')),
-  );
-
-/**
  * Fees owed by a student.
+ *
+ * They take `t` so a refused field reads in the page's language; Zod's own
+ * defaults are English.
  *
  * Four shapes, deliberately kept apart even though they overlap, because the
  * four screens answer different questions:
@@ -57,67 +34,96 @@ const discountField = () =>
  * form neither sends nor owns them. The edit dialog does show a status select,
  * and this schema quietly drops what it submits — see `feeOptions.ts`.
  */
-export const feeSchema = z.object({
-  id: optionalId,
-  studentId: requiredId,
-  feeTypeId: requiredId,
-  academicYear: academicYearField.optional(),
-  effectiveDate: optionalDateField,
-  schedule: z.enum(SCHEDULE_VALUES),
-  baseAmount: optionalNumberField(z.number({ error: 'Must be a valid number' }).positive('Base amount must be positive')),
-  discountAmount: discountField(),
-  discountReason: z.string().max(500, 'Discount reason too long').optional().nullable(),
-  assignedBy: optionalId.nullable(),
-  notes: z.string().max(1000, 'Notes too long').optional().nullable(),
-});
+export const createFeeSchemas = (t: T) => {
+  const required = t('fees.validation.required');
+  const tooLong = t('fees.validation.tooLong');
+  const optionalId = z.preprocess(
+    (value) => (value === '' ? undefined : value),
+    z.string().min(1).nullish().optional(),
+  );
+  const requiredId = z.preprocess(
+    (value) => value ?? '',
+    z.string({ error: required }).min(1, required),
+  );
+  const optionalDateField = z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, t('fees.validation.dateInvalid'))
+    .nullable()
+    .optional();
+  const academicYearField = z
+    .string()
+    .min(9, required)
+    .regex(/^\d{4}-\d{4}$/, t('fees.validation.academicYearInvalid'));
+  const baseAmountField = () => optionalNumberField(
+    z.number({ error: t('fees.validation.amountInvalid') }).positive(t('fees.validation.baseAmountPositive')),
+  );
+  /**
+   * A discount left empty is no discount. A cleared number field reports
+   * `undefined`, which an optional field would drop from the payload, and on an
+   * edit a dropped discount keeps the old one while the form shows none.
+   */
+  const discountField = () =>
+    z.preprocess(
+      (value) => (value === undefined || value === null || (typeof value === 'string' && value.trim() === '') ? 0 : value),
+      numberField(z.number({ error: t('fees.validation.amountInvalid') }).min(0, t('fees.validation.discountNegative'))),
+    );
+  const schedule = z.enum(SCHEDULE_VALUES, { error: required });
 
-/** One line of a bulk list: the student is named once, above the list. */
-export const bulkFeeItemSchema = feeSchema.omit({ studentId: true });
+  const fee = z.object({
+    id: optionalId,
+    studentId: requiredId,
+    feeTypeId: requiredId,
+    academicYear: academicYearField.optional(),
+    effectiveDate: optionalDateField,
+    schedule,
+    baseAmount: baseAmountField(),
+    discountAmount: discountField(),
+    discountReason: z.string().max(500, tooLong).optional().nullable(),
+    assignedBy: optionalId.nullable(),
+    notes: z.string().max(1000, tooLong).optional().nullable(),
+  });
 
-export const bulkFeeFormSchema = z.object({
-  studentId: requiredId,
-  fees: z.array(bulkFeeItemSchema).min(1, 'At least one fee is required'),
-});
+  /** One line of a bulk list: the student is named once, above the list. */
+  const bulkFeeItem = fee.omit({ studentId: true });
+  const feeList = z.array(bulkFeeItem).min(1, t('fees.validation.feesRequired'));
 
-/** The fee list alone — the full student wizard's fees step binds this. */
-export const feesSchema = z.object({
-  fees: z.array(bulkFeeItemSchema).min(1, 'At least one fee is required'),
-});
+  const bulkFeeForm = z.object({ studentId: requiredId, fees: feeList });
 
-/**
- * The same fee applied across a class. `sectionId` is optional: leaving it
- * empty means the whole class rather than one section.
- */
-export const classBulkFeeFormSchema = z.object({
-  classId: requiredId,
-  sectionId: optionalId,
-  feeTypeId: requiredId,
-  schedule: z.enum(SCHEDULE_VALUES),
-  academicYear: academicYearField.optional(),
-  effectiveDate: optionalDateField,
-  baseAmount: optionalNumberField(z.number({ error: 'Must be a valid number' }).positive('Base amount must be positive')),
-  discountAmount: discountField(),
-  discountReason: z.string().max(500, 'Discount reason too long').optional().nullable(),
-  notes: z.string().max(1000, 'Notes too long').optional().nullable(),
-}).superRefine((data, context) => {
-  if (data.academicYear && (!data.effectiveDate || !isDateOnly(data.effectiveDate))) {
-    context.addIssue({
-      code: 'custom', path: ['effectiveDate'],
-      message: 'Select a valid date for the class roster in this academic year',
-    });
-  }
-  if (data.academicYear && data.effectiveDate && isDateOnly(data.effectiveDate) && parseSchoolYearLabel(data.academicYear)) {
-    const calendar = defaultSchoolYearCalendar(data.academicYear);
-    if (data.effectiveDate < calendar.instructionStartsOn || data.effectiveDate > calendar.instructionEndsOn) {
-      context.addIssue({
-        code: 'custom', path: ['effectiveDate'],
-        message: 'Choose a charge date during the September to June school term',
-      });
+  /** The fee list alone — the full student wizard's fees step binds this. */
+  const fees = z.object({ fees: feeList });
+
+  /**
+   * The same fee applied across a class. `sectionId` is optional: leaving it
+   * empty means the whole class rather than one section.
+   */
+  const classBulkFeeForm = z.object({
+    classId: requiredId,
+    sectionId: optionalId,
+    feeTypeId: requiredId,
+    schedule,
+    academicYear: academicYearField.optional(),
+    effectiveDate: optionalDateField,
+    baseAmount: baseAmountField(),
+    discountAmount: discountField(),
+    discountReason: z.string().max(500, tooLong).optional().nullable(),
+    notes: z.string().max(1000, tooLong).optional().nullable(),
+  }).superRefine((data, context) => {
+    if (data.academicYear && (!data.effectiveDate || !isDateOnly(data.effectiveDate))) {
+      context.addIssue({ code: 'custom', path: ['effectiveDate'], message: t('fees.validation.chargeDateRequired') });
     }
-  }
-});
+    if (data.academicYear && data.effectiveDate && isDateOnly(data.effectiveDate) && parseSchoolYearLabel(data.academicYear)) {
+      const calendar = defaultSchoolYearCalendar(data.academicYear);
+      if (data.effectiveDate < calendar.instructionStartsOn || data.effectiveDate > calendar.instructionEndsOn) {
+        context.addIssue({ code: 'custom', path: ['effectiveDate'], message: t('fees.validation.chargeDateInTerm') });
+      }
+    }
+  });
 
-export type FeeFormValues = z.input<typeof feeSchema>;
-export type BulkFeeFormValues = z.input<typeof bulkFeeFormSchema>;
-export type FeesFormValues = z.input<typeof feesSchema>;
-export type ClassBulkFeeFormValues = z.input<typeof classBulkFeeFormSchema>;
+  return { fee, bulkFeeItem, bulkFeeForm, fees, classBulkFeeForm };
+};
+
+type FeeSchemas = ReturnType<typeof createFeeSchemas>;
+export type FeeFormValues = z.input<FeeSchemas['fee']>;
+export type BulkFeeFormValues = z.input<FeeSchemas['bulkFeeForm']>;
+export type FeesFormValues = z.input<FeeSchemas['fees']>;
+export type ClassBulkFeeFormValues = z.input<FeeSchemas['classBulkFeeForm']>;

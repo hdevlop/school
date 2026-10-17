@@ -4,16 +4,17 @@ import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
-import React from 'react'
+import React, { useMemo } from 'react'
 import { DollarSign, Tag, FileText, Layers, CreditCard } from 'lucide-react'
 import { useDialog } from '@/shared/useDialog'
 import { useTranslation } from 'najm-i18n/react'
-import { feeTypeSchema } from '../config/feeTypeSchemas'
+import { createFeeTypeSchema } from '../config/feeTypeSchemas'
 import { buildFeeCategoryOptionsFor, buildPaymentTypeOptions } from '../config/feeTypeOptions'
 
 const FeeTypeForm = ({ feeType = null }) => {
 
    const { t } = useTranslation();
+   const feeTypeSchema = useMemo(() => createFeeTypeSchema(t), [t]);
    const { pop } = useDialog();
    
    const defaultValues = {

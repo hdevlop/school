@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'bun:test';
 import { PAYMENT_METHOD_VALUES } from '@sms/contracts';
 
-import { feePaymentSchema, paymentEditSchema } from '@/features/Financial/Payment/config/paymentSchemas';
+import { createPaymentSchemas } from '@/features/Financial/Payment/config/paymentSchemas';
+
+const { feePayment: feePaymentSchema, paymentEdit: paymentEditSchema, details: paymentDetailsSchema } = createPaymentSchemas((key: string) => key);
 
 const payment = {
   paymentMethod: 'cash',
@@ -90,5 +92,17 @@ describe('paymentEditSchema', () => {
     expect(paymentEditSchema.safeParse(edit).success).toBe(true);
     expect(paymentEditSchema.safeParse({ ...edit, paymentDate: '' }).success).toBe(false);
     expect(paymentEditSchema.safeParse({ ...edit, id: undefined }).success).toBe(false);
+  });
+});
+
+// The cheque refinements lived in the component with English messages.
+describe('payment details step', () => {
+  const details = { amount: 100, paymentMethod: 'check', paymentDate: '2026-03-02', checkNumber: '', checkDueDate: '' };
+  const messages = (input: object) => paymentDetailsSchema.safeParse(input).error?.issues.map((issue) => issue.message) ?? [];
+
+  it('asks a cheque for its number and due date by catalog key', () => {
+    expect(messages(details)).toEqual(['payments.validation.checkNumberRequired', 'payments.validation.checkDueDateRequired']);
+    expect(messages({ ...details, checkNumber: 'CHK-1', checkDueDate: '2026-04-01' })).toEqual([]);
+    expect(messages({ ...details, paymentMethod: 'cash' })).toEqual([]);
   });
 });
