@@ -1,8 +1,8 @@
 {
   "origin": "https://myscolai.com",
-  "revision": "9c9d77a35b58c8009a0df3b4816f20d02ad61009",
+  "revision": "65b15ec047b8c92996162a47f469857fb3329b63",
   "browser": "155.0.8059.80",
-  "completedUtc": "2026-10-16T23:07:00.903Z",
+  "completedUtc": "2026-10-17T10:34:40.369Z",
   "scope": "PB1017 driver-to-vehicle assignment via Vehicles page; end assignment API-only",
   "results": [
     {
@@ -25,6 +25,10 @@
       "case": "driver ids",
       "outcome": "INFO",
       "staffMatchesDriver": false
+    },
+    {
+      "case": "vehicles card view: row menu offers assigning a driver",
+      "outcome": "PASS"
     },
     {
       "case": "vehicle-assignments-M01: start date 15 June 2026 chosen in the calendar",
@@ -61,10 +65,18 @@
       ]
     },
     {
-      "case": "vehicle-assignments-M02: end the owned assignment",
+      "case": "vehicle-assignments-M02: end dialog names the driver and the start date",
+      "outcome": "PASS"
+    },
+    {
+      "case": "vehicle-assignments-M02: an end before the start is refused in French without a request",
+      "outcome": "PASS"
+    },
+    {
+      "case": "vehicle-assignments-M02: assignment ended from the row menu, once",
       "outcome": "PASS",
-      "surface": "API-only (no browser control ends a driver assignment)",
-      "status": 200
+      "status": 200,
+      "requests": 1
     },
     {
       "case": "vehicle-assignments-M02: vehicle row shows no driver; history keeps one completed record ending 20 June",

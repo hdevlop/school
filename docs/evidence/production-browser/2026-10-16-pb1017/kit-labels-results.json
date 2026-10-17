@@ -1,0 +1,71 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "65b15ec047b8c92996162a47f469857fb3329b63",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-17T10:34:54.859Z",
+  "scope": "PB1017 najm-kit 3.5.3 labels and inert drawer; no saves",
+  "results": [
+    {
+      "case": "fr: dialog close button is named \"Fermer\"",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr: no English icon-button names with the staff dialog open",
+      "outcome": "PASS",
+      "found": []
+    },
+    {
+      "case": "fr: map button reads \"Sélectionner sur la carte\"",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr: calendar month buttons are \"Mois précédent\" / \"Mois suivant\"",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr: no English icon-button names with the calendar open",
+      "outcome": "PASS",
+      "found": []
+    },
+    {
+      "case": "ar phone: page header menu button is named \"فتح القائمة\"",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar phone: no English icon-button names on the page",
+      "outcome": "PASS",
+      "found": []
+    },
+    {
+      "case": "ar phone: the closed drawer is inert (out of tab order and accessibility tree)",
+      "outcome": "PASS",
+      "closed": [
+        true
+      ]
+    },
+    {
+      "case": "ar phone: the open drawer is reachable",
+      "outcome": "PASS",
+      "opened": [
+        false
+      ]
+    },
+    {
+      "case": "ar phone: closing makes it inert again",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Revision stayed immutable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No writes and no page errors",
+      "outcome": "PASS",
+      "writes": [],
+      "diagnostics": []
+    }
+  ],
+  "diagnostics": [],
+  "writes": [],
+  "failure": null
+}

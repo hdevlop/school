@@ -1,7 +1,7 @@
 # PB1017: staff, zones, grades, attendance and transport on the demo
 
-Tested `https://myscolai.com`, 2026-10-16 22:00 – 23:20 UTC, with the grades and
-attendance script rerun 2026-10-17 09:25 UTC.
+Tested `https://myscolai.com` from 2026-10-16 22:00 UTC; the final set of
+runs is from 2026-10-17 on `65b15ec`.
 Tester: Claude Code, continuing the
 [extended read-only run](../2026-10-16-extended-readonly/README.md). Chrome
 155 through Playwright, headless; French at 1440×900 unless stated, Arabic RTL
@@ -11,8 +11,8 @@ traces or raw response bodies were recorded.
 
 ## Releases under test
 
-The run found product defects, fixed them and redeployed five times. Every
-result below is from the final revision, `9c9d77a`.
+The run found product defects, fixed them and redeployed seven times. Every
+result below is from the final revision, `65b15ec`.
 
 | Revision | Change | Deploy run |
 | --- | --- | --- |
@@ -21,19 +21,22 @@ result below is from the final revision, `9c9d77a`.
 | `7ca1cef` | Ending a student route posts a date inside the viewed year | 38974799519 |
 | `b2199a9` | A driver without vehicle history can be deleted | 38977061112 |
 | `9c9d77a` | A refused dialog save no longer raises an uncaught page error | 38978446169 |
+| `9d8976e`, `439d321` | Vehicles row menu assigns and ends a driver assignment; najm-kit 3.5.3 adopted | 39023776905 |
+| `65b15ec` | Locale catalogs stored with LF endings again (content unchanged) | 39023833770 |
 
 Each workflow passed verify, publish and the Dokploy deploy step; the served
 `/deployment-revision.txt` matched and `/api/health/status` returned 200. No
 container inspection was done in this run.
 
-## Results on `9c9d77a`
+## Results on `65b15ec`
 
 | Script | Result | Evidence |
 | --- | --- | --- |
 | Staff form, zones, job titles | **34 pass** | [staff-zones](staff-zones-results.json) |
-| Grades and student attendance | **24 pass** (rerun 2026-10-17 09:25 UTC, see below) | [grades-attendance](grades-attendance-results.json) |
+| Grades and student attendance | **24 pass** | [grades-attendance](grades-attendance-results.json) |
 | Transport workspace (student routes) | **20 pass** | [transport](transport-results.json) |
-| Driver-to-vehicle assignment | **14 pass** (M02 through the API) | [vehicle-assignments](vehicle-assignments-results.json) |
+| Driver-to-vehicle assignment | **17 pass** | [vehicle-assignments](vehicle-assignments-results.json) |
+| najm-kit 3.5.3 labels and drawer | **12 pass**, no saves | [kit-labels](kit-labels-results.json) |
 | Recovery request | **6 pass, 1 BLOCKED** | [recovery-request](recovery-request-results.json) |
 
 Each run left zero fixtures behind and kept the serving revision unchanged.
@@ -69,13 +72,20 @@ Each run left zero fixtures behind and kept the serving revision unchanged.
   fee generated, same vehicle on the profile's Transport tab; a second active
   route refused (409); unassign ends the route ("completed"), panel back to
   0/3, French toast. Phone layout fits; teacher-A refused (403).
-- **vehicle-assignments R01/M01 — PASS, M02 — PASS (API-only).** The owned
-  driver is assigned to an owned vehicle from the Vehicles page with a start
-  date of 15 June; the row and the stored assignment agree after reload. An
-  earlier start for the same vehicle is refused (409, one French toast) and
-  the assignment is unchanged. No browser control ends a driver assignment,
-  so it was ended through the API on 20 June; the row then shows no driver
-  and history keeps one completed record. Teacher-A is refused (403).
+- **vehicle-assignments R01/M01/M02 — PASS.** In card view, the page's
+  default, the row menu offers assigning a driver. The owned driver is
+  assigned to an owned vehicle with a start date of 15 June; the row and the
+  stored assignment agree after reload. An earlier start for the same vehicle
+  is refused (409, one French toast) and the assignment is unchanged. "End
+  driver assignment" in the row menu names the driver, refuses an end before
+  the start in French without a request, and ends it on 20 June with one
+  request; the row then shows no driver and history keeps one completed
+  record. Teacher-A is refused (403).
+- **najm-kit 3.5.3 — PASS.** In French the dialog close button is "Fermer",
+  the map button "Sélectionner sur la carte" and the calendar's month buttons
+  "Mois précédent"/"Mois suivant"; on an Arabic phone the header menu button
+  is "فتح القائمة". No icon button keeps an English name. The closed drawer is
+  inert, reachable once opened and inert again after closing.
 - **AUTH-07 request side — PASS.** Known and unknown addresses get the
   identical French confirmation and status; no session is created; a
   malformed address is refused in French without a request.
@@ -99,26 +109,25 @@ Each run left zero fixtures behind and kept the serving revision unchanged.
    already is for a role change (`b2199a9`).
 9. Twelve dialog forms do not await their submit, so every refused save also
    raised an uncaught page error (`9c9d77a`).
+10. No browser control ended a driver assignment; the Vehicles row menu now
+    does, and also assigns a driver in card view, where there was no driver
+    cell to click (`9d8976e`).
+11. In najm-kit 3.5.3, published and adopted (`439d321`): icon-only controls
+    are named in the interface language (dialog and sheet close, page header
+    and sidebar menu buttons, calendar month buttons), the closed mobile
+    drawer is inert, and the French and Spanish location labels have their
+    accents.
 
-## Open findings (not fixed here)
+## Accepted, not fixed
 
 - **Server and browser disagree on Casablanca's offset.** The server runtime
   (Bun 1.3.14, tzdata 2026b) puts Africa/Casablanca at GMT+1 on these dates;
   Chrome 155 puts it at GMT+0. Between 23:00 and 24:00 UTC the server's
   "today" is the next day while the browser's is not, so the student
   attendance register hydrates with a different date (React error #418) and
-  then uses the browser's. The register here clamps to 30 June either way, so
-  no mark was affected. The run at 23:06 UTC recorded four such errors; at
-  09:25 UTC the same script and a probe in three browser time zones record
-  none. Which tzdata is current must be settled before a fix: either a
-  runtime tzdata update or one server-provided "today".
-- **No browser control ends a driver assignment** (`unassignDriverApi` is not
-  used), so vehicle-assignments M02 has only an API surface.
-- Upstream in najm-kit (School pins the published package): the French
-  location label reads "Selectionner sur la carte"; calendar month buttons
-  are labelled "Go to the Previous/Next Month", the dialog close button
-  "Close" and the mobile sidebar trigger "Open sidebar" in every language;
-  the closed mobile sidebar stays in the accessibility tree and tab order.
+  then uses the browser's. Seen at 23:06 UTC; absent at 09:25 UTC in three
+  browser time zones. The owner accepted it: the school closes at 17:00, so
+  no one takes attendance in that hour.
 
 ## Blocked and not run
 
@@ -142,6 +151,6 @@ zone, staff member, job title, vehicle, assessment or active route;
 student-A keeps only the previously retained fee, and the PB1016 marks for
 2026-06-30 are as before (A absent, B present).
 
-The API was used only for setup, cleanup, the API-only M02 and to confirm
-what the browser saved. Credentials, sessions and identities remain in
+The API was used only for setup, cleanup and to confirm what the browser
+saved. Credentials, sessions and identities remain in
 ignored local files; committed results use aliases.
