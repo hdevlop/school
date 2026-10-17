@@ -332,6 +332,38 @@
       "success": {
         "retrieved": "User retrieved successfully"
       }
+    },
+    "emails": {
+      "passwordReset": {
+        "subject": "Reset your password",
+        "documentTitle": "Password Reset",
+        "heading": "Password Reset Request",
+        "greeting": "Hello {{name}},",
+        "intro": "We received a request to reset your password. Click the button below to create a new password:",
+        "button": "Reset Password",
+        "expiry": "This link will expire in 1 hour for security reasons.",
+        "ignore": "If you didn't request a password reset, you can safely ignore this email.",
+        "singleUse": "For security, this link can only be used once.",
+        "fallback": "If the button doesn't work, copy and paste this link into your browser:"
+      },
+      "accountInvite": {
+        "subject": "{{appName}}: activate your {{accountLabel}}",
+        "documentTitle": "Activate your {{accountLabel}} | {{appName}}",
+        "preheader": "Your {{appName}} {{accountLabel}} is ready. Confirm your email and choose your password.",
+        "eyebrow": "Secure account invitation",
+        "heading": "Activate your {{accountLabel}}",
+        "greeting": "Hello {{name}},",
+        "intro": "An administrator created a {{accountLabel}} for you on {{appName}}. Confirm your email and choose a private password to activate your access.",
+        "stepsTitle": "Email confirmation + password setup",
+        "stepsBody": "The secure button completes both steps with one single-use link.",
+        "button": "Activate my {{accountLabel}}",
+        "expiry": "This invitation expires in 3 days.",
+        "expiryNote": "It can be used only once. {{appName}} will never ask you to email this link or your password to anyone.",
+        "fallbackPrefix": "Button not working?",
+        "fallbackLink": "Open the secure account setup page",
+        "footerIgnore": "If you did not expect this invitation, no action is needed.",
+        "footerAutomated": "{{appName}}. This is an automated account-security message."
+      }
     }
   },
   "users": {

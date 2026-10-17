@@ -48,7 +48,7 @@ const ForgotPassword = () => {
           id='forgot-password-form'
           schema={schema}
           defaultValues={{ email: '' }}
-          onSubmit={({ email }: { email: string }) => mutation.mutateAsync({ email })}
+          onSubmit={({ email }: { email: string }) => mutation.mutateAsync({ email }).catch(() => undefined)}
         >
           <FormInput
             name='email'

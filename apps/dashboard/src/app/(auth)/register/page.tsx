@@ -68,7 +68,7 @@ const Register = () => {
           id='register-form'
           schema={schema}
           defaultValues={{ name: '', email: '', password: '', confirmPassword: '' }}
-          onSubmit={(values: RegisterValues) => mutation.mutateAsync(values)}
+          onSubmit={(values: RegisterValues) => mutation.mutateAsync(values).catch(() => undefined)}
         >
           <FormInput
             name='name'

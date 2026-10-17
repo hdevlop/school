@@ -332,6 +332,38 @@
       "success": {
         "retrieved": "Utilisateur récupéré avec succès"
       }
+    },
+    "emails": {
+      "passwordReset": {
+        "subject": "Réinitialisez votre mot de passe",
+        "documentTitle": "Réinitialisation du mot de passe",
+        "heading": "Demande de réinitialisation du mot de passe",
+        "greeting": "Bonjour {{name}},",
+        "intro": "Nous avons reçu une demande de réinitialisation de votre mot de passe. Cliquez sur le bouton ci-dessous pour en choisir un nouveau :",
+        "button": "Réinitialiser le mot de passe",
+        "expiry": "Pour votre sécurité, ce lien expire dans 1 heure.",
+        "ignore": "Si vous n’êtes pas à l’origine de cette demande, ignorez simplement cet e-mail.",
+        "singleUse": "Pour votre sécurité, ce lien ne peut être utilisé qu’une seule fois.",
+        "fallback": "Si le bouton ne fonctionne pas, copiez ce lien et collez-le dans votre navigateur :"
+      },
+      "accountInvite": {
+        "subject": "{{appName}} : activez votre compte",
+        "documentTitle": "Activez votre compte | {{appName}}",
+        "preheader": "Votre compte {{appName}} est prêt. Confirmez votre e-mail et choisissez votre mot de passe.",
+        "eyebrow": "Invitation sécurisée",
+        "heading": "Activez votre compte",
+        "greeting": "Bonjour {{name}},",
+        "intro": "Un administrateur vous a créé un compte sur {{appName}}. Confirmez votre e-mail et choisissez un mot de passe personnel pour activer votre accès.",
+        "stepsTitle": "Confirmation de l’e-mail et choix du mot de passe",
+        "stepsBody": "Le bouton sécurisé réalise les deux étapes avec un lien à usage unique.",
+        "button": "Activer mon compte",
+        "expiry": "Cette invitation expire dans 3 jours.",
+        "expiryNote": "Elle ne peut être utilisée qu’une seule fois. {{appName}} ne vous demandera jamais d’envoyer ce lien ou votre mot de passe à qui que ce soit.",
+        "fallbackPrefix": "Le bouton ne fonctionne pas ?",
+        "fallbackLink": "Ouvrir la page sécurisée de création du compte",
+        "footerIgnore": "Si vous n’attendiez pas cette invitation, aucune action n’est nécessaire.",
+        "footerAutomated": "{{appName}}. Ceci est un message automatique de sécurité du compte."
+      }
     }
   },
   "users": {

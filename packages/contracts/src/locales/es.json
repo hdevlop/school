@@ -332,6 +332,38 @@
       "success": {
         "retrieved": "Usuario obtenido correctamente"
       }
+    },
+    "emails": {
+      "passwordReset": {
+        "subject": "Restablece tu contraseña",
+        "documentTitle": "Restablecer la contraseña",
+        "heading": "Solicitud de restablecimiento de contraseña",
+        "greeting": "Hola, {{name}}:",
+        "intro": "Hemos recibido una solicitud para restablecer tu contraseña. Pulsa el botón de abajo para crear una nueva:",
+        "button": "Restablecer la contraseña",
+        "expiry": "Por seguridad, este enlace caduca en 1 hora.",
+        "ignore": "Si no solicitaste restablecer la contraseña, puedes ignorar este correo.",
+        "singleUse": "Por seguridad, este enlace solo puede usarse una vez.",
+        "fallback": "Si el botón no funciona, copia este enlace y pégalo en tu navegador:"
+      },
+      "accountInvite": {
+        "subject": "{{appName}}: activa tu cuenta",
+        "documentTitle": "Activa tu cuenta | {{appName}}",
+        "preheader": "Tu cuenta de {{appName}} está lista. Confirma tu correo y elige tu contraseña.",
+        "eyebrow": "Invitación segura",
+        "heading": "Activa tu cuenta",
+        "greeting": "Hola, {{name}}:",
+        "intro": "Un administrador te ha creado una cuenta en {{appName}}. Confirma tu correo y elige una contraseña personal para activar tu acceso.",
+        "stepsTitle": "Confirmación del correo y elección de contraseña",
+        "stepsBody": "El botón seguro completa ambos pasos con un enlace de un solo uso.",
+        "button": "Activar mi cuenta",
+        "expiry": "Esta invitación caduca en 3 días.",
+        "expiryNote": "Solo puede usarse una vez. {{appName}} nunca te pedirá que envíes este enlace ni tu contraseña a nadie.",
+        "fallbackPrefix": "¿El botón no funciona?",
+        "fallbackLink": "Abrir la página segura de creación de la cuenta",
+        "footerIgnore": "Si no esperabas esta invitación, no tienes que hacer nada.",
+        "footerAutomated": "{{appName}}. Este es un mensaje automático de seguridad de la cuenta."
+      }
     }
   },
   "users": {

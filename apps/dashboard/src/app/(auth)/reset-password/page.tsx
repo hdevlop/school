@@ -48,8 +48,9 @@ const ResetPasswordForm = () => {
     },
   })
 
+  // onError already tells the user; the rejection is not left unhandled.
   const handleSubmit = async ({ newPassword }: { newPassword: string }) => {
-    await mutation.mutateAsync({ token, newPassword })
+    await mutation.mutateAsync({ token, newPassword }).catch(() => undefined)
   }
 
   return (
