@@ -1,8 +1,8 @@
 {
   "origin": "https://myscolai.com",
-  "revision": "b472ff2c28fc4f0d1b0d485ae2686b117aadf1a3",
+  "revision": "ff7d5717e2f4cced8e60e741d0bfb7148744234b",
   "browser": "155.0.8059.80",
-  "completedUtc": "2026-10-17T17:21:13.940Z",
+  "completedUtc": "2026-10-17T21:03:06.358Z",
   "scope": "PB1020 payroll R01, M01, M02 on an owned staff record",
   "results": [
     {
@@ -62,7 +62,17 @@
       "count": 1
     },
     {
-      "case": "payroll-M01: undoing the payment succeeds",
+      "case": "payroll-M01: undoing asks first, naming the staff member, amount and period",
+      "outcome": "PASS",
+      "text": "Annuler le paiement du salaire Annuler le paiement de 3.210,00 MAD à PB1020 staff fixture pour juin 2026 ? La fiche de paie est conservée et repasse en attente. Annuler Annuler le paiement Fermer"
+    },
+    {
+      "case": "payroll-M01: cancelling the undo sends nothing and the salary stays paid",
+      "outcome": "PASS",
+      "requests": []
+    },
+    {
+      "case": "payroll-M01: confirming the undo succeeds",
       "outcome": "PASS"
     },
     {

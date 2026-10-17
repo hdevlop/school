@@ -3,7 +3,7 @@
 Tested `https://myscolai.com` on 2026-10-17 between 14:00 and 17:25 UTC: the
 Finance group of the production-browser checklist (expenses, payroll,
 installments, student credits, aging, reports, financial operations; 26
-cases). Final runs are on `b472ff2`, except financial operations, which stays
+cases). Final runs are on `ff7d571` after the follow-up fixes (see the end), except financial operations, which stays
 on `752e1bd` (see Notes). Tester: Claude Code. Chrome 155 through Playwright,
 headless, French at 1440×900, with phone-width (390×844) checks. Zero
 automatic retries: a failed attempt was diagnosed and the whole script rerun.
@@ -142,28 +142,54 @@ Najm releases: najm-kit 3.5.5, 3.6.0 and 3.6.1.
 - **Payroll undo keeps the payslip.** "Annuler" returns the June payslip to
   pending; cleanup deletes it through the API.
 
-## Open findings (not fixed)
+## Follow-up: open findings fixed
 
-- **Product decisions:**
-  - **Student credits:** restore a credit panel, or retire the remaining
-    credit API.
-  - **Paid expenses:** a paid expense can still be deleted.
-  - **Payroll undo:** "Annuler" (undo a payment) asks for no confirmation.
-- **Interface:**
-  - The expense table shows a raw ID column.
-  - The fee dialog says "Étudiant" where the rest of the interface says
-    "Élève".
-  - Plural agreement: "1 Versements", "{{count}} chèques".
-- **Server validation:** DTO messages are English literals ("Amount must be
-  greater than 0" with `X-Language: fr`). The forms catch these first, but
-  API and MCP callers see English.
-- **Other features:** about 19 form schema files outside Finance still hold
-  English validation messages. Reminders has no failed-list state; it belongs
-  to the Communication run.
+The first pass left these findings open. Five commits fixed them, and the
+results files in this folder were rerun on `ff7d571`, which contains all five.
+The financial operations file stays on `752e1bd`: rerunning it would add more
+bounced cheques.
+
+| Finding | Fix | Verified on `ff7d571` |
+|---|---|---|
+| A paid expense could still be edited or deleted | `d101b81`: the server refuses both with 409 and a translated message, and the row menu offers only "Voir". | A seeded paid expense from 2024-2025: PUT and DELETE return 409, the French message is shown, the record is unchanged, and the menu reads "Voir" only. |
+| Undoing a salary payment asked for no confirmation | `d101b81`: a dialog names the staff member, amount and period. | Cancelling sends no request and the salary stays paid. Confirming sets the payslip back to pending. |
+| The expense table showed a raw ID column | `d101b81` | The headers are category, title, amount, date, method and status. |
+| "Étudiant" instead of "Élève", "1 Versements", "{{count}} chèques" | `d101b81`: 43 French strings say "Élève", and counts use the plural forms or count-neutral wording. | Covered by the i18n check and the unit tests. |
+| The server answered refused requests in English | `071dbe6`: the validation formatter translates DTO messages and zod's own messages into the request's language. | `POST /api/student-credits/apply` with amount -1 answers in French, English and Arabic for `X-Language` fr, en and ar. |
+| 19 form schemas outside Finance held English messages | `37147d7`: every schema is built from `t`, and a guard test rejects literal messages. | The class, subject and vehicle forms are refused in French when submitted empty, and no request is sent. |
+| The class form opened with sample values ("CE1", "asdasd"), so a quick Create posted them | `cf09583` | The empty class form is refused in French. |
+| Phone cards cut "Virement bancaire" off at 12 characters | `1239e55` | The expense card shows the full method. |
+
+The new [forms results](forms-results.json) cover the form and server-language
+checks.
+
+**Final counts:**
+- expenses: 26 pass;
+- payroll: 18 pass;
+- installments: 19 pass;
+- aging and reports: 19 pass;
+- credits API: 7 pass;
+- forms: 9 pass;
+- financial operations: 16 pass, on `752e1bd`.
+
+There were no page errors and no CSP reports, and every run stayed on one
+revision.
+
+### Still open
+
+- **Student credits (decision needed).** The credit UI was removed in
+  `4f2f9a4`, but the API still creates credits through the
+  `keepRemainderAsCredit` option. Either restore a credit panel or retire the
+  remaining API. The browser cases stay BLOCKED until then.
+- **Student terms in Arabic and Spanish.** These were not normalised: a
+  mechanical swap in Arabic risks wrong grammar, so it needs a reviewed edit.
+- **Not run, by design:** installment closeout from July 1 to 14 needs a
+  controlled clock, and credit M03 would post an overpayment. Reports export
+  is not exposed in the interface.
 
 ## Cleanup
 
-The [residue check](residue-check.json) on `b472ff2` finds:
+The [residue check](residue-check.json) on `ff7d571` finds:
 - no PB1020 expense;
 - no PB1020 staff or roster row;
 - no Technologie fee on student-A;
@@ -171,4 +197,5 @@ The [residue check](residue-check.json) on `b472ff2` finds:
 - student-A's Field Trip fee fully due (200.00).
 
 Payroll deleted its payslip and staff record, and installments and expenses
-deleted their own records.
+deleted their own records. The paid-lock probes were refused, so they changed
+nothing.

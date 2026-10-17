@@ -1,0 +1,72 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "ff7d5717e2f4cced8e60e741d0bfb7148744234b",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-17T21:03:40.765Z",
+  "scope": "PB1020 follow-up: French form validation outside Finance and translated server refusals (read-only)",
+  "results": [
+    {
+      "case": "classes: an empty form is refused in French",
+      "outcome": "PASS",
+      "expected": [
+        "Le nom de la classe est obligatoire",
+        "Le niveau de la classe est obligatoire"
+      ],
+      "english": null,
+      "shown": "Créer\n\nInformation   ur la cla e\nNom de la cla e\n*\n\nLe nom de la cla e e t obligatoire\n\nNiveau\n\nLe niveau de la cla e e t obligatoire\n\nDe cription\nDe cription\nAnnuler\nCréer\nFermer"
+    },
+    {
+      "case": "subjects: an empty form is refused in French",
+      "outcome": "PASS",
+      "expected": [
+        "Le code de la matière doit contenir au moins 2 caractères",
+        "Le nom de la matière doit contenir au moins 2 caractères"
+      ],
+      "english": null,
+      "shown": "Créer\n\nInformation   ur la matière\nCode\n*\n\nLe code de la matière doit contenir au moin  2 caractère \n\nNom\n*\n\nLe nom de la matière doit contenir au moin  2 caractère \n\nDe cription\nAnnuler\nCréer\nFermer"
+    },
+    {
+      "case": "vehicles: an empty form is refused in French",
+      "outcome": "PASS",
+      "expected": [
+        "Le nom du véhicule doit contenir au moins 2 caractères",
+        "La marque doit contenir au moins 2 caractères"
+      ],
+      "english": null,
+      "shown": "Créer\n\nInformation   ur le véhicule\nNom\n*\n\nLe nom du véhicule doit contenir au moin  2 caractère \n\nMarque\n*\n\nLa marque doit contenir au moin  2 caractère \n\nModèle\n*\n\nLe modèle doit contenir au moin  2 caractère \n\nAnnée\n*\nType\n*\nBu  complet\nBu  complet\nBerline\nMinibu \nBu  complet\nNavette\nCapacité\n*\nPlaque d'immatriculation\n*\n\nLa plaque d'immatriculation doit contenir au moin  2 caractère \n\nStatut\nA"
+    },
+    {
+      "case": "No form sent a request",
+      "outcome": "PASS",
+      "writes": []
+    },
+    {
+      "case": "server: a refused request answers in French",
+      "outcome": "PASS",
+      "status": 400,
+      "message": "Le montant doit être supérieur à 0"
+    },
+    {
+      "case": "server: the same refusal stays English for an English request",
+      "outcome": "PASS",
+      "message": "Amount must be greater than 0"
+    },
+    {
+      "case": "server: and Arabic for an Arabic request",
+      "outcome": "PASS",
+      "message": "يجب أن يكون المبلغ أكبر من 0"
+    },
+    {
+      "case": "Revision stayed immutable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No page errors and no CSP violations",
+      "outcome": "PASS",
+      "diagnostics": []
+    }
+  ],
+  "diagnostics": [],
+  "writes": [],
+  "failure": null
+}

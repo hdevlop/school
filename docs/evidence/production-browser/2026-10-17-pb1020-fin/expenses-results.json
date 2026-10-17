@@ -1,8 +1,8 @@
 {
   "origin": "https://myscolai.com",
-  "revision": "b472ff2c28fc4f0d1b0d485ae2686b117aadf1a3",
+  "revision": "ff7d5717e2f4cced8e60e741d0bfb7148744234b",
   "browser": "155.0.8059.80",
-  "completedUtc": "2026-10-17T17:19:58.751Z",
+  "completedUtc": "2026-10-17T21:01:49.227Z",
   "scope": "PB1020 expenses R01, M01, M02 on an owned expense",
   "results": [
     {
@@ -46,7 +46,21 @@
     {
       "case": "expenses-R01: the row shows the amount, date, category and status in French",
       "outcome": "PASS",
-      "row": " Lq1MU Fournitures PB1020 Fournitures de test 1.234,50 MAD 15/06/2026 Chèque En attente "
+      "row": " Fournitures PB1020 Fournitures de test 1.234,50 MAD 15/06/2026 Chèque En attente "
+    },
+    {
+      "case": "expenses-R01: the table has no raw id column",
+      "outcome": "PASS",
+      "headers": [
+        "",
+        "catégorie",
+        "titre",
+        "montant",
+        "date de la dépense",
+        "méthode de paiement",
+        "statut",
+        ""
+      ]
     },
     {
       "case": "expenses-M01: switching away from a cheque hides the cheque number field",
@@ -72,24 +86,9 @@
       "outcome": "PASS"
     },
     {
-      "case": "expenses: the payment is recorded",
+      "case": "expenses-R01: at phone width the card shows the title, amount, method and status",
       "outcome": "PASS",
-      "status": 200,
-      "message": "Paiement enregistré avec succès"
-    },
-    {
-      "case": "expenses: the expense is paid by cheque PB1020-CHK-2",
-      "outcome": "PASS",
-      "status": "paid"
-    },
-    {
-      "case": "expenses-R01: at phone width the card shows the title, amount and status",
-      "outcome": "PASS",
-      "hasTitle": true,
-      "hasAmount": true,
-      "hasPaid": true,
-      "paidLabel": "Payé",
-      "card": "Notes Calendrier Planning Académique Transport Contrôle d’accès Apparence Notifications Paramètres Déconnecter Dépenses PB1020 Fournitures modifiées Fournitures Payé Montant: 1.234,50 MAD Date de la dépense: 15/06/2026 Méthode de paiement: Chèque"
+      "card": "cè \nApparence\nNotification \nParamètre \nDéconnecter\nDépen e \nPB1020 Fourniture  modifiée \nFourniture \nApprouvé\nMontant:\n1.234,50 MAD\nDate de la dépen e:\n15/06/2026\nMéthode de paiement:\nVirement bancaire"
     },
     {
       "case": "expenses-M02: cancelling the deletion keeps the expense",
@@ -104,13 +103,39 @@
       "outcome": "PASS"
     },
     {
+      "case": "expenses: 2024-2025 holds a seeded paid expense",
+      "outcome": "PASS",
+      "listed": 82
+    },
+    {
+      "case": "expenses: the server refuses to edit a paid expense, in French",
+      "outcome": "PASS",
+      "status": 409,
+      "message": "Une dépense payée est clôturée : elle ne peut plus être modifiée ni supprimée"
+    },
+    {
+      "case": "expenses: the server refuses to delete a paid expense",
+      "outcome": "PASS",
+      "status": 409
+    },
+    {
+      "case": "expenses: the paid expense is unchanged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "expenses: a paid expense offers only View in its menu",
+      "outcome": "PASS",
+      "items": [
+        "Voir"
+      ]
+    },
+    {
       "case": "Only the expected writes were sent",
       "outcome": "PASS",
       "writes": [
         "POST /api/expenses",
         "PUT /api/expenses/:id",
         "POST /api/expenses/:id/approve",
-        "POST /api/expenses/:id/payment",
         "DELETE /api/expenses/:id"
       ]
     },
@@ -129,7 +154,6 @@
     "POST /api/expenses",
     "PUT /api/expenses/:id",
     "POST /api/expenses/:id/approve",
-    "POST /api/expenses/:id/payment",
     "DELETE /api/expenses/:id"
   ],
   "cleanup": "removed 0 leftover, 0 remain",

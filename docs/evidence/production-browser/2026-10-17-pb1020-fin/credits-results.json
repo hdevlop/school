@@ -1,8 +1,8 @@
 {
   "origin": "https://myscolai.com",
-  "revision": "b472ff2c28fc4f0d1b0d485ae2686b117aadf1a3",
+  "revision": "ff7d5717e2f4cced8e60e741d0bfb7148744234b",
   "browser": "155.0.8059.80",
-  "completedUtc": "2026-10-17T17:21:30.434Z",
+  "completedUtc": "2026-10-17T21:03:23.615Z",
   "scope": "PB1020 student credits: browser surface absent; API read and refusals",
   "results": [
     {
@@ -17,16 +17,16 @@
       "lots": 0
     },
     {
-      "case": "student-credits-M02 (API): an amount of 0 is refused",
+      "case": "student-credits-M02 (API): an amount of 0 is refused in French",
       "outcome": "PASS",
       "status": 400,
-      "message": "Amount must be greater than 0"
+      "message": "Le montant doit être supérieur à 0"
     },
     {
-      "case": "student-credits-M02 (API): an amount of -5 is refused",
+      "case": "student-credits-M02 (API): an amount of -5 is refused in French",
       "outcome": "PASS",
       "status": 400,
-      "message": "Amount must be greater than 0"
+      "message": "Le montant doit être supérieur à 0"
     },
     {
       "case": "student-credits-M02 (API): more than the available credit is refused in French",
