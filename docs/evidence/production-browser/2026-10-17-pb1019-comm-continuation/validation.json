@@ -41,9 +41,12 @@
     "browser": {
       "reminders": 35,
       "announcements": 34,
-      "failures": 0
+      "failures": 0,
+      "alerts": 51,
+      "finalLiveAssertions": 120
     },
     "localizedAnnouncementRefusals": "PASS; invalid French title/content produce translated errors without a write",
-    "proof": "successor-37147d7/deployment-proof.json"
+    "proof": "successor-37147d7/deployment-proof.json",
+    "alertDisplayAcceptance": "PASS: direct and sidebar navigation, class/section filters, supported subjects, priority, status and full timestamps on French desktop and Arabic phone; 3 exact owned alerts cleaned up; unrelated baseline unchanged"
   }
 }

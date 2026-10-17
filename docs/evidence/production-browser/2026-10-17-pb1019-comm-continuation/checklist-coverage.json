@@ -2,8 +2,8 @@
   "scope": "Cumulative Communication coverage; only three promoted cases are newly accepted here. Historical passes retain their original source boundary.",
   "selectedCases": 25,
   "outcomes": {
-    "PASS": 7,
-    "BLOCKED": 18,
+    "PASS": 8,
+    "BLOCKED": 17,
     "FAIL": 0
   },
   "cases": [
@@ -51,10 +51,11 @@
     },
     {
       "id": "alerts-R01",
-      "outcome": "BLOCKED",
-      "reason": "Desktop and Arabic phone identify owned alerts; class/section filters and translated status pass. Full priority/date/navigation matrix remains open.",
-      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
-      "scope": "Retained earlier outcome; not rerun by this continuation"
+      "outcome": "PASS",
+      "reason": "Direct and sidebar navigation, class/section filters, own subject identity and audience filtering, priority, status and full date/time match supported reads. Arabic phone projection reconciles with desktop. Controlled fixture status actions and cleanup also rerun.",
+      "evidence": "successor-37147d7/pw-alerts-results.json",
+      "scope": "New acceptance on successor source",
+      "revision": "37147d72ef8dc119f282f8a6305fc88fc47a2f3f"
     },
     {
       "id": "alerts-R02",
@@ -188,12 +189,14 @@
     "acceptedCases": [
       "announcements-R01",
       "reminders-R01",
-      "reminders-R02"
+      "reminders-R02",
+      "alerts-R01"
     ],
     "evidence": [
       "successor-37147d7/reminders-deployed-results.json",
-      "successor-37147d7/pw-announcements-results.json"
+      "successor-37147d7/pw-announcements-results.json",
+      "successor-37147d7/pw-alerts-results.json"
     ],
-    "note": "Cumulative outcome remains 7 PASS / 18 partial or BLOCKED; earlier cases retain their historical evidence."
+    "note": "Cumulative outcome is 8 PASS / 17 partial or BLOCKED; other cases retain their historical evidence."
   }
 }

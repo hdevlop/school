@@ -39,6 +39,11 @@
       "evidence": "reminders-deployed-observer-attempt6.json",
       "classification": "TEST",
       "reason": "Observer initially treated Next prefetch and HTTP 200 RSC stream cancellations as failures. Final observer restricts expected cancellations to supported-read link targets or the exact owned HTTP 200 RSC destination whose identity/fee view passed; no API failure is ignored."
+    },
+    {
+      "evidence": "alerts-display-observer-attempt1.json",
+      "classification": "TEST",
+      "reason": "New sidebar navigation produced HTTP 200 RSC stream cancellations. Final observer accepts only exact /announcements and /alerts destinations during their named navigation phases after route/owned fixture checks pass; API failures remain unexpected. Exact owned cleanup passed on both attempts."
     }
   ],
   "finalOnlyCounts": {

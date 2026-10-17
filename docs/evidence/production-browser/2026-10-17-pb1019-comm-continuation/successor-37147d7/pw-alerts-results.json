@@ -1,0 +1,396 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "37147d72ef8dc119f282f8a6305fc88fc47a2f3f",
+  "completedUtc": "2026-10-17T19:44:51.027Z",
+  "browser": "Chrome 155 via standalone Playwright explicitly requested by owner",
+  "results": [
+    {
+      "case": "setup-parent-A",
+      "outcome": "PASS"
+    },
+    {
+      "case": "setup-parent-B",
+      "outcome": "PASS"
+    },
+    {
+      "case": "setup-teacher-A",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R04-parent-has-no-year-switch",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R02-parent-A-own-row-visible",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R02-parent-A-other-row-hidden",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R02-parent-A-teacher-audience-hidden",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R03-parent-only-acknowledge",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-UI-parent-A-acknowledge",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-reload-parent-A-acknowledged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R02-parent-B-other-row-hidden",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-UI-parent-B-acknowledge",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-reload-parent-B-acknowledged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R02-teacher-parent-audience-hidden",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-UI-teacher-A-acknowledge",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-reload-teacher-A-acknowledged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-UI-teacher-A-resolve",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-reload-teacher-A-resolved",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-UI-teacher-A-dismiss",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-reload-teacher-A-dismissed",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R01-admin-reconciles-personal-fixtures",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R01-supported-detail-parent-A",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R01-navigation-subject-priority-status-date-parent-A",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R01-supported-detail-parent-B",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R01-navigation-subject-priority-status-date-parent-B",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R01-supported-detail-teacher-A",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R01-navigation-subject-priority-status-date-teacher-A",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-UI-parent-A-resolve",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-reload-parent-A-resolved",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-UI-parent-A-dismiss",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-reload-parent-A-dismissed",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R01-class-section-filters-keep-controlled-roster",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R04-history-request-uses-selection",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R04-history-hides-current-fixtures",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R04-switch-back-request",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R04-switch-back-restores-fixtures",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R04-active-year-unchanged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R01-Arabic-phone-status",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-R01-Arabic-card-subject-priority-status-date",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-Arabic-phone-RTL",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-Arabic-phone-no-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-M04-cancel-delete-keeps-alert",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-M04-confirm-delete",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-M04-deletion-reloads",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-unrelated-records-unchanged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-M01-student-self",
+      "outcome": "BLOCKED",
+      "reason": "No controlled student login; parent half passed."
+    },
+    {
+      "case": "alerts-R02-teacher-B",
+      "outcome": "BLOCKED",
+      "reason": "No controlled teacher-B; parent A/B and teacher audience checks passed."
+    },
+    {
+      "case": "alerts-R03-M02-M03-shared-class-supervisor",
+      "outcome": "BLOCKED",
+      "reason": "Entire class audience is not controlled; no class notice created. Supervisor account absent."
+    },
+    {
+      "case": "cleanup-parent-A",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cleanup-parent-B",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cleanup-teacher-A",
+      "outcome": "PASS"
+    },
+    {
+      "case": "serving-revision-stable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "exact-browser-write-list",
+      "outcome": "PASS"
+    },
+    {
+      "case": "no-unexpected-browser-diagnostics",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [
+    {
+      "actor": "admin",
+      "sessionId": 4,
+      "at": 1792266270691,
+      "type": "expected-rendered-route-stream-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/announcements",
+      "code": "net::ERR_ABORTED",
+      "prefetch": false,
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "navigate-announcements",
+      "phase": "navigate-announcements",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200,
+      "reason": "Exact sidebar destination returned HTTP 200 RSC headers and its visible route/owned fixtures passed; retained client stream cancellation. API failures remain unexpected."
+    },
+    {
+      "actor": "admin",
+      "sessionId": 4,
+      "at": 1792266270941,
+      "type": "expected-rendered-route-stream-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/alerts",
+      "code": "net::ERR_ABORTED",
+      "prefetch": false,
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "navigate-alerts",
+      "phase": "navigate-alerts",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200,
+      "reason": "Exact sidebar destination returned HTTP 200 RSC headers and its visible route/owned fixtures passed; retained client stream cancellation. API failures remain unexpected."
+    },
+    {
+      "actor": "admin",
+      "sessionId": 5,
+      "at": 1792266280432,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/forgot-password",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": true,
+      "rsc": "1",
+      "startedPhase": "initial",
+      "phase": "initial",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 5,
+      "at": 1792266280433,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": true,
+      "rsc": "1",
+      "startedPhase": "initial",
+      "phase": "initial",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 5,
+      "at": 1792266280553,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/forgot-password",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "initial",
+      "phase": "initial",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 5,
+      "at": 1792266280567,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "initial",
+      "phase": "initial",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    }
+  ],
+  "writes": [
+    {
+      "actor": "parent-a",
+      "method": "PUT",
+      "path": "/api/alerts/:owned-id/status"
+    },
+    {
+      "actor": "parent-b",
+      "method": "PUT",
+      "path": "/api/alerts/:owned-id/status"
+    },
+    {
+      "actor": "teacher-a",
+      "method": "PUT",
+      "path": "/api/alerts/:owned-id/status"
+    },
+    {
+      "actor": "teacher-a",
+      "method": "PUT",
+      "path": "/api/alerts/:owned-id/status"
+    },
+    {
+      "actor": "teacher-a",
+      "method": "PUT",
+      "path": "/api/alerts/:owned-id/status"
+    },
+    {
+      "actor": "admin",
+      "method": "PUT",
+      "path": "/api/alerts/:owned-id/status"
+    },
+    {
+      "actor": "admin",
+      "method": "PUT",
+      "path": "/api/alerts/:owned-id/status"
+    },
+    {
+      "actor": "admin",
+      "method": "DELETE",
+      "path": "/api/alerts/:owned-id"
+    }
+  ],
+  "failure": null,
+  "cleanup": {
+    "created": 3,
+    "remaining": 0
+  }
+}

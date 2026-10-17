@@ -6,11 +6,11 @@ The successor forms release `37147d72ef8dc119f282f8a6305fc88fc47a2f3f` passed it
 [CI/image/deployment workflow](https://github.com/hdevlop/school/actions/runs/39062228402).
 [Fresh runtime proof](successor-37147d7/deployment-proof.json) confirms both services healthy
 on its exact immutable image. Both scripts then ran again on this source:
-**35 reminder + 34 announcement assertions PASS, zero FAIL**.
+**35 reminder + 34 announcement + 51 alert assertions PASS, zero FAIL**.
 [Reminders](successor-37147d7/reminders-deployed-results.json) repeat the owned installment
 reconciliation and keyboard destinations; [announcements](successor-37147d7/pw-announcements-results.json)
 also reject short title/content in French without a write. Exact owned cleanup
-passes. No financial data or delivery changed. These 69 assertions are a
+passes. [Alerts](successor-37147d7/pw-alerts-results.json) also reconcile sidebar navigation, subjects, priorities, statuses and full timestamps on French desktop and Arabic phone. Their three owned alerts are removed and unrelated alerts remain unchanged. No financial data or delivery changed. These 120 assertions are a
 separate recheck; they are not added to the earlier runs below.
 
 ## Reminder correction and first accepted deployment
@@ -47,7 +47,7 @@ record, email, SMS or push was written or sent. The sole announcement remained
 unpublished, and its exact owned cleanup passes.
 
 The [cumulative case map](checklist-coverage.json) advances announcements-R01 and
-reminders-R01/R02: **7 complete cases PASS, 18 partial/BLOCKED**. Earlier passes
+reminders-R01/R02 plus alerts-R01: **8 complete cases PASS, 17 partial/BLOCKED**. Earlier passes
 retain their own source evidence; this is not a full Communication pass. Sending
 reminders remains unavailable, as do publication controls, controlled additional
 roles/class audience, positive deployed inbox fixtures and enabled push. Disabled
