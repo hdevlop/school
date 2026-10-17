@@ -9,7 +9,7 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 const ExpenseCard = ({ data: expense }) => {
    const { t } = useTranslation();
-   const { displayDateOnly } = useSchoolFormat();
+   const { majorMoney, displayDateOnly } = useSchoolFormat();
 
    return (
       <div className="flex items-start gap-4 p-4">
@@ -25,12 +25,15 @@ const ExpenseCard = ({ data: expense }) => {
                   {expense.title}
                </Label>
 
-               <NBadge
-                  look="outline"
-                  className={`w-fit border ${getCategoryClass(expense.category)}`}
-               >
-                  {t(`expenses.categories.${expense.category}`)}
-               </NBadge>
+               <div className="flex flex-wrap items-center gap-2">
+                  <NBadge
+                     look="outline"
+                     className={`w-fit border ${getCategoryClass(expense.category)}`}
+                  >
+                     {t(`expenses.categories.${expense.category}`)}
+                  </NBadge>
+                  <NBadge status={expense.status} showIcon />
+               </div>
             </div>
 
             <div className="space-y-2">
@@ -38,7 +41,7 @@ const ExpenseCard = ({ data: expense }) => {
                   icon={DollarSign}
                   iconColor="text-primary"
                   label={t('expenses.form.amount')}
-                  value={expense.amount}
+                  value={majorMoney(expense.amount)}
                   valueColor="text-primary font-bold"
                />
 
@@ -54,17 +57,17 @@ const ExpenseCard = ({ data: expense }) => {
                   icon={CreditCard}
                   iconColor="text-muted-foreground"
                   label={t('expenses.form.paymentMethod')}
-                  value={expense.paymentMethod}
-                  valueColor="text-foreground font-medium capitalize"
+                  value={expense.paymentMethod ? t(`expenses.paymentMethods.${expense.paymentMethod}`) : t('expenses.table.notSpecified')}
+                  valueColor="text-foreground font-medium"
                />
 
-               <NSectionInfo
+               {expense.invoiceNumber && <NSectionInfo
                   icon={FileText}
                   iconColor="text-muted-foreground"
                   label={t('expenses.form.invoiceNumber')}
                   value={expense.invoiceNumber}
                   valueColor="text-foreground font-mono text-sm"
-               />
+               />}
 
             </div>
          </div>
