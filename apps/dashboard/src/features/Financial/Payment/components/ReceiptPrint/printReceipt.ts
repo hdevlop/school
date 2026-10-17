@@ -171,14 +171,25 @@ export function buildReceiptHtml(data: ReceiptData) {
     <p>${escapeHtml(text.keepReceipt)}</p>
   </footer>
 </main>
-<script>window.onload = function(){ window.print(); };</script>
 </body>
 </html>`;
 }
 
+// The receipt window inherits the page's Content Security Policy, which allows
+// only nonce-bearing scripts, so an inline `window.print()` in it never ran.
+// The opener prints it instead, once its images have loaded or failed.
 export function printReceipt(data: ReceiptData) {
   const win = window.open('', '_blank', 'width=420,height=800');
   if (!win) return;
   win.document.write(buildReceiptHtml(data));
   win.document.close();
+  const print = () => { win.focus(); win.print(); };
+  const pending = Array.from(win.document.images ?? []).filter((image) => !image.complete);
+  if (pending.length === 0) return print();
+  let left = pending.length;
+  const settle = () => { left -= 1; if (left === 0) print(); };
+  for (const image of pending) {
+    image.addEventListener('load', settle, { once: true });
+    image.addEventListener('error', settle, { once: true });
+  }
 }

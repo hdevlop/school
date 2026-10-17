@@ -28,12 +28,29 @@ it('SEC-003 renders all receipt data as escaped text, including invalid dates an
 it('SEC-003 forwards escaped content into the actual print window', () => {
   const writes: string[] = [];
   Object.defineProperty(globalThis, 'window', { configurable: true, value: {
-    open: () => ({ document: { write: (html: string) => writes.push(html), close() {} } }),
+    open: () => ({ document: { write: (html: string) => writes.push(html), close() {}, images: [] }, focus() {}, print() {} }),
   } });
   printReceipt({ ...input, notes: '<script>canary</script>' });
   expect(writes).toHaveLength(1);
   expect(writes[0]).toContain('&lt;script&gt;canary&lt;/script&gt;');
   expect(writes[0]).not.toContain('<script>canary</script>');
+});
+
+// The page's CSP allows only nonce-bearing scripts, and the receipt window
+// inherits it: the inline print script was blocked, so no print dialog opened.
+it('prints from the opener, with no script in the receipt, after the logo settles', () => {
+  const html = buildReceiptHtml({ ...input, schoolLogo: '/logo.png' });
+  expect(html).not.toContain('<script');
+  const listeners: Record<string, () => void> = {};
+  const logo = { complete: false, addEventListener: (type: string, fn: () => void) => { listeners[type] = fn; } };
+  let printed = 0;
+  Object.defineProperty(globalThis, 'window', { configurable: true, value: {
+    open: () => ({ document: { write() {}, close() {}, images: [logo] }, focus() {}, print: () => { printed += 1; } }),
+  } });
+  printReceipt({ ...input, schoolLogo: '/logo.png' });
+  expect(printed).toBe(0);
+  listeners.error();
+  expect(printed).toBe(1);
 });
 
 it('keeps the full payment distinct from its allocation to a school year', () => {
