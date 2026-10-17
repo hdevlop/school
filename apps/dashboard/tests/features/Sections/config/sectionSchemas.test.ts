@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'bun:test';
+import { schoolI18n } from '@sms/contracts/locales';
 import { SECTION_STATUS_VALUES } from '@sms/contracts';
 
-import { sectionSchema } from '@/features/Sections/config/sectionSchemas';
+import { createSectionSchema } from '@/features/Sections/config/sectionSchemas';
+
+// The English catalog, so a message a test reads proves its key exists.
+const english = (key: string, params?: Record<string, unknown>) => schoolI18n.translate('en', key as never, params as never);
+const sectionSchema = createSectionSchema(english);
 
 const valid = { classId: 'cls1', name: 'A' };
 

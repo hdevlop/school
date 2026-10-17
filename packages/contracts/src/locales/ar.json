@@ -5898,6 +5898,20 @@
     "mustBeAtLeast": "يجب ألا يقل عن {{value}}",
     "cannotExceed": "لا يمكن أن يتجاوز {{value}}",
     "mustBePositive": "يجب أن يكون موجبًا",
-    "mustBeAnInteger": "يجب أن يكون عددًا صحيحًا"
+    "mustBeAnInteger": "يجب أن يكون عددًا صحيحًا",
+    "mustBeAValidNumber": "يجب أن يكون عددًا صالحًا",
+    "atLeastOneAssignmentIsRequired": "يلزم إسناد واحد على الأقل",
+    "sectionIsRequired": "القسم مطلوب",
+    "vehicleIsRequired": "المركبة مطلوبة",
+    "pickupLocationIsRequired": "مكان الالتقاط مطلوب",
+    "required": "مطلوب",
+    "enterARealDate": "أدخل تاريخًا حقيقيًا",
+    "theDateMustFallInsideThisSchoolYear": "يجب أن يقع التاريخ ضمن هذه السنة الدراسية",
+    "theDateMustFollowTheCurrentPlacementAndFallInside": "يجب أن يأتي التاريخ بعد التوزيع الحالي وأن يقع ضمن هذه السنة الدراسية",
+    "theDateMustFollowTheCurrentPlacement": "يجب أن يأتي التاريخ بعد التوزيع الحالي",
+    "incidentDateIsRequired": "تاريخ الحادثة مطلوب",
+    "incidentTimeIsRequired": "وقت الحادثة مطلوب",
+    "behaviorDateIsRequired": "تاريخ السلوك مطلوب",
+    "behaviorTimeIsRequired": "وقت السلوك مطلوب"
   }
 }

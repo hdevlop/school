@@ -9,13 +9,8 @@ import { schoolApp, SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
 import { SETTINGS_DATE_FORMAT_VALUES, SETTINGS_TIME_FORMAT_VALUES } from './dateTimeFormats';
 export { SETTINGS_DATE_FORMAT_VALUES, SETTINGS_TIME_FORMAT_VALUES } from './dateTimeFormats';
 
-const emailField = z.string().email('Invalid email format').or(z.literal(''));
-const phoneField = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number');
-const locationValueSchema = z.object({
-  address: z.string().max(500, 'Address too long'),
-  latitude: z.number().min(-90).max(90).nullable(),
-  longitude: z.number().min(-180).max(180).nullable(),
-});
+type T = (key: string) => string;
+
 const numberField = (schema: z.ZodNumber): any =>
   z.preprocess((value) => {
     if (typeof value !== 'string') return value;
@@ -45,88 +40,104 @@ export type AttendanceMode = (typeof ATTENDANCE_MODE_VALUES)[number];
 
 export const SETTINGS_THEME_VALUES = ['light', 'dark'] as const;
 
-// Only what the settings screen shows. A field with a default and no input
-// would be submitted on every save and overwrite the stored value: the year's
-// start and end months (registered calendars change through a reviewed
-// correction), maintenance mode and backups. The active year is shown
-// read-only (AcademicSection): it changes through activation.
-export const settingsSchema = z.object({
-  // School Information
-  schoolName: z.string().min(2, 'School name must be at least 2 characters').max(200, 'School name too long'),
-  schoolLocation: locationValueSchema,
-  schoolAddressPlaceId: z.string().max(255).optional().nullable(),
-  schoolPhone: phoneField,
-  schoolEmail: emailField,
-  schoolWebsite: z.string().url('Must be a valid URL').max(255, 'School website URL too long').optional(),
-  schoolLogo: z.string().url('Must be a valid image URL').max(255, 'School logo URL too long').optional(),
-  receiptLanguage: z.enum(RECEIPT_LANGUAGES).default(DEFAULT_RECEIPT_LANGUAGE),
-
-  // Academic Settings
-  attendanceRequirement: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Attendance requirement must be non-negative').max(100, 'Attendance requirement cannot exceed 100')).default(75.00),
-  attendanceMode: z.enum(ATTENDANCE_MODE_VALUES).default('daily'),
-  maxClassSize: numberField(z.number({ error: 'Must be a valid number' }).int('Max class size must be an integer').min(1, 'Max class size must be at least 1').max(200, 'Max class size cannot exceed 200')).default(34),
-  minimumPassingGrade: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Minimum passing grade must be non-negative').max(100, 'Minimum passing grade cannot exceed 100')).default(60.00),
-  defaultExamDuration: numberField(z.number({ error: 'Must be a valid number' }).int('Default exam duration must be in minutes').min(15, 'Exam duration must be at least 15 minutes').max(480, 'Exam duration cannot exceed 480 minutes')).default(120),
-  calendarSystem: z.enum(CALENDAR_SYSTEM_VALUES).default('SEMESTER'),
-  teachingDays: z.array(z.enum(ROUTINE_DAYS)).min(1).max(7)
-    .refine((days) => new Set(days).size === days.length, 'Teaching days must be unique')
-    .transform((days) => ROUTINE_DAYS.filter((day) => days.includes(day))).default(DEFAULT_TEACHING_DAYS),
-
-  // Notification Settings
-  academicAlerts: z.boolean().default(true),
-  attendanceAlerts: z.boolean().default(true),
-  eventAlerts: z.boolean().default(true),
-  homeworkAlerts: z.boolean().default(true),
-  feesReminder: z.boolean().default(true),
-  feesOverdueAlerts: z.boolean().default(true),
-  emailNotifications: z.boolean().default(true),
-  smsNotifications: z.boolean().default(false),
-  parentNotifications: z.boolean().default(true),
-  lowGradeAlerts: z.boolean().default(true),
-  allowLateSubmission: z.boolean().default(true),
-  examResultsAlerts: z.boolean().default(true),
-  disciplinaryAlerts: z.boolean().default(true),
-  achievementAlerts: z.boolean().default(true),
-
-  // Security Settings
-  twoFactorEnabled: z.boolean().default(false),
-  sessionTimeout: z.string().regex(/^\d{1,4}$/, 'Session timeout must be a number between 1-9999 minutes').default('60'),
-  passwordRequireSymbols: z.boolean().default(true),
-  loginNotifications: z.boolean().default(true),
-  parentAccessEnabled: z.boolean().default(true),
-  teacherAccessEnabled: z.boolean().default(true),
-  studentAccessEnabled: z.boolean().default(true),
-
-  // System Preferences
-  timeZone: z.enum(NAJM_TIME_ZONES).default(schoolApp.preferences.defaultTimeZone),
-  language: z.enum(schoolI18n.supportedLanguages).default(schoolI18n.defaultLanguage),
-  theme: z.enum(SETTINGS_THEME_VALUES).default('light'),
-  dateFormat: z.enum(SETTINGS_DATE_FORMAT_VALUES).default('MM/DD/YYYY'),
-  timeFormat: z.enum(SETTINGS_TIME_FORMAT_VALUES).default('12'),
-  currency: z.enum(NAJM_CURRENCIES).default(SCHOOL_DEFAULT_CURRENCY),
-
-  // Academic Calendar Settings
-  gradingPeriods: numberField(z.number({ error: 'Must be a valid number' }).int('Grading periods must be an integer').min(1, 'Grading periods must be at least 1').max(12, 'Grading periods cannot exceed 12')).default(4),
-  schoolStartTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Invalid start time format (HH:MM)').default('08:00'),
-  schoolEndTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Invalid end time format (HH:MM)').default('15:00'),
-  lunchBreakDuration: numberField(z.number({ error: 'Must be a valid number' }).int('Lunch break duration must be in minutes').min(15, 'Lunch break must be at least 15 minutes').max(120, 'Lunch break cannot exceed 120 minutes')).default(30),
-});
-
-export type SettingsFormValues = z.input<typeof settingsSchema>;
-
 /**
- * The first-run form shown while the school has no settings. Installing them
- * registers and activates `currentAcademicYear` (September-June, reviewable
- * later), which every year-scoped page needs. The rest of the settings keep
- * the server's defaults until the administrator opens the settings screen.
+ * The settings and first-run forms' schemas. They take `t` so a refused field
+ * reads in the page's language.
  */
-export const schoolSetupSchema = settingsSchema
-  .pick({ schoolName: true, schoolPhone: true, schoolEmail: true, timeZone: true, language: true, currency: true })
-  .extend({
-    currentAcademicYear: z.string().refine(
-      (value) => parseSchoolYearLabel(value) !== null,
-      'Expected consecutive years in YYYY-YYYY format',
-    ),
+export const createSettingsSchemas = (t: T) => {
+  const emailField = z.string().email(t('validationMessages.invalidEmailFormat')).or(z.literal(''));
+  const phoneField = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, t('validationMessages.invalidPhoneNumber'));
+  const locationValueSchema = z.object({
+    address: z.string().max(500, t('validationMessages.addressTooLong')),
+    latitude: z.number().min(-90).max(90).nullable(),
+    longitude: z.number().min(-180).max(180).nullable(),
   });
 
-export type SchoolSetupValues = z.input<typeof schoolSetupSchema>;
+  // Only what the settings screen shows. A field with a default and no input
+  // would be submitted on every save and overwrite the stored value: the year's
+  // start and end months (registered calendars change through a reviewed
+  // correction), maintenance mode and backups. The active year is shown
+  // read-only (AcademicSection): it changes through activation.
+  const settings = z.object({
+    // School Information
+    schoolName: z.string().min(2, t('validationMessages.schoolNameMustBeAtLeast2Characters')).max(200, t('validationMessages.schoolNameTooLong')),
+    schoolLocation: locationValueSchema,
+    schoolAddressPlaceId: z.string().max(255).optional().nullable(),
+    schoolPhone: phoneField,
+    schoolEmail: emailField,
+    schoolWebsite: z.string().url(t('validationMessages.mustBeAValidUrl')).max(255, t('validationMessages.schoolWebsiteUrlTooLong')).optional(),
+    schoolLogo: z.string().url(t('validationMessages.mustBeAValidImageUrl')).max(255, t('validationMessages.schoolLogoUrlTooLong')).optional(),
+    receiptLanguage: z.enum(RECEIPT_LANGUAGES).default(DEFAULT_RECEIPT_LANGUAGE),
+
+    // Academic Settings
+    attendanceRequirement: numberField(z.number({ error: t('validationMessages.mustBeAValidNumber') }).min(0, t('validationMessages.attendanceRequirementMustBeNonNegative')).max(100, t('validationMessages.attendanceRequirementCannotExceed100'))).default(75.00),
+    attendanceMode: z.enum(ATTENDANCE_MODE_VALUES).default('daily'),
+    maxClassSize: numberField(z.number({ error: t('validationMessages.mustBeAValidNumber') }).int(t('validationMessages.maxClassSizeMustBeAnInteger')).min(1, t('validationMessages.maxClassSizeMustBeAtLeast1')).max(200, t('validationMessages.maxClassSizeCannotExceed200'))).default(34),
+    minimumPassingGrade: numberField(z.number({ error: t('validationMessages.mustBeAValidNumber') }).min(0, t('validationMessages.minimumPassingGradeMustBeNonNegative')).max(100, t('validationMessages.minimumPassingGradeCannotExceed100'))).default(60.00),
+    defaultExamDuration: numberField(z.number({ error: t('validationMessages.mustBeAValidNumber') }).int(t('validationMessages.defaultExamDurationMustBeInMinutes')).min(15, t('validationMessages.examDurationMustBeAtLeast15Minutes')).max(480, t('validationMessages.examDurationCannotExceed480Minutes'))).default(120),
+    calendarSystem: z.enum(CALENDAR_SYSTEM_VALUES).default('SEMESTER'),
+    teachingDays: z.array(z.enum(ROUTINE_DAYS)).min(1).max(7)
+      .refine((days) => new Set(days).size === days.length, t('validationMessages.teachingDaysMustBeUnique'))
+      .transform((days) => ROUTINE_DAYS.filter((day) => days.includes(day))).default(DEFAULT_TEACHING_DAYS),
+
+    // Notification Settings
+    academicAlerts: z.boolean().default(true),
+    attendanceAlerts: z.boolean().default(true),
+    eventAlerts: z.boolean().default(true),
+    homeworkAlerts: z.boolean().default(true),
+    feesReminder: z.boolean().default(true),
+    feesOverdueAlerts: z.boolean().default(true),
+    emailNotifications: z.boolean().default(true),
+    smsNotifications: z.boolean().default(false),
+    parentNotifications: z.boolean().default(true),
+    lowGradeAlerts: z.boolean().default(true),
+    allowLateSubmission: z.boolean().default(true),
+    examResultsAlerts: z.boolean().default(true),
+    disciplinaryAlerts: z.boolean().default(true),
+    achievementAlerts: z.boolean().default(true),
+
+    // Security Settings
+    twoFactorEnabled: z.boolean().default(false),
+    sessionTimeout: z.string().regex(/^\d{1,4}$/, t('validationMessages.sessionTimeoutMustBeANumberBetween19999')).default('60'),
+    passwordRequireSymbols: z.boolean().default(true),
+    loginNotifications: z.boolean().default(true),
+    parentAccessEnabled: z.boolean().default(true),
+    teacherAccessEnabled: z.boolean().default(true),
+    studentAccessEnabled: z.boolean().default(true),
+
+    // System Preferences
+    timeZone: z.enum(NAJM_TIME_ZONES).default(schoolApp.preferences.defaultTimeZone),
+    language: z.enum(schoolI18n.supportedLanguages).default(schoolI18n.defaultLanguage),
+    theme: z.enum(SETTINGS_THEME_VALUES).default('light'),
+    dateFormat: z.enum(SETTINGS_DATE_FORMAT_VALUES).default('MM/DD/YYYY'),
+    timeFormat: z.enum(SETTINGS_TIME_FORMAT_VALUES).default('12'),
+    currency: z.enum(NAJM_CURRENCIES).default(SCHOOL_DEFAULT_CURRENCY),
+
+    // Academic Calendar Settings
+    gradingPeriods: numberField(z.number({ error: t('validationMessages.mustBeAValidNumber') }).int(t('validationMessages.gradingPeriodsMustBeAnInteger')).min(1, t('validationMessages.gradingPeriodsMustBeAtLeast1')).max(12, t('validationMessages.gradingPeriodsCannotExceed12'))).default(4),
+    schoolStartTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, t('validationMessages.invalidStartTimeFormatHhMm')).default('08:00'),
+    schoolEndTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, t('validationMessages.invalidEndTimeFormatHhMm')).default('15:00'),
+    lunchBreakDuration: numberField(z.number({ error: t('validationMessages.mustBeAValidNumber') }).int(t('validationMessages.lunchBreakDurationMustBeInMinutes')).min(15, t('validationMessages.lunchBreakMustBeAtLeast15Minutes')).max(120, t('validationMessages.lunchBreakCannotExceed120Minutes'))).default(30),
+  });
+
+  /**
+   * The first-run form shown while the school has no settings. Installing them
+   * registers and activates `currentAcademicYear` (September-June, reviewable
+   * later), which every year-scoped page needs. The rest of the settings keep
+   * the server's defaults until the administrator opens the settings screen.
+   */
+  const schoolSetup = settings
+    .pick({ schoolName: true, schoolPhone: true, schoolEmail: true, timeZone: true, language: true, currency: true })
+    .extend({
+      currentAcademicYear: z.string().refine(
+        (value) => parseSchoolYearLabel(value) !== null,
+        t('validationMessages.expectedConsecutiveYearsInYyyyYyyyFormat'),
+      ),
+    });
+
+  return { settings, schoolSetup };
+};
+
+type SettingsSchemas = ReturnType<typeof createSettingsSchemas>;
+export type SettingsFormValues = z.input<SettingsSchemas['settings']>;
+export type SchoolSetupValues = z.input<SettingsSchemas['schoolSetup']>;

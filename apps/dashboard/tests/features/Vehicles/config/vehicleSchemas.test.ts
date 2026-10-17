@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'bun:test';
+import { schoolI18n } from '@sms/contracts/locales';
 
-import { createEndDriverAssignmentSchema, vehicleSchema } from '@/features/Vehicles/config/vehicleSchemas';
+import { createEndDriverAssignmentSchema, createVehicleSchema } from '@/features/Vehicles/config/vehicleSchemas';
+
+// The English catalog, so a message a test reads proves its key exists.
+const english = (key: string, params?: Record<string, unknown>) => schoolI18n.translate('en', key as never, params as never);
+const vehicleSchema = createVehicleSchema(english);
 
 const vehicle = {
   name: 'Bus 3',

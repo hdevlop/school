@@ -3,10 +3,10 @@
 import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
-import React from 'react'
+import React, { useMemo } from 'react'
 import { CalendarDays, FileText, User, GraduationCap, DoorOpen, BookOpen, Activity } from 'lucide-react'
 import { useDialog } from '@/shared/useDialog'
-import { attendanceSchema } from '../config/attendanceSchemas'
+import { createAttendanceSchema } from '../config/attendanceSchemas'
 import { useTranslation } from 'najm-i18n/react'
 
 const STATUS_VALUES = ['present', 'absent', 'late'] as const
@@ -14,6 +14,7 @@ const STATUS_VALUES = ['present', 'absent', 'late'] as const
 
 const StudentAttendanceForm = ({ attendanceData = null }) => {
   const { t } = useTranslation();
+  const attendanceSchema = useMemo(() => createAttendanceSchema(t), [t]);
   const { pop } = useDialog();
 
   const defaultValues = {

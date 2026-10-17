@@ -7,31 +7,33 @@ import { isDateOnly } from '@sms/contracts/academic-years';
  * class or section from a date, or end the enrollment. Each is bounded by the
  * dates it depends on so an impossible date is caught before submission; the
  * server re-checks every rule, including dates in the future and draft years.
+ * Each takes `t` so a refused field reads in the page's language.
  */
 
+type T = (key: string) => string;
 type YearDates = { reportingStartsOn: string; reportingEndsOn: string };
 
-const requiredId = z.string().min(1, 'Required');
-const dateOnly = z.string().refine(isDateOnly, 'Enter a real date');
+const requiredId = (t: T) => z.string().min(1, t('validationMessages.required'));
+const dateOnly = (t: T) => z.string().refine(isDateOnly, t('validationMessages.enterARealDate'));
 
-export const buildEnrollSchema = (year: YearDates) => z.object({
-  classId: requiredId,
-  sectionId: requiredId,
-  enrolledOn: dateOnly.refine(
+export const buildEnrollSchema = (t: T, year: YearDates) => z.object({
+  classId: requiredId(t),
+  sectionId: requiredId(t),
+  enrolledOn: dateOnly(t).refine(
     (date) => date >= year.reportingStartsOn && date <= year.reportingEndsOn,
-    'The date must fall inside this school year',
+    t('validationMessages.theDateMustFallInsideThisSchoolYear'),
   ),
 });
 
 /** A transfer starts after the current placement began and inside the year. */
-export const buildTransferSchema = (year: YearDates, currentFrom: string) => z.object({
-  classId: requiredId,
-  sectionId: requiredId,
-  validFrom: dateOnly.refine(
+export const buildTransferSchema = (t: T, year: YearDates, currentFrom: string) => z.object({
+  classId: requiredId(t),
+  sectionId: requiredId(t),
+  validFrom: dateOnly(t).refine(
     (date) => date > currentFrom && date <= year.reportingEndsOn,
-    'The date must follow the current placement and fall inside this school year',
+    t('validationMessages.theDateMustFollowTheCurrentPlacementAndFallInside'),
   ),
-  reason: z.string().trim().min(1, 'Required').max(500),
+  reason: z.string().trim().min(1, t('validationMessages.required')).max(500),
 });
 
 /**
@@ -39,8 +41,8 @@ export const buildTransferSchema = (year: YearDates, currentFrom: string) => z.o
  * it must follow the current placement's start. The server also allows the
  * day after the year's last day.
  */
-export const buildEndEnrollmentSchema = (currentFrom: string) => z.object({
-  leftOn: dateOnly.refine((date) => date > currentFrom, 'The date must follow the current placement'),
+export const buildEndEnrollmentSchema = (t: T, currentFrom: string) => z.object({
+  leftOn: dateOnly(t).refine((date) => date > currentFrom, t('validationMessages.theDateMustFollowTheCurrentPlacement')),
   status: z.enum(STUDENT_YEAR_ENROLLMENT_END_STATUS_VALUES),
 });
 

@@ -10,19 +10,22 @@ import { FormInput } from 'najm-kit';
 import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location';
 import { z } from 'zod'
 import { toast } from 'sonner'
-import { locationValueSchema } from '../config/transportSchemas'
+import { createTransportSchemas } from '../config/transportSchemas'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'najm-i18n/react';
 
-const assignSchema = (t: (key: string) => string) => z.object({
-  studentId: z.string().min(1, t('transport.validation.studentRequired')),
-  assignmentDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, t('transport.validation.dateFormat')),
-  pickup: locationValueSchema,
-  pickupPlaceId: z.string().max(255).optional().nullable(),
-  dropoff: locationValueSchema,
-  dropoffPlaceId: z.string().max(255).optional().nullable(),
-  notes: z.string().max(1000).optional(),
-})
+const assignSchema = (t: (key: string) => string) => {
+  const { location: locationValueSchema } = createTransportSchemas(t)
+  return z.object({
+    studentId: z.string().min(1, t('transport.validation.studentRequired')),
+    assignmentDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, t('transport.validation.dateFormat')),
+    pickup: locationValueSchema,
+    pickupPlaceId: z.string().max(255).optional().nullable(),
+    dropoff: locationValueSchema,
+    dropoffPlaceId: z.string().max(255).optional().nullable(),
+    notes: z.string().max(1000).optional(),
+  })
+}
 
 const AssignStudentFields = ({ students }) => {
   const { t } = useTranslation();

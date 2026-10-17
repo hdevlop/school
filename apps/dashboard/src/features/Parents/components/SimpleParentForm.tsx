@@ -1,12 +1,13 @@
 'use client'
 
+import { useMemo } from 'react';
 import { AvatarFormInput, NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { IdCard, Mail, User, Users, UserRound, Globe, Calendar, Briefcase, Heart, Phone, MapPin } from 'lucide-react'
 import { useDialog } from '@/shared/useDialog'
 import { useTranslation } from 'najm-i18n/react'
-import { parentSchema } from '../config/parentSchemas'
+import { createParentSchemas } from '../config/parentSchemas'
 import { usePrefix } from 'najm-kit';
 import { useWatch } from 'react-hook-form'
 import {
@@ -200,6 +201,8 @@ export const ParentFormContent = () => {
 // ==================== MAIN FORM ====================
 
 const SimpleParentForm = ({ parent = null }) => {
+   const { t } = useTranslation()
+   const parentSchema = useMemo(() => createParentSchemas(t).parent, [t]);
    const { pop } = useDialog()
    const defaultValues = getParentDefaultValues(parent)
 

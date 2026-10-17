@@ -9,12 +9,7 @@ import { AvatarFormInput, FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormHeader } from 'najm-kit';
 import { Briefcase, IdCard, User, UserRound, Mail, Activity, UserPlus, BookOpen, Award, Calendar, Wallet, Landmark, Clock, GraduationCap, Phone, MapPin, Loader2 } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
-import {
-  teacherPersonalSchema,
-  teacherProfessionalSchema,
-  teacherAssignmentsStepSchema,
-  teacherFullSchema,
-} from '../config/teacherSchemas'
+import { createTeacherSchemas } from '../config/teacherSchemas'
 import {
   buildGenderOptions,
   buildEmploymentTypeOptionsFor,
@@ -64,6 +59,7 @@ export const getTeacherAssignmentsDefaultValues = (teacher = null) => ({
 const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeacher }) => {
    const { pop } = useDialog()
    const { t } = useTranslation()
+   const teacherSchemas = useMemo(() => createTeacherSchemas(t), [t])
    const [isSubmitting, setIsSubmitting] = useState(false)
    const submissionPromiseRef = useRef<Promise<unknown> | null>(null)
 
@@ -71,8 +67,8 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
       {
          id: 'personal',
          title: t('teachers.form.personalInformation'),
-         schema: teacherPersonalSchema,
-         fields: Object.keys(teacherPersonalSchema.shape),
+         schema: teacherSchemas.personal,
+         fields: Object.keys(teacherSchemas.personal.shape),
          render: () => (
             <>
                <PersonalInfoContent />
@@ -82,8 +78,8 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
       {
          id: 'professional',
          title: t('teachers.form.professionalInformation'),
-         schema: teacherProfessionalSchema,
-         fields: Object.keys(teacherProfessionalSchema.shape),
+         schema: teacherSchemas.professional,
+         fields: Object.keys(teacherSchemas.professional.shape),
          render: () => (
             <>
                <ProfessionalInfoContent />
@@ -93,7 +89,7 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
       {
          id: 'assignments',
          title: t('teachers.form.assignmentsStep'),
-         schema: teacherAssignmentsStepSchema,
+         schema: teacherSchemas.assignmentsStep,
          fields: ['assignments'],
          render: () => (
             <>
@@ -101,7 +97,7 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
             </>
          ),
       },
-   ], [classes, subjects, t])
+   ], [classes, subjects, t, teacherSchemas])
 
    const defaultValues = useMemo(() => ({
       ...getTeacherPersonalDefaultValues(teacher),
@@ -133,7 +129,7 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
       <div className='h-full min-h-0' aria-busy={isSubmitting}>
          <TeacherWizardForm
             steps={steps}
-            schema={teacherFullSchema}
+            schema={teacherSchemas.full}
             defaultValues={defaultValues}
             onSubmit={handleSubmit}
             className={isSubmitting ? 'pointer-events-none select-none' : undefined}

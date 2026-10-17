@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useFormState, type Control } from 'react-hook-form';
 import { AlertCircle, BookOpen, Building2, Check, Circle, RotateCcw, Save, Settings as SettingsIcon } from 'lucide-react';
 import { NButton, NConfirmDialog, NForm, NSheet, NSkeleton as Skeleton, Tabs, TabsContent, TabsList, TabsTrigger, useNForm } from 'najm-kit';
@@ -16,7 +16,7 @@ import AcademicSection from './sections/AcademicSection';
 import SystemSection from './sections/SystemSection';
 import SecuritySection from './sections/SecuritySection';
 import NotificationSection from './sections/NotificationSection';
-import { settingsSchema } from '../config/settingsSchemas';
+import { createSettingsSchemas } from '../config/settingsSchemas';
 import { useAdminSettings } from '../hooks/useSettings';
 
 const SETTINGS_FORM_ID = 'settings-form';
@@ -157,6 +157,7 @@ export function SchoolSettingsSheet({ open, onOpenChange, onLeave }: {
   onLeave?: () => void;
 }) {
   const { t } = useTranslation();
+  const settingsSchema = useMemo(() => createSettingsSchemas(t).settings, [t]);
   const admin = useAdminSettings(open);
   const { isSettingsLoading, isError, refetch, updateSettings, isUpdating } = admin;
   // Until the query has data the CRUD hook hands back a fresh `[]` on every

@@ -5988,6 +5988,20 @@
     "mustBeAtLeast": "Doit être au moins {{value}}",
     "cannotExceed": "Ne peut pas dépasser {{value}}",
     "mustBePositive": "Doit être positif",
-    "mustBeAnInteger": "Doit être un nombre entier"
+    "mustBeAnInteger": "Doit être un nombre entier",
+    "mustBeAValidNumber": "Doit être un nombre valide",
+    "atLeastOneAssignmentIsRequired": "Au moins une affectation est requise",
+    "sectionIsRequired": "La section est obligatoire",
+    "vehicleIsRequired": "Le véhicule est obligatoire",
+    "pickupLocationIsRequired": "Le lieu de prise en charge est obligatoire",
+    "required": "Obligatoire",
+    "enterARealDate": "Saisissez une date réelle",
+    "theDateMustFallInsideThisSchoolYear": "La date doit être comprise dans cette année scolaire",
+    "theDateMustFollowTheCurrentPlacementAndFallInside": "La date doit suivre l'affectation actuelle et être comprise dans cette année scolaire",
+    "theDateMustFollowTheCurrentPlacement": "La date doit suivre l'affectation actuelle",
+    "incidentDateIsRequired": "La date de l'incident est obligatoire",
+    "incidentTimeIsRequired": "L'heure de l'incident est obligatoire",
+    "behaviorDateIsRequired": "La date du comportement est obligatoire",
+    "behaviorTimeIsRequired": "L'heure du comportement est obligatoire"
   }
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useMemo } from 'react'
 import { BookOpen, User, GraduationCap, Layers } from 'lucide-react'
 import { DynamicArray, NForm, usePrefix } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
@@ -8,7 +8,7 @@ import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react'
 import { useFormContext, useWatch } from 'react-hook-form'
-import { assignmentsSchema } from '../config/teacherSchemas'
+import { createTeacherSchemas } from '../config/teacherSchemas'
 
 // ==================== COMPONENTS ====================
 
@@ -118,6 +118,7 @@ export const AssignmentFormContent = ({ classes, subjects }) => {
 const BulkAssignmentForm = ({  classes = [], subjects = [], teachers = [] }) => {
    const { pop } = useDialog()
    const { t } = useTranslation()
+   const assignmentsSchema = useMemo(() => createTeacherSchemas(t).assignments, [t]);
 
    const defaultValues = {
       teacherId: null,

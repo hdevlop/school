@@ -3,14 +3,14 @@
 import { NErrorState, NForm, NLoadingState } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useMemo } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import {
   ClipboardList, FileText, Tag, Building, DoorOpen, BookOpen, User,
   Calendar, Clock, Award, Activity,
 } from 'lucide-react'
 import { useDialog } from '@/shared/useDialog'
-import { assessmentSchema } from '../config/assessmentSchemas'
+import { createAssessmentSchema } from '../config/assessmentSchemas'
 import { useTranslation } from 'najm-i18n/react'
 import { buildAssessmentStatusOptions, buildAssessmentTypeOptions } from '../config/assessmentOptions'
 import { useClasses } from '@/features/Classes/hooks/useClasses'
@@ -66,6 +66,7 @@ const mergeDescriptionAndInstructions = (description?: string, instructions?: st
 
 const AssessmentForm = ({ assessment = null }) => {
   const { t } = useTranslation();
+  const assessmentSchema = useMemo(() => createAssessmentSchema(t), [t]);
   const { pop } = useDialog();
   const { viewingYear, isResolving } = useViewingAcademicYear();
   const { data: registeredYears, isPending: isYearsPending } = useAcademicYearOptions();

@@ -4,15 +4,17 @@ import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormHeader } from 'najm-kit';
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Car, Hash, Calendar, DollarSign, Gauge, Tag, Truck, Users, Activity, User, FileText } from 'lucide-react'
 import { useDialog } from '@/shared/useDialog'
-import { vehicleSchema } from '../config/vehicleSchemas'
+import { createVehicleSchema } from '../config/vehicleSchemas'
 import { buildVehicleStatusOptions, buildVehicleTypeOptions } from '../config/vehicleOptions'
 import { useTranslation } from 'najm-i18n/react'
 
 const VehicleForm = ({ vehicle = null, drivers = [] }) => {
 
+   const { t } = useTranslation();
+   const vehicleSchema = useMemo(() => createVehicleSchema(t), [t]);
    const { pop } = useDialog();
 
    const defaultValues = {

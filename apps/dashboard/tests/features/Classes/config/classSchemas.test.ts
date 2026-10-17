@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'bun:test';
+import { schoolI18n } from '@sms/contracts/locales';
 
-import { classSchema } from '@/features/Classes/config/classSchemas';
+import { createClassSchema } from '@/features/Classes/config/classSchemas';
+
+// The English catalog, so a message a test reads proves its key exists.
+const english = (key: string, params?: Record<string, unknown>) => schoolI18n.translate('en', key as never, params as never);
+const classSchema = createClassSchema(english);
 
 const valid = { name: '6A', level: 'primary' };
 

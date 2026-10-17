@@ -5,8 +5,11 @@ import {
   BEHAVIOR_REWARD_TYPE_VALUES,
 } from '@sms/contracts';
 
+type T = (key: string) => string;
+
 /**
- * Recording a reward.
+ * Recording a reward. It takes `t` so a refused field reads in the page's
+ * language.
  *
  * The three enums used to be spelled out twice — once inline in the global
  * validation module and once in this feature's constants file — and neither
@@ -18,16 +21,16 @@ import {
  * rather than as a shape: the form owns the format, the component owns the
  * join.
  */
-export const behaviorRewardSchema = z.object({
-  studentId: z.string().min(1, 'Student is required'),
-  behaviorDate: z.string().min(1, 'Behavior date is required'),
-  behaviorTime: z.string().min(1, 'Behavior time is required'),
+export const createBehaviorRewardSchema = (t: T) => z.object({
+  studentId: z.string().min(1, t('validationMessages.studentIsRequired')),
+  behaviorDate: z.string().min(1, t('validationMessages.behaviorDateIsRequired')),
+  behaviorTime: z.string().min(1, t('validationMessages.behaviorTimeIsRequired')),
   category: z.enum(BEHAVIOR_REWARD_CATEGORY_VALUES),
   recognitionLevel: z.enum(BEHAVIOR_RECOGNITION_LEVEL_VALUES),
-  description: z.string().trim().min(1, 'Description is required').max(2000, 'Description is too long'),
+  description: z.string().trim().min(1, t('validationMessages.descriptionIsRequired')).max(2000, t('validationMessages.descriptionIsTooLong')),
   rewardType: z.enum(BEHAVIOR_REWARD_TYPE_VALUES),
-  points: z.coerce.number().int('Points must be an integer').min(0).max(100),
-  rewardNote: z.string().trim().max(1000, 'Reward note is too long').optional().nullable(),
+  points: z.coerce.number().int(t('validationMessages.pointsMustBeAnInteger')).min(0).max(100),
+  rewardNote: z.string().trim().max(1000, t('validationMessages.rewardNoteIsTooLong')).optional().nullable(),
 });
 
-export type BehaviorRewardFormValues = z.input<typeof behaviorRewardSchema>;
+export type BehaviorRewardFormValues = z.input<ReturnType<typeof createBehaviorRewardSchema>>;

@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'bun:test';
+import { schoolI18n } from '@sms/contracts/locales';
 import { CALENDAR_SYSTEM_VALUES } from '@sms/contracts';
 
-import { schoolSetupSchema, settingsSchema } from '@/features/Settings/config/settingsSchemas';
+import { createSettingsSchemas } from '@/features/Settings/config/settingsSchemas';
+
+// The English catalog, so a message a test reads proves its key exists.
+const english = (key: string, params?: Record<string, unknown>) => schoolI18n.translate('en', key as never, params as never);
+const schoolSetupSchema = createSettingsSchemas(english).schoolSetup;
+const settingsSchema = createSettingsSchemas(english).settings;
 
 /**
  * A school that has never opened the settings screen runs on these defaults,

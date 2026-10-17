@@ -4,15 +4,16 @@ import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
-import React from 'react'
+import React, { useMemo } from 'react'
 import { BookOpen, Hash, FileText } from 'lucide-react'
 import { useDialog } from '@/shared/useDialog'
-import { subjectSchema } from '../config/subjectSchemas'
+import { createSubjectSchema } from '../config/subjectSchemas'
 import { useTranslation } from 'najm-i18n/react'
 
 const SubjectForm = ({ subject = null }) => {
 
    const { t } = useTranslation();
+   const subjectSchema = useMemo(() => createSubjectSchema(t), [t]);
    const { pop } = useDialog();
 
    const defaultValues = {

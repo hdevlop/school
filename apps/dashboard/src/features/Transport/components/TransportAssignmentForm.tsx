@@ -5,7 +5,7 @@ import { Bus, CalendarDays, NotebookPen } from 'lucide-react'
 import { FormInput, NForm } from 'najm-kit'
 import { useDialog } from '@/shared/useDialog'
 import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'
-import { standaloneTransportAssignmentSchema } from '../config/transportSchemas'
+import { createTransportSchemas } from '../config/transportSchemas'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'najm-i18n/react'
 import { useVehicles } from '@/features/Vehicles/hooks/useVehicles'
@@ -87,6 +87,8 @@ function AssignmentFields({ lockVehicleId }: { lockVehicleId?: string }) {
 }
 
 export function TransportAssignmentForm({ student, assignment, lockVehicleId }: Props) {
+  const { t } = useTranslation()
+  const standaloneTransportAssignmentSchema = useMemo(() => createTransportSchemas(t).standaloneAssignment, [t]);
   const { pop } = useDialog()
   const defaults = {
     vehicleId: lockVehicleId || assignment?.vehicleId || '',

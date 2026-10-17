@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'bun:test';
+import { schoolI18n } from '@sms/contracts/locales';
 
-import {
-  standaloneTransportAssignmentSchema,
-  transportSchema,
-} from '@/features/Transport/config/transportSchemas';
+import { createTransportSchemas } from '@/features/Transport/config/transportSchemas';
+
+// The English catalog, so a message a test reads proves its key exists.
+const english = (key: string, params?: Record<string, unknown>) => schoolI18n.translate('en', key as never, params as never);
+const standaloneTransportAssignmentSchema = createTransportSchemas(english).standaloneAssignment;
+const transportSchema = createTransportSchemas(english).transport;
 
 const somewhere = { address: '12 Rue des Écoles', latitude: 33.57, longitude: -7.59 };
 const nowhere = { address: '', latitude: null, longitude: null };

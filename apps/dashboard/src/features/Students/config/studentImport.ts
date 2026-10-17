@@ -1,7 +1,11 @@
 import { findClassByName, GENDER_VALUES, STUDENT_STATUS_VALUES, type Gender, type StudentStatus } from '@sms/contracts';
 import { isDateOnly } from '@sms/contracts/academic-years';
 import { firstYearEnrolledOn } from './newStudentEnrollment';
-import { parentSchema, type ParentFormValues } from '@/features/Parents/config/parentSchemas';
+import { createParentSchemas, type ParentFormValues } from '@/features/Parents/config/parentSchemas';
+
+// The import reports which guardian fields failed, never their messages, so the
+// schema's translator is irrelevant here.
+const parentSchema = createParentSchemas((key) => key).parent;
 
 /**
  * The columns an import reads. Exported table columns use these same keys,

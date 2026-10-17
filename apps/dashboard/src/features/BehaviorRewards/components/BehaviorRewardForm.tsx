@@ -1,10 +1,11 @@
 'use client';
 
+import { useMemo } from 'react';
 import { Award, CalendarClock, FileText, Gift, Star, Trophy, UserRound } from 'lucide-react';
 import { FormInput, NForm, NFormSectionHeader } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
-import { behaviorRewardSchema } from '../config/behaviorRewardSchemas';
+import { createBehaviorRewardSchema } from '../config/behaviorRewardSchemas';
 import { useStudents } from '@/features/Students/hooks/useStudents';
 import { toLocalDateTimeInput } from '../behaviorRewardConstants';
 import { useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
@@ -17,6 +18,7 @@ import {
 
 const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any }) => {
   const { t } = useTranslation();
+  const behaviorRewardSchema = useMemo(() => createBehaviorRewardSchema(t), [t]);
   const { pop } = useDialog();
   const { students, isStudentsLoading } = useStudents();
 

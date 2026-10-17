@@ -3,11 +3,11 @@
 import { AvatarFormInput, NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Briefcase, IdCard, User, UserRound, Mail, Activity, UserPlus, CreditCard, Car, Calendar, CalendarCheck, Award, DollarSign, Phone, MapPin, FileText } from 'lucide-react'
 import { useDialog } from '@/shared/useDialog'
 import { useTranslation } from 'najm-i18n/react'
-import { driverSchema } from '../config/driverSchemas'
+import { createDriverSchema } from '../config/driverSchemas'
 import {
    DRIVER_LICENSE_TYPE_OPTIONS,
    buildDriverStatusOptions,
@@ -16,6 +16,8 @@ import {
 
 const DriverForm = ({ driver = null, defaultGender = 'M' }) => {
 
+   const { t } = useTranslation();
+   const driverSchema = useMemo(() => createDriverSchema(t), [t]);
    const { pop } = useDialog();
 
    const defaultValues = {

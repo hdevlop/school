@@ -1,9 +1,7 @@
 import { z } from 'zod';
 
-const optionalId = z.preprocess(
-  (value) => (value === '' ? undefined : value),
-  z.string().min(1, 'ID cannot be empty').nullish().optional(),
-);
+type T = (key: string, params?: Record<string, unknown>) => string;
+
 const numberField = (schema: z.ZodNumber): any =>
   z.preprocess((value) => {
     if (typeof value !== 'string') return value;
@@ -17,14 +15,25 @@ const optionalNumberField = (schema: z.ZodNumber): any =>
 
 /**
  * What the subject form accepts. The server's `SubjectDto` validates the same
- * payload again; this only spares the user a round trip.
+ * payload again; this only spares the user a round trip. It takes `t` so a
+ * refused field reads in the page's language.
  */
-export const subjectSchema = z.object({
-  id: optionalId,
-  code: z.string().min(2, 'Subject code must be at least 2 characters').max(10, 'Subject code too long'),
-  name: z.string().min(2, 'Subject name must be at least 2 characters').max(100, 'Subject name too long'),
-  description: z.string().max(500, 'Description too long').optional(),
-  gradeLevel: optionalNumberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(1, 'Must be at least 1').max(12, 'Cannot exceed 12')),
-});
+export const createSubjectSchema = (t: T) => {
+  const optionalId = z.preprocess(
+    (value) => (value === '' ? undefined : value),
+    z.string().min(1, t('validationMessages.idCannotBeEmpty')).nullish().optional(),
+  );
 
-export type SubjectFormValues = z.input<typeof subjectSchema>;
+  return z.object({
+    id: optionalId,
+    code: z.string().min(2, t('validationMessages.subjectCodeMustBeAtLeast2Characters')).max(10, t('validationMessages.subjectCodeTooLong')),
+    name: z.string().min(2, t('validationMessages.subjectNameMustBeAtLeast2Characters')).max(100, t('validationMessages.subjectNameTooLong')),
+    description: z.string().max(500, t('validationMessages.descriptionTooLong')).optional(),
+    gradeLevel: optionalNumberField(z.number({ error: t('validationMessages.mustBeAValidNumber') })
+      .int(t('validationMessages.mustBeAnInteger'))
+      .min(1, t('validationMessages.mustBeAtLeast', { value: 1 }))
+      .max(12, t('validationMessages.cannotExceed', { value: 12 }))),
+  });
+};
+
+export type SubjectFormValues = z.input<ReturnType<typeof createSubjectSchema>>;

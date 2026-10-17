@@ -1,13 +1,16 @@
 import { describe, expect, it } from 'bun:test';
 import { STUDENT_YEAR_ENROLLMENT_END_STATUS_VALUES } from '@sms/contracts';
-import { ar, en, es, fr } from '@sms/contracts/locales';
+import { ar, en, es, fr, schoolI18n } from '@sms/contracts/locales';
+
+// The English catalog, so a message a test reads proves its key exists.
+const english = (key: string) => schoolI18n.translate('en', key as never);
 import { buildEndEnrollmentSchema, buildEnrollSchema, buildTransferSchema } from '@/features/Students/config/enrollmentSchemas';
 import { buildEnrollmentEndStatusOptions, ENROLLMENT_END_STATUS_TRANSLATION_PREFIX } from '@/features/Students/config/enrollmentOptions';
 
 const year = { reportingStartsOn: '2025-09-01', reportingEndsOn: '2026-08-31' };
 
 describe('enrol form', () => {
-  const schema = buildEnrollSchema(year);
+  const schema = buildEnrollSchema(english, year);
 
   it('accepts a class, a section, and a real day of the year, bounds included', () => {
     for (const enrolledOn of ['2025-09-01', '2026-02-10', '2026-08-31']) {
@@ -25,7 +28,7 @@ describe('enrol form', () => {
 });
 
 describe('transfer form', () => {
-  const schema = buildTransferSchema(year, '2025-09-01');
+  const schema = buildTransferSchema(english, year, '2025-09-01');
   const move = { classId: 'c2', sectionId: 's2', reason: 'Section change' };
 
   it('starts after the current placement and inside the year', () => {
@@ -41,7 +44,7 @@ describe('transfer form', () => {
 });
 
 describe('end enrollment form', () => {
-  const schema = buildEndEnrollmentSchema('2025-09-01');
+  const schema = buildEndEnrollmentSchema(english, '2025-09-01');
 
   it('ends after the current placement with a status the command accepts', () => {
     for (const status of STUDENT_YEAR_ENROLLMENT_END_STATUS_VALUES) {

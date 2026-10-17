@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'bun:test';
+import { schoolI18n } from '@sms/contracts/locales';
 import { ASSESSMENT_STATUS_VALUES, ASSESSMENT_TYPE_VALUES } from '@sms/contracts';
 
-import { assessmentSchema } from '@/features/Assessments/config/assessmentSchemas';
+import { createAssessmentSchema } from '@/features/Assessments/config/assessmentSchemas';
+
+// The English catalog, so a message a test reads proves its key exists.
+const english = (key: string, params?: Record<string, unknown>) => schoolI18n.translate('en', key as never, params as never);
+const assessmentSchema = createAssessmentSchema(english);
 
 /**
  * What the assessment form will and will not submit.

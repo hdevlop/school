@@ -4,15 +4,16 @@ import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
-import React from 'react'
+import React, { useMemo } from 'react'
 import { GraduationCap, FileText, Layers } from 'lucide-react'
 import { useDialog } from '@/shared/useDialog'
-import { classSchema } from '../config/classSchemas'
+import { createClassSchema } from '../config/classSchemas'
 import { useTranslation } from 'najm-i18n/react'
 
 const ClassForm = ({ classData = null}) => {
 
    const { t } = useTranslation();
+   const classSchema = useMemo(() => createClassSchema(t), [t]);
    const { pop } = useDialog();
 
    const defaultValues = {

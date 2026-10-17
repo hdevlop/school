@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'bun:test';
+import { schoolI18n } from '@sms/contracts/locales';
 import { GENDER_VALUES, STUDENT_STATUS_VALUES } from '@sms/contracts';
 
-import { PLACEMENT_FIELDS, studentProfileEditSchema, studentSchema } from '@/features/Students/config/studentSchemas';
+import { PLACEMENT_FIELDS, createStudentSchemas } from '@/features/Students/config/studentSchemas';
+
+// The English catalog, so a message a test reads proves its key exists.
+const english = (key: string, params?: Record<string, unknown>) => schoolI18n.translate('en', key as never, params as never);
+const studentProfileEditSchema = createStudentSchemas(english).profileEdit;
+const studentSchema = createStudentSchemas(english).student;
 
 const somewhere = { address: '12 Rue des Écoles', latitude: 33.57, longitude: -7.59 };
 

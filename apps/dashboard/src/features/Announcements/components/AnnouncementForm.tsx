@@ -3,11 +3,11 @@
 import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useWatch } from 'react-hook-form'
 import { Megaphone, FileText, Users, Building, Calendar } from 'lucide-react'
 import { useDialog } from '@/shared/useDialog'
-import { announcementSchema } from '../config/announcementSchemas'
+import { createAnnouncementSchema } from '../config/announcementSchemas'
 import { useTranslation } from 'najm-i18n/react'
 import { useClasses } from '@/features/Classes/hooks/useClasses'
 
@@ -57,6 +57,7 @@ const ClassTargetFields = () => {
 
 const AnnouncementForm = ({ announcement = null, defaultPublishDate = null }) => {
   const { t } = useTranslation();
+  const announcementSchema = useMemo(() => createAnnouncementSchema(t), [t]);
   const { pop } = useDialog();
 
   const initialClassId = announcement?.classId || announcement?.class?.id || '';

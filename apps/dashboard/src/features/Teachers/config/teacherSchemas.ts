@@ -1,22 +1,8 @@
 import { z } from 'zod';
 import { EMPLOYMENT_TYPE_VALUES, GENDER_VALUES, TEACHER_STATUS_VALUES } from '@sms/contracts';
 
-const optionalId = z.preprocess(
-  (value) => (value === '' ? undefined : value),
-  z.string().min(1, 'ID cannot be empty').nullish().optional(),
-);
-const emailField = z.string().email('Invalid email format').or(z.literal(''));
-const phoneField = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number');
-const nameField = z
-  .string()
-  .min(2, 'Name must be at least 2 characters')
-  .max(100, 'Name too long');
-const dateField = z.string().regex(
-  /^(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/,
-  'Date must be in YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, DD-MM-YY, or DD-MM-YYYY format',
-);
-const cinField = z.string().min(8, 'CIN must be at least 8 characters').max(20, 'CIN too long');
-const addressField = z.string().max(500, 'Address too long').optional();
+type T = (key: string) => string;
+
 const numberField = (schema: z.ZodNumber): any =>
   z.preprocess((value) => {
     if (typeof value !== 'string') return value;
@@ -33,72 +19,98 @@ const optionalNumberField = (schema: z.ZodNumber): any =>
  * it is neither checked against the field's rules nor sent: the API refuses
  * `''` for these fields.
  */
-const optionalText = <T extends z.ZodType>(schema: T) =>
+const optionalText = <S extends z.ZodType>(schema: S) =>
   z.preprocess((value) => (typeof value === 'string' && value.trim() === '' ? undefined : value), schema.optional());
 
 /**
- * Hiring a teacher, in the three steps the wizard walks through.
+ * Hiring a teacher, in the three steps the wizard walks through. The schemas
+ * take `t` so a refused field reads in the page's language.
  *
  * Each step binds its own schema so the user is stopped at the step that has
- * the problem, and `teacherFullSchema` is the same three merged for the final
- * submit. Keeping the parts and the whole in one file is what stops a field
- * from being validated on one screen and not the other.
+ * the problem, and `full` is the same three merged for the final submit.
+ * Keeping the parts and the whole in one place is what stops a field from
+ * being validated on one screen and not the other.
  */
+export const createTeacherSchemas = (t: T) => {
+  const optionalId = z.preprocess(
+    (value) => (value === '' ? undefined : value),
+    z.string().min(1, t('validationMessages.idCannotBeEmpty')).nullish().optional(),
+  );
+  const emailField = z.string().email(t('validationMessages.invalidEmailFormat')).or(z.literal(''));
+  const phoneField = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, t('validationMessages.invalidPhoneNumber'));
+  const nameField = z
+    .string()
+    .min(2, t('validationMessages.nameMustBeAtLeast2Characters'))
+    .max(100, t('validationMessages.nameTooLong'));
+  const dateField = z.string().regex(
+    /^(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/,
+    t('validationMessages.dateMustBeInYyyyMmDdMmDd'),
+  );
+  const cinField = z.string().min(8, t('validationMessages.cinMustBeAtLeast8Characters')).max(20, t('validationMessages.cinTooLong'));
+  const addressField = z.string().max(500, t('validationMessages.addressTooLong')).optional();
+  const validNumber = () => z.number({ error: t('validationMessages.mustBeAValidNumber') });
 
-/** Step 1 — who they are. */
-export const teacherPersonalSchema = z.object({
-  id: optionalId,
-  name: nameField,
-  cin: cinField,
-  email: emailField,
-  phone: phoneField,
-  address: addressField,
-  gender: z.enum(GENDER_VALUES).optional(),
-  emergencyContact: optionalText(nameField),
-  emergencyPhone: optionalText(phoneField),
-  status: z.enum(TEACHER_STATUS_VALUES).default('active'),
-  image: z.union([z.string(), z.instanceof(File), z.null()]).optional(),
-});
+  /** Step 1 — who they are. */
+  const personal = z.object({
+    id: optionalId,
+    name: nameField,
+    cin: cinField,
+    email: emailField,
+    phone: phoneField,
+    address: addressField,
+    gender: z.enum(GENDER_VALUES).optional(),
+    emergencyContact: optionalText(nameField),
+    emergencyPhone: optionalText(phoneField),
+    status: z.enum(TEACHER_STATUS_VALUES).default('active'),
+    image: z.union([z.string(), z.instanceof(File), z.null()]).optional(),
+  });
 
-/** Step 2 — the terms of their employment. */
-export const teacherProfessionalSchema = z.object({
-  specialization: z.string().max(100, 'Specialization too long').optional(),
-  yearsOfExperience: optionalNumberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(0, 'Years of experience must be non-negative')),
-  salary: optionalNumberField(z.number({ error: 'Must be a valid number' }).positive('Salary must be positive')),
-  hireDate: dateField,
-  bankAccount: z.coerce.string().max(100, { message: 'Bank account too long' }).optional(),
-  employmentType: z.enum(EMPLOYMENT_TYPE_VALUES).optional(),
-  workloadHours: optionalNumberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(0, 'Workload hours must be non-negative').max(60, 'Workload hours cannot exceed 60')),
-  academicDegrees: z.string().max(500, 'Academic degrees description too long').optional(),
-});
+  /** Step 2 — the terms of their employment. */
+  const professional = z.object({
+    specialization: z.string().max(100, t('validationMessages.specializationTooLong')).optional(),
+    yearsOfExperience: optionalNumberField(validNumber().int(t('validationMessages.mustBeAnInteger'))
+      .min(0, t('validationMessages.yearsOfExperienceMustBeNonNegative'))),
+    salary: optionalNumberField(validNumber().positive(t('validationMessages.salaryMustBePositive'))),
+    hireDate: dateField,
+    bankAccount: z.coerce.string().max(100, { message: t('validationMessages.bankAccountTooLong') }).optional(),
+    employmentType: z.enum(EMPLOYMENT_TYPE_VALUES).optional(),
+    workloadHours: optionalNumberField(validNumber().int(t('validationMessages.mustBeAnInteger'))
+      .min(0, t('validationMessages.workloadHoursMustBeNonNegative'))
+      .max(60, t('validationMessages.workloadHoursCannotExceed60'))),
+    academicDegrees: z.string().max(500, t('validationMessages.academicDegreesDescriptionTooLong')).optional(),
+  });
 
-/** One line of "this teacher teaches these subjects to these sections". */
-export const assignmentSchema = z.object({
-  classId: z.string().min(1, 'Class is required'),
-  sectionIds: z.array(z.string()).min(1, 'At least one section is required'),
-  subjectIds: z.array(z.string()).min(1, 'At least one subject is required'),
-});
+  /** One line of "this teacher teaches these subjects to these sections". */
+  const assignment = z.object({
+    classId: z.string().min(1, t('validationMessages.classIsRequired')),
+    sectionIds: z.array(z.string()).min(1, t('validationMessages.atLeastOneSectionIsRequired')),
+    subjectIds: z.array(z.string()).min(1, t('validationMessages.atLeastOneSubjectIsRequired')),
+  });
 
-/** The bulk assignment dialog: it is opened to assign, so it needs one line. */
-export const assignmentsSchema = z.object({
-  assignments: z.array(assignmentSchema).min(1, 'At least one assignment is required'),
-});
+  /** The bulk assignment dialog: it is opened to assign, so it needs one line. */
+  const assignments = z.object({
+    assignments: z.array(assignment).min(1, t('validationMessages.atLeastOneAssignmentIsRequired')),
+  });
 
-/**
- * Step 3 — the timetable. A teacher may have none yet, and removing the last
- * one is how an edit clears the year's assignments before a delete.
- */
-export const teacherAssignmentsStepSchema = z.object({
-  assignments: z.array(assignmentSchema),
-});
+  /**
+   * Step 3 — the timetable. A teacher may have none yet, and removing the last
+   * one is how an edit clears the year's assignments before a delete.
+   */
+  const assignmentsStep = z.object({
+    assignments: z.array(assignment),
+  });
 
-export const teacherFullSchema = z.object({
-  ...teacherPersonalSchema.shape,
-  ...teacherProfessionalSchema.shape,
-  ...teacherAssignmentsStepSchema.shape,
-});
+  const full = z.object({
+    ...personal.shape,
+    ...professional.shape,
+    ...assignmentsStep.shape,
+  });
 
-export type TeacherPersonalFormValues = z.input<typeof teacherPersonalSchema>;
-export type TeacherProfessionalFormValues = z.input<typeof teacherProfessionalSchema>;
-export type TeacherAssignmentFormValues = z.input<typeof assignmentSchema>;
-export type TeacherFullFormValues = z.input<typeof teacherFullSchema>;
+  return { personal, professional, assignment, assignments, assignmentsStep, full };
+};
+
+type TeacherSchemas = ReturnType<typeof createTeacherSchemas>;
+export type TeacherPersonalFormValues = z.input<TeacherSchemas['personal']>;
+export type TeacherProfessionalFormValues = z.input<TeacherSchemas['professional']>;
+export type TeacherAssignmentFormValues = z.input<TeacherSchemas['assignment']>;
+export type TeacherFullFormValues = z.input<TeacherSchemas['full']>;

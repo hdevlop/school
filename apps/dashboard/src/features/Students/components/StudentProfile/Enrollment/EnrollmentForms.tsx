@@ -79,7 +79,7 @@ function PlacementFields({ year }: { year: Year }) {
 export function EnrollForm({ year, defaultDate }: { year: Year; defaultDate: string }) {
   const { t } = useTranslation();
   const { pop } = useDialog();
-  const schema = useMemo(() => buildEnrollSchema(year), [year]);
+  const schema = useMemo(() => buildEnrollSchema(t, year), [t, year]);
 
   return (
     <NForm
@@ -105,7 +105,7 @@ export function EnrollForm({ year, defaultDate }: { year: Year; defaultDate: str
 export function TransferForm({ year, current }: { year: Year; current: EnrollmentPlacement }) {
   const { t } = useTranslation();
   const { pop } = useDialog();
-  const schema = useMemo(() => buildTransferSchema(year, current.validFrom), [year, current.validFrom]);
+  const schema = useMemo(() => buildTransferSchema(t, year, current.validFrom), [t, year, current.validFrom]);
 
   return (
     <NForm
@@ -146,7 +146,7 @@ export function TransferForm({ year, current }: { year: Year; current: Enrollmen
 export function EndEnrollmentForm({ current }: { current: EnrollmentPlacement }) {
   const { t } = useTranslation();
   const { pop } = useDialog();
-  const schema = useMemo(() => buildEndEnrollmentSchema(current.validFrom), [current.validFrom]);
+  const schema = useMemo(() => buildEndEnrollmentSchema(t, current.validFrom), [t, current.validFrom]);
 
   return (
     <NForm

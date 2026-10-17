@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'bun:test';
+import { schoolI18n } from '@sms/contracts/locales';
 
-import { announcementSchema } from '@/features/Announcements/config/announcementSchemas';
+import { createAnnouncementSchema } from '@/features/Announcements/config/announcementSchemas';
+
+// The English catalog, so a message a test reads proves its key exists.
+const english = (key: string, params?: Record<string, unknown>) => schoolI18n.translate('en', key as never, params as never);
+const announcementSchema = createAnnouncementSchema(english);
 
 /**
  * A new announcement form starts with `classIds: []`, and only the class

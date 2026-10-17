@@ -9,7 +9,7 @@ import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'
 import { IdCard, BookOpen, Hash, User, UserRound, Calendar, CalendarCheck, GraduationCap, DoorOpen, School, Mail, Phone, HeartPulse, Bus } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
 import { useFormContext, useWatch } from 'react-hook-form'
-import { PLACEMENT_FIELDS, studentProfileEditSchema } from '../config/studentSchemas'
+import { PLACEMENT_FIELDS, createStudentSchemas } from '../config/studentSchemas'
 import { buildGenderOptions } from '../config/studentOptions'
 
 const sectionHeaderClassName = 'student-form-section-header'
@@ -45,6 +45,8 @@ export const getStudentDefaultValues = (student = null, businessDate?: string | 
 
 const SimpleStudentForm = ({ student = null, classes = [] }) => {
 
+  const { t } = useTranslation()
+  const studentProfileEditSchema = useMemo(() => createStudentSchemas(t).profileEdit, [t])
   const { pop } = useDialog()
   const handleSubmit = async (studentData) => {
     const { addressLocation, ...fields } = studentData;

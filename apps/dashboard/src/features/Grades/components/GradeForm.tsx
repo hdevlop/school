@@ -10,7 +10,7 @@ import {
   ListChecks, UserCircle,
 } from 'lucide-react'
 import { useDialog } from '@/shared/useDialog'
-import { gradeSchema } from '../config/gradeSchemas'
+import { createGradeSchema } from '../config/gradeSchemas'
 import { useTranslation } from 'najm-i18n/react'
 import { useClasses } from '@/features/Classes/hooks/useClasses'
 import { useSections } from '@/features/Sections/hooks/useSections'
@@ -110,6 +110,7 @@ const MarksRefHelper = ({ assessments }) => {
 
 const GradeForm = ({ grade = null }) => {
   const { t } = useTranslation();
+  const gradeSchema = useMemo(() => createGradeSchema(t), [t]);
   const { pop } = useDialog();
   const isEdit = !!grade?.id;
 

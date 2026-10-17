@@ -1,14 +1,8 @@
 import { z } from 'zod';
 import { SECTION_STATUS_VALUES } from '@sms/contracts';
 
-const optionalId = z.preprocess(
-  (value) => (value === '' ? undefined : value),
-  z.string().min(1, 'ID cannot be empty').nullish().optional(),
-);
-const requiredId = z.preprocess(
-  (value) => value ?? '',
-  z.string().min(1, 'ID is required'),
-);
+type T = (key: string) => string;
+
 const numberField = (schema: z.ZodNumber): any =>
   z.preprocess((value) => {
     if (typeof value !== 'string') return value;
@@ -21,18 +15,33 @@ const optionalNumberField = (schema: z.ZodNumber): any =>
   z.preprocess((value) => (value === null ? undefined : value), numberField(schema).optional());
 
 /**
- * What the section form accepts.
+ * What the section form accepts. It takes `t` so a refused field reads in the
+ * page's language.
  *
  * `roomNumber` is a number here although the column is text — the form has
  * always coerced it, and changing that would change what the API receives.
  */
-export const sectionSchema = z.object({
-  id: optionalId,
-  classId: requiredId,
-  name: z.string().min(1, 'Section name is required').max(10, 'Section name too long'),
-  maxStudents: numberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(1, 'Max students must be at least 1').max(100, 'Max students cannot exceed 100')).default(30),
-  roomNumber: optionalNumberField(z.number({ error: 'Must be a valid number' }).max(10000, 'Room number too long')),
-  status: z.enum(SECTION_STATUS_VALUES).default('active'),
-});
+export const createSectionSchema = (t: T) => {
+  const optionalId = z.preprocess(
+    (value) => (value === '' ? undefined : value),
+    z.string().min(1, t('validationMessages.idCannotBeEmpty')).nullish().optional(),
+  );
+  const requiredId = z.preprocess(
+    (value) => value ?? '',
+    z.string().min(1, t('validationMessages.idIsRequired')),
+  );
+  const validNumber = { error: t('validationMessages.mustBeAValidNumber') };
 
-export type SectionFormValues = z.input<typeof sectionSchema>;
+  return z.object({
+    id: optionalId,
+    classId: requiredId,
+    name: z.string().min(1, t('validationMessages.sectionNameIsRequired')).max(10, t('validationMessages.sectionNameTooLong')),
+    maxStudents: numberField(z.number(validNumber).int(t('validationMessages.mustBeAnInteger'))
+      .min(1, t('validationMessages.maxStudentsMustBeAtLeast1'))
+      .max(100, t('validationMessages.maxStudentsCannotExceed100'))).default(30),
+    roomNumber: optionalNumberField(z.number(validNumber).max(10000, t('validationMessages.roomNumberTooLong'))),
+    status: z.enum(SECTION_STATUS_VALUES).default('active'),
+  });
+};
+
+export type SectionFormValues = z.input<ReturnType<typeof createSectionSchema>>;

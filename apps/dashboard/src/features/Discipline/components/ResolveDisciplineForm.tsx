@@ -1,14 +1,16 @@
 'use client';
 
+import { useMemo } from 'react';
 import { FileCheck2, FileText, Gavel } from 'lucide-react';
 import { FormInput, NForm, NFormSectionHeader } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
-import { resolveDisciplineSchema } from '../config/disciplineSchemas';
+import { createDisciplineSchemas } from '../config/disciplineSchemas';
 import { DISCIPLINE_ACTIONS } from '../disciplineConstants';
 
 export default function ResolveDisciplineForm() {
   const { t } = useTranslation();
+  const resolveDisciplineSchema = useMemo(() => createDisciplineSchemas(t).resolve, [t]);
   const { pop } = useDialog();
   return (
     <NForm

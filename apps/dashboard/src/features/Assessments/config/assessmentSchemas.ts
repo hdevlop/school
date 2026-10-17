@@ -1,18 +1,8 @@
 import { z } from 'zod';
 import { ASSESSMENT_STATUS_VALUES, ASSESSMENT_TYPE_VALUES } from '@sms/contracts';
 
-const optionalId = z.preprocess(
-  (value) => (value === '' ? undefined : value),
-  z.string().min(1, 'ID cannot be empty').nullish().optional(),
-);
-const requiredId = z.preprocess(
-  (value) => value ?? '',
-  z.string().min(1, 'ID is required'),
-);
-const dateField = z.string().regex(
-  /^(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/,
-  'Date must be in YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, DD-MM-YY, or DD-MM-YYYY format',
-);
+type T = (key: string) => string;
+
 const numberField = (schema: z.ZodNumber): any =>
   z.preprocess((value) => {
     if (typeof value !== 'string') return value;
@@ -21,7 +11,8 @@ const numberField = (schema: z.ZodNumber): any =>
   }, schema);
 
 /**
- * What the assessment form accepts.
+ * What the assessment form accepts. It takes `t` so a refused field reads in
+ * the page's language.
  *
  * This is form validation, not authorization: it exists so the user sees a
  * problem before a request leaves the browser. `AssessmentDto` on the server
@@ -32,24 +23,45 @@ const numberField = (schema: z.ZodNumber): any =>
  * the `pgEnum` column get them — so a type the form offers is a type the API
  * accepts, by construction rather than by review.
  */
-export const assessmentSchema = z.object({
-  classId: requiredId,
-  sectionId: optionalId,
-  sectionIds: z.array(requiredId).min(1, 'Select at least one section'),
-  subjectId: requiredId,
-  teacherId: requiredId,
-  teacherAssignmentId: optionalId,
-  title: z.string().min(3, 'Title must be at least 3 characters').max(200, 'Title too long'),
-  description: z.string().max(1000, 'Description too long').optional().nullable(),
-  type: z.enum(ASSESSMENT_TYPE_VALUES).default('quiz'),
-  date: dateField,
-  duration: numberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(1, 'Duration must be at least 1 minute').max(480, 'Duration cannot exceed 8 hours')),
-  totalMarks: numberField(z.number({ error: 'Must be a valid number' }).positive('Total marks must be greater than 0').max(1000, 'Total marks cannot exceed 1000')).default(20),
-  passingMarks: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Passing marks must be non-negative').max(1000, 'Passing marks cannot exceed 1000')).default(10),
-  instructions: z.string().max(2000, 'Instructions too long').optional().nullable(),
-  status: z.enum(ASSESSMENT_STATUS_VALUES).default('scheduled'),
-  assessmentId: optionalId,
-});
+export const createAssessmentSchema = (t: T) => {
+  const optionalId = z.preprocess(
+    (value) => (value === '' ? undefined : value),
+    z.string().min(1, t('validationMessages.idCannotBeEmpty')).nullish().optional(),
+  );
+  const requiredId = z.preprocess(
+    (value) => value ?? '',
+    z.string().min(1, t('validationMessages.idIsRequired')),
+  );
+  const dateField = z.string().regex(
+    /^(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/,
+    t('validationMessages.dateMustBeInYyyyMmDdMmDd'),
+  );
+  const validNumber = () => z.number({ error: t('validationMessages.mustBeAValidNumber') });
 
-export type AssessmentFormValues = z.input<typeof assessmentSchema>;
-export type AssessmentSubmitValues = z.output<typeof assessmentSchema>;
+  return z.object({
+    classId: requiredId,
+    sectionId: optionalId,
+    sectionIds: z.array(requiredId).min(1, t('validationMessages.selectAtLeastOneSection')),
+    subjectId: requiredId,
+    teacherId: requiredId,
+    teacherAssignmentId: optionalId,
+    title: z.string().min(3, t('validationMessages.titleMustBeAtLeast3Characters')).max(200, t('validationMessages.titleTooLong')),
+    description: z.string().max(1000, t('validationMessages.descriptionTooLong')).optional().nullable(),
+    type: z.enum(ASSESSMENT_TYPE_VALUES).default('quiz'),
+    date: dateField,
+    duration: numberField(validNumber().int(t('validationMessages.mustBeAnInteger'))
+      .min(1, t('validationMessages.durationMustBeAtLeast1Minute'))
+      .max(480, t('validationMessages.durationCannotExceed8Hours'))),
+    totalMarks: numberField(validNumber().positive(t('validationMessages.totalMarksMustBeGreaterThan0'))
+      .max(1000, t('validationMessages.totalMarksCannotExceed1000'))).default(20),
+    passingMarks: numberField(validNumber().min(0, t('validationMessages.passingMarksMustBeNonNegative'))
+      .max(1000, t('validationMessages.passingMarksCannotExceed1000'))).default(10),
+    instructions: z.string().max(2000, t('validationMessages.instructionsTooLong')).optional().nullable(),
+    status: z.enum(ASSESSMENT_STATUS_VALUES).default('scheduled'),
+    assessmentId: optionalId,
+  });
+};
+
+type AssessmentSchema = ReturnType<typeof createAssessmentSchema>;
+export type AssessmentFormValues = z.input<AssessmentSchema>;
+export type AssessmentSubmitValues = z.output<AssessmentSchema>;

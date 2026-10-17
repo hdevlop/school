@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Activity,
   Building,
@@ -16,7 +16,7 @@ import { FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
-import { eventSchema } from '../config/eventSchemas';
+import { createEventSchema } from '../config/eventSchemas';
 import {
   buildEventStatusOptions,
   buildEventTypeOptions,
@@ -35,6 +35,7 @@ const emptyToUndefined = (value) => (value === '' || value === null ? undefined 
 
 const EventForm = ({ event = null, initialDate = null }) => {
   const { t } = useTranslation();
+  const eventSchema = useMemo(() => createEventSchema(t), [t]);
   const { pop } = useDialog();
   const { classes, isClassesLoading } = useClasses();
 

@@ -1,12 +1,13 @@
 'use client'
 
+import { useMemo } from 'react';
 import { NForm } from 'najm-kit'
 import { useDialog } from '@/shared/useDialog'
 import { useTranslation } from 'najm-i18n/react'
 import { DynamicArray } from 'najm-kit';
 
 import { ParentFormContent, getParentDefaultValues } from './SimpleParentForm'
-import { parentsSchema } from '../config/parentSchemas'
+import { createParentSchemas } from '../config/parentSchemas'
 
 export const BulkParentFormContent = () => {
 
@@ -39,6 +40,8 @@ export const BulkParentFormContent = () => {
 // ==================== MAIN FORM ====================
 
 const BulkParentForm = () => {
+  const { t } = useTranslation()
+  const parentsSchema = useMemo(() => createParentSchemas(t).parents, [t]);
   const { pop } = useDialog()
 
   const defaultValues = {

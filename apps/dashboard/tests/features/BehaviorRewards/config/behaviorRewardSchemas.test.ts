@@ -1,11 +1,16 @@
 import { describe, expect, it } from 'bun:test';
+import { schoolI18n } from '@sms/contracts/locales';
 import {
   BEHAVIOR_RECOGNITION_LEVEL_VALUES,
   BEHAVIOR_REWARD_CATEGORY_VALUES,
   BEHAVIOR_REWARD_TYPE_VALUES,
 } from '@sms/contracts';
 
-import { behaviorRewardSchema } from '@/features/BehaviorRewards/config/behaviorRewardSchemas';
+import { createBehaviorRewardSchema } from '@/features/BehaviorRewards/config/behaviorRewardSchemas';
+
+// The English catalog, so a message a test reads proves its key exists.
+const english = (key: string, params?: Record<string, unknown>) => schoolI18n.translate('en', key as never, params as never);
+const behaviorRewardSchema = createBehaviorRewardSchema(english);
 
 const reward = {
   studentId: 'st1',

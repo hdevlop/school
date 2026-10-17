@@ -1,12 +1,17 @@
 import { describe, expect, it } from 'bun:test';
+import { schoolI18n } from '@sms/contracts/locales';
 import { DRIVER_STATUS_VALUES, GENDER_VALUES } from '@sms/contracts';
 
-import { driverSchema } from '@/features/Drivers/config/driverSchemas';
+import { createDriverSchema } from '@/features/Drivers/config/driverSchemas';
 import {
   DRIVER_LICENSE_TYPE_OPTIONS,
   buildDriverStatusOptions,
   buildGenderOptions,
 } from '@/features/Drivers/config/driverOptions';
+
+// The English catalog, so a message a test reads proves its key exists.
+const english = (key: string, params?: Record<string, unknown>) => schoolI18n.translate('en', key as never, params as never);
+const driverSchema = createDriverSchema(english);
 
 const echo = (key: string) => key;
 

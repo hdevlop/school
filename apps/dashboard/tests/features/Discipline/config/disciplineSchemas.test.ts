@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'bun:test';
+import { schoolI18n } from '@sms/contracts/locales';
 import { DISCIPLINE_ACTION_VALUES, DISCIPLINE_CATEGORY_VALUES, DISCIPLINE_SEVERITY_VALUES } from '@sms/contracts';
 
-import { disciplineSchema, resolveDisciplineSchema } from '@/features/Discipline/config/disciplineSchemas';
+import { createDisciplineSchemas } from '@/features/Discipline/config/disciplineSchemas';
+
+// The English catalog, so a message a test reads proves its key exists.
+const english = (key: string, params?: Record<string, unknown>) => schoolI18n.translate('en', key as never, params as never);
+const disciplineSchema = createDisciplineSchemas(english).discipline;
+const resolveDisciplineSchema = createDisciplineSchemas(english).resolve;
 
 const incident = {
   studentId: 'st1',

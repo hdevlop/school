@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
 import { createFeeSchemas } from '@/features/Financial/Fees/config/feeSchemas';
-import { parentsSchema } from '@/features/Parents/config/parentSchemas';
-import { transportAssignmentSchema } from '@/features/Transport/config/transportSchemas';
+import { createParentSchemas } from '@/features/Parents/config/parentSchemas';
+import { createTransportSchemas } from '@/features/Transport/config/transportSchemas';
 
-import { studentSchema } from './studentSchemas';
+import { createStudentSchemas } from './studentSchemas';
 
 // Answered on the first step; the step and the whole form share this field.
 const transportEnabledField = z.boolean().optional().default(false);
@@ -26,16 +26,21 @@ const transportEnabledField = z.boolean().optional().default(false);
  * There is no yearly enrollment date to fill in: the wizard derives the
  * placement date from the admission date on submit (`firstYearEnrolledOn`).
  *
- * It takes `t` for the fee list, whose refusals read in the page's language.
+ * It takes `t` so every step's refusals read in the page's language, and
+ * returns each step's schema beside the whole form's.
  */
 export const createFullStudentSchemas = (t: (key: string) => string) => {
+  const { student } = createStudentSchemas(t);
+  const { parents } = createParentSchemas(t);
+  const { assignment, transport } = createTransportSchemas(t);
   const { fees } = createFeeSchemas(t);
+
   const fullStudent = z.object({
-    ...studentSchema.shape,
-    ...parentsSchema.shape,
+    ...student.shape,
+    ...parents.shape,
     ...fees.shape,
     transportEnabled: transportEnabledField,
-    transportAssignment: transportAssignmentSchema.optional().nullable(),
+    transportAssignment: assignment.optional().nullable(),
   });
 
   // SEC-001: enrollment staff without financial access submit no charges.
@@ -44,19 +49,19 @@ export const createFullStudentSchemas = (t: (key: string) => string) => {
     fees: z.array(fullStudent.shape.fees.element).max(0),
   });
 
-  return { fees, fullStudent, studentWithoutFees };
-};
+  /**
+   * The wizard's first step.
+   *
+   * The student's own fields plus the transport toggle, because the toggle is
+   * answered on that step and decides whether a fourth step appears at all. It
+   * shares `transportEnabledField` with the whole form, so the step and the form
+   * cannot disagree about it.
+   */
+  const studentWithTransport = student.extend({
+    transportEnabled: transportEnabledField,
+  });
 
-/**
- * The wizard's first step.
- *
- * The student's own fields plus the transport toggle, because the toggle is
- * answered on that step and decides whether a fourth step appears at all. It
- * shares `transportEnabledField` with the whole form, so the step and the form
- * cannot disagree about it.
- */
-export const studentWithTransportSchema = studentSchema.extend({
-  transportEnabled: transportEnabledField,
-});
+  return { fees, parents, transport, fullStudent, studentWithoutFees, studentWithTransport };
+};
 
 export type FullStudentFormValues = z.input<ReturnType<typeof createFullStudentSchemas>['fullStudent']>;

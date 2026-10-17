@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { Building2, CalendarRange, DollarSign, Globe, Languages, Loader2, LogOut, Mail, Phone, School } from 'lucide-react';
@@ -12,7 +12,7 @@ import { schoolI18n } from '@sms/contracts/locales';
 
 import { schoolApp, SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
 import { isConflictError } from '@/services/apiError';
-import { schoolSetupSchema, type SchoolSetupValues } from '../config/settingsSchemas';
+import { type SchoolSetupValues, createSettingsSchemas } from '../config/settingsSchemas';
 import { buildSetupAcademicYearOptions } from '../config/settingsOptions';
 import { useInstallSchool } from '../hooks/useSettings';
 
@@ -25,6 +25,7 @@ const languageLabels = { en: 'English', fr: 'Français', ar: 'العربية', e
  */
 const SchoolSetup: React.FC<{ canInstall: boolean }> = ({ canInstall }) => {
   const { t } = useTranslation();
+  const schoolSetupSchema = useMemo(() => createSettingsSchemas(t).schoolSetup, [t]);
   const router = useRouter();
   const queryClient = useQueryClient();
   const { installSchool, isInstalling } = useInstallSchool();

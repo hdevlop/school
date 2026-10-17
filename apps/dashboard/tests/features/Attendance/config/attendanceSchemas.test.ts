@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'bun:test';
+import { schoolI18n } from '@sms/contracts/locales';
 import { ATTENDANCE_STATUS_VALUES } from '@sms/contracts';
 
-import { attendanceSchema } from '@/features/Attendance/config/attendanceSchemas';
+import { createAttendanceSchema } from '@/features/Attendance/config/attendanceSchemas';
+
+// The English catalog, so a message a test reads proves its key exists.
+const english = (key: string, params?: Record<string, unknown>) => schoolI18n.translate('en', key as never, params as never);
+const attendanceSchema = createAttendanceSchema(english);
 
 const valid = {
   studentId: 'st1',

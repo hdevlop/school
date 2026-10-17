@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'bun:test';
+import { schoolI18n } from '@sms/contracts/locales';
 import { GENDER_VALUES, MARITAL_STATUS_VALUES, RELATIONSHIP_TYPE_VALUES } from '@sms/contracts';
 
-import { parentSchema, parentsSchema } from '@/features/Parents/config/parentSchemas';
+import { createParentSchemas } from '@/features/Parents/config/parentSchemas';
+
+// The English catalog, so a message a test reads proves its key exists.
+const english = (key: string, params?: Record<string, unknown>) => schoolI18n.translate('en', key as never, params as never);
+const parentSchema = createParentSchemas(english).parent;
+const parentsSchema = createParentSchemas(english).parents;
 
 const parent = {
   name: 'Fatima Alaoui',

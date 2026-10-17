@@ -6604,6 +6604,20 @@
     "mustBeAtLeast": "Must be at least {{value}}",
     "cannotExceed": "Cannot exceed {{value}}",
     "mustBePositive": "Must be positive",
-    "mustBeAnInteger": "Must be an integer"
+    "mustBeAnInteger": "Must be an integer",
+    "mustBeAValidNumber": "Must be a valid number",
+    "atLeastOneAssignmentIsRequired": "At least one assignment is required",
+    "sectionIsRequired": "Section is required",
+    "vehicleIsRequired": "Vehicle is required",
+    "pickupLocationIsRequired": "Pickup location is required",
+    "required": "Required",
+    "enterARealDate": "Enter a real date",
+    "theDateMustFallInsideThisSchoolYear": "The date must fall inside this school year",
+    "theDateMustFollowTheCurrentPlacementAndFallInside": "The date must follow the current placement and fall inside this school year",
+    "theDateMustFollowTheCurrentPlacement": "The date must follow the current placement",
+    "incidentDateIsRequired": "Incident date is required",
+    "incidentTimeIsRequired": "Incident time is required",
+    "behaviorDateIsRequired": "Behavior date is required",
+    "behaviorTimeIsRequired": "Behavior time is required"
   }
 }

@@ -1,11 +1,12 @@
 'use client';
 
+import { useMemo } from 'react';
 import { CalendarDays, Clock3, FileText, MapPin, ShieldAlert, UserRound } from 'lucide-react';
 import { FormInput, NForm, NFormSectionHeader } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useStudents } from '@/features/Students/hooks/useStudents';
 import { useTranslation } from 'najm-i18n/react';
-import { disciplineSchema } from '../config/disciplineSchemas';
+import { createDisciplineSchemas } from '../config/disciplineSchemas';
 import { DISCIPLINE_CATEGORIES, DISCIPLINE_SEVERITIES, type DisciplineIncident } from '../disciplineConstants';
 import { useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYear';
@@ -23,6 +24,7 @@ const localParts = (value?: string) => {
 
 export default function DisciplineForm({ incident }: { incident?: DisciplineIncident | null }) {
   const { t } = useTranslation();
+  const disciplineSchema = useMemo(() => createDisciplineSchemas(t).discipline, [t]);
   const { pop } = useDialog();
   const { students, isStudentsLoading } = useStudents();
   const yearCalendar = useViewingYearCalendar();

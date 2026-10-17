@@ -1,13 +1,16 @@
 import { describe, expect, it } from 'bun:test';
+import { schoolI18n } from '@sms/contracts/locales';
 import { EMPLOYMENT_TYPE_VALUES, TEACHER_STATUS_VALUES } from '@sms/contracts';
 
-import {
-  assignmentsSchema,
-  teacherAssignmentsStepSchema,
-  teacherFullSchema,
-  teacherPersonalSchema,
-  teacherProfessionalSchema,
-} from '@/features/Teachers/config/teacherSchemas';
+import { createTeacherSchemas } from '@/features/Teachers/config/teacherSchemas';
+
+// The English catalog, so a message a test reads proves its key exists.
+const english = (key: string, params?: Record<string, unknown>) => schoolI18n.translate('en', key as never, params as never);
+const assignmentsSchema = createTeacherSchemas(english).assignments;
+const teacherAssignmentsStepSchema = createTeacherSchemas(english).assignmentsStep;
+const teacherFullSchema = createTeacherSchemas(english).full;
+const teacherPersonalSchema = createTeacherSchemas(english).personal;
+const teacherProfessionalSchema = createTeacherSchemas(english).professional;
 
 const personal = {
   name: 'Youssef Idrissi',
