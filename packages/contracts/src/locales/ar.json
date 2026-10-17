@@ -1652,6 +1652,7 @@
   "fees": {
     "stats": {
       "collected": "المحصل حتى اليوم",
+      "tpe": "TPE",
       "overdueAmount": "المبلغ المتأخر"
     },
     "classBulk": {

@@ -195,7 +195,7 @@ export class FeeRepository {
       ), 0)
     `;
 
-    const collectedToDateForFee = (method?: typeof payments.$inferSelect.paymentMethod) => sql`
+    const collectedToDateForFee = (...methods: (typeof payments.$inferSelect.paymentMethod)[]) => sql`
       coalesce((
         select sum(${paymentAllocations.amount}::numeric)
         from ${paymentAllocations}
@@ -203,7 +203,7 @@ export class FeeRepository {
         where ${paymentAllocations.feeId} = ${fees.id}
           and ${payments.status} = 'completed'
           and coalesce(${payments.settledDate}, ${payments.paymentDate}) <= ${today}
-          ${method ? sql`and ${payments.paymentMethod} = ${method}` : sql``}
+          ${methods.length ? sql`and ${inArray(payments.paymentMethod, methods)}` : sql``}
       ), 0)
     `;
     // Derive the unpaid balance from completed allocations, rather than a
@@ -243,6 +243,7 @@ export class FeeRepository {
       collectedCashToDate: sql<string>`coalesce(sum(${collectedToDateForFee('cash')}), 0)::text`.as('collectedCashToDate'),
       collectedCheckToDate: sql<string>`coalesce(sum(${collectedToDateForFee('check')}), 0)::text`.as('collectedCheckToDate'),
       collectedBankTransferToDate: sql<string>`coalesce(sum(${collectedToDateForFee('bankTransfer')}), 0)::text`.as('collectedBankTransferToDate'),
+      collectedTpeToDate: sql<string>`coalesce(sum(${collectedToDateForFee('creditCard', 'debitCard')}), 0)::text`.as('collectedTpeToDate'),
       overdueAmount: sql<string>`coalesce(sum(${overdueAmountForFee}), 0)::text`.as('overdueAmount'),
       totalDiscount: getTotalDiscountSum().as('totalDiscount'),
       totalDue: sql<string>`coalesce(sum(${fees.netAmount}::numeric - ${completedAllocatedForFee}), 0)::text`.as('totalDue'),
@@ -296,6 +297,7 @@ export class FeeRepository {
       collectedCashToDate: student.collectedCashToDate,
       collectedCheckToDate: student.collectedCheckToDate,
       collectedBankTransferToDate: student.collectedBankTransferToDate,
+      collectedTpeToDate: student.collectedTpeToDate,
       overdueAmount: student.overdueAmount,
       totalDiscount: student.totalDiscount,
       totalDue: student.totalDue,

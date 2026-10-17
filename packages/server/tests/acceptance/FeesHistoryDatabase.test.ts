@@ -48,6 +48,10 @@ describe('fee year scope on the marked PostgreSQL fixture', () => {
           { id: 'asof-received', status: 'completed' as const, paymentMethod: 'cash' as const, amount: '100', paymentDate: day(0), installmentId: 'asof-past' },
           { id: 'asof-advance', status: 'completed' as const, paymentMethod: 'bankTransfer' as const, amount: '70', paymentDate: day(-1), installmentId: 'asof-future' },
           { id: 'asof-full', status: 'completed' as const, paymentMethod: 'check' as const, amount: '100', paymentDate: day(-1), installmentId: 'asof-paid' },
+          { id: 'asof-credit-card', status: 'completed' as const, paymentMethod: 'creditCard' as const, amount: '20', paymentDate: day(0), installmentId: 'asof-today' },
+          { id: 'asof-debit-card', status: 'completed' as const, paymentMethod: 'debitCard' as const, amount: '30', paymentDate: day(0), installmentId: 'asof-today' },
+          { id: 'asof-future-card', status: 'completed' as const, paymentMethod: 'creditCard' as const, amount: '40', paymentDate: day(1), installmentId: 'asof-today' },
+          { id: 'asof-voided-card', status: 'voided' as const, paymentMethod: 'debitCard' as const, amount: '10', paymentDate: day(-1), installmentId: 'asof-today' },
           { id: 'asof-dated-future', status: 'completed' as const, paymentMethod: 'cash' as const, amount: '50', paymentDate: day(1), installmentId: 'asof-past' },
           { id: 'asof-pending', status: 'pending' as const, paymentMethod: 'check' as const, amount: '30', paymentDate: day(-1), installmentId: 'asof-past' },
           { id: 'asof-voided', status: 'voided' as const, paymentMethod: 'bankTransfer' as const, amount: '20', paymentDate: day(-1), installmentId: 'asof-past' },
@@ -64,13 +68,14 @@ describe('fee year scope on the marked PostgreSQL fixture', () => {
         })));
 
         const after = await read();
-        expect(Number(after.collectedToDate) - Number(before?.collectedToDate ?? 0)).toBe(270);
+        expect(Number(after.collectedToDate) - Number(before?.collectedToDate ?? 0)).toBe(320);
         expect(Number(after.collectedCashToDate) - Number(before?.collectedCashToDate ?? 0)).toBe(100);
         expect(Number(after.collectedCheckToDate) - Number(before?.collectedCheckToDate ?? 0)).toBe(100);
         expect(Number(after.collectedBankTransferToDate) - Number(before?.collectedBankTransferToDate ?? 0)).toBe(70);
+        expect(Number(after.collectedTpeToDate) - Number(before?.collectedTpeToDate ?? 0)).toBe(50);
         expect(Number(after.overdueAmount) - Number(before?.overdueAmount ?? 0)).toBe(300);
         // The existing annual balance still includes the future-dated completed receipts.
-        expect(Number(after.totalPaid) - Number(before?.totalPaid ?? 0)).toBe(360);
+        expect(Number(after.totalPaid) - Number(before?.totalPaid ?? 0)).toBe(450);
         throw rollback;
       });
     } catch (error) {

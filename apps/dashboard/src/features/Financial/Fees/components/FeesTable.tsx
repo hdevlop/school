@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { NPageHeader, NPageHeaderActions, NEmptyState, NButton, NErrorState, NForbiddenState, NStatCard, NStatCardSkeleton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Banknote, CircleDollarSign, HandCoins, Landmark, Plus, ReceiptText, SearchX, Wallet } from 'lucide-react';
+import { Banknote, CircleDollarSign, CreditCard, HandCoins, Landmark, Plus, ReceiptText, SearchX, Wallet } from 'lucide-react';
 import FeeForm from './FeeForm';
 import EditFeeForm from './EditFeeForm';
 import { useFees } from '../hooks/useFees';
@@ -94,9 +94,10 @@ function FeesTableForYear() {
     totals.cash += toMinorUnits(row.collectedCashToDate, 2) ?? 0;
     totals.check += toMinorUnits(row.collectedCheckToDate, 2) ?? 0;
     totals.bankTransfer += toMinorUnits(row.collectedBankTransferToDate, 2) ?? 0;
+    totals.tpe += toMinorUnits(row.collectedTpeToDate, 2) ?? 0;
     totals.overdue += toMinorUnits(row.overdueAmount, 2) ?? 0;
     return totals;
-  }, { collected: 0, cash: 0, check: 0, bankTransfer: 0, overdue: 0 }), [filteredFees]);
+  }, { collected: 0, cash: 0, check: 0, bankTransfer: 0, tpe: 0, overdue: 0 }), [filteredFees]);
 
   const classOptions = useMemo(
     () => [
@@ -240,11 +241,11 @@ function FeesTableForYear() {
       </NPageHeader>
 
       {isFeesLoading || isAcademicYearLoading ? (
-        <div className="grid shrink-0 grid-cols-2 gap-3 xl:grid-cols-5">
-          {Array.from({ length: 5 }, (_, index) => <NStatCardSkeleton key={index} />)}
+        <div className="grid shrink-0 grid-cols-2 gap-3 xl:grid-cols-6">
+          {Array.from({ length: 6 }, (_, index) => <NStatCardSkeleton key={index} />)}
         </div>
       ) : failedToLoad ? null : (
-        <div className="grid shrink-0 grid-cols-2 gap-3 xl:grid-cols-5">
+        <div className="grid shrink-0 grid-cols-2 gap-3 xl:grid-cols-6">
           <NStatCard
             icon={HandCoins}
             label={t('fees.stats.collected')}
@@ -273,6 +274,13 @@ function FeesTableForYear() {
             icon={Landmark}
             label={t('payments.methods.bankTransfer')}
             value={majorMoney(stats.bankTransfer / 100)}
+            className="min-w-0"
+            classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
+          />
+          <NStatCard
+            icon={CreditCard}
+            label={t('fees.stats.tpe')}
+            value={majorMoney(stats.tpe / 100)}
             className="min-w-0"
             classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
           />

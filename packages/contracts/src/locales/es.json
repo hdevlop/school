@@ -1638,6 +1638,7 @@
   "fees": {
     "stats": {
       "collected": "Cobrado hasta hoy",
+      "tpe": "TPE",
       "overdueAmount": "Importe vencido"
     },
     "classBulk": {

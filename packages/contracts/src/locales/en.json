@@ -1398,6 +1398,7 @@
   "fees": {
     "stats": {
       "collected": "Collected to date",
+      "tpe": "TPE",
       "overdueAmount": "Overdue amount"
     },
     "classBulk": {

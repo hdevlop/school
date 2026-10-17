@@ -2358,6 +2358,7 @@
   "fees": {
     "stats": {
       "collected": "Encaissé à ce jour",
+      "tpe": "TPE",
       "overdueAmount": "Montant en retard"
     },
     "classBulk": {
