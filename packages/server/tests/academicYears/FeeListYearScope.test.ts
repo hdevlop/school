@@ -121,7 +121,7 @@ describe('normal fee list year scope', () => {
     }];
     repo.db = drizzle(async (sql, params) => {
       statements.push({ sql, params });
-      return { rows: sql.includes('year_receipt_allocations') ? [['0', '0', '0', null]] : [] };
+      return { rows: sql.includes('year_receipt_allocations') ? [['0', '0', '0', 2, null]] : [] };
     }) as any;
 
     const result = await repo.getByStudent('student-1');
@@ -129,11 +129,14 @@ describe('normal fee list year scope', () => {
     expect(result?.assignment.class.id).toBe('old-class');
     expect(result?.fees).toEqual([]);
     expect(result?.summary.avgPaymentAmount).toBe('0');
+    // "Nombre de paiements" counted fully paid fees, not payments.
+    expect(result?.summary.paymentCount).toBe(2);
     expect(statements).toHaveLength(2);
     const metrics = statements.find((item) => item.sql.includes('year_receipt_allocations'));
     const feeRows = statements.find((item) => !item.sql.includes('year_receipt_allocations'));
     expect(metrics?.sql.toLowerCase()).toContain('sum(');
     expect(metrics?.sql.toLowerCase()).toContain('payment_allocations');
+    expect(metrics?.sql).toContain('count(distinct "payments"."id")');
     expect(metrics?.params).toContain('2025-2026');
     expect(feeRows?.params).toContain('2025-2026');
     expect(feeRows?.params).toContain('student-1');

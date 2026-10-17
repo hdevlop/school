@@ -259,6 +259,18 @@ export const getAvgPaymentAmount = () => {
   `;
 };
 
+/** Completed payments allocated to the student's fees, each counted once. */
+export const getCompletedPaymentCount = () => {
+   return sql`
+  (SELECT COUNT(DISTINCT ${payments.id})
+   FROM ${payments}
+   INNER JOIN ${paymentAllocations} ON ${paymentAllocations.paymentId} = ${payments.id}
+   INNER JOIN ${fees} ON ${paymentAllocations.feeId} = ${fees.id}
+   WHERE ${fees.studentId} = ${students.id}
+   AND ${payments.status} = 'completed')::int
+`;
+};
+
 export const getLastPaymentDate = () => {
    return sql`
   (SELECT MAX(${payments.paymentDate})

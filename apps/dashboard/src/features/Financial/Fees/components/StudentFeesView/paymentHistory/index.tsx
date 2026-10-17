@@ -60,7 +60,7 @@ export const PaymentHistory = ({ studentId, studentFees: initialStudentFees }: P
         <NStatCard
           icon={CheckCircle2}
           label={t('fees.studentView.paymentsCount')}
-          value={summary.paidCount}
+          value={summary.paymentCount ?? 0}
         />
 
         <NStatCard

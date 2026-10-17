@@ -9,6 +9,7 @@ import { Year } from '../../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 import {
   getAvgPaymentAmount,
+  getCompletedPaymentCount,
   getFeeBaseFields,
   getFeeComputedFields,
   getFeeRelations,
@@ -385,6 +386,7 @@ export class FeeRepository {
         totalUnpaidAmount: getTotalUnpaidAmount().as('totalUnpaidAmount'),
         lastPayment: getLastPaymentDate().as('lastPayment'),
         avgPaymentAmount: getAvgPaymentAmount().as('avgPaymentAmount'),
+        paymentCount: getCompletedPaymentCount().as('paymentCount'),
       })
       .from(students)
       .leftJoin(users, eq(students.userId, users.id))
@@ -443,6 +445,7 @@ export class FeeRepository {
         totalOverdueAmount: overview.totalOverdueAmount,
         totalUnpaidAmount: overview.totalUnpaidAmount,
         avgPaymentAmount: overview.avgPaymentAmount,
+        paymentCount: Number(overview.paymentCount ?? 0),
         lastPayment: overview.lastPayment,
 
       },
@@ -546,6 +549,16 @@ export class FeeRepository {
             group by "payments"."id"
           ) year_receipt_allocations
         ), 0)::text`,
+        // Counted like avgPaymentAmount: the year's completed payments, once each.
+        paymentCount: sql<number>`(
+          select count(distinct "payments"."id")
+          from ${paymentAllocations}
+          inner join ${fees} on "payment_allocations"."fee_id" = "fees"."id"
+          inner join ${payments} on "payment_allocations"."payment_id" = "payments"."id"
+          where "fees"."student_id" = ${studentId}
+            and "fees"."academic_year" = ${academicYear}
+            and "payments"."status" = 'completed'
+        )::int`,
         lastPayment: sql<string | null>`(
           select max("payments"."payment_date")
           from ${paymentAllocations}
@@ -580,6 +593,7 @@ export class FeeRepository {
       totalOverdueAmount: metrics?.totalOverdueAmount ?? '0',
       totalUnpaidAmount: metrics?.totalUnpaidAmount ?? '0',
       avgPaymentAmount: metrics?.avgPaymentAmount ?? '0',
+      paymentCount: metrics?.paymentCount ?? 0,
       lastPayment: metrics?.lastPayment ?? null,
     }, feesList);
     return {
