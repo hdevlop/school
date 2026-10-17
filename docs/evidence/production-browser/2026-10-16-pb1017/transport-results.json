@@ -1,0 +1,126 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "9c9d77a35b58c8009a0df3b4816f20d02ad61009",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-16T23:08:53.530Z",
+  "scope": "PB1017 transport workspace student route assign/unassign for owned student-A on an owned vehicle",
+  "results": [
+    {
+      "case": "setup: student-A has no active route",
+      "outcome": "PASS"
+    },
+    {
+      "case": "setup: owned vehicle created (API, supporting setup)",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "transport-R01: owned vehicle panel shows 0/3 and no assigned students",
+      "outcome": "PASS"
+    },
+    {
+      "case": "transport i18n: assign button reads in French",
+      "outcome": "PASS",
+      "observed": "Affecter un élève",
+      "fingerprint": "VehicleStudentsPanel.literal-English"
+    },
+    {
+      "case": "transport i18n: assign dialog title reads in French",
+      "outcome": "PASS",
+      "observed": "Affecter un élève à Bus PB1017"
+    },
+    {
+      "case": "student-routes setup: calendar reached June 2026",
+      "outcome": "PASS"
+    },
+    {
+      "case": "student-routes setup: form still open after closing the calendar",
+      "outcome": "PASS"
+    },
+    {
+      "case": "student-routes setup: start date set to 15 June 2026",
+      "outcome": "PASS"
+    },
+    {
+      "case": "transport i18n: assign submit reads in French",
+      "outcome": "PASS",
+      "englishPresent": false
+    },
+    {
+      "case": "student-routes-M01: owned student assigned through the transport panel",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "student-routes-M01 / transport-M01: reload shows student-A on the vehicle and 1/3 occupancy",
+      "outcome": "PASS"
+    },
+    {
+      "case": "student-routes-M01: exactly one transport fee was generated for student-A",
+      "outcome": "PASS",
+      "count": 1
+    },
+    {
+      "case": "student-routes-M01: student profile shows the same vehicle",
+      "outcome": "PASS"
+    },
+    {
+      "case": "student-routes-M02: a second active route for the same student is refused",
+      "outcome": "PASS",
+      "status": 409
+    },
+    {
+      "case": "transport i18n: unassign confirmation toast reads in French",
+      "outcome": "PASS",
+      "toasts": [
+        "student-A retiré de Bus PB1017"
+      ]
+    },
+    {
+      "case": "student-routes-M02: unassigned route kept in history, none active, panel back to 0/3",
+      "outcome": "PASS",
+      "routes": [
+        "completed"
+      ]
+    },
+    {
+      "case": "transport-R02 phone: workspace fits the viewport",
+      "outcome": "PASS",
+      "w": 390,
+      "sw": 390
+    },
+    {
+      "case": "transport-R03 denial: teacher cannot create a student route",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "Revision stayed immutable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No unexpected API or browser errors",
+      "outcome": "PASS",
+      "count": 0,
+      "unexpected": []
+    },
+    {
+      "case": "cleanup: route",
+      "outcome": "INFO",
+      "status": 200
+    },
+    {
+      "case": "cleanup: vehicle",
+      "outcome": "INFO",
+      "status": 200
+    },
+    {
+      "case": "cleanup: fee",
+      "outcome": "INFO",
+      "status": 200
+    }
+  ],
+  "diagnostics": [],
+  "remainingFixtures": [],
+  "failure": null
+}

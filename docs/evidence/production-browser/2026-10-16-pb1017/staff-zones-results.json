@@ -1,0 +1,181 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "9c9d77a35b58c8009a0df3b4816f20d02ad61009",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-16T23:07:44.143Z",
+  "scope": "PB1017 staff validation i18n, zone and job-title lifecycle, cleaner/security creation, teacher denial",
+  "results": [
+    {
+      "case": "staff-roles-zones-R02: staff header exposes Zones management",
+      "outcome": "PASS"
+    },
+    {
+      "case": "staff-roles-zones-R02: staff header exposes Job titles management for admin",
+      "outcome": "PASS"
+    },
+    {
+      "case": "staff-form-i18n: French empty step shows French errors for name, CIN, phone and address",
+      "outcome": "PASS",
+      "frenchFound": 4,
+      "englishFound": 0,
+      "fingerprint": "StaffForm.personal.schema.literal-English-errors"
+    },
+    {
+      "case": "staff-roles-zones setup: no zone named like the fixture exists",
+      "outcome": "PASS",
+      "zoneCount": 0
+    },
+    {
+      "case": "staff-roles-zones-R01: zone dialog opens with localized title",
+      "outcome": "PASS"
+    },
+    {
+      "case": "staff-roles-zones-M01: create owned zone",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "staff-roles-zones-M01: edit owned zone",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "staff-roles-zones: refusal is announced once",
+      "outcome": "PASS",
+      "toasts": 1,
+      "fingerprint": "ManageScopesDialog.duplicate-error-toast"
+    },
+    {
+      "case": "staff-roles-zones-M01: duplicate zone name refused in French, no second zone",
+      "outcome": "PASS",
+      "status": 409
+    },
+    {
+      "case": "staff-roles-zones-M01: edited zone persists after reload",
+      "outcome": "PASS"
+    },
+    {
+      "case": "staff-cleaner: missing zone refused in French without a request",
+      "outcome": "PASS"
+    },
+    {
+      "case": "staff-cleaner: created through the wizard with the owned zone",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "staff-security: missing zone refused in French without a request",
+      "outcome": "PASS"
+    },
+    {
+      "case": "staff-security: created through the wizard with the owned zone",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "staff-cleaner: reload shows record with role and zone assignment",
+      "outcome": "PASS",
+      "assignmentCount": 1
+    },
+    {
+      "case": "staff-cleaner: listed on the staff page after reload",
+      "outcome": "PASS"
+    },
+    {
+      "case": "staff-security: reload shows record with role and zone assignment",
+      "outcome": "PASS",
+      "assignmentCount": 1
+    },
+    {
+      "case": "staff-security: listed on the staff page after reload",
+      "outcome": "PASS"
+    },
+    {
+      "case": "staff-roles-zones-R01: saved zone selection verified through stored record",
+      "outcome": "INFO",
+      "via": "GET /api/staff/:id"
+    },
+    {
+      "case": "staff-roles-zones: in-use refusal is announced once",
+      "outcome": "PASS",
+      "toasts": 1
+    },
+    {
+      "case": "staff-roles-zones-M01: deleting a zone in use is refused in French and the zone remains",
+      "outcome": "PASS",
+      "status": 409
+    },
+    {
+      "case": "cleanup: delete owned cleaner staff (API)",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "cleanup: delete owned security staff (API)",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "staff-roles-zones-M02: unreferenced owned zone deleted in the UI and returns 404",
+      "outcome": "PASS",
+      "status": 200,
+      "after": 404
+    },
+    {
+      "case": "staff-roles-zones-M01: create owned job title",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "staff-roles-zones-M01: edited job title persists after reload",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "staff-roles-zones-M02: unused owned job title deleted",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "ar phone: Zones and Job titles buttons are named for assistive technology",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar phone: staff header fits without horizontal overflow, RTL",
+      "outcome": "PASS",
+      "width": 390,
+      "scrollWidth": 390,
+      "dir": "rtl"
+    },
+    {
+      "case": "ar phone: zone dialog keeps keyboard focus inside",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar phone: focus returns to the Zones button after close",
+      "outcome": "PASS"
+    },
+    {
+      "case": "teacher: zone and job-title creation refused",
+      "outcome": "PASS",
+      "zone": 403,
+      "title": 403
+    },
+    {
+      "case": "teacher: staff page shows no management buttons",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Revision stayed immutable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No unexpected API or browser errors",
+      "outcome": "PASS",
+      "count": 0
+    }
+  ],
+  "diagnostics": [],
+  "remainingFixtures": [],
+  "failure": null
+}

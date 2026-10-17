@@ -1,0 +1,43 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "9c9d77a35b58c8009a0df3b4816f20d02ad61009",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-16T23:09:04.020Z",
+  "scope": "PB1017 recovery request side (fr); delivery BLOCKED",
+  "results": [
+    {
+      "case": "AUTH-07 request: known address gets the French generic confirmation",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "AUTH-07 request: unknown address gets the identical answer (no account disclosure)",
+      "outcome": "PASS",
+      "known": 200,
+      "unknown": 200
+    },
+    {
+      "case": "AUTH-07 request: no session is created by a recovery request",
+      "outcome": "PASS"
+    },
+    {
+      "case": "AUTH-02 recovery: malformed address refused in French, nothing sent",
+      "outcome": "PASS"
+    },
+    {
+      "case": "AUTH-07 delivery, reset link use, reuse refusal",
+      "outcome": "BLOCKED",
+      "reason": "mail-test hub reading not permitted to this tester; request side only"
+    },
+    {
+      "case": "Revision stayed immutable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No browser errors",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "failure": null
+}

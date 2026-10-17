@@ -1,0 +1,20 @@
+{
+  "checkedUtc": "2026-10-17T09:25:56.685Z",
+  "zones": 0,
+  "staff": 0,
+  "staffRoles": 0,
+  "vehicles": 0,
+  "assessments": 0,
+  "activeRoutesStudentA": 0,
+  "studentAFees": 1,
+  "attendance0630": [
+    [
+      "student-B",
+      "present"
+    ],
+    [
+      "student-A",
+      "absent"
+    ]
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "9c9d77a35b58c8009a0df3b4816f20d02ad61009",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-17T09:25:41.553Z",
+  "scope": "PB1017 teacher grade entry/edit/save and PB1016 student attendance saves; owned fixtures only",
+  "results": [
+    {
+      "case": "setup: teacher-A teaches the owned PB1016 section",
+      "outcome": "PASS"
+    },
+    {
+      "case": "setup: two owned assessments created (API, supporting setup)",
+      "outcome": "PASS",
+      "a": 200,
+      "b": 200
+    },
+    {
+      "case": "grades-R01: owned assessment selects the PB1016 roster with both owned students and no grade yet",
+      "outcome": "PASS",
+      "a": 1,
+      "b": 1,
+      "rows": 3,
+      "aText": " STUDENT-A-CODE student-A — / 20.00 — En Attente —"
+    },
+    {
+      "case": "grades draft: entered value appears before save",
+      "outcome": "PASS"
+    },
+    {
+      "case": "grades-R02: switching assessments drops the unsaved draft on both",
+      "outcome": "PASS",
+      "writes": 0
+    },
+    {
+      "case": "grades-M01: one save request for one edited student",
+      "outcome": "PASS",
+      "writes": [
+        "POST /api/grades"
+      ]
+    },
+    {
+      "case": "grades-M01: reload shows one saved 15 / 20 at 75%",
+      "outcome": "PASS"
+    },
+    {
+      "case": "grades-M01: exactly one stored grade for the student",
+      "outcome": "PASS",
+      "count": 1
+    },
+    {
+      "case": "grades-M02: out-of-range mark is refused in the interface language",
+      "outcome": "PASS",
+      "observed": "Ne peut pas dépasser 20",
+      "fingerprint": "Grades.marksObtained.validate.literal-English"
+    },
+    {
+      "case": "grades-M02: refused value sends nothing",
+      "outcome": "PASS"
+    },
+    {
+      "case": "grades-M02/M03: keyboard edit saves once as an update of the existing grade",
+      "outcome": "PASS",
+      "writes": [
+        "PUT /api/grades/:id"
+      ]
+    },
+    {
+      "case": "grades-M02: reload shows 18 / 20 at 90%, still one stored grade",
+      "outcome": "PASS",
+      "count": 1
+    },
+    {
+      "case": "grades: student-B left untouched",
+      "outcome": "PASS"
+    },
+    {
+      "case": "grades-M03 phone: card shows the saved 18 (90%) and the page fits",
+      "outcome": "PASS",
+      "w": 390,
+      "sw": 390
+    },
+    {
+      "case": "grades denial: parent-B does not receive student-A grades",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "student-attendance-R01: owned section roster lists exactly the two owned students",
+      "outcome": "PASS",
+      "rows": 2
+    },
+    {
+      "case": "attendance date in view",
+      "outcome": "INFO",
+      "date": "30 juin 2026"
+    },
+    {
+      "case": "student-attendance-R02: draft mark shows pressed before save",
+      "outcome": "PASS"
+    },
+    {
+      "case": "student-attendance-R02: reload discards the draft, nothing saved",
+      "outcome": "PASS"
+    },
+    {
+      "case": "attendance save requests",
+      "outcome": "INFO",
+      "requests": [
+        "PUT /api/attendance/:id"
+      ],
+      "date": "2026-06-30"
+    },
+    {
+      "case": "student-attendance-M01: one persisted mark per owned student for the date, change visible after reload",
+      "outcome": "PASS",
+      "perStudent": [
+        1,
+        1
+      ],
+      "date": "2026-06-30",
+      "priorMarks": 2
+    },
+    {
+      "case": "student-attendance-M01: save only touched the owned section",
+      "outcome": "PASS"
+    },
+    {
+      "case": "student-attendance-M02 phone: card register shows owned students and fits",
+      "outcome": "PASS",
+      "w": 390,
+      "sw": 390
+    },
+    {
+      "case": "student-attendance denial: parent cannot record attendance",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "Revision stayed immutable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No unexpected API or browser errors",
+      "outcome": "PASS",
+      "count": 0,
+      "unexpected": []
+    },
+    {
+      "case": "cleanup: attendanceRestore",
+      "outcome": "INFO",
+      "status": 200
+    },
+    {
+      "case": "cleanup: assessment",
+      "outcome": "INFO",
+      "status": 200
+    },
+    {
+      "case": "cleanup: grade",
+      "outcome": "INFO",
+      "status": 200
+    },
+    {
+      "case": "cleanup: assessment",
+      "outcome": "INFO",
+      "status": 200
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    {
+      "account": "teacher-a",
+      "method": "POST",
+      "path": "/api/grades"
+    },
+    {
+      "account": "teacher-a",
+      "method": "PUT",
+      "path": "/api/grades/:id"
+    },
+    {
+      "account": "teacher-a",
+      "method": "PUT",
+      "path": "/api/attendance/:id"
+    }
+  ],
+  "remainingFixtures": [],
+  "failure": null
+}

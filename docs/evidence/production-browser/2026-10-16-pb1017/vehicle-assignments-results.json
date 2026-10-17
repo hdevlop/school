@@ -1,0 +1,115 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "9c9d77a35b58c8009a0df3b4816f20d02ad61009",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-16T23:07:00.903Z",
+  "scope": "PB1017 driver-to-vehicle assignment via Vehicles page; end assignment API-only",
+  "results": [
+    {
+      "case": "setup: two owned vehicles created (API)",
+      "outcome": "PASS",
+      "v1": 200,
+      "v2": 200
+    },
+    {
+      "case": "setup: owned driver created without a vehicle (API)",
+      "outcome": "PASS",
+      "status": 200,
+      "message": "Membre du personnel créé avec succès"
+    },
+    {
+      "case": "setup: owned driver listed among drivers",
+      "outcome": "PASS"
+    },
+    {
+      "case": "driver ids",
+      "outcome": "INFO",
+      "staffMatchesDriver": false
+    },
+    {
+      "case": "vehicle-assignments-M01: start date 15 June 2026 chosen in the calendar",
+      "outcome": "PASS",
+      "shown": "15 juin 2026"
+    },
+    {
+      "case": "vehicle-assignments-M01: owned driver assigned to the owned vehicle",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "vehicle-assignments-R01: reload shows the driver on the vehicle row",
+      "outcome": "PASS"
+    },
+    {
+      "case": "vehicle-assignments-R01: one active assignment, same driver, from 15 June",
+      "outcome": "PASS",
+      "active": 1
+    },
+    {
+      "case": "vehicle-assignments-M01: conflicting earlier start refused, assignment unchanged",
+      "outcome": "PASS",
+      "status": 409,
+      "toasts": [
+        "Le chauffeur est déjà affecté à partir d’une date ultérieure"
+      ]
+    },
+    {
+      "case": "vehicle-assignments: refusal shown once, in French",
+      "outcome": "PASS",
+      "toasts": [
+        "Le chauffeur est déjà affecté à partir d’une date ultérieure"
+      ]
+    },
+    {
+      "case": "vehicle-assignments-M02: end the owned assignment",
+      "outcome": "PASS",
+      "surface": "API-only (no browser control ends a driver assignment)",
+      "status": 200
+    },
+    {
+      "case": "vehicle-assignments-M02: vehicle row shows no driver; history keeps one completed record ending 20 June",
+      "outcome": "PASS",
+      "history": [
+        "completed 2026-06-15..2026-06-20"
+      ]
+    },
+    {
+      "case": "vehicle-assignments denial: teacher cannot assign a driver",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "Revision stayed immutable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No unexpected API or browser errors",
+      "outcome": "PASS",
+      "count": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "cleanup: assignment",
+      "outcome": "INFO",
+      "status": 200
+    },
+    {
+      "case": "cleanup: staff",
+      "outcome": "INFO",
+      "status": 200
+    },
+    {
+      "case": "cleanup: vehicle",
+      "outcome": "INFO",
+      "status": 200
+    },
+    {
+      "case": "cleanup: vehicle",
+      "outcome": "INFO",
+      "status": 200
+    }
+  ],
+  "diagnostics": [],
+  "remainingFixtures": [],
+  "failure": null
+}
