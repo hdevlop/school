@@ -7,6 +7,7 @@ import { validation } from 'najm-validation';
 
 import { LANGUAGE_HEADER, schoolI18n } from '@sms/contracts/locales';
 import { db } from '../database/db';
+import { createValidationErrorFormatter } from './validationMessages';
 
 /**
  * Plugins with no School policy beyond what is written here.
@@ -17,7 +18,8 @@ import { db } from '../database/db';
 
 export const databaseConfig = () => database({ default: db });
 
-export const validationConfig = () => validation();
+// A refused request answers in the request's language; see validationMessages.ts.
+export const validationConfig = () => validation({ errorFormatter: createValidationErrorFormatter() });
 
 export const eventsConfig = () => events();
 
