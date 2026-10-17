@@ -2,9 +2,10 @@ import { useMemo } from 'react';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { getFeeTypeDisplayName } from '@/features/Financial/Fees/utils/feeUtils';
 
 export const useFeeTypesTableColumns = () => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { majorMoney } = useSchoolFormat();
 
   return useMemo(() => [
@@ -21,6 +22,7 @@ export const useFeeTypesTableColumns = () => {
 
     {
       accessorKey: "name",
+      accessorFn: (row: any) => getFeeTypeDisplayName(row, t, language),
       header: t('feeTypes.table.name'),
       enableSorting: true,
       cell: ({ getValue }: any) => (
@@ -77,5 +79,5 @@ export const useFeeTypesTableColumns = () => {
       },
       size: 120,
     },
-  ], [t, majorMoney]);
+  ], [t, language, majorMoney]);
 };

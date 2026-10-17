@@ -14,6 +14,7 @@ Owned charges/installments and explicitly authorized test payments. Use an ident
 
 - [ ] **payments-R01**: Open single/multi-fee payment controls; outstanding amounts and allocation preview reconcile.
 - [ ] **payments-R02**: Inspect cash/bank/check-specific required fields; invalid amounts and missing fields cannot submit.
+- [ ] **payments-R03**: Print an existing completed payment using the saved school receipt language. French has French labels and left-to-right layout; Arabic has Arabic labels and right-to-left layout. The exact school logo, receipt number, student code, total and year allocation remain intact. Check long Arabic/French names and references on 80 mm paper.
 
 ## Owned-fixture mutations
 

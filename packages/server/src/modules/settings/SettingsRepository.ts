@@ -16,6 +16,7 @@ const publicSettings = {
   schoolEmail: settings.schoolEmail,
   schoolWebsite: settings.schoolWebsite,
   schoolLogo: settings.schoolLogo,
+  receiptLanguage: settings.receiptLanguage,
   currentAcademicYear: settings.currentAcademicYear,
   activeAcademicYearId: settings.activeAcademicYearId,
 

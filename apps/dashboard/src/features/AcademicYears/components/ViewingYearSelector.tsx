@@ -36,7 +36,7 @@ export function ViewingYearSelector({ placement = 'inline' }: { placement?: View
   const { viewingYear, activeYear } = useViewingAcademicYear();
   const canChooseYear = useCanUseOtherAcademicYears();
   const setViewingYear = useSetViewingYear();
-  const { data, isError, isPending } = useAcademicYearOptions();
+  const { data, isError, isPending, isFetching, refetch } = useAcademicYearOptions();
 
   const label = t('academicYearViewing.label');
   const years = data?.years ?? [];
@@ -63,7 +63,9 @@ export function ViewingYearSelector({ placement = 'inline' }: { placement?: View
       : 'relative text-foreground hover:text-foreground [&_svg]:opacity-100';
 
   return (
-    <DropdownMenu>
+    <DropdownMenu onOpenChange={(open) => {
+      if (open && isError) void refetch();
+    }}>
       <DropdownMenuTrigger asChild>
         <NButton
           type="button"
@@ -84,10 +86,10 @@ export function ViewingYearSelector({ placement = 'inline' }: { placement?: View
       <DropdownMenuContent align={inSidebar ? 'start' : 'end'} className="min-w-52">
         <DropdownMenuLabel>{label}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {isError || (!isPending && years.length === 0) ? (
-          <DropdownMenuItem disabled>{t('academicYearViewing.unavailable')}</DropdownMenuItem>
-        ) : isPending ? (
+        {(isPending || isFetching) && years.length === 0 ? (
           <DropdownMenuItem disabled>{t('common.loading')}</DropdownMenuItem>
+        ) : isError || years.length === 0 ? (
+          <DropdownMenuItem disabled>{t('academicYearViewing.unavailable')}</DropdownMenuItem>
         ) : (
           <DropdownMenuRadioGroup value={viewingYear ?? ''} onValueChange={setViewingYear}>
             {years.map((year) => (

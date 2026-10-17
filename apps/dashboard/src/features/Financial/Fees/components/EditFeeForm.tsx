@@ -11,7 +11,7 @@ import { useCallback, useEffect } from 'react'
 import { feeSchema } from '../config/feeSchemas'
 import { buildFeeStatusOptions, buildScheduleOptions } from '../config/feeOptions'
 import { useDialog } from '@/shared/useDialog'
-import { calculateFeeAmounts, getFeeDiscountPerPeriod } from '@/features/Financial/Fees/utils/feeUtils'
+import { calculateFeeAmounts, getFeeDiscountPerPeriod, getFeeTypeDisplayName } from '@/features/Financial/Fees/utils/feeUtils'
 import { usePrefix } from 'najm-kit';
 
 
@@ -51,7 +51,7 @@ const EditFeeForm = ({ fee, feeTypes = [] }) => {
 }
 
 const SimpleFeeFormContent = ({ fee, feeTypes, isEditMode }) => {
-   const { t } = useTranslation()
+   const { t, language } = useTranslation()
    const { setValue, register } = useFormContext()
    const prefix = usePrefix();
    const f = useCallback((name: string) => prefix != null ? `${prefix}.${name}` : name, [prefix]);
@@ -117,7 +117,7 @@ const SimpleFeeFormContent = ({ fee, feeTypes, isEditMode }) => {
                   icon={Tag}
                   formLabel={t('fees.form.feeType') || 'Fee Type'}
                   placeholder={t('fees.form.feeTypePlaceholder') || 'Select fee type'}
-                  items={feeTypes.map(ft => ({ value: ft.id, label: ft.name }))}
+                  items={feeTypes.map(ft => ({ value: ft.id, label: getFeeTypeDisplayName(ft, t, language) }))}
                   required={true}
                />
             )}

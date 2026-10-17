@@ -7,9 +7,10 @@ import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import FeeCategoryIcon from '@/features/Financial/Fees/components/FeeCategoryIcon';
+import { getFeeTypeDisplayName } from '@/features/Financial/Fees/utils/feeUtils';
 
 const FeeTypeCard = ({ data }: any) => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { majorMoney } = useSchoolFormat();
   const feeType = data;
 
@@ -30,7 +31,7 @@ const FeeTypeCard = ({ data }: any) => {
 
       <div className="flex-1 flex flex-col gap-2">
         <Label className="text-md font-bold">
-          {feeType.name}
+          {getFeeTypeDisplayName(feeType, t, language)}
         </Label>
 
         <div className="space-y-2">

@@ -2056,11 +2056,6 @@
       "recalculate": "¿Recalcular el monto asignado de esta tarifa?"
     },
     "settings": {
-    "receipts": {
-      "title": "Recibos de pago",
-      "description": "Elija el idioma utilizado para imprimir todos los recibos de pago, incluidas las reimpresiones.",
-      "language": "Idioma de los recibos"
-    },
       "create": "¿Crear la configuración?",
       "update": "¿Actualizar la configuración?"
     },
@@ -3713,6 +3708,11 @@
     }
   },
   "settings": {
+    "receipts": {
+      "title": "Recibos de pago",
+      "description": "Elija el idioma utilizado para imprimir todos los recibos de pago, incluidas las reimpresiones.",
+      "language": "Idioma de los recibos"
+    },
     "editor": {
       "schoolTab": "Centro",
       "academicTab": "Académico",

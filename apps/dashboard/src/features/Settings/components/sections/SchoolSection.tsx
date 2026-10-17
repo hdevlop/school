@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react';
-import { Building2, Mail, Phone, Clock, Hamburger } from 'lucide-react';
+import { Building2, Mail, Phone, Clock, Hamburger, Printer } from 'lucide-react';
 import { FormInput } from 'najm-kit';
 import { FormLocationInput } from 'najm-kit/location';
 
@@ -62,6 +62,17 @@ const SchoolSection: React.FC = () => {
             onProviderMetaChange={(meta) => setValue('schoolAddressPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
           />
         </div>
+      </SettingsGroup>
+
+      <SettingsGroup title={t('settings.receipts.title')} description={t('settings.receipts.description')}>
+        <FormInput
+          name="receiptLanguage"
+          type="select"
+          formLabel={t('settings.receipts.language')}
+          items={[{ value: 'fr', label: 'Français' }, { value: 'ar', label: 'العربية' }]}
+          icon={Printer}
+          required
+        />
       </SettingsGroup>
 
       <SettingsGroup title={t('settings.editor.groups.schoolDay.title')} description={t('settings.editor.groups.schoolDay.description')}>

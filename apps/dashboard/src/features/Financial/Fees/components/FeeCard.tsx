@@ -20,9 +20,10 @@ const FeeCard = ({ data }: any) => {
   const totalPaid = Number(data?.totalPaid ?? 0);
   const totalDue = Number(data?.totalDue ?? 0);
   const overdueCount = Number(data?.overdueCount ?? 0);
+  const hasFees = Number(data?.totalFees ?? 0) > 0;
 
-  const progress = netAmount > 0 ? Math.min((totalPaid / netAmount) * 100, 100) : 0;
-  const isPaid = totalDue <= 0 && netAmount > 0;
+  const isPaid = hasFees && totalDue <= 0;
+  const progress = netAmount > 0 ? Math.min((totalPaid / netAmount) * 100, 100) : isPaid ? 100 : 0;
 
   return (
     <div
@@ -56,14 +57,14 @@ const FeeCard = ({ data }: any) => {
           <NBadge status="paid" look="solid" showIcon className="mr-2">
             {t('fees.status.paid') || 'Paid'}
           </NBadge>
-        ) : overdueCount > 0 && (
+        ) : hasFees && overdueCount > 0 && (
           <NBadge status="overdue" look="solid" showIcon className="mr-2">
             {overdueCount} {t('fees.status.overdue') || 'Overdue'}
           </NBadge>
         )}
       </div>
 
-      <>
+      {hasFees ? <>
         <div className="text-center">
           <p className={`text-xl font-bold tabular-nums ${isPaid ? 'text-green-600' : 'text-red-600'}`}>
             {majorMoney(isPaid ? netAmount : totalDue)}
@@ -77,7 +78,11 @@ const FeeCard = ({ data }: any) => {
             <span>{Math.round(progress)}%</span>
           </div>
         </div>
-      </>
+      </> : (
+        <p className="flex min-h-20 items-center justify-center px-2 text-center text-sm text-muted-foreground">
+          {t('fees.studentView.noFees')}
+        </p>
+      )}
     </div>
   );
 };

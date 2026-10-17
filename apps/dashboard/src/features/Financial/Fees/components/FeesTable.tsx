@@ -66,42 +66,26 @@ function FeesTableForYear() {
   }, [classes, selectedClassId]);
 
   useEffect(() => {
-    if (isAllClasses) {
+    if (selectedSectionId && !sections?.some((section) =>
+      section.id === selectedSectionId && (isAllClasses || section.classId === selectedClassId))) {
       setSelectedSectionId('');
-      return;
     }
-    if (selectedClassId && sections?.length > 0) {
-      const classSections = sections.filter((s: any) => s.classId === selectedClassId);
-      const sectionA = classSections.find((s: any) => s.name?.toUpperCase() === 'A');
-      setSelectedSectionId(sectionA?.id || classSections[0]?.id || '');
-    }
-  }, [selectedClassId, sections, isAllClasses]);
+  }, [selectedClassId, selectedSectionId, sections, isAllClasses]);
 
   const filteredFees = useMemo(() => {
-    if (!fees) return [];
-
-    return fees.filter((row: any) => {
-      // The server already limits the year scope to the viewed year.
+    const query = searchText.trim().toLowerCase();
+    // The server already limits the year scope to the viewed year.
+    return (fees || []).filter((row: any) => {
       if (!isAllClasses && selectedClassId && row.class?.id !== selectedClassId) return false;
+      if (selectedSectionId && row.section?.id !== selectedSectionId) return false;
+      if (query && !row.student?.name?.toLowerCase().includes(query)
+        && !row.student?.studentCode?.toLowerCase().includes(query)) return false;
 
-      if (!isAllClasses && selectedSectionId && row.section?.id !== selectedSectionId) return false;
-
-      if (searchText) {
-        const q = searchText.toLowerCase();
-        const name = row.student?.name?.toLowerCase() || '';
-        const code = row.student?.studentCode?.toLowerCase() || '';
-        if (!name.includes(q) && !code.includes(q)) return false;
-      }
-
-      if (statusFilter && statusFilter !== '__all__') {
-        const overdue = Number(row.overdueCount ?? 0);
-        const totalDue = Number(row.totalDue ?? 0);
-
-        if (statusFilter === 'paid' && totalDue > 0) return false;
-        if (statusFilter === 'overdue' && overdue === 0) return false;
-        if (statusFilter === 'paying' && (overdue > 0 || totalDue <= 0)) return false;
-      }
-
+      const overdue = Number(row.overdueCount ?? 0);
+      const totalDue = Number(row.totalDue ?? 0);
+      if (statusFilter === 'paid' && (Number(row.totalFees ?? 0) === 0 || totalDue > 0)) return false;
+      if (statusFilter === 'overdue' && overdue === 0) return false;
+      if (statusFilter === 'paying' && (overdue > 0 || totalDue <= 0)) return false;
       return true;
     });
   }, [fees, selectedClassId, selectedSectionId, searchText, statusFilter, isAllClasses]);
@@ -115,12 +99,13 @@ function FeesTableForYear() {
   );
 
   const sectionOptions = useMemo(
-    () => isAllClasses
-      ? []
-      : (sections || [])
-          .filter((s: any) => s.classId === selectedClassId)
-          .map((s: any) => ({ value: s.id, label: s.name })),
-    [sections, selectedClassId, isAllClasses],
+    () => (sections || [])
+      .filter((s: any) => isAllClasses || s.classId === selectedClassId)
+      .map((s: any) => ({
+        value: s.id,
+        label: isAllClasses ? `${s.class?.name || classes?.find(c => c.id === s.classId)?.name || ''} - ${s.name}` : s.name,
+      })),
+    [sections, classes, selectedClassId, isAllClasses],
   );
 
   const columns = useFeesTableColumns();
@@ -140,16 +125,12 @@ function FeesTableForYear() {
       name: 'section',
       type: 'select',
       showIcon: false,
-      placeholder: isAllClasses
-        ? (t('fees.filters.selectClass') || 'Select a class')
-        : sectionOptions.length === 0
-          ? (t('fees.filters.noSections') || 'No sections')
-          : (t('fees.filters.section') || 'Section'),
+      placeholder: t('fees.filters.section'),
       value: selectedSectionId,
-      onChange: setSelectedSectionId,
-      options: sectionOptions,
-      disabled: isAllClasses || sectionOptions.length === 0,
-      className: 'w-full lg:w-28',
+      onChange: (value: string) => setSelectedSectionId(value === '__all__' ? '' : value),
+      options: [{ value: '__all__', label: t('fees.filters.allSections') }, ...sectionOptions],
+      disabled: sectionOptions.length === 0,
+      className: 'w-full lg:w-40',
     },
     {
       name: 'search',
@@ -174,7 +155,7 @@ function FeesTableForYear() {
       ],
       className: 'w-full lg:w-36',
     },
-  ], [t, selectedClassId, selectedSectionId, searchText, statusFilter, classOptions, sectionOptions, isAllClasses]);
+  ], [t, selectedClassId, selectedSectionId, searchText, statusFilter, classOptions, sectionOptions]);
 
   const handleAddClick = () => {
     if (!viewingYear) return;

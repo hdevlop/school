@@ -5,6 +5,7 @@ import type { CreateSettingsDto, UpdateSettingsDto } from './SettingsDto';
 import { getBusinessClockInfo } from '../../shared';
 import { AcademicYearRepository } from '../academicYears/AcademicYearRepository';
 import { DEFAULT_TEACHING_DAYS } from '@sms/contracts/routines';
+import { DEFAULT_RECEIPT_LANGUAGE } from '@sms/contracts';
 
 @Service()
 export class SettingsService {
@@ -57,6 +58,7 @@ export class SettingsService {
       schoolEmail: data.schoolEmail,
       schoolWebsite: data.schoolWebsite,
       schoolLogo: data.schoolLogo,
+      receiptLanguage: data.receiptLanguage ?? DEFAULT_RECEIPT_LANGUAGE,
       currentAcademicYear: data.currentAcademicYear,
       activeAcademicYearId: activeYear.id,
 

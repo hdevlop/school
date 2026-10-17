@@ -14,6 +14,7 @@ Administrator and denied role; recorded original settings. Use an identity allow
 
 - [ ] **settings-R01**: Read school identity, currency, time zone and academic-year settings; selectors use the shared choices.
 - [ ] **settings-R02**: As a denied role, open the route; read/write refusal must leave the role signed in.
+- [ ] **settings-R03**: School → Payment receipts offers only Français and العربية. Receipt language is independent of the interface language; existing installations initially use French after migration `0070`.
 
 ## Owned-fixture mutations
 
@@ -21,6 +22,7 @@ Run only within the recorded production fixture scope; otherwise mark these case
 
 - [ ] **settings-M01**: Only during an explicitly scoped settings run, save an agreed reversible setting, reload and restore it.
 - [ ] **settings-M02**: Changing active academic year must not silently create fees or rewrite historical fee selection. Global year/currency changes need an isolated environment unless a production maintenance action is already authorized.
+- [ ] **settings-M03**: In an authorized settings run, save Arabic receipt language, reload the settings, and verify a receipt from payment history and student documents prints in Arabic. Save French and verify both entry points print in French. Confirm interface language is unchanged, then restore the original receipt choice.
 
 ## Finish and evidence
 

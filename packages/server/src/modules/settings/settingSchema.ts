@@ -4,6 +4,7 @@ import { idField, timestamps } from '../../database/shared';
 import { getEnumValues } from '../../shared/enums';
 import { academicYears } from '../academicYears/AcademicYearSchema';
 import { DEFAULT_TEACHING_DAYS, type RoutineDay } from '@sms/contracts/routines';
+import { DEFAULT_RECEIPT_LANGUAGE, type ReceiptLanguage } from '@sms/contracts';
 
 export const calendarSystemEnum = pgEnum('calendarSystem', getEnumValues('calendarSystem'));
 export const languageEnum = pgEnum('language', getEnumValues('language'));
@@ -19,6 +20,7 @@ export const settings = pgTable('settings', {
   schoolEmail: text('school_email'),
   schoolWebsite: text('school_website'),
   schoolLogo: text('school_logo'),
+  receiptLanguage: text('receipt_language').$type<ReceiptLanguage>().notNull().default(DEFAULT_RECEIPT_LANGUAGE),
   currentAcademicYear: text('current_academic_year').notNull(),
   activeAcademicYearId: text('active_academic_year_id').references(() => academicYears.id, { onDelete: 'restrict' }),
   gradingScale: jsonb('grading_scale'),

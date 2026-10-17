@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { NAJM_CURRENCIES, NAJM_TIME_ZONES } from 'najm-kit/server';
-import { CALENDAR_SYSTEM_VALUES } from '@sms/contracts';
+import { CALENDAR_SYSTEM_VALUES, DEFAULT_RECEIPT_LANGUAGE, RECEIPT_LANGUAGES } from '@sms/contracts';
 import { parseSchoolYearLabel } from '@sms/contracts/academic-years';
 import { schoolI18n } from '@sms/contracts/locales';
 import { DEFAULT_TEACHING_DAYS, ROUTINE_DAYS } from '@sms/contracts/routines';
@@ -59,6 +59,7 @@ export const settingsSchema = z.object({
   schoolEmail: emailField,
   schoolWebsite: z.string().url('Must be a valid URL').max(255, 'School website URL too long').optional(),
   schoolLogo: z.string().url('Must be a valid image URL').max(255, 'School logo URL too long').optional(),
+  receiptLanguage: z.enum(RECEIPT_LANGUAGES).default(DEFAULT_RECEIPT_LANGUAGE),
 
   // Academic Settings
   attendanceRequirement: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Attendance requirement must be non-negative').max(100, 'Attendance requirement cannot exceed 100')).default(75.00),

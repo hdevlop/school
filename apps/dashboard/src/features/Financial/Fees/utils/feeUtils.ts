@@ -34,7 +34,7 @@ export interface FeeType {
 const SEEDED_FEE_TYPE_IDS = new Set(['FT00', 'FT01', 'FT02', 'FT03', 'FT04', 'FT05', 'FT06', 'FT07', 'FT8'])
 
 export const getFeeTypeDisplayName = (
-   feeType: FeeType | null | undefined,
+   feeType: Pick<FeeType, 'id' | 'name' | 'category' | 'labels'> | null | undefined,
    translate: (key: string) => string,
    language: string,
 ): string => {
@@ -50,6 +50,22 @@ export const getFeeTypeDisplayName = (
    }
 
    return feeType.name
+}
+
+/** Derive translated view data without changing the query cache or saved names. */
+export const getStudentFeesDisplayData = <T extends { fees?: Array<{
+   name: string;
+   feeTypeId: string;
+   type?: string;
+}> }>(data: T | null | undefined, translate: (key: string) => string, language: string): T | null | undefined => {
+   if (!data?.fees) return data
+   return {
+      ...data,
+      fees: data.fees.map(fee => ({
+         ...fee,
+         name: getFeeTypeDisplayName({ id: fee.feeTypeId, name: fee.name, category: fee.type }, translate, language),
+      })),
+   }
 }
 
 // ==================== FEE FACTORY ====================

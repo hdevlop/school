@@ -13,10 +13,11 @@ import FeeTypeCard from './FeeTypeCard';
 import { useFeeTypesTableColumns } from '../hooks/useFeeTypesTableColumns';
 import { useFeeTypesTableFilters } from '../hooks/useFeeTypesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { getFeeTypeDisplayName } from '@/features/Financial/Fees/utils/feeUtils';
 
 function FeeTypesTable() {
 
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const columns = useFeeTypesTableColumns();
   const rawFilters = useFeeTypesTableFilters();
 
@@ -58,7 +59,7 @@ function FeeTypesTable() {
 
   const handleEdit = (feeType) => {
     openDialog({
-      title: `${t('feeTypes.dialogs.editTitle')} - ${feeType.name}`,
+      title: `${t('feeTypes.dialogs.editTitle')} - ${getFeeTypeDisplayName(feeType, t, language)}`,
       children: <FeeTypeForm feeType={feeType} />,
       primaryButton: {
         form: 'fee-type-form',
@@ -76,7 +77,7 @@ function FeeTypesTable() {
       title: t('common.delete'),
       warningText: t('common.deleteConfirm'),
       cancelText: t('common.cancel'),
-      itemName: feeType.name,
+      itemName: getFeeTypeDisplayName(feeType, t, language),
       confirmText: t('feeTypes.dialogs.deleteButton'),
       loading: isDeleting,
       onConfirm: async () => {

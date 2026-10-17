@@ -14,11 +14,25 @@ import {
   transportPack,
 } from './generator';
 import { seedAcademicYear } from '../shared/school-seed-data';
+import { MAX_TEACHER_CLASSES, MAX_TEACHER_LESSONS } from '../shared/timetable';
 
 it('generates 100 students by default', async () => {
   expect(DEFAULT_DEMO_COUNTS.students).toBe(100);
   const { students } = await studentsPack();
   expect(students).toHaveLength(100);
+});
+
+it('assigns each demo teacher exactly one subject across one or two classes', async () => {
+  const { teachers } = await teachersPack();
+  for (const teacher of teachers) {
+    const subjects = new Set(teacher.assignments.flatMap((assignment: any) => assignment.subjectIds));
+    const classes = new Set(teacher.assignments.map((assignment: any) => assignment.classId));
+    expect(subjects.size).toBe(1);
+    expect(classes.size).toBeGreaterThanOrEqual(1);
+    expect(classes.size).toBeLessThanOrEqual(MAX_TEACHER_CLASSES);
+    expect(teacher.workloadHours).toBeLessThanOrEqual(MAX_TEACHER_LESSONS);
+    expect(teacher.specialization).toBe(subjectsData.find((subject) => subjects.has(subject.id))?.name);
+  }
 });
 
 it('sizes the default school so tuition carries its payroll and running costs', async () => {

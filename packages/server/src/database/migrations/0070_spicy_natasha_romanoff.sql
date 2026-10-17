@@ -1,0 +1,1 @@
+ALTER TABLE "settings" ADD COLUMN "receipt_language" text DEFAULT 'fr' NOT NULL;

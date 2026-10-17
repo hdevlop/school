@@ -48,7 +48,7 @@ export const useFeesTableColumns = () => {
       cell: ({ row }: any) => {
         const amount = row.original.totalPaid || '0';
         return (
-          <span className="text-green-600 font-medium">
+          <span className={Number(row.original.totalFees ?? 0) > 0 ? 'text-green-600 font-medium' : 'text-muted-foreground'}>
             {majorMoney(amount)}
           </span>
         );
@@ -71,6 +71,7 @@ export const useFeesTableColumns = () => {
     {
       id: "status",
       accessorFn: (row: any) => {
+        if (Number(row.totalFees ?? 0) === 0) return 'noFees';
         if (row.overdueCount > 0) return 'overdue';
         if (Number(row.totalDue ?? 0) <= 0) return 'paid';
         return 'paying';
@@ -79,6 +80,9 @@ export const useFeesTableColumns = () => {
       enableSorting: true,
       enableColumnFilter: true,
       cell: ({ row }: any) => {
+        if (Number(row.original.totalFees ?? 0) === 0) {
+          return <span className="text-muted-foreground">{t('fees.studentView.noFees')}</span>;
+        }
         const overdue = row.original.overdueCount || 0;
         const totalDue = Number(row.original.totalDue ?? 0);
 

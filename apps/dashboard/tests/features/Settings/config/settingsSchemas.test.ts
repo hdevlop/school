@@ -69,6 +69,16 @@ describe('settingsSchema defaults', () => {
 });
 
 describe('settingsSchema validation', () => {
+  it('defaults receipt printing to French and accepts only French or Arabic independently of UI language', () => {
+    expect(settingsSchema.parse(minimal).receiptLanguage).toBe('fr');
+    for (const receiptLanguage of ['fr', 'ar'] as const) {
+      const result = settingsSchema.parse({ ...minimal, language: 'en', receiptLanguage });
+      expect(result.receiptLanguage).toBe(receiptLanguage);
+      expect(result.language).toBe('en');
+    }
+    expect(settingsSchema.safeParse({ ...minimal, receiptLanguage: 'en' }).success).toBe(false);
+    expect(settingsSchema.safeParse({ ...minimal, receiptLanguage: 'bilingual' }).success).toBe(false);
+  });
   it('requires at least one unique teaching day and puts selected days in week order', () => {
     expect(settingsSchema.safeParse({ ...minimal, teachingDays: [] }).success).toBe(false);
     expect(settingsSchema.safeParse({ ...minimal, teachingDays: ['monday', 'monday'] }).success).toBe(false);

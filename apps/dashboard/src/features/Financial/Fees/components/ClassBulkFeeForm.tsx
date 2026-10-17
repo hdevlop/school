@@ -9,7 +9,7 @@ import { Label } from 'najm-kit';import { Badge } from 'najm-kit';import { useTr
 import { classBulkFeeFormSchema } from '../config/feeSchemas'
 import { buildScheduleOptions } from '../config/feeOptions'
 import { useDialog } from '@/shared/useDialog'
-import { calculateFeeAmounts, buildInstallmentsPreview } from '@/features/Financial/Fees/utils/feeUtils'
+import { calculateFeeAmounts, buildInstallmentsPreview, getFeeTypeDisplayName } from '@/features/Financial/Fees/utils/feeUtils'
 import { useQuery } from '@tanstack/react-query'
 import { getStudentsOnDateApi } from '@/services/studentApi'
 import { useSchoolFormat } from '@/hooks/useSchoolFormat'
@@ -100,7 +100,7 @@ export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
    const activeClasses = useMemo(() => classes.filter((cls) => cls.academicYear === academicYear), [classes, academicYear])
    const { majorMoney } = useSchoolFormat()
    const { getValues, setValue } = useFormContext()
-   const { t } = useTranslation()
+   const { t, language } = useTranslation()
 
    const classId = useWatch({ name: 'classId' })
    const sectionId = useWatch({ name: 'sectionId' })
@@ -205,7 +205,7 @@ export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
                icon={Tag}
                formLabel={t('fees.form.feeType') || 'Fee Type'}
                placeholder={t('fees.form.feeTypePlaceholder') || 'Select fee type'}
-               items={feeTypes.map(ft => ({ value: ft.id, label: ft.name }))}
+               items={feeTypes.map(ft => ({ value: ft.id, label: getFeeTypeDisplayName(ft, t, language) }))}
                required
             />
             <FormInput

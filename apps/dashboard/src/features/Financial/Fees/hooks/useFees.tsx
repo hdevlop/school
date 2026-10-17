@@ -1,9 +1,12 @@
 'use client'
+import { useMemo } from 'react';
+import { useTranslation } from 'najm-i18n/react';
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import * as feeApi from '@/services/feeApi';
+import { getStudentFeesDisplayData } from '../utils/feeUtils';
 
 type UseFeesOptions = {
   feeId?: string;
@@ -18,6 +21,7 @@ type UseFeesOptions = {
 };
 
 export const useFees = (options?: UseFeesOptions) => {
+  const { t, language } = useTranslation();
   const { feeId, studentId, enabled = true, allYears = false, studentYear, studentAllYears = false } = options || {};
   const { viewingYear } = useViewingAcademicYear();
   const mutationYear = studentYear ?? viewingYear;
@@ -57,6 +61,8 @@ export const useFees = (options?: UseFeesOptions) => {
   const { data: studentAllYearFees } = crud.useGetByParam(
     'studentAllYears', studentAllYears ? studentId : undefined, studentAllYears && !!studentId,
   );
+  const displayedStudentFees = useMemo(() => getStudentFeesDisplayData(studentFees, t, language), [studentFees, t, language]);
+  const displayedStudentAllYearFees = useMemo(() => getStudentFeesDisplayData(studentAllYearFees, t, language), [studentAllYearFees, t, language]);
   const { mutateAsync: createFee, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateFee, isLoading: isUpdating } = crud.useUpdate();
   const { mutateAsync: deleteFee, isLoading: isDeleting } = crud.useDelete();
@@ -67,8 +73,8 @@ export const useFees = (options?: UseFeesOptions) => {
     // Data
     fees,
     fee,
-    studentFees,
-    studentAllYearFees,
+    studentFees: displayedStudentFees,
+    studentAllYearFees: displayedStudentAllYearFees,
 
     // Status
     isError,

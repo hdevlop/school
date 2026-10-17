@@ -80,6 +80,7 @@ describe('normal fee list year scope', () => {
 
     await repo.getAllYears();
     expect(statement).toContain(`'academicYear', "fees"."academic_year"`);
+    expect(statement).toContain('coalesce("users"."image", "students"."image")');
   });
 
   it('keeps fees without enrollment while selecting one dated placement before sums', async () => {
@@ -94,6 +95,7 @@ describe('normal fee list year scope', () => {
     }) as any;
 
     await repo.getAll();
+    expect(statement).toContain('coalesce("users"."image", "students"."image")');
     expect(statement.toLowerCase()).toContain('distinct on');
     expect(statement).toContain('fee_year_last_placement');
     expect(statement.toLowerCase()).toContain('filter (where');

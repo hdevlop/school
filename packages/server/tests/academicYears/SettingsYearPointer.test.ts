@@ -25,6 +25,21 @@ function service(current: object | null, writes: object[] = [], years: object[] 
 }
 
 describe('Settings edits and the active year', () => {
+  it('accepts only supported receipt languages without adding one to an unrelated update', () => {
+    expect(updateSettingsDto.parse({ schoolName: 'Al Amal' })).not.toHaveProperty('receiptLanguage');
+    for (const receiptLanguage of ['fr', 'ar'] as const) {
+      expect(updateSettingsDto.parse({ receiptLanguage })).toEqual({ receiptLanguage });
+    }
+    expect(updateSettingsDto.safeParse({ receiptLanguage: 'en' }).success).toBe(false);
+    expect(updateSettingsDto.safeParse({ receiptLanguage: null }).success).toBe(false);
+  });
+
+  it('persists a receipt language change independently of interface language and academic year', async () => {
+    const writes: object[] = [];
+    await service({ currentAcademicYear: '2026-2027', language: 'en', receiptLanguage: 'fr' }, writes)
+      .update(updateSettingsDto.parse({ receiptLanguage: 'ar' }));
+    expect(writes).toEqual([{ receiptLanguage: 'ar' }]);
+  });
   it('never moves the active year: activation owns it', async () => {
     const writes: object[] = [];
     await expect(service({ currentAcademicYear: '2025-2026' }, writes).update({ currentAcademicYear: '2026-2027' }))
@@ -75,6 +90,12 @@ describe('Settings edits and the active year', () => {
       .create({ schoolName: 'Al Amal', schoolPhone: '212600000000', schoolEmail: '', currentAcademicYear: '2026-2027' } as any);
     expect(years.map((year) => year.label)).toEqual(['2026-2027']);
     expect(writes[0]).toMatchObject({ currentAcademicYear: '2026-2027', activeAcademicYearId: 'year-2026-2027',
-      timeZone: 'UTC', currency: 'USD', startMonth: 'september', endMonth: 'june', maintenanceMode: false });
+      timeZone: 'UTC', currency: 'USD', receiptLanguage: 'fr', startMonth: 'september', endMonth: 'june', maintenanceMode: false });
+  });
+
+  it('retains an explicitly selected receipt language during installation', async () => {
+    const writes: Array<Record<string, unknown>> = [];
+    await service(null, writes).create({ schoolName: 'Al Amal', schoolPhone: '212600000000', schoolEmail: '', currentAcademicYear: '2026-2027', receiptLanguage: 'ar' });
+    expect(writes[0].receiptLanguage).toBe('ar');
   });
 });

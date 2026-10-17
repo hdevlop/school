@@ -3,6 +3,7 @@ import { academicYearField, emailField, num, phoneField } from '../../shared/fie
 import { calendarSystemEnum, languageEnum } from '../../shared/enums';
 import { latitudeDto, longitudeDto, placeIdDto } from '../../shared/locationDto';
 import { ROUTINE_DAYS } from '@sms/contracts/routines';
+import { RECEIPT_LANGUAGES } from '@sms/contracts';
 
 // No field has a Zod default: `.partial()` keeps defaults, so an update naming
 // one field would reset every other one, time zone and currency included.
@@ -17,6 +18,7 @@ const settingsSchema = z.object({
   schoolEmail: emailField,
   schoolWebsite: z.string().url('Must be a valid URL').max(255, 'School website URL too long').optional(),
   schoolLogo: z.string().url('Must be a valid image URL').max(255, 'School logo URL too long').optional(),
+  receiptLanguage: z.enum(RECEIPT_LANGUAGES).optional(),
   currentAcademicYear: academicYearField,
 
   gradingScale: z.record(z.string(), z.unknown()).optional(),
