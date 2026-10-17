@@ -1,0 +1,91 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "440c0601313e1cad5a4d9eab608d3a54789bc383",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-17T12:39:14.421Z",
+  "scope": "PB1018 AUTH-07 recovery delivery and link use for teacher-A",
+  "passwordChanged": true,
+  "mailCleanup": "deleted 1",
+  "results": [
+    {
+      "case": "Mail-test gateway answers for the School scope",
+      "outcome": "PASS"
+    },
+    {
+      "case": "AUTH-07: recovery request accepted with the French confirmation",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "AUTH-07: the recovery message reaches the controlled mailbox",
+      "outcome": "PASS",
+      "subject": "Réinitialisez votre mot de passe"
+    },
+    {
+      "case": "AUTH-07: the email is written in French, the interface language",
+      "outcome": "PASS",
+      "subject": "Réinitialisez votre mot de passe"
+    },
+    {
+      "case": "AUTH-07: the message is addressed to teacher-A only",
+      "outcome": "PASS"
+    },
+    {
+      "case": "AUTH-07: the message carries one reset link on the demo origin",
+      "outcome": "PASS",
+      "links": [
+        "https://myscolai.com/reset-password"
+      ]
+    },
+    {
+      "case": "AUTH-07: a short password is refused in French before anything is sent",
+      "outcome": "PASS"
+    },
+    {
+      "case": "AUTH-07: mismatched passwords are refused in French before anything is sent",
+      "outcome": "PASS"
+    },
+    {
+      "case": "AUTH-07: the replacement password is accepted",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "AUTH-07: success says so in French and returns to sign-in",
+      "outcome": "PASS"
+    },
+    {
+      "case": "AUTH-07: the old password no longer signs in",
+      "outcome": "PASS",
+      "status": 401,
+      "toast": "Identifiants invalides. Veuillez réessayer"
+    },
+    {
+      "case": "AUTH-07: the new password signs in",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "AUTH-07: the used link is refused in French",
+      "outcome": "PASS",
+      "status": 400,
+      "toast": "Ce lien est invalide ou a déjà été utilisé. Demandez-en un nouveau."
+    },
+    {
+      "case": "AUTH-07: the refused reuse left the new password in place",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "Revision stayed immutable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No page errors",
+      "outcome": "PASS",
+      "diagnostics": []
+    }
+  ],
+  "diagnostics": [],
+  "failure": null
+}

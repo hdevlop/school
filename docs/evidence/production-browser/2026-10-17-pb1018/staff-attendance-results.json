@@ -1,0 +1,75 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "440c0601313e1cad5a4d9eab608d3a54789bc383",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-17T12:38:55.455Z",
+  "scope": "PB1018 staff attendance roster save on 2026-06-30, cleaned up",
+  "results": [
+    {
+      "case": "2026-06-30 has no staff mark before the run (nothing real can be overwritten)",
+      "outcome": "PASS",
+      "existing": 0
+    },
+    {
+      "case": "Fixture staff-A, hired 2026-10-16, is not on the 30 June roster",
+      "outcome": "PASS"
+    },
+    {
+      "case": "The roster opens on the viewing year's last day with everyone present by default",
+      "outcome": "PASS",
+      "rosterSize": 18,
+      "marked": "staff-member-marked"
+    },
+    {
+      "case": "Marking that person absent presses only the absent button",
+      "outcome": "PASS"
+    },
+    {
+      "case": "The roster save succeeds and sends one mark per listed staff member",
+      "outcome": "PASS",
+      "status": 200,
+      "items": 18,
+      "rosterSize": 18
+    },
+    {
+      "case": "The save is confirmed in French",
+      "outcome": "PASS"
+    },
+    {
+      "case": "The server holds one mark per staff member, that person absent and the others present",
+      "outcome": "PASS",
+      "marks": 18,
+      "staffA": "absent"
+    },
+    {
+      "case": "After reload that person still shows absent",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Correcting that person to late sends only that change and updates the same record",
+      "outcome": "PASS",
+      "items": 1,
+      "marks": 18
+    },
+    {
+      "case": "With no unsaved change the save button is disabled and nothing is sent",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Revision stayed immutable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No page errors",
+      "outcome": "PASS",
+      "diagnostics": []
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    "POST /api/attendance/staff/bulk",
+    "POST /api/attendance/staff/bulk"
+  ],
+  "cleanup": "deleted 18 (created 18), 0 left",
+  "failure": null
+}

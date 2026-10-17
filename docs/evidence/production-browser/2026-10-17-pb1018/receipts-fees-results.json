@@ -1,0 +1,369 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "440c0601313e1cad5a4d9eab608d3a54789bc383",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-17T12:38:36.246Z",
+  "scope": "PB1018 receipt language, fee names, fee filters, year selector retry",
+  "restoredBy": "ui",
+  "results": [
+    {
+      "case": "settings-R03: migration 0070 gives the school a receipt language, French by default",
+      "outcome": "PASS",
+      "receiptLanguage": "fr"
+    },
+    {
+      "case": "A completed payment with a receipt number exists to reprint",
+      "outcome": "PASS",
+      "receipt": "RECEIPT-REPRINTED",
+      "studentCode": "STUDENT-CODE-REPRINTED"
+    },
+    {
+      "case": "settings-R03: the receipt language select announces its value, Français",
+      "outcome": "PASS"
+    },
+    {
+      "case": "najm-kit 3.5.4: no settings select is announced as \"Select\" or \"Country selector\"",
+      "outcome": "PASS",
+      "generic": []
+    },
+    {
+      "case": "najm-kit 3.5.4: the phone country button is named \"Pays\"",
+      "outcome": "PASS"
+    },
+    {
+      "case": "settings-R03: only Français and العربية are offered",
+      "outcome": "PASS",
+      "options": [
+        "Français",
+        "العربية"
+      ]
+    },
+    {
+      "case": "payments-R03: payment history receipt prints in French, left to right",
+      "outcome": "PASS",
+      "lang": "fr",
+      "dir": "ltr"
+    },
+    {
+      "case": "payments-R03: payment history receipt keeps receipt number, student name and code",
+      "outcome": "PASS"
+    },
+    {
+      "case": "payments-R03: payment history receipt shows the monochrome school logo",
+      "outcome": "PASS",
+      "logos": [
+        {
+          "src": "/images/branding/school-logo-monochrome.png",
+          "w": 1254
+        }
+      ]
+    },
+    {
+      "case": "payments-R03: payment history receipt fits the 80 mm window without horizontal overflow",
+      "outcome": "PASS",
+      "overflow": 0
+    },
+    {
+      "case": "payments-R03: payment history receipt opens the print dialog once",
+      "outcome": "PASS",
+      "printed": 1
+    },
+    {
+      "case": "payments-R03: student documents receipt prints in French, left to right",
+      "outcome": "PASS",
+      "lang": "fr",
+      "dir": "ltr"
+    },
+    {
+      "case": "payments-R03: student documents receipt keeps receipt number, student name and code",
+      "outcome": "PASS"
+    },
+    {
+      "case": "payments-R03: student documents receipt shows the monochrome school logo",
+      "outcome": "PASS",
+      "logos": [
+        {
+          "src": "/images/branding/school-logo-monochrome.png",
+          "w": 1254
+        }
+      ]
+    },
+    {
+      "case": "payments-R03: student documents receipt fits the 80 mm window without horizontal overflow",
+      "outcome": "PASS",
+      "overflow": 0
+    },
+    {
+      "case": "payments-R03: student documents receipt opens the print dialog once",
+      "outcome": "PASS",
+      "printed": 1
+    },
+    {
+      "case": "settings-M03: saving العربية succeeds",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "settings-M03: after reload the receipt language is ar",
+      "outcome": "PASS"
+    },
+    {
+      "case": "settings-M03: saving العربية changed no other setting",
+      "outcome": "PASS",
+      "changed": []
+    },
+    {
+      "case": "settings-M03: interface language stays French after saving العربية",
+      "outcome": "PASS",
+      "lang": "fr",
+      "cookie": "fr"
+    },
+    {
+      "case": "settings-M03 Arabic: payment history receipt prints in Arabic, right to left",
+      "outcome": "PASS",
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    {
+      "case": "settings-M03 Arabic: payment history receipt keeps receipt number, student name and code",
+      "outcome": "PASS"
+    },
+    {
+      "case": "settings-M03 Arabic: payment history receipt shows the monochrome school logo",
+      "outcome": "PASS",
+      "logos": [
+        {
+          "src": "/images/branding/school-logo-monochrome.png",
+          "w": 1254
+        }
+      ]
+    },
+    {
+      "case": "settings-M03 Arabic: payment history receipt fits the 80 mm window without horizontal overflow",
+      "outcome": "PASS",
+      "overflow": 0
+    },
+    {
+      "case": "settings-M03 Arabic: payment history receipt opens the print dialog once",
+      "outcome": "PASS",
+      "printed": 1
+    },
+    {
+      "case": "settings-M03 Arabic: student documents receipt prints in Arabic, right to left",
+      "outcome": "PASS",
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    {
+      "case": "settings-M03 Arabic: student documents receipt keeps receipt number, student name and code",
+      "outcome": "PASS"
+    },
+    {
+      "case": "settings-M03 Arabic: student documents receipt shows the monochrome school logo",
+      "outcome": "PASS",
+      "logos": [
+        {
+          "src": "/images/branding/school-logo-monochrome.png",
+          "w": 1254
+        }
+      ]
+    },
+    {
+      "case": "settings-M03 Arabic: student documents receipt fits the 80 mm window without horizontal overflow",
+      "outcome": "PASS",
+      "overflow": 0
+    },
+    {
+      "case": "settings-M03 Arabic: student documents receipt opens the print dialog once",
+      "outcome": "PASS",
+      "printed": 1
+    },
+    {
+      "case": "settings-M03: saving Français succeeds",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "settings-M03: after reload the receipt language is fr",
+      "outcome": "PASS"
+    },
+    {
+      "case": "settings-M03: saving Français changed no other setting",
+      "outcome": "PASS",
+      "changed": []
+    },
+    {
+      "case": "settings-M03: interface language stays French after saving Français",
+      "outcome": "PASS",
+      "lang": "fr",
+      "cookie": "fr"
+    },
+    {
+      "case": "settings-M03 French: payment history receipt prints in French, left to right",
+      "outcome": "PASS",
+      "lang": "fr",
+      "dir": "ltr"
+    },
+    {
+      "case": "settings-M03 French: payment history receipt keeps receipt number, student name and code",
+      "outcome": "PASS"
+    },
+    {
+      "case": "settings-M03 French: payment history receipt shows the monochrome school logo",
+      "outcome": "PASS",
+      "logos": [
+        {
+          "src": "/images/branding/school-logo-monochrome.png",
+          "w": 1254
+        }
+      ]
+    },
+    {
+      "case": "settings-M03 French: payment history receipt fits the 80 mm window without horizontal overflow",
+      "outcome": "PASS",
+      "overflow": 0
+    },
+    {
+      "case": "settings-M03 French: payment history receipt opens the print dialog once",
+      "outcome": "PASS",
+      "printed": 1
+    },
+    {
+      "case": "settings-M03 French: student documents receipt prints in French, left to right",
+      "outcome": "PASS",
+      "lang": "fr",
+      "dir": "ltr"
+    },
+    {
+      "case": "settings-M03 French: student documents receipt keeps receipt number, student name and code",
+      "outcome": "PASS"
+    },
+    {
+      "case": "settings-M03 French: student documents receipt shows the monochrome school logo",
+      "outcome": "PASS",
+      "logos": [
+        {
+          "src": "/images/branding/school-logo-monochrome.png",
+          "w": 1254
+        }
+      ]
+    },
+    {
+      "case": "settings-M03 French: student documents receipt fits the 80 mm window without horizontal overflow",
+      "outcome": "PASS",
+      "overflow": 0
+    },
+    {
+      "case": "settings-M03 French: student documents receipt opens the print dialog once",
+      "outcome": "PASS",
+      "printed": 1
+    },
+    {
+      "case": "fr: fee types page shows every seeded type in the interface language",
+      "outcome": "PASS",
+      "missing": [],
+      "english": []
+    },
+    {
+      "case": "ar: fee types page shows every seeded type in the interface language",
+      "outcome": "PASS",
+      "missing": [],
+      "english": []
+    },
+    {
+      "case": "fr: the student fee view names seeded fees in French",
+      "outcome": "PASS",
+      "english": []
+    },
+    {
+      "case": "/fees: the statistic cards equal the sums of the listed rows",
+      "outcome": "PASS",
+      "got": [
+        {
+          "label": "Encaissé à ce jour",
+          "shown": 86913300,
+          "expected": 86913300
+        },
+        {
+          "label": "Espèces",
+          "shown": 12873400,
+          "expected": 12873400
+        },
+        {
+          "label": "Chèque",
+          "shown": 13001800,
+          "expected": 13001800
+        },
+        {
+          "label": "Virement bancaire",
+          "shown": 12568000,
+          "expected": 12568000
+        },
+        {
+          "label": "Montant en retard",
+          "shown": 88705100,
+          "expected": 88705100
+        }
+      ]
+    },
+    {
+      "case": "/fees: the section filter is enabled under all classes",
+      "outcome": "PASS"
+    },
+    {
+      "case": "/fees: section options name their class under all classes",
+      "outcome": "PASS",
+      "sectionLabel": "CM2 - PB1016"
+    },
+    {
+      "case": "/fees: choosing a section under all classes shows only that section",
+      "outcome": "PASS",
+      "section": "CM2 - PB1016",
+      "want": 2,
+      "leaked": []
+    },
+    {
+      "case": "/fees: the paid filter lists no student without fees and none who owes",
+      "outcome": "PASS",
+      "paid": 46,
+      "noFees": 0,
+      "wrong": []
+    },
+    {
+      "case": "/fees: paid filter population",
+      "outcome": "NOTE",
+      "paid": 46,
+      "noFees": 0,
+      "shownPaid": 15
+    },
+    {
+      "case": "Year selector: opening the menu after a failed load fetches the years again and lists them",
+      "outcome": "PASS",
+      "abortedRequests": 2,
+      "listed": 2
+    },
+    {
+      "case": "Only the two settings saves were written",
+      "outcome": "PASS",
+      "writes": [
+        "PUT /api/settings",
+        "PUT /api/settings"
+      ]
+    },
+    {
+      "case": "Revision stayed immutable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No page errors and no CSP violations",
+      "outcome": "PASS",
+      "diagnostics": []
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    "PUT /api/settings",
+    "PUT /api/settings"
+  ],
+  "failure": null
+}
