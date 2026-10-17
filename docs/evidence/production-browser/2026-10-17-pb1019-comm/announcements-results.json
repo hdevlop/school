@@ -1,0 +1,307 @@
+{
+  "origin": "https://myscolai.com",
+  "revisionBefore": "041697afcf6bc4eaa8aa2347d8516019c2deecfc",
+  "revisionAfter": "041697afcf6bc4eaa8aa2347d8516019c2deecfc",
+  "completedUtc": "2026-10-17T13:28:47.160Z",
+  "transport": "internal REST/MCP; browser unavailable",
+  "results": [
+    {
+      "case": "announcements-controlled-section-roster",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-active-publish-controlled-audience",
+      "outcome": "BLOCKED",
+      "reason": "Class audience includes 13 students; only two are controlled. Publication not attempted."
+    },
+    {
+      "case": "announcements-admin-list",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-teacher-a-list",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-parent-a-list",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-parent-b-list",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-create-draft-MCP",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-draft-persists-REST",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-draft-hidden-teacher-a",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "announcements-draft-hidden-parent-a",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "announcements-draft-hidden-parent-b",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "announcements-partial-update-MCP",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-update-persists-REST",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-wrong-year-read-denied",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "announcements-wrong-year-delete-denied",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-wrong-year-delete-no-effect",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-invalid-date-refused",
+      "outcome": "PASS",
+      "status": 400
+    },
+    {
+      "case": "announcements-invalid-date-no-partial-write",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-unpublish-draft-refused",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-draft-excluded-published-list",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-parent-write-denied",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "announcements-teacher-effective-grants",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-teacher-create-denied-by-effective-grants",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-teacher-create-REST-denied",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "announcements-anonymous-published-denied",
+      "outcome": "PASS",
+      "status": 401
+    },
+    {
+      "case": "announcements-conflicting-year-denied",
+      "outcome": "PASS",
+      "status": 400
+    },
+    {
+      "case": "announcements-cleanup-delete-admin",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-cleanup-absence-admin",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "serving-revision-stable",
+      "outcome": "PASS"
+    }
+  ],
+  "requests": [
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/announcements/:owned-draft",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/announcements/:owned-draft",
+      "status": 404
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/announcements/:owned-draft",
+      "status": 404
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/announcements/:owned-draft",
+      "status": 404
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/announcements/:owned-draft",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/announcements/:owned-draft",
+      "status": 404
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/announcements/:owned-draft",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "PUT",
+      "path": "/announcements/:owned-draft",
+      "status": 400
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/announcements/:owned-draft",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "PUT",
+      "path": "/announcements/:owned-draft",
+      "status": 403
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "POST",
+      "path": "/announcements",
+      "status": 403
+    },
+    {
+      "actor": "anonymous",
+      "method": "GET",
+      "path": "/announcements/published",
+      "status": 401
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/announcements?academicYear=2025-2026",
+      "status": 400
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/announcements/:owned-draft",
+      "status": 404
+    }
+  ],
+  "failure": null,
+  "cleanup": {
+    "created": 1,
+    "removed": 1,
+    "remaining": 0
+  },
+  "published": 0
+}

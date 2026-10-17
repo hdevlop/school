@@ -1,0 +1,642 @@
+{
+  "origin": "https://myscolai.com",
+  "revisionBefore": "041697afcf6bc4eaa8aa2347d8516019c2deecfc",
+  "revisionAfter": "041697afcf6bc4eaa8aa2347d8516019c2deecfc",
+  "completedUtc": "2026-10-17T13:29:45.813Z",
+  "transport": "internal REST/MCP; browser unavailable",
+  "results": [
+    {
+      "case": "notifications-list-admin",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-unread-count-consistent-admin",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-read-filter-admin",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-inbox-independent-of-year-admin-2024-2025",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-inbox-independent-of-year-admin-2025-2026",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-recipient-scope-admin",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-config-disabled-no-public-key-admin",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-list-teacher-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-unread-count-consistent-teacher-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-read-filter-teacher-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-inbox-independent-of-year-teacher-a-2024-2025",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-inbox-independent-of-year-teacher-a-2025-2026",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-recipient-scope-teacher-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-config-disabled-no-public-key-teacher-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-empty-mark-all-teacher-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-empty-mark-all-persists-zero-teacher-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-list-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-unread-count-consistent-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-read-filter-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-inbox-independent-of-year-parent-a-2024-2025",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-inbox-independent-of-year-parent-a-2025-2026",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-recipient-scope-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-config-disabled-no-public-key-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-empty-mark-all-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-empty-mark-all-persists-zero-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-list-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-unread-count-consistent-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-read-filter-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-inbox-independent-of-year-parent-b-2024-2025",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-inbox-independent-of-year-parent-b-2025-2026",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-recipient-scope-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-config-disabled-no-public-key-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-empty-mark-all-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-empty-mark-all-persists-zero-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notifications-missing-message-read-404",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "notifications-invalid-limit-0",
+      "outcome": "PASS",
+      "status": 400
+    },
+    {
+      "case": "notifications-invalid-limit-101",
+      "outcome": "PASS",
+      "status": 400
+    },
+    {
+      "case": "notifications-invalid-limit-invalid",
+      "outcome": "PASS",
+      "status": 400
+    },
+    {
+      "case": "push-invalid-provider-refused-127.0.0.1",
+      "outcome": "PASS",
+      "status": 400
+    },
+    {
+      "case": "push-invalid-provider-refused-example.invalid",
+      "outcome": "PASS",
+      "status": 400
+    },
+    {
+      "case": "push-invalid-provider-refused-fcm.googleapis.com.example.invalid",
+      "outcome": "PASS",
+      "status": 400
+    },
+    {
+      "case": "push-invalid-provider-refused-fcm.googleapis.com-port",
+      "outcome": "PASS",
+      "status": 400
+    },
+    {
+      "case": "push-invalid-keys-refused",
+      "outcome": "PASS",
+      "status": 400
+    },
+    {
+      "case": "push-unsubscribe-missing-404",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "notifications-auth-required-GET-/notifications",
+      "outcome": "PASS",
+      "status": 401
+    },
+    {
+      "case": "notifications-auth-required-GET-/notifications/unread-count",
+      "outcome": "PASS",
+      "status": 401
+    },
+    {
+      "case": "notifications-auth-required-GET-/notifications/push-config",
+      "outcome": "PASS",
+      "status": 401
+    },
+    {
+      "case": "notifications-auth-required-PATCH-/notifications/read-all",
+      "outcome": "PASS",
+      "status": 401
+    },
+    {
+      "case": "notifications-auth-required-PATCH-/notifications/pb1019-comm-absent/read",
+      "outcome": "PASS",
+      "status": 401
+    },
+    {
+      "case": "notifications-auth-required-POST-/notifications/push-subscriptions",
+      "outcome": "PASS",
+      "status": 401
+    },
+    {
+      "case": "notifications-auth-required-DELETE-/notifications/push-subscriptions",
+      "outcome": "PASS",
+      "status": 401
+    },
+    {
+      "case": "notifications-nonempty-inbox-order-destinations",
+      "outcome": "BLOCKED",
+      "reason": "All controlled inboxes are empty; creating a notification requires a finance job or a broad visit-request trigger. Neither invoked."
+    },
+    {
+      "case": "notifications-positive-read-persistence-and-cross-recipient",
+      "outcome": "BLOCKED",
+      "reason": "No run-owned notification available through a supported recipient-specific trigger. Missing-ID and empty mark-all checks are separate evidence."
+    },
+    {
+      "case": "notifications-controlled-delivery-and-deduplication",
+      "outcome": "BLOCKED",
+      "reason": "No nonfinancial recipient-specific notification trigger in the supported live API. No worker/cron dispatch invoked."
+    },
+    {
+      "case": "push-real-browser-permission-opt-in-opt-out-delivery",
+      "outcome": "BLOCKED",
+      "reason": "No browser connection and deployed push-config.enabled=false. No synthetic valid push subscription registered."
+    },
+    {
+      "case": "serving-revision-stable",
+      "outcome": "PASS"
+    }
+  ],
+  "requests": [
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/notifications?unread=true&limit=100",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/notifications?unread=false&limit=100",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/notifications/push-config",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/notifications?unread=true&limit=100",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/notifications?unread=false&limit=100",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/notifications/push-config",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "PATCH",
+      "path": "/notifications/read-all",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications?unread=true&limit=100",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications?unread=false&limit=100",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications/push-config",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "PATCH",
+      "path": "/notifications/read-all",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/notifications?unread=true&limit=100",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/notifications?unread=false&limit=100",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/notifications/push-config",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "PATCH",
+      "path": "/notifications/read-all",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "PATCH",
+      "path": "/notifications/pb1019-comm-absent/read",
+      "status": 404
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications?limit=0",
+      "status": 400
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications?limit=101",
+      "status": 400
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications?limit=invalid",
+      "status": 400
+    },
+    {
+      "actor": "parent-a",
+      "method": "POST",
+      "path": "/notifications/push-subscriptions",
+      "status": 400
+    },
+    {
+      "actor": "parent-a",
+      "method": "POST",
+      "path": "/notifications/push-subscriptions",
+      "status": 400
+    },
+    {
+      "actor": "parent-a",
+      "method": "POST",
+      "path": "/notifications/push-subscriptions",
+      "status": 400
+    },
+    {
+      "actor": "parent-a",
+      "method": "POST",
+      "path": "/notifications/push-subscriptions",
+      "status": 400
+    },
+    {
+      "actor": "parent-a",
+      "method": "POST",
+      "path": "/notifications/push-subscriptions",
+      "status": 400
+    },
+    {
+      "actor": "parent-a",
+      "method": "DELETE",
+      "path": "/notifications/push-subscriptions",
+      "status": 404
+    },
+    {
+      "actor": "anonymous",
+      "method": "GET",
+      "path": "/notifications",
+      "status": 401
+    },
+    {
+      "actor": "anonymous",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 401
+    },
+    {
+      "actor": "anonymous",
+      "method": "GET",
+      "path": "/notifications/push-config",
+      "status": 401
+    },
+    {
+      "actor": "anonymous",
+      "method": "PATCH",
+      "path": "/notifications/read-all",
+      "status": 401
+    },
+    {
+      "actor": "anonymous",
+      "method": "PATCH",
+      "path": "/notifications/pb1019-comm-absent/read",
+      "status": 401
+    },
+    {
+      "actor": "anonymous",
+      "method": "POST",
+      "path": "/notifications/push-subscriptions",
+      "status": 401
+    },
+    {
+      "actor": "anonymous",
+      "method": "DELETE",
+      "path": "/notifications/push-subscriptions",
+      "status": 401
+    }
+  ],
+  "failure": null,
+  "cleanup": {
+    "createdNotifications": 0,
+    "createdSubscriptions": 0,
+    "remainingFixtures": 0
+  },
+  "emptyInboxNoOpWrites": 3,
+  "externalDeliveryAttempts": 0
+}

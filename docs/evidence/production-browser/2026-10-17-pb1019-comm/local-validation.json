@@ -1,0 +1,87 @@
+{
+  "run": "PB1019-COMM",
+  "localCheckoutHeadObserved": "e56e02196c1c67fd0299abffe345b741d91d451a",
+  "scope": "Shared checkout with concurrent unrelated finance edits; not an immutable full-release candidate.",
+  "sourceTests": {
+    "command": "bun test packages/server/tests/ownership/AlertAndAnnouncementWrites.test.ts packages/server/tests/security/PushEndpoint.test.ts packages/server/tests/academicYears/AlertYearPolicy.test.ts packages/server/tests/academicYears/AlertsHistoryManifest.test.ts packages/server/tests/academicYears/AlertFilterPlacement.test.ts apps/dashboard/tests/features/Announcements/config/announcementSchemas.test.ts",
+    "exitCode": 0,
+    "passed": 37,
+    "failed": 0,
+    "assertions": 147
+  },
+  "isolatedPostgreSQL": {
+    "guard": "Verified local loopback host and database name school_history_test before running. No production DB used.",
+    "suites": [
+      {
+        "command": "bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/NotificationsHistoryTransport.test.ts",
+        "exitCode": 0,
+        "passed": 2,
+        "failed": 0,
+        "assertions": 22
+      },
+      {
+        "command": "bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/AnnouncementsHistoryTransport.test.ts",
+        "exitCode": 0,
+        "passed": 4,
+        "failed": 0,
+        "assertions": 41
+      },
+      {
+        "command": "bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/AlertsHistoryTransport.test.ts",
+        "exitCode": 0,
+        "passed": 6,
+        "failed": 0,
+        "assertions": 52
+      }
+    ],
+    "notes": [
+      "Existing Alerts history suite creates and removes a temporary fee-source fixture only in the isolated local history database. No live finance writes.",
+      "Expected negative requests emit permission/not-found/year-conflict errors.",
+      "Environment warnings: optional embedding provider unavailable, unmounted StorageStudioController, request client address unresolved in local server.fetch tests; rate limiting is not proven.",
+      "Started local servers stopped; ports 5497 and 5498 no longer listening."
+    ]
+  },
+  "applicationChanges": 0,
+  "deployment": "NOT REQUIRED; no application code changed",
+  "continuation": {
+    "localCheckoutHeadObserved": "e56e02196c1c67fd0299abffe345b741d91d451a",
+    "additionalRepositoryTests": [
+      {
+        "command": "bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/AnnouncementsHistoryDatabase.test.ts",
+        "exitCode": 0,
+        "passed": 4,
+        "failed": 0,
+        "assertions": 62
+      },
+      {
+        "command": "bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/AlertsHistoryDatabase.test.ts --test-name-pattern 'returns the exact|shows a signed-in student|keeps writes'",
+        "exitCode": 0,
+        "passed": 3,
+        "failed": 0,
+        "filteredOut": 1,
+        "assertions": 54,
+        "selectionReason": "Exclude the finance-source case from this continuation."
+      }
+    ],
+    "additionalLifecycle": {
+      "command": "bun --env-file=apps/dashboard/.env.local .cache/production-browser/pb1019-comm/local-notifications.mjs",
+      "exitCode": 0,
+      "passedAssertions": 30,
+      "failedAssertions": 0,
+      "fixtureDates": "Explicit dates two hours old; default-created notification failure is retained and unresolved.",
+      "evidence": "local-notifications-results.json"
+    },
+    "productRegression": {
+      "command": "bun --env-file=apps/dashboard/.env.local .cache/production-browser/pb1019-comm/notification-clock-repro.mjs",
+      "commandExitCode": 0,
+      "commandPurpose": "Confirm two failing product operations and verify database-clock control; zero means the failure reproduced as expected.",
+      "failedProductOperations": 2,
+      "defects": 1,
+      "classification": "PRODUCT",
+      "fixed": false,
+      "evidence": "notification-clock-repro-results.json"
+    },
+    "applicationChanges": 0,
+    "browserConnection": "No browser discovered during continuation; no UI cases promoted."
+  }
+}

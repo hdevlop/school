@@ -1,0 +1,143 @@
+{
+  "origin": "https://myscolai.com",
+  "revisionBefore": "041697afcf6bc4eaa8aa2347d8516019c2deecfc",
+  "revisionAfter": "041697afcf6bc4eaa8aa2347d8516019c2deecfc",
+  "completedUtc": "2026-10-17T13:31:21.056Z",
+  "transport": "internal REST/MCP; browser unavailable",
+  "results": [
+    {
+      "case": "cleanup-announcements-fixture-1-absent",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "cleanup-no-communication-run-announcements",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cleanup-alerts-fixture-1-absent",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "cleanup-alerts-fixture-2-absent",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "cleanup-alerts-fixture-3-absent",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "cleanup-no-communication-run-alerts",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cleanup-inbox-remains-empty-admin",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cleanup-inbox-remains-empty-teacher-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cleanup-inbox-remains-empty-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cleanup-inbox-remains-empty-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cleanup-push-remains-disabled",
+      "outcome": "PASS"
+    },
+    {
+      "case": "final-readiness-/login",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "final-readiness-/api/health/status",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "serving-revision-stable",
+      "outcome": "PASS"
+    }
+  ],
+  "requests": [
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/announcements/:owned-fixture",
+      "status": 404
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-fixture",
+      "status": 404
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-fixture",
+      "status": 404
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-fixture",
+      "status": 404
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications/push-config",
+      "status": 200
+    }
+  ],
+  "failure": null,
+  "remainingRunFixtures": 0,
+  "financialWrites": 0,
+  "deliveriesTriggered": 0
+}

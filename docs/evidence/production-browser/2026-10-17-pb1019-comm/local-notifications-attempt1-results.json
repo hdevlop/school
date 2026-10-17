@@ -1,0 +1,116 @@
+{
+  "run": "PB1019-COMM continuation",
+  "completedUtc": "2026-10-17T13:41:55.254Z",
+  "scope": "Isolated loopback school_history_test only; server.fetch REST plus direct fixture setup and persisted-effect checks",
+  "results": [
+    {
+      "case": "local-recipient-1-sign-in",
+      "outcome": "PASS"
+    },
+    {
+      "case": "local-recipient-2-sign-in",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-source-recipient-deduplication",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-inbox-A-exact-owned-IDs",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-inbox-B-same-source-different-recipient",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-hrefs-preserved",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-unread-initial-count",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-cross-recipient-read-refused",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-refused-read-leaves-row-unread",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-own-read-persists-under-historical-selection",
+      "outcome": "FAIL"
+    },
+    {
+      "case": "cleanup-local-users-absent",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cleanup-local-notifications-absent",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cleanup-local-subscriptions-absent",
+      "outcome": "PASS"
+    }
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/notifications/:owned-n1/read",
+      "status": 404
+    },
+    {
+      "method": "PATCH",
+      "path": "/notifications/:owned-n1/read",
+      "status": 500
+    }
+  ],
+  "failure": {
+    "case": "notification-own-read-persists-under-historical-selection"
+  },
+  "created": {
+    "users": 2,
+    "notifications": 3,
+    "subscriptions": 0
+  },
+  "cleanup": {
+    "remainingUsers": 0,
+    "remainingNotifications": 0,
+    "remainingSubscriptions": 0
+  },
+  "deliveryAttempts": 0,
+  "browserAcceptance": false,
+  "syntheticSubscription": "Local lifecycle data only; not a browser-generated subscription or delivery proof",
+  "runnerNotes": [
+    "Subscription creation count corrected from static planned count: request log shows failure before any subscription POST.",
+    "The process completed cleanup and wrote this report, then stayed alive on an open local pool. Only that owned process was terminated; the follow-up runner explicitly closes its pool."
+  ]
+}

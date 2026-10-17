@@ -1,0 +1,47 @@
+{
+  "run": "PB1019-COMM continuation",
+  "completedUtc": "2026-10-17T13:44:08.631Z",
+  "scope": "Isolated local school_history_test; no production database read or write",
+  "classification": "PRODUCT: mixed database-local and application-UTC timestamps",
+  "diagnostic": {
+    "databaseTimezone": "Africa/Casablanca",
+    "databaseTime": "2026-10-17 14:44:08.559811+01",
+    "appUtc": "2026-10-17T13:44:08.560Z",
+    "clockSkewMilliseconds": 0,
+    "defaultCreatedAt": "2026-10-17 14:44:08.553614"
+  },
+  "results": [
+    {
+      "case": "markRead-new-default-created-notification",
+      "outcome": "FAIL",
+      "expected": "Successful read transition",
+      "observed": "Database constraint rejection",
+      "code": "23514",
+      "constraint": "notifications_read_after_create_check"
+    },
+    {
+      "case": "markAllRead-new-default-created-notification",
+      "outcome": "FAIL",
+      "expected": "Successful read transition",
+      "observed": "Database constraint rejection",
+      "code": "23514",
+      "constraint": "notifications_read_after_create_check"
+    },
+    {
+      "case": "failed-transitions-leave-notification-unread",
+      "outcome": "PASS"
+    },
+    {
+      "case": "database-clock-control-succeeds-on-same-new-record",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cleanup-local-clock-fixtures",
+      "outcome": "PASS"
+    }
+  ],
+  "reproductionConfirmed": true,
+  "suggestedFix": "Use the database clock consistently for readAt in both PersonalNotificationRepository.markRead and markAllRead; preserve ownership predicates and idempotent replay.",
+  "applicationChanges": 0,
+  "remainingFixtures": 0
+}

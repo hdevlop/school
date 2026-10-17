@@ -42,7 +42,7 @@ export class PersonalNotificationRepository {
 
   async markRead(userId: string, id: string) {
     const [row] = await this.db.update(notifications)
-      .set({ readAt: new Date().toISOString() })
+      .set({ readAt: sql`CURRENT_TIMESTAMP` })
       .where(and(eq(notifications.id, id), eq(notifications.recipientUserId, userId), isNull(notifications.readAt)))
       .returning();
     if (row) return row;
@@ -52,7 +52,7 @@ export class PersonalNotificationRepository {
   }
 
   async markAllRead(userId: string) {
-    return this.db.update(notifications).set({ readAt: new Date().toISOString() })
+    return this.db.update(notifications).set({ readAt: sql`CURRENT_TIMESTAMP` })
       .where(and(eq(notifications.recipientUserId, userId), isNull(notifications.readAt))).returning({ id: notifications.id });
   }
 

@@ -1,0 +1,66 @@
+{
+  "run": "PB1019-COMM notification clock fix",
+  "completedUtc": "2026-10-17T13:51:59.455Z",
+  "scope": "Local source fix and isolated loopback school_history_test; no production write or deployment",
+  "sourceFingerprints": {
+    "packages/server/src/modules/notifications/NotificationRepository.ts": "443584bd3a73d953f82aa5267ad16cd491fc0b39a9dba23b635f8b1ae0fd9de9",
+    "packages/server/tests/acceptance/NotificationReadClockDatabase.test.ts": "4dd95d7ab59421742fe5fb690f561a6ceb9482284c3dd5ae022c9932fae3e8e4"
+  },
+  "change": "Use sql CURRENT_TIMESTAMP for readAt in markRead and markAllRead; recipient predicates and replay behavior preserved.",
+  "regression": {
+    "command": "bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/NotificationReadClockDatabase.test.ts",
+    "beforeFix": {
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 2,
+      "constraint": "notifications_read_after_create_check"
+    },
+    "afterFix": {
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "assertions": 12
+    },
+    "databaseTimezone": "Fixed UTC+1 using transaction-local Etc/GMT-1; fixture writes roll back."
+  },
+  "transportRegression": {
+    "command": "bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/NotificationReadClockDatabase.test.ts packages/server/tests/acceptance/NotificationsHistoryTransport.test.ts",
+    "exitCode": 0,
+    "passed": 4,
+    "failed": 0,
+    "assertions": 34
+  },
+  "freshLifecycle": {
+    "command": "bun --env-file=apps/dashboard/.env.local .cache/production-browser/pb1019-comm/local-notifications.mjs",
+    "exitCode": 0,
+    "passedAssertions": 30,
+    "failedAssertions": 0,
+    "fixtureDates": "Normal database-default created_at; no backdating",
+    "evidence": "local-notifications-fixed-results.json",
+    "remainingFixtures": 0
+  },
+  "checks": [
+    {
+      "command": "bun run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run test",
+      "exitCode": 0,
+      "note": "Existing landing PostgreSQL preservation cases remain skipped without their separate fixture setup."
+    },
+    {
+      "command": "bun run build",
+      "status": "PASS",
+      "distDir": ".next-communication-clock",
+      "exitCode": 0
+    }
+  ],
+  "fixedLocally": true,
+  "deployed": false,
+  "browserAvailable": false
+}

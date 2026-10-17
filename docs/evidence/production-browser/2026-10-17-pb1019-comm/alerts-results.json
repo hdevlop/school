@@ -1,0 +1,752 @@
+{
+  "origin": "https://myscolai.com",
+  "revisionBefore": "041697afcf6bc4eaa8aa2347d8516019c2deecfc",
+  "revisionAfter": "041697afcf6bc4eaa8aa2347d8516019c2deecfc",
+  "completedUtc": "2026-10-17T13:28:54.101Z",
+  "transport": "internal REST/MCP; browser unavailable",
+  "results": [
+    {
+      "case": "alerts-baseline-list",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-effective-grants-teacher-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-effective-grants-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-effective-grants-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-personal-fixtures-have-free-types",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-create-parent-A",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-create-parent-B",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-list-ownership-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-detail-own-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-detail-cross-owner-denied-parent-a",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "alerts-MCP-cross-owner-denied-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-parent-acknowledge-parent-a",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-persisted-parent-a-acknowledged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-parent-resolved-denied-parent-a",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "alerts-persisted-parent-a-acknowledged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-parent-dismissed-denied-parent-a",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "alerts-persisted-parent-a-acknowledged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-parent-content-edit-denied-parent-a",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "alerts-parent-cross-owner-delete-denied-parent-a",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "alerts-parent-cross-owner-update-denied-parent-a",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "alerts-list-ownership-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-detail-own-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-detail-cross-owner-denied-parent-b",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "alerts-MCP-cross-owner-denied-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-parent-acknowledge-parent-b",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-persisted-parent-b-acknowledged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-parent-resolved-denied-parent-b",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "alerts-persisted-parent-b-acknowledged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-parent-dismissed-denied-parent-b",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "alerts-persisted-parent-b-acknowledged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-parent-content-edit-denied-parent-b",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "alerts-parent-cross-owner-delete-denied-parent-b",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "alerts-parent-cross-owner-update-denied-parent-b",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "alerts-parent-audience-hidden-from-teacher",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "alerts-create-teacher-A",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-teacher-readable-assigned-child",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-teacher-audience-hidden-parent-a",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "alerts-teacher-audience-hidden-parent-b",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "alerts-teacher-status-acknowledged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-persisted-teacher-A-acknowledged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-teacher-status-resolved",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-persisted-teacher-A-resolved",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-teacher-status-dismissed",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-persisted-teacher-A-dismissed",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-teacher-content-edit-denied",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "alerts-admin-status-active",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-persisted-admin-active",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-admin-status-acknowledged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-persisted-admin-acknowledged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-admin-status-resolved",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-persisted-admin-resolved",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-admin-status-dismissed",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-persisted-admin-dismissed",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-wrong-year-detail-denied",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "alerts-wrong-year-update-denied",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-persisted-year-protected-dismissed",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-parent-historical-scope-denied",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "alerts-historical-list-excludes-new-fixtures",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-current-list-restored-after-year-switch",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-status-filter-exact-owned-results",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-student-filter-keeps-audience",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-MCP-conflicting-year-denied",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-anonymous-denied",
+      "outcome": "PASS",
+      "status": 401
+    },
+    {
+      "case": "alerts-student-self-status",
+      "outcome": "BLOCKED",
+      "reason": "No controlled student login in handoff."
+    },
+    {
+      "case": "alerts-teacher-B-comparison",
+      "outcome": "BLOCKED",
+      "reason": "No controlled teacher-B in handoff."
+    },
+    {
+      "case": "alerts-shared-class-notice",
+      "outcome": "BLOCKED",
+      "reason": "Class audience contains uncontrolled students; no shared notice created."
+    },
+    {
+      "case": "alerts-cleanup-delete-teacher-A",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-cleanup-absent-teacher-A",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "alerts-cleanup-delete-parent-B",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-cleanup-absent-parent-B",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "alerts-cleanup-delete-parent-A",
+      "outcome": "PASS"
+    },
+    {
+      "case": "alerts-cleanup-absent-parent-A",
+      "outcome": "PASS",
+      "status": 404
+    },
+    {
+      "case": "alerts-existing-records-unchanged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "serving-revision-stable",
+      "outcome": "PASS"
+    }
+  ],
+  "requests": [
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/alerts/:owned-child-alert",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/alerts/:other-controlled-child-alert",
+      "status": 404
+    },
+    {
+      "actor": "parent-a",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-parent-a",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "PUT",
+      "path": "/alerts/:owned-child-alert/status",
+      "status": 403
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-parent-a",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "PUT",
+      "path": "/alerts/:owned-child-alert/status",
+      "status": 403
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-parent-a",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "PUT",
+      "path": "/alerts/:owned-child-alert",
+      "status": 403
+    },
+    {
+      "actor": "parent-a",
+      "method": "DELETE",
+      "path": "/alerts/:other-controlled-child-alert",
+      "status": 403
+    },
+    {
+      "actor": "parent-a",
+      "method": "PUT",
+      "path": "/alerts/:other-controlled-child-alert/status",
+      "status": 404
+    },
+    {
+      "actor": "parent-b",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/alerts/:owned-child-alert",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/alerts/:other-controlled-child-alert",
+      "status": 404
+    },
+    {
+      "actor": "parent-b",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-parent-b",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "PUT",
+      "path": "/alerts/:owned-child-alert/status",
+      "status": 403
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-parent-b",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "PUT",
+      "path": "/alerts/:owned-child-alert/status",
+      "status": 403
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-parent-b",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "PUT",
+      "path": "/alerts/:owned-child-alert",
+      "status": 403
+    },
+    {
+      "actor": "parent-b",
+      "method": "DELETE",
+      "path": "/alerts/:other-controlled-child-alert",
+      "status": 403
+    },
+    {
+      "actor": "parent-b",
+      "method": "PUT",
+      "path": "/alerts/:other-controlled-child-alert/status",
+      "status": 404
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/alerts/:parent-audience-alert",
+      "status": 404
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/alerts/:teacher-audience-alert",
+      "status": 404
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/alerts/:teacher-audience-alert",
+      "status": 404
+    },
+    {
+      "actor": "teacher-a",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-teacher-A",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-teacher-A",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-teacher-A",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "PUT",
+      "path": "/alerts/:teacher-audience-alert",
+      "status": 403
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-admin",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-admin",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-admin",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-admin",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-year-alert",
+      "status": 404
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-year-protected",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/alerts",
+      "status": 403
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "anonymous",
+      "method": "GET",
+      "path": "/alerts",
+      "status": 401
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-cleanup-alert",
+      "status": 404
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-cleanup-alert",
+      "status": 404
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/alerts/:owned-cleanup-alert",
+      "status": 404
+    },
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    }
+  ],
+  "failure": null,
+  "cleanup": {
+    "created": 3,
+    "removed": 3,
+    "remaining": 0
+  }
+}

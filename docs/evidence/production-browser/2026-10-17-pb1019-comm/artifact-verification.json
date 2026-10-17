@@ -1,0 +1,32 @@
+{
+  "artifactJsonParse": "PASS",
+  "jsonFilesValidated": 14,
+  "secretAndRuntimeIdentityScan": "PASS",
+  "readmeLinks": "PASS",
+  "missingLinks": [],
+  "exactChecklistIdMapping": "PASS",
+  "checklistCases": 25,
+  "initialLiveAssertions": 164,
+  "initialResidueAssertions": 14,
+  "existingLocalTestsPassed": 56,
+  "additionalOlderFixtureAssertionsPassed": 30,
+  "confirmedProductDefects": 1,
+  "productDefectFixed": true,
+  "applicationChanges": 1,
+  "ledgerContinuationPresent": true,
+  "browserCasesStillBlocked": 25,
+  "fixedLocally": true,
+  "deployed": false,
+  "regressionTestsAdded": 2,
+  "currentFreshNotificationOperations": "PASS",
+  "historicalFailingFreshNotificationOperations": 2,
+  "fixValidation": "fix-validation.json",
+  "freshFixtureAssertionsPassed": 30,
+  "broaderChecks": {
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "rootTests": "PASS",
+    "productionBuild": "PASS"
+  },
+  "fixSourceFingerprintsMatch": true
+}

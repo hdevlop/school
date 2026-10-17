@@ -1,0 +1,244 @@
+{
+  "run": "PB1019-COMM notification clock fix",
+  "completedUtc": "2026-10-17T13:48:38.107Z",
+  "scope": "Isolated loopback school_history_test only; server.fetch REST plus direct fixture setup and persisted-effect checks",
+  "fixtureDates": "Fresh notifications with normal database-default created_at; no backdating.",
+  "results": [
+    {
+      "case": "local-recipient-1-sign-in",
+      "outcome": "PASS"
+    },
+    {
+      "case": "local-recipient-2-sign-in",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-source-recipient-deduplication",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-inbox-A-exact-owned-IDs",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-inbox-B-same-source-different-recipient",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-hrefs-preserved",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-unread-initial-count",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-cross-recipient-read-refused",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-refused-read-leaves-row-unread",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-own-read-persists-under-historical-selection",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-read-replay-keeps-first-read-time",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-read-replay-decrements-once",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-unread-filter-after-read",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-read-filter-after-read",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-mark-all-only-remaining-owned-row",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-mark-all-replay-noop",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-other-recipient-unread-unchanged",
+      "outcome": "PASS"
+    },
+    {
+      "case": "notification-mark-all-read-state-reloads",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-local-subscribe-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-subscription-bound-to-recipient",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-endpoint-and-keys-encrypted-at-rest",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-repeated-subscribe-reuses-one-record",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-cross-recipient-unsubscribe-refused",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-refused-unsubscribe-keeps-owner",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-own-unsubscribe-succeeds",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-unsubscribe-removes-persisted-record",
+      "outcome": "PASS"
+    },
+    {
+      "case": "push-repeated-unsubscribe-returns-404",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cleanup-local-users-absent",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cleanup-local-notifications-absent",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cleanup-local-subscriptions-absent",
+      "outcome": "PASS"
+    }
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/notifications/:owned-n1/read",
+      "status": 404
+    },
+    {
+      "method": "PATCH",
+      "path": "/notifications/:owned-n1/read",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/notifications/:owned-n1/read",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/notifications?unread=true",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/notifications?unread=false",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/notifications/read-all",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/notifications/read-all",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/notifications?unread=false&limit=100",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/notifications/push-subscriptions",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/notifications/push-subscriptions",
+      "status": 200
+    },
+    {
+      "method": "DELETE",
+      "path": "/notifications/push-subscriptions",
+      "status": 404
+    },
+    {
+      "method": "DELETE",
+      "path": "/notifications/push-subscriptions",
+      "status": 200
+    },
+    {
+      "method": "DELETE",
+      "path": "/notifications/push-subscriptions",
+      "status": 404
+    }
+  ],
+  "failure": null,
+  "created": {
+    "users": 2,
+    "notifications": 3,
+    "subscriptions": 1
+  },
+  "cleanup": {
+    "remainingUsers": 0,
+    "remainingNotifications": 0,
+    "remainingSubscriptions": 0
+  },
+  "deliveryAttempts": 0,
+  "browserAcceptance": false,
+  "syntheticSubscription": "Local lifecycle data only; not a browser-generated subscription or delivery proof"
+}
