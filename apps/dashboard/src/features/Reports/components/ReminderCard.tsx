@@ -1,7 +1,8 @@
 'use client';
 
 import { NAvatar, NBadge, NButton, cn } from 'najm-kit';
-import { Bell, CheckCircle2 } from 'lucide-react';
+import { Bell } from 'lucide-react';
+import Link from 'next/link';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
@@ -33,12 +34,11 @@ export const urgencyBadge = (days: number) => {
 
 interface Props {
   data: OverdueRow;
-  reminded: boolean;
-  onRemind: (studentId: string, studentName: string) => void;
+  deliveryDescriptionId: string;
 }
 
 /** One overdue student at phone width, where the seven table columns did not fit. */
-export default function ReminderCard({ data: row, reminded, onRemind }: Props) {
+export default function ReminderCard({ data: row, deliveryDescriptionId }: Props) {
   const { t } = useTranslation();
   const { displayDateOnly, majorMoney } = useSchoolFormat();
 
@@ -46,21 +46,21 @@ export default function ReminderCard({ data: row, reminded, onRemind }: Props) {
     <div
       className={cn(
         'flex flex-col gap-2 rounded-lg border border-l-4 bg-card p-3',
-        reminded ? 'border-l-muted opacity-60' : urgencyRowColor(row.daysOverdue),
+        urgencyRowColor(row.daysOverdue),
       )}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
           <NAvatar src={row.studentImage} fallback={row.studentName} size="sm" />
           <div className="min-w-0">
-            <p className={cn('truncate font-medium', reminded && 'text-muted-foreground line-through')}>{row.studentName}</p>
+            <Link href={`/students/${row.studentId}/fees`} className="block truncate rounded-sm font-medium hover:underline focus-visible:outline-2 focus-visible:outline-ring">{row.studentName}</Link>
             <p className="truncate text-xs text-muted-foreground">{row.studentCode}</p>
           </div>
         </div>
         <NBadge
           className={cn(
             'inline-flex shrink-0 whitespace-nowrap rounded-full font-semibold',
-            reminded ? 'bg-muted text-muted-foreground' : urgencyBadge(row.daysOverdue),
+            urgencyBadge(row.daysOverdue),
           )}
         >
           {t('reports.reminders.daysOverdue', {
@@ -74,30 +74,20 @@ export default function ReminderCard({ data: row, reminded, onRemind }: Props) {
           <p className="text-muted-foreground">
             {t('reports.reminders.oldestDueDate')}: {displayDateOnly(row.oldestDueDate)}
           </p>
-          <p className={cn('font-bold tabular-nums', reminded ? 'text-muted-foreground' : 'text-red-600')}>
+          <p className="font-bold tabular-nums text-red-600">
             {majorMoney(row.totalOverdue)}
           </p>
         </div>
-        {reminded ? (
-          <div className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-xs font-semibold text-green-600">
-            <CheckCircle2 className="h-4 w-4" />
-            {t('reports.reminders.reminded')}
-          </div>
-        ) : (
           <NButton
             size="sm"
             variant="outline"
-            onClick={(event) => {
-              // The card itself selects the row; the button only sends the reminder.
-              event.stopPropagation();
-              onRemind(row.studentId, row.studentName);
-            }}
+            disabled
+            aria-describedby={deliveryDescriptionId}
             className="h-8 shrink-0 gap-1.5"
           >
             <Bell className="h-3.5 w-3.5" />
             {t('reports.reminders.remind')}
           </NButton>
-        )}
       </div>
     </div>
   );

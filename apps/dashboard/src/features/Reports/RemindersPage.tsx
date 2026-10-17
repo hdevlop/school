@@ -1,14 +1,15 @@
 'use client';
 
-import { NBadge, NAvatar, NButton, NEmptyState, NPageHeader, NPageHeaderActions } from 'najm-kit';
+import { NBadge, NAvatar, NButton, NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions } from 'najm-kit';
+import Link from 'next/link';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Bell, BellRing, Search, CheckCircle2, AlertTriangle } from 'lucide-react';
+import React, { useEffect, useId, useMemo, useState } from 'react';
+import { Bell, BellRing, Search } from 'lucide-react';
 import { useFinanceOverdue } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
 import { cn } from 'najm-kit';
-import { toast } from 'sonner';
+import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import ReminderCard, { urgencyBadge, urgencyRowColor, type OverdueRow } from './components/ReminderCard';
@@ -27,13 +28,15 @@ const RemindersPage: React.FC = () => {
   const [placementFilter, setPlacementFilter] = useState({ yearKey, classId: '', sectionId: '' });
   const classId = placementFilter.yearKey === yearKey ? placementFilter.classId : '';
   const sectionId = placementFilter.yearKey === yearKey ? placementFilter.sectionId : '';
-  const [reminded, setReminded] = useState<Set<string>>(new Set());
+  const deliveryDescriptionId = useId();
 
   useEffect(() => {
     setPlacementFilter({ yearKey, classId: '', sectionId: '' });
   }, [yearKey]);
 
   const rows: OverdueRow[] = useMemo(() => Array.isArray(data) ? data : [], [data]);
+  const failed = hasFailedToLoad(error, rows);
+  const countUnknown = isCountUnknown(error, rows, isLoading);
 
   const classOptions = useMemo(() => Array.from(new Map(rows
     .filter((row) => row.classId)
@@ -53,20 +56,6 @@ const RemindersPage: React.FC = () => {
       && (!classId || r.classId === classId)
       && (!sectionId || r.sectionId === sectionId));
   }, [rows, search, classId, sectionId]);
-
-  const handleRemind = useCallback((studentId: string, name: string) => {
-    setReminded((prev) => new Set(prev).add(`${yearKey}:${studentId}`));
-    toast.success(t('reports.reminders.toastReminded', { name }), {
-      description: t('reports.reminders.toastSmsComingSoon'),
-    });
-  }, [t, yearKey]);
-
-  const handleRemindAll = useCallback(() => {
-    setReminded((prev) => new Set([...prev, ...filtered.map((r) => `${yearKey}:${r.studentId}`)]));
-    toast.success(t('reports.reminders.toastRemindedAll', { count: filtered.length }), {
-      description: t('reports.reminders.toastSmsComingSoon'),
-    });
-  }, [filtered, t, yearKey]);
 
   const totalOverdue = filtered.reduce((s, r) => s + r.totalOverdue, 0);
 
@@ -123,14 +112,10 @@ const RemindersPage: React.FC = () => {
       filterFn: (row: any, _id: string, value: unknown) =>
         matchesStudent(row.original, String(value ?? '').toLowerCase()),
       cell: ({ row }: any) => {
-        const done = reminded.has(`${yearKey}:${row.original.studentId}`);
         return (
-          <NAvatar
-            src={row.original.studentImage}
-            title={row.original.studentName}
-            size="sm"
-            classNames={{ title: cn(done && 'text-muted-foreground line-through') }}
-          />
+          <Link href={`/students/${row.original.studentId}/fees`} className="rounded-sm hover:underline focus-visible:outline-2 focus-visible:outline-ring">
+            <NAvatar src={row.original.studentImage} title={row.original.studentName} size="sm" />
+          </Link>
         );
       },
     },
@@ -139,12 +124,11 @@ const RemindersPage: React.FC = () => {
       header: t('reports.reminders.overdueAmount') || 'Overdue',
       enableSorting: true,
       cell: ({ row }: any) => {
-        const done = reminded.has(`${yearKey}:${row.original.studentId}`);
         return (
           <NBadge
             className={cn(
               'inline-flex whitespace-nowrap rounded-full font-semibold',
-              done ? 'bg-muted text-muted-foreground' : urgencyBadge(row.original.daysOverdue),
+              urgencyBadge(row.original.daysOverdue),
             )}
           >
             {t('reports.reminders.daysOverdue', {
@@ -170,9 +154,8 @@ const RemindersPage: React.FC = () => {
       header: t('common.amount') || 'Amount',
       enableSorting: true,
       cell: ({ row }: any) => {
-        const done = reminded.has(`${yearKey}:${row.original.studentId}`);
         return (
-          <span className={cn('whitespace-nowrap font-bold tabular-nums', done ? 'text-muted-foreground' : 'text-red-600')}>
+          <span className="whitespace-nowrap font-bold tabular-nums text-red-600">
             {majorMoney(row.original.totalOverdue)}
           </span>
         );
@@ -182,51 +165,49 @@ const RemindersPage: React.FC = () => {
       id: 'reminder',
       header: t('reports.reminders.remind') || 'Reminder',
       enableSorting: false,
-      cell: ({ row }: any) => {
-        const done = reminded.has(`${yearKey}:${row.original.studentId}`);
-        return done ? (
-          <div className="flex items-center gap-1.5 whitespace-nowrap text-xs font-semibold text-green-600">
-            <CheckCircle2 className="h-4 w-4" />
-            {t('reports.reminders.reminded')}
-          </div>
-        ) : (
+      cell: () => (
           <NButton
             size="sm"
             variant="outline"
-            onClick={() => handleRemind(row.original.studentId, row.original.studentName)}
+            disabled
+            aria-describedby={deliveryDescriptionId}
             className="h-8 gap-1.5"
           >
             <Bell className="h-3.5 w-3.5" />
             {t('reports.reminders.remind')}
           </NButton>
-        );
-      },
+      ),
     },
-  ], [handleRemind, displayDateOnly, majorMoney, reminded, t, yearKey]);
+  ], [deliveryDescriptionId, displayDateOnly, majorMoney, t]);
 
   return (
     <div className="flex flex-col gap-2 h-full overflow-hidden">
       <NPageHeader
         icon={BellRing}
         title={t('reports.reminders.title')}
-        subtitle={`${viewingYear ? `${t('reports.year', { year: viewingYear })} · ` : ''}${t('reports.reminders.studentsOverdueCount', { count: filtered.length })} · ${majorMoney(totalOverdue)}`}
+        subtitle={countUnknown ? (viewingYear ? t('reports.year', { year: viewingYear }) : undefined) : `${viewingYear ? `${t('reports.year', { year: viewingYear })} · ` : ''}${t('reports.reminders.studentsOverdueCount', { count: filtered.length })} · ${majorMoney(totalOverdue)}`}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
       </NPageHeader>
 
-      {error && !isLoading ? (
-        <NEmptyState icon={AlertTriangle} title={t('common.feedback.errorMessage')} className="min-h-64" />
-      ) : <NTable
+      <p id={deliveryDescriptionId} className="text-sm text-muted-foreground">
+        {t('reports.reminders.toastSmsComingSoon')}
+      </p>
+      <NTable
         data={filtered}
         columns={columns}
         filters={filters}
         loading={isLoading}
+        error={failed ? error : null}
+        renderError={(currentError) => isAuthorizationError(currentError)
+          ? <NForbiddenState surface="panel" />
+          : <NErrorState surface="panel" />}
         getRowId={(row) => row.studentId}
         getRowClassName={(row) => cn(
           'border-l-4',
-          reminded.has(`${yearKey}:${row.studentId}`) ? 'border-l-muted opacity-60' : urgencyRowColor(row.daysOverdue),
+          urgencyRowColor(row.daysOverdue),
         )}
         defaultSorting={[{ id: 'daysOverdue', desc: true }]}
         defaultMode="table"
@@ -234,8 +215,7 @@ const RemindersPage: React.FC = () => {
         renderCard={({ data: row }: { data: OverdueRow }) => (
           <ReminderCard
             data={row}
-            reminded={reminded.has(`${yearKey}:${row.studentId}`)}
-            onRemind={handleRemind}
+            deliveryDescriptionId={deliveryDescriptionId}
           />
         )}
         showViewToggle={false}
@@ -256,7 +236,7 @@ const RemindersPage: React.FC = () => {
             className="min-h-64"
           />
         )}
-        headerSlot={(
+        headerSlot={countUnknown ? null : (
           <div className="flex flex-wrap items-center justify-end gap-2">
             <NBadge className="inline-flex items-center gap-1.5 rounded-lg bg-red-50 font-semibold text-red-700">
               <Bell className="h-3.5 w-3.5" />
@@ -268,8 +248,8 @@ const RemindersPage: React.FC = () => {
             <NButton
               size="sm"
               variant="outline"
-              onClick={handleRemindAll}
-              disabled={filtered.length === 0}
+              disabled
+              aria-describedby={deliveryDescriptionId}
               className="h-10 gap-2"
             >
               <BellRing className="h-4 w-4" />
@@ -277,7 +257,7 @@ const RemindersPage: React.FC = () => {
             </NButton>
           </div>
         )}
-      />}
+      />
     </div>
   );
 };
