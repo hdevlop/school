@@ -1,0 +1,35 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "752e1bd83fab1108707583fa94c0b158b2d762dd",
+  "completedUtc": "2026-10-17T15:33:16.941Z",
+  "browser": "Chrome 155 standalone Playwright",
+  "scope": "Read-only Finance release smoke plus invalid form validation; no saved financial mutation",
+  "results": [
+    {
+      "case": "fees-schedule-monthly-200",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-monthly-fee-projection-and-sample-match",
+      "outcome": "PASS"
+    },
+    {
+      "case": "expect(received).toBe(expected) // Object.is equality",
+      "outcome": "FAIL"
+    },
+    {
+      "case": "serving-revision-stable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "no-unexpected-browser-diagnostics",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "writes": [],
+  "failure": {
+    "case": "expect(received).toBe(expected) // Object.is equality"
+  },
+  "financialWrites": 0
+}

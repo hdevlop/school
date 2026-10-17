@@ -1,0 +1,166 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "a55dcd8bcafb37bc7b91d27dbc2ccc745ad2f208",
+  "completedUtc": "2026-10-17T16:02:19.529Z",
+  "browser": "Chrome 155 standalone Playwright",
+  "scope": "Read-only Finance release smoke plus invalid form validation; no saved financial mutation",
+  "results": [
+    {
+      "case": "fees-schedule-monthly-200",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-monthly-fee-projection-and-sample-match",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-monthly-six-visible-totals-reconcile",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-quarterly-200",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-quarterly-fee-projection-and-sample-match",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-quarterly-six-visible-totals-reconcile",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-semester-200",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-semester-fee-projection-and-sample-match",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-semester-six-visible-totals-reconcile",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-annually-200",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-annually-fee-projection-and-sample-match",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-annually-six-visible-totals-reconcile",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-oneTime-200",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-oneTime-fee-projection-and-sample-match",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-oneTime-six-visible-totals-reconcile",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-all-schedules-restores-six-totals",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fee-type-Space-selects-and-translated-count",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fee-type-Enter-deselects",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fee-preview-has-computed-positive-net-amount",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fee-preview-follows-viewed-year",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fee-preview-cancel-saves-nothing",
+      "outcome": "PASS"
+    },
+    {
+      "case": "calendar-month-grid-French",
+      "outcome": "PASS"
+    },
+    {
+      "case": "calendar-day-buttons-French",
+      "outcome": "PASS"
+    },
+    {
+      "case": "calendar-weekday-headers-French",
+      "outcome": "FAIL"
+    },
+    {
+      "case": "calendar-weekday-headers-French",
+      "outcome": "FAIL",
+      "stage": "French-calendar-accessibility"
+    },
+    {
+      "case": "serving-revision-stable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "no-unexpected-browser-diagnostics",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [
+    {
+      "actor": "admin",
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "path": "/forgot-password",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "navigation": false,
+      "resourceType": "fetch"
+    },
+    {
+      "actor": "admin",
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "path": "/forgot-password",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "navigation": false,
+      "resourceType": "fetch"
+    },
+    {
+      "actor": "admin",
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "path": "/register",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "navigation": false,
+      "resourceType": "fetch"
+    },
+    {
+      "actor": "admin",
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "path": "/",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "navigation": false,
+      "resourceType": "fetch"
+    }
+  ],
+  "writes": [],
+  "failure": {
+    "case": "calendar-weekday-headers-French",
+    "stage": "French-calendar-accessibility"
+  },
+  "financialWrites": 0
+}

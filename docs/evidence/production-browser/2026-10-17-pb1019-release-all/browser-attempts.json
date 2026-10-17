@@ -1,0 +1,275 @@
+{
+  "attempts": [
+    {
+      "evidence": "pw-finance-release-attempt1-results.json",
+      "revision": "752e1bd83fab1108707583fa94c0b158b2d762dd",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 3,
+        "FAIL": 2
+      },
+      "failure": {
+        "case": "fees-schedule-monthly-matching-fees"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt10-results.json",
+      "revision": "752e1bd83fab1108707583fa94c0b158b2d762dd",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 27,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "unexpected-browser-diagnostics"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt11-results.json",
+      "revision": "a55dcd8bcafb37bc7b91d27dbc2ccc745ad2f208",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 25,
+        "FAIL": 2
+      },
+      "failure": {
+        "case": "calendar-weekday-headers-French",
+        "stage": "French-calendar-accessibility"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt12-results.json",
+      "revision": "a55dcd8bcafb37bc7b91d27dbc2ccc745ad2f208",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 25,
+        "FAIL": 2
+      },
+      "failure": {
+        "case": "calendar-weekday-headers-French",
+        "stage": "French-calendar-accessibility"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt13-results.json",
+      "revision": "a55dcd8bcafb37bc7b91d27dbc2ccc745ad2f208",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 32,
+        "FAIL": 2
+      },
+      "failure": {
+        "case": "no-financial-writes",
+        "stage": "reports-chart"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt14-results.json",
+      "revision": "b43b39a19a97a75eea9de1f4864e80fc4e5d3bab",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 30,
+        "FAIL": 2
+      },
+      "failure": {
+        "case": "expense-card-readable-row-available",
+        "stage": "expense-card"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt15-results.json",
+      "revision": "b43b39a19a97a75eea9de1f4864e80fc4e5d3bab",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 32,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "expect(locator).toBeVisible() failed",
+        "stage": "expense-card"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt16-results.json",
+      "revision": "b43b39a19a97a75eea9de1f4864e80fc4e5d3bab",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 33,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "expect(locator).toBeVisible() failed",
+        "stage": "expense-card"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt17-results.json",
+      "revision": "b43b39a19a97a75eea9de1f4864e80fc4e5d3bab",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 33,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "expect(locator).toBeVisible() failed",
+        "stage": "expense-card"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt18-results.json",
+      "revision": "7c85a5a75bcfec985f7c0395a5af5d2cf4a2569a",
+      "classification": "PRODUCT",
+      "counts": {
+        "PASS": 21,
+        "FAIL": 2
+      },
+      "failure": {
+        "case": "expect(locator).toBeVisible() failed",
+        "stage": "keyboard-selection"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt19-results.json",
+      "revision": "a823e0f66a2bd53917c9f3c61526fdb8ced10046",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 37,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "expect(locator).toHaveCount(expected) failed",
+        "stage": "expense-card"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt2-results.json",
+      "revision": "752e1bd83fab1108707583fa94c0b158b2d762dd",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 4,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "expect(received).toBe(expected) // Object.is equality"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt3-results.json",
+      "revision": "752e1bd83fab1108707583fa94c0b158b2d762dd",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 4,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "expect(received).toBe(expected) // Object.is equality"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt4-results.json",
+      "revision": "752e1bd83fab1108707583fa94c0b158b2d762dd",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 4,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "expect(received).toBe(expected) // Object.is equality"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt5-results.json",
+      "revision": "752e1bd83fab1108707583fa94c0b158b2d762dd",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 4,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "expect(received).toBe(expected) // Object.is equality"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt6-results.json",
+      "revision": "752e1bd83fab1108707583fa94c0b158b2d762dd",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 4,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "expect(received).toBe(expected) // Object.is equality"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt7-results.json",
+      "revision": "752e1bd83fab1108707583fa94c0b158b2d762dd",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 18,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "locator.click: Timeout 30000ms exceeded."
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt8-results.json",
+      "revision": "752e1bd83fab1108707583fa94c0b158b2d762dd",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 18,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "locator.click: Timeout 30000ms exceeded.",
+        "stage": "open-type-selection"
+      }
+    },
+    {
+      "evidence": "pw-finance-release-attempt9-results.json",
+      "revision": "752e1bd83fab1108707583fa94c0b158b2d762dd",
+      "classification": "TEST",
+      "counts": {
+        "PASS": 27,
+        "FAIL": 1
+      },
+      "failure": {
+        "case": "unexpected-browser-diagnostics"
+      }
+    }
+  ],
+  "finalEvidence": "pw-finance-release-results.json",
+  "announcementYearEvent": {
+    "classification": "TEST",
+    "evidence": "pw-announcements-year-attempt-results.json",
+    "cleanup": "pw-announcements-year-cleanup.json",
+    "cause": "Diagnostic session remembered 2024-2025; script expected 2025-2026. Initial year-scoped 404 was insufficient cleanup proof. Exact unpublished manifest record was removed from its actual year; both years reread absent. Final script explicitly selects and saves the expected year before mutations."
+  },
+  "testCorrections": [
+    "Fee summary omits schedule: use supported detail samples and list IDs.",
+    "Parse currency grouping and decimal separators.",
+    "Reselecting All clears the combobox and triggers its existing first-class fallback: retain All when active.",
+    "DynamicArray add-button name includes the empty hint.",
+    "Await API quiescence before navigation/closing, rather than suppressing aborted API requests.",
+    "Calendar weekday names use header titles.",
+    "Audit-list POST is read-only; retain it separately from financial mutations.",
+    "Use populated registered year 2024-2025 for expense reads and reconcile duplicate titles by exact row ID.",
+    "NSectionInfo truncates long method labels; assert the full localized tooltip."
+  ],
+  "runnerEvent": {
+    "status": 429,
+    "classification": "RUNNER",
+    "action": "Stopped login retries; retained refreshed session state and waited for the normal rate window. No auth-policy changes or limit bypass."
+  },
+  "productEvent": {
+    "evidence": "pw-finance-release-attempt18-results.json",
+    "defect": "najm-kit 3.6.0 empty date causes Invalid time value",
+    "resolution": "Published najm-kit 3.6.1 adopted; final deployed empty and cleared date checks pass."
+  },
+  "alertRefetchEvent": {
+    "classification": "TEST",
+    "evidence": "pw-alerts-late-refetch-attempt-results.json",
+    "cause": "Navigation interrupted a late React Query refetch. Final script waits for API quiescence before navigation and close; final alerts run passes without ignoring aborted API requests."
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "7c85a5a75bcfec985f7c0395a5af5d2cf4a2569a",
+  "completedUtc": "2026-10-17T16:34:54.859Z",
+  "browser": "Chrome 155 standalone Playwright",
+  "scope": "Read-only Finance release smoke plus invalid form validation; no saved financial mutation",
+  "results": [
+    {
+      "case": "fees-schedule-monthly-200",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-monthly-fee-projection-and-sample-match",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-monthly-six-visible-totals-reconcile",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-quarterly-200",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-quarterly-fee-projection-and-sample-match",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-quarterly-six-visible-totals-reconcile",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-semester-200",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-semester-fee-projection-and-sample-match",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-semester-six-visible-totals-reconcile",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-annually-200",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-annually-fee-projection-and-sample-match",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-annually-six-visible-totals-reconcile",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-oneTime-200",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-oneTime-fee-projection-and-sample-match",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-schedule-oneTime-six-visible-totals-reconcile",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fees-all-schedules-restores-six-totals",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fee-type-Space-selects-and-translated-count",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fee-type-Enter-deselects",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fee-preview-has-computed-positive-net-amount",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fee-preview-follows-viewed-year",
+      "outcome": "PASS"
+    },
+    {
+      "case": "expect(locator).toBeVisible() failed",
+      "outcome": "FAIL",
+      "stage": "keyboard-selection"
+    },
+    {
+      "case": "serving-revision-stable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "no-unexpected-browser-diagnostics",
+      "outcome": "FAIL"
+    }
+  ],
+  "diagnostics": [
+    {
+      "actor": "admin",
+      "type": "pageerror",
+      "message": "Invalid time value"
+    }
+  ],
+  "writes": [],
+  "nonGetRequestMeaning": "POST /api/financial-audit-logs/list is a read-only list route; retained separately from mutations.",
+  "failure": {
+    "case": "expect(locator).toBeVisible() failed",
+    "stage": "keyboard-selection"
+  },
+  "financialWrites": 0
+}

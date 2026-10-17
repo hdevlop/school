@@ -1,0 +1,17 @@
+{
+  "classification": "TEST",
+  "cause": "Private diagnostic session remembered 2024-2025; initial script did not select 2025-2026 before creating draft.",
+  "historicalCleanupLimitation": "Initial cleanup reread only 2025-2026 and falsely inferred global absence. Continuation read and removed the exact unpublished manifest record in its actual year.",
+  "checks": [
+    {
+      "year": "2024-2025",
+      "outcome": "PASS",
+      "remaining": 0
+    },
+    {
+      "year": "2025-2026",
+      "outcome": "PASS",
+      "remaining": 0
+    }
+  ]
+}

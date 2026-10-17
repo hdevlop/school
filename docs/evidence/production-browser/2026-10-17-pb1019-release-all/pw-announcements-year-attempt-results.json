@@ -1,0 +1,52 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "a823e0f66a2bd53917c9f3c61526fdb8ced10046",
+  "completedUtc": "2026-10-17T17:01:38.526Z",
+  "browser": "Chrome 155 via standalone Playwright explicitly requested by owner",
+  "results": [
+    {
+      "case": "announcements-R02-admin-create-visible",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-M01-one-create-persists-draft",
+      "outcome": "FAIL"
+    },
+    {
+      "case": "announcements-M01-one-create-persists-draft",
+      "outcome": "FAIL"
+    },
+    {
+      "case": "cleanup-owned-draft-absent",
+      "outcome": "PASS"
+    },
+    {
+      "case": "serving-revision-stable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "exact-browser-write-list",
+      "outcome": "FAIL"
+    },
+    {
+      "case": "no-unexpected-browser-diagnostics",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/announcements"
+    }
+  ],
+  "failure": {
+    "case": "announcements-M01-one-create-persists-draft"
+  },
+  "cleanup": {
+    "created": 1,
+    "remaining": 0
+  },
+  "published": 0
+}

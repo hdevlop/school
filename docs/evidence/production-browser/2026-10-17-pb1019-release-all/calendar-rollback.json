@@ -13,5 +13,14 @@
     "command": "bun run check",
     "exitCode": 0,
     "distDir": ".next-release-all-final"
+  },
+  "currentResolution": {
+    "package": "najm-kit@3.6.1",
+    "sourceCommit": "b472ff2c28fc4f0d1b0d485ae2686b117aadf1a3",
+    "temporaryRollbackWorkflow": "Cancelled before deployment; superseded by corrected published release.",
+    "emptyDate": "PASS",
+    "clearedDate": "PASS",
+    "schoolYearNavigationLimit": "PASS",
+    "evidence": "pw-finance-release-results.json"
   }
 }
