@@ -1,6 +1,6 @@
 # Fee types
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PARTIAL** (0/3 complete cases). Recorded on `7657cc0`, 2026-10-16, and `440c060`, 2026-10-17. Evidence: [PB1018 translated fee names](../../evidence/production-browser/2026-10-17-pb1018/receipts-fees-results.json) and [PB1016](../../evidence/production-browser/2026-10-16-pb1016/README.md) (price snapshot). Complete filter/recurrence/amount validation and referenced-deletion cases remain open.
 
 Entry point: `/fee-types`. Original coverage: G01.
 

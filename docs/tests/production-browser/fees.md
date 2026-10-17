@@ -1,6 +1,6 @@
 # Fees
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PARTIAL** (0/5 complete cases). Recorded on `440c060` and `ff7d571`, 2026-10-17. Evidence: [PB1018 fee reads](../../evidence/production-browser/2026-10-17-pb1018/receipts-fees-results.json) and [PB1020 fee/schedule lifecycle](../../evidence/production-browser/2026-10-17-pb1020-fin/installments-results.json). These targeted assertions do not complete the full filters, history, discounts and bulk-charge cases below.
 
 Entry point: `/fees`. Original coverage: G02.
 
@@ -12,7 +12,7 @@ Owned students, fee type and known historical/active academic years. Use an iden
 
 ## Browser checks
 
-- [ ] **fees-R01**: Filter by academic year, class, section, status and student; totals and results follow the selected scope.
+- [ ] **fees-R01**: Filter by academic year, class, section, status and student; totals and results follow the selected scope. Result: **PARTIAL** — PB1018 verifies statistics against listed rows, section filtering under all classes, and paid-status filtering; the complete filter matrix is not recorded.
 - [ ] **fees-R02**: Select a historical year, navigate away/back and reload; selection must not change the active school setting.
 
 ## Owned-fixture mutations

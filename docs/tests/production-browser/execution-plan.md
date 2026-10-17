@@ -1,6 +1,6 @@
 # Real browser execution plan: myscolai.com
 
-Prepared: **2026-10-15**. Status: **NOT RUN**. Target: **https://myscolai.com**.
+Prepared: **2026-10-15**. Status: **PARTIALLY EXECUTED**; see the [recorded checklist progress](README.md#recorded-checklist-progress) and [evidence ledger](evidence-ledger.md). Target: **https://myscolai.com**.
 
 Run in this order: **authentication → controlled security checks → students,
 teachers and staff → remaining CRUD → finance → cleanup and acceptance report**.

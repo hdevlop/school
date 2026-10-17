@@ -1,6 +1,6 @@
 # Student profile
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PARTIAL** (1/4 cases complete) on `7657cc0`, 2026-10-16. Evidence: [PB1016](../../evidence/production-browser/2026-10-16-pb1016/README.md). Full profile tabs and linked destinations remain open.
 
 Entry point: `/students/[id]`. Original coverage: D02, D10.
 
@@ -15,7 +15,7 @@ Owned student with known parents, attendance, fees and transport. Use an identit
 - [ ] **student-profile-R01**: Open the profile from its row/card and by direct URL; identity/class/status agree.
 - [ ] **student-profile-R02**: Inspect every rendered tab, attendance counts, parents, records and avatar.
 - [ ] **student-profile-R03**: Follow fees and transport links; they retain the same student identity.
-- [ ] **student-profile-R04**: Try a forbidden student's URL with a restricted identity; no private profile or internal fields appear.
+- [x] **student-profile-R04**: Try a forbidden student's URL with a restricted identity; no private profile or internal fields appear. Result: **PASS** — PB1016 teacher/parent ownership checks restrict students and profiles to owned records; the other family receives 404 and not-found feedback.
 
 ## Owned-fixture mutations
 

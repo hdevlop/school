@@ -1,6 +1,6 @@
 # Parents
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PARTIAL** (1/4 cases complete) on `7657cc0`, 2026-10-16. Target: `https://myscolai.com`. Evidence: [PB1016](../../evidence/production-browser/2026-10-16-pb1016/README.md). The remaining parent cases need their complete requirements.
 
 Entry point: `/parents`. Original coverage: D03.
 
@@ -20,7 +20,7 @@ Run only within the recorded production fixture scope; otherwise mark these case
 
 - [ ] **parents-M01**: Create and edit an owned parent, attach only an owned child and reload.
 - [ ] **parents-M02**: Duplicate CIN/phone/email produce safe feedback; nested student creation reuses the intended parent without duplication.
-- [ ] **parents-M03**: Cancel deletion, then remove only the owned unlinked parent.
+- [x] **parents-M03**: Cancel deletion, then remove only the owned unlinked parent. Result: **PASS** — PB1016 PEOPLE-05: cancellation sends nothing; the disposable parent is deleted and its supported read returns 404.
 
 ## Finish and evidence
 

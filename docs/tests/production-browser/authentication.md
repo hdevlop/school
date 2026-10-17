@@ -1,6 +1,6 @@
 # Authentication and sessions
 
-Status: **PARTIAL** (1/11 PASS; the rest NOT RUN) on `440c060`, 2026-10-17. Evidence: [PB1018](../../evidence/production-browser/2026-10-17-pb1018/README.md).
+Status: **PARTIAL** (3/11 cases complete). Recorded on `7657cc0`, 2026-10-16 ([PB1016](../../evidence/production-browser/2026-10-16-pb1016/README.md)), and `440c060`, 2026-10-17 ([PB1018](../../evidence/production-browser/2026-10-17-pb1018/README.md)). The full role/session matrix and Gate A remain incomplete.
 
 Entry point: `/login`, `/forgot-password`, `/reset-password`, `/change-password`. Original coverage: A.
 
@@ -25,8 +25,8 @@ remain applicable with this release-specific inventory.
 
 ## Browser checks
 
-- [ ] **authentication-R01**: Open a protected URL signed out; expect login and a safe return path. Try an unsafe return target; it must not redirect outside the supported app routes.
-- [ ] **authentication-R02**: Sign in as an admin, load a protected page, reload, log out through the UI, then revisit the protected URL; access must be refused.
+- [x] **authentication-R01**: Open a protected URL signed out; expect login and a safe return path. Try an unsafe return target; it must not redirect outside the supported app routes. Result: **PASS** — PB1016 AUTH-01 protected-page/API denials and AUTH-08 external/protocol-relative return-target refusal.
+- [x] **authentication-R02**: Sign in as an admin, load a protected page, reload, log out through the UI, then revisit the protected URL; access must be refused. Result: **PASS** — PB1016 AUTH-03 session/logout; [PB1016r browser results](../../evidence/production-browser/2026-10-16-pb1016r/browser-results.json) also confirms Back after logout returns to sign-in.
 - [ ] **authentication-R03**: Compare Remember Me enabled and disabled using fresh browser contexts; inspect cookie attributes without copying values.
 - [ ] **authentication-R04**: Repeat allowed/denied navigation and protected reads for every role in the serving release's catalog and grants, including supervisor in the current inventory; isolated contexts must not share sessions. Record each role separately and leave missing accounts BLOCKED.
 - [ ] **authentication-R05**: With two tabs in the same session, log out in one; the other must lose protected access. Observe an overlapping protected request; no late response may restore the session.
@@ -40,7 +40,7 @@ Run only within the recorded production fixture scope; otherwise mark these case
 
 - [ ] **authentication-M01**: Use only owned accounts for wrong-password, inactive and revoked-session cases; record actual status codes without provoking a live user's lockout.
 - [ ] **authentication-M02**: Complete an owned temporary-credential setup; protected pages remain inaccessible until replacement and fresh login. Old credentials, cancellation and replay must fail.
-- [x] **authentication-M03**: Send recovery/invite mail only to the controlled recipient; test weak/mismatched replacements, single use and old-password refusal. Record delivery separately from simulated transport. Result: **PASS** — recovery mail (AUTH-07) to the controlled mailbox in French, weak/mismatched refused, single use, old password refused; invitation mail not run.
+- [x] **authentication-M03**: Send recovery/invite mail only to the controlled recipient; test weak/mismatched replacements, single use and old-password refusal. Record delivery separately from simulated transport. Result: **PASS** — PB1018 controlled recovery delivery, weak/mismatched replacement refusal, single use and old-password refusal. PB1016 separately records controlled invitation delivery, activation and reuse refusal. This does not pass temporary-credential setup under M02.
 
 ## Finish and evidence
 

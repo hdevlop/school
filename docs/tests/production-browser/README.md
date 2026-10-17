@@ -2,7 +2,16 @@
 
 Status: **IN PROGRESS**. Prepared on 2026-09-25 for `https://myscolai.com`. Each feature page carries its own status and ticked cases; the [evidence ledger](evidence-ledger.md) lists every run.
 
-This folder replaces the root School connected acceptance plan. Each feature has a browser checklist with an entry point, fixtures, expected results and stable case IDs. These are execution guides, not implemented automated tests or evidence of a production pass.
+This folder replaces the root School connected acceptance plan. Each feature has a browser checklist with an entry point, fixtures, expected results and stable case IDs. Completed cases reference retained execution reports. These guides do not execute automated tests or establish a new production pass.
+
+## Recorded checklist progress
+
+As of 2026-10-17: **54 of 225 cases complete; 171 remain unchecked**.
+The 225 cases are in 56 feature checklists; the folder also contains planning
+and shared guidance. Checked cases link to retained evidence on their recorded
+source revisions. This reconciliation runs no new tests and does not accept all
+features on the latest release. Unchecked cases can have passing subchecks while
+remaining PARTIAL, BLOCKED, NOT RUN or NOT EXPOSED.
 
 ## Start here
 
@@ -29,7 +38,7 @@ For a single production inspection, record exactly what was checked even if a fu
 
 ## Feature index
 
-Every guide starts as NOT RUN. The unit column maps the old acceptance matrix to its new owner; extensions cover current routes missing from that matrix.
+Guides start as NOT RUN; each executed guide records its current case status. The unit column maps the old acceptance matrix to its new owner; extensions cover current routes missing from that matrix.
 
 | Guide | Entry point | Original units |
 | --- | --- | --- |

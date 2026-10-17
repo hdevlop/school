@@ -1,6 +1,6 @@
 # Teacher profile
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PARTIAL** (1/3 cases complete) on `bc4e665`, 2026-10-16. Evidence: [PB1016r browser results](../../evidence/production-browser/2026-10-16-pb1016r/browser-results.json). Full profile tabs and timetable checks remain open.
 
 Entry point: `/teachers/[id]`. Original coverage: D06, D10.
 
@@ -14,7 +14,7 @@ Owned teacher with class, subject and routine fixtures. Use an identity allowed 
 
 - [ ] **teacher-profile-R01**: Inspect identity, academic details, classes, subjects, schedule, payments and documents as exposed.
 - [ ] **teacher-profile-R02**: Compare timetable with Class routines; whole lessons and assignments match.
-- [ ] **teacher-profile-R03**: Open a forbidden profile in another context; projection excludes unauthorized/private fields.
+- [x] **teacher-profile-R03**: Open a forbidden profile in another context; projection excludes unauthorized/private fields. Result: **PASS** — the unauthorized teacher profile shows not found; the two expected 404 responses are retained in the browser diagnostics.
 
 ## Owned-fixture mutations
 

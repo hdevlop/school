@@ -1,6 +1,6 @@
 # Reports
 
-Status: **PASS** (2/2 runnable) on `ff7d571`, 2026-10-17; export NOT EXPOSED. Evidence: [PB1020-FIN](../../evidence/production-browser/2026-10-17-pb1020-fin/README.md).
+Status: **PARTIAL** (1/3 cases complete; export NOT EXPOSED) on `ff7d571`, 2026-10-17. Evidence: [PB1020-FIN](../../evidence/production-browser/2026-10-17-pb1020-fin/README.md) and [recorded checks](../../evidence/production-browser/2026-10-17-pb1020-fin/aging-reports-results.json).
 
 Entry point: `/reports`. Original coverage: G16.
 
@@ -13,7 +13,7 @@ Known financial period and role-scoped fixture totals. Use an identity allowed b
 ## Browser checks
 
 - [x] **reports-R01**: Check academic-year heading and income/expense trend, expense breakdown and collection-by-class charts. Result: **PASS**.
-- [x] **reports-R02**: Compare totals with supported reads for the same period; distinguish empty results from failed queries. Result: **PASS**.
+- [ ] **reports-R02**: Compare totals with supported reads for the same period; distinguish empty results from failed queries. Result: **PARTIAL** — actual income, collection and per-class totals reconcile, and the empty expense breakdown is checked. The failed-query response was simulated, so it does not complete this guide's unmocked production error-state requirement.
 - [ ] **reports-R03**: Use filters/export only if exposed; a download must contain the selected scope and authorized fields. Record absent export as not exposed, not passed. Result: **NOT EXPOSED** — the reports page offers no filter or export control.
 
 ## Owned-fixture mutations

@@ -25,7 +25,7 @@ not satisfy this prerequisite.
 
 Run only within the recorded production fixture scope after the full-roster prerequisite passes; otherwise mark these cases BLOCKED.
 
-- [x] **staff-attendance-M01**: On the entirely owned roster, save and update marks through allowed transitions; reload after each. Reconcile every submitted person, including unchanged-looking rows that had no saved mark. Result: **PASS** — owned 30 June roster saved, corrected and reloaded; 18 marks removed.
+- [x] **staff-attendance-M01**: On the entirely owned roster, save and update marks through allowed transitions; reload after each. Reconcile every submitted person, including unchanged-looking rows that had no saved mark. Result: **PASS with recorded owner-authorized scope** — PB1018 explicitly authorized the 18-person shared roster for 30 June, which had no pre-existing marks. Every submitted mark was reconciled, corrected/reloaded and removed. The people were not all owned fixtures; this historical authorization does not authorize another shared-roster save.
 - [ ] **staff-attendance-M02**: Invalid transitions or denied identities cannot modify records; clean up only through supported owned-fixture operations.
 
 ## Finish and evidence
