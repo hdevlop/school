@@ -19,11 +19,13 @@ import { DynamicArray } from 'najm-kit';
 import { usePrefix } from 'najm-kit';
 
 import InstallmentPreviewTable from './InstallmentPreviewTable'
+import { useSchoolFormat } from '@/hooks/useSchoolFormat'
 
 // ==================== COMPONENTS ====================
 
 const TotalFeesBadge = () => {
    const { t } = useTranslation()
+   const { majorMoney } = useSchoolFormat()
    const feesData = useWatch({ name: 'fees' }) || []
    const totalFees = calculateTotalFees(feesData)
 
@@ -35,7 +37,7 @@ const TotalFeesBadge = () => {
             {t('fees.form.selectedFees') || 'Selected Fees'}
          </Label>
          <Badge variant="secondary" className="font-semibold text-md">
-            {t('fees.form.total') || 'Total'}: ${totalFees}
+            {t('fees.form.total') || 'Total'}: {majorMoney(totalFees)}
          </Badge>
       </div>
    )

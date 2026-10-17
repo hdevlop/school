@@ -251,13 +251,13 @@ export const calculateFeeAmounts = (
   };
 };
 
-export const calculateTotalFees = (fees) => {
-  return fees.reduce((sum, fee) => {
-    const amount = parseFloat(fee.amount?.toString() || '0') || 0;
-    const discount = parseFloat(fee.discountAmount?.toString() || '0') || 0;
-    return sum + (amount - discount);
-  }, 0).toFixed(2);
-}
+/**
+ * What the selected fees come to: each line's net amount, which the form
+ * computes from its amount, schedule and discount. The lines hold
+ * `baseAmount`; reading `amount` summed nothing.
+ */
+export const calculateTotalFees = (fees: Array<{ netAmount?: unknown }>): number =>
+  fees.reduce((sum, fee) => sum + (Number(fee.netAmount) || 0), 0)
 
 export const getAcademicYearDateRange = (): { startDate; endDate } => {
   const currentDate = new Date();

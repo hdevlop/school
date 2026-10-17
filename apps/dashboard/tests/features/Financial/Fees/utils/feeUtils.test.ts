@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { calculateFeeAmounts, getFeeDiscountPerPeriod, getFeeTypeDisplayName, getStudentFeesDisplayData, withFeeYear } from '@/features/Financial/Fees/utils/feeUtils';
+import { calculateFeeAmounts, calculateTotalFees, getFeeDiscountPerPeriod, getFeeTypeDisplayName, getStudentFeesDisplayData, withFeeYear } from '@/features/Financial/Fees/utils/feeUtils';
 import { translations } from '@sms/contracts/locales';
 
 const seededFeeTypes = [
@@ -90,5 +90,14 @@ describe('fee edit discount units', () => {
     expect(getFeeDiscountPerPeriod({ schedule: 'oneTime', baseAmount: 100, grossAmount: 100, discountAmount: 10 })).toBe(10);
     expect(calculateFeeAmounts('recurring', 100, 'monthly', 10, { academicYear: '2026-2027', effectiveDate: '2026-09-01' }).netAmount).toBe(900);
     expect(calculateFeeAmounts('recurring', 100, 'oneTime', 10, { academicYear: '2026-2027', effectiveDate: '2026-09-01' }).netAmount).toBe(90);
+  });
+});
+
+// The "selected fees" badge summed `amount`, which the form's lines do not have,
+// and printed it after a literal "$".
+describe('calculateTotalFees', () => {
+  it('totals each line\'s computed net amount', () => {
+    expect(calculateTotalFees([{ netAmount: 1200 }, { netAmount: '300.5' }, {}])).toBe(1500.5);
+    expect(calculateTotalFees([])).toBe(0);
   });
 });
