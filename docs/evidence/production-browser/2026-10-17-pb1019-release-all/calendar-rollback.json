@@ -1,0 +1,17 @@
+{
+  "observedRevision": "7c85a5a75bcfec985f7c0395a5af5d2cf4a2569a",
+  "package": "najm-kit@3.6.0",
+  "classification": "PRODUCT",
+  "failure": "Opening an empty fee effective-date calendar emits pageerror Invalid time value and no calendar grid.",
+  "evidence": "pw-finance-release-attempt18-results.json",
+  "cause": "FormInput supplies empty string for an unset date. DateInput parses it to Invalid Date and uses that object as defaultMonth via nullish coalescing; an Invalid Date is not nullish.",
+  "schoolFix": "Restore the published 3.5.5 exact root and dashboard pins and lockfile; remove min/max props introduced with 3.6.0. Keep server enrollment validation, translated refusals, localized placeholders and viewed-year installment previews.",
+  "sharedFollowup": "In a separately authorized Najm change, normalize empty and invalid dates before selected/defaultMonth and verify empty/cleared date inputs with and without min/max before publishing a corrected version. Desktop sources remain read-only in this task.",
+  "calendarRangeAcceptance": "BLOCKED pending corrected published shared release",
+  "secrets": "No credentials, response bodies or runtime identities recorded.",
+  "rollbackValidation": {
+    "command": "bun run check",
+    "exitCode": 0,
+    "distDir": ".next-release-all-final"
+  }
+}

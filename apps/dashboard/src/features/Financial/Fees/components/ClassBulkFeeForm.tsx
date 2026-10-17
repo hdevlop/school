@@ -187,8 +187,6 @@ export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
             type='date'
             icon={CalendarClock}
             formLabel={t('fees.classBulk.rosterDate')}
-            min={yearCalendar?.instructionStartsOn}
-            max={yearCalendar?.instructionEndsOn}
             required
          />
 
