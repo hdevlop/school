@@ -14,6 +14,7 @@ import {
   type NNotifyLabels,
 } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { toast } from 'sonner';
 import { useNotificationCommands, useNotifications, useUnreadCount } from './useNotifications';
 import type { NotificationRecord } from './types';
@@ -65,6 +66,7 @@ function NotificationsMenuBody({
   onClose,
 }: Readonly<{ labels: NNotifyLabels; onClose: () => void }>) {
   const router = useRouter();
+  const { locale } = useSchoolFormat();
   const list = useNotifications(5);
   const { markAll, markRead } = useNotificationCommands();
 
@@ -89,6 +91,7 @@ function NotificationsMenuBody({
       <NNotifyList
         error={list.isError}
         itemProps={{ onMarkedRead: onClose }}
+        locale={locale}
         items={items}
         labels={labels}
         loading={list.isPending}
@@ -108,7 +111,7 @@ function NotificationsMenuBody({
 }
 
 export function NotificationsMenu() {
-  const { language } = useTranslation();
+  const { locale } = useSchoolFormat();
   const [open, setOpen] = useState(false);
   const labels = useNotifyLabels();
   const unreadCount = useUnreadCount().data?.count ?? 0;
@@ -117,7 +120,7 @@ export function NotificationsMenu() {
     <NNotifyRoot onOpenChange={setOpen} open={open}>
       <NNotifyTrigger
         label={labels.open}
-        locale={language ?? 'en'}
+        locale={locale}
         unreadCount={unreadCount}
         unreadLabel={labels.unread}
       />

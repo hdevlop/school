@@ -18,6 +18,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { toast } from 'sonner';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { isAuthorizationError } from '@/services/apiError';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useNotificationCommands, useNotifications } from './useNotifications';
 import type { NotificationRecord } from './types';
 
@@ -34,6 +35,7 @@ function toNotifyItem(record: NotificationRecord): NNotifyItemData {
 
 export default function NotificationsPage() {
   const { t } = useTranslation();
+  const { locale } = useSchoolFormat();
   const router = useRouter();
   const list = useNotifications(100);
   const { markRead, markAll } = useNotificationCommands();
@@ -89,6 +91,7 @@ export default function NotificationsPage() {
             item={item}
             key={item.id}
             labels={labels}
+            locale={locale}
             onError={report}
             onMarkRead={(id) => markRead.mutateAsync(id)}
             onOpenItem={(opened) => {
