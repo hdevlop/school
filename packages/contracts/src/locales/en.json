@@ -1525,7 +1525,10 @@
       "invalidDiscount": "Invalid discount",
       "invalidNetAmount": "The amount after discount must be positive",
       "cannotPayCancelledInstallment": "A cancelled installment cannot be paid",
-      "installmentNumberExists": "An installment with this number already exists for this fee"
+      "installmentNumberExists": "An installment with this number already exists for this fee",
+      "studentNotEnrolledInAcademicYear": "The student was not enrolled in this school year",
+      "effectiveDateOutsideEnrollmentPeriod": "The billing start date must fall within the student's enrollment period for this school year, on or after their enrollment date",
+      "invalidEffectiveDate": "Invalid billing start date"
     },
     "validation": {
       "studentRequired": "Student is required",
@@ -1576,6 +1579,7 @@
       "amount": "Amount",
       "effectiveDate": "Charge Start Date",
       "effectiveDateDescription": "First date this fee applies. Leave blank to use the student's enrollment date.",
+      "effectiveDatePlaceholder": "Select a date",
       "paidAmount": "Paid Amount",
       "remainingAmount": "Remaining Amount",
       "status": "Status",

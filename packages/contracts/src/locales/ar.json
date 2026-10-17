@@ -1690,6 +1690,7 @@
       "amount": "المبلغ",
       "effectiveDate": "تاريخ بدء احتساب الرسوم",
       "effectiveDateDescription": "أول تاريخ تُطبق فيه هذه الرسوم. اتركه فارغاً لاستخدام تاريخ تسجيل التلميذ.",
+      "effectiveDatePlaceholder": "اختر التاريخ",
       "class": "القسم",
       "classPlaceholder": "اختر القسم",
       "discountAmount": "قيمة الخصم",
@@ -1845,7 +1846,10 @@
       "installmentNotFound": "القسط غير موجود",
       "installmentDoesNotBelongToFee": "القسط لا ينتمي إلى الرسوم المحددة",
       "feeAlreadyExists": "توجد مسبقًا رسوم لهذا التلميذ وهذه السنة الدراسية وهذا النوع من الرسوم",
-      "installmentAlreadyPaid": "هذا القسط مدفوع مسبقًا"
+      "installmentAlreadyPaid": "هذا القسط مدفوع مسبقًا",
+      "studentNotEnrolledInAcademicYear": "لم يكن التلميذ مسجلاً في هذه السنة الدراسية",
+      "effectiveDateOutsideEnrollmentPeriod": "يجب أن يقع تاريخ بدء الفوترة ضمن فترة تسجيل التلميذ في هذه السنة الدراسية، ابتداءً من تاريخ تسجيله",
+      "invalidEffectiveDate": "تاريخ بدء الفوترة غير صالح"
     },
     "studentView": {
       "pay": "دفع",

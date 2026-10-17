@@ -10,6 +10,7 @@ import {
   getFeeDiscountPerPeriod,
   formatDateOnly,
   resolveFeeEffectiveDate,
+  type FeeEffectiveDateError,
 } from '../utils';
 import { InstallmentService } from '../installments/InstallmentService';
 import { SettingsRepository } from '../../settings/SettingsRepository';
@@ -48,6 +49,11 @@ export class FeeService {
     private enrollments: StudentEnrollmentRepository,
     private academicYears: AcademicYearValidator,
   ) { }
+
+  /** Why a billing date was refused, in the request's language. */
+  effectiveDateMessage(error: FeeEffectiveDateError): string {
+    return this.feeValidator.effectiveDateMessage(error);
+  }
 
   async getAll(filters: ListFeesQueryDto = {}) {
     return this.feeRepository.getAll(undefined, filters.schedule);

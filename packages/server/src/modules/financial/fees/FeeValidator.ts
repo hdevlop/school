@@ -15,8 +15,18 @@ export class FeeValidator {
   ) { }
 
   mapEffectiveDateError(error: unknown): never {
-    if (error instanceof FeeEffectiveDateError) Err(400, error.message);
+    if (error instanceof FeeEffectiveDateError) Err(400, this.effectiveDateMessage(error));
     throw error;
+  }
+
+  /** The refusal in the request's language; the util's own message is English. */
+  effectiveDateMessage(error: FeeEffectiveDateError): string {
+    switch (error.code) {
+      case 'studentNotEnrolledInAcademicYear': return this.t('studentNotEnrolledInAcademicYear');
+      case 'effectiveDateOutsideEnrollmentPeriod': return this.t('effectiveDateOutsideEnrollmentPeriod');
+      case 'invalidRequestedDate': return this.t('invalidEffectiveDate');
+      case 'invalidEnrollmentDate': return this.t('studentEnrollmentDateInvalid');
+    }
   }
 
   ensureWritableYear(year: { status: string }, role?: string) {

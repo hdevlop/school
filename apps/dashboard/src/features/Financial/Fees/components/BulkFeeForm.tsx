@@ -20,7 +20,7 @@ import { usePrefix } from 'najm-kit';
 
 import InstallmentPreviewTable from './InstallmentPreviewTable'
 import { useSchoolFormat } from '@/hooks/useSchoolFormat'
-import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear'
+import { useViewingAcademicYear, useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear'
 
 // ==================== COMPONENTS ====================
 
@@ -52,6 +52,7 @@ const FeeItem = ({
 }) => {
     const { setValue } = useFormContext();
     const { t } = useTranslation();
+    const { displayDateOnly } = useSchoolFormat();
     const prefix = usePrefix();
 
     const feeTypeId = useWatch({ name: `${prefix}.feeTypeId` })
@@ -63,6 +64,11 @@ const FeeItem = ({
     // the fee is created in, not the school year of today's date.
     const { viewingYear } = useViewingAcademicYear()
     const academicYear = useWatch({ name: `${prefix}.academicYear` }) || viewingYear
+    // The server bills from the student's enrollment to the end of the year and
+    // refuses any other date, so the calendar offers only those days.
+    const yearCalendar = useViewingYearCalendar()
+    const minBillingDate = [studentEnrollmentDate, yearCalendar?.instructionStartsOn].filter(Boolean).sort().at(-1) ?? null
+    const maxBillingDate = yearCalendar?.instructionEndsOn ?? null
     const calculationContext = useMemo(
        () => ({ effectiveDate, academicYear }),
        [academicYear, effectiveDate],
@@ -121,7 +127,9 @@ const FeeItem = ({
                       icon={CalendarDays}
                       formLabel={t('fees.form.effectiveDate')}
                       formDescription={t('fees.form.effectiveDateDescription')}
-                      placeholder={studentEnrollmentDate || 'YYYY-MM-DD'}
+                      placeholder={studentEnrollmentDate ? displayDateOnly(studentEnrollmentDate) : t('fees.form.effectiveDatePlaceholder')}
+                      min={minBillingDate}
+                      max={maxBillingDate}
                    />
                 </div>
              )}

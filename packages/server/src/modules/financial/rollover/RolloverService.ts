@@ -12,6 +12,7 @@ import {
   getFeeDiscountPerPeriod,
   formatDateOnly,
   fromCents,
+  FeeEffectiveDateError,
   getAcademicYearRange,
   isValidDateOnly,
   resolveFeeEffectiveDate,
@@ -219,7 +220,9 @@ export class RolloverService {
         validationErrors.push({
           studentId: student.id,
           studentName: student.name,
-          error: error?.message || 'Effective date resolution failed',
+          error: error instanceof FeeEffectiveDateError
+            ? this.feeService.effectiveDateMessage(error)
+            : error?.message || 'Effective date resolution failed',
         });
       }
     }

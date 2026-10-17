@@ -2401,6 +2401,7 @@
       "amount": "Montant",
       "effectiveDate": "Date de début de facturation",
       "effectiveDateDescription": "Première date d'application de ces frais. Laissez vide pour utiliser la date d'inscription de l'élève.",
+      "effectiveDatePlaceholder": "Sélectionnez la date",
       "class": "Classe",
       "classPlaceholder": "Sélectionnez la classe",
       "discountAmount": "Montant de remise",
@@ -2556,7 +2557,10 @@
       "installmentNotFound": "Échéance introuvable",
       "installmentDoesNotBelongToFee": "L'échéance n'appartient pas aux frais indiqués",
       "feeAlreadyExists": "Des frais existent déjà pour cet élève, cette année scolaire et ce type de frais",
-      "installmentAlreadyPaid": "Cette échéance est déjà payée"
+      "installmentAlreadyPaid": "Cette échéance est déjà payée",
+      "studentNotEnrolledInAcademicYear": "L'élève n'était pas inscrit pour cette année scolaire",
+      "effectiveDateOutsideEnrollmentPeriod": "La date de début de facturation doit être comprise dans la période d'inscription de l'élève pour cette année scolaire, à partir de sa date d'inscription",
+      "invalidEffectiveDate": "Date de début de facturation invalide"
     },
     "studentView": {
       "pay": "Payer",

@@ -59,6 +59,15 @@ describe('server error messages', () => {
     expect(literals).toEqual([]);
   });
 
+  // Another error's message is written in English by whoever threw it; the fee
+  // effective-date refusal reached French users that way.
+  it('never forwards another error\'s message as the refusal', () => {
+    const forwarded = files.flatMap(({ path, text }) =>
+      [...text.matchAll(/Err(?:\.\w+)?\(\s*(?:\d{3}\s*,\s*)?([\w?.]*\.message)\b/g)]
+        .map((match) => `${path}: ${match[1]}`));
+    expect(forwarded).toEqual([]);
+  });
+
   it('has every key it names in every language, with the same placeholders', () => {
     const keys = referencedKeys();
     expect(keys.size).toBeGreaterThan(300);

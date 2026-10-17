@@ -1676,6 +1676,7 @@
       "amount": "Monto",
       "effectiveDate": "Fecha de inicio del cobro",
       "effectiveDateDescription": "Primera fecha en que se aplica esta cuota. Déjelo vacío para usar la fecha de inscripción del estudiante.",
+      "effectiveDatePlaceholder": "Seleccione la fecha",
       "class": "Clase",
       "classPlaceholder": "Seleccione la clase",
       "discountAmount": "Monto de descuento",
@@ -1831,7 +1832,10 @@
       "installmentNotFound": "Cuota no encontrada",
       "installmentDoesNotBelongToFee": "La cuota no pertenece a la tarifa indicada",
       "feeAlreadyExists": "Ya existe una cuota para este alumno, año escolar y tipo de cuota",
-      "installmentAlreadyPaid": "Esta cuota ya está pagada"
+      "installmentAlreadyPaid": "Esta cuota ya está pagada",
+      "studentNotEnrolledInAcademicYear": "El alumno no estaba matriculado en este curso escolar",
+      "effectiveDateOutsideEnrollmentPeriod": "La fecha de inicio de facturación debe estar dentro del periodo de matrícula del alumno en este curso escolar, a partir de su fecha de matrícula",
+      "invalidEffectiveDate": "Fecha de inicio de facturación no válida"
     },
     "studentView": {
       "pay": "Pagar",
