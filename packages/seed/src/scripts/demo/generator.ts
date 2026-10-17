@@ -18,9 +18,7 @@ import {
    MAX_TEACHER_LESSONS,
    PART_TIME_BELOW,
    fillSections,
-   shareEvenly,
    shareUnits,
-   subjectFamily,
    weeklyLessons,
 } from '../shared/timetable';
 
@@ -49,7 +47,7 @@ function getCliArg(long: string, short?: string): string | undefined {
 
 export const DEFAULT_DEMO_COUNTS = {
    students: 100,
-   teachers: 0, // 0 = auto (sized to the student count, see demoHeadcount)
+   teachers: 0, // 0 = auto (one subject and at most two classes per teacher)
    announcements: 12,
    events: 12,
    assessments: 0, // 0 = auto (the full calendar for every taught section and subject)
@@ -260,11 +258,9 @@ function teacherSalary(level: string, yearsOfExperience: number) {
 }
 
 /**
- * Teachers for the sections that have students: every section is taught each
- * subject's weekly lessons, and each subject (history and geography count as
- * one) is shared evenly among as few teachers as a
- * full-time load allows, so the timetable fits and payroll follows the
- * school's size. A lighter load is a part-time contract paid in proportion.
+ * Teachers for occupied sections: one subject and one or two classes each,
+ * with every section's subjects covered once within the weekly workload cap.
+ * A lighter load is a part-time contract paid in proportion.
  */
 export async function teachersPack() {
    const yearStart = `${seedAcademicYear.slice(0, 4)}-09-01`;
@@ -272,9 +268,7 @@ export async function teachersPack() {
       const classEntity = getClassByName(CLASS_NAME);
       return getSectionsByClass(classEntity.id)
          .filter((_, index) => (SECTION_COUNTS[index] ?? 0) > 0)
-         .flatMap((section) => subjectsData.map((subject, subjectIndex) => ({
-            family: subjectFamily(subject.code),
-            subjectIndex,
+         .flatMap((section) => subjectsData.map((subject) => ({
             level: classEntity.level,
             classId: classEntity.id,
             sectionId: section.id,
@@ -282,60 +276,28 @@ export async function teachersPack() {
             subjectName: subject.name,
             lessons: weeklyLessons(classEntity.level, subject.code),
          })));
-   }).sort((a, b) => a.family - b.family || a.level.localeCompare(b.level));
-
-   const families = [...new Set(units.map((unit) => unit.family))];
-   const shares = teacherLimit > 0
-      ? shareUnits(units, teacherLimit)
-      : families.flatMap((family) => shareEvenly(units.filter((unit) => unit.family === family)));
+   }).sort((a, b) => a.subjectId.localeCompare(b.subjectId) || a.level.localeCompare(b.level));
+   const shares = shareUnits(units, teacherLimit);
 
    const selectedTeachers: any[] = shares.map((share) => {
       const yearsOfExperience = 2 + Math.floor(Math.random() * 24);
-      const bySection = new Map<string, any>();
-      for (const unit of [...share].sort((a, b) => a.subjectIndex - b.subjectIndex)) {
-         const assignment = bySection.get(unit.sectionId)
-            ?? { classId: unit.classId, sectionIds: [unit.sectionId], subjectIds: [] };
-         assignment.subjectIds.push(unit.subjectId);
-         bySection.set(unit.sectionId, assignment);
-      }
-      const lessonsBySubject = new Map<string, number>();
-      for (const unit of share) lessonsBySubject.set(unit.subjectName, (lessonsBySubject.get(unit.subjectName) ?? 0) + unit.lessons);
-      const specialization = [...lessonsBySubject].sort((a, b) => b[1] - a[1])[0][0];
       const workloadHours = share.reduce((sum, unit) => sum + unit.lessons, 0);
       const partTime = workloadHours < PART_TIME_BELOW;
       const fullSalary = teacherSalary(share[0].level, yearsOfExperience);
       const teacher = generateTeacher({
-         specialization,
+         specialization: share[0].subjectName,
          yearsOfExperience,
          workloadHours,
          employmentType: partTime ? 'partTime' : 'fullTime',
          salary: partTime ? Math.round(fullSalary * workloadHours / MAX_TEACHER_LESSONS / 100) * 100 : fullSalary,
-         assignments: [...bySection.values()],
+         assignments: share.map((unit) => ({
+            classId: unit.classId,
+            sectionIds: [unit.sectionId],
+            subjectIds: [unit.subjectId],
+         })),
       });
       return { ...teacher, hireDate: teacher.hireDate > yearStart ? yearStart : teacher.hireDate };
    });
-
-   for (let i = selectedTeachers.length; i < teacherLimit; i++) {
-      const classEntity = selectedClassRecords()[i % selectedClassRecords().length];
-      const sections = getSectionsByClass(classEntity.id);
-      const subject = subjectsData[i % subjectsData.length];
-      const primarySection = sections[i % sections.length];
-      const secondarySection = sections[(i + 1) % sections.length];
-      const sectionIds = Array.from(new Set([
-         primarySection?.id,
-         i % 3 === 0 ? secondarySection?.id : null,
-      ].filter(Boolean)));
-
-      selectedTeachers.push(generateTeacher({
-         hireDate: `${seedAcademicYear.slice(0, 4)}-09-01`,
-         specialization: subject.name,
-         assignments: [{
-            classId: classEntity.id,
-            sectionIds,
-            subjectIds: [subject.id],
-         }],
-      }));
-   }
 
    return { teachers: selectedTeachers };
 }

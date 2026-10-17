@@ -135,6 +135,13 @@ Repeat runs add more demo people; they do not replace a year's previous demo.
 Use `bun run seed:demo --year=2025-2026` for the direct script;
 `seed:full` still resets all demo data and should not be used to add another year.
 
+Demo teachers each teach exactly one subject across one or two classes, with
+at most 26 lessons per week. History and geography use separate teachers.
+Automatic staffing (`--teachers=0`, the default) covers every occupied section's
+subjects once. An explicit `--teachers=N` must fit those assignments; an invalid
+count fails before seeding and reports the supported count instead of mixing
+subjects or duplicating assignments.
+
 Run `bun run db:migrate` before seeding. If a seed stopped at Announcements after
 Payroll completed, resume with the same year and class selection:
 

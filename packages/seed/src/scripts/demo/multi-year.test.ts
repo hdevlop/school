@@ -18,7 +18,7 @@ function generateYear(year: string) {
     }));
   `;
   const result = Bun.spawnSync([process.execPath, '--eval', script, '--',
-    'demo-year-probe', `--year=${year}`, '--students=12', '--teachers=6', '--staff=4', '--expenses=8',
+    'demo-year-probe', `--year=${year}`, '--students=12', '--teachers=0', '--staff=4', '--expenses=8',
   ]);
   expect(result.exitCode).toBe(0);
   if (result.exitCode) throw new Error(result.stderr.toString());
