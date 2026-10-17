@@ -104,5 +104,18 @@
     "typecheck": "PASS",
     "translations": "PASS",
     "exactCandidateProductionBuild": "Required in GitHub verification before deployment"
+  },
+  "finalStatusCapitalization": {
+    "changedKeys": [
+      "status.pending",
+      "status.processing"
+    ],
+    "translations": "PASS",
+    "configTests": {
+      "passed": 505,
+      "failed": 0,
+      "assertions": 3517
+    },
+    "scope": "Two French status capitalization corrections received during browser retest; included under all-current-changes authorization."
   }
 }
