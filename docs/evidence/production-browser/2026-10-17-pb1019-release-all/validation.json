@@ -94,5 +94,15 @@
     "packages/server/tests/acceptance/FeesHistoryTransport.test.ts": "e4fb7f6efc0847810d6a0bcab2be959b82e382071355dba5a8a9d2019223481e",
     ".claude/skills/najm-internals/SKILL.md": "25a9ae7b646da5c2a1210d1f5ddc9ab3b7eecac3e5d22fae21bee045c7044a11"
   },
-  "productionFinancialWrites": 0
+  "productionFinancialWrites": 0,
+  "followup": {
+    "scope": "Keyboard checkbox selection, translated selected-count and viewed-year installment preview",
+    "financeTests": 124,
+    "financeAssertions": 539,
+    "failed": 0,
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "translations": "PASS",
+    "exactCandidateProductionBuild": "Required in GitHub verification before deployment"
+  }
 }

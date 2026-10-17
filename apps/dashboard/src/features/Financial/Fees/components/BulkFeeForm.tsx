@@ -20,6 +20,7 @@ import { usePrefix } from 'najm-kit';
 
 import InstallmentPreviewTable from './InstallmentPreviewTable'
 import { useSchoolFormat } from '@/hooks/useSchoolFormat'
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear'
 
 // ==================== COMPONENTS ====================
 
@@ -58,7 +59,10 @@ const FeeItem = ({
     const discountAmount = useWatch({ name: `${prefix}.discountAmount` }) || 0
     const schedule = useWatch({ name: `${prefix}.schedule` })
     const effectiveDate = useWatch({ name: `${prefix}.effectiveDate` }) || studentEnrollmentDate
-    const academicYear = useWatch({ name: `${prefix}.academicYear` })
+    // A new line has no year until submit; preview it in the viewed year, which
+    // the fee is created in, not the school year of today's date.
+    const { viewingYear } = useViewingAcademicYear()
+    const academicYear = useWatch({ name: `${prefix}.academicYear` }) || viewingYear
     const calculationContext = useMemo(
        () => ({ effectiveDate, academicYear }),
        [academicYear, effectiveDate],

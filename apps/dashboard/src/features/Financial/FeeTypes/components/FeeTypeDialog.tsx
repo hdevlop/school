@@ -29,17 +29,29 @@ const FeeTypeSelectionContent = ({ feeTypes, tempSelected, onToggle }) => {
     <div className="space-y-4">
 
       <div className="text-sm text-muted-foreground">
-        {tempSelected.length} {tempSelected.length === 1 ? 'fee type' : 'fee types'} selected
+        {t('feeTypes.dialogs.selectedCount', { count: tempSelected.length })}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto pr-2">
         {feeTypes.map((feeType) => {
           const isSelected = tempSelected.includes(feeType.id)
           return (
+            // A checkbox to assistive technology and the keyboard, not only a
+            // clickable box: the choice is announced and Space/Enter toggle it.
             <div
               key={feeType.id}
+              role="checkbox"
+              aria-checked={isSelected}
+              tabIndex={0}
               onClick={() => onToggle(feeType.id)}
+              onKeyDown={(event) => {
+                if (event.key === ' ' || event.key === 'Enter') {
+                  event.preventDefault()
+                  onToggle(feeType.id)
+                }
+              }}
               className={cn(
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 "relative p-4 rounded-lg cursor-pointer transition-all",
                 "border-2 hover:shadow-md",
                 isSelected
@@ -49,7 +61,7 @@ const FeeTypeSelectionContent = ({ feeTypes, tempSelected, onToggle }) => {
             >
               {/* Check Icon */}
               {isSelected && (
-                <div className="absolute top-2 right-2">
+                <div className="absolute top-2 end-2" aria-hidden>
                   <div className="bg-green-500 rounded-full p-1">
                     <Check className="h-4 w-4 text-white" />
                   </div>
@@ -58,7 +70,7 @@ const FeeTypeSelectionContent = ({ feeTypes, tempSelected, onToggle }) => {
 
               {/* Fee Type Content */}
               <div className="space-y-2">
-                <div className="flex items-center gap-3 pr-8">
+                <div className="flex items-center gap-3 pe-8">
                   <FeeCategoryIcon
                     category={feeType.category}
                     size={32}

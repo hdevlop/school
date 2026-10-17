@@ -2902,7 +2902,8 @@
       "editTitle": "Editar",
       "updateButton": "Actualizar",
       "viewTitle": "Detalles",
-      "noFeeTypes": "No hay tipos de cuota disponibles"
+      "noFeeTypes": "No hay tipos de cuota disponibles",
+      "selectedCount": "{{count}} tipo(s) de cuota seleccionado(s)"
     },
     "filters": {
       "filterByCategory": "Filtrar por categoría",

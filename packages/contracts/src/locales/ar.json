@@ -2916,7 +2916,8 @@
       "editTitle": "تعديل",
       "updateButton": "تحديث",
       "viewTitle": "التفاصيل",
-      "noFeeTypes": "لا توجد أنواع رسوم متاحة"
+      "noFeeTypes": "لا توجد أنواع رسوم متاحة",
+      "selectedCount": "أنواع الرسوم المحددة: {{count}}"
     },
     "filters": {
       "filterByCategory": "تصفية حسب الفئة",

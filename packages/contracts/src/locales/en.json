@@ -1336,7 +1336,8 @@
       "editTitle": "Edit Fee Type",
       "updateButton": "Update Fee Type",
       "deleteButton": "Delete Fee Type",
-      "noFeeTypes": "No fee types available"
+      "noFeeTypes": "No fee types available",
+      "selectedCount": "{{count}} fee type(s) selected"
     },
     "table": {
       "selectAll": "Select all",
