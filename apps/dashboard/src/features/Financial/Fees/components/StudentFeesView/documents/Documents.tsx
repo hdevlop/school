@@ -19,6 +19,7 @@ export const Documents = ({ studentId }) => {
 
   const handlePrint = (payment) => {
     printReceipt({
+      paymentId: payment.id,
       receiptNumber: payment.receiptNumber ?? payment.id,
       paymentDate: payment.paymentDate,
       studentName: payment.student?.name ?? '',

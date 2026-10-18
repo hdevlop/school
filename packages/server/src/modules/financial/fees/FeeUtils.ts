@@ -195,6 +195,13 @@ export function getFeeRelations() {
             WHERE ${paymentAllocations.installmentId} = ${feeInstallments.id}
             AND ${payments.status} = 'completed'
          )`,
+         paymentMethods: sql`COALESCE((
+            SELECT json_agg(DISTINCT ${payments.paymentMethod} ORDER BY ${payments.paymentMethod})
+            FROM ${paymentAllocations}
+            INNER JOIN ${payments} ON ${paymentAllocations.paymentId} = ${payments.id}
+            WHERE ${paymentAllocations.installmentId} = ${feeInstallments.id}
+            AND ${payments.status} = 'completed'
+         ), '[]'::json)`,
          status: feeInstallments.status,
       }, feeInstallments, eq(feeInstallments.feeId, fees.id), asc(feeInstallments.number)).as('installments'),
       payments: getPaymentsJson().as('payments'),

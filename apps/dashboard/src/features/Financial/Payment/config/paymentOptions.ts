@@ -47,6 +47,17 @@ export const buildPaymentMethodOptionsFor = (
     t(`${PAYMENT_METHOD_TRANSLATION_PREFIX}.${value}`),
   );
 
+/** A cheque can be replaced with cash; other edits keep their receipt lifecycle. */
+export const buildPaymentEditMethodOptions = (
+  t: Translate,
+  payment: { paymentMethod: string; status?: string | null },
+): readonly EnumOption<PaymentMethod>[] =>
+  buildPaymentMethodOptionsFor(t, payment.paymentMethod).filter(({ value }) =>
+    payment.paymentMethod === 'check'
+      ? value === 'check' || (value === 'cash' && ['pending', 'deposited', 'completed'].includes(payment.status ?? ''))
+      : value !== 'check',
+  );
+
 /**
  * The methods the cashier's Record Payment dialog offers.
  *

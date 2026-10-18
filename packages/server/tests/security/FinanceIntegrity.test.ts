@@ -210,12 +210,18 @@ function paymentEditHarness(paymentMethod: string, status: string) {
 }
 
 describe('SEC-008 receipt payment method boundaries', () => {
-  it.each(['pending', 'deposited', 'completed', 'voided'])('rejects check -> cash for a %s receipt', async status => {
+  it.each(['bounced', 'refunded', 'failed', 'voided'])('rejects check -> cash for a %s receipt', async status => {
     const h = paymentEditHarness('check', status);
     await expect(h.service.update('payment', updatePaymentDto.parse({ paymentMethod: 'cash' }), 'accountant'))
-      .rejects.toThrow('void the receipt');
+      .rejects.toThrow('Cannot void payment');
     expect(h.effects).toEqual([]);
     expect(h.payment.paymentMethod).toBe('check');
+  });
+  it('keeps other cheque method changes behind a new receipt lifecycle', async () => {
+    const h = paymentEditHarness('check', 'pending');
+    await expect(h.service.update('payment', { paymentMethod: 'bankTransfer' }, 'accountant'))
+      .rejects.toThrow('void the receipt');
+    expect(h.effects).toEqual([]);
   });
   it('rejects cash -> check but keeps same-method and non-check edits', async () => {
     const h = paymentEditHarness('cash', 'completed');

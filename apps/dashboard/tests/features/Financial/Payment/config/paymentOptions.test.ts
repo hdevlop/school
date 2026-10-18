@@ -8,6 +8,7 @@ import {
   buildDeskPaymentMethodOptions,
   buildPaymentMethodOptions,
   buildPaymentMethodOptionsFor,
+  buildPaymentEditMethodOptions,
   buildPaymentStatusFilterOptions,
 } from '@/features/Financial/Payment/config/paymentOptions';
 
@@ -25,6 +26,24 @@ describe('payment method options', () => {
 
     expect(options).toHaveLength(PAYMENT_METHOD_VALUES.length + 1);
     expect(options.at(-1)?.value).toBe('wireTransfer' as never);
+  });
+});
+
+describe('payment edit methods', () => {
+  it.each(['pending', 'deposited', 'completed'])('offers cash replacement for a %s cheque', (status) => {
+    expect(buildPaymentEditMethodOptions(echo, { paymentMethod: 'check', status }).map(option => option.value))
+      .toEqual(['cash', 'check']);
+  });
+
+  it.each(['voided', 'bounced', 'refunded', 'failed'])('keeps a %s cheque from being replaced again', (status) => {
+    expect(buildPaymentEditMethodOptions(echo, { paymentMethod: 'check', status }).map(option => option.value))
+      .toEqual(['check']);
+  });
+
+  it('does not offer a cheque lifecycle change on a cash receipt', () => {
+    const options = buildPaymentEditMethodOptions(echo, { paymentMethod: 'cash', status: 'completed' });
+    expect(options.some(option => option.value === 'check')).toBe(false);
+    expect(options.some(option => option.value === 'bankTransfer')).toBe(true);
   });
 });
 

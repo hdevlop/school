@@ -296,6 +296,109 @@ describe('real PostgreSQL finance lifecycle over authenticated HTTP and MCP', ()
 // These are ordinary assertions, deliberately exposing defects found in the
 // review. They must pass after the production fix; do not convert them to skips.
 describe('finance review regression cases', () => {
+  it.each(['pending', 'deposited', 'completed'])('replaces a %s cheque with cash through the edit endpoint', async (status) => {
+    const { fee } = await newFee();
+    const cheque = await record(fee.id, 100, { paymentMethod: 'check', checkNumber: 'CHEQUE-CASH', checkDueDate: '2026-10-20' });
+    expect(cheque.status, JSON.stringify(cheque.body)).toBe(200);
+    const original = cheque.body.data;
+    if (status !== 'pending') {
+      expect((await request(`/payments/${original.id}/check-status`, 'POST', { status: 'deposited' })).status).toBe(200);
+      if (status === 'completed') {
+        expect((await request(`/payments/${original.id}/check-status`, 'POST', { status: 'completed' })).status).toBe(200);
+      }
+    }
+    const updated = await request(`/payments/${original.id}`, 'PUT', {
+      paymentMethod: 'cash', paymentDate: '2026-10-17', receiptNumber: original.receiptNumber,
+      checkNumber: original.checkNumber, checkDueDate: original.checkDueDate, notes: 'Cheque returned to parent',
+    });
+    expect(updated.status, JSON.stringify(updated.body)).toBe(200);
+    const cash = updated.body.data;
+    paymentIds.push(cash.id);
+    expect(cash.id).not.toBe(original.id);
+    expect(cash.receiptNumber).not.toBe(original.receiptNumber);
+    expect(cash).toMatchObject({ paymentMethod: 'cash', status: 'completed', amount: '100.00',
+      paymentDate: '2026-10-17', settledDate: '2026-10-17', checkNumber: null, checkDueDate: null, checkBank: null,
+      notes: 'Cheque returned to parent', processedBy: actorId });
+    expect((await db.select().from(payments).where(eq(payments.id, original.id)))[0])
+      .toMatchObject({ paymentMethod: 'check', status: 'voided', receiptNumber: original.receiptNumber,
+        checkNumber: 'CHEQUE-CASH', voidedBy: actorId });
+    const oldAllocations = await db.select().from(paymentAllocations).where(eq(paymentAllocations.paymentId, original.id));
+    const newAllocations = await db.select().from(paymentAllocations).where(eq(paymentAllocations.paymentId, cash.id));
+    expect(newAllocations.map(({ installmentId, amount }) => ({ installmentId, amount })))
+      .toEqual(oldAllocations.map(({ installmentId, amount }) => ({ installmentId, amount })));
+    expect(await storedFee(fee.id)).toMatchObject({ paidAmount: '100.00', status: 'paid' });
+    const detail = await request(`/fees/${fee.id}`);
+    expect(detail.status, JSON.stringify(detail.body)).toBe(200);
+    expect(detail.body.data.installments[0].paymentMethods).toEqual(['cash']);
+    const audit = await db.select().from(financialAuditLogs).where(eq(financialAuditLogs.entityId, original.id));
+    expect(audit.find(row => row.action === 'payment.replaced')?.metadata)
+      .toMatchObject({ replacementPaymentId: cash.id });
+    // A stale or retried edit cannot issue a second cash receipt.
+    expect((await request(`/payments/${original.id}`, 'PUT', { paymentMethod: 'cash' })).status).toBe(409);
+    expect(await db.select().from(paymentAllocations).where(eq(paymentAllocations.feeId, fee.id))).toHaveLength(2);
+  });
+
+  it('serializes two simultaneous cheque replacements into one cash receipt', async () => {
+    const { fee } = await newFee();
+    const cheque = await record(fee.id, 100, { paymentMethod: 'check', checkNumber: 'RACE-CASH', checkDueDate: '2026-10-20' });
+    expect(cheque.status, JSON.stringify(cheque.body)).toBe(200);
+    const results = await Promise.all([1, 2].map(() => request(`/payments/${cheque.body.data.id}`, 'PUT', {
+      paymentMethod: 'cash', paymentDate: '2026-10-17',
+    })));
+    for (const result of results) if (result.status === 200) paymentIds.push(result.body.data.id);
+    expect(results.map(result => result.status).sort(), JSON.stringify(results)).toEqual([200, 409]);
+    expect(await storedFee(fee.id)).toMatchObject({ paidAmount: '100.00' });
+    expect(await db.select().from(paymentAllocations).where(eq(paymentAllocations.feeId, fee.id))).toHaveLength(2);
+  });
+
+  it('replaces a credit-only cheque without allocating its cash credit to other fees', async () => {
+    const id = `finance-credit-only-${suffix}`;
+    paymentIds.push(id);
+    await db.insert(payments).values({ id, studentId, amount: '50', paymentMethod: 'check', status: 'pending',
+      paymentDate: '2026-10-03', receiptNumber: `CREDIT-ONLY-${suffix}`, checkNumber: 'CREDIT-ONLY', checkDueDate: '2026-10-20' });
+    await db.insert(studentCreditLots).values({ studentId, sourcePaymentId: id, originalAmount: '50', remainingAmount: '50', status: 'pending' });
+    const updated = await request(`/payments/${id}`, 'PUT', { paymentMethod: 'cash', paymentDate: '2026-10-17' });
+    expect(updated.status, JSON.stringify(updated.body)).toBe(200);
+    paymentIds.push(updated.body.data.id);
+    expect(await db.select().from(paymentAllocations).where(eq(paymentAllocations.paymentId, updated.body.data.id))).toHaveLength(0);
+    expect((await db.select().from(studentCreditLots).where(eq(studentCreditLots.sourcePaymentId, updated.body.data.id)))[0])
+      .toMatchObject({ originalAmount: '50.00', remainingAmount: '50.00', status: 'available' });
+  });
+
+  it('replaces cheque credit with available cash credit without duplicating the balance', async () => {
+    const { fee } = await newFee();
+    const cheque = await record(fee.id, 150, { paymentMethod: 'check', checkNumber: 'CREDIT-CASH',
+      checkDueDate: '2026-10-20', keepRemainderAsCredit: true,
+      allocations: [{ feeId: fee.id, number: 1, amount: 100 }] });
+    expect(cheque.status, JSON.stringify(cheque.body)).toBe(200);
+    const updated = await request(`/payments/${cheque.body.data.id}`, 'PUT', { paymentMethod: 'cash', paymentDate: '2026-10-17' });
+    expect(updated.status, JSON.stringify(updated.body)).toBe(200);
+    paymentIds.push(updated.body.data.id);
+    expect((await db.select().from(studentCreditLots).where(eq(studentCreditLots.sourcePaymentId, cheque.body.data.id)))[0].status)
+      .toBe('cancelled');
+    expect((await db.select().from(studentCreditLots).where(eq(studentCreditLots.sourcePaymentId, updated.body.data.id)))[0])
+      .toMatchObject({ remainingAmount: '50.00', status: 'available' });
+    expect(await storedFee(fee.id)).toMatchObject({ paidAmount: '100.00' });
+  });
+
+  it('rolls back the automatic void and credit cancellation when a replacement target is cancelled', async () => {
+    const { fee, installments } = await newFee();
+    const cheque = await record(fee.id, 150, { paymentMethod: 'check', checkNumber: 'ROLLBACK-CASH',
+      checkDueDate: '2026-10-20', keepRemainderAsCredit: true,
+      allocations: [{ feeId: fee.id, number: 1, amount: 100 }] });
+    expect(cheque.status, JSON.stringify(cheque.body)).toBe(200);
+    await db.update(feeInstallments).set({ status: 'cancelled' }).where(eq(feeInstallments.id, installments[0].id));
+    const updated = await request(`/payments/${cheque.body.data.id}`, 'PUT', { paymentMethod: 'cash' });
+    expect(updated.status, JSON.stringify(updated.body)).toBe(409);
+    expect((await db.select().from(payments).where(eq(payments.id, cheque.body.data.id)))[0])
+      .toMatchObject({ status: 'pending', voidedAt: null, voidedBy: null });
+    expect((await db.select().from(studentCreditLots).where(eq(studentCreditLots.sourcePaymentId, cheque.body.data.id)))[0].status)
+      .toBe('pending');
+    expect(await db.select().from(paymentAllocations).where(eq(paymentAllocations.feeId, fee.id))).toHaveLength(1);
+    expect(await db.select().from(financialAuditLogs).where(and(eq(financialAuditLogs.entityId, cheque.body.data.id),
+      eq(financialAuditLogs.action, 'payment.voided')))).toHaveLength(0);
+  });
+
   it('refuses pre-hire direct, existing-slip and bulk payments without changing history; pays the hire month', async () => {
     const id = `finance-prehire-${suffix}`;
     payslipIds.push(id);

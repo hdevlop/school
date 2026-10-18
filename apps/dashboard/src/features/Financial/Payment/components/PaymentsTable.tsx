@@ -9,11 +9,14 @@ import { usePayments } from '../hooks/usePayments';
 import { useTranslation } from 'najm-i18n/react';
 import PaymentCard from './PaymentCard';
 import PaymentEditForm from './PaymentEditForm';
+import CheckReasonForm, { CHECK_REASON_FORM_ID } from '@/features/Financial/Operations/components/CheckReasonForm';
+import { PaymentRecordedPrompt } from './ReceiptPrint/PaymentRecordedPrompt';
 import { usePaymentsTableColumns } from '../hooks/usePaymentsTableColumns';
 import { usePaymentsTableFilters } from '../hooks/usePaymentsTableFilters';
 import { usePrintReceipt } from './ReceiptPrint/usePrintReceipt';
 import { Printer, SearchX } from 'lucide-react';
 import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { updateCheckStatusApi, voidPaymentApi } from '@/services/paymentApi';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
@@ -39,10 +42,10 @@ function PaymentsTable({studentId}) {
     studentPaymentsError,
     isUpdating,
     updatePayment,
-    refetch,
   } = usePayments({ studentId });
+  const queryClient = useQueryClient();
 
-  const { openDialog, confirmDelete } = useDialog();
+  const { openDialog, pop } = useDialog();
 
   const data = studentId ? studentPayments : payments;
   const isLoading = studentId ? isStudentPaymentsLoading : isPaymentsLoading;
@@ -50,6 +53,7 @@ function PaymentsTable({studentId}) {
 
   const handlePrint = (payment) => {
     printReceipt({
+      paymentId: payment.id,
       receiptNumber: payment.receiptNumber ?? payment.id,
       paymentDate: payment.paymentDate,
       studentName: payment.student?.name ?? '',
@@ -67,30 +71,51 @@ function PaymentsTable({studentId}) {
 
   // As on the cheques page: a refusal is shown rather than escaping as an
   // unhandled rejection, and the check status reads in the page language.
+  // The action changes this history, the balances and the installments; the
+  // hook's `refetch` reloads only the school-wide list.
   const runAction = async (action: () => Promise<unknown>, success: string) => {
     try {
       await action();
-      await refetch();
+      await Promise.all(['payments', 'fees', 'installments'].map((key) => queryClient.invalidateQueries({ queryKey: [key] })));
       toast.success(success);
     } catch (actionError: any) {
       toast.error(actionError?.message || t('financialOperations.failed'));
     }
   };
 
+  // The reason form the cheques page uses; the browser's prompt was English
+  // chrome, unstyled and unreachable on some phones.
+  const askReason = (payment, kind: 'bounce' | 'void') => openDialog({
+    title: t(kind === 'bounce' ? 'financialOperations.bounceTitle' : 'payments.dialogs.voidPayment'),
+    description: [payment.receiptNumber, payment.checkNumber].filter(Boolean).join(' · '),
+    children: <CheckReasonForm label={t(kind === 'bounce' ? 'financialOperations.bounceReason' : 'financialOperations.voidReason')} />,
+    width: 'md',
+    primaryButton: {
+      form: CHECK_REASON_FORM_ID,
+      text: t(kind === 'bounce' ? 'financialOperations.bounce' : 'payments.dialogs.voidPayment'),
+      variant: 'destructive',
+      onClick: ({ reason }: { reason: string }) => kind === 'bounce'
+        ? runAction(() => updateCheckStatusApi(payment.id, { status: 'bounced', reason }),
+          t('payments.success.checkMarked', { status: t('financialOperations.checkStatuses.bounced') }))
+        : runAction(() => voidPaymentApi(payment.id, reason), t('payments.success.voided')),
+    },
+    secondaryButton: { text: t('common.cancel') },
+  });
+
   const handleView = (payment) => {
+    // Each action closes this view first: it shows the status it was opened with.
     const updateCheck = async (status) => {
-      const reason = status === 'bounced' ? window.prompt(t('payments.dialogs.bounceReason')) : undefined;
-      if (status === 'bounced' && !reason) return;
+      await pop();
+      if (status === 'bounced') return askReason(payment, 'bounce');
       await runAction(
-        () => updateCheckStatusApi(payment.id, { status, reason }),
+        () => updateCheckStatusApi(payment.id, { status }),
         t('payments.success.checkMarked', { status: t(`financialOperations.checkStatuses.${status}`) }),
       );
     };
 
     const voidPayment = async () => {
-      const reason = window.prompt(t('payments.dialogs.voidReason'));
-      if (!reason) return;
-      await runAction(() => voidPaymentApi(payment.id, reason), t('payments.success.voided'));
+      await pop();
+      return askReason(payment, 'void');
     };
 
     openDialog({
@@ -128,35 +153,31 @@ function PaymentsTable({studentId}) {
     });
   };
 
-  const handleEdit = (payment) => {
-    openDialog({
-      title: `${t('expenses.dialogs.editTitle')} - ${payment.receiptNumber}`,
+  const handleEdit = async (payment) => {
+    let savedPayment: any;
+    await openDialog({
+      title: `${t('payments.dialogs.editTitle')} - ${payment.receiptNumber}`,
       children: <PaymentEditForm payment={payment} />,
       primaryButton: {
         form: 'payment-form',
-        text: t('expenses.dialogs.updateButton'),
+        text: t('payments.dialogs.updateButton'),
         loading: isUpdating,
         onClick: async (paymentData) => {
-          await updatePayment(paymentData);
+          savedPayment = (await updatePayment(paymentData))?.data;
         }
       }
-    }); 
+    });
+    if (savedPayment?.id && savedPayment.id !== payment.id) {
+      openDialog({
+        title: t('payments.dialogs.recordedTitle'),
+        children: <PaymentRecordedPrompt payment={savedPayment} student={payment.student} />,
+        showButtons: false,
+      });
+    }
   };
 
-  const handleDelete = (payment) => {
-    confirmDelete({
-      title: t('common.delete'),
-      warningText: t('common.deleteConfirm'),
-      cancelText: t('common.cancel'),
-      itemName: payment.receiptNumber,
-      confirmText: t('payments.dialogs.deleteButton'),
-      onConfirm: async () => {
-        const reason = window.prompt(t('payments.dialogs.voidReason'));
-        if (!reason) return;
-        await runAction(() => voidPaymentApi(payment.id, reason), t('payments.success.voided'));
-      }
-    });
-  };
+  // A payment is never deleted: the row's delete voids it, with a reason.
+  const handleDelete = (payment) => askReason(payment, 'void');
 
   return (
     <NTable

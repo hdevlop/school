@@ -82,7 +82,11 @@ export class PaymentService {
 
   async getById(id: string) {
     await this.paymentValidator.checkExists(id);
-    return this.paymentRepository.getById(id);
+    const [payment, receiptItems] = await Promise.all([
+      this.paymentRepository.getById(id),
+      this.paymentRepository.getReceiptItems(id),
+    ]);
+    return { ...payment, receiptItems };
   }
 
   async getByStudent(studentId: string) {
@@ -230,6 +234,15 @@ export class PaymentService {
 
     await this.paymentValidator.validateAllocationStudents(data.studentId, resolvedAllocations);
 
+    return this.createRecordedPayment(data, resolvedAllocations, processedBy, idempotencyHash);
+  }
+
+  private async createRecordedPayment(
+    data: CreatePaymentDto,
+    resolvedAllocations: Array<{ feeId: string; number: number; amount: number }>,
+    processedBy?: string,
+    idempotencyHash: string | null = null,
+  ) {
     const isCheck = data.paymentMethod === 'check';
     const initialStatus = isCheck ? 'pending' : 'completed';
     const settledDate = isCheck ? null : data.paymentDate;
@@ -333,6 +346,41 @@ export class PaymentService {
   async update(id: string, data: UpdatePaymentDto, actorId?: string) {
     await this.paymentValidator.validate(data, id);
     const previous = this.paymentValidator.ensureLockedPayment(await this.paymentRepository.getByIdForUpdate(id));
+    if (previous.paymentMethod === 'check' && data.paymentMethod === 'cash') {
+      this.paymentValidator.ensureVoidable(previous.status!);
+      // Read every allocation, including other years and applied credit, before
+      // voiding. Nested transactions join this update's transaction.
+      const previousAllocations = await this.allocationRepository.getByPaymentId(id);
+      const allocations = previousAllocations.map((allocation) => {
+        const installment = this.paymentValidator.ensureCheckInstallmentExists(allocation.installment);
+        return { feeId: allocation.feeId, number: installment.number, amount: Number(allocation.amount) };
+      });
+      const reason = 'Cheque returned and replaced with cash';
+      await this.voidPayment(id, { reason }, actorId);
+      await this.paymentValidator.validateAllocationStudents(previous.studentId, allocations);
+      const result = await this.createRecordedPayment({
+        studentId: previous.studentId,
+        amount: Number(previous.amount),
+        paymentMethod: 'cash',
+        paymentDate: data.paymentDate ?? formatDateOnly(getBusinessDate())!,
+        transactionRef: data.transactionRef ?? null,
+        notes: data.notes === undefined ? previous.notes : data.notes,
+        allocations,
+        autoAllocate: false,
+        keepRemainderAsCredit: true,
+      }, allocations, actorId);
+      await this.auditService.record({
+        entityType: 'payment',
+        entityId: id,
+        action: 'payment.replaced',
+        actorId,
+        before: previous,
+        after: result.payment,
+        metadata: { reason, replacementPaymentId: result.payment.id },
+      });
+      this.events.emit('payment.recorded', result);
+      return result.payment;
+    }
     this.paymentValidator.ensureMethodEditable(previous.paymentMethod, data.paymentMethod);
     const paymentData = pickProps(data, UPDATE_KEYS);
     if (

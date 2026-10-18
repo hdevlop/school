@@ -1,6 +1,6 @@
 import { Repository } from '../../../najm';
 import { eq, desc, and, sql, count, isNotNull } from 'drizzle-orm';
-import { fees, paymentAllocations, payments, students, users } from '../../../database/schema';
+import { fees, feeTypes, feeInstallments, paymentAllocations, payments, students, users } from '../../../database/schema';
 import { DB } from '../../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
 import { formatDateOnly } from '../utils/dateOnly';
@@ -110,6 +110,46 @@ export class PaymentRepository {
       .limit(1);
 
     return payment;
+  }
+
+  // A receipt covers the whole payment, even when its fees span multiple years.
+  // The balance covers only installments on this receipt, not future fee charges.
+  async getReceiptItems(paymentId: string) {
+    const targets = this.db.select({
+      feeId: paymentAllocations.feeId,
+      installmentId: paymentAllocations.installmentId,
+      amount: sql<string>`sum(${paymentAllocations.amount})`.as('receipt_amount'),
+    }).from(paymentAllocations)
+      .where(eq(paymentAllocations.paymentId, paymentId))
+      .groupBy(paymentAllocations.feeId, paymentAllocations.installmentId)
+      .as('receipt_installments');
+    const settled = this.db.select({
+      installmentId: paymentAllocations.installmentId,
+      amount: sql<string>`sum(${paymentAllocations.amount})`.as('settled_amount'),
+    }).from(paymentAllocations)
+      .innerJoin(targets, eq(targets.installmentId, paymentAllocations.installmentId))
+      .innerJoin(payments, eq(payments.id, paymentAllocations.paymentId))
+      .where(eq(payments.status, 'completed'))
+      .groupBy(paymentAllocations.installmentId)
+      .as('settled_installments');
+
+    return this.db.select({
+      feeId: fees.id,
+      feeType: feeTypes.name,
+      academicYear: fees.academicYear,
+      schedule: fees.schedule,
+      dueDates: sql<string[]>`json_agg(${feeInstallments.dueDate} order by ${feeInstallments.dueDate}, ${feeInstallments.number})`,
+      amount: sql<string>`sum(${targets.amount})::text`,
+      remainingAmount: sql<string>`sum(case when ${feeInstallments.status} = 'cancelled' then 0
+        else greatest(${feeInstallments.amount}::numeric - coalesce(${settled.amount}, 0), 0) end)::text`,
+    })
+      .from(targets)
+      .innerJoin(fees, eq(targets.feeId, fees.id))
+      .innerJoin(feeTypes, eq(fees.feeTypeId, feeTypes.id))
+      .innerJoin(feeInstallments, and(eq(targets.installmentId, feeInstallments.id), eq(feeInstallments.feeId, fees.id)))
+      .leftJoin(settled, eq(settled.installmentId, feeInstallments.id))
+      .groupBy(fees.id, feeTypes.name)
+      .orderBy(fees.academicYear, feeTypes.name, fees.id);
   }
 
   async getByIdForUpdate(id: string) {

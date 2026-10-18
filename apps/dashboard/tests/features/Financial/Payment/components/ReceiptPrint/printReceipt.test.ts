@@ -108,3 +108,105 @@ it('accepts the print logo while rejecting executable and protocol-relative URLs
     expect(buildReceiptHtml({ ...input, schoolLogo })).not.toContain('<img');
   }
 });
+
+it('prints each fee type, its payment portion and installment balance in both languages', () => {
+  for (const language of ['fr', 'ar'] as const) {
+    const html = buildReceiptHtml({ ...input, language, amount: 150, items: [
+      { feeType: 'Scolarité <CM1>', academicYear: '2025-2026', amount: 100, remainingAmount: 250 },
+      { feeType: 'Transport', academicYear: '2026-2027', amount: 50, remainingAmount: 0 },
+    ] });
+    const money = (amount: number) => new Intl.NumberFormat(language === 'ar' ? 'ar-MA' : 'fr-MA',
+      { style: 'currency', currency: 'MAD', numberingSystem: 'latn' }).format(amount);
+    expect(html).toContain('Scolarité &lt;CM1&gt;');
+    expect(html).toContain('Transport');
+    expect(html).toContain('2025-2026');
+    expect(html).toContain('2026-2027');
+    for (const amount of [100, 250, 50, 0, 150]) expect(html).toContain(money(amount));
+    expect(html).toContain(language === 'ar' ? 'متبقي الأقساط' : 'Reste');
+    expect(html).not.toContain(language === 'ar' ? 'Reste' : 'متبقي الأقساط');
+    expect(html).not.toContain('class="credit"');
+  }
+});
+
+it('shows the common school year once and labels only fees from a different year', () => {
+  const items = [
+    { feeType: 'Tuition', academicYear: '2026-2027', amount: 100, remainingAmount: 0 },
+    { feeType: 'Transport', academicYear: '2026-2027', amount: 50, remainingAmount: 0 },
+  ];
+  const html = buildReceiptHtml({ ...input, amount: 150, items });
+  expect(html.match(/2026-2027/g)).toHaveLength(1);
+  expect(html).not.toContain('class="fee-year"');
+  expect(html.indexOf('2026-2027')).toBeLessThan(html.indexOf('<table'));
+  const mixed = buildReceiptHtml({ ...input, amount: 175, items: [
+    ...items, { feeType: 'Old tuition', academicYear: '2025-2026', amount: 25, remainingAmount: 0 },
+  ] });
+  expect(mixed.match(/2026-2027/g)).toHaveLength(1);
+  expect(mixed).toContain('class="fee-year" dir="ltr">2025-2026</bdi>');
+  const historical = buildReceiptHtml({ ...input, items: [{ ...items[0], academicYear: '2024-2025' }] });
+  expect(historical.match(/2024-2025/g)).toHaveLength(1);
+  expect(historical).not.toContain('class="fee-year"');
+});
+
+it('identifies the paid monthly installments without an extra balance explanation', () => {
+  for (const language of ['fr', 'ar'] as const) {
+    const html = buildReceiptHtml({ ...input, language, amount: 1920, items: [{
+      feeType: 'Tuition', academicYear: '2026-2027', amount: 1920, remainingAmount: 0,
+      schedule: 'monthly', dueDates: ['2026-09-01', '2026-10-01'],
+    }] });
+    const locale = language === 'ar' ? 'ar-MA' : 'fr-MA';
+    for (const date of ['2026-09-01', '2026-10-01']) {
+      expect(html).toContain(new Date(date).toLocaleDateString(locale, {
+        month: 'long', calendar: 'gregory', timeZone: 'UTC',
+      }));
+    }
+    expect(html).not.toContain('balance-note');
+    expect(html).toContain(new Intl.NumberFormat(locale, {
+      style: 'currency', currency: 'MAD', numberingSystem: 'latn',
+    }).format(0));
+  }
+});
+
+it('lists only full month names without years or ranges', () => {
+  const render = (dueDates: string[]) => buildReceiptHtml({ ...input, items: [{
+    feeType: 'Tuition', academicYear: '2026-2027', amount: 100, remainingAmount: 0, schedule: 'monthly', dueDates,
+  }] });
+  expect(render(['2026-10-01', '2026-09-01'])).toContain('class="installment-period">septembre, octobre</span>');
+  expect(render(['2027-01-01', '2026-12-01'])).toContain('class="installment-period">décembre, janvier</span>');
+  expect(render(['2026-09-01'])).toContain('class="installment-period">septembre</span>');
+  const skipped = render(['2026-09-01', '2026-11-01']);
+  expect(skipped).toContain('class="installment-period">septembre, novembre</span>');
+  expect(skipped).not.toContain('De septembre');
+});
+
+it('separates overpayment credit from fee payments, including a credit-only payment', () => {
+  const item = { feeType: 'Transport', academicYear: '2026-2027', amount: 90.10, remainingAmount: 0 };
+  expect(buildReceiptHtml({ ...input, amount: 100.20, items: [item] }))
+    .toContain('Crédit non affecté <bdi>10,10');
+  expect(buildReceiptHtml({ ...input, items: [] })).toContain('Crédit non affecté <bdi>100,00');
+});
+
+it('opens the print window before fetching fresh details and prints only after the read succeeds', async () => {
+  const events: string[] = [];
+  Object.defineProperty(globalThis, 'window', { configurable: true, value: {
+    open: () => { events.push('open'); return { document: {
+      write: (html: string) => { expect(html).toContain('Fresh fee'); events.push('write'); },
+      close() {}, images: [],
+    }, focus() {}, print: () => events.push('print') }; },
+  } });
+  await printReceipt(input, async () => {
+    events.push('load');
+    return { ...input, items: [{ feeType: 'Fresh fee', academicYear: '2026-2027', amount: 100, remainingAmount: 30 }] };
+  });
+  expect(events).toEqual(['open', 'load', 'write', 'print']);
+});
+
+it('closes the unused window and does not print an incomplete receipt when the details fail', async () => {
+  let closed = false;
+  let printed = false;
+  Object.defineProperty(globalThis, 'window', { configurable: true, value: {
+    open: () => ({ close: () => { closed = true; }, print: () => { printed = true; } }),
+  } });
+  await expect(printReceipt(input, async () => { throw new Error('Read refused'); })).rejects.toThrow('Read refused');
+  expect(closed).toBe(true);
+  expect(printed).toBe(false);
+});

@@ -10,7 +10,7 @@ import { useTranslation } from 'najm-i18n/react'
 import { useWatch } from 'react-hook-form'
 import { useMemo } from 'react'
 import { createPaymentSchemas } from '../config/paymentSchemas'
-import { buildPaymentMethodOptionsFor } from '../config/paymentOptions'
+import { buildPaymentEditMethodOptions } from '../config/paymentOptions'
 
 const PaymentEditForm = ({ payment }) => {
   const { t } = useTranslation();
@@ -29,22 +29,22 @@ const PaymentEditForm = ({ payment }) => {
   }
 
   const handleSubmit = async (paymentData) => {
-    pop(paymentData);
+    await pop(paymentData);
   }
 
   return (
     <NForm id='payment-form' schema={paymentEditSchema} defaultValues={defaultValues} onSubmit={handleSubmit} >
-      <PaymentEditFormContent />
+      <PaymentEditFormContent payment={payment} />
     </NForm>
   )
 }
 
-const PaymentEditFormContent = () => {
+const PaymentEditFormContent = ({ payment }) => {
   const { t } = useTranslation();
   const paymentMethod = useWatch({ name: 'paymentMethod' });
 
-  // Keeps a stored method selectable while the paperwork is corrected.
-  const paymentMethodOptions = buildPaymentMethodOptionsFor(t, paymentMethod);
+  const paymentMethodOptions = buildPaymentEditMethodOptions(t, payment);
+  const replacingCheck = payment.paymentMethod === 'check' && paymentMethod === 'cash';
 
   return (
     <>
@@ -72,19 +72,25 @@ const PaymentEditFormContent = () => {
         />
       </div>
 
+      {replacingCheck && (
+        <p role="status" className="rounded-md bg-muted p-3 text-sm text-muted-foreground">
+          {t('payments.form.replaceCheckWithCash')}
+        </p>
+      )}
+
       <FormSectionHeader
         icon={FileText}
         title={t('payments.form.paymentDetails')}
       />
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-        <FormInput
+        {!replacingCheck && <FormInput
           name='receiptNumber'
           type='text'
           icon={Receipt}
           formLabel={t('payments.form.receiptNumber')}
           placeholder={t('payments.form.receiptNumberPlaceholder')}
-        />
+        />}
 
         <FormInput
           name='transactionRef'

@@ -61,6 +61,22 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
       },
     },
     {
+      id: "paymentMethods",
+      accessorFn: (installment: any) => (installment.paymentMethods ?? [])
+        .map((method: string) => t(`payments.methods.${method}`))
+        .join(', '),
+      header: t('payments.table.paymentMethod'),
+      enableSorting: true,
+      cell: ({ getValue }: any) => {
+        const methods = getValue();
+        return methods ? (
+          <NBadge color="info" className="w-auto">{methods}</NBadge>
+        ) : (
+          <span className="text-gray-400">-</span>
+        );
+      },
+    },
+    {
       accessorKey: "status",
       header: t('installments.table.status'),
       enableSorting: true,

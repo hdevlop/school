@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'bun:test';
+import { eq } from 'drizzle-orm';
 import { scopedHistoryRepository } from '../academicYears/fixtures/scopedHistoryRepository';
 
 const rawUrl = process.env.SCHOOL_HISTORY_TEST_DB_URL;
@@ -18,6 +19,55 @@ const { AllocationRepository } = await import('../../src/modules/financial/alloc
 const rollback = Symbol('rollback');
 
 describe('payment receipt and fee-year portions on the marked PostgreSQL fixture', () => {
+  it('excludes future monthly installments and counts each receipted installment balance once', async () => {
+    try {
+      await db.transaction(async (transaction) => {
+        const tx = transaction as unknown as typeof db;
+        const { repo } = await scopedHistoryRepository(PaymentRepository, tx);
+        const feeId = 'receipt-monthly-fee';
+        const typeId = 'receipt-monthly-type';
+        const receiptId = 'receipt-monthly-cash';
+        const topUpId = 'receipt-monthly-topup';
+        const checkId = 'receipt-monthly-pending';
+        const studentId = 'history-student-08';
+        await tx.insert(feeTypes).values({ id: typeId, name: 'Tuition', category: 'tuition',
+          amount: '960', paymentType: 'recurring', status: 'active' });
+        await tx.insert(fees).values({ id: feeId, studentId, feeTypeId: typeId, schedule: 'monthly',
+          academicYear: '2026-2027', baseAmount: '960', grossAmount: '9600', netAmount: '9600' });
+        await tx.insert(feeInstallments).values(Array.from({ length: 10 }, (_, i) => ({
+          id: `receipt-monthly-inst-${i + 1}`, feeId, number: i + 1, amount: '960',
+          dueDate: new Date(Date.UTC(2026, 8 + i, 1)).toISOString().slice(0, 10),
+        })));
+        await tx.insert(payments).values([
+          { id: receiptId, studentId, amount: '1500', paymentDate: '2026-10-17', paymentMethod: 'cash', status: 'completed' },
+          { id: checkId, studentId, amount: '100', paymentDate: '2026-10-17', paymentMethod: 'check', status: 'pending' },
+        ]);
+        // Multiple allocations can target the same installment (for example credit applications).
+        await tx.insert(paymentAllocations).values([
+          { paymentId: receiptId, feeId, installmentId: 'receipt-monthly-inst-1', amount: '400', type: 'installment' },
+          { paymentId: receiptId, feeId, installmentId: 'receipt-monthly-inst-1', amount: '560', type: 'installment' },
+          { paymentId: receiptId, feeId, installmentId: 'receipt-monthly-inst-2', amount: '540', type: 'installment' },
+          { paymentId: checkId, feeId, installmentId: 'receipt-monthly-inst-2', amount: '100', type: 'installment' },
+        ]);
+        // Pending checks and the eight future months must not change this receipt's balance.
+        expect(await repo.getReceiptItems(receiptId)).toEqual([{
+          feeId, feeType: 'Tuition', academicYear: '2026-2027', schedule: 'monthly',
+          dueDates: ['2026-09-01', '2026-10-01'], amount: '1500.00', remainingAmount: '420.00',
+        }]);
+        await tx.insert(payments).values({ id: topUpId, studentId, amount: '420',
+          paymentDate: '2026-10-18', paymentMethod: 'cash', status: 'completed' });
+        await tx.insert(paymentAllocations).values({ paymentId: topUpId, feeId,
+          installmentId: 'receipt-monthly-inst-2', amount: '420', type: 'installment' });
+        expect((await repo.getReceiptItems(receiptId))[0]).toMatchObject({ amount: '1500.00', remainingAmount: '0.00' });
+        await tx.update(payments).set({ status: 'refunded' }).where(eq(payments.id, topUpId));
+        expect((await repo.getReceiptItems(receiptId))[0].remainingAmount).toBe('420.00');
+        throw rollback;
+      });
+    } catch (error) {
+      if (error !== rollback) throw error;
+    }
+  });
+
   it('shows one mixed receipt in both fee years, keeping cash date and exact portions', async () => {
     try {
       await db.transaction(async (transaction) => {
