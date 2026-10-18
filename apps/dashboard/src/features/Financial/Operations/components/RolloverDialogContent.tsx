@@ -44,7 +44,10 @@ export default function RolloverDialogContent() {
 
   const payload = { fromYear, toYear, copyDiscounts, includeOneTimeFees, dryRun: true, idempotencyKey: rolloverKey };
   const yearsValid = Boolean(fromYear && toYear && fromYear !== toYear);
-  const reset = () => setRun(null);
+  const reset = () => {
+    setRun(null);
+    setRolloverKey(crypto.randomUUID());
+  };
 
   const execute = async (kind: 'preview' | 'commit', action: () => Promise<unknown>, success: string) => {
     setBusy(kind);

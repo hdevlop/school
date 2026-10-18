@@ -150,6 +150,7 @@ const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '
       icon={DollarSign}
       loading={isLoading}
       error={error}
+      errorText={t('common.feedback.errorMessage')}
       onRetry={() => refetch()}
       skeleton={<NSkeletonChart />}
       classNames={{ content: 'flex-1 min-h-0' }}

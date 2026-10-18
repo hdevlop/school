@@ -73,6 +73,7 @@ const CollectionByClassChart: React.FC<Props> = ({ academicYear, className = '' 
       className={`flex w-full h-full ${className}`}
       loading={isLoading}
       error={error}
+      errorText={t('common.feedback.errorMessage')}
       onRetry={() => refetch()}
       skeleton={<NSkeletonChart />}
       noData={!isLoading && !error && rows.length === 0}

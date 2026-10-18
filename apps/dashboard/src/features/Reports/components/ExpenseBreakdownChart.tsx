@@ -75,6 +75,7 @@ const ExpenseBreakdownChart: React.FC<Props> = ({ academicYear, className = '' }
       className={`flex w-full h-full ${className}`}
       loading={isLoading}
       error={error}
+      errorText={t('common.feedback.errorMessage')}
       onRetry={() => refetch()}
       skeleton={<NSkeletonChart />}
       classNames={{ content: 'flex-1 min-h-0' }}
