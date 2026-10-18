@@ -64,6 +64,7 @@
     "test:security": "bun test packages/server/tests/security",
     "test:finance": "bun test packages/server/tests/security/FinanceIntegrity.test.ts packages/server/tests/security/MoneyPrecision.test.ts packages/server/tests/security/FinanceEditWorkflow.test.ts apps/dashboard/tests/features/Financial",
     "test:finance:integration": "bun scripts/run-finance-acceptance.ts",
+    "test:calendar:integration": "bun scripts/run-calendar-acceptance.ts",
     "test:chat": "bun test packages/server/tests/chat",
     "test:security:transport": "bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/RouteSecurityTransport.test.ts && bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/ConcurrentRefreshTransport.test.ts",
     "db:generate": "bun --env-file=apps/dashboard/.env.local drizzle-kit generate",
