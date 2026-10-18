@@ -1,0 +1,84 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "date": "2026-10-18T09:36:55.723Z",
+  "results": [
+    {
+      "test": "access-fixture-identity-unused",
+      "outcome": "PASS"
+    },
+    {
+      "test": "access-fixture-staff-CIN-unused",
+      "outcome": "PASS"
+    },
+    {
+      "test": "owned-denied-account-created",
+      "outcome": "PASS"
+    },
+    {
+      "test": "owned-authorization-target-created",
+      "outcome": "PASS"
+    },
+    {
+      "test": "denied-role-can-authenticate",
+      "outcome": "PASS"
+    },
+    {
+      "test": "actual-role-confirmed-as-teacher",
+      "outcome": "PASS"
+    },
+    {
+      "test": "teacher-denied-GET-/staff",
+      "outcome": "PASS"
+    },
+    {
+      "test": "teacher-denied-GET-/staff/:owned-id",
+      "outcome": "PASS"
+    },
+    {
+      "test": "teacher-denied-PUT-/staff/:owned-id",
+      "outcome": "PASS"
+    },
+    {
+      "test": "teacher-denied-DELETE-/staff/:owned-id",
+      "outcome": "PASS"
+    },
+    {
+      "test": "teacher-denied-POST-/staff",
+      "outcome": "PASS"
+    },
+    {
+      "test": "refused-mutations-preserve-owned-staff",
+      "outcome": "PASS"
+    },
+    {
+      "test": "denied-role-browser-login-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "staff-page-redirects-denied-role-and-hides-create",
+      "outcome": "PASS"
+    },
+    {
+      "test": "no-unhandled-page-errors",
+      "outcome": "PASS"
+    }
+  ],
+  "counts": {
+    "PASS": 15,
+    "FAIL": 0
+  },
+  "failure": null,
+  "diagnostics": [],
+  "cleanup": [
+    {
+      "type": "staff",
+      "removed": true
+    },
+    {
+      "type": "user",
+      "removed": true
+    }
+  ],
+  "staffResidue": 0,
+  "userResidue": 0
+}

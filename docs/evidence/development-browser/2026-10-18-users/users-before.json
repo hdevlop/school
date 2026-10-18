@@ -1,0 +1,14 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "observedAt": "2026-10-17T23:39:11.172Z",
+  "view": {
+    "forms": 1,
+    "enabledIdentityInputs": 2,
+    "statusVisible": 0
+  },
+  "edit": {
+    "statusControls": 0
+  },
+  "writes": [],
+  "diagnostics": []
+}

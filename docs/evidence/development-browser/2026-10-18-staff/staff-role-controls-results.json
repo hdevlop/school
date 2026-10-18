@@ -1,0 +1,45 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "date": "2026-10-18T09:42:55.263Z",
+  "results": [
+    {
+      "test": "assistant-shows-its-own-assignment-control-only",
+      "outcome": "PASS"
+    },
+    {
+      "test": "accountant-shows-its-own-assignment-control-only",
+      "outcome": "PASS"
+    },
+    {
+      "test": "busAssistant-shows-its-own-assignment-control-only",
+      "outcome": "PASS"
+    },
+    {
+      "test": "security-shows-its-own-assignment-control-only",
+      "outcome": "PASS"
+    },
+    {
+      "test": "driver-shows-its-own-assignment-control-only",
+      "outcome": "PASS"
+    },
+    {
+      "test": "missing-driver-license-returns-to-details-with-French-errors-and-no-write",
+      "outcome": "PASS"
+    },
+    {
+      "test": "role-control-probes-made-no-business-writes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "no-unhandled-page-errors",
+      "outcome": "PASS"
+    }
+  ],
+  "counts": {
+    "PASS": 8,
+    "FAIL": 0
+  },
+  "failure": null,
+  "diagnostics": [],
+  "writes": []
+}

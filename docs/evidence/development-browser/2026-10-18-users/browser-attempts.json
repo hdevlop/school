@@ -1,0 +1,1309 @@
+{
+  "intermediateAssertionsIncludedInFinalCount": false,
+  "notes": [
+    "View labels include a colon; cards display the user name twice. Corrected the test selectors.",
+    "Role selects expose an aria-label on a transparent trigger; use its accessible name.",
+    "Readiness checks require the filtered list to settle before opening a menu. The intermediate menu timeout is retained without asserting an independently proven cause.",
+    "A cached helper admin session became invalid during dev recompilation; the helper now renews once on 401.",
+    "The initial pagination patch mishandled the server response envelope. Corrected locally and added service regression tests.",
+    "Missing duplicate-email translation was a product defect and is fixed.",
+    "The no-match empty-state defect is still open; it remains the final lifecycle failure."
+  ],
+  "attempts": [
+    {
+      "file": "users-access-harness-attempt1.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-17T23:44:10.478Z",
+        "results": [],
+        "counts": {
+          "PASS": 0,
+          "FAIL": 0
+        },
+        "failure": {
+          "message": "users.data.some is not a function",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "diagnostics": [],
+        "cleanup": [],
+        "fixtureResidue": null
+      }
+    },
+    {
+      "file": "users-email-filter-attempt6.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-17T23:49:05.983Z",
+        "results": [
+          {
+            "test": "reserved-fixture-email-is-unused",
+            "outcome": "PASS"
+          },
+          {
+            "test": "dev-email-provider-is-console",
+            "outcome": "PASS"
+          },
+          {
+            "test": "cancel-create-has-no-invitation-or-write",
+            "outcome": "PASS"
+          },
+          {
+            "test": "French-required-validation-prevents-invitation",
+            "outcome": "PASS"
+          },
+          {
+            "test": "UI-invite-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "created-user-persists-with-selected-role",
+            "outcome": "PASS"
+          },
+          {
+            "test": "card-role-and-status-match-supported-read",
+            "outcome": "PASS"
+          },
+          {
+            "test": "view-is-read-only-and-shows-role-status",
+            "outcome": "PASS"
+          },
+          {
+            "test": "edit-reopens-saved-identity-and-status",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-9-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "name-edit-persists-with-role-email-status-preserved",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-11-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "status-inactive-survives-reload",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-13-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "status-pending-survives-reload",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-15-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "status-active-survives-reload",
+            "outcome": "PASS"
+          },
+          {
+            "test": "duplicate-email-is-refused",
+            "outcome": "PASS"
+          },
+          {
+            "test": "duplicate-feedback-keeps-dialog-and-one-account",
+            "outcome": "PASS"
+          },
+          {
+            "test": "nonmatching-name-removes-cards",
+            "outcome": "PASS"
+          },
+          {
+            "test": "nonmatching-name-shows-filtered-empty",
+            "outcome": "FAIL"
+          },
+          {
+            "test": "email-filter-finds-exact-owned-account",
+            "outcome": "FAIL"
+          }
+        ],
+        "counts": {
+          "PASS": 20,
+          "FAIL": 2
+        },
+        "failure": {
+          "message": "email-filter-finds-exact-owned-account",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "diagnostics": [
+          {
+            "type": "responseerror",
+            "method": "POST",
+            "path": "/api/auth/invite",
+            "status": 409
+          }
+        ],
+        "writes": [
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          }
+        ],
+        "invitations": [
+          {
+            "method": "POST",
+            "path": "/api/auth/invite",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/api/auth/invite",
+            "status": 409
+          }
+        ],
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/users",
+            "status": 401
+          },
+          {
+            "method": "GET",
+            "path": "/users",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/roles",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "DELETE",
+            "path": "/users/:owned-id",
+            "status": 200
+          }
+        ],
+        "cleanup": [
+          {
+            "removed": true
+          }
+        ],
+        "limitations": [
+          "Console provider; no real email delivery",
+          "Denied-role checks and complete role-filter/table-mode matrix remain separate",
+          "Production checkboxes unchanged"
+        ]
+      }
+    },
+    {
+      "file": "users-empty-attempt5.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-17T23:46:44.286Z",
+        "results": [
+          {
+            "test": "reserved-fixture-email-is-unused",
+            "outcome": "PASS"
+          },
+          {
+            "test": "dev-email-provider-is-console",
+            "outcome": "PASS"
+          },
+          {
+            "test": "cancel-create-has-no-invitation-or-write",
+            "outcome": "PASS"
+          },
+          {
+            "test": "French-required-validation-prevents-invitation",
+            "outcome": "PASS"
+          },
+          {
+            "test": "UI-invite-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "created-user-persists-with-selected-role",
+            "outcome": "PASS"
+          },
+          {
+            "test": "card-role-and-status-match-supported-read",
+            "outcome": "PASS"
+          },
+          {
+            "test": "view-is-read-only-and-shows-role-status",
+            "outcome": "PASS"
+          },
+          {
+            "test": "edit-reopens-saved-identity-and-status",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-9-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "name-edit-persists-with-role-email-status-preserved",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-11-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "status-inactive-survives-reload",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-13-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "status-pending-survives-reload",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-15-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "status-active-survives-reload",
+            "outcome": "PASS"
+          },
+          {
+            "test": "duplicate-email-is-refused",
+            "outcome": "PASS"
+          },
+          {
+            "test": "duplicate-feedback-keeps-dialog-and-one-account",
+            "outcome": "PASS"
+          }
+        ],
+        "counts": {
+          "PASS": 19,
+          "FAIL": 0
+        },
+        "failure": {
+          "message": "expect(locator).toBeVisible() failed\n\nLocator: getByText('Aucun résultat', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 5000ms\n  - waiting for getByText('Aucun résultat', { exact: true })\n",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "diagnostics": [
+          {
+            "type": "responseerror",
+            "method": "POST",
+            "path": "/api/auth/invite",
+            "status": 409
+          }
+        ],
+        "writes": [
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          }
+        ],
+        "invitations": [
+          {
+            "method": "POST",
+            "path": "/api/auth/invite",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/api/auth/invite",
+            "status": 409
+          }
+        ],
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/users",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/roles",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "DELETE",
+            "path": "/users/:owned-id",
+            "status": 200
+          }
+        ],
+        "cleanup": [
+          {
+            "removed": true
+          }
+        ],
+        "limitations": [
+          "Console provider; no real email delivery",
+          "Denied-role checks and complete role-filter/table-mode matrix remain separate",
+          "Production checkboxes unchanged"
+        ]
+      }
+    },
+    {
+      "file": "users-filter-harness-attempt1.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-17T23:56:51.934Z",
+        "results": [
+          {
+            "test": "UI-count-covers-every-API-page",
+            "outcome": "PASS"
+          },
+          {
+            "test": "email-search-finds-existing-account-beyond-first-100",
+            "outcome": "PASS"
+          },
+          {
+            "test": "deep-page-account-details-match-role-and-identity",
+            "outcome": "PASS"
+          },
+          {
+            "test": "desktop-table-shows-same-filtered-account",
+            "outcome": "PASS"
+          }
+        ],
+        "counts": {
+          "PASS": 4,
+          "FAIL": 0
+        },
+        "failure": {
+          "message": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('combobox').filter({ hasText: 'Filtrer par rôle...' }).filter({ visible: true })\u001b[22m\n",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "apiPages": [
+          {
+            "offset": 0,
+            "count": 100
+          },
+          {
+            "offset": 100,
+            "count": 100
+          },
+          {
+            "offset": 200,
+            "count": 43
+          }
+        ],
+        "expectedTotal": 243,
+        "uiPages": [
+          {
+            "status": 200,
+            "limit": "100",
+            "offset": "0",
+            "count": 100
+          },
+          {
+            "status": 200,
+            "limit": "100",
+            "offset": "100",
+            "count": 100
+          },
+          {
+            "status": 200,
+            "limit": "100",
+            "offset": "200",
+            "count": 43
+          }
+        ],
+        "diagnostics": [],
+        "writes": []
+      }
+    },
+    {
+      "file": "users-filter-harness-attempt2.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-17T23:58:10.313Z",
+        "results": [
+          {
+            "test": "UI-count-covers-every-API-page",
+            "outcome": "PASS"
+          },
+          {
+            "test": "email-search-finds-existing-account-beyond-first-100",
+            "outcome": "PASS"
+          },
+          {
+            "test": "deep-page-account-details-match-role-and-identity",
+            "outcome": "PASS"
+          },
+          {
+            "test": "desktop-table-shows-same-filtered-account",
+            "outcome": "PASS"
+          }
+        ],
+        "counts": {
+          "PASS": 4,
+          "FAIL": 0
+        },
+        "failure": {
+          "message": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText('Filtrer par rôle...', { exact: true }).filter({ visible: true })\u001b[22m\n\u001b[2m    - locator resolved to <span class=\"flex-1 truncate text-sm text-muted-foreground\">Filtrer par rôle...</span>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <button dir=\"ltr\" type=\"button\" role=\"combobox\" data-state=\"closed\" aria-expanded=\"false\" aria-autocomplete=\"none\" data-slot=\"select-trigger\" aria-controls=\"radix-_r_6_\" aria-label=\"Filtrer par rôle...\" class=\"border-input data-[placeholder]:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground flex cursor-pointer items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible…>…</button> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <button dir=\"ltr\" type=\"button\" role=\"combobox\" data-state=\"closed\" aria-expanded=\"false\" aria-autocomplete=\"none\" data-slot=\"select-trigger\" aria-controls=\"radix-_r_6_\" aria-label=\"Filtrer par rôle...\" class=\"border-input data-[placeholder]:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground flex cursor-pointer items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible…>…</button> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    56 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - <button dir=\"ltr\" type=\"button\" role=\"combobox\" data-state=\"closed\" aria-expanded=\"false\" aria-autocomplete=\"none\" data-slot=\"select-trigger\" aria-controls=\"radix-_r_6_\" aria-label=\"Filtrer par rôle...\" class=\"border-input data-[placeholder]:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground flex cursor-pointer items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible…>…</button> intercepts pointer events\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "apiPages": [
+          {
+            "offset": 0,
+            "count": 100
+          },
+          {
+            "offset": 100,
+            "count": 100
+          },
+          {
+            "offset": 200,
+            "count": 43
+          }
+        ],
+        "expectedTotal": 243,
+        "uiPages": [
+          {
+            "status": 200,
+            "limit": "100",
+            "offset": "0",
+            "count": 100
+          },
+          {
+            "status": 200,
+            "limit": "100",
+            "offset": "100",
+            "count": 100
+          },
+          {
+            "status": 200,
+            "limit": "100",
+            "offset": "200",
+            "count": 43
+          }
+        ],
+        "diagnostics": [],
+        "writes": []
+      }
+    },
+    {
+      "file": "users-harness-attempt1.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-17T23:41:29.404Z",
+        "results": [
+          {
+            "test": "reserved-fixture-email-is-unused",
+            "outcome": "PASS"
+          },
+          {
+            "test": "dev-email-provider-is-console",
+            "outcome": "PASS"
+          },
+          {
+            "test": "cancel-create-has-no-invitation-or-write",
+            "outcome": "PASS"
+          },
+          {
+            "test": "French-required-validation-prevents-invitation",
+            "outcome": "PASS"
+          },
+          {
+            "test": "UI-invite-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "created-user-persists-with-selected-role",
+            "outcome": "PASS"
+          },
+          {
+            "test": "card-role-and-status-match-supported-read",
+            "outcome": "PASS"
+          },
+          {
+            "test": "view-is-read-only-and-shows-role-status",
+            "outcome": "FAIL"
+          }
+        ],
+        "counts": {
+          "PASS": 7,
+          "FAIL": 1
+        },
+        "failure": {
+          "message": "view-is-read-only-and-shows-role-status",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "diagnostics": [],
+        "writes": [],
+        "invitations": [
+          {
+            "method": "POST",
+            "path": "/api/auth/invite",
+            "status": 200
+          }
+        ],
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/users",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/roles",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "DELETE",
+            "path": "/users/:owned-id",
+            "status": 200
+          }
+        ],
+        "cleanup": [
+          {
+            "removed": true
+          }
+        ],
+        "limitations": [
+          "Console provider; no real email delivery",
+          "Denied-role checks and complete role-filter/table-mode matrix remain separate",
+          "Production checkboxes unchanged"
+        ]
+      }
+    },
+    {
+      "file": "users-harness-attempt3.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-17T23:43:49.330Z",
+        "results": [],
+        "counts": {
+          "PASS": 0,
+          "FAIL": 0
+        },
+        "failure": {
+          "message": "Users list unavailable: 401",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "diagnostics": [],
+        "writes": [],
+        "invitations": [],
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/users",
+            "status": 401
+          }
+        ],
+        "cleanup": [],
+        "limitations": [
+          "Console provider; no real email delivery",
+          "Denied-role checks and complete role-filter/table-mode matrix remain separate",
+          "Production checkboxes unchanged"
+        ]
+      }
+    },
+    {
+      "file": "users-loading-attempt7.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-17T23:50:11.598Z",
+        "results": [
+          {
+            "test": "reserved-fixture-email-is-unused",
+            "outcome": "PASS"
+          },
+          {
+            "test": "dev-email-provider-is-console",
+            "outcome": "PASS"
+          }
+        ],
+        "counts": {
+          "PASS": 2,
+          "FAIL": 0
+        },
+        "failure": {
+          "message": "expect(locator).toBeVisible() failed\n\nLocator: getByRole('button', { name: 'Créer Utilisateur', exact: true }).first()\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 5000ms\n  - waiting for getByRole('button', { name: 'Créer Utilisateur', exact: true }).first()\n",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "diagnostics": [],
+        "writes": [],
+        "invitations": [],
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/users",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/roles",
+            "status": 200
+          }
+        ],
+        "cleanup": [],
+        "limitations": [
+          "Console provider; no real email delivery",
+          "Denied-role checks and complete role-filter/table-mode matrix remain separate",
+          "Production checkboxes unchanged"
+        ]
+      }
+    },
+    {
+      "file": "users-loading-attempt8.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-17T23:51:45.359Z",
+        "results": [
+          {
+            "test": "reserved-fixture-email-is-unused",
+            "outcome": "PASS"
+          },
+          {
+            "test": "dev-email-provider-is-console",
+            "outcome": "PASS"
+          }
+        ],
+        "counts": {
+          "PASS": 2,
+          "FAIL": 0
+        },
+        "failure": {
+          "message": "expect(locator).toBeVisible() failed\n\nLocator: getByRole('button', { name: 'Créer Utilisateur', exact: true }).first()\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 30000ms\n  - waiting for getByRole('button', { name: 'Créer Utilisateur', exact: true }).first()\n",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "diagnostics": [],
+        "writes": [],
+        "invitations": [],
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/users",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/roles",
+            "status": 200
+          }
+        ],
+        "cleanup": [],
+        "limitations": [
+          "Console provider; no real email delivery",
+          "Denied-role checks and complete role-filter/table-mode matrix remain separate",
+          "Production checkboxes unchanged"
+        ]
+      }
+    },
+    {
+      "file": "users-menu-attempt4.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-17T23:45:33.520Z",
+        "results": [
+          {
+            "test": "reserved-fixture-email-is-unused",
+            "outcome": "PASS"
+          },
+          {
+            "test": "dev-email-provider-is-console",
+            "outcome": "PASS"
+          },
+          {
+            "test": "cancel-create-has-no-invitation-or-write",
+            "outcome": "PASS"
+          },
+          {
+            "test": "French-required-validation-prevents-invitation",
+            "outcome": "PASS"
+          },
+          {
+            "test": "UI-invite-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "created-user-persists-with-selected-role",
+            "outcome": "PASS"
+          },
+          {
+            "test": "card-role-and-status-match-supported-read",
+            "outcome": "PASS"
+          },
+          {
+            "test": "view-is-read-only-and-shows-role-status",
+            "outcome": "PASS"
+          },
+          {
+            "test": "edit-reopens-saved-identity-and-status",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-9-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "name-edit-persists-with-role-email-status-preserved",
+            "outcome": "PASS"
+          }
+        ],
+        "counts": {
+          "PASS": 11,
+          "FAIL": 0
+        },
+        "failure": {
+          "message": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('menuitem', { name: 'Modifier', exact: true })\u001b[22m\n",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "diagnostics": [],
+        "writes": [
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          }
+        ],
+        "invitations": [
+          {
+            "method": "POST",
+            "path": "/api/auth/invite",
+            "status": 200
+          }
+        ],
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/users",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/roles",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "DELETE",
+            "path": "/users/:owned-id",
+            "status": 200
+          }
+        ],
+        "cleanup": [
+          {
+            "removed": true
+          }
+        ],
+        "limitations": [
+          "Console provider; no real email delivery",
+          "Denied-role checks and complete role-filter/table-mode matrix remain separate",
+          "Production checkboxes unchanged"
+        ]
+      }
+    },
+    {
+      "file": "users-product-attempt2.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-17T23:42:42.849Z",
+        "results": [
+          {
+            "test": "reserved-fixture-email-is-unused",
+            "outcome": "PASS"
+          },
+          {
+            "test": "dev-email-provider-is-console",
+            "outcome": "PASS"
+          },
+          {
+            "test": "cancel-create-has-no-invitation-or-write",
+            "outcome": "PASS"
+          },
+          {
+            "test": "French-required-validation-prevents-invitation",
+            "outcome": "PASS"
+          },
+          {
+            "test": "UI-invite-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "created-user-persists-with-selected-role",
+            "outcome": "PASS"
+          },
+          {
+            "test": "card-role-and-status-match-supported-read",
+            "outcome": "PASS"
+          },
+          {
+            "test": "view-is-read-only-and-shows-role-status",
+            "outcome": "PASS"
+          },
+          {
+            "test": "edit-reopens-saved-identity-and-status",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-9-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "name-edit-persists-with-role-email-status-preserved",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-11-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "status-inactive-survives-reload",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-13-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "status-pending-survives-reload",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-15-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "status-active-survives-reload",
+            "outcome": "PASS"
+          },
+          {
+            "test": "duplicate-email-is-refused",
+            "outcome": "PASS"
+          }
+        ],
+        "counts": {
+          "PASS": 18,
+          "FAIL": 0
+        },
+        "failure": {
+          "message": "expect(locator).toBeVisible() failed\n\nLocator: getByText('Un compte avec cette adresse e-mail existe déjà', { exact: true }).first()\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 5000ms\n  - waiting for getByText('Un compte avec cette adresse e-mail existe déjà', { exact: true }).first()\n",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "diagnostics": [
+          {
+            "type": "responseerror",
+            "method": "POST",
+            "path": "/api/auth/invite",
+            "status": 409
+          }
+        ],
+        "writes": [
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          }
+        ],
+        "invitations": [
+          {
+            "method": "POST",
+            "path": "/api/auth/invite",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/api/auth/invite",
+            "status": 409
+          }
+        ],
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/users",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/roles",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "DELETE",
+            "path": "/users/:owned-id",
+            "status": 200
+          }
+        ],
+        "cleanup": [
+          {
+            "removed": true
+          }
+        ],
+        "limitations": [
+          "Console provider; no real email delivery",
+          "Denied-role checks and complete role-filter/table-mode matrix remain separate",
+          "Production checkboxes unchanged"
+        ]
+      }
+    },
+    {
+      "file": "users-strict-name-attempt9.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-17T23:54:17.078Z",
+        "results": [
+          {
+            "test": "reserved-fixture-email-is-unused",
+            "outcome": "PASS"
+          },
+          {
+            "test": "dev-email-provider-is-console",
+            "outcome": "PASS"
+          },
+          {
+            "test": "cancel-create-has-no-invitation-or-write",
+            "outcome": "PASS"
+          },
+          {
+            "test": "French-required-validation-prevents-invitation",
+            "outcome": "PASS"
+          },
+          {
+            "test": "UI-invite-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "created-user-persists-with-selected-role",
+            "outcome": "PASS"
+          },
+          {
+            "test": "card-role-and-status-match-supported-read",
+            "outcome": "PASS"
+          },
+          {
+            "test": "view-is-read-only-and-shows-role-status",
+            "outcome": "PASS"
+          },
+          {
+            "test": "edit-reopens-saved-identity-and-status",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-9-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "name-edit-persists-with-role-email-status-preserved",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-11-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "status-inactive-survives-reload",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-13-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "status-pending-survives-reload",
+            "outcome": "PASS"
+          },
+          {
+            "test": "user-update-15-accepted",
+            "outcome": "PASS"
+          },
+          {
+            "test": "status-active-survives-reload",
+            "outcome": "PASS"
+          },
+          {
+            "test": "duplicate-email-is-refused",
+            "outcome": "PASS"
+          },
+          {
+            "test": "duplicate-feedback-keeps-dialog-and-one-account",
+            "outcome": "PASS"
+          },
+          {
+            "test": "nonmatching-name-removes-cards",
+            "outcome": "PASS"
+          },
+          {
+            "test": "nonmatching-name-shows-filtered-empty",
+            "outcome": "FAIL"
+          }
+        ],
+        "counts": {
+          "PASS": 20,
+          "FAIL": 1
+        },
+        "failure": {
+          "message": "expect(locator).toBeVisible() failed\n\nLocator: locator('[data-row=\"true\"]').getByText('<owned-user-edited>', { exact: true })\nExpected: visible\nError: strict mode violation: locator('[data-row=\"true\"]').getByText('<owned-user-edited>', { exact: true }) resolved to 2 elements:\n    1) <span class=\"font-semibold text-base\"><owned-user-edited></span> aka getByText('<owned-user-edited>').first()\n    2) <label data-slot=\"label\" class=\"flex items-center gap-2 text-foreground select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 text-md font-bold\"><owned-user-edited></label> aka locator('label').filter({ hasText: '<owned-user-edited>' })\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 30000ms\n  - waiting for locator('[data-row=\"true\"]').getByText('<owned-user-edited>', { exact: true })\n",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "diagnostics": [
+          {
+            "type": "responseerror",
+            "method": "POST",
+            "path": "/api/auth/invite",
+            "status": 409
+          }
+        ],
+        "writes": [
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/users/:owned-id"
+          }
+        ],
+        "invitations": [
+          {
+            "method": "POST",
+            "path": "/api/auth/invite",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/api/auth/invite",
+            "status": 409
+          }
+        ],
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/users",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/roles",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/users/:owned-id",
+            "status": 200
+          },
+          {
+            "method": "DELETE",
+            "path": "/users/:owned-id",
+            "status": 200
+          }
+        ],
+        "cleanup": [
+          {
+            "removed": true
+          }
+        ],
+        "limitations": [
+          "Console provider; no real email delivery",
+          "Denied-role checks and complete role-filter/table-mode matrix remain separate",
+          "Production checkboxes unchanged"
+        ]
+      }
+    }
+  ]
+}

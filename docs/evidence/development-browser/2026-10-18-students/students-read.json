@@ -1,0 +1,104 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "fr-desktop code search identifies saved student",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop Arabic name search",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop no-match translated feedback",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop clearing no-match restores saved identity",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop mixed-script names and code keep direction",
+      "result": "PASS"
+    },
+    {
+      "label": "Class filter has accessible name",
+      "result": "FAIL"
+    },
+    {
+      "label": "Class filter preserves CP student",
+      "result": "PASS"
+    },
+    {
+      "label": "Old section filter excludes transferred student",
+      "result": "PASS"
+    },
+    {
+      "label": "New section filter finds transferred student",
+      "result": "PASS"
+    },
+    {
+      "label": "Desktop table matches card identity",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone code search identifies saved student",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone Arabic name search",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone no-match translated feedback",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone clearing no-match restores saved identity",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone mixed-script names and code keep direction",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone code search identifies saved student",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone Arabic name search",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone no-match translated feedback",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone clearing no-match restores saved identity",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone mixed-script names and code keep direction",
+      "result": "PASS"
+    },
+    {
+      "label": "Arabic document RTL",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone page fits viewport",
+      "result": "PASS"
+    }
+  ],
+  "result": "PARTIAL",
+  "diagnostics": [],
+  "writes": [],
+  "counts": {
+    "PASS": 22,
+    "FAIL": 1
+  }
+}

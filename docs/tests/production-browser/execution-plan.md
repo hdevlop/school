@@ -2,6 +2,10 @@
 
 Prepared: **2026-10-15**. Status: **PARTIALLY EXECUTED**; see the [recorded checklist progress](README.md#recorded-checklist-progress) and [evidence ledger](evidence-ledger.md). Target: **https://myscolai.com**.
 
+**Development first:** use the [existing dev demo workflow](../development-browser.md)
+for test/fix iterations, then batch the validated changes into one release.
+This plan describes the later production recheck; dev results remain separate.
+
 Run in this order: **authentication → controlled security checks → students,
 teachers and staff → remaining CRUD → finance → cleanup and acceptance report**.
 This is a plan for testing the running product through its real browser UI.

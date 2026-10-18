@@ -1,0 +1,116 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Separate denied parent account created",
+      "result": "PASS"
+    },
+    {
+      "label": "Denied parent authenticates",
+      "result": "PASS"
+    },
+    {
+      "label": "Actual parent role confirmed",
+      "result": "PASS"
+    },
+    {
+      "label": "Parent denied POST exams",
+      "result": "PASS"
+    },
+    {
+      "label": "Parent denied PUT exams",
+      "result": "PASS"
+    },
+    {
+      "label": "Parent denied DELETE exams",
+      "result": "PASS"
+    },
+    {
+      "label": "Parent denied POST assessments",
+      "result": "PASS"
+    },
+    {
+      "label": "Parent denied PUT assessments",
+      "result": "PASS"
+    },
+    {
+      "label": "Parent denied DELETE assessments",
+      "result": "PASS"
+    },
+    {
+      "label": "Parent denied POST class-routines",
+      "result": "PASS"
+    },
+    {
+      "label": "Parent denied PUT class-routines",
+      "result": "PASS"
+    },
+    {
+      "label": "Parent denied DELETE class-routines",
+      "result": "PASS"
+    },
+    {
+      "label": "Refused mutations preserve records and five lessons",
+      "result": "PASS"
+    }
+  ],
+  "responses": [
+    {
+      "area": "exams",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "area": "exams",
+      "method": "PUT",
+      "status": 403
+    },
+    {
+      "area": "exams",
+      "method": "DELETE",
+      "status": 403
+    },
+    {
+      "area": "assessments",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "area": "assessments",
+      "method": "PUT",
+      "status": 403
+    },
+    {
+      "area": "assessments",
+      "method": "DELETE",
+      "status": 403
+    },
+    {
+      "area": "class-routines",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "area": "class-routines",
+      "method": "PUT",
+      "status": 403
+    },
+    {
+      "area": "class-routines",
+      "method": "DELETE",
+      "status": 403
+    }
+  ],
+  "cleanup": [
+    {
+      "entity": "denied-user",
+      "removed": true
+    }
+  ],
+  "result": "PASS",
+  "counts": {
+    "PASS": 13,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

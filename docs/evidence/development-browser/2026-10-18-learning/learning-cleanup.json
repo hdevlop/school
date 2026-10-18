@@ -1,0 +1,207 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Exact exams cleanup ownership",
+      "result": "PASS"
+    },
+    {
+      "label": "exams invalid scoring returns browser refusal",
+      "result": "PASS"
+    },
+    {
+      "label": "exams scoring error keeps form available for correction",
+      "result": "PASS"
+    },
+    {
+      "label": "Cancel preserves exams",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser deletes owned ungraded exams",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted exams returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Exact assessments cleanup ownership",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments invalid scoring returns browser refusal",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments scoring error keeps form available for correction",
+      "result": "PASS"
+    },
+    {
+      "label": "Cancel preserves assessments",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser deletes owned ungraded assessments",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted assessments returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Exact routine cleanup ownership verified",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned versioned lesson removed",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned versioned lesson removed",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned versioned lesson removed",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned versioned lesson removed",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned versioned lesson removed",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned supervision removed",
+      "result": "PASS"
+    },
+    {
+      "label": "Routine content residue zero",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned empty timetable archived",
+      "result": "PASS"
+    },
+    {
+      "label": "Archived schedule deletion follows draft-only refusal",
+      "result": "PASS"
+    },
+    {
+      "label": "Retained timetable is empty and archived",
+      "result": "PASS"
+    },
+    {
+      "label": "Exact routine cleanup ownership verified",
+      "result": "PASS"
+    },
+    {
+      "label": "Routine content residue zero",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned empty timetable archived",
+      "result": "PASS"
+    },
+    {
+      "label": "Archived schedule deletion follows draft-only refusal",
+      "result": "PASS"
+    },
+    {
+      "label": "Retained timetable is empty and archived",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned academic assignment removed",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned academic assignment removed",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher chain cleanup ownership confirmed",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned teacher staff login chain removed",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted teachers detail returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted staff detail returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted users detail returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Unused owned section removed",
+      "result": "PASS"
+    }
+  ],
+  "retained": [
+    {
+      "entity": "empty-archived-timetable",
+      "section": "LA18",
+      "periods": 7,
+      "reason": "Delete API accepts drafts only; create API publishes immediately and exposes no transition back to draft."
+    },
+    {
+      "entity": "empty-archived-timetable",
+      "section": "LB18",
+      "periods": 7,
+      "reason": "Delete API accepts drafts only; create API publishes immediately and exposes no transition back to draft."
+    },
+    {
+      "entity": "academic-structure",
+      "classes": 1,
+      "sections": 2,
+      "reason": "Referenced by the two empty archived timetables; no people or lesson content retained."
+    }
+  ],
+  "result": "PARTIAL",
+  "diagnostics": [
+    {
+      "type": "responseerror",
+      "method": "PUT",
+      "path": "/api/exams/:owned-id",
+      "status": 400
+    },
+    {
+      "type": "responseerror",
+      "method": "PUT",
+      "path": "/api/assessments/:owned-id",
+      "status": 400
+    }
+  ],
+  "writes": [
+    {
+      "method": "PUT",
+      "path": "/api/exams/:owned-id"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/exams/:owned-id"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/assessments/:owned-id"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/assessments/:owned-id"
+    }
+  ],
+  "counts": {
+    "PASS": 36,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

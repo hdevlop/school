@@ -1,0 +1,164 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Owned notice made live for role visibility check",
+      "result": "PASS"
+    },
+    {
+      "label": "Untargeted owned public event created",
+      "result": "PASS"
+    },
+    {
+      "label": "teacher lists own calendar audiences successfully",
+      "result": "PASS"
+    },
+    {
+      "label": "teacher sees public event",
+      "result": "PASS"
+    },
+    {
+      "label": "teacher teacher-only event audience enforced",
+      "result": "PASS"
+    },
+    {
+      "label": "teacher teacher-only announcement audience enforced",
+      "result": "PASS"
+    },
+    {
+      "label": "teacher browser sign-in succeeds",
+      "result": "PASS"
+    },
+    {
+      "label": "teacher browser shows public event",
+      "result": "PASS"
+    },
+    {
+      "label": "teacher browser applies event and announcement audience",
+      "result": "PASS"
+    },
+    {
+      "label": "teacher browser hides event management controls",
+      "result": "PASS"
+    },
+    {
+      "label": "parent lists own calendar audiences successfully",
+      "result": "PASS"
+    },
+    {
+      "label": "parent sees public event",
+      "result": "PASS"
+    },
+    {
+      "label": "parent teacher-only event audience enforced",
+      "result": "PASS"
+    },
+    {
+      "label": "parent teacher-only announcement audience enforced",
+      "result": "PASS"
+    },
+    {
+      "label": "Parent detail read cannot reveal teacher event",
+      "result": "PASS"
+    },
+    {
+      "label": "Parent detail read cannot reveal teacher announcement",
+      "result": "PASS"
+    },
+    {
+      "label": "Parent event POST is refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Parent event PUT is refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Parent event DELETE is refused",
+      "result": "PASS"
+    },
+    {
+      "label": "parent browser sign-in succeeds",
+      "result": "PASS"
+    },
+    {
+      "label": "parent browser shows public event",
+      "result": "PASS"
+    },
+    {
+      "label": "parent browser applies event and announcement audience",
+      "result": "PASS"
+    },
+    {
+      "label": "parent browser hides event management controls",
+      "result": "PASS"
+    },
+    {
+      "label": "Refused mutations preserve owned event identity and date",
+      "result": "PASS"
+    }
+  ],
+  "responses": [
+    {
+      "role": "teacher",
+      "method": "GET",
+      "area": "events",
+      "status": 200
+    },
+    {
+      "role": "teacher",
+      "method": "GET",
+      "area": "announcements",
+      "status": 200
+    },
+    {
+      "role": "parent",
+      "method": "GET",
+      "area": "events",
+      "status": 200
+    },
+    {
+      "role": "parent",
+      "method": "GET",
+      "area": "announcements",
+      "status": 200
+    },
+    {
+      "role": "parent",
+      "method": "GET",
+      "area": "events",
+      "status": 404
+    },
+    {
+      "role": "parent",
+      "method": "GET",
+      "area": "announcements",
+      "status": 404
+    },
+    {
+      "role": "parent",
+      "method": "POST",
+      "area": "events",
+      "status": 403
+    },
+    {
+      "role": "parent",
+      "method": "PUT",
+      "area": "events",
+      "status": 403
+    },
+    {
+      "role": "parent",
+      "method": "DELETE",
+      "area": "events",
+      "status": 403
+    }
+  ],
+  "diagnostics": [],
+  "result": "PASS",
+  "counts": {
+    "PASS": 24,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

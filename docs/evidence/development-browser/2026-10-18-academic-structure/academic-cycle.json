@@ -1,0 +1,43 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Blank cycle refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser creates one owned cycle",
+      "result": "PASS"
+    },
+    {
+      "label": "Cycle survives reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Renamed cycle survives reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Duplicate cycle refused with conflict",
+      "result": "PASS"
+    }
+  ],
+  "duplicateStatus": 409,
+  "result": "PASS",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/cycles"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/cycles/:owned-id"
+    }
+  ],
+  "continuation": "Missing class selector is fixed and verified in academic-create.json.",
+  "counts": {
+    "PASS": 5,
+    "FAIL": 0
+  }
+}

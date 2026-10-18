@@ -1,0 +1,46 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Edit reloads professional salary",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher identity edit saved",
+      "result": "PASS"
+    },
+    {
+      "label": "Identity edit preserves exact section subject pairs",
+      "result": "PASS"
+    },
+    {
+      "label": "Linked staff identity updated without changing salary",
+      "result": "PASS"
+    },
+    {
+      "label": "Identity edit survives reload",
+      "result": "PASS"
+    }
+  ],
+  "beforePairs": [
+    "2026-2027-SC09/SB00",
+    "2026-2027-SC10/SB01"
+  ],
+  "editStatus": 200,
+  "afterPairs": [
+    "2026-2027-SC09/SB00",
+    "2026-2027-SC10/SB01"
+  ],
+  "result": "PASS",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "PUT",
+      "path": "/api/teachers/:owned-id"
+    }
+  ],
+  "counts": {
+    "PASS": 5,
+    "FAIL": 0
+  }
+}

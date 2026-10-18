@@ -1,0 +1,144 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Owned reference teacher created without an invitation",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned subject assigned through supported MCP",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned student supplies disposable enrollment reference",
+      "result": "PASS"
+    },
+    {
+      "label": "Exact class section subject link exists once",
+      "result": "PASS"
+    },
+    {
+      "label": "Referenced cycles deletion returns safe conflict",
+      "result": "PASS"
+    },
+    {
+      "label": "cycles conflict supplies translated explanation",
+      "result": "PASS"
+    },
+    {
+      "label": "Reference conflict preserves cycles",
+      "result": "PASS"
+    },
+    {
+      "label": "Referenced classes deletion returns safe conflict",
+      "result": "PASS"
+    },
+    {
+      "label": "classes conflict supplies translated explanation",
+      "result": "PASS"
+    },
+    {
+      "label": "Reference conflict preserves classes",
+      "result": "PASS"
+    },
+    {
+      "label": "Referenced sections deletion returns safe conflict",
+      "result": "PASS"
+    },
+    {
+      "label": "sections conflict supplies translated explanation",
+      "result": "PASS"
+    },
+    {
+      "label": "Reference conflict preserves sections",
+      "result": "PASS"
+    },
+    {
+      "label": "Referenced subjects deletion returns safe conflict",
+      "result": "PASS"
+    },
+    {
+      "label": "subjects conflict supplies translated explanation",
+      "result": "PASS"
+    },
+    {
+      "label": "Reference conflict preserves subjects",
+      "result": "PASS"
+    },
+    {
+      "label": "Duplicate classes refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Duplicate sections refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Duplicate subjects refused",
+      "result": "PASS"
+    },
+    {
+      "label": "API refuses capacity 0",
+      "result": "PASS"
+    },
+    {
+      "label": "API refuses capacity 101",
+      "result": "PASS"
+    },
+    {
+      "label": "API refuses capacity 1.5",
+      "result": "PASS"
+    },
+    {
+      "label": "Invalid API edits preserve correct capacity",
+      "result": "PASS"
+    }
+  ],
+  "responses": [
+    {
+      "operation": "delete referenced cycles",
+      "status": 409
+    },
+    {
+      "operation": "delete referenced classes",
+      "status": 409
+    },
+    {
+      "operation": "delete referenced sections",
+      "status": 409
+    },
+    {
+      "operation": "delete referenced subjects",
+      "status": 409
+    },
+    {
+      "operation": "duplicate classes",
+      "status": 409
+    },
+    {
+      "operation": "duplicate sections",
+      "status": 409
+    },
+    {
+      "operation": "duplicate subjects",
+      "status": 409
+    },
+    {
+      "operation": "invalid capacity 0",
+      "status": 400
+    },
+    {
+      "operation": "invalid capacity 101",
+      "status": 400
+    },
+    {
+      "operation": "invalid capacity 1.5",
+      "status": 400
+    }
+  ],
+  "result": "PASS",
+  "counts": {
+    "PASS": 23,
+    "FAIL": 0
+  }
+}

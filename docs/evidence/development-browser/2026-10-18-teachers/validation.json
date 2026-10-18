@@ -1,0 +1,56 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "date": "2026-10-18T10:25:27.821Z",
+  "academicYear": "2026-2027",
+  "head": "6a2284b0c087ac58f4d5ade35c4c63c82a0a4418",
+  "workingTree": true,
+  "fingerprints": {
+    "packages/server/src/modules/teachers/TeacherRepository.ts": "ad7c131eb04817de249496a9d2538151bd47c000afdef13331e484848080ecf1",
+    "packages/server/tests/acceptance/TeachersHistoryDatabase.test.ts": "dd0de8289a53fdba22265de5a4d850b4fb4d3119596b3c6d12a0e77df654ccba",
+    "apps/dashboard/src/features/Teachers/components/TeacherForm.tsx": "e7498264177c8dbe0ecc099343dc99413982ef0348b8f0f2b75bac067794bd90",
+    "apps/dashboard/src/features/Teachers/components/BulkAssignmentForm.tsx": "f6632cb2479769e38a11cbb0b3a2a1394d3d5ac0db5b986328229705030a2898",
+    "apps/dashboard/src/features/Teachers/components/TeachersTable.tsx": "cf817361187e5498f92b2f005f8eea463ef483b733308bcc65ba9ea131db8532",
+    "apps/dashboard/src/features/Teachers/components/view/TeacherDetailsTab.tsx": "32dc4659fd2d2cb6c3affb95199aa2caf686bf454f111b23294d77c76eadd40c"
+  },
+  "counts": {
+    "PASS": 58,
+    "FAIL": 2
+  },
+  "gates": [
+    {
+      "command": "bun test packages/server/tests/acceptance/TeachersHistoryDatabase.test.ts",
+      "database": "local school_history_test only",
+      "transactionRollback": true,
+      "exitCode": 0,
+      "pass": 4,
+      "fail": 0
+    },
+    {
+      "command": "bun test packages/server/tests/teacherDashboard apps/dashboard/tests/features/Teachers",
+      "exitCode": 0,
+      "pass": 39,
+      "fail": 0
+    },
+    {
+      "command": "bun run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run build",
+      "exitCode": 0,
+      "output": ".next-dev-teachers-1018",
+      "isolatedOutput": true
+    }
+  ],
+  "limits": [
+    "Dev only; production cases remain unchecked.",
+    "Shared wizard loses edits on Previous before step completion.",
+    "Shared filtered-empty defect also affects Teachers.",
+    "Console invitation acceptance is not external delivery proof.",
+    "Avatar and full accessibility matrices were not run."
+  ]
+}

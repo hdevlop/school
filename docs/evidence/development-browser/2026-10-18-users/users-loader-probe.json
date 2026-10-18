@@ -1,0 +1,20 @@
+{
+  "ready": false,
+  "traffic": [
+    {
+      "query": "?limit=100&offset=0",
+      "status": 200,
+      "kind": "array",
+      "count": 100
+    },
+    {
+      "query": "?limit=100&offset=0",
+      "status": 200,
+      "kind": "array",
+      "count": 100
+    }
+  ],
+  "messages": [],
+  "diagnostics": [],
+  "table": "Une erreur est survenue\n\nCette liste n'a pas pu être chargée. Veuillez réessayer."
+}

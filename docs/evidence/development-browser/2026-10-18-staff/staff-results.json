@@ -1,0 +1,163 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "date": "2026-10-18T09:40:23.666Z",
+  "results": [
+    {
+      "test": "owned-CIN-and-phone-unused",
+      "outcome": "PASS"
+    },
+    {
+      "test": "cancel-create-does-not-write",
+      "outcome": "PASS"
+    },
+    {
+      "test": "first-step-required-errors-are-French",
+      "outcome": "PASS"
+    },
+    {
+      "test": "non-assignment-role-has-two-steps-and-no-driver-fields",
+      "outcome": "PASS"
+    },
+    {
+      "test": "hourly-mode-requires-rate-and-hours-with-clear-French-feedback",
+      "outcome": "PASS"
+    },
+    {
+      "test": "POST-staff-save-accepted-5",
+      "outcome": "PASS"
+    },
+    {
+      "test": "created-hourly-staff-values-survive-reload",
+      "outcome": "PASS"
+    },
+    {
+      "test": "no-email-staff-has-no-linked-login",
+      "outcome": "PASS"
+    },
+    {
+      "test": "card-shows-translated-active-status-and-role",
+      "outcome": "PASS"
+    },
+    {
+      "test": "edit-reopens-hourly-values-and-locks-job-role",
+      "outcome": "PASS"
+    },
+    {
+      "test": "PUT-staff-save-accepted-10",
+      "outcome": "PASS"
+    },
+    {
+      "test": "edited-rate-hours-name-persist-with-identity-and-role-preserved",
+      "outcome": "PASS"
+    },
+    {
+      "test": "PUT-staff-save-accepted-12",
+      "outcome": "PASS"
+    },
+    {
+      "test": "status-onLeave-persists-with-pay-and-role-preserved",
+      "outcome": "PASS"
+    },
+    {
+      "test": "PUT-staff-save-accepted-14",
+      "outcome": "PASS"
+    },
+    {
+      "test": "status-inactive-persists-with-pay-and-role-preserved",
+      "outcome": "PASS"
+    },
+    {
+      "test": "PUT-staff-save-accepted-16",
+      "outcome": "PASS"
+    },
+    {
+      "test": "status-active-persists-with-pay-and-role-preserved",
+      "outcome": "PASS"
+    },
+    {
+      "test": "table-translates-status-and-does-not-show-raw-code",
+      "outcome": "PASS"
+    },
+    {
+      "test": "French-phone-details-are-read-only-without-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "test": "Arabic-phone-card-shows-localized-status-in-RTL-without-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "test": "cancel-delete-keeps-owned-staff-without-write",
+      "outcome": "PASS"
+    },
+    {
+      "test": "UI-delete-owned-staff-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "deleted-staff-is-absent-from-MCP-list",
+      "outcome": "PASS"
+    },
+    {
+      "test": "cleaner-gets-zone-assignment-control",
+      "outcome": "PASS"
+    },
+    {
+      "test": "driver-gets-license-fields",
+      "outcome": "PASS"
+    },
+    {
+      "test": "driver-gets-vehicle-assignment-without-manual-assignment-dates",
+      "outcome": "PASS"
+    },
+    {
+      "test": "no-unhandled-page-errors",
+      "outcome": "PASS"
+    }
+  ],
+  "counts": {
+    "PASS": 28,
+    "FAIL": 0
+  },
+  "failure": null,
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/staff"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/staff/:owned-id"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/staff/:owned-id"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/staff/:owned-id"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/staff/:owned-id"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/staff/:owned-id"
+    }
+  ],
+  "cleanup": [
+    {
+      "type": "zone",
+      "removed": true
+    }
+  ],
+  "staffResidue": 0,
+  "limitations": [
+    "Assignments controls checked; actual assignment mutation is a separate journey",
+    "Driver profile creation is separate",
+    "Denied-role acceptance is separate",
+    "Production checkboxes unchanged"
+  ]
+}

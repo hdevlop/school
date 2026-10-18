@@ -1,0 +1,26 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Long teacher class label stays inside its own cell",
+      "result": "PASS"
+    },
+    {
+      "label": "Full class identity remains available in title",
+      "result": "PASS"
+    }
+  ],
+  "measurement": {
+    "fitsCell": true,
+    "labelWidth": 152.328125,
+    "cellWidth": 173.328125,
+    "fullTitle": "Atelier Lecture 1018 · LA18"
+  },
+  "result": "PASS",
+  "diagnostics": [],
+  "counts": {
+    "PASS": 2,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

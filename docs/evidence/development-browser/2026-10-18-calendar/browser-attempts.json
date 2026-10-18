@@ -1,0 +1,47 @@
+{
+  "countedAssertions": 0,
+  "attempts": [
+    {
+      "name": "date-edit-attempt-1",
+      "acceptedForTotals": false,
+      "completedAssertions": 0,
+      "reason": "Harness expected HH:mm, but the saved optional time is displayed as HH:mm:ss; matched the stored format.",
+      "diagnostics": []
+    },
+    {
+      "name": "date-edit-attempt-2",
+      "acceptedForTotals": false,
+      "completedAssertions": 0,
+      "reason": "Selecting the already selected date toggles it off. Reset the owned fixture date before replaying the edit.",
+      "diagnostics": []
+    },
+    {
+      "name": "views-attempt-1",
+      "acceptedForTotals": false,
+      "completedAssertions": 3,
+      "reason": "Read checks started before the corrected fixture clear/reopen journey had completed. Reran sequentially after cleanup of the saved values.",
+      "diagnostics": []
+    },
+    {
+      "name": "views-attempt-2",
+      "acceptedForTotals": false,
+      "completedAssertions": 6,
+      "reason": "Light theme can have no class attribute on html; the harness now handles null.",
+      "diagnostics": []
+    },
+    {
+      "name": "views-attempt-3",
+      "acceptedForTotals": false,
+      "completedAssertions": 11,
+      "reason": "Publishing a notice sets its actual publication date to today. Phone checks now select that day instead of its original scheduled date.",
+      "diagnostics": []
+    },
+    {
+      "name": "boundary-attempt-1",
+      "acceptedForTotals": false,
+      "completedAssertions": 9,
+      "reason": "The day-number selector also matched the event-count badge 1. Replaced it with the full accessible date; original apparent passes are invalid and excluded.",
+      "diagnostics": []
+    }
+  ]
+}

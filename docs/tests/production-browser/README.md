@@ -15,6 +15,10 @@ remaining PARTIAL, BLOCKED, NOT RUN or NOT EXPOSED.
 
 ## Start here
 
+For new testing and fixes, use the [development browser workflow](../development-browser.md)
+on the existing local demo first. Batch validated fixes before one deployment;
+the production procedure below is the subsequent live recheck.
+
 For the ordered live run requested on 2026-10-15, use the
 [real browser execution plan](execution-plan.md): authentication and controlled
 [security checks](security.md), then people CRUD, remaining modules and finance.

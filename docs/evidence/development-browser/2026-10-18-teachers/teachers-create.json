@@ -1,0 +1,54 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Empty personal step refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Negative salary refused in professional step",
+      "result": "PASS"
+    },
+    {
+      "label": "Personal values survive backward navigation",
+      "result": "PASS"
+    },
+    {
+      "label": "Unsubmitted professional draft survives Previous navigation",
+      "result": "FAIL"
+    },
+    {
+      "label": "Incomplete assignment refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser creates exactly one teacher",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher persists after reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher links exact staff identity and salary",
+      "result": "PASS"
+    },
+    {
+      "label": "Initial class section subject stored once",
+      "result": "PASS"
+    }
+  ],
+  "createStatus": 200,
+  "result": "PARTIAL",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/teachers"
+    }
+  ],
+  "counts": {
+    "PASS": 8,
+    "FAIL": 1
+  }
+}

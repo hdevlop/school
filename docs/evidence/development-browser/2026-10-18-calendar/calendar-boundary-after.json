@@ -1,0 +1,47 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Overnight event appears on October 31",
+      "result": "PASS"
+    },
+    {
+      "label": "Overnight event remains visible on its November 1 end date",
+      "result": "PASS"
+    },
+    {
+      "label": "Next month shows the event on November 1",
+      "result": "PASS"
+    },
+    {
+      "label": "Today returns to October from boundary navigation",
+      "result": "PASS"
+    },
+    {
+      "label": "Refuses reversed date-only end",
+      "result": "PASS"
+    },
+    {
+      "label": "Refuses reversed date-only start",
+      "result": "PASS"
+    },
+    {
+      "label": "Refuses late date-only deadline",
+      "result": "PASS"
+    },
+    {
+      "label": "Refuses outside selected year",
+      "result": "PASS"
+    },
+    {
+      "label": "Refused date-only edits preserve saved dates and cleared times",
+      "result": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "counts": {
+    "PASS": 9,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

@@ -1,0 +1,55 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Visual fixture ownership verified",
+      "result": "PASS"
+    },
+    {
+      "label": "Visual lesson belongs to exact owned section",
+      "result": "PASS"
+    },
+    {
+      "label": "Visual lesson removed through versioned API",
+      "result": "PASS"
+    },
+    {
+      "label": "Empty visual timetable archived",
+      "result": "PASS"
+    },
+    {
+      "label": "Visual teacher assignment removed",
+      "result": "PASS"
+    },
+    {
+      "label": "Visual teacher chain removed",
+      "result": "PASS"
+    },
+    {
+      "label": "Visual teachers returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Visual staff returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Visual users returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Retained visual routine has no content",
+      "result": "PASS"
+    }
+  ],
+  "result": "PARTIAL",
+  "retained": {
+    "emptyArchivedSchedules": 1,
+    "periods": 7
+  },
+  "counts": {
+    "PASS": 10,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

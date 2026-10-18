@@ -1,0 +1,111 @@
+{
+  "runDate": "2026-10-18",
+  "clientTimeZone": "Africa/Casablanca",
+  "origin": "http://127.0.0.1:3102",
+  "source": {
+    "baseCommit": "db257c4b36b0e54e44f25224fa9146cc0b7d3850",
+    "workingTree": true,
+    "fingerprintCaptured": "After the accepted run; not an immutable committed-candidate gate",
+    "files": [
+      {
+        "path": "apps/dashboard/src/features/Parents/components/ParentCard.tsx",
+        "sha256": "f0e546728bb6f91309afacc40beb05b2aa41f95cb8b0a3694c37c2c37ecf3e53"
+      },
+      {
+        "path": "apps/dashboard/src/features/Parents/components/SimpleParentForm.tsx",
+        "sha256": "900653608fb4f1d0bd9a55bcfaf76d2f17dc71191b7bc58c409abcf05f52e4ba"
+      },
+      {
+        "path": "apps/dashboard/src/features/Parents/components/ParentsTable.tsx",
+        "sha256": "57b27a749ab8f1654555906909179c9ac754b3a9eb58f1b184dfc599cdfec888"
+      },
+      {
+        "path": "apps/dashboard/src/features/Parents/config/parentSchemas.ts",
+        "sha256": "88ff6f9d3a910f534dc1bac5422160ef1f4ed718cfc1b3a4ad95d2abb2bbb941"
+      },
+      {
+        "path": "packages/server/src/modules/parents/ParentService.ts",
+        "sha256": "652de236d6ab2964f88ddd8815d9820442060c3d029700e2bbcc25d946b96529"
+      }
+    ],
+    "change": "ParentCard accessible name uses existing common.view translation"
+  },
+  "target": "Existing development demo / local school database, expressly authorized by the owner",
+  "browser": {
+    "channel": "Chrome",
+    "version": "155.0.8059.80",
+    "headless": true,
+    "driver": "Standalone Node Playwright; app remains Bun/Next dev",
+    "viewports": [
+      "1440x900",
+      "390x844"
+    ],
+    "languages": [
+      "fr",
+      "ar"
+    ]
+  },
+  "commands": [
+    {
+      "command": "node .cache/dev-people/parents-lifecycle.mjs",
+      "exitCode": 0,
+      "assertions": {
+        "PASS": 20,
+        "FAIL": 0
+      }
+    },
+    {
+      "command": "bun run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run --cwd apps/dashboard typecheck",
+      "exitCode": 0
+    }
+  ],
+  "devCases": [
+    {
+      "id": "parents-R01",
+      "outcome": "PARTIAL",
+      "remaining": "Complete linked-child/details/filter coverage"
+    },
+    {
+      "id": "parents-M01",
+      "outcome": "PARTIAL",
+      "remaining": "Attach only an owned child through the supported browser flow"
+    },
+    {
+      "id": "parents-M02",
+      "outcome": "PARTIAL",
+      "remaining": "Phone/email duplicate and nested parent reuse cases"
+    },
+    {
+      "id": "parents-M03",
+      "outcome": "PASS",
+      "reason": "Cancel deletion, confirm once, reload and supported read verify absence"
+    }
+  ],
+  "capturedDiagnostics": "Unhandled page errors and HTTP error responses; this run does not claim a full console/request-failure/CSP matrix",
+  "expectedNegative": {
+    "method": "POST",
+    "path": "/api/parents",
+    "status": 409,
+    "reason": "Own duplicate CIN probe"
+  },
+  "cleanup": {
+    "finalParentFixturesRemaining": 0,
+    "harnessAttempts": "Both removed their exact created parent",
+    "existingRecordsChanged": 0,
+    "externalMail": 0,
+    "parentAccountsCreated": 0,
+    "authenticationSessions": "Normal admin sign-in/session refresh occurred"
+  },
+  "production": {
+    "deploymentTriggered": false,
+    "build": "DEFERRED until the completed batch gate",
+    "fullRootGate": "NOT RUN for this dev batch",
+    "productionRetest": "NOT RUN",
+    "productionCheckboxesChanged": false
+  },
+  "parallelWork": "Finance edits preserved; dev server was not restarted"
+}

@@ -1,0 +1,29 @@
+{
+  "countedAssertions": 0,
+  "attempts": [
+    {
+      "name": "forms-attempt-1",
+      "acceptedForTotals": false,
+      "result": "FAIL",
+      "completedAssertions": 1,
+      "reason": "Harness selected the subject using its ID instead of its displayed MATH code; corrected before the accepted run.",
+      "diagnostics": []
+    },
+    {
+      "name": "read-attempt-1",
+      "acceptedForTotals": false,
+      "result": "ERROR",
+      "completedAssertions": 14,
+      "reason": "Phone title search is inside the filter popover; corrected harness opens it first.",
+      "diagnostics": []
+    },
+    {
+      "name": "routine-views-attempt-1",
+      "acceptedForTotals": false,
+      "result": "ERROR",
+      "completedAssertions": 0,
+      "reason": "Harness expected an explicit light class; light mode is represented by the absence of dark.",
+      "diagnostics": []
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Class required name and level validated",
+      "result": "PASS"
+    },
+    {
+      "label": "Class cycle selector exposed after fix",
+      "result": "PASS"
+    },
+    {
+      "label": "Class stores chosen cycle and selected year",
+      "result": "PASS"
+    },
+    {
+      "label": "Created class survives reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Edit reopens chosen cycle",
+      "result": "PASS"
+    },
+    {
+      "label": "Class edit saves",
+      "result": "PASS"
+    },
+    {
+      "label": "Renamed class keeps year and cycle",
+      "result": "PASS"
+    },
+    {
+      "label": "Subject required code validated",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned subject survives reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Subject edit saves",
+      "result": "PASS"
+    },
+    {
+      "label": "Subject edit survives reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Section required identity validated",
+      "result": "PASS"
+    },
+    {
+      "label": "Section zero capacity refused by form",
+      "result": "PASS"
+    },
+    {
+      "label": "Section capacity room and class survive reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Saved section appears once",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/classes"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/classes/:owned-id"
+    },
+    {
+      "method": "POST",
+      "path": "/api/subjects"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/subjects/:owned-id"
+    },
+    {
+      "method": "POST",
+      "path": "/api/sections"
+    }
+  ],
+  "counts": {
+    "PASS": 15,
+    "FAIL": 0
+  }
+}

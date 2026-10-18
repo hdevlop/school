@@ -1,0 +1,22 @@
+{
+  "attempts": [
+    {
+      "file": "parent-card-observer-before-ready.json",
+      "classification": "TEST",
+      "accepted": false,
+      "reason": "No ready-state assertion; corrected to require visible parent cards before counting English labels"
+    },
+    {
+      "file": "parents-harness-attempt1.json",
+      "classification": "TEST",
+      "reason": "Responsive hidden/visible inputs share a placeholder; select the visible search input. Fixture cleanup passed."
+    },
+    {
+      "file": "parents-harness-attempt2.json",
+      "classification": "TEST",
+      "reason": "Delete dialog embeds the parent name in a confirmation sentence; assert contained text. Fixture cleanup passed."
+    }
+  ],
+  "accepted": "parents-results.json",
+  "intermediateAssertionsIncludedInFinalCount": false
+}

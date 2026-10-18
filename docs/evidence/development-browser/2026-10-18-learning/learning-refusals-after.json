@@ -1,0 +1,116 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "exams rejects passing above total",
+      "result": "PASS"
+    },
+    {
+      "label": "exams rejects zero duration",
+      "result": "PASS"
+    },
+    {
+      "label": "exams rejects unassigned subject",
+      "result": "PASS"
+    },
+    {
+      "label": "exams rejects unassigned section",
+      "result": "PASS"
+    },
+    {
+      "label": "exams refused edits preserve score and targets",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments rejects passing above total",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments rejects zero duration",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments rejects unassigned subject",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments rejects unassigned section",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments refused edits preserve score and targets",
+      "result": "PASS"
+    },
+    {
+      "label": "Exam valid time window stored",
+      "result": "PASS"
+    },
+    {
+      "label": "Exam rejects reversed full time window",
+      "result": "PASS"
+    },
+    {
+      "label": "Exam rejects partial update that reverses stored time window",
+      "result": "PASS"
+    }
+  ],
+  "responses": [
+    {
+      "area": "exams",
+      "variant": "passing above total",
+      "status": 400
+    },
+    {
+      "area": "exams",
+      "variant": "zero duration",
+      "status": 400
+    },
+    {
+      "area": "exams",
+      "variant": "unassigned subject",
+      "status": 404
+    },
+    {
+      "area": "exams",
+      "variant": "unassigned section",
+      "status": 404
+    },
+    {
+      "area": "assessments",
+      "variant": "passing above total",
+      "status": 400
+    },
+    {
+      "area": "assessments",
+      "variant": "zero duration",
+      "status": 400
+    },
+    {
+      "area": "assessments",
+      "variant": "unassigned subject",
+      "status": 404
+    },
+    {
+      "area": "assessments",
+      "variant": "unassigned section",
+      "status": 404
+    },
+    {
+      "area": "exams",
+      "variant": "both reversed times",
+      "status": 400
+    },
+    {
+      "area": "exams",
+      "variant": "partial reversed time",
+      "status": 400
+    }
+  ],
+  "partialInvalidWindowPersisted": false,
+  "result": "PASS",
+  "counts": {
+    "PASS": 13,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

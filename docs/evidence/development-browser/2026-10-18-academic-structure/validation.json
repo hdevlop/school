@@ -1,0 +1,64 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "date": "2026-10-18T10:51:43.048Z",
+  "academicYear": "2026-2027",
+  "head": "6a2284b0c087ac58f4d5ade35c4c63c82a0a4418",
+  "workingTree": true,
+  "fingerprints": {
+    "apps/dashboard/src/features/Classes/components/ClassForm.tsx": "05c741c125800461fa3cc90a1d7a4a099ca9b04838df4a9cc01691dea72e3b13",
+    "apps/dashboard/src/features/Classes/config/classSchemas.ts": "49baf69679d258e0b8aa097fd503c05c523b03220d1ced9d8a9136f587c503d3",
+    "apps/dashboard/src/features/Sections/hooks/useSectionsTableColumns.tsx": "e9f4aa74592a4317390c13fc66f00ed9e9cf858706a7235668d2c3f00fbe8705",
+    "apps/dashboard/tests/features/Classes/config/classSchemas.test.ts": "f7425f93c5a76f9d2e6b6dbee94de96db98646a7802de8bf8edfb7480b8e8962",
+    "packages/contracts/src/locales/ar.json": "303fd30ae0fe8831746b23cd5621a1e2b4162b386b4a5ccbcfa656a343f36271",
+    "packages/contracts/src/locales/en.json": "266136bf7be10d26bf1f84165648376c3958fbf6a49325ae5e96f16b66e22fd2",
+    "packages/contracts/src/locales/es.json": "34edf1d9854dac3b29ec34df25cd63b580c2e01c3a4c8698859ca5f7f2f38a7d",
+    "packages/contracts/src/locales/fr.json": "f852d5332c04f1d53c83aad17c7802c99753e008919835c3e263dd635030d067",
+    "packages/server/src/modules/classes/ClassService.ts": "891e12a30f44ba4427ebc27add79cdcda42c3a63765dfdfcefcf94a2ff922dad",
+    "packages/server/src/modules/cycles/CycleService.ts": "74573561f511f50764f231cc965af58d679360c03e0c599485c9705454f15011",
+    "packages/server/src/modules/sections/SectionService.ts": "bda51bc1b4857cb6134d92aec543b6f93f0db6fcdf97eeb6d45c09b2ea042599",
+    "packages/server/src/modules/subjects/SubjectService.ts": "246460a79bc6da6412efadb7348089ded2f3c43c701b33154556332540a414ed"
+  },
+  "counts": {
+    "PASS": 165,
+    "FAIL": 5
+  },
+  "gates": [
+    {
+      "command": "bun test apps/dashboard/tests/features/Sections/config/sectionSchemas.test.ts apps/dashboard/tests/features/Classes/config/classSchemas.test.ts",
+      "exitCode": 0,
+      "pass": 8,
+      "fail": 0
+    },
+    {
+      "command": "bun run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run i18n:check",
+      "exitCode": 0,
+      "missingKeys": 0
+    },
+    {
+      "command": "bun run test:config",
+      "exitCode": 0,
+      "pass": 531,
+      "fail": 0
+    },
+    {
+      "command": "bun run build",
+      "exitCode": 0,
+      "output": ".next-dev-academic-1018",
+      "isolatedOutput": true
+    }
+  ],
+  "limits": [
+    "Local development evidence; production cases remain unchanged.",
+    "Shared no-match feedback fails on all four pages; the Section class filter also lacks an accessible name.",
+    "Phone viewport and RTL checks do not constitute full touch or accessibility acceptance.",
+    "No external email delivery or deployment tested."
+  ]
+}

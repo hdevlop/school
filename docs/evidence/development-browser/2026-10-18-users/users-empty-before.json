@@ -1,0 +1,8 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "rows": 0,
+  "expectedTitle": "Aucun résultat",
+  "expectedTitleCount": 0,
+  "emptyStateTexts": [],
+  "diagnostics": []
+}

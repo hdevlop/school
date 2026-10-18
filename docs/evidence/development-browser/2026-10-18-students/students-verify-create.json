@@ -1,0 +1,32 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Created student exists exactly once",
+      "result": "PASS"
+    },
+    {
+      "label": "Saved student readable after new browser session and reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Exactly one nested parent with owned CIN",
+      "result": "PASS"
+    },
+    {
+      "label": "Exactly one owned registration fee with amount 50",
+      "result": "PASS"
+    },
+    {
+      "label": "Initial dated enrollment stored once",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS",
+  "diagnostics": [],
+  "writes": [],
+  "counts": {
+    "PASS": 5,
+    "FAIL": 0
+  }
+}

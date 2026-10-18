@@ -1,0 +1,94 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "exams required fields refuse empty form",
+      "result": "PASS"
+    },
+    {
+      "label": "exams invalid duration refused by form",
+      "result": "PASS"
+    },
+    {
+      "label": "exams creates exactly one record for two sections",
+      "result": "PASS"
+    },
+    {
+      "label": "exams survives reload",
+      "result": "PASS"
+    },
+    {
+      "label": "exams edit restores both sections",
+      "result": "PASS"
+    },
+    {
+      "label": "exams edit uses exact record ID",
+      "result": "PASS"
+    },
+    {
+      "label": "exams saved scoring and duration persist",
+      "result": "PASS"
+    },
+    {
+      "label": "exams saves each section exactly once",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments required fields refuse empty form",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments invalid duration refused by form",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments creates exactly one record for two sections",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments survives reload",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments edit restores both sections",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments edit uses exact record ID",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments saved scoring and duration persist",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments saves each section exactly once",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/exams"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/exams/:owned-id"
+    },
+    {
+      "method": "POST",
+      "path": "/api/assessments"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/assessments/:owned-id"
+    }
+  ],
+  "counts": {
+    "PASS": 16,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

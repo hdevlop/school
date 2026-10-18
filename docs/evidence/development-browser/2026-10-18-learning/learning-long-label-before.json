@@ -1,0 +1,22 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Long teacher class label stays inside its own cell",
+      "result": "FAIL"
+    }
+  ],
+  "measurement": {
+    "fitsCell": false,
+    "labelWidth": 200.265625,
+    "cellWidth": 173.328125,
+    "fullTitle": null
+  },
+  "result": "FAIL",
+  "diagnostics": [],
+  "counts": {
+    "PASS": 0,
+    "FAIL": 1
+  },
+  "acceptedForTotals": false
+}

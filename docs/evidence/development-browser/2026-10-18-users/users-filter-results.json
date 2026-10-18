@@ -1,0 +1,80 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "date": "2026-10-17T23:58:45.633Z",
+  "results": [
+    {
+      "test": "UI-count-covers-every-API-page",
+      "outcome": "PASS"
+    },
+    {
+      "test": "email-search-finds-existing-account-beyond-first-100",
+      "outcome": "PASS"
+    },
+    {
+      "test": "deep-page-account-details-match-role-and-identity",
+      "outcome": "PASS"
+    },
+    {
+      "test": "desktop-table-shows-same-filtered-account",
+      "outcome": "PASS"
+    },
+    {
+      "test": "role-filter-matches-visible-table-rows",
+      "outcome": "PASS"
+    },
+    {
+      "test": "card-mode-preserves-role-filter",
+      "outcome": "PASS"
+    },
+    {
+      "test": "no-business-writes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "no-unhandled-page-errors",
+      "outcome": "PASS"
+    }
+  ],
+  "counts": {
+    "PASS": 8,
+    "FAIL": 0
+  },
+  "failure": null,
+  "apiPages": [
+    {
+      "offset": 0,
+      "count": 100
+    },
+    {
+      "offset": 100,
+      "count": 100
+    },
+    {
+      "offset": 200,
+      "count": 43
+    }
+  ],
+  "expectedTotal": 243,
+  "uiPages": [
+    {
+      "status": 200,
+      "limit": "100",
+      "offset": "0",
+      "count": 100
+    },
+    {
+      "status": 200,
+      "limit": "100",
+      "offset": "100",
+      "count": 100
+    },
+    {
+      "status": 200,
+      "limit": "100",
+      "offset": "200",
+      "count": 43
+    }
+  ],
+  "diagnostics": [],
+  "writes": []
+}

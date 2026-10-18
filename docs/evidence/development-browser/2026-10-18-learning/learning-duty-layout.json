@@ -1,0 +1,70 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Browser saves lunch supervision",
+      "result": "PASS"
+    },
+    {
+      "label": "Supervision links exact owned staff once",
+      "result": "PASS"
+    },
+    {
+      "label": "Break duty reopens and edits",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser layout rejects end before start",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser saves outer period layout",
+      "result": "PASS"
+    },
+    {
+      "label": "Layout remap preserves every lesson ID and content group",
+      "result": "PASS"
+    },
+    {
+      "label": "Layout remap preserves supervision identity and notes",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned periods were replaced with mapped periods",
+      "result": "PASS"
+    },
+    {
+      "label": "Removing occupied supervision slot refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Removing occupied lesson slots refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Refused layouts retain five entries and duty",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/class-routines/:owned-id/duties"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/class-routines/:owned-id/duties/:owned-id"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/class-routines/:owned-id/layout"
+    }
+  ],
+  "counts": {
+    "PASS": 11,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

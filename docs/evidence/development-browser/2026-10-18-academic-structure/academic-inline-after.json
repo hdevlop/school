@@ -1,0 +1,50 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Inline zero capacity is blocked locally",
+      "result": "PASS"
+    },
+    {
+      "label": "Inline capacity validation uses French message",
+      "result": "PASS"
+    },
+    {
+      "label": "Inline capacity above 100 blocked before a write",
+      "result": "PASS"
+    },
+    {
+      "label": "Refused capacity retains stored value",
+      "result": "PASS"
+    },
+    {
+      "label": "Valid inline save returns 200",
+      "result": "PASS"
+    },
+    {
+      "label": "Valid inline edit survives reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Enter followed by blur writes once",
+      "result": "PASS"
+    }
+  ],
+  "capacityMax": "100",
+  "zeroError": "Le nombre maximal d'élèves doit être au moins de 1",
+  "result": "PASS",
+  "updates": [
+    200
+  ],
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "PUT",
+      "path": "/api/sections/:owned-id"
+    }
+  ],
+  "counts": {
+    "PASS": 7,
+    "FAIL": 0
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "First editor saves current version",
+      "result": "PASS"
+    },
+    {
+      "label": "Stale content save refused with actionable browser feedback",
+      "result": "PASS"
+    },
+    {
+      "label": "Stale deletion refuses original version",
+      "result": "PASS"
+    },
+    {
+      "label": "Both refused actions preserve winning content and all five lessons",
+      "result": "PASS"
+    }
+  ],
+  "responses": [
+    {
+      "operation": "stale content replacement",
+      "status": 409
+    },
+    {
+      "operation": "stale lesson deletion",
+      "status": 409
+    }
+  ],
+  "result": "PASS",
+  "diagnostics": [],
+  "otherPageErrors": [],
+  "writes": [
+    {
+      "method": "PUT",
+      "path": "/api/class-routines/:owned-id/entries/:owned-id"
+    }
+  ],
+  "counts": {
+    "PASS": 4,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

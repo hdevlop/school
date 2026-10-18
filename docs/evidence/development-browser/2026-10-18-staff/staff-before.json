@@ -1,0 +1,13 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "date": "2026-10-18T00:39:42.331Z",
+  "card": {
+    "translatedActiveStatusCount": 0
+  },
+  "table": {
+    "rawActiveStatus": 1,
+    "translatedActiveStatus": 0
+  },
+  "writes": [],
+  "diagnostics": []
+}

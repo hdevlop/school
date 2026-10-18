@@ -1,0 +1,46 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Browser saves bulk section assignments",
+      "result": "PASS"
+    },
+    {
+      "label": "Every intended assignment stored exactly once",
+      "result": "PASS"
+    },
+    {
+      "label": "Detail view agrees with all four assignment rows",
+      "result": "PASS"
+    },
+    {
+      "label": "Assignment details survive reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher deletion refuses live assignment references",
+      "result": "PASS"
+    },
+    {
+      "label": "Reference refusal gives translated guidance",
+      "result": "PASS"
+    },
+    {
+      "label": "Reference conflict preserves teacher and assignment count",
+      "result": "PASS"
+    }
+  ],
+  "referenceConflictStatus": 409,
+  "result": "PASS",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "PUT",
+      "path": "/api/teachers/:owned-id"
+    }
+  ],
+  "counts": {
+    "PASS": 7,
+    "FAIL": 0
+  }
+}

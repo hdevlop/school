@@ -1,0 +1,194 @@
+{
+  "database": "isolated local school_history_test",
+  "tables": {
+    "fee_types": {
+      "before": {
+        "count": 1,
+        "sha256": "1f89036e9509639fd12fb4a041b055999e8f69f3c635d8b4327ef5953c2323b8"
+      },
+      "after": {
+        "count": 1,
+        "sha256": "1f89036e9509639fd12fb4a041b055999e8f69f3c635d8b4327ef5953c2323b8"
+      },
+      "unchanged": true
+    },
+    "fees": {
+      "before": {
+        "count": 2,
+        "sha256": "a3d26ba536c5d11412bbca2e0bdb1b740b22b43553b6c02fa5fa970f2511a89e"
+      },
+      "after": {
+        "count": 2,
+        "sha256": "a3d26ba536c5d11412bbca2e0bdb1b740b22b43553b6c02fa5fa970f2511a89e"
+      },
+      "unchanged": true
+    },
+    "fee_installments": {
+      "before": {
+        "count": 1,
+        "sha256": "e5c02fc5187a219d5993fd7578acd6d8e3e339a67a626b4dd8b2be895c0f664f"
+      },
+      "after": {
+        "count": 1,
+        "sha256": "e5c02fc5187a219d5993fd7578acd6d8e3e339a67a626b4dd8b2be895c0f664f"
+      },
+      "unchanged": true
+    },
+    "payments": {
+      "before": {
+        "count": 1,
+        "sha256": "28548c4b6bd15127a5d90b3e800181aa7ae2d3ed85c19df2e73ecd1d633f088f"
+      },
+      "after": {
+        "count": 1,
+        "sha256": "28548c4b6bd15127a5d90b3e800181aa7ae2d3ed85c19df2e73ecd1d633f088f"
+      },
+      "unchanged": true
+    },
+    "payment_allocations": {
+      "before": {
+        "count": 1,
+        "sha256": "8f60abc47693055d0d3479e5701d42de4b465661012b138980c269ea7d51fec9"
+      },
+      "after": {
+        "count": 1,
+        "sha256": "8f60abc47693055d0d3479e5701d42de4b465661012b138980c269ea7d51fec9"
+      },
+      "unchanged": true
+    },
+    "student_credit_lots": {
+      "before": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "after": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "unchanged": true
+    },
+    "student_credit_applications": {
+      "before": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "after": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "unchanged": true
+    },
+    "expenses": {
+      "before": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "after": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "unchanged": true
+    },
+    "payslips": {
+      "before": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "after": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "unchanged": true
+    },
+    "rollover_runs": {
+      "before": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "after": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "unchanged": true
+    },
+    "rollover_run_items": {
+      "before": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "after": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "unchanged": true
+    },
+    "financial_audit_logs": {
+      "before": {
+        "count": 43,
+        "sha256": "0a848c942d8ec5524f4468abbeb2d413e2f71b963ce872768d9b9e18c2a12733"
+      },
+      "after": {
+        "count": 43,
+        "sha256": "0a848c942d8ec5524f4468abbeb2d413e2f71b963ce872768d9b9e18c2a12733"
+      },
+      "unchanged": true
+    },
+    "financial_notification_deliveries": {
+      "before": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "after": {
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "unchanged": true
+    },
+    "settings": {
+      "before": {
+        "count": 1,
+        "sha256": "8b765abdd4fbc58958651fc4621a81f623393aae896b079b567bd52f94fe473e"
+      },
+      "after": {
+        "count": 1,
+        "sha256": "8b765abdd4fbc58958651fc4621a81f623393aae896b079b567bd52f94fe473e"
+      },
+      "unchanged": true
+    },
+    "students": {
+      "before": {
+        "count": 10,
+        "sha256": "633c215a2d316a3494ed0ff1562d1c67c7a7fc0799809200aee11c46c1c88875"
+      },
+      "after": {
+        "count": 10,
+        "sha256": "633c215a2d316a3494ed0ff1562d1c67c7a7fc0799809200aee11c46c1c88875"
+      },
+      "unchanged": true
+    },
+    "staff": {
+      "before": {
+        "count": 1,
+        "sha256": "277993e083ec8b57c030b6965a8c4c772c69ee70f00fb0d9f6c7fd5762e6fb40"
+      },
+      "after": {
+        "count": 1,
+        "sha256": "277993e083ec8b57c030b6965a8c4c772c69ee70f00fb0d9f6c7fd5762e6fb40"
+      },
+      "unchanged": true
+    }
+  },
+  "initialAttempt": {
+    "changedTables": [
+      "financial_audit_logs"
+    ],
+    "extraRows": 1,
+    "cause": "Allocation test deleted its fixture allocation without removing its audit row"
+  },
+  "repair": {
+    "exactRunOwnedAuditRowsRemoved": 1,
+    "olderRowsPreserved": true,
+    "cleanupRetestPassed": true
+  },
+  "finalAllTablesUnchanged": true
+}

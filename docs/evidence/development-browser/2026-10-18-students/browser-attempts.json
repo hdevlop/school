@@ -1,0 +1,62 @@
+{
+  "attempts": [
+    {
+      "attempt": "students-create-attempt-1.json",
+      "result": "HARNESS_FAILURE",
+      "writes": [],
+      "reason": "expect(locator).toBeVisible() failed\n\nLocator: getByRole('dialog').getByRole('button', { name: 'Ajouter un parent', exact: true })\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 30000ms\n  - waiting for getByRole('dialog').getByRole('button', { name: 'Ajouter un parent', exact: true })\n",
+      "countedAssertions": 0
+    },
+    {
+      "attempt": "students-create-attempt-2.json",
+      "result": "HARNESS_FAILURE",
+      "writes": [],
+      "reason": "expect(locator).toHaveCount(expected) failed\n\nLocator:  getByRole('dialog')\nExpected: 2\nReceived: 1\nTimeout:  30000ms\n\nCall log:\n  - Expect \"to.have.count\" with timeout 30000ms\n  - waiting for getByRole('dialog')\n    33 × locator resolved to 1 element\n       - unexpected value \"1\"\n",
+      "countedAssertions": 0
+    },
+    {
+      "attempt": "students-create-attempt-3.json",
+      "result": "HARNESS_FAILURE",
+      "writes": [],
+      "reason": "expect(locator).toHaveValue(expected) failed\n\nLocator:  getByRole('dialog').locator('[name=\"fees.0.baseAmount\"]')\nExpected: \"1000\"\nReceived: \"1000.00\"\nTimeout:  30000ms\n\nCall log:\n  - Expect \"to.have.value\" with timeout 30000ms\n  - waiting for getByRole('dialog').locator('[name=\"fees.0.baseAmount\"]')\n    33 × locator resolved to <input type=\"number\" value=\"1000.00\" placeholder=\"0.00\" aria-invalid=\"false\" id=\"_r_73_-form-item\" data-slot=\"form-control\" name=\"fees.0.baseAmount\" aria-describedby=\"_r_73_-form-item-description\" class=\"file:text-foreground selection:bg-primary selection:text-primary-foreground border-input flex h-9 w-full min-w-0 rounded-md text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disab…/>\n       - unexpected value \"1000.00\"\n",
+      "countedAssertions": 0
+    },
+    {
+      "attempt": "students-create-attempt-4.json",
+      "result": "HARNESS_FAILURE",
+      "writes": [
+        {
+          "method": "POST",
+          "path": "/api/students"
+        }
+      ],
+      "reason": "Nested fee mismatch",
+      "countedAssertions": 0
+    },
+    {
+      "attempt": "students-read-attempt-1.json",
+      "result": "HARNESS_FAILURE",
+      "writes": [],
+      "reason": {
+        "view": "fr-desktop",
+        "message": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Filtrer par classe', exact: true }).filter({ visible: true })\u001b[22m\n"
+      },
+      "countedAssertions": 0
+    },
+    {
+      "attempt": "students-verify-create-attempt-1.json",
+      "result": "HARNESS_FAILURE",
+      "writes": [],
+      "reason": "Nested fee mismatch",
+      "countedAssertions": 0
+    }
+  ],
+  "notes": [
+    "DynamicArray empty add button includes its description in the accessible name.",
+    "Nested dialogs hide earlier dialogs from the accessibility tree.",
+    "Numeric inputs format currency as 1000.00.",
+    "Fee response is an object with fees, not an array.",
+    "The class-filter accessible-name failure is a separate product defect.",
+    "Refusal language uses the existing French label Obligatoire. No extra records were created by these harness failures except the one completed nested creation verified in the continuation."
+  ]
+}

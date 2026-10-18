@@ -1,0 +1,9 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "status": 409,
+  "message": "users.errors.emailExists",
+  "feedback": [
+    "users.errors.emailExists"
+  ],
+  "dialogRemainsOpen": true
+}

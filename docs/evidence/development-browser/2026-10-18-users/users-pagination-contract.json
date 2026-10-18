@@ -1,0 +1,16 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "observedAt": "2026-10-18T00:00:54.067Z",
+  "defaultRequest": {
+    "path": "/api/users",
+    "status": 200,
+    "count": 50
+  },
+  "laterRequest": {
+    "path": "/api/users?limit=100&offset=50",
+    "status": 200,
+    "count": 100
+  },
+  "laterPageContainsAccountsOutsideDefault": true,
+  "note": "Live API contract unchanged by the frontend fix; the previous client called only /users without pagination."
+}

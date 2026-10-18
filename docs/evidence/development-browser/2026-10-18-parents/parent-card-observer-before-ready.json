@@ -1,0 +1,20 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "mode": "development",
+  "checkedUtc": "2026-10-17T23:14:28.259Z",
+  "result": {
+    "case": "French-parent-card-accessible-name-is-localized",
+    "outcome": "PASS"
+  },
+  "englishCardNames": 0,
+  "pageErrors": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/mcp"
+    }
+  ],
+  "accepted": false,
+  "classification": "TEST",
+  "note": "Probe ran before the parent records rendered; its zero English labels were a vacuous result. Replaced by a probe requiring visible cards. The tools/list MCP request is discovery, not a business write."
+}

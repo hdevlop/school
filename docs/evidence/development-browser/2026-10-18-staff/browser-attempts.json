@@ -1,0 +1,373 @@
+{
+  "intermediateAssertionsIncludedInFinalCount": false,
+  "notes": [
+    "Phone controls have accessible names but no name attribute. The correct target is the labeled textbox.",
+    "Staff select triggers use their placeholder as the accessible name.",
+    "The masked phone input ignored bulk fill; a focused probe confirmed real keystrokes retain all digits.",
+    "Stored numeric money 75.00 equals 75; the reopened-value assertion compares numbers.",
+    "One reverse view-mode menu attempt timed out. The accepted run waits for the first menu to close before opening it again; the exact cause of the earlier timeout was not independently proven.",
+    "The dev server stopped between attempts. Port 3102 was confirmed unbound, then the normal bun run dev server was restarted on that port. That refused connection happened before fixture setup."
+  ],
+  "attempts": [
+    {
+      "file": "staff-harness-attempt1.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-18T00:41:19.412Z",
+        "results": [
+          {
+            "test": "owned-CIN-and-phone-unused",
+            "outcome": "PASS"
+          },
+          {
+            "test": "cancel-create-does-not-write",
+            "outcome": "PASS"
+          },
+          {
+            "test": "first-step-required-errors-are-French",
+            "outcome": "PASS"
+          }
+        ],
+        "counts": {
+          "PASS": 3,
+          "FAIL": 0
+        },
+        "failure": {
+          "message": "locator.fill: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('dialog').locator('input[name=\"phone\"]')\u001b[22m\n",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "diagnostics": [
+          {
+            "type": "responseerror",
+            "method": "POST",
+            "path": "/api/mcp",
+            "status": 401
+          },
+          {
+            "type": "responseerror",
+            "method": "POST",
+            "path": "/api/mcp",
+            "status": 401
+          }
+        ],
+        "writes": [],
+        "cleanup": [
+          {
+            "type": "zone",
+            "removed": true
+          }
+        ],
+        "staffResidue": 0,
+        "limitations": [
+          "Assignments controls checked; actual assignment mutation is a separate journey",
+          "Driver profile creation is separate",
+          "Denied-role acceptance is separate",
+          "Production checkboxes unchanged"
+        ]
+      }
+    },
+    {
+      "file": "staff-harness-attempt2.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-18T09:33:03.074Z",
+        "results": [
+          {
+            "test": "owned-CIN-and-phone-unused",
+            "outcome": "PASS"
+          },
+          {
+            "test": "cancel-create-does-not-write",
+            "outcome": "PASS"
+          },
+          {
+            "test": "first-step-required-errors-are-French",
+            "outcome": "PASS"
+          }
+        ],
+        "counts": {
+          "PASS": 3,
+          "FAIL": 0
+        },
+        "failure": {
+          "message": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('dialog').getByRole('combobox', { name: 'Rôle', exact: true })\u001b[22m\n",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "diagnostics": [],
+        "writes": [],
+        "cleanup": [
+          {
+            "type": "zone",
+            "removed": true
+          }
+        ],
+        "staffResidue": 0,
+        "limitations": [
+          "Assignments controls checked; actual assignment mutation is a separate journey",
+          "Driver profile creation is separate",
+          "Denied-role acceptance is separate",
+          "Production checkboxes unchanged"
+        ]
+      }
+    },
+    {
+      "file": "staff-harness-attempt3.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-18T09:34:11.282Z",
+        "results": [
+          {
+            "test": "owned-CIN-and-phone-unused",
+            "outcome": "PASS"
+          },
+          {
+            "test": "cancel-create-does-not-write",
+            "outcome": "PASS"
+          },
+          {
+            "test": "first-step-required-errors-are-French",
+            "outcome": "PASS"
+          }
+        ],
+        "counts": {
+          "PASS": 3,
+          "FAIL": 0
+        },
+        "failure": {
+          "message": "expect(locator).toBeVisible() failed\n\nLocator: getByRole('dialog').locator('[name=\"salary\"]')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 30000ms\n  - waiting for getByRole('dialog').locator('[name=\"salary\"]')\n",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "diagnostics": [],
+        "writes": [],
+        "cleanup": [
+          {
+            "type": "zone",
+            "removed": true
+          }
+        ],
+        "staffResidue": 0,
+        "limitations": [
+          "Assignments controls checked; actual assignment mutation is a separate journey",
+          "Driver profile creation is separate",
+          "Denied-role acceptance is separate",
+          "Production checkboxes unchanged"
+        ]
+      }
+    },
+    {
+      "file": "staff-harness-attempt4.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-18T09:36:10.527Z",
+        "results": [
+          {
+            "test": "owned-CIN-and-phone-unused",
+            "outcome": "PASS"
+          },
+          {
+            "test": "cancel-create-does-not-write",
+            "outcome": "PASS"
+          },
+          {
+            "test": "first-step-required-errors-are-French",
+            "outcome": "PASS"
+          },
+          {
+            "test": "non-assignment-role-has-two-steps-and-no-driver-fields",
+            "outcome": "PASS"
+          },
+          {
+            "test": "hourly-mode-requires-rate-and-hours-with-clear-French-feedback",
+            "outcome": "PASS"
+          },
+          {
+            "test": "POST-staff-save-accepted-5",
+            "outcome": "PASS"
+          },
+          {
+            "test": "created-hourly-staff-values-survive-reload",
+            "outcome": "PASS"
+          },
+          {
+            "test": "no-email-staff-has-no-linked-login",
+            "outcome": "PASS"
+          },
+          {
+            "test": "card-shows-translated-active-status-and-role",
+            "outcome": "PASS"
+          }
+        ],
+        "counts": {
+          "PASS": 9,
+          "FAIL": 0
+        },
+        "failure": {
+          "message": "expect(locator).toHaveValue(expected) failed\n\nLocator:  getByRole('dialog').locator('[name=\"hourlyRate\"]')\nExpected: \"75\"\nReceived: \"75.00\"\nTimeout:  30000ms\n\nCall log:\n  - Expect \"to.have.value\" with timeout 30000ms\n  - waiting for getByRole('dialog').locator('[name=\"hourlyRate\"]')\n    33 × locator resolved to <input type=\"number\" value=\"75.00\" name=\"hourlyRate\" aria-invalid=\"false\" id=\"_r_2p_-form-item\" data-slot=\"form-control\" placeholder=\"Saisir le taux horaire\" aria-describedby=\"_r_2p_-form-item-description\" class=\"file:text-foreground selection:bg-primary selection:text-primary-foreground border-input flex h-9 w-full min-w-0 rounded-md text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-n…/>\n       - unexpected value \"75.00\"\n",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "diagnostics": [],
+        "writes": [
+          {
+            "method": "POST",
+            "path": "/api/staff"
+          }
+        ],
+        "cleanup": [
+          {
+            "type": "staff",
+            "removed": true
+          },
+          {
+            "type": "zone",
+            "removed": true
+          }
+        ],
+        "staffResidue": 0,
+        "limitations": [
+          "Assignments controls checked; actual assignment mutation is a separate journey",
+          "Driver profile creation is separate",
+          "Denied-role acceptance is separate",
+          "Production checkboxes unchanged"
+        ]
+      }
+    },
+    {
+      "file": "staff-menu-attempt5.json",
+      "accepted": false,
+      "report": {
+        "origin": "http://127.0.0.1:3102",
+        "date": "2026-10-18T09:38:18.536Z",
+        "results": [
+          {
+            "test": "owned-CIN-and-phone-unused",
+            "outcome": "PASS"
+          },
+          {
+            "test": "cancel-create-does-not-write",
+            "outcome": "PASS"
+          },
+          {
+            "test": "first-step-required-errors-are-French",
+            "outcome": "PASS"
+          },
+          {
+            "test": "non-assignment-role-has-two-steps-and-no-driver-fields",
+            "outcome": "PASS"
+          },
+          {
+            "test": "hourly-mode-requires-rate-and-hours-with-clear-French-feedback",
+            "outcome": "PASS"
+          },
+          {
+            "test": "POST-staff-save-accepted-5",
+            "outcome": "PASS"
+          },
+          {
+            "test": "created-hourly-staff-values-survive-reload",
+            "outcome": "PASS"
+          },
+          {
+            "test": "no-email-staff-has-no-linked-login",
+            "outcome": "PASS"
+          },
+          {
+            "test": "card-shows-translated-active-status-and-role",
+            "outcome": "PASS"
+          },
+          {
+            "test": "edit-reopens-hourly-values-and-locks-job-role",
+            "outcome": "PASS"
+          },
+          {
+            "test": "PUT-staff-save-accepted-10",
+            "outcome": "PASS"
+          },
+          {
+            "test": "edited-rate-hours-name-persist-with-identity-and-role-preserved",
+            "outcome": "PASS"
+          },
+          {
+            "test": "PUT-staff-save-accepted-12",
+            "outcome": "PASS"
+          },
+          {
+            "test": "status-onLeave-persists-with-pay-and-role-preserved",
+            "outcome": "PASS"
+          },
+          {
+            "test": "PUT-staff-save-accepted-14",
+            "outcome": "PASS"
+          },
+          {
+            "test": "status-inactive-persists-with-pay-and-role-preserved",
+            "outcome": "PASS"
+          },
+          {
+            "test": "PUT-staff-save-accepted-16",
+            "outcome": "PASS"
+          },
+          {
+            "test": "status-active-persists-with-pay-and-role-preserved",
+            "outcome": "PASS"
+          },
+          {
+            "test": "table-translates-status-and-does-not-show-raw-code",
+            "outcome": "PASS"
+          }
+        ],
+        "counts": {
+          "PASS": 19,
+          "FAIL": 0
+        },
+        "failure": {
+          "message": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('menuitemradio', { name: 'Afficher en mode Cartes', exact: true })\u001b[22m\n",
+          "classification": "REQUIRES_TRIAGE"
+        },
+        "diagnostics": [],
+        "writes": [
+          {
+            "method": "POST",
+            "path": "/api/staff"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/staff/:owned-id"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/staff/:owned-id"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/staff/:owned-id"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/staff/:owned-id"
+          }
+        ],
+        "cleanup": [
+          {
+            "type": "staff",
+            "removed": true
+          },
+          {
+            "type": "zone",
+            "removed": true
+          }
+        ],
+        "staffResidue": 0,
+        "limitations": [
+          "Assignments controls checked; actual assignment mutation is a separate journey",
+          "Driver profile creation is separate",
+          "Denied-role acceptance is separate",
+          "Production checkboxes unchanged"
+        ]
+      }
+    }
+  ]
+}

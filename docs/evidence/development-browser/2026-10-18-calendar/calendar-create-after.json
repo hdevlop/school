@@ -1,0 +1,29 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "timeZone": "Africa/Casablanca",
+  "checks": [
+    {
+      "label": "Calendar exposes previous and next period controls",
+      "result": "PASS"
+    },
+    {
+      "label": "Casablanca new event starts on selected calendar day",
+      "result": "PASS"
+    },
+    {
+      "label": "Event with optional times omitted creates successfully",
+      "result": "PASS"
+    }
+  ],
+  "dateDefaults": {
+    "start": "18 octobre 2026",
+    "end": "18 octobre 2026"
+  },
+  "createStatus": 200,
+  "diagnostics": [],
+  "counts": {
+    "PASS": 3,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

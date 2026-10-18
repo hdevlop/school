@@ -1,0 +1,94 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Browser creates owned section timetable",
+      "result": "PASS"
+    },
+    {
+      "label": "Days are rows and outer periods are columns",
+      "result": "PASS"
+    },
+    {
+      "label": "Empty lesson assignment refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Plain lesson stores zero content groups",
+      "result": "PASS"
+    },
+    {
+      "label": "Three-label live preview visible",
+      "result": "PASS"
+    },
+    {
+      "label": "Three fixed labels retain order",
+      "result": "PASS"
+    },
+    {
+      "label": "Alternative-only cell retains ordered OR pair",
+      "result": "PASS"
+    },
+    {
+      "label": "Mixed editor reorders and removes groups",
+      "result": "PASS"
+    },
+    {
+      "label": "Lesson editor exposes no nested times or rotation controls",
+      "result": "PASS"
+    },
+    {
+      "label": "Mixed groups preserve final order",
+      "result": "PASS"
+    },
+    {
+      "label": "Content editor caps at six groups",
+      "result": "PASS"
+    },
+    {
+      "label": "Fixed to alternative to fixed preserves first label",
+      "result": "PASS"
+    },
+    {
+      "label": "Six content groups persist",
+      "result": "PASS"
+    },
+    {
+      "label": "All five lesson variants survive reload",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/class-routines"
+    },
+    {
+      "method": "POST",
+      "path": "/api/class-routines/:owned-id/entries"
+    },
+    {
+      "method": "POST",
+      "path": "/api/class-routines/:owned-id/entries"
+    },
+    {
+      "method": "POST",
+      "path": "/api/class-routines/:owned-id/entries"
+    },
+    {
+      "method": "POST",
+      "path": "/api/class-routines/:owned-id/entries"
+    },
+    {
+      "method": "POST",
+      "path": "/api/class-routines/:owned-id/entries"
+    }
+  ],
+  "counts": {
+    "PASS": 14,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

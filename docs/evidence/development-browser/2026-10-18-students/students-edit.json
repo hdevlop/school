@@ -1,0 +1,55 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Profile edit disables yearly placement fields",
+      "result": "PASS"
+    },
+    {
+      "label": "Edited identity survives reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Identity edit preserves complete dated enrollment history",
+      "result": "PASS"
+    },
+    {
+      "label": "Supported transfer updates profile history",
+      "result": "PASS"
+    },
+    {
+      "label": "Old placement closes at transfer date and new placement has actor audit",
+      "result": "PASS"
+    },
+    {
+      "label": "Transfer preserves original admission date",
+      "result": "PASS"
+    },
+    {
+      "label": "New section survives full reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Cancel deletion preserves student",
+      "result": "PASS"
+    }
+  ],
+  "editStatus": 200,
+  "transferStatus": 200,
+  "result": "PASS",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "PUT",
+      "path": "/api/students/:owned-id"
+    },
+    {
+      "method": "POST",
+      "path": "/api/student-enrollments/J7R8svgnzs/transfer"
+    }
+  ],
+  "counts": {
+    "PASS": 8,
+    "FAIL": 0
+  }
+}

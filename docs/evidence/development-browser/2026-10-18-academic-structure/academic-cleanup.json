@@ -1,0 +1,167 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Reference fixture ownership confirmed",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned subject assignment removed through MCP",
+      "result": "PASS"
+    },
+    {
+      "label": "No owned teacher assignments remain",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned reference teacher chain removed",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned enrollment reference removed",
+      "result": "PASS"
+    },
+    {
+      "label": "Exact subjects ownership confirmed",
+      "result": "PASS"
+    },
+    {
+      "label": "Cancel preserves subjects",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser deletes owned subjects",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted subjects remains absent after reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted subjects returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Exact sections ownership confirmed",
+      "result": "PASS"
+    },
+    {
+      "label": "Cancel preserves sections",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser deletes owned sections",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted sections remains absent after reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted sections returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Exact classes ownership confirmed",
+      "result": "PASS"
+    },
+    {
+      "label": "Cancel preserves classes",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser deletes owned classes",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted classes remains absent after reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted classes returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Exact cycles ownership confirmed",
+      "result": "PASS"
+    },
+    {
+      "label": "Cancel preserves cycles",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser deletes owned cycles",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted cycles remains absent after reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted cycles returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted reference students returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted reference teachers returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted reference staff returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted reference users returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "cycles owned fixture residue zero",
+      "result": "PASS"
+    },
+    {
+      "label": "classes owned fixture residue zero",
+      "result": "PASS"
+    },
+    {
+      "label": "sections owned fixture residue zero",
+      "result": "PASS"
+    },
+    {
+      "label": "subjects owned fixture residue zero",
+      "result": "PASS"
+    }
+  ],
+  "finalCounts": {
+    "cycles": 3,
+    "classes": 15,
+    "sections": 46,
+    "subjects": 10
+  },
+  "result": "PASS",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "DELETE",
+      "path": "/api/subjects/:owned-id"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/sections/:owned-id"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/classes/:owned-id"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/cycles/:owned-id"
+    }
+  ],
+  "counts": {
+    "PASS": 33,
+    "FAIL": 0
+  }
+}

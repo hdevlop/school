@@ -1,0 +1,28 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "summaryFromRecordedToolOutput": true,
+  "checks": [
+    {
+      "label": "Calendar exposes previous and next period controls",
+      "result": "FAIL"
+    },
+    {
+      "label": "Casablanca new event starts on selected calendar day",
+      "result": "PASS"
+    },
+    {
+      "label": "Event with optional times omitted creates successfully",
+      "result": "FAIL"
+    }
+  ],
+  "createStatus": 500,
+  "dateDefaults": {
+    "start": "18 octobre 2026",
+    "end": "18 octobre 2026"
+  },
+  "counts": {
+    "PASS": 1,
+    "FAIL": 2
+  },
+  "acceptedForTotals": false
+}

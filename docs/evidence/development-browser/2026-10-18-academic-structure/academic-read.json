@@ -1,0 +1,235 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "fr-desktop cycles name filter returns same fixture",
+      "result": "PASS"
+    },
+    {
+      "label": "cycles no-match translated feedback",
+      "result": "FAIL"
+    },
+    {
+      "label": "cycles filter recovery restores same fixture",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop cycles detail identity matches list",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop classes name filter returns same fixture",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop class retains year and level",
+      "result": "PASS"
+    },
+    {
+      "label": "classes no-match translated feedback",
+      "result": "FAIL"
+    },
+    {
+      "label": "classes filter recovery restores same fixture",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop classes detail identity matches list",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop sections name filter returns same fixture",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop section retains parent class",
+      "result": "PASS"
+    },
+    {
+      "label": "Section class filter has accessible name",
+      "result": "FAIL"
+    },
+    {
+      "label": "Section class filter matches owned placement",
+      "result": "PASS"
+    },
+    {
+      "label": "sections no-match translated feedback",
+      "result": "FAIL"
+    },
+    {
+      "label": "sections filter recovery restores same fixture",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop sections detail identity matches list",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop subjects name filter returns same fixture",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop subject retains code",
+      "result": "PASS"
+    },
+    {
+      "label": "subjects no-match translated feedback",
+      "result": "FAIL"
+    },
+    {
+      "label": "subjects filter recovery restores same fixture",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop subjects detail identity matches list",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone cycles name filter returns same fixture",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone cycles page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone cycles detail identity matches list",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone classes name filter returns same fixture",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone class retains year and level",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone classes page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone classes detail identity matches list",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone sections name filter returns same fixture",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone section retains parent class",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone sections page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone sections detail identity matches list",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone subjects name filter returns same fixture",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone subject retains code",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone subjects page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone subjects detail identity matches list",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone cycles name filter returns same fixture",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone cycles page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "label": "Arabic cycles uses RTL",
+      "result": "PASS"
+    },
+    {
+      "label": "Arabic cycle displays localized label",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone cycles detail identity matches list",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone classes name filter returns same fixture",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone class retains year and level",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone classes page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "label": "Arabic classes uses RTL",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone classes detail identity matches list",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone sections name filter returns same fixture",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone section retains parent class",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone sections page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "label": "Arabic sections uses RTL",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone sections detail identity matches list",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone subjects name filter returns same fixture",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone subject retains code",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone subjects page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "label": "Arabic subjects uses RTL",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone subjects detail identity matches list",
+      "result": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "result": "PARTIAL",
+  "counts": {
+    "PASS": 51,
+    "FAIL": 5
+  }
+}

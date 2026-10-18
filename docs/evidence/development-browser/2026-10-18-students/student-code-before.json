@@ -1,0 +1,20 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "date": "2026-10-18T10:01:01.839Z",
+  "results": [
+    {
+      "variant": "empty",
+      "refused": false,
+      "createdOwnedRecord": true,
+      "blankCodePersisted": true,
+      "cleanupAccepted": true
+    },
+    {
+      "variant": "whitespace",
+      "refused": false,
+      "createdOwnedRecord": true,
+      "blankCodePersisted": true,
+      "cleanupAccepted": true
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Teacher wizard assigns owned subject class and section",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser assignment stored exactly once",
+      "result": "PASS"
+    },
+    {
+      "label": "Linked subject and class agree with reloaded teacher details",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "PUT",
+      "path": "/api/teachers/:owned-id"
+    }
+  ],
+  "counts": {
+    "PASS": 3,
+    "FAIL": 0
+  }
+}

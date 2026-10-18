@@ -1,0 +1,149 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "mode": "development",
+  "completedUtc": "2026-10-17T23:19:50.138Z",
+  "scope": "Real dev demo, unmocked UI and internal MCP. No production deployment or external message.",
+  "selectedAcademicYear": "2026-2027",
+  "results": [
+    {
+      "case": "fixture-cin-is-unused",
+      "outcome": "PASS"
+    },
+    {
+      "case": "French-card-labels-use-selected-language",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cancel-create-sends-no-write",
+      "outcome": "PASS"
+    },
+    {
+      "case": "empty-form-is-refused-in-French-without-write",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-create-is-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "case": "created-parent-survives-reload",
+      "outcome": "PASS"
+    },
+    {
+      "case": "created-parent-values-match-supported-read",
+      "outcome": "PASS"
+    },
+    {
+      "case": "no-contact-parent-has-no-login-or-external-mail",
+      "outcome": "PASS"
+    },
+    {
+      "case": "unlinked-parent-is-explicitly-marked",
+      "outcome": "PASS"
+    },
+    {
+      "case": "edit-reopens-stored-values",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-edit-is-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "case": "edit-persists-with-unrelated-identity-preserved",
+      "outcome": "PASS"
+    },
+    {
+      "case": "duplicate-cin-is-refused",
+      "outcome": "PASS"
+    },
+    {
+      "case": "duplicate-refusal-keeps-dialog-and-one-parent",
+      "outcome": "PASS"
+    },
+    {
+      "case": "phone-card-shows-same-owned-parent-without-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic-phone-card-label-is-localized-and-RTL",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cancel-delete-keeps-owned-parent-without-write",
+      "outcome": "PASS"
+    },
+    {
+      "case": "confirmed-delete-is-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "case": "deleted-parent-is-absent-from-supported-list",
+      "outcome": "PASS"
+    },
+    {
+      "case": "no-unhandled-page-errors",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [
+    {
+      "type": "responseerror",
+      "method": "POST",
+      "path": "/api/parents",
+      "status": 409
+    }
+  ],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/parents"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/parents/:owned-id"
+    },
+    {
+      "method": "POST",
+      "path": "/api/parents"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/parents/:owned-id"
+    }
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    }
+  ],
+  "cleanup": [],
+  "failure": null
+}

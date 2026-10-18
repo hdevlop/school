@@ -1,0 +1,140 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "recordedAt": "2026-10-18T12:16:08.063Z",
+  "academicYear": "2026-2027",
+  "head": "4daea772499be16fe480441ba9ca21a3f12713e2",
+  "workingTree": true,
+  "counts": {
+    "PASS": 186,
+    "FAIL": 2
+  },
+  "stages": {
+    "forms": {
+      "PASS": 16,
+      "FAIL": 0
+    },
+    "refusals-after": {
+      "PASS": 13,
+      "FAIL": 0
+    },
+    "routines-ui": {
+      "PASS": 14,
+      "FAIL": 0
+    },
+    "routines-conflicts": {
+      "PASS": 7,
+      "FAIL": 0
+    },
+    "stale-editors": {
+      "PASS": 4,
+      "FAIL": 0
+    },
+    "duty-layout": {
+      "PASS": 11,
+      "FAIL": 0
+    },
+    "read": {
+      "PASS": 26,
+      "FAIL": 2
+    },
+    "routine-views": {
+      "PASS": 19,
+      "FAIL": 0
+    },
+    "access": {
+      "PASS": 13,
+      "FAIL": 0
+    },
+    "cleanup": {
+      "PASS": 36,
+      "FAIL": 0
+    },
+    "long-label-after": {
+      "PASS": 2,
+      "FAIL": 0
+    },
+    "visual-cleanup": {
+      "PASS": 10,
+      "FAIL": 0
+    },
+    "residue-audit": {
+      "PASS": 15,
+      "FAIL": 0
+    }
+  },
+  "fingerprints": {
+    "packages/server/src/modules/exams/ExamValidator.ts": "27817b7f0505fa9e78f0ebc83d50e37719f50745922e997d133e49e97f31215e",
+    "packages/server/tests/security/ExamTimeUpdates.test.ts": "0fdd142ba933dc74683eb0f37c0041c3a5093da69501e13bcf42f338cbe2a1b9",
+    "apps/dashboard/src/features/ClassRoutines/components/TeacherWeek.tsx": "647e4f798f2229e4d7ea876b96b183a35201b7b03a5dfd98015879a0fa331ecb",
+    "packages/server/src/modules/classRoutines/ClassRoutineService.ts": "b4a5897c185a89621ed3dfe147d23043c545bc96db4d2c745b7d49c5f8f56cb5",
+    "packages/server/src/modules/classRoutines/ClassRoutineValidator.ts": "c5316d2d0f8f8d6a5b098882533bd845c67170b354ea15c258b721215dac63f8",
+    "apps/dashboard/src/features/Exams/components/ExamForm.tsx": "8a513fca6e5203071b7871dba01190f6eb074079b325bbd0d1153995e2aa16f1",
+    "apps/dashboard/src/features/Assessments/components/AssessmentForm.tsx": "42ca54014f4cff90180d910b6043234e6c3c9109c2c514671bc21db5f69d4368",
+    "package.json": "e55d6d38422c9d66dae29750d019df3115bc9b5b5aad4a359c8f6c28d1036fc6",
+    "bun.lock": "0781dfd4651182d4bf7fc72fb717c978cbd84dcd0f2ea6f1dfcafbcd6b2b1dd2"
+  },
+  "gates": [
+    {
+      "command": "bun test packages/server/tests/security/ExamTimeUpdates.test.ts",
+      "exitCode": 0,
+      "pass": 4,
+      "fail": 0,
+      "assertions": 10
+    },
+    {
+      "command": "bun run test:routines",
+      "exitCode": 0,
+      "pass": 15,
+      "fail": 0,
+      "assertions": 41
+    },
+    {
+      "command": "bun run test:server-i18n",
+      "exitCode": 0,
+      "pass": 18,
+      "fail": 0,
+      "assertions": 50
+    },
+    {
+      "command": "bun run test:config",
+      "exitCode": 0,
+      "pass": 538,
+      "fail": 0,
+      "assertions": 3633
+    },
+    {
+      "command": "bun run typecheck",
+      "exitCode": 0,
+      "boundary": "After weekday accessibility fix, before final class-name CSS/title adjustment; final build also checked app types."
+    },
+    {
+      "command": "bun run lint",
+      "exitCode": 0,
+      "boundary": "After all three source fixes."
+    },
+    {
+      "command": "bun run build",
+      "exitCode": 0,
+      "output": ".next-dev-learning-checked-1018",
+      "isolatedOutput": true,
+      "boundary": "After all three source fixes; normal dev output untouched."
+    }
+  ],
+  "retained": {
+    "archivedSchedules": 3,
+    "periods": 21,
+    "sections": 2,
+    "classes": 1,
+    "lessons": 0,
+    "duties": 0
+  },
+  "limits": [
+    "Mutable local working tree includes concurrent notification and prior batches; fingerprint is not a deployment attestation.",
+    "Production acceptance checkboxes remain unchanged.",
+    "Exams and assessments no-match feedback remains failed in shared Najm Kit.",
+    "Date labels were not independently asserted. Native browser zoom and physical touch were not tested; CSS zoom and Chrome touch emulation were tested.",
+    "Teacher timetable was inspected through the admin teacher profile, not a teacher-login browser session.",
+    "Two-editor stale writes do not prove migration preservation or every database concurrency guarantee.",
+    "Cleanup is partial: draft-only deletion prevents removal of three empty archived schedules and their class/section references."
+  ]
+}

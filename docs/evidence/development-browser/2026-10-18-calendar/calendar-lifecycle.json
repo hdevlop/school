@@ -1,0 +1,101 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Created date-only event reopens after navigation",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned class target restored exactly",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser edit of details and times succeeds",
+      "result": "PASS"
+    },
+    {
+      "label": "Edited details persist after reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Stored event has one exact class, times and teacher audience",
+      "result": "PASS"
+    },
+    {
+      "label": "Reversed browser time edit is refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Time refusal preserves editable form and explains failure",
+      "result": "PASS"
+    },
+    {
+      "label": "Invalid event endDate refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Invalid event registrationDeadline refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Invalid event classIds refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Date-only edit and explicit time clearing succeeds",
+      "result": "PASS"
+    },
+    {
+      "label": "Moved event appears on its saved calendar date",
+      "result": "PASS"
+    },
+    {
+      "label": "Moved date and cleared time reopen correctly",
+      "result": "PASS"
+    },
+    {
+      "label": "Next month navigation changes month",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned October event absent from November",
+      "result": "PASS"
+    },
+    {
+      "label": "Previous month restores event",
+      "result": "PASS"
+    },
+    {
+      "label": "Next week changes displayed range",
+      "result": "PASS"
+    },
+    {
+      "label": "Today selects one calendar day",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS",
+  "diagnostics": [
+    {
+      "type": "responseerror",
+      "method": "PUT",
+      "path": "/api/events/:owned-id",
+      "status": 400
+    }
+  ],
+  "writes": [
+    {
+      "method": "PUT",
+      "path": "/api/events/:owned-id"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/events/:owned-id"
+    }
+  ],
+  "counts": {
+    "PASS": 18,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

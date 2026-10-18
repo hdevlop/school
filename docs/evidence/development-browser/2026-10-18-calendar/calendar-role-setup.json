@@ -1,0 +1,34 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "teacher disposable account created",
+      "result": "PASS"
+    },
+    {
+      "label": "Actual teacher role verified",
+      "result": "PASS"
+    },
+    {
+      "label": "parent disposable account created",
+      "result": "PASS"
+    },
+    {
+      "label": "Actual parent role verified",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned teacher announcement created through MCP",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned teacher announcement published through MCP",
+      "result": "PASS"
+    }
+  ],
+  "counts": {
+    "PASS": 6,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

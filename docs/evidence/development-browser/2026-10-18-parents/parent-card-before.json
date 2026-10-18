@@ -1,0 +1,14 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "mode": "development",
+  "checkedUtc": "2026-10-17T23:16:21.898Z",
+  "result": {
+    "case": "French-parent-card-accessible-name-is-localized",
+    "outcome": "FAIL",
+    "classification": "PRODUCT"
+  },
+  "visibleCards": 16,
+  "englishCardNames": 16,
+  "diagnostics": [],
+  "writes": []
+}

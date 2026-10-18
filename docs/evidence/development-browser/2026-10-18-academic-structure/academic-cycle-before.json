@@ -1,0 +1,43 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Blank cycle refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser creates one owned cycle",
+      "result": "PASS"
+    },
+    {
+      "label": "Cycle survives reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Renamed cycle survives reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Duplicate cycle refused with conflict",
+      "result": "PASS"
+    },
+    {
+      "label": "Class form exposes cycle relationship",
+      "result": "FAIL"
+    }
+  ],
+  "duplicateStatus": 409,
+  "classCycleSelectorExposed": false,
+  "result": "PARTIAL",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/cycles"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/cycles/:owned-id"
+    }
+  ]
+}

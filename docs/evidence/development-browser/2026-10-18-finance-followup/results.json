@@ -1,0 +1,328 @@
+{
+  "date": "2026-10-18",
+  "kind": "local API, MCP and PostgreSQL acceptance; no browser",
+  "origin": "http://127.0.0.1:3102 (read-only health and MCP registry preflight)",
+  "mutationTarget": "isolated local school_history_test; fixture marker academic-history-alerts-v1",
+  "suites": [
+    {
+      "name": "AllocationsHistoryDatabase",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 14,
+      "cases": [
+        "allocation year scope on the marked PostgreSQL fixture > uses target fee years for each part of a mixed-year receipt"
+      ]
+    },
+    {
+      "name": "AllocationsHistoryTransport",
+      "exitCode": 0,
+      "pass": 3,
+      "fail": 0,
+      "finalAttempt": "focused retest after added assertions/cleanup",
+      "assertions": 32,
+      "cases": [
+        "authenticated allocation year scope on the marked PostgreSQL fixture > returns only the selected part of a mixed-year receipt and protects deletion",
+        "authenticated allocation year scope on the marked PostgreSQL fixture > resolves the same year for the MCP allocation list",
+        "authenticated allocation year scope on the marked PostgreSQL fixture > keeps fee-year portions when the normal payment write creates a mixed-year receipt"
+      ]
+    },
+    {
+      "name": "CreditsHistoryDatabase",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 6,
+      "cases": [
+        "credit balance and target fee year on the marked PostgreSQL fixture > keeps lots shared and locks only installments of the named target year"
+      ]
+    },
+    {
+      "name": "CreditsHistoryTransport",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 39,
+      "cases": [
+        "student credit shared balance and selected target year > creates unallocated credit and applies it to old and current fee years explicitly"
+      ]
+    },
+    {
+      "name": "ExpensesHistoryDatabase",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 20,
+      "cases": [
+        "expense date year scope on the marked PostgreSQL fixture > keeps expense dates in their reporting year and protects reads and writes"
+      ]
+    },
+    {
+      "name": "ExpensesHistoryTransport",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 26,
+      "cases": [
+        "authenticated expense year scope > keeps dated expenses and corrections in the selected year over REST and MCP"
+      ]
+    },
+    {
+      "name": "FeesHistoryDatabase",
+      "exitCode": 0,
+      "pass": 3,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 50,
+      "cases": [
+        "fee year scope on the marked PostgreSQL fixture > limits student totals and receipt metrics to the selected payment schedule",
+        "fee year scope on the marked PostgreSQL fixture > counts collected money and overdue installment balances only through today",
+        "fee year scope on the marked PostgreSQL fixture > keeps charged-year rows, fee-only students and completed cross-year allocations exact"
+      ]
+    },
+    {
+      "name": "FeesHistoryTransport",
+      "exitCode": 0,
+      "pass": 2,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 37,
+      "cases": [
+        "authenticated fee year scope > filters the fee list by schedule and rejects unknown schedules",
+        "authenticated fee year scope > keeps fee views, corrections and MCP input on the selected charged year"
+      ]
+    },
+    {
+      "name": "FeeTypesHistoryDatabase",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 8,
+      "cases": [
+        "fee type shared catalog on the marked PostgreSQL fixture > keeps identity and filters global under different selected years"
+      ]
+    },
+    {
+      "name": "FeeTypesHistoryTransport",
+      "exitCode": 0,
+      "pass": 2,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 20,
+      "cases": [
+        "authenticated shared fee type catalog > keeps fee types shared through REST and MCP, with one name rule across years",
+        "authenticated shared fee type catalog > creates one fee type when creates of one name race, whatever its case or spaces"
+      ]
+    },
+    {
+      "name": "FinancialAuditHistoryDatabase",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 13,
+      "cases": [
+        "financial audit retains all years on the marked PostgreSQL fixture > keeps list, count, detail, and filters independent of the selected year"
+      ]
+    },
+    {
+      "name": "FinancialAuditHistoryTransport",
+      "exitCode": 0,
+      "pass": 2,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 20,
+      "cases": [
+        "authenticated financial audit remains all-year > returns both years under either selected-year header and keeps admin-only access",
+        "authenticated financial audit remains all-year > keeps the audit list all-year over MCP"
+      ]
+    },
+    {
+      "name": "FinancialNotificationsHistoryDatabase",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 4,
+      "cases": [
+        "financial reminder sources on the marked PostgreSQL fixture > groups debt by charged year, omits cancelled schedules and requires one check source year"
+      ]
+    },
+    {
+      "name": "FinancialNotificationsHistoryTransport",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 6,
+      "cases": [
+        "financial notification operational history > keeps admin delivery history all-year and dry-runs old debt through cron"
+      ]
+    },
+    {
+      "name": "InstallmentsHistoryDatabase",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 17,
+      "cases": [
+        "installment charged year on the marked PostgreSQL fixture > scopes ordinary reads and writes while source fee access remains all-year"
+      ]
+    },
+    {
+      "name": "InstallmentsHistoryTransport",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 14,
+      "cases": [
+        "authenticated installment charged year > scopes lists, detail, writes and MCP by the fee year"
+      ]
+    },
+    {
+      "name": "PaymentsHistoryDatabase",
+      "exitCode": 0,
+      "pass": 2,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 16,
+      "cases": [
+        "payment receipt and fee-year portions on the marked PostgreSQL fixture > excludes future monthly installments and counts each receipted installment balance once",
+        "payment receipt and fee-year portions on the marked PostgreSQL fixture > shows one mixed receipt in both fee years, keeping cash date and exact portions"
+      ]
+    },
+    {
+      "name": "PaymentsHistoryTransport",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 13,
+      "cases": [
+        "authenticated mixed-year receipt > shows allocated portions by fee year and retains one shared receipt"
+      ]
+    },
+    {
+      "name": "PayrollHistoryDatabase",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 14,
+      "cases": [
+        "payroll period year on the marked PostgreSQL fixture > attributes by period month, preserves later cash date and guards writes"
+      ]
+    },
+    {
+      "name": "PayrollHistoryTransport",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 15,
+      "cases": [
+        "authenticated payroll period history > scopes period/detail/writes while preserving a later cash date"
+      ]
+    },
+    {
+      "name": "RolloverHistoryDatabase",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 4,
+      "cases": [
+        "rollover source roster on the marked PostgreSQL fixture > uses the source-year enrollment and placement instead of the current class"
+      ]
+    },
+    {
+      "name": "RolloverHistoryTransport",
+      "exitCode": 0,
+      "pass": 4,
+      "fail": 0,
+      "finalAttempt": "focused retest after added assertions/cleanup",
+      "assertions": 45,
+      "cases": [
+        "authenticated financial rollover > previews explicit years, commits under target context and retries without duplicates",
+        "authenticated financial rollover > rolls back a failed fee item and records a stable failed run",
+        "authenticated financial rollover > commits one preview once when two commits of it race",
+        "authenticated financial rollover > rolls back the whole run when a write fails midway, and a retry bills it once"
+      ]
+    },
+    {
+      "name": "FinanceLifecycleTransport",
+      "exitCode": 0,
+      "pass": 23,
+      "fail": 0,
+      "finalAttempt": "complete finance run",
+      "assertions": 181,
+      "cases": [
+        "real PostgreSQL finance lifecycle over authenticated HTTP and MCP > denies finance reads and writes to anonymous and roleless accounts",
+        "real PostgreSQL finance lifecycle over authenticated HTTP and MCP > preserves a monthly discount and installment cents on an ordinary MCP edit",
+        "real PostgreSQL finance lifecycle over authenticated HTTP and MCP > records partial cash, replays idempotently, refuses changed payload and refunds without deleting history",
+        "real PostgreSQL finance lifecycle over authenticated HTTP and MCP > rolls back an underallocated receipt and refuses another student or a cancelled installment",
+        "real PostgreSQL finance lifecycle over authenticated HTTP and MCP > serializes competing cash allocations without overpaying an installment",
+        "real PostgreSQL finance lifecycle over authenticated HTTP and MCP > reserves a pending check, settles after deposit, and releases the balance on bounce",
+        "real PostgreSQL finance lifecycle over authenticated HTTP and MCP > applies overpayment credit and reverses all its allocations on source refund",
+        "real PostgreSQL finance lifecycle over authenticated HTTP and MCP > requires expense approval and a valid cash date before recording payment",
+        "real PostgreSQL finance lifecycle over authenticated HTTP and MCP > pays a staff snapshot once and undoes payment without deleting the payslip",
+        "finance review regression cases > replaces a pending cheque with cash through the edit endpoint",
+        "finance review regression cases > replaces a deposited cheque with cash through the edit endpoint",
+        "finance review regression cases > replaces a completed cheque with cash through the edit endpoint",
+        "finance review regression cases > serializes two simultaneous cheque replacements into one cash receipt",
+        "finance review regression cases > replaces a credit-only cheque without allocating its cash credit to other fees",
+        "finance review regression cases > replaces cheque credit with available cash credit without duplicating the balance",
+        "finance review regression cases > rolls back the automatic void and credit cancellation when a replacement target is cancelled",
+        "finance review regression cases > refuses pre-hire direct, existing-slip and bulk payments without changing history; pays the hire month",
+        "finance review regression cases > replays concurrent identical idempotency keys without returning a server error",
+        "finance review regression cases > refuses concurrent changed payloads sharing one idempotency key",
+        "finance review regression cases > rejects sub-cent money with a client validation error and no writes",
+        "finance review regression cases > refuses deductions exceeding gross salary",
+        "finance review regression cases > validates an expense payment date against the stored date on a partial edit",
+        "finance review regression cases > refuses marking an expense paid through the generic edit without approval or payment metadata"
+      ]
+    }
+  ],
+  "counts": {
+    "pass": 56,
+    "fail": 0,
+    "suites": 23
+  },
+  "otherChecks": [
+    {
+      "command": "bun run test:finance",
+      "pass": 146,
+      "fail": 0,
+      "assertions": 611
+    },
+    {
+      "command": "bun test packages/contracts/tests/academicYears.test.ts packages/server/tests/academicYears/FinancialUtilsHistory.test.ts",
+      "pass": 16,
+      "fail": 0,
+      "assertions": 69
+    },
+    {
+      "command": "bun run --cwd packages/server typecheck:test",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run lint",
+      "exitCode": 0
+    }
+  ],
+  "limitations": [
+    "Browser discovery returned no available browser; zero browser cases executed",
+    "No deployment or production acceptance",
+    "Calendar tests verify explicit-date calculations, not July payment-cutoff enforcement",
+    "Notification evidence is dry-run/history, not real delivery",
+    "Audit immutability is not enforced by a database trigger"
+  ]
+}

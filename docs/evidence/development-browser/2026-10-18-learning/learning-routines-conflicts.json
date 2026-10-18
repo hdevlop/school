@@ -1,0 +1,57 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Parent-only entry update succeeds",
+      "result": "PASS"
+    },
+    {
+      "label": "Parent-only update preserves mixed groups and increments version",
+      "result": "PASS"
+    },
+    {
+      "label": "Whole-period overlap refused despite alternative content",
+      "result": "PASS"
+    },
+    {
+      "label": "Reversed outer period time refused",
+      "result": "PASS"
+    },
+    {
+      "label": "API refuses seventh content group",
+      "result": "PASS"
+    },
+    {
+      "label": "Content replacement requires expected version",
+      "result": "PASS"
+    },
+    {
+      "label": "Refusals preserve all five lesson rows and mixed content",
+      "result": "PASS"
+    }
+  ],
+  "responses": [
+    {
+      "variant": "whole period teacher overlap",
+      "status": 409
+    },
+    {
+      "variant": "end before start",
+      "status": 400
+    },
+    {
+      "variant": "seven content groups",
+      "status": 400
+    },
+    {
+      "variant": "content replacement without version",
+      "status": 409
+    }
+  ],
+  "result": "PASS",
+  "counts": {
+    "PASS": 7,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

@@ -1,0 +1,12 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "date": "2026-10-18T09:44:34.347Z",
+  "staffRecordsRead": 5,
+  "ownedStaffRemaining": 0,
+  "ownedZoneRemaining": 0,
+  "ownedUsersRemaining": 0,
+  "lastOwnedIdStatuses": [
+    404,
+    404
+  ]
+}

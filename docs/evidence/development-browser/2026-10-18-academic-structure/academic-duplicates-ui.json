@@ -1,0 +1,124 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "cycles duplicate browser submission returns 409",
+      "result": "PASS"
+    },
+    {
+      "label": "cycles duplicate shows server guidance in browser",
+      "result": "PASS"
+    },
+    {
+      "label": "cycles duplicate keeps form available for correction",
+      "result": "PASS"
+    },
+    {
+      "label": "classes duplicate browser submission returns 409",
+      "result": "PASS"
+    },
+    {
+      "label": "classes duplicate shows server guidance in browser",
+      "result": "PASS"
+    },
+    {
+      "label": "classes duplicate keeps form available for correction",
+      "result": "PASS"
+    },
+    {
+      "label": "sections duplicate browser submission returns 409",
+      "result": "PASS"
+    },
+    {
+      "label": "sections duplicate shows server guidance in browser",
+      "result": "PASS"
+    },
+    {
+      "label": "sections duplicate keeps form available for correction",
+      "result": "PASS"
+    },
+    {
+      "label": "subjects duplicate browser submission returns 409",
+      "result": "PASS"
+    },
+    {
+      "label": "subjects duplicate shows server guidance in browser",
+      "result": "PASS"
+    },
+    {
+      "label": "subjects duplicate keeps form available for correction",
+      "result": "PASS"
+    }
+  ],
+  "responses": [
+    {
+      "area": "cycles",
+      "status": 409
+    },
+    {
+      "area": "classes",
+      "status": 409
+    },
+    {
+      "area": "sections",
+      "status": 409
+    },
+    {
+      "area": "subjects",
+      "status": 409
+    }
+  ],
+  "result": "PASS",
+  "diagnostics": [
+    {
+      "type": "responseerror",
+      "method": "POST",
+      "path": "/api/cycles",
+      "status": 409
+    },
+    {
+      "type": "pageerror",
+      "message": "Un cycle portant ce nom existe déjà"
+    },
+    {
+      "type": "responseerror",
+      "method": "POST",
+      "path": "/api/classes",
+      "status": 409
+    },
+    {
+      "type": "responseerror",
+      "method": "POST",
+      "path": "/api/sections",
+      "status": 409
+    },
+    {
+      "type": "responseerror",
+      "method": "POST",
+      "path": "/api/subjects",
+      "status": 409
+    }
+  ],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/cycles"
+    },
+    {
+      "method": "POST",
+      "path": "/api/classes"
+    },
+    {
+      "method": "POST",
+      "path": "/api/sections"
+    },
+    {
+      "method": "POST",
+      "path": "/api/subjects"
+    }
+  ],
+  "counts": {
+    "PASS": 12,
+    "FAIL": 0
+  }
+}

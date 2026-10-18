@@ -1,0 +1,28 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "fr final phone calendar renders event and controls",
+      "result": "PASS"
+    },
+    {
+      "label": "fr final phone width fits",
+      "result": "PASS"
+    },
+    {
+      "label": "ar final phone calendar renders event and controls",
+      "result": "PASS"
+    },
+    {
+      "label": "ar final phone width fits",
+      "result": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "emptyMonthStatus": "NOT RUN",
+  "counts": {
+    "PASS": 4,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

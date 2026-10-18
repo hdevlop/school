@@ -1,0 +1,18 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "browserTimeZone": "Asia/Tokyo",
+  "checks": [
+    {
+      "label": "Selected day 20 is preserved for an event in a browser east of UTC",
+      "result": "PASS"
+    }
+  ],
+  "selectedDay": 20,
+  "renderedStart": "20 octobre 2026",
+  "diagnostics": [],
+  "counts": {
+    "PASS": 1,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

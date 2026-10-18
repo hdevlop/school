@@ -1,0 +1,39 @@
+{
+  "baseCommit": "fc2c1d835103024677feb4856f31729af35234eb",
+  "workingTree": true,
+  "scope": "Only acceptance-test changes in this follow-up; pre-existing unrelated changes preserved",
+  "files": [
+    {
+      "path": "packages/server/tests/acceptance/AllocationsHistoryTransport.test.ts",
+      "sha256": "63eec2068402b42de467df29c2127ca8b1f31c52b116b13fa0f3dbdf0bd244c5"
+    },
+    {
+      "path": "packages/server/tests/acceptance/CreditsHistoryTransport.test.ts",
+      "sha256": "88861e23a20d3b69360f5cb0528ddfae58a3a9639f209bf89eb8d48791f59709"
+    },
+    {
+      "path": "packages/server/tests/acceptance/FinanceLifecycleTransport.test.ts",
+      "sha256": "555b4858fa65a091f9fc27369c09bd480568bb36ee49426036f79a4944a6ae09"
+    },
+    {
+      "path": "packages/server/tests/acceptance/RolloverHistoryTransport.test.ts",
+      "sha256": "cf0aebb347fc6973461429dababc24c8c9486bcdd888686ef2ce2e88442fc80e"
+    },
+    {
+      "path": "packages/server/src/modules/financial/credits/CreditService.ts",
+      "sha256": "36c66e6fcb2fbf7a93d4ad17a79e877b40a92c4d59c14cddf84a80f0f22c7605"
+    },
+    {
+      "path": "packages/server/src/modules/financial/rollover/RolloverService.ts",
+      "sha256": "a27626434208264ba10e748c433eba2b83bf0ee090e735389d90a20a5a5ceb23"
+    },
+    {
+      "path": "packages/server/src/modules/financial/payments/PaymentService.ts",
+      "sha256": "2faca7ad92a78c35953cf638e8a36cb95df74ac46090354abf36c942264c2ba5"
+    },
+    {
+      "path": "packages/contracts/src/academicYears.ts",
+      "sha256": "733fefa566d6115d679a3eaf9c5cd0bf2a50b85eff3c4969e3d371f65cb87587"
+    }
+  ]
+}

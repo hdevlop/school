@@ -1,0 +1,23 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Browser date-picker edit succeeds",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser date edit persists the selected day",
+      "result": "PASS"
+    },
+    {
+      "label": "Clearing optional time and location fields removes saved values",
+      "result": "FAIL"
+    }
+  ],
+  "diagnostics": [],
+  "counts": {
+    "PASS": 2,
+    "FAIL": 1
+  },
+  "acceptedForTotals": false
+}

@@ -1,0 +1,103 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "recordedAt": "2026-10-18T12:33:53.112Z",
+  "academicYear": "2026-2027",
+  "head": "f081af713060b29e6a99931a63c3ebadcfa67840",
+  "workingTree": true,
+  "counts": {
+    "PASS": 123,
+    "FAIL": 0
+  },
+  "stages": {
+    "create-after": {
+      "PASS": 3,
+      "FAIL": 0
+    },
+    "date-after": {
+      "PASS": 1,
+      "FAIL": 0
+    },
+    "lifecycle": {
+      "PASS": 18,
+      "FAIL": 0
+    },
+    "date-edit-after": {
+      "PASS": 3,
+      "FAIL": 0
+    },
+    "role-setup": {
+      "PASS": 6,
+      "FAIL": 0
+    },
+    "views": {
+      "PASS": 27,
+      "FAIL": 0
+    },
+    "access": {
+      "PASS": 24,
+      "FAIL": 0
+    },
+    "boundary-after": {
+      "PASS": 9,
+      "FAIL": 0
+    },
+    "final-views": {
+      "PASS": 4,
+      "FAIL": 0
+    },
+    "cleanup": {
+      "PASS": 28,
+      "FAIL": 0
+    }
+  },
+  "fingerprints": {
+    "apps/dashboard/src/features/Calendar/CalendarPage.tsx": "d1af198e2a105bcd9739955c9759f562cd4270755e4f535f0b6c0e04310df86b",
+    "apps/dashboard/src/features/Events/components/EventForm.tsx": "f199ead12841a45cbff186b9452222f033434ac3e1fa882c37eeb0cf95567bff",
+    "packages/server/src/modules/events/EventService.ts": "dd1bd2e0b761a6a684fb294d35704e6946d54c903d88f1e004cec785d2c49951",
+    "packages/server/src/modules/events/EventValidator.ts": "ff84718eb02ef83780eb91cdc1893b28971cb094adf023f10247bd0be1960206",
+    "packages/server/tests/security/EventDateUpdates.test.ts": "df75d15a8e7187ad847730cc78eaf0aca2e50a4a88cfafe0be7d75c808688a1b",
+    "packages/server/src/modules/events/EventGuards.ts": "0d5c1927f8f049c4c6f00e46a4928524a2f34b61099804828a50796f1bbadcbb",
+    "packages/server/src/modules/announcements/AnnouncementGuards.ts": "b407c0459ced5c4395dd7b18f148974c241209ea00d17b94aecfad81d658a018",
+    "package.json": "e55d6d38422c9d66dae29750d019df3115bc9b5b5aad4a359c8f6c28d1036fc6",
+    "bun.lock": "0781dfd4651182d4bf7fc72fb717c978cbd84dcd0f2ea6f1dfcafbcd6b2b1dd2"
+  },
+  "gates": [
+    {
+      "command": "bun test apps/dashboard/tests/features/Events/config/eventOptions.test.ts apps/dashboard/tests/hooks/schoolDateFormat.test.ts packages/server/tests/security/EventDateUpdates.test.ts packages/server/tests/security/ExamTimeUpdates.test.ts packages/server/tests/academicYears/PartialUpdateDefaults.test.ts",
+      "exitCode": 0,
+      "pass": 31,
+      "fail": 0,
+      "assertions": 275
+    },
+    {
+      "command": "bun run typecheck",
+      "exitCode": 0,
+      "boundary": "Root gate after date validation and navigation fixes; final optional-clear and interval display edits are also checked by the final app build."
+    },
+    {
+      "command": "bun run lint",
+      "exitCode": 0,
+      "boundary": "Final run after all calendar/event source changes."
+    },
+    {
+      "command": "bun run build",
+      "exitCode": 0,
+      "output": ".next-dev-calendar-checked-1018",
+      "isolatedOutput": true,
+      "boundary": "Final run includes multi-day display fix and leaves the normal dev output running."
+    }
+  ],
+  "createdFixtureResidue": {
+    "events": 0,
+    "announcements": 0,
+    "users": 0
+  },
+  "limits": [
+    "Local mutable working tree, including concurrent work; HEAD is not an exact deployment attestation.",
+    "No entirely empty month was available among the selected-year candidate months. Empty-day feedback passed; calendar-R03 remains partial.",
+    "Physical devices, native browser zoom, full accessibility and full audience/class-placement matrices were not tested.",
+    "Allowed reader browser checks prove visible titles/audiences; opening reader-only event detail controls was not accepted.",
+    "All new fixtures for this batch were removed. The reused learning class and its three empty archived schedules remain as previously recorded.",
+    "No production checkboxes were changed and no deployment was triggered by this batch."
+  ]
+}

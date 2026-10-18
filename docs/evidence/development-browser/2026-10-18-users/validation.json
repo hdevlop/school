@@ -1,0 +1,168 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "runDate": "2026-10-18",
+  "clientTimeZone": "Africa/Casablanca",
+  "selectedAcademicYear": "2026-2027",
+  "source": {
+    "baseCommit": "db257c4b36b0e54e44f25224fa9146cc0b7d3850",
+    "workingTree": true,
+    "fingerprintCaptured": "After the browser runs; concurrent Finance edits mean this is not an immutable release-candidate gate",
+    "files": [
+      {
+        "path": "apps/dashboard/src/features/Users/components/UsersTable.tsx",
+        "sha256": "bab69f8cb8a56e0021eb77f5283e86f80b2381e428de10893e20cde52771f153"
+      },
+      {
+        "path": "apps/dashboard/src/features/Users/components/UserForm.tsx",
+        "sha256": "08c730dc9b4f204c9ed299c2a1b62dca58bc9cea38cadea377d377e5d1786fbd"
+      },
+      {
+        "path": "apps/dashboard/src/features/Users/components/UserView.tsx",
+        "sha256": "62c2ae2a80075300a57fd70e6278c4a49f5f1ce31e322293147277aec12270c5"
+      },
+      {
+        "path": "apps/dashboard/src/features/Users/config/usersValidateSchema.ts",
+        "sha256": "06cca14197fb4752e90ec2dd199da916723cc4ac3bf41736b4315c4a2aa2f177"
+      },
+      {
+        "path": "apps/dashboard/src/services/userApi.ts",
+        "sha256": "a8e87e1d267696ccd31427bcb4eba7f24796d0f8f83ac67e2cafe0656c541330"
+      },
+      {
+        "path": "packages/contracts/src/locales/ar.json",
+        "sha256": "454344978b57b5072dcb85d787e1895529526d36667e5008cc9f2c23a5a058e0"
+      },
+      {
+        "path": "packages/contracts/src/locales/en.json",
+        "sha256": "8be1b52f69dc93e1c1bf54a5b38f8820b3b36c8b02669f3301c96e1588f67e0f"
+      },
+      {
+        "path": "packages/contracts/src/locales/es.json",
+        "sha256": "ed2043233a5de47c662c691e9eb6657e514e2302527d2511362f98c4cf24eb68"
+      },
+      {
+        "path": "packages/contracts/src/locales/fr.json",
+        "sha256": "65a260b4cf5049b661be216b5a393792e3219eeed3ef9fbaf7de2be8ca44964b"
+      }
+    ],
+    "packagePins": {
+      "najm-kit": "3.6.1",
+      "najm-auth": "6.6.0",
+      "najm-next": "0.10.0"
+    }
+  },
+  "browser": {
+    "driver": "Standalone Node Playwright",
+    "channel": "Chrome",
+    "headless": true,
+    "viewports": [
+      "1440x900",
+      "390x844"
+    ],
+    "languages": [
+      "fr",
+      "ar"
+    ]
+  },
+  "counts": {
+    "lifecycle": {
+      "PASS": 27,
+      "FAIL": 1
+    },
+    "access": {
+      "PASS": 18,
+      "FAIL": 0
+    },
+    "filters": {
+      "PASS": 8,
+      "FAIL": 0
+    },
+    "totalPASS": 53,
+    "totalFAIL": 1
+  },
+  "devCases": [
+    {
+      "id": "users-R01",
+      "outcome": "FAIL",
+      "reason": "Full-list loading, name/email/role filters, table/card details pass; no-match card list is blank instead of showing the filtered-empty renderer"
+    },
+    {
+      "id": "users-R02",
+      "outcome": "PASS",
+      "reason": "French required validation, populated edit form, duplicate email 409 with readable feedback; dialog remains open"
+    },
+    {
+      "id": "users-M01",
+      "outcome": "PASS",
+      "reason": "UI invitation, name edit and inactive/pending/active changes survive reload and supported REST reads"
+    },
+    {
+      "id": "users-M02",
+      "outcome": "PASS",
+      "reason": "Cancel is read-only; confirmed owned-user deletion persists; independent residue scan and final ID 404"
+    }
+  ],
+  "validation": [
+    {
+      "command": "bun test apps/dashboard/tests/features/Users/config/usersValidateSchema.test.ts apps/dashboard/tests/services/userApi.test.ts packages/server/tests/i18n/ServerMessages.test.ts",
+      "exitCode": 0,
+      "testsPASS": 9
+    },
+    {
+      "command": "bun run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run --cwd apps/dashboard typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run i18n:check",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check (changed People files)",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run test:config",
+      "exitCode": 0,
+      "testsPASS": 528,
+      "testsFAIL": 0
+    }
+  ],
+  "rootTypecheck": {
+    "initialExitCode": 2,
+    "reason": "Initial test typing error corrected with as const; final full root production/test type checks passed.",
+    "finalExitCode": 0
+  },
+  "build": {
+    "status": "PASS (bun run build, exit 0; isolated output directory)",
+    "outputDirectory": ".next-dev-people-build-1018-final",
+    "previousAttempt": "Stopped as superseded after discovering the user-list pagination defect; not an accepted build"
+  },
+  "diagnostics": {
+    "captured": "Unhandled page errors and HTTP error responses; loader triage also captured console warnings/errors and failed requests. This is not a complete CSP/accessibility audit.",
+    "unexpectedPageErrors": 0,
+    "expectedNegativeResponses": "UI duplicate-email POST 409; teacher admin-only API probes 403; inactive session/login refusal; deleted owned-user GET 404"
+  },
+  "cleanup": {
+    "allPagesRead": 3,
+    "usersRead": 243,
+    "ownedAccountsRemaining": 0,
+    "lastOwnedIdStatus": 404,
+    "existingPeopleMutated": 0,
+    "externalEmailDelivery": "None claimed; console provider only",
+    "browserContexts": "Closed"
+  },
+  "production": {
+    "deployed": false,
+    "checkboxesChanged": false,
+    "retest": "NOT RUN"
+  },
+  "parallelWork": "Finance work preserved; shared dev server kept running; production build used a separate output directory"
+}

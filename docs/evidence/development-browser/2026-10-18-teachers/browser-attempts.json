@@ -1,0 +1,22 @@
+{
+  "attempts": [
+    {
+      "attempt": "teachers-create-attempt-1.json",
+      "result": "NOT_ACCEPTED",
+      "error": "expect(locator).toHaveValue(expected) failed\n\nLocator: getByRole('dialog').locator('[name=\"salary\"]')\nExpected pattern: /^3000(?:[.]0+)?$/\nReceived string:  \"\"\nTimeout: 30000ms\n\nCall log:\n  - Expect \"to.have.value\" with timeout 30000ms\n  - waiting for getByRole('dialog').locator('[name=\"salary\"]')\n    33 × locator resolved to <input value=\"\" type=\"number\" name=\"salary\" aria-invalid=\"false\" id=\"_r_2h_-form-item\" data-slot=\"form-control\" placeholder=\"Entrez le salaire\" aria-describedby=\"_r_2h_-form-item-description\" class=\"file:text-foreground selection:bg-primary selection:text-primary-foreground border-input flex h-9 w-full min-w-0 rounded-md text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:c…/>\n       - unexpected value \"\"\n",
+      "writes": [],
+      "countedAssertions": 0
+    },
+    {
+      "attempt": "teachers-create-attempt-2.json",
+      "result": "NOT_ACCEPTED",
+      "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('dialog').getByRole('combobox', { name: 'Sélectionnez les sections', exact: true })\u001b[22m\n",
+      "writes": [],
+      "countedAssertions": 0
+    }
+  ],
+  "notes": [
+    "The first attempt exposed a real shared wizard draft-loss defect. The final run retains this FAIL and continues after refilling the lost fields.",
+    "The second attempt corrected multiselect lookup from placeholder to its form-label accessible name. No create request preceded that timeout."
+  ]
+}

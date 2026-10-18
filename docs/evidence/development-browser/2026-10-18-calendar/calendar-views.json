@@ -1,0 +1,120 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "fr-desktop named calendar day works with keyboard or touch",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop period controls remain available",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop event details agree with owning feature and API",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop cleared fields remain cleared on reopen",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop known announcement opens matching originating content",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop required validation is visible and sends no write",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop requested theme rendered",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-touch named calendar day works with keyboard or touch",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-touch period controls remain available",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-touch event details agree with owning feature and API",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-touch cleared fields remain cleared on reopen",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-touch known announcement opens matching originating content",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-touch required validation is visible and sends no write",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-touch requested theme rendered",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-touch fits phone width",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-touch empty selected day shows translated feedback",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-touch named calendar day works with keyboard or touch",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-touch period controls remain available",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-touch event details agree with owning feature and API",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-touch cleared fields remain cleared on reopen",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-touch known announcement opens matching originating content",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-touch required validation is visible and sends no write",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-touch requested theme rendered",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-touch fits phone width",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-touch empty selected day shows translated feedback",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-touch RTL rendered",
+      "result": "PASS"
+    },
+    {
+      "label": "Read-only viewport journeys preserve exact saved event",
+      "result": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "result": "PASS",
+  "counts": {
+    "PASS": 27,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

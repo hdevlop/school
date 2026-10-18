@@ -1,0 +1,142 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Separate denied account created",
+      "result": "PASS"
+    },
+    {
+      "label": "Denied account can authenticate",
+      "result": "PASS"
+    },
+    {
+      "label": "Actual denied role confirmed as teacher",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher denied POST cycles",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher denied PUT cycles",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher denied DELETE cycles",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher denied POST classes",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher denied PUT classes",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher denied DELETE classes",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher denied POST sections",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher denied PUT sections",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher denied DELETE sections",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher denied POST subjects",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher denied PUT subjects",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher denied DELETE subjects",
+      "result": "PASS"
+    },
+    {
+      "label": "Denied mutations preserve all owned identities",
+      "result": "PASS"
+    }
+  ],
+  "responses": [
+    {
+      "area": "cycles",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "area": "cycles",
+      "method": "PUT",
+      "status": 403
+    },
+    {
+      "area": "cycles",
+      "method": "DELETE",
+      "status": 403
+    },
+    {
+      "area": "classes",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "area": "classes",
+      "method": "PUT",
+      "status": 403
+    },
+    {
+      "area": "classes",
+      "method": "DELETE",
+      "status": 403
+    },
+    {
+      "area": "sections",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "area": "sections",
+      "method": "PUT",
+      "status": 403
+    },
+    {
+      "area": "sections",
+      "method": "DELETE",
+      "status": 403
+    },
+    {
+      "area": "subjects",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "area": "subjects",
+      "method": "PUT",
+      "status": 403
+    },
+    {
+      "area": "subjects",
+      "method": "DELETE",
+      "status": 403
+    }
+  ],
+  "cleanup": [
+    {
+      "entity": "denied-user",
+      "removed": true
+    }
+  ],
+  "result": "PASS",
+  "counts": {
+    "PASS": 16,
+    "FAIL": 0
+  }
+}

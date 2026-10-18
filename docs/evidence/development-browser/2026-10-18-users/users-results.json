@@ -1,0 +1,223 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "date": "2026-10-17T23:55:57.836Z",
+  "results": [
+    {
+      "test": "reserved-fixture-email-is-unused",
+      "outcome": "PASS"
+    },
+    {
+      "test": "dev-email-provider-is-console",
+      "outcome": "PASS"
+    },
+    {
+      "test": "cancel-create-has-no-invitation-or-write",
+      "outcome": "PASS"
+    },
+    {
+      "test": "French-required-validation-prevents-invitation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "UI-invite-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "created-user-persists-with-selected-role",
+      "outcome": "PASS"
+    },
+    {
+      "test": "card-role-and-status-match-supported-read",
+      "outcome": "PASS"
+    },
+    {
+      "test": "view-is-read-only-and-shows-role-status",
+      "outcome": "PASS"
+    },
+    {
+      "test": "edit-reopens-saved-identity-and-status",
+      "outcome": "PASS"
+    },
+    {
+      "test": "user-update-9-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "name-edit-persists-with-role-email-status-preserved",
+      "outcome": "PASS"
+    },
+    {
+      "test": "user-update-11-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "status-inactive-survives-reload",
+      "outcome": "PASS"
+    },
+    {
+      "test": "user-update-13-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "status-pending-survives-reload",
+      "outcome": "PASS"
+    },
+    {
+      "test": "user-update-15-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "status-active-survives-reload",
+      "outcome": "PASS"
+    },
+    {
+      "test": "duplicate-email-is-refused",
+      "outcome": "PASS"
+    },
+    {
+      "test": "duplicate-feedback-keeps-dialog-and-one-account",
+      "outcome": "PASS"
+    },
+    {
+      "test": "nonmatching-name-removes-cards",
+      "outcome": "PASS"
+    },
+    {
+      "test": "nonmatching-name-shows-filtered-empty",
+      "outcome": "FAIL"
+    },
+    {
+      "test": "email-filter-finds-exact-owned-account",
+      "outcome": "PASS"
+    },
+    {
+      "test": "French-phone-details-remain-read-only-without-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "test": "Arabic-phone-details-use-RTL-and-localized-status-label",
+      "outcome": "PASS"
+    },
+    {
+      "test": "cancel-delete-keeps-account-without-write",
+      "outcome": "PASS"
+    },
+    {
+      "test": "confirmed-delete-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "deleted-user-absent-after-reload-and-REST-read",
+      "outcome": "PASS"
+    },
+    {
+      "test": "no-unhandled-page-errors",
+      "outcome": "PASS"
+    }
+  ],
+  "counts": {
+    "PASS": 27,
+    "FAIL": 1
+  },
+  "failure": null,
+  "diagnostics": [
+    {
+      "type": "responseerror",
+      "method": "POST",
+      "path": "/api/auth/invite",
+      "status": 409
+    }
+  ],
+  "writes": [
+    {
+      "method": "PUT",
+      "path": "/api/users/:owned-id"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/users/:owned-id"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/users/:owned-id"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/users/:owned-id"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/users/:owned-id"
+    }
+  ],
+  "invitations": [
+    {
+      "method": "POST",
+      "path": "/api/auth/invite",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/invite",
+      "status": 409
+    }
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/users",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/roles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/users/:owned-id",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/users/:owned-id",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/users/:owned-id",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/users/:owned-id",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/users/:owned-id",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/users",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/users/:owned-id",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/users",
+      "status": 200
+    }
+  ],
+  "cleanup": [],
+  "limitations": [
+    "Console provider; no real email delivery",
+    "Denied-role checks and complete role-filter/table-mode matrix remain separate",
+    "Production checkboxes unchanged"
+  ]
+}

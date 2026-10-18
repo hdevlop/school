@@ -1,0 +1,58 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Inline zero capacity is blocked locally",
+      "result": "PASS"
+    },
+    {
+      "label": "Inline capacity validation uses French message",
+      "result": "FAIL"
+    },
+    {
+      "label": "Inline capacity above 100 blocked before a write",
+      "result": "FAIL"
+    },
+    {
+      "label": "Refused capacity retains stored value",
+      "result": "PASS"
+    },
+    {
+      "label": "Valid inline save returns 200",
+      "result": "PASS"
+    },
+    {
+      "label": "Valid inline edit survives reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Enter followed by blur writes once",
+      "result": "PASS"
+    }
+  ],
+  "capacityMax": "200",
+  "zeroError": "Must be ≥ 1",
+  "result": "PARTIAL",
+  "updates": [
+    400,
+    200
+  ],
+  "diagnostics": [
+    {
+      "type": "responseerror",
+      "method": "PUT",
+      "path": "/api/sections/:owned-id",
+      "status": 400
+    }
+  ],
+  "writes": [
+    {
+      "method": "PUT",
+      "path": "/api/sections/:owned-id"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/sections/:owned-id"
+    }
+  ]
+}

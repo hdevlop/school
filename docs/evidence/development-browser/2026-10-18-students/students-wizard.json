@@ -1,0 +1,39 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Empty first step stays open with translated validation",
+      "result": "PASS"
+    },
+    {
+      "label": "Whitespace student code refused by browser",
+      "result": "PASS"
+    },
+    {
+      "label": "Student fields survive backward navigation",
+      "result": "PASS"
+    },
+    {
+      "label": "Nested parent survives backward navigation",
+      "result": "PASS"
+    },
+    {
+      "label": "Three-step browser submission creates exactly one student",
+      "result": "PASS"
+    }
+  ],
+  "createStatus": 200,
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/students"
+    }
+  ],
+  "result": "PASS",
+  "continuation": "Initial harness read the fee response as an array. Corrected follow-up verified response.fees without creating a second record.",
+  "counts": {
+    "PASS": 5,
+    "FAIL": 0
+  }
+}

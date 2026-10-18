@@ -1,0 +1,63 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "mode": "development",
+  "completedUtc": "2026-10-17T23:17:37.251Z",
+  "scope": "Real dev demo, unmocked UI and internal MCP. No production deployment or external message.",
+  "selectedAcademicYear": "2026-2027",
+  "results": [
+    {
+      "case": "fixture-cin-is-unused",
+      "outcome": "PASS"
+    },
+    {
+      "case": "French-card-labels-use-selected-language",
+      "outcome": "PASS"
+    },
+    {
+      "case": "cancel-create-sends-no-write",
+      "outcome": "PASS"
+    },
+    {
+      "case": "empty-form-is-refused-in-French-without-write",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-create-is-accepted",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/parents"
+    }
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    }
+  ],
+  "cleanup": [
+    {
+      "removed": true
+    }
+  ],
+  "failure": {
+    "message": "locator.fill: Error: strict mode violation: getByPlaceholder('Rechercher par nom...', { exact: true }) resolved to 2 elements:\n    1) <input value=\"\" data-slot=\"input\" placeholder=\"Rechercher par nom...\" class=\"file:text-foreground selection:bg-primary selection:text-primary-foreground border-input flex h-9 w-full min-w-0 rounded-md text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring aria-invalid:ring-destructive/20 dark:aria-inva…/> aka getByRole('textbox', { name: 'Rechercher par nom...' })\n    2) <input value=\"\" data-slot=\"input\" placeholder=\"Rechercher par nom...\" class=\"file:text-foreground selection:bg-primary selection:text-primary-foreground border-input flex h-9 w-full min-w-0 rounded-md text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring aria-invalid:ring-destructive/20 dark:aria-inva…/> aka getByPlaceholder('Rechercher par nom...').nth(1)\n\nCall log:\n\u001b[2m  - waiting for getByPlaceholder('Rechercher par nom...', { exact: true })\u001b[22m\n",
+    "classification": "TEST",
+    "reason": "Responsive desktop and phone search inputs share a placeholder; the observer must select the visible input. Exact owned cleanup passed."
+  }
+}

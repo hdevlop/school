@@ -1,0 +1,50 @@
+{
+  "countedAssertions": 0,
+  "attempts": [
+    {
+      "name": "academic-read-attempt-1",
+      "result": "NOT_ACCEPTED",
+      "error": {
+        "view": "fr-phone",
+        "message": "expect(locator).toContainText(expected) failed\n\nLocator: locator('[data-row=\"true\"]')\nExpected substring: \"Atelier Atlas 1018\"\nReceived string:    \"OR18Classe:Atelier Atla...Numéro de salle:101Max élèves:26\"\nTimeout: 30000ms\n\nCall log:\n  - Expect \"to.have.text\" with timeout 30000ms\n  - waiting for locator('[data-row=\"true\"]')\n    33 × locator resolved to <div data-row=\"true\" data-row-id=\"46\" data-bordered=\"true\" class=\"relative group w-full rounded-lg text-card-foreground overflow-hidden bg-card najm-border border-border\">…</div>\n       - unexpected value \"OR18Classe:Atelier Atla...Numéro de salle:101Max élèves:26\"\n"
+      },
+      "diagnostics": [
+        {
+          "type": "responseerror",
+          "method": "POST",
+          "path": "/api/mcp",
+          "status": 401,
+          "view": "fr-phone"
+        },
+        {
+          "type": "responseerror",
+          "method": "POST",
+          "path": "/api/mcp",
+          "status": 401,
+          "view": "fr-phone"
+        },
+        {
+          "type": "responseerror",
+          "method": "POST",
+          "path": "/api/mcp",
+          "status": 401,
+          "view": "fr-phone"
+        }
+      ],
+      "explanation": "The name is intentionally shortened by NSectionInfo with the full value in its tooltip. The corrected run verifies that tooltip and continues all views. The earlier run also recorded transient 401 MCP discovery responses; the final run has no HTTP errors."
+    }
+  ],
+  "validationRetry": {
+    "command": "bun run test:config",
+    "initial": {
+      "pass": 530,
+      "fail": 1,
+      "failedTest": "schoolI18n has no letter lost to a question mark"
+    },
+    "resolution": "Corrected the newly added Arabic class-cycle label after a Windows helper encoded its letters as question marks.",
+    "final": {
+      "pass": 531,
+      "fail": 0
+    }
+  }
+}

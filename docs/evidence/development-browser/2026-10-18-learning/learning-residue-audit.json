@@ -1,0 +1,81 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "year": "2026-2027",
+  "result": "PARTIAL",
+  "checks": [
+    {
+      "label": "Owned schedule remains archived without lessons or duties",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned schedule remains archived without lessons or duties",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned schedule remains archived without lessons or duties",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned teachers chain detail remains absent",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned staff chain detail remains absent",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned users chain detail remains absent",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned teachers chain detail remains absent",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned staff chain detail remains absent",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned users chain detail remains absent",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned exams remains absent",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned assessments remains absent",
+      "result": "PASS"
+    },
+    {
+      "label": "Referenced owned class remains available",
+      "result": "PASS"
+    },
+    {
+      "label": "Referenced owned section remains available",
+      "result": "PASS"
+    },
+    {
+      "label": "Referenced owned section remains available",
+      "result": "PASS"
+    },
+    {
+      "label": "Unused owned section remains absent",
+      "result": "PASS"
+    }
+  ],
+  "retained": {
+    "archivedSchedules": 3,
+    "periods": 21,
+    "sections": 2,
+    "classes": 1,
+    "lessons": 0,
+    "duties": 0
+  },
+  "reason": "Published schedules can be archived, but deletion accepts drafts only; retained class and sections are referenced by these empty schedules.",
+  "counts": {
+    "PASS": 15,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

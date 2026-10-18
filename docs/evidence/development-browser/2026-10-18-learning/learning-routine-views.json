@@ -1,0 +1,92 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "fr-light-desktop requested theme rendered",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-light-desktop break supervision opens with keyboard or touch",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-light-desktop outer period editor remains usable at CSS 200 percent zoom",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-light-desktop teacher view uses days as rows",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-light-desktop teacher view names matching class and section",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-light-desktop teacher view count agrees with five class lessons",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-dark-desktop requested theme rendered",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-dark-desktop break supervision opens with keyboard or touch",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-dark-desktop outer period editor remains usable at CSS 200 percent zoom",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-dark-desktop teacher view uses days as rows",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-dark-desktop teacher view names matching class and section",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-dark-desktop teacher view count agrees with five class lessons",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-dark-touch requested theme rendered",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-dark-touch touch switches teaching day",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-dark-touch RTL rendered",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-dark-touch page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-dark-touch break supervision opens with keyboard or touch",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-dark-touch teacher timetable has touch day controls",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-dark-touch teacher view count agrees with five class lessons",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS",
+  "diagnostics": [],
+  "limitations": [
+    "CSS zoom at 200 percent checked; native browser zoom remains unverified.",
+    "No physical touch device was used; Chrome touch emulation was used."
+  ],
+  "counts": {
+    "PASS": 19,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

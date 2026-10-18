@@ -1,0 +1,144 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Exact owned event cleanup identity verified",
+      "result": "PASS"
+    },
+    {
+      "label": "Cancelled event deletion preserves record",
+      "result": "PASS"
+    },
+    {
+      "label": "Confirmed browser event deletion succeeds",
+      "result": "PASS"
+    },
+    {
+      "label": "Calendar removes the deleted event immediately",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted event detail returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Exact owned event cleanup identity verified",
+      "result": "PASS"
+    },
+    {
+      "label": "Cancelled event deletion preserves record",
+      "result": "PASS"
+    },
+    {
+      "label": "Confirmed browser event deletion succeeds",
+      "result": "PASS"
+    },
+    {
+      "label": "Calendar removes the deleted event immediately",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted event detail returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Exact owned event cleanup identity verified",
+      "result": "PASS"
+    },
+    {
+      "label": "Cancelled event deletion preserves record",
+      "result": "PASS"
+    },
+    {
+      "label": "Confirmed browser event deletion succeeds",
+      "result": "PASS"
+    },
+    {
+      "label": "Calendar removes the deleted event immediately",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted event detail returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Exact owned announcement cleanup identity verified",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned published announcement deleted through MCP",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted announcement detail returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "teacher cleanup identity verified",
+      "result": "PASS"
+    },
+    {
+      "label": "teacher disposable login removed",
+      "result": "PASS"
+    },
+    {
+      "label": "teacher deleted login returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "parent cleanup identity verified",
+      "result": "PASS"
+    },
+    {
+      "label": "parent disposable login removed",
+      "result": "PASS"
+    },
+    {
+      "label": "parent deleted login returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Calendar stays usable after cleanup",
+      "result": "PASS"
+    },
+    {
+      "label": "Final list reads succeed",
+      "result": "PASS"
+    },
+    {
+      "label": "Final owned event and announcement residue is zero",
+      "result": "PASS"
+    },
+    {
+      "label": "Reused class remains available for retained archived timetables",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS",
+  "createdFixtureResidue": {
+    "events": 0,
+    "announcements": 0,
+    "users": 0
+  },
+  "reusedAcademicStructure": "Existing class from learning batch remains with its three empty archived schedules; no new academic structure created here.",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "DELETE",
+      "path": "/api/events/:owned-id"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/events/:owned-id"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/events/:owned-id"
+    }
+  ],
+  "counts": {
+    "PASS": 28,
+    "FAIL": 0
+  },
+  "acceptedForTotals": true
+}

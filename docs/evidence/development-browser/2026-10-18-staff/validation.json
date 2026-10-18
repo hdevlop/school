@@ -1,0 +1,136 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "runDate": "2026-10-18",
+  "clientTimeZone": "Africa/Casablanca",
+  "selectedAcademicYear": "2026-2027",
+  "source": {
+    "baseCommit": "6a2284b0c087ac58f4d5ade35c4c63c82a0a4418",
+    "workingTree": true,
+    "files": [
+      {
+        "path": "apps/dashboard/src/features/Staff/components/StaffCard.tsx",
+        "sha256": "2f5162805bc2208a900ad045287b1427d809d41b1703013055120d6ab7c846ef"
+      },
+      {
+        "path": "apps/dashboard/src/features/Staff/components/StaffTable.tsx",
+        "sha256": "ca7a2f0aa7c504ddd2078f714163e26187166d16e0e7d69074a4f2f85b020ec1"
+      },
+      {
+        "path": "apps/dashboard/src/features/Staff/components/StaffForm.tsx",
+        "sha256": "97e077a8f1dde9943f5668c6cdb3b9a84f58443526ed8075f5b52ade00c23274"
+      },
+      {
+        "path": "apps/dashboard/src/features/Staff/config/staffSchemas.ts",
+        "sha256": "854a4953a39a82d062e6cf5ea9cd14cf94c5e160bf1060479fc99e363b34a19d"
+      }
+    ],
+    "fingerprintCaptured": "After the accepted runs; not an immutable committed-candidate gate",
+    "packagePins": {
+      "najm-kit": "3.6.1",
+      "najm-auth": "6.6.0",
+      "najm-next": "0.10.0"
+    }
+  },
+  "browser": {
+    "driver": "Standalone Node Playwright",
+    "channel": "Chrome",
+    "headless": true,
+    "viewports": [
+      "1440x900",
+      "390x844"
+    ],
+    "languages": [
+      "fr",
+      "ar"
+    ]
+  },
+  "counts": {
+    "PASS": 67,
+    "FAIL": 1
+  },
+  "devCases": [
+    {
+      "id": "staff-R01",
+      "outcome": "FAIL",
+      "reason": "Positive name, role and category filtering, card/table role and translated status pass. No-match filtering still fails to show the shared empty-state renderer."
+    },
+    {
+      "id": "staff-R02",
+      "outcome": "PASS",
+      "reason": "Hourly validation; receptionist two-step form; cleaner/security zone, assistant class, accountant cycle, driver/bus assistant vehicle controls; missing driver license routes back to French errors without a write."
+    },
+    {
+      "id": "staff-M01",
+      "outcome": "PASS",
+      "reason": "Owned hourly and monthly staff created through UI; hourly name/rate/hours edit, zone reopen, reload and supported MCP checks."
+    },
+    {
+      "id": "staff-M02",
+      "outcome": "PASS",
+      "reason": "Owned onLeave/inactive/active changes persist with pay/role preserved; cancel-delete sends no write; cleaner reference ended through MCP before UI deletion, then owned zone removed."
+    }
+  ],
+  "validation": [
+    {
+      "command": "bun test apps/dashboard/tests/features/Staff/config/staffSchemas.test.ts",
+      "exitCode": 0,
+      "testsPASS": 4
+    },
+    {
+      "command": "bun run test:config",
+      "exitCode": 0,
+      "testsPASS": 529,
+      "testsFAIL": 0
+    },
+    {
+      "command": "bun run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run build",
+      "exitCode": 0,
+      "outputDirectory": ".next-dev-staff-build-1018"
+    },
+    {
+      "command": "git diff --check (Staff source)",
+      "exitCode": 0
+    }
+  ],
+  "changes": [
+    "Card now includes translated employment status",
+    "Table status displays the existing translation instead of raw enum text"
+  ],
+  "diagnostics": {
+    "captured": "HTTP error responses and unhandled page errors; not a full console/CSP/accessibility matrix",
+    "acceptedBrowserReportsUnexpectedErrors": 0,
+    "negativeProbe": "Teacher account REST staff reads/writes return 403; forbidden browser page redirects to /home. Deleted owned staff reads return 404."
+  },
+  "cleanup": {
+    "origin": "http://127.0.0.1:3102",
+    "date": "2026-10-18T09:44:34.347Z",
+    "staffRecordsRead": 5,
+    "ownedStaffRemaining": 0,
+    "ownedZoneRemaining": 0,
+    "ownedUsersRemaining": 0,
+    "lastOwnedIdStatuses": [
+      404,
+      404
+    ]
+  },
+  "production": {
+    "deployed": false,
+    "checkboxesChanged": false,
+    "retest": "NOT RUN"
+  },
+  "remaining": [
+    "Shared Najm client-filtered empty-card view remains broken; see Users package-fix handoff",
+    "No real invitation delivery or access-reset acceptance",
+    "Driver profile creation/deletion and transport assignment mutation remain separate from these form-control probes",
+    "Avatar upload and complete accessibility checks remain open"
+  ],
+  "parallelWork": "Finance changes preserved. Its commits advanced HEAD during this development sequence; they were not reset or staged by this batch. Shared dev server stayed on 3102 after its restart."
+}

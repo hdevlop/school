@@ -1,0 +1,124 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "fr-desktop exams same saved title",
+      "result": "PASS"
+    },
+    {
+      "label": "exams class filter has accessible name",
+      "result": "PASS"
+    },
+    {
+      "label": "exams matches linked section LA18",
+      "result": "PASS"
+    },
+    {
+      "label": "exams matches linked section LB18",
+      "result": "PASS"
+    },
+    {
+      "label": "exams no-match translated feedback",
+      "result": "FAIL"
+    },
+    {
+      "label": "exams filter recovery restores identity",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop exams detail type status and section count",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop assessments same saved title",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments class filter has accessible name",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments matches linked section LA18",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments matches linked section LB18",
+      "result": "PASS"
+    },
+    {
+      "label": "assessments no-match translated feedback",
+      "result": "FAIL"
+    },
+    {
+      "label": "assessments filter recovery restores identity",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop assessments detail type status and section count",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone exams same saved title",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone exams detail type status and section count",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone exams page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone assessments same saved title",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone assessments detail type status and section count",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone assessments page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone exams same saved title",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone exams detail type status and section count",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone exams page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "label": "Arabic exams RTL",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone assessments same saved title",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone assessments detail type status and section count",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone assessments page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "label": "Arabic assessments RTL",
+      "result": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "result": "PARTIAL",
+  "counts": {
+    "PASS": 26,
+    "FAIL": 2
+  },
+  "acceptedForTotals": true
+}
