@@ -1,4 +1,8 @@
-# Open defect: client filtering leaves an empty card grid
+# Historical defect: client filtering leaves an empty card grid
+
+**Development follow-up:** the published Najm Kit 3.6.3 fix passes the
+[School recheck](../2026-10-18-shared-ui-recheck/README.md). The reproduction
+below records the earlier 3.6.1 failure; production acceptance remains separate.
 
 Target: `http://127.0.0.1:3102/users`, French desktop, `najm-kit@3.6.1`.
 

@@ -1,0 +1,11 @@
+{
+  "database": "school_read_browser_20261018",
+  "markerVerified": true,
+  "connectionsBeforeDrop": 0,
+  "removed": true,
+  "sourceRemoved": false,
+  "authenticatedZoomProfilesRemoved": true,
+  "anonymousProbeProfilesRetained": 3,
+  "probeCleanup": "Automatic approval review rejected recursive removal with blocked by policy. Anonymous probe folders remain ignored; no credential login was performed in those profiles.",
+  "normalDevHealth": 200
+}

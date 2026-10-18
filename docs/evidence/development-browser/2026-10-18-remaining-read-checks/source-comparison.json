@@ -1,0 +1,78 @@
+{
+  "tables": [
+    "fees",
+    "fee_installments",
+    "settings",
+    "academic_years",
+    "students"
+  ],
+  "sourceBefore": {
+    "fees": {
+      "count": 2,
+      "sha256": "a3d26ba536c5d11412bbca2e0bdb1b740b22b43553b6c02fa5fa970f2511a89e"
+    },
+    "fee_installments": {
+      "count": 1,
+      "sha256": "e5c02fc5187a219d5993fd7578acd6d8e3e339a67a626b4dd8b2be895c0f664f"
+    },
+    "settings": {
+      "count": 1,
+      "sha256": "8b765abdd4fbc58958651fc4621a81f623393aae896b079b567bd52f94fe473e"
+    },
+    "academic_years": {
+      "count": 3,
+      "sha256": "58e20f818d8cd1c64ebcf9e7410bb0f0d8a31af9ba289bdaf800166d28e21d4a"
+    },
+    "students": {
+      "count": 10,
+      "sha256": "633c215a2d316a3494ed0ff1562d1c67c7a7fc0799809200aee11c46c1c88875"
+    }
+  },
+  "sourceAfter": {
+    "fees": {
+      "count": 2,
+      "sha256": "a3d26ba536c5d11412bbca2e0bdb1b740b22b43553b6c02fa5fa970f2511a89e"
+    },
+    "fee_installments": {
+      "count": 1,
+      "sha256": "e5c02fc5187a219d5993fd7578acd6d8e3e339a67a626b4dd8b2be895c0f664f"
+    },
+    "settings": {
+      "count": 1,
+      "sha256": "8b765abdd4fbc58958651fc4621a81f623393aae896b079b567bd52f94fe473e"
+    },
+    "academic_years": {
+      "count": 3,
+      "sha256": "58e20f818d8cd1c64ebcf9e7410bb0f0d8a31af9ba289bdaf800166d28e21d4a"
+    },
+    "students": {
+      "count": 10,
+      "sha256": "633c215a2d316a3494ed0ff1562d1c67c7a7fc0799809200aee11c46c1c88875"
+    }
+  },
+  "cloneAfter": {
+    "fees": {
+      "count": 2,
+      "sha256": "a3d26ba536c5d11412bbca2e0bdb1b740b22b43553b6c02fa5fa970f2511a89e"
+    },
+    "fee_installments": {
+      "count": 1,
+      "sha256": "e5c02fc5187a219d5993fd7578acd6d8e3e339a67a626b4dd8b2be895c0f664f"
+    },
+    "settings": {
+      "count": 1,
+      "sha256": "8b765abdd4fbc58958651fc4621a81f623393aae896b079b567bd52f94fe473e"
+    },
+    "academic_years": {
+      "count": 3,
+      "sha256": "58e20f818d8cd1c64ebcf9e7410bb0f0d8a31af9ba289bdaf800166d28e21d4a"
+    },
+    "students": {
+      "count": 10,
+      "sha256": "633c215a2d316a3494ed0ff1562d1c67c7a7fc0799809200aee11c46c1c88875"
+    }
+  },
+  "sourceUnchanged": true,
+  "cloneUnchanged": true,
+  "authAuditTablesCompared": false
+}

@@ -1,0 +1,114 @@
+{
+  "date": "2026-10-18T18:49:57.984Z",
+  "sourceCommit": "67ffa104a230fda66b190ab11a527989d18c19cc",
+  "browserChecks": 132,
+  "counts": {
+    "examCalendar": {
+      "PASS": 33,
+      "FAIL": 0
+    },
+    "fees": {
+      "PASS": 78,
+      "FAIL": 0
+    },
+    "nativeZoom": {
+      "PASS": 21,
+      "FAIL": 0
+    }
+  },
+  "files": [
+    {
+      "path": "package.json",
+      "sha256": "7dcd482fe10b76c4dcd9a89adb4ebd5941c2c53e37529f885d4a4cd5f410771e"
+    },
+    {
+      "path": "bun.lock",
+      "sha256": "d794871257ffe80d0f10c5ba433969242108ada1f7a4c013d0ce29163c971eae"
+    },
+    {
+      "path": "apps/dashboard/src/features/Exams/components/ExamCard.tsx",
+      "sha256": "873ae086f7a9d0b2fc451c2e086697040e04478e57f9734b14382e6b9e7856ae"
+    },
+    {
+      "path": "apps/dashboard/src/features/Exams/components/ExamsTable.tsx",
+      "sha256": "dc7bf87fbf540b8659a7e2b6ad00760b6c0d8b4a65090eafd41c1e949c862bd9"
+    },
+    {
+      "path": "apps/dashboard/src/features/Exams/hooks/useExamsTableColumns.tsx",
+      "sha256": "42096dcf4ec9c1eaaabe60c72508d37b8dc65c35baa01fb1c6a6422314dd3e2f"
+    },
+    {
+      "path": "apps/dashboard/src/features/Calendar/CalendarPage.tsx",
+      "sha256": "d1af198e2a105bcd9739955c9759f562cd4270755e4f535f0b6c0e04310df86b"
+    },
+    {
+      "path": "apps/dashboard/src/features/Financial/Fees/components/FeesTable.tsx",
+      "sha256": "82a58f24b88a135185d41fa4d5276ad374b6bc065c66ee3fb0e2d3e821d9c264"
+    },
+    {
+      "path": "apps/dashboard/src/features/AcademicYears/components/ViewingYearSelector.tsx",
+      "sha256": "5d404df1699c956fe2bf9b3fa5c3608eb716963d023cf284db53b505d56b91a4"
+    },
+    {
+      "path": "apps/dashboard/src/features/ClassRoutines/components/ClassRoutinePage.tsx",
+      "sha256": "33f0d8dc3bddc3e6e3b46966b3ea6c3a3b07f1fb2a87081e4b8742c8ae1ff214"
+    },
+    {
+      "path": "apps/dashboard/src/features/ClassRoutines/components/RoutineDayList.tsx",
+      "sha256": "e30859fb36909b7e07a1565af9bec3a9825baafcd51c1c4c3bb994d1345022f2"
+    },
+    {
+      "path": "apps/dashboard/src/hooks/schoolDateFormat.ts",
+      "sha256": "0341bb3bb95ba7778e6deac2547c32578ba6db20f26da6a94c8c2cfa18b7ecee"
+    }
+  ],
+  "privateHarnesses": [
+    {
+      "path": ".cache/dev-people/remaining-ui.mjs",
+      "sha256": "91891f2c33a3938c67b106ebd04438859a61e4056d97b57c92e50d6f56dadd2f"
+    },
+    {
+      "path": ".cache/remaining-ui/fees.mjs",
+      "sha256": "f6d0d9f9860b977e7631d7dcd5ac3da72555628f123a18c89cf7a672adc99341"
+    },
+    {
+      "path": ".cache/remaining-ui/native-zoom.mjs",
+      "sha256": "0cf1e94f6b9671c92bea8ed7b0672bd8d190a9d118a2c23efdef965dc62d9a53"
+    }
+  ],
+  "runtimeChanges": true,
+  "runtimeChange": "RoutineDayList day heading uses text-foreground.",
+  "dependencyChanges": false,
+  "checks": [
+    {
+      "command": "bun run lint",
+      "result": "PASS",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run --cwd apps/dashboard typecheck",
+      "environment": {
+        "NAJM_NEXT_DIST_DIR": ".next-read-checks-types"
+      },
+      "result": "PASS",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run build",
+      "environment": {
+        "NAJM_NEXT_DIST_DIR": ".next-read-checks-build"
+      },
+      "result": "PASS",
+      "exitCode": 0,
+      "freshIsolatedOutput": true,
+      "normalDevOutputPreserved": true,
+      "warnings": [
+        "Existing najm-chatbot/pg RAG import deprecation"
+      ]
+    }
+  ],
+  "productionAcceptance": false,
+  "noBusinessWrites": true,
+  "cloneExternalEmailAndPush": false,
+  "scope": "Focused remaining development reads plus day-heading contrast fix; no full feature matrix or all-table database acceptance."
+}

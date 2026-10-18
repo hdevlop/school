@@ -1,0 +1,216 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "view": "fr-desktop",
+      "area": "exam-dates",
+      "label": "Card date matches independently reordered API date 2027-01-29",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "exam-dates",
+      "label": "Type status and section labels agree with API 2027-01-29",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "exam-dates",
+      "label": "Card date matches independently reordered API date 2027-01-28",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "exam-dates",
+      "label": "Type status and section labels agree with API 2027-01-28",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "exam-dates",
+      "label": "Card date matches independently reordered API date 2027-01-27",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "exam-dates",
+      "label": "Type status and section labels agree with API 2027-01-27",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "exam-dates",
+      "label": "Table date matches the same API record 2027-01-29",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "exam-dates",
+      "label": "Table date matches the same API record 2027-01-28",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "exam-dates",
+      "label": "Table date matches the same API record 2027-01-27",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "empty-month",
+      "label": "Navigate to independently empty month 2027-07",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "empty-month",
+      "label": "Keyboard selection works with no records in the selected month",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "empty-month",
+      "label": "Today returns from the empty month",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "layout",
+      "label": "No page horizontal overflow",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "exam-dates",
+      "label": "Card date matches independently reordered API date 2027-01-29",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "exam-dates",
+      "label": "Type status and section labels agree with API 2027-01-29",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "exam-dates",
+      "label": "Card date matches independently reordered API date 2027-01-28",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "exam-dates",
+      "label": "Type status and section labels agree with API 2027-01-28",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "exam-dates",
+      "label": "Card date matches independently reordered API date 2027-01-27",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "exam-dates",
+      "label": "Type status and section labels agree with API 2027-01-27",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "empty-month",
+      "label": "Navigate to independently empty month 2027-07",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "empty-month",
+      "label": "Keyboard selection works with no records in the selected month",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "empty-month",
+      "label": "Today returns from the empty month",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "layout",
+      "label": "No page horizontal overflow",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "exam-dates",
+      "label": "Card date matches independently reordered API date 2027-01-29",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "exam-dates",
+      "label": "Type status and section labels agree with API 2027-01-29",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "exam-dates",
+      "label": "Card date matches independently reordered API date 2027-01-28",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "exam-dates",
+      "label": "Type status and section labels agree with API 2027-01-28",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "exam-dates",
+      "label": "Card date matches independently reordered API date 2027-01-27",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "exam-dates",
+      "label": "Type status and section labels agree with API 2027-01-27",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "empty-month",
+      "label": "Navigate to independently empty month 2027-07",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "empty-month",
+      "label": "Keyboard selection works with no records in the selected month",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "empty-month",
+      "label": "Today returns from the empty month",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "layout",
+      "label": "No page horizontal overflow",
+      "result": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "writes": [],
+  "emptyMonths": [
+    "2027-07",
+    "2027-08"
+  ],
+  "counts": {
+    "PASS": 33,
+    "FAIL": 0
+  },
+  "browser": "isolated Chromium",
+  "selectedYear": "2026-2027",
+  "normalDemo": true
+}

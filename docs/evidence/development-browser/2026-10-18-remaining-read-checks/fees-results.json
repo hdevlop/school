@@ -1,0 +1,1269 @@
+{
+  "origin": "http://127.0.0.1:3109",
+  "checks": [
+    {
+      "view": "fr-desktop",
+      "label": "Header count matches 2026-2027 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "All six stat cards reconcile to 2026-2027 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Visible student rows belong to 2026-2027",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Header count matches 2025-2026 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "All six stat cards reconcile to 2025-2026 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Visible student rows belong to 2025-2026",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Header count matches 2024-2025 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "All six stat cards reconcile to 2024-2025 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Visible student rows belong to 2024-2025",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Header count matches 2024-2025 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "All six stat cards reconcile to 2024-2025 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Visible student rows belong to 2024-2025",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Historical selection survives navigation away and back",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Header count matches 2024-2025 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "All six stat cards reconcile to 2024-2025 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Visible student rows belong to 2024-2025",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Historical selection survives reload",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Header count matches 2025-2026 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "All six stat cards reconcile to 2025-2026 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Visible student rows belong to 2025-2026",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Fees class filter has translated accessible name",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Header count matches 2026-2027 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "All six stat cards reconcile to 2026-2027 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Visible student rows belong to 2026-2027",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Switch back restores the active-year view",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "label": "Viewport and direction remain correct",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Rendered count metadata matches 2026-2027 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "All six stat cards reconcile to 2026-2027 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Visible student rows belong to 2026-2027",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Rendered count metadata matches 2025-2026 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "All six stat cards reconcile to 2025-2026 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Visible student rows belong to 2025-2026",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Rendered count metadata matches 2024-2025 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "All six stat cards reconcile to 2024-2025 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Visible student rows belong to 2024-2025",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Rendered count metadata matches 2024-2025 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "All six stat cards reconcile to 2024-2025 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Visible student rows belong to 2024-2025",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Historical selection survives navigation away and back",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Rendered count metadata matches 2024-2025 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "All six stat cards reconcile to 2024-2025 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Visible student rows belong to 2024-2025",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Historical selection survives reload",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Rendered count metadata matches 2025-2026 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "All six stat cards reconcile to 2025-2026 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Visible student rows belong to 2025-2026",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Fees class filter has translated accessible name",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Rendered count metadata matches 2026-2027 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "All six stat cards reconcile to 2026-2027 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Visible student rows belong to 2026-2027",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Switch back restores the active-year view",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "label": "Viewport and direction remain correct",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Rendered count metadata matches 2026-2027 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "All six stat cards reconcile to 2026-2027 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Visible student rows belong to 2026-2027",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Rendered count metadata matches 2025-2026 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "All six stat cards reconcile to 2025-2026 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Visible student rows belong to 2025-2026",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Rendered count metadata matches 2024-2025 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "All six stat cards reconcile to 2024-2025 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Visible student rows belong to 2024-2025",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Rendered count metadata matches 2024-2025 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "All six stat cards reconcile to 2024-2025 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Visible student rows belong to 2024-2025",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Historical selection survives navigation away and back",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Rendered count metadata matches 2024-2025 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "All six stat cards reconcile to 2024-2025 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Visible student rows belong to 2024-2025",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Historical selection survives reload",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Rendered count metadata matches 2025-2026 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "All six stat cards reconcile to 2025-2026 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Visible student rows belong to 2025-2026",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Fees class filter has translated accessible name",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Rendered count metadata matches 2026-2027 API rows",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "All six stat cards reconcile to 2026-2027 API totals",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Visible student rows belong to 2026-2027",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Switch back restores the active-year view",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "label": "Viewport and direction remain correct",
+      "result": "PASS"
+    }
+  ],
+  "totals": [
+    {
+      "view": "fr-desktop",
+      "year": "2026-2027",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2026-2027",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2026-2027",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2026-2027",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2026-2027",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2026-2027",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2025-2026",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2025-2026",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2025-2026",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2025-2026",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2025-2026",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2025-2026",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 10000
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2024-2025",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2025-2026",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2025-2026",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2025-2026",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2025-2026",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2025-2026",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2025-2026",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 10000
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2026-2027",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2026-2027",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2026-2027",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2026-2027",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2026-2027",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-desktop",
+      "year": "2026-2027",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2026-2027",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2026-2027",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2026-2027",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2026-2027",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2026-2027",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2026-2027",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2025-2026",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2025-2026",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2025-2026",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2025-2026",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2025-2026",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2025-2026",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 10000
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2024-2025",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2025-2026",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2025-2026",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2025-2026",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2025-2026",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2025-2026",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2025-2026",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 10000
+    },
+    {
+      "view": "fr-phone",
+      "year": "2026-2027",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2026-2027",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2026-2027",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2026-2027",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2026-2027",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "fr-phone",
+      "year": "2026-2027",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2026-2027",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2026-2027",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2026-2027",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2026-2027",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2026-2027",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2026-2027",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2025-2026",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2025-2026",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2025-2026",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2025-2026",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2025-2026",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2025-2026",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 10000
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2024-2025",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2025-2026",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2025-2026",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2025-2026",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2025-2026",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2025-2026",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2025-2026",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 10000
+    },
+    {
+      "view": "ar-phone",
+      "year": "2026-2027",
+      "metric": "collectedToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2026-2027",
+      "metric": "collectedCashToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2026-2027",
+      "metric": "collectedCheckToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2026-2027",
+      "metric": "collectedBankTransferToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2026-2027",
+      "metric": "collectedTpeToDate",
+      "expectedMinorUnits": 0
+    },
+    {
+      "view": "ar-phone",
+      "year": "2026-2027",
+      "metric": "overdueAmount",
+      "expectedMinorUnits": 0
+    }
+  ],
+  "diagnostics": [],
+  "writes": [],
+  "reads": [
+    {
+      "path": "/api/fees",
+      "year": "2026-2027",
+      "view": "fr-desktop"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2025-2026",
+      "view": "fr-desktop"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2024-2025",
+      "view": "fr-desktop"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2024-2025",
+      "view": "fr-desktop"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2024-2025",
+      "view": "fr-desktop"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2025-2026",
+      "view": "fr-desktop"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2026-2027",
+      "view": "fr-desktop"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2026-2027",
+      "view": "fr-phone"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2025-2026",
+      "view": "fr-phone"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2024-2025",
+      "view": "fr-phone"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2024-2025",
+      "view": "fr-phone"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2024-2025",
+      "view": "fr-phone"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2025-2026",
+      "view": "fr-phone"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2026-2027",
+      "view": "fr-phone"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2026-2027",
+      "view": "ar-phone"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2025-2026",
+      "view": "ar-phone"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2024-2025",
+      "view": "ar-phone"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2024-2025",
+      "view": "ar-phone"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2024-2025",
+      "view": "ar-phone"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2025-2026",
+      "view": "ar-phone"
+    },
+    {
+      "path": "/api/fees",
+      "year": "2026-2027",
+      "view": "ar-phone"
+    }
+  ],
+  "counts": {
+    "PASS": 78,
+    "FAIL": 0
+  },
+  "browser": "isolated Chromium",
+  "database": "owned local clone of school_history_test",
+  "phoneSubtitle": "Count metadata is rendered but intentionally hidden on phone; six stat cards and student cards are visible."
+}

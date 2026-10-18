@@ -1,5 +1,11 @@
 # Finance: development browser batch (PB1021-FIN)
 
+Later development follow-up: [remaining reads](../2026-10-18-remaining-read-checks/README.md)
+closes the year-filter gap on an isolated three-year clone and verifies the
+fees class filter's accessible name. Other follow-up batches are listed in
+the [development ledger](../../../tests/development-browser.md). The original
+results and findings below describe this earlier execution.
+
 Target: **http://127.0.0.1:3102**, the existing dev demo and its local
 database, which the owner authorized changing on 2026-10-18. Run on
 2026-10-17 23:15 – 2026-10-18 00:35 UTC by Claude Code, while another coder

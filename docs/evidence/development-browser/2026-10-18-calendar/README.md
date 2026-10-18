@@ -1,5 +1,9 @@
 # Calendar and events: development browser batch
 
+Later development follow-up: [remaining reads](../2026-10-18-remaining-read-checks/README.md)
+verifies a real entirely empty July 2027 in French/Arabic desktop/phone views.
+The original execution counts and other limitations below are preserved.
+
 Target: **http://127.0.0.1:3102**, existing local demo, year **2026-2027**.
 Accepted reports contain **123 PASS, 0 FAIL assertions**. Five of the six
 development checklist cases pass; calendar-R03 remains partial because an

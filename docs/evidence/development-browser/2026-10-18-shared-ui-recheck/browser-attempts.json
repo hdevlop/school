@@ -1,0 +1,39 @@
+{
+  "excludedFromAcceptedTotals": true,
+  "initialCounts": {
+    "PASS": 99,
+    "FAIL": 13
+  },
+  "secondRunCounts": {
+    "PASS": 122,
+    "FAIL": 4
+  },
+  "focusedFollowupCounts": {
+    "PASS": 16,
+    "FAIL": 0
+  },
+  "issues": [
+    {
+      "classification": "HARNESS",
+      "description": "Staff uses staff.filters.search, not searchByName."
+    },
+    {
+      "classification": "HARNESS",
+      "description": "Subjects has no class filter; only Students and Sections are targeted."
+    },
+    {
+      "classification": "HARNESS",
+      "description": "Some primary phone filters had not hydrated when count() was read; await real rows and then the visible primary filter. A filter menu is not present on single-filter tables."
+    },
+    {
+      "classification": "HARNESS",
+      "description": "Exams and Assessments use class as the primary phone filter, with title search inside the filter menu. The focused follow-up opens that menu and passes all four page/view combinations. Passing checks repeated by the follow-up are counted once."
+    },
+    {
+      "classification": "DEVELOPMENT_TOOL_OVERLAY",
+      "description": "Next.js indicator overlaps the left edge of the Arabic phone Next button. Use the uncovered right edge via a normal pointer click; no DOM, application or Next config changes."
+    }
+  ],
+  "initialProductWrites": [],
+  "initialDiagnostics": []
+}

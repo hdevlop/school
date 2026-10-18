@@ -27,6 +27,16 @@ diagnostics and cleanup. Keep credentials, sessions and raw fixture manifests
 in ignored local files. The [production ledger](production-browser/evidence-ledger.md)
 continues to describe production execution.
 
+The rows below preserve each batch's original results. Later follow-ups can
+resolve an earlier failure without rewriting its historical counts. In
+particular, the [Najm Kit 3.6.3 development recheck](../evidence/development-browser/2026-10-18-shared-ui-recheck/README.md)
+resolves the recorded shared empty-search, class-filter accessible-name and
+teacher wizard draft-retention failures in the exercised views. Remaining
+partials are not promoted by that recheck. The subsequent
+[remaining read checks](../evidence/development-browser/2026-10-18-remaining-read-checks/README.md)
+close the specific exam date-label, native browser zoom, empty-month and fee
+year-filter gaps in development. Production results remain separate.
+
 | Dev batch | Result | Evidence |
 | --- | --- | --- |
 | Parents, 2026-10-18 | 20 assertions PASS; one accessibility-label defect fixed locally; production recheck pending | [Parent lifecycle](../evidence/development-browser/2026-10-18-parents/README.md) |
@@ -45,3 +55,5 @@ continues to describe production execution.
 | Vehicle table/card follow-up, 2026-10-18 | 71 assertions PASS; missing mileage column fixed; numeric sorting, four desktop languages, French/Arabic phone parity and exact cleanup verified; closes the prior partial vehicle read case in development; production recheck pending | [Vehicle parity results](../evidence/development-browser/2026-10-18-vehicle-parity/README.md) |
 | Rollover browser, 2026-10-18 | 71 final assertions PASS on an owned database clone; preview option/year changes fixed; real commit, duplicate skip/retry, exact fees/installments, unchanged settings, four languages and teacher denial checked; clone removed; separate activation and payment cutoff remain open | [Rollover results](../evidence/development-browser/2026-10-18-rollover-browser/README.md) |
 | Calendar boundaries API/database follow-up, 2026-10-18 | 72 tests PASS, including 11 new HTTP/PostgreSQL cases; six payment dates retain actual cash dates and fee-year allocations; early activation refusal, concurrent September 1 activation, repeat/close and no fee generation verified; owned clone removed and eight original tables unchanged; no new browser or production acceptance | [Payment dates and separate activation](../evidence/development-browser/2026-10-18-calendar-boundaries/README.md) |
+| Shared UI recheck, 2026-10-18 | 134 unique browser checks PASS on published Najm Kit 3.6.3; nine tables recover from translated empty searches, Students/Sections class filters have names, teacher wizard drafts survive Previous/header navigation and still validate; French desktop/phone and Arabic dark phone; 547 config and 28 boundary tests PASS; no application changes or business writes; production recheck pending | [Shared component follow-up](../evidence/development-browser/2026-10-18-shared-ui-recheck/README.md) |
+| Remaining read checks, 2026-10-18 | 132 browser checks PASS: exact exam date labels, a real empty July, historical fee selection/totals/navigation/reload, and native Chrome 200% zoom; timetable dark day-heading contrast fixed; clone removed and five checked tables unchanged; production recheck pending | [Dates, calendar, fee years and zoom](../evidence/development-browser/2026-10-18-remaining-read-checks/README.md) |

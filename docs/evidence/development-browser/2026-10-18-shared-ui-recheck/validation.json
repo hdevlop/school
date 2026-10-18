@@ -1,0 +1,76 @@
+{
+  "recordedAt": "2026-10-18T18:03:36.026Z",
+  "sourceCommit": "67ffa104a230fda66b190ab11a527989d18c19cc",
+  "workingTree": "M docs/evidence/development-browser/2026-10-18-students/shared-class-filter-label.md\n M docs/evidence/development-browser/2026-10-18-teachers/shared-wizard-draft.md\n M docs/evidence/development-browser/2026-10-18-users/shared-table-empty-state.md\n M docs/tests/development-browser.md\n?? docs/evidence/development-browser/2026-10-18-shared-ui-recheck/",
+  "runtimeChangesInThisBatch": false,
+  "rootNajmKit": "3.6.3",
+  "referenceNajmKit": "3.6.3",
+  "files": [
+    {
+      "path": "package.json",
+      "sha256": "7dcd482fe10b76c4dcd9a89adb4ebd5941c2c53e37529f885d4a4cd5f410771e"
+    },
+    {
+      "path": "bun.lock",
+      "sha256": "d794871257ffe80d0f10c5ba433969242108ada1f7a4c013d0ce29163c971eae"
+    },
+    {
+      "path": "apps/dashboard/src/components/SchoolTable.tsx",
+      "sha256": "0d1112a8015c46f3b79897bcf7a0a32dc08ff06ef45576c86b581e707f6fcf7f"
+    },
+    {
+      "path": "apps/dashboard/src/providers/AppProviders.tsx",
+      "sha256": "dd0d8b36e2c4c1a289090b87dbaef46769fae394f24363030ee116ff0eff15b9"
+    },
+    {
+      "path": "apps/dashboard/src/features/Teachers/components/TeacherForm.tsx",
+      "sha256": "e7498264177c8dbe0ecc099343dc99413982ef0348b8f0f2b75bac067794bd90"
+    },
+    {
+      "path": "apps/dashboard/src/features/Teachers/config/teacherSchemas.ts",
+      "sha256": "4415e5816c7ff52c6d869a5794b56abfd73ac69360eb35b335bebb71ac538160"
+    },
+    {
+      "path": "apps/dashboard/src/features/Students/hooks/useStudentsTableFilters.tsx",
+      "sha256": "3fffabdc7d1f4800d79d5969fb3e01ccf8c274bdd0e3c88bd328f36ebc52853a"
+    },
+    {
+      "path": "apps/dashboard/src/features/Classes/hooks/useClassSectionTableScope.ts",
+      "sha256": "c28133e16374fc08591cdff82f1fa8e54bb0ba4b6dc7da06b700ab2293796ec9"
+    },
+    {
+      "path": "packages/contracts/src/locales/fr.json",
+      "sha256": "eccd017c413579b8c816d071d019da99ae17666d5fc7b42c578e24d7a0c14424"
+    },
+    {
+      "path": "packages/contracts/src/locales/ar.json",
+      "sha256": "9dc009740a557f57c636f3aa057f8978bdf1ae6daf824f85ec0063173f22e070"
+    }
+  ],
+  "privateHarnessSha256": "96aeaa29d5430c6b56df38de5707598d5ed098f70be6b4b539fb13cae480bf48",
+  "checks": [
+    {
+      "command": "bun run test:config",
+      "result": "PASS",
+      "tests": 547,
+      "assertions": 3656
+    },
+    {
+      "command": "bun run test:boundaries",
+      "result": "PASS",
+      "tests": 28,
+      "assertions": 55,
+      "filesScanned": 1453,
+      "clientEntries": 318
+    }
+  ],
+  "lintAndBuild": "Not repeated: evidence-only batch; no application, dependency or translation changes.",
+  "cleanup": {
+    "createdBusinessFixtures": 0,
+    "businessWrites": 0,
+    "browserContexts": "Closed after each matrix view",
+    "authentication": "Local sign-in/session refresh only; no cleanup claim for authentication audit metadata",
+    "databaseSnapshots": "Not taken; no all-table equality claim"
+  },
+  "productionAcceptance": false
+}

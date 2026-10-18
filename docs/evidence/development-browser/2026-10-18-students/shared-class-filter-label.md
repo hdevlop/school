@@ -1,4 +1,9 @@
-# Open defect: the class filter has no accessible name
+# Historical defect: the class filter has no accessible name
+
+**Development follow-up:** the published Najm Kit fix passes the School
+[3.6.3 recheck](../2026-10-18-shared-ui-recheck/README.md) on Students and
+Sections. The reproduction below records the earlier 3.6.1 failure;
+production acceptance remains separate.
 
 Target: `http://127.0.0.1:3102/students`, French desktop,
 `najm-kit@3.6.1`. The root pin matches the read-only Desktop package version.

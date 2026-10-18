@@ -1,0 +1,40 @@
+{
+  "excludedFromAcceptedTotals": true,
+  "initialExamRuns": [
+    {
+      "pass": 0,
+      "fail": 3
+    },
+    {
+      "pass": 0,
+      "fail": 3
+    }
+  ],
+  "issues": [
+    {
+      "classification": "HARNESS",
+      "detail": "Initial exam selection assumed data-row-id was the entity ID; this table uses row-model IDs. Filter by the API class and exact title, assert one row, then compare date/type/status/section."
+    },
+    {
+      "classification": "HARNESS",
+      "detail": "Page header and calendar period are both h2. Scope the period heading to its displayed year."
+    },
+    {
+      "classification": "HARNESS",
+      "detail": "Arabic formatting uses ar-MA, including the July month name and currency text; initial expectations used generic ar."
+    },
+    {
+      "classification": "HARNESS",
+      "detail": "The phone header intentionally hides its subtitle. Assert rendered count metadata there; stat cards and student rows remain visible."
+    },
+    {
+      "classification": "HARNESS",
+      "detail": "Sidebar labels live under navigation. After selecting a year, close the drawer explicitly and wait for its bounds to move off-screen; a transformed button is still visible to the locator."
+    },
+    {
+      "classification": "SCREENSHOT_CAPTURE",
+      "detail": "Playwright screenshot capture clipped the native zoom surface. Final private images use CDP Page.captureScreenshot without a CSS clip. Capturing the surface does not change viewport or app styling."
+    }
+  ],
+  "repeatPolicy": "Accepted main and focused follow-up checks are combined once; native zoom repeats are counted once. Fee comparisons after navigation/reload are separate workflow checkpoints."
+}

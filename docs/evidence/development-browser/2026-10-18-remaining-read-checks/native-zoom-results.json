@@ -1,0 +1,207 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "view": "fr-light",
+      "label": "Native browser zoom is 200 percent without CSS or pinch scaling",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-light",
+      "label": "Reflowed day controls work with keyboard",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-light",
+      "label": "Day heading meets 4.5 to 1 contrast",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-light",
+      "label": "Period editor and save control remain reachable at native 200 percent",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-light",
+      "label": "Break supervision opens by keyboard with controls reachable",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-light",
+      "label": "Zoomed page has no horizontal document overflow",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-dark",
+      "label": "Native browser zoom is 200 percent without CSS or pinch scaling",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-dark",
+      "label": "Reflowed day controls work with keyboard",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-dark",
+      "label": "Day heading meets 4.5 to 1 contrast",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-dark",
+      "label": "Period editor and save control remain reachable at native 200 percent",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-dark",
+      "label": "Break supervision opens by keyboard with controls reachable",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-dark",
+      "label": "Zoomed page has no horizontal document overflow",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-dark",
+      "label": "Native browser zoom is 200 percent without CSS or pinch scaling",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-dark",
+      "label": "Reflowed day controls work with keyboard",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-dark",
+      "label": "Day heading meets 4.5 to 1 contrast",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-dark",
+      "label": "Period editor and save control remain reachable at native 200 percent",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-dark",
+      "label": "Break supervision opens by keyboard with controls reachable",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-dark",
+      "label": "Zoomed page has no horizontal document overflow",
+      "result": "PASS"
+    },
+    {
+      "view": "all",
+      "label": "Exact timetable content is unchanged",
+      "result": "PASS"
+    },
+    {
+      "view": "all",
+      "label": "No business writes",
+      "result": "PASS"
+    },
+    {
+      "view": "all",
+      "label": "No uncaught page errors",
+      "result": "PASS"
+    }
+  ],
+  "metrics": [
+    {
+      "zoom": "100%",
+      "devicePixelRatio": 1,
+      "innerWidth": 1424,
+      "outerWidth": 1440,
+      "innerHeight": 905,
+      "visualScale": 1,
+      "cssZoom": "1",
+      "transform": "none"
+    },
+    {
+      "view": "fr-light",
+      "zoom": "200%",
+      "devicePixelRatio": 2,
+      "innerWidth": 712,
+      "outerWidth": 1440,
+      "innerHeight": 452,
+      "visualScale": 1,
+      "cssZoom": "1",
+      "transform": "none"
+    },
+    {
+      "view": "fr-dark",
+      "zoom": "200%",
+      "devicePixelRatio": 2,
+      "innerWidth": 712,
+      "outerWidth": 1440,
+      "innerHeight": 452,
+      "visualScale": 1,
+      "cssZoom": "1",
+      "transform": "none"
+    },
+    {
+      "view": "ar-dark",
+      "zoom": "200%",
+      "devicePixelRatio": 2,
+      "innerWidth": 712,
+      "outerWidth": 1440,
+      "innerHeight": 452,
+      "visualScale": 1,
+      "cssZoom": "1",
+      "transform": "none"
+    }
+  ],
+  "contrast": [
+    {
+      "view": "fr-light",
+      "foreground": [
+        10,
+        10,
+        10
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "ratio": 19.79814571052481
+    },
+    {
+      "view": "fr-dark",
+      "foreground": [
+        244,
+        244,
+        245
+      ],
+      "background": [
+        9,
+        9,
+        11
+      ],
+      "ratio": 18.10042426312613
+    },
+    {
+      "view": "ar-dark",
+      "foreground": [
+        244,
+        244,
+        245
+      ],
+      "background": [
+        9,
+        9,
+        11
+      ],
+      "ratio": 18.10042426312613
+    }
+  ],
+  "diagnostics": [],
+  "writes": [],
+  "profileRemoved": true,
+  "mechanism": "Chrome Settings appearance Page zoom select 200%; devicePixelRatio doubled, visualViewport.scale 1, CSS zoom 1, no transform",
+  "counts": {
+    "PASS": 21,
+    "FAIL": 0
+  }
+}

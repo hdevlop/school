@@ -1,0 +1,11 @@
+{
+  "view": "ar-dark-phone",
+  "foreground": "rgb(0, 0, 0)",
+  "backgrounds": [
+    {
+      "tag": "DIV",
+      "background": "oklch(0.1417 0.0044 285.819)"
+    }
+  ],
+  "finding": "Black day-heading text on dark background before the School foreground-token fix."
+}

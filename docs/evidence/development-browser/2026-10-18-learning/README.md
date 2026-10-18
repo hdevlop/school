@@ -1,5 +1,11 @@
 # Exams, assessments and timetables: development browser batch
 
+Later development follow-ups close this batch's specific shared empty-search
+failures ([shared UI](../2026-10-18-shared-ui-recheck/README.md)), exam date-label
+comparison and native browser 200% zoom gaps
+([remaining reads](../2026-10-18-remaining-read-checks/README.md)). The original
+execution counts and other limitations below are preserved.
+
 Target: **http://127.0.0.1:3102**, existing local demo, year **2026-2027**.
 Accepted reports contain **186 PASS and 2 FAIL assertions**, including 61 cleanup
 and residue assertions. These are development results; production cases remain

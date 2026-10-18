@@ -1,0 +1,829 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "browser": "isolated headless Chromium",
+  "date": "2026-10-18T17:58:53.627Z",
+  "najmKit": "3.6.3",
+  "results": [
+    {
+      "view": "fr-desktop",
+      "area": "users",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "users",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "users",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "users",
+      "label": "Desktop table also shows translated no-match feedback",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "users",
+      "label": "Desktop table rows recover",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "staff",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "staff",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "staff",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "staff",
+      "label": "Desktop table also shows translated no-match feedback",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "staff",
+      "label": "Desktop table rows recover",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "teachers",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "teachers",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "teachers",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "teachers",
+      "label": "Desktop table also shows translated no-match feedback",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "teachers",
+      "label": "Desktop table rows recover",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "cycles",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "cycles",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "cycles",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "cycles",
+      "label": "Desktop table also shows translated no-match feedback",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "cycles",
+      "label": "Desktop table rows recover",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "classes",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "classes",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "classes",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "classes",
+      "label": "Desktop table also shows translated no-match feedback",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "classes",
+      "label": "Desktop table rows recover",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "sections",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "sections",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "sections",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "sections",
+      "label": "Desktop table also shows translated no-match feedback",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "sections",
+      "label": "Desktop table rows recover",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "subjects",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "subjects",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "subjects",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "subjects",
+      "label": "Desktop table also shows translated no-match feedback",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "subjects",
+      "label": "Desktop table rows recover",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "exams",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "exams",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "exams",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "exams",
+      "label": "Desktop table also shows translated no-match feedback",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "exams",
+      "label": "Desktop table rows recover",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "assessments",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "assessments",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "assessments",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "assessments",
+      "label": "Desktop table also shows translated no-match feedback",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "assessments",
+      "label": "Desktop table rows recover",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "students",
+      "label": "Class filter is discoverable by translated accessible name",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "students",
+      "label": "Keyboard opening and selection preserve class filter name",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "sections",
+      "label": "Class filter is discoverable by translated accessible name",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "sections",
+      "label": "Keyboard opening and selection preserve class filter name",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "teacher-wizard",
+      "label": "Previous restores unsaved text and numeric drafts",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "teacher-wizard",
+      "label": "Invalid draft can go back and is retained",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "teacher-wizard",
+      "label": "Next still validates the restored invalid draft",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "teacher-wizard",
+      "label": "Header navigation also preserves raw draft",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "teacher-wizard",
+      "label": "Unsubmitted assignment array survives Previous",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "teacher-wizard",
+      "label": "Cancel closes the unsaved wizard",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-desktop",
+      "area": "layout",
+      "label": "Page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "users",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "users",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "users",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "staff",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "staff",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "staff",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "teachers",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "teachers",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "teachers",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "cycles",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "cycles",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "cycles",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "classes",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "classes",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "classes",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "sections",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "sections",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "sections",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "subjects",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "subjects",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "subjects",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "students",
+      "label": "Class filter is discoverable by translated accessible name",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "students",
+      "label": "Keyboard opening and selection preserve class filter name",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "sections",
+      "label": "Class filter is discoverable by translated accessible name",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "sections",
+      "label": "Keyboard opening and selection preserve class filter name",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "teacher-wizard",
+      "label": "Previous restores unsaved text and numeric drafts",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "teacher-wizard",
+      "label": "Invalid draft can go back and is retained",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "teacher-wizard",
+      "label": "Next still validates the restored invalid draft",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "teacher-wizard",
+      "label": "Header navigation also preserves raw draft",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "teacher-wizard",
+      "label": "Unsubmitted assignment array survives Previous",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "teacher-wizard",
+      "label": "Cancel closes the unsaved wizard",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "layout",
+      "label": "Page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "users",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "users",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "users",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "staff",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "staff",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "staff",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "teachers",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "teachers",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "teachers",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "cycles",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "cycles",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "cycles",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "classes",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "classes",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "classes",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "sections",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "sections",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "sections",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "subjects",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "subjects",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "subjects",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "students",
+      "label": "Class filter is discoverable by translated accessible name",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "students",
+      "label": "Keyboard opening and selection preserve class filter name",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "sections",
+      "label": "Class filter is discoverable by translated accessible name",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "sections",
+      "label": "Keyboard opening and selection preserve class filter name",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "teacher-wizard",
+      "label": "Previous restores unsaved text and numeric drafts",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "teacher-wizard",
+      "label": "Invalid draft can go back and is retained",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "teacher-wizard",
+      "label": "Next still validates the restored invalid draft",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "teacher-wizard",
+      "label": "Header navigation also preserves raw draft",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "teacher-wizard",
+      "label": "Unsubmitted assignment array survives Previous",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "teacher-wizard",
+      "label": "Cancel closes the unsaved wizard",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "layout",
+      "label": "Page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "view": "all",
+      "area": "integrity",
+      "label": "No business writes",
+      "result": "PASS"
+    },
+    {
+      "view": "all",
+      "area": "integrity",
+      "label": "No uncaught page errors",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "exams",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "exams",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "exams",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "assessments",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "assessments",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "fr-phone",
+      "area": "assessments",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "exams",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "exams",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "exams",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "assessments",
+      "label": "Translated no-match feedback replaces empty cards",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "assessments",
+      "label": "Filter remains available and no page 1 of 0",
+      "result": "PASS"
+    },
+    {
+      "view": "ar-phone",
+      "area": "assessments",
+      "label": "Clearing the filter restores the same rows",
+      "result": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "writes": [],
+  "counts": {
+    "PASS": 134,
+    "FAIL": 0
+  },
+  "acceptedRuns": [
+    {
+      "name": "Main matrix",
+      "date": "2026-10-18T17:58:53.627Z"
+    },
+    {
+      "name": "Phone learning filter-menu follow-up",
+      "date": "2026-10-18T18:02:13.511Z"
+    }
+  ],
+  "deduplicated": true
+}

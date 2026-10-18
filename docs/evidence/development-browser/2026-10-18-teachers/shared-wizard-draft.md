@@ -1,4 +1,9 @@
-# Open defect: Previous discards the current step's draft
+# Historical defect: Previous discards the current step's draft
+
+**Development follow-up:** the published Najm Kit 3.6.3 fix passes the
+[School recheck](../2026-10-18-shared-ui-recheck/README.md), including invalid
+drafts, header navigation and assignment arrays. The reproduction below
+records the earlier 3.6.1 failure; production acceptance remains separate.
 
 Target: `http://127.0.0.1:3102/teachers`, French, `najm-kit@3.6.1`.
 The pinned package version matches its read-only Desktop checkout.
