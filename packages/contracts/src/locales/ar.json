@@ -293,7 +293,16 @@
       "refreshTokenGenerated": "تم إنشاء رمز التحديث بنجاح",
       "refreshTokenRefreshed": "تم تحديث رمز التحديث بنجاح",
       "authInitialized": "تم تهيئة المصادقة بنجاح",
-      "accountActivated": "حسابك مفعّل الآن. سجّل الدخول بكلمة المرور الجديدة."
+      "accountActivated": "حسابك مفعّل الآن. سجّل الدخول بكلمة المرور الجديدة.",
+      "passwordChanged": "تم تغيير كلمة المرور",
+      "passwordResetSent": "إذا كان هذا البريد الإلكتروني موجودًا، فقد أُرسل رابط إعادة التعيين",
+      "accountInviteSent": "تم إرسال الدعوة",
+      "sessionRecovered": "تمت استعادة الجلسة",
+      "oauthLogin": "تم تسجيل الدخول عبر Google",
+      "oauthLinked": "تم ربط حساب Google",
+      "credentialSetupPending": "يلزم تعيين كلمة المرور",
+      "credentialSetupPasswordReplaced": "تم تعيين كلمة المرور",
+      "credentialSetupCancelled": "تم إلغاء تعيين كلمة المرور"
     },
     "errors": {
       "resetEmailFailed": "تعذر إرسال بريد إعادة التعيين",
@@ -316,7 +325,33 @@
       "resetLinkInvalid": "هذا الرابط غير صالح أو سبق استخدامه. اطلب رابطًا جديدًا.",
       "setPasswordFailed": "تعذّر تعيين كلمة المرور. ربما انتهت صلاحية الرابط.",
       "setupSessionExpired": "تعذّر تعيين كلمة المرور. ربما انتهت جلسة الإعداد.",
-      "registerFailed": "تعذّر إنشاء حسابك. يرجى المحاولة مرة أخرى."
+      "registerFailed": "تعذّر إنشاء حسابك. يرجى المحاولة مرة أخرى.",
+      "tokenRevoked": "تم إلغاء الرمز",
+      "invalidResetToken": "رابط إعادة تعيين كلمة المرور غير صالح",
+      "resetTokenExpired": "انتهت صلاحية رابط إعادة تعيين كلمة المرور",
+      "unauthorized": "وصول غير مصرح به",
+      "sessionExpired": "انتهت صلاحية الجلسة",
+      "accountLocked": "الحساب مقفل مؤقتًا. يرجى المحاولة لاحقًا.",
+      "accountInactive": "هذا الحساب غير نشط. يرجى التواصل مع المؤسسة.",
+      "emailNotVerified": "يرجى تأكيد بريدك الإلكتروني قبل تسجيل الدخول.",
+      "oauthProviderDisabled": "تسجيل الدخول عبر Google غير مُعدّ.",
+      "oauthStateInvalid": "محاولة تسجيل الدخول عبر Google غير صالحة أو منتهية الصلاحية.",
+      "oauthAccessDenied": "تم إلغاء تسجيل الدخول عبر Google.",
+      "oauthProviderError": "تعذّر إتمام تسجيل الدخول عبر Google.",
+      "oauthVerifiedEmailRequired": "يجب أن يوفّر Google بريدًا إلكترونيًا مؤكَّدًا.",
+      "oauthAccountLinkRequired": "سجّل الدخول بكلمة المرور، ثم اربط Google من حسابك.",
+      "oauthProviderAccountLinked": "حساب Google هذا مرتبط بالفعل.",
+      "oauthSignupDisabled": "التسجيل عبر Google معطّل.",
+      "oauthHostedDomainDenied": "نطاق Google Workspace هذا غير مسموح به.",
+      "oauthLinkSessionExpired": "تغيّرت جلستك قبل ربط Google. يرجى المحاولة مرة أخرى.",
+      "oauthCredentialSetupRequired": "عيّن كلمة مرور جديدة قبل تسجيل الدخول عبر Google.",
+      "credentialSetupRequired": "عيّن كلمة مرور جديدة للمتابعة.",
+      "credentialSetupSessionRequired": "يلزم وجود جلسة لتعيين كلمة المرور.",
+      "credentialSetupSessionInvalid": "جلسة تعيين كلمة المرور غير صالحة أو منتهية الصلاحية.",
+      "credentialSetupAlreadyCompleted": "تم استبدال كلمة المرور بالفعل. يرجى تسجيل الدخول مرة أخرى.",
+      "credentialSetupPasswordRejected": "اختر كلمة مرور أخرى.",
+      "credentialSetupTemporaryShape": "اختر كلمة مرور مختلفة عن كلمة المرور المؤقتة.",
+      "credentialSetupSamePassword": "اختر كلمة مرور مختلفة عن كلمة المرور الحالية."
     },
     "validation": {
       "emailInvalid": "تنسيق عنوان البريد الإلكتروني غير صحيح",
@@ -417,7 +452,11 @@
       "idExists": "معرف المستخدم موجود بالفعل",
       "emailExists": "يوجد حساب بهذا البريد الإلكتروني بالفعل",
       "emailOrPhoneRequired": "أدخل بريدًا إلكترونيًا أو رقم هاتف",
-      "phoneExists": "رقم الهاتف هذا مستخدم بالفعل في حساب آخر"
+      "phoneExists": "رقم الهاتف هذا مستخدم بالفعل في حساب آخر",
+      "emailRequired": "البريد الإلكتروني مطلوب",
+      "passwordRequired": "كلمة المرور مطلوبة",
+      "invalidEmail": "صيغة البريد الإلكتروني غير صالحة",
+      "weakPassword": "كلمة المرور ضعيفة جدًا"
     },
     "validation": {
       "nameMinLength": "يجب أن يكون الاسم حرفين على الأقل",
@@ -484,13 +523,18 @@
       "assignedToUser": "تم تعيين الدور للمستخدم بنجاح",
       "userRolesRetrieved": "تم استرداد أدوار المستخدم بنجاح",
       "usersByRoleRetrieved": "تم استرداد المستخدمين للدور المحدد بنجاح",
-      "userRoleDeleted": "تم حذف دور المستخدم بنجاح"
+      "userRoleDeleted": "تم حذف دور المستخدم بنجاح",
+      "assigned": "تم إسناد الدور"
     },
     "errors": {
       "exists": "اسم الدور مستخدم بالفعل. يرجى اختيار اسم آخر",
       "notFound": "لم يتم العثور على الدور",
       "userRoleExists": "الدور المحدد للمستخدم موجود بالفعل",
-      "userRoleNotFound": "لم يتم العثور على الدور المحدد للمستخدم"
+      "userRoleNotFound": "لم يتم العثور على الدور المحدد للمستخدم",
+      "nameRequired": "اسم الدور مطلوب",
+      "cannotDeleteSystem": "لا يمكن حذف دور النظام",
+      "cannotRenameSystem": "لا يمكن إعادة تسمية دور مدير النظام",
+      "roleInUse": "لا يمكن حذف دور مُسنَد إلى مستخدمين"
     },
     "validation": {
       "nameRequired": "اسم دور مناسب مطلوب",
@@ -4913,7 +4957,10 @@
       "removed": "تمت إزالة الصلاحية بنجاح",
       "retrieved": "تم جلب الصلاحية بنجاح",
       "updated": "تم تحديث الصلاحية بنجاح",
-      "created": "تم إنشاء الصلاحية بنجاح"
+      "created": "تم إنشاء الصلاحية بنجاح",
+      "granted": "تم منح الصلاحية",
+      "revoked": "تم سحب الصلاحية",
+      "allDeleted": "تم حذف جميع الصلاحيات"
     },
     "dialogs": {
       "createButton": "إنشاء صلاحية",
@@ -4948,6 +4995,12 @@
       "actionRequired": "الإجراء مطلوب",
       "nameRequired": "اسم الصلاحية مطلوب",
       "resourceRequired": "المورد مطلوب"
+    },
+    "errors": {
+      "notFound": "الصلاحية غير موجودة",
+      "nameExists": "اسم الصلاحية موجود بالفعل",
+      "roleAlreadyHasPermission": "هذا الدور يملك هذه الصلاحية بالفعل",
+      "cannotRemoveRequired": "لا يمكن إزالة صلاحية إلزامية"
     }
   },
   "refuels": {

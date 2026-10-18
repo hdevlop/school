@@ -41,7 +41,9 @@ All read `apps/dashboard/.env.local`, the monorepo's only env file.
   tests and the API error helpers
 - `bun run test:server-i18n` - Every server refusal names a catalog key, never
   an English literal, and every key the server uses exists in all four
-  languages with the same placeholders. The dashboard sends its interface
+  languages with the same placeholders. So does every najm-auth message key:
+  najm-auth reads School's catalog and falls back to its own English only.
+  The dashboard sends its interface
   language as `X-Language` (`LANGUAGE_HEADER`), which the server reads first
 - `bun run test:access-reset` - The focused access-recovery suite
 - `bun run test:ownership` - Repository ownership: the school-wide role list,

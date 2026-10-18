@@ -293,7 +293,16 @@
       "refreshTokenGenerated": "Token de actualización generado exitosamente",
       "refreshTokenRefreshed": "Token de actualización renovado exitosamente",
       "authInitialized": "Autenticación inicializada exitosamente",
-      "accountActivated": "Tu cuenta está activa. Inicia sesión con tu nueva contraseña."
+      "accountActivated": "Tu cuenta está activa. Inicia sesión con tu nueva contraseña.",
+      "passwordChanged": "Contraseña cambiada",
+      "passwordResetSent": "Si ese correo existe, se ha enviado un enlace de restablecimiento",
+      "accountInviteSent": "Invitación enviada",
+      "sessionRecovered": "Sesión recuperada",
+      "oauthLogin": "Inicio de sesión con Google correcto",
+      "oauthLinked": "Cuenta de Google vinculada",
+      "credentialSetupPending": "Es necesario establecer la contraseña",
+      "credentialSetupPasswordReplaced": "Contraseña establecida",
+      "credentialSetupCancelled": "Se canceló el establecimiento de la contraseña"
     },
     "errors": {
       "resetEmailFailed": "No se pudo enviar el correo de restablecimiento",
@@ -316,7 +325,33 @@
       "resetLinkInvalid": "Este enlace no es válido o ya se ha utilizado. Solicita uno nuevo.",
       "setPasswordFailed": "No se pudo establecer tu contraseña. Es posible que el enlace haya caducado.",
       "setupSessionExpired": "No se pudo establecer tu contraseña. Es posible que la sesión de configuración haya caducado.",
-      "registerFailed": "No se pudo crear tu cuenta. Inténtalo de nuevo."
+      "registerFailed": "No se pudo crear tu cuenta. Inténtalo de nuevo.",
+      "tokenRevoked": "El token ha sido revocado",
+      "invalidResetToken": "Enlace de restablecimiento de contraseña no válido",
+      "resetTokenExpired": "El enlace de restablecimiento de contraseña ha caducado",
+      "unauthorized": "Acceso no autorizado",
+      "sessionExpired": "La sesión ha caducado",
+      "accountLocked": "La cuenta está bloqueada temporalmente. Inténtelo de nuevo más tarde.",
+      "accountInactive": "Esta cuenta no está activa. Contacte con el centro.",
+      "emailNotVerified": "Verifique su correo electrónico antes de iniciar sesión.",
+      "oauthProviderDisabled": "El inicio de sesión con Google no está configurado.",
+      "oauthStateInvalid": "El intento de inicio de sesión con Google no es válido o ha caducado.",
+      "oauthAccessDenied": "Se canceló el inicio de sesión con Google.",
+      "oauthProviderError": "No se pudo completar el inicio de sesión con Google.",
+      "oauthVerifiedEmailRequired": "Google debe proporcionar una dirección de correo verificada.",
+      "oauthAccountLinkRequired": "Inicie sesión con su contraseña y vincule Google desde su cuenta.",
+      "oauthProviderAccountLinked": "Esta cuenta de Google ya está vinculada.",
+      "oauthSignupDisabled": "El registro con Google está desactivado.",
+      "oauthHostedDomainDenied": "Este dominio de Google Workspace no está permitido.",
+      "oauthLinkSessionExpired": "Su sesión cambió antes de vincular Google. Inténtelo de nuevo.",
+      "oauthCredentialSetupRequired": "Establezca una nueva contraseña antes de iniciar sesión con Google.",
+      "credentialSetupRequired": "Establezca una nueva contraseña para continuar.",
+      "credentialSetupSessionRequired": "Se requiere una sesión para establecer la contraseña.",
+      "credentialSetupSessionInvalid": "La sesión para establecer la contraseña no es válida o ha caducado.",
+      "credentialSetupAlreadyCompleted": "La contraseña ya se ha sustituido. Vuelva a iniciar sesión.",
+      "credentialSetupPasswordRejected": "Elija otra contraseña.",
+      "credentialSetupTemporaryShape": "Elija una contraseña distinta de su contraseña temporal.",
+      "credentialSetupSamePassword": "Elija una contraseña distinta de la actual."
     },
     "validation": {
       "emailInvalid": "Formato de dirección de correo electrónico inválido",
@@ -417,7 +452,11 @@
       "idExists": "El ID de usuario ya existe",
       "emailExists": "Ya existe una cuenta con este correo electrónico",
       "emailOrPhoneRequired": "Introduce un correo electrónico o un número de teléfono",
-      "phoneExists": "Este número de teléfono ya lo usa otra cuenta"
+      "phoneExists": "Este número de teléfono ya lo usa otra cuenta",
+      "emailRequired": "El correo electrónico es obligatorio",
+      "passwordRequired": "La contraseña es obligatoria",
+      "invalidEmail": "Formato de correo electrónico no válido",
+      "weakPassword": "La contraseña es demasiado débil"
     },
     "validation": {
       "nameMinLength": "El nombre debe tener al menos 2 caracteres",
@@ -483,13 +522,18 @@
       "assignedToUser": "El rol se asignó exitosamente al usuario",
       "userRolesRetrieved": "Roles de usuario recuperados exitosamente",
       "usersByRoleRetrieved": "Usuarios para el rol especificado recuperados exitosamente",
-      "userRoleDeleted": "El rol de usuario ha sido eliminado exitosamente"
+      "userRoleDeleted": "El rol de usuario ha sido eliminado exitosamente",
+      "assigned": "Rol asignado"
     },
     "errors": {
       "exists": "El nombre del rol ya está en uso. Por favor, elige otro",
       "notFound": "Rol no encontrado",
       "userRoleExists": "El rol especificado para el usuario ya existe",
-      "userRoleNotFound": "El rol especificado para el usuario no fue encontrado"
+      "userRoleNotFound": "El rol especificado para el usuario no fue encontrado",
+      "nameRequired": "El nombre del rol es obligatorio",
+      "cannotDeleteSystem": "No se puede eliminar un rol del sistema",
+      "cannotRenameSystem": "No se puede cambiar el nombre del rol de administrador del sistema",
+      "roleInUse": "No se puede eliminar un rol asignado a usuarios"
     },
     "form": {
       "name": "Nombre del Rol",
@@ -4899,7 +4943,10 @@
       "removed": "Permiso eliminado correctamente",
       "retrieved": "Permiso obtenido correctamente",
       "updated": "Permiso actualizado correctamente",
-      "created": "Permiso creado correctamente"
+      "created": "Permiso creado correctamente",
+      "granted": "Permiso concedido",
+      "revoked": "Permiso retirado",
+      "allDeleted": "Se han eliminado todos los permisos"
     },
     "dialogs": {
       "createButton": "Crear permiso",
@@ -4934,6 +4981,12 @@
       "actionRequired": "La acción es obligatoria",
       "nameRequired": "El nombre del permiso es obligatorio",
       "resourceRequired": "El recurso es obligatorio"
+    },
+    "errors": {
+      "notFound": "Permiso no encontrado",
+      "nameExists": "Ya existe un permiso con ese nombre",
+      "roleAlreadyHasPermission": "Este rol ya tiene este permiso",
+      "cannotRemoveRequired": "No se puede quitar un permiso obligatorio"
     }
   },
   "refuels": {

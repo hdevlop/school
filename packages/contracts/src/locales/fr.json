@@ -293,7 +293,16 @@
       "refreshTokenGenerated": "Jeton de rafraîchissement généré avec succès",
       "refreshTokenRefreshed": "Jeton de rafraîchissement actualisé avec succès",
       "authInitialized": "Authentification initialisée avec succès",
-      "accountActivated": "Votre compte est actif. Connectez-vous avec votre nouveau mot de passe."
+      "accountActivated": "Votre compte est actif. Connectez-vous avec votre nouveau mot de passe.",
+      "passwordChanged": "Mot de passe modifié",
+      "passwordResetSent": "Si cette adresse e-mail existe, un lien de réinitialisation a été envoyé",
+      "accountInviteSent": "Invitation envoyée",
+      "sessionRecovered": "Session rétablie",
+      "oauthLogin": "Connexion avec Google réussie",
+      "oauthLinked": "Compte Google lié",
+      "credentialSetupPending": "La définition du mot de passe est requise",
+      "credentialSetupPasswordReplaced": "Mot de passe défini",
+      "credentialSetupCancelled": "Définition du mot de passe annulée"
     },
     "errors": {
       "resetEmailFailed": "Échec de l'envoi de l'e-mail de réinitialisation",
@@ -316,7 +325,33 @@
       "resetLinkInvalid": "Ce lien est invalide ou a déjà été utilisé. Demandez-en un nouveau.",
       "setPasswordFailed": "Impossible de définir votre mot de passe. Le lien a peut-être expiré.",
       "setupSessionExpired": "Impossible de définir votre mot de passe. La session de configuration a peut-être expiré.",
-      "registerFailed": "Impossible de créer votre compte. Veuillez réessayer."
+      "registerFailed": "Impossible de créer votre compte. Veuillez réessayer.",
+      "tokenRevoked": "Le jeton a été révoqué",
+      "invalidResetToken": "Lien de réinitialisation du mot de passe invalide",
+      "resetTokenExpired": "Le lien de réinitialisation du mot de passe a expiré",
+      "unauthorized": "Accès non autorisé",
+      "sessionExpired": "La session a expiré",
+      "accountLocked": "Le compte est temporairement verrouillé. Veuillez réessayer plus tard.",
+      "accountInactive": "Ce compte n'est pas actif. Contactez l'établissement.",
+      "emailNotVerified": "Veuillez vérifier votre adresse e-mail avant de vous connecter.",
+      "oauthProviderDisabled": "La connexion avec Google n'est pas configurée.",
+      "oauthStateInvalid": "Cette tentative de connexion avec Google est invalide ou a expiré.",
+      "oauthAccessDenied": "La connexion avec Google a été annulée.",
+      "oauthProviderError": "La connexion avec Google n'a pas pu aboutir.",
+      "oauthVerifiedEmailRequired": "Google doit fournir une adresse e-mail vérifiée.",
+      "oauthAccountLinkRequired": "Connectez-vous avec votre mot de passe, puis liez Google depuis votre compte.",
+      "oauthProviderAccountLinked": "Ce compte Google est déjà lié.",
+      "oauthSignupDisabled": "L'inscription avec Google est désactivée.",
+      "oauthHostedDomainDenied": "Ce domaine Google Workspace n'est pas autorisé.",
+      "oauthLinkSessionExpired": "Votre session a changé avant que Google soit lié. Veuillez réessayer.",
+      "oauthCredentialSetupRequired": "Définissez un nouveau mot de passe avant de vous connecter avec Google.",
+      "credentialSetupRequired": "Définissez un nouveau mot de passe pour continuer.",
+      "credentialSetupSessionRequired": "Une session de définition du mot de passe est requise.",
+      "credentialSetupSessionInvalid": "La session de définition du mot de passe est invalide ou a expiré.",
+      "credentialSetupAlreadyCompleted": "Le mot de passe a déjà été remplacé. Veuillez vous reconnecter.",
+      "credentialSetupPasswordRejected": "Choisissez un autre mot de passe.",
+      "credentialSetupTemporaryShape": "Choisissez un mot de passe différent de votre mot de passe temporaire.",
+      "credentialSetupSamePassword": "Choisissez un mot de passe différent de l'actuel."
     },
     "validation": {
       "emailInvalid": "Format d'adresse e-mail invalide",
@@ -418,7 +453,11 @@
       "idExists": "L'ID utilisateur existe déjà",
       "emailExists": "Un compte avec cette adresse e-mail existe déjà",
       "emailOrPhoneRequired": "Saisissez une adresse e-mail ou un numéro de téléphone",
-      "phoneExists": "Ce numéro de téléphone est déjà utilisé par un autre compte"
+      "phoneExists": "Ce numéro de téléphone est déjà utilisé par un autre compte",
+      "emailRequired": "L'e-mail est obligatoire",
+      "passwordRequired": "Le mot de passe est obligatoire",
+      "invalidEmail": "Format d'adresse e-mail invalide",
+      "weakPassword": "Le mot de passe est trop faible"
     },
     "validation": {
       "nameMinLength": "Le nom doit contenir au moins 2 caractères",
@@ -485,13 +524,18 @@
       "assignedToUser": "Le rôle a été attribué avec succès à l'utilisateur",
       "userRolesRetrieved": "Les rôles utilisateur ont été récupérés avec succès",
       "usersByRoleRetrieved": "Les utilisateurs pour le rôle spécifié ont été récupérés avec succès",
-      "userRoleDeleted": "Le rôle utilisateur a été supprimé avec succès"
+      "userRoleDeleted": "Le rôle utilisateur a été supprimé avec succès",
+      "assigned": "Rôle attribué"
     },
     "errors": {
       "exists": "Le nom du rôle est déjà utilisé. Veuillez en choisir un autre",
       "notFound": "Rôle introuvable",
       "userRoleExists": "Le rôle spécifié pour l'utilisateur existe déjà",
-      "userRoleNotFound": "Le rôle spécifié pour l'utilisateur n'a pas été trouvé"
+      "userRoleNotFound": "Le rôle spécifié pour l'utilisateur n'a pas été trouvé",
+      "nameRequired": "Le nom du rôle est obligatoire",
+      "cannotDeleteSystem": "Impossible de supprimer un rôle système",
+      "cannotRenameSystem": "Impossible de renommer le rôle administrateur système",
+      "roleInUse": "Impossible de supprimer un rôle attribué à des utilisateurs"
     },
     "validation": {
       "nameRequired": "Un nom de rôle approprié est requis",
@@ -5003,7 +5047,10 @@
       "removed": "Permission retiré avec succès",
       "retrieved": "Permission récupérée avec succès",
       "updated": "Permission mise à jour avec succès",
-      "created": "Autorisation créée avec succès"
+      "created": "Autorisation créée avec succès",
+      "granted": "Permission accordée",
+      "revoked": "Permission retirée",
+      "allDeleted": "Toutes les permissions ont été supprimées"
     },
     "dialogs": {
       "createButton": "Créer une autorisation",
@@ -5038,6 +5085,12 @@
       "actionRequired": "L’action est requise",
       "nameRequired": "Le nom de l’autorisation est requis",
       "resourceRequired": "La ressource est requise"
+    },
+    "errors": {
+      "notFound": "Permission introuvable",
+      "nameExists": "Ce nom de permission existe déjà",
+      "roleAlreadyHasPermission": "Ce rôle a déjà cette permission",
+      "cannotRemoveRequired": "Impossible de retirer une permission obligatoire"
     }
   },
   "refuels": {

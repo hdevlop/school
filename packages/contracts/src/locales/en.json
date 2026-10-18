@@ -293,7 +293,16 @@
       "refreshTokenGenerated": "Refresh token successfully generated",
       "refreshTokenRefreshed": "Refresh token successfully refreshed",
       "authInitialized": "Authentication initialized successfully",
-      "accountActivated": "Your account is active. Sign in with your new password."
+      "accountActivated": "Your account is active. Sign in with your new password.",
+      "passwordChanged": "Password changed successfully",
+      "passwordResetSent": "If that email exists, a reset link has been sent",
+      "accountInviteSent": "Invitation sent successfully",
+      "sessionRecovered": "Session recovered successfully",
+      "oauthLogin": "Google sign-in successful",
+      "oauthLinked": "Google account linked successfully",
+      "credentialSetupPending": "Password setup is required",
+      "credentialSetupPasswordReplaced": "Password set successfully",
+      "credentialSetupCancelled": "Password setup cancelled"
     },
     "errors": {
       "resetEmailFailed": "Failed to send reset email",
@@ -316,7 +325,33 @@
       "resetLinkInvalid": "This link is invalid or has already been used. Ask for a new one.",
       "setPasswordFailed": "Could not set your password. The link may have expired.",
       "setupSessionExpired": "Could not set your password. The setup session may have expired.",
-      "registerFailed": "Could not create your account. Please try again."
+      "registerFailed": "Could not create your account. Please try again.",
+      "tokenRevoked": "Token has been revoked",
+      "invalidResetToken": "Invalid password reset token",
+      "resetTokenExpired": "Password reset token has expired",
+      "unauthorized": "Unauthorized access",
+      "sessionExpired": "Session has expired",
+      "accountLocked": "Account is temporarily locked. Please try again later.",
+      "accountInactive": "Account is inactive. Please contact support.",
+      "emailNotVerified": "Please verify your email address before signing in.",
+      "oauthProviderDisabled": "Google sign-in is not configured.",
+      "oauthStateInvalid": "The Google sign-in attempt is invalid or expired.",
+      "oauthAccessDenied": "Google sign-in was cancelled.",
+      "oauthProviderError": "Google sign-in could not be completed.",
+      "oauthVerifiedEmailRequired": "Google must provide a verified email address.",
+      "oauthAccountLinkRequired": "Sign in with your password and link Google from your account.",
+      "oauthProviderAccountLinked": "This Google account is already linked.",
+      "oauthSignupDisabled": "Registration with Google is disabled.",
+      "oauthHostedDomainDenied": "This Google Workspace domain is not allowed.",
+      "oauthLinkSessionExpired": "Your session changed before Google could be linked. Please try again.",
+      "oauthCredentialSetupRequired": "Set a new password before signing in with Google.",
+      "credentialSetupRequired": "Set a new password before continuing.",
+      "credentialSetupSessionRequired": "Credential setup session is required.",
+      "credentialSetupSessionInvalid": "Credential setup session is invalid or expired.",
+      "credentialSetupAlreadyCompleted": "The password was already replaced. Please sign in again.",
+      "credentialSetupPasswordRejected": "Choose a different password.",
+      "credentialSetupTemporaryShape": "Choose a password that is not your temporary credential.",
+      "credentialSetupSamePassword": "Choose a password different from your current one."
     },
     "validation": {
       "emailInvalid": "Invalid email address format",
@@ -418,7 +453,11 @@
       "idExists": "User ID already exists",
       "emailExists": "An account with this email already exists",
       "emailOrPhoneRequired": "Enter an email address or a phone number",
-      "phoneExists": "This phone number is already used by another account"
+      "phoneExists": "This phone number is already used by another account",
+      "emailRequired": "Email is required",
+      "passwordRequired": "Password is required",
+      "invalidEmail": "Invalid email format",
+      "weakPassword": "Password is too weak"
     },
     "validation": {
       "nameMinLength": "Name must be at least 2 characters long",
@@ -485,14 +524,19 @@
       "assignedToUser": "The role was successfully assigned to the user",
       "userRolesRetrieved": "User roles were successfully retrieved",
       "usersByRoleRetrieved": "Users for the specified role were successfully retrieved",
-      "userRoleDeleted": "The user role has been successfully deleted"
+      "userRoleDeleted": "The user role has been successfully deleted",
+      "assigned": "Role assigned successfully"
     },
     "errors": {
       "idExists": "Role already exists",
       "exists": "Role name is already in use. Please choose another one",
       "notFound": "Role not found",
       "userRoleExists": "The specified role for the user already exists",
-      "userRoleNotFound": "The specified role for the user was not found"
+      "userRoleNotFound": "The specified role for the user was not found",
+      "nameRequired": "Role name is required",
+      "cannotDeleteSystem": "Cannot delete system role",
+      "cannotRenameSystem": "Cannot rename the system admin role",
+      "roleInUse": "Cannot delete a role that is assigned to users"
     },
     "form": {
       "name": "Role Name",
@@ -536,7 +580,10 @@
       "updated": "Permission updated successfully",
       "deleted": "Permission deleted successfully",
       "assigned": "Permission assigned to role successfully",
-      "removed": "Permission removed from role successfully"
+      "removed": "Permission removed from role successfully",
+      "granted": "Permission granted successfully",
+      "revoked": "Permission revoked successfully",
+      "allDeleted": "All permissions deleted successfully"
     },
     "errors": {
       "idExists": "Permission already exists",
@@ -544,7 +591,8 @@
       "nameExists": "Permission name already exists",
       "resourceActionExists": "Permission for this resource and action already exists",
       "roleAlreadyHasPermission": "Role already has this permission",
-      "roleDoesNotHavePermission": "Role does not have this permission"
+      "roleDoesNotHavePermission": "Role does not have this permission",
+      "cannotRemoveRequired": "Cannot remove required permission"
     },
     "form": {
       "name": "Permission Name",
