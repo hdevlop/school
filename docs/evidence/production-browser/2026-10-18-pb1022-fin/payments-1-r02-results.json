@@ -1,0 +1,32 @@
+{
+ "name": "payments-1-r02",
+ "scope": "payments R02 check refusal rerun (apostrophe)",
+ "origin": "https://myscolai.com",
+ "candidate": "bfaa158e4b2ee3763344bf116d1aa4024121197a",
+ "deployedRevision": "bfaa158e4b2ee3763344bf116d1aa4024121197a",
+ "worktreeDirty": 42,
+ "browser": "155.0.8059.80",
+ "startedUtc": "2026-10-18T12:00:00.765Z",
+ "results": [
+  {
+   "case": "payments-R02: desk methods offered; a check requires its number and due date (French, no request)",
+   "outcome": "PASS",
+   "methods": [
+    "Espèces",
+    "Chèque",
+    "Virement bancaire",
+    "Carte de crédit"
+   ],
+   "placeholder": "Sélectionnez la date d'échéance"
+  }
+ ],
+ "diagnostics": [],
+ "writes": [],
+ "mcpReads": [],
+ "nativeDialogs": [],
+ "apiWrites": [],
+ "completedUtc": "2026-10-18T12:00:08.732Z",
+ "counts": {
+  "PASS": 1
+ }
+}

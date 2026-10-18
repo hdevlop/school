@@ -1,0 +1,101 @@
+{
+ "name": "fee-types-m01-rerun",
+ "scope": "fee-types M01 API refusals after the zod default-message fix",
+ "origin": "https://myscolai.com",
+ "candidate": "4daea772499be16fe480441ba9ca21a3f12713e2",
+ "deployedRevision": "4daea772499be16fe480441ba9ca21a3f12713e2",
+ "worktreeDirty": 42,
+ "browser": "155.0.8059.80",
+ "startedUtc": "2026-10-18T12:19:21.613Z",
+ "results": [
+  {
+   "case": "Setup: owned fee type (API)",
+   "outcome": "DONE",
+   "status": 200
+  },
+  {
+   "case": "fee-types-M01: the API refuses an invalid recurrence and amount in French; the record is unchanged",
+   "outcome": "PASS",
+   "refusals": {
+    "fr {\"paymentType\":\"weekly\"}": [
+     400,
+     "Option invalide : une valeur parmi \"recurring\"|\"oneTime\" attendue"
+    ],
+    "fr {\"amount\":150000}": [
+     400,
+     "Le montant est trop élevé"
+    ],
+    "fr {\"amount\":0}": [
+     400,
+     "Le montant doit être supérieur à 0"
+    ],
+    "ar {\"paymentType\":\"weekly\"}": [
+     400,
+     "اختيار غير مقبول: يتوقع انتقاء أحد هذه الخيارات: \"recurring\"|\"oneTime\""
+    ],
+    "es {\"paymentType\":\"weekly\"}": [
+     400,
+     "Opción inválida: se esperaba una de \"recurring\"|\"oneTime\""
+    ]
+   }
+  },
+  {
+   "case": "Cleanup: delete the owned fee type",
+   "outcome": "DONE",
+   "status": 200
+  }
+ ],
+ "diagnostics": [],
+ "writes": [],
+ "mcpReads": [],
+ "nativeDialogs": [],
+ "apiWrites": [
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/fee-types",
+   "status": 200
+  },
+  {
+   "as": "admin",
+   "method": "PUT",
+   "path": "/fee-types/:id",
+   "status": 400
+  },
+  {
+   "as": "admin",
+   "method": "PUT",
+   "path": "/fee-types/:id",
+   "status": 400
+  },
+  {
+   "as": "admin",
+   "method": "PUT",
+   "path": "/fee-types/:id",
+   "status": 400
+  },
+  {
+   "as": "admin",
+   "method": "PUT",
+   "path": "/fee-types/:id",
+   "status": 400
+  },
+  {
+   "as": "admin",
+   "method": "PUT",
+   "path": "/fee-types/:id",
+   "status": 400
+  },
+  {
+   "as": "admin",
+   "method": "DELETE",
+   "path": "/fee-types/:id",
+   "status": 200
+  }
+ ],
+ "completedUtc": "2026-10-18T12:19:22.618Z",
+ "counts": {
+  "DONE": 2,
+  "PASS": 1
+ }
+}

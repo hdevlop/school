@@ -1,0 +1,169 @@
+{
+ "name": "payments-2",
+ "scope": "payments R02 (check refusal), M02, M03; financial-operations R01",
+ "origin": "https://myscolai.com",
+ "candidate": "bfaa158e4b2ee3763344bf116d1aa4024121197a",
+ "deployedRevision": "bfaa158e4b2ee3763344bf116d1aa4024121197a",
+ "worktreeDirty": 42,
+ "browser": "155.0.8059.80",
+ "startedUtc": "2026-10-18T12:00:13.799Z",
+ "results": [
+  {
+   "case": "payments-R02: a check requires its number and due date; refusals French, placeholder translated, no request",
+   "outcome": "PASS",
+   "placeholder": "Sélectionnez la date d'échéance"
+  },
+  {
+   "case": "payments-M02: more cash than selected records only the selection and shows the change to give back",
+   "outcome": "PASS",
+   "change": "400,00",
+   "amount": "1100.00",
+   "receipt": "RCP-20261018-CGX_9W9DO1"
+  },
+  {
+   "case": "payments-M02: the API refuses an allocation above the installment, in French, and records nothing",
+   "outcome": "PASS",
+   "status": 400,
+   "message": "L'affectation de 2000 dépasse le disponible de 1100.00 pour l'échéance n°4"
+  },
+  {
+   "case": "payments-M02: a double-click on \"Enregistrer\" records one payment",
+   "outcome": "PASS",
+   "postsSent": 1,
+   "completedPaymentsOf1100": 2,
+   "installment4": "paid"
+  },
+  {
+   "case": "payments-M02: replaying a payment with the same idempotency key returns the first and records once",
+   "outcome": "PASS",
+   "first": 200,
+   "second": 200,
+   "sameId": true
+  },
+  {
+   "case": "payments-M03: record an owned check for installment 5; it is pending and reserves the installment",
+   "outcome": "PASS",
+   "receipt": "RCP-20261018-PH08CL8MPV",
+   "installment5": "overdue"
+  },
+  {
+   "case": "financial-operations-R01 (local): the pending check is listed and the count equals the read",
+   "outcome": "PASS",
+   "count": 1,
+   "row": " Pbtest Alpha Pbtest Alpha PB1021A PB1021-CHK-5 Banque PB1021 25/10/2026 1.100,00 MAD En attente Déposer ",
+   "panels": [
+    "Chèques en attente"
+   ]
+  },
+  {
+   "case": "payments-M03: deposit, then encash the check from the payment history; totals and history follow",
+   "outcome": "PASS",
+   "depositToasts": [
+    "Chèque marqué Déposé"
+   ],
+   "completeToasts": [
+    "Chèque marqué Encaissé"
+   ]
+  },
+  {
+   "case": "payments-M03: cancelling the bounce reason form sends nothing; a bounce with a reason frees the installment",
+   "outcome": "PASS",
+   "toasts": [
+    "Chèque marqué Rejeté"
+   ],
+   "installment6": "overdue",
+   "nativeDialogs": 0
+  },
+  {
+   "case": "payments-M03: void the over-tendered cash payment with a reason; installment 3 is due again",
+   "outcome": "PASS",
+   "status": "voided",
+   "toasts": [
+    "Paiement annulé"
+   ],
+   "installment3": "overdue"
+  },
+  {
+   "case": "payments-M03: summary and history agree after the transitions",
+   "outcome": "PASS",
+   "completed": 6500,
+   "statuses": [
+    "check:bounced:1100.00",
+    "check:completed:1100.00",
+    "cash:completed:1100.00",
+    "cash:completed:1100.00",
+    "cash:voided:1100.00",
+    "cash:completed:3200.00"
+   ]
+  }
+ ],
+ "diagnostics": [],
+ "writes": [
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments/:id/check-status"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments/:id/check-status"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments/:id/check-status"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments/:id/void"
+  }
+ ],
+ "mcpReads": [],
+ "nativeDialogs": [],
+ "apiWrites": [
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/payments",
+   "status": 400
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/payments",
+   "status": 200
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/payments",
+   "status": 200
+  }
+ ],
+ "completedUtc": "2026-10-18T12:01:23.657Z",
+ "counts": {
+  "PASS": 11
+ }
+}

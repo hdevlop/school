@@ -1,0 +1,201 @@
+{
+ "name": "followups",
+ "scope": "follow-up fixes after 69b13c7",
+ "origin": "https://myscolai.com",
+ "candidate": "bfaa158e4b2ee3763344bf116d1aa4024121197a",
+ "deployedRevision": "bfaa158e4b2ee3763344bf116d1aa4024121197a",
+ "worktreeDirty": 42,
+ "browser": "155.0.8059.80",
+ "startedUtc": "2026-10-18T12:01:29.338Z",
+ "results": [
+  {
+   "case": "fees-M02 follow-up: a type the student already has is refused with a message; the form stays open",
+   "outcome": "PASS",
+   "status": 200,
+   "toasts": [
+    "Ces frais sont déjà facturés à cet élève pour cette année"
+   ],
+   "stillOpen": true
+  },
+  {
+   "case": "fees-M02 follow-up: a new charge confirms and the list updates without a reload",
+   "outcome": "PASS",
+   "status": 200,
+   "toasts": [
+    "Frais créés avec succès"
+   ],
+   "stillOpen": false,
+   "rowBefore": "Pbtest Alpha PB1021A | CM2 - PB1021 En retard 5.500,00 MAD",
+   "rowAfter": "Pbtest Alpha PB1021A | CM2 - PB1021 En retard 5.800,00 MAD"
+  },
+  {
+   "case": "fees-M02 follow-up: a mix of new and existing types names both counts",
+   "outcome": "PASS",
+   "status": 200,
+   "toasts": [
+    "1 frais créés ; 1 déjà facturés à cet élève, ignorés"
+   ],
+   "stillOpen": false
+  },
+  {
+   "case": "fees-R01 follow-up: the card total reads \"Carte bancaire\", not \"TPE\"",
+   "outcome": "PASS"
+  },
+  {
+   "case": "cleanup: delete created fee",
+   "outcome": "DONE",
+   "status": 200
+  },
+  {
+   "case": "cleanup: delete created fee",
+   "outcome": "DONE",
+   "status": 200
+  },
+  {
+   "case": "payments-M03 follow-up: void from the row menu asks for a reason in a form; Cancel sends nothing",
+   "outcome": "PASS",
+   "toasts": [
+    "Paiement annulé"
+   ],
+   "writes": [
+    "POST /api/payments/:id/void"
+   ]
+  },
+  {
+   "case": "payments-M03 follow-up: bounce from the view closes it and asks for a reason in a form",
+   "outcome": "PASS",
+   "toasts": [
+    "Chèque marqué Rejeté"
+   ],
+   "badge": " RCP-20261018-4WLRJOJVTI 📅 18/10/2026 100,00 MAD Chèque PB1021-FU-BNC Rejeté - "
+  },
+  {
+   "case": "payments-M03 follow-up: deposit from the view closes the stale view and confirms",
+   "outcome": "PASS",
+   "toasts": [
+    "Chèque marqué Déposé"
+   ],
+   "cleanupVoid": 200
+  },
+  {
+   "case": "payments follow-up: refusals name the status in the request language, not its code",
+   "outcome": "PASS",
+   "fr1": [
+    409,
+    "Impossible d'annuler un paiement au statut Annulé"
+   ],
+   "fr2": [
+    409,
+    "Impossible de passer un chèque de Rejeté à Déposé"
+   ],
+   "ar2": [
+    409,
+    "لا يمكن نقل الشيك من مرفوض إلى مودع"
+   ]
+  },
+  {
+   "case": "payments a11y follow-up: the payment dialog and its checkboxes have names",
+   "outcome": "PASS",
+   "boxes": [
+    "Sélectionner ce qui est dû : Scolarité"
+   ]
+  }
+ ],
+ "diagnostics": [],
+ "writes": [
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/fees/bulk"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/fees/bulk"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/fees/bulk"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments/:id/void"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments/:id/check-status"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments/:id/check-status"
+  }
+ ],
+ "mcpReads": [],
+ "nativeDialogs": [],
+ "nativeDialogCount": 0,
+ "apiWrites": [
+  {
+   "as": "admin",
+   "method": "DELETE",
+   "path": "/fees/:id",
+   "status": 200
+  },
+  {
+   "as": "admin",
+   "method": "DELETE",
+   "path": "/fees/:id",
+   "status": 200
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/payments",
+   "status": 200
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/payments",
+   "status": 200
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/payments",
+   "status": 200
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/payments/:id/void",
+   "status": 200
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/payments/:id/void",
+   "status": 409
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/payments/:id/check-status",
+   "status": 409
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/payments/:id/check-status",
+   "status": 409
+  }
+ ],
+ "completedUtc": "2026-10-18T12:03:19.478Z",
+ "counts": {
+  "PASS": 9,
+  "DONE": 2
+ }
+}

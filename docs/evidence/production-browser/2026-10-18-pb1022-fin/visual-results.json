@@ -1,0 +1,59 @@
+{
+ "name": "visual",
+ "scope": "payment register layout, phone width, Arabic RTL",
+ "origin": "https://myscolai.com",
+ "candidate": "bfaa158e4b2ee3763344bf116d1aa4024121197a",
+ "deployedRevision": "bfaa158e4b2ee3763344bf116d1aa4024121197a",
+ "worktreeDirty": 42,
+ "browser": "155.0.8059.80",
+ "startedUtc": "2026-10-18T12:03:30.320Z",
+ "results": [
+  {
+   "case": "Shared matrix: payment register amounts do not overlap at 1440 px (French)",
+   "outcome": "PASS",
+   "found": true,
+   "values": [
+    "1.100,00 MAD",
+    "1.100,00 MAD",
+    "0,00 MAD"
+   ],
+   "overlap": false,
+   "clipped": false
+  },
+  {
+   "case": "Shared matrix: payment register at 390 px phone width",
+   "outcome": "PASS",
+   "found": true,
+   "values": [
+    "0,00 MAD",
+    "0,00 MAD",
+    "0,00 MAD"
+   ],
+   "overlap": false,
+   "clipped": false,
+   "horizontalScroll": false
+  },
+  {
+   "case": "Shared matrix: fee type cards at 390 px show the whole category; no horizontal scroll",
+   "outcome": "PASS",
+   "horizontalScroll": false
+  },
+  {
+   "case": "Shared matrix: Arabic right-to-left student fees and payment register",
+   "outcome": "PASS",
+   "dir": "rtl",
+   "lang": "ar",
+   "register": [],
+   "overlap": false
+  }
+ ],
+ "diagnostics": [],
+ "writes": [],
+ "mcpReads": [],
+ "nativeDialogs": [],
+ "apiWrites": [],
+ "completedUtc": "2026-10-18T12:03:56.581Z",
+ "counts": {
+  "PASS": 4
+ }
+}

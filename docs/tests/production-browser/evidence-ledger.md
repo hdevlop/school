@@ -49,6 +49,7 @@ Copy the following block for each attempt; keep earlier failures and partial res
 | Redacted artifact links / secret scan | NOT RUN |
 | Source / API / DB / production smoke / full promotion status | NOT RUN |
 | Deployment NOT REQUIRED or exact healthy revision evidence | NOT RUN |
+| PB1022-FIN, 2026-10-18 | myscolai.com / `bfaa158`, `4daea77` | Production recheck of the PB1021-FIN dev batch (fee types, fees, payments, follow-ups, najm-kit 3.6.2). The demo year 2025-2026 has ended, so all installments are overdue; scripts adapted. One defect found and fixed: the production bundle dropped zod's English messages, so an invalid fee type payment type was refused with "Invalid input" (`4daea77`, rerun in French, Arabic and Spanish). Final: fee types 13, fees 16, payments 17, follow-ups 9, layout/language 4, najm-kit 2 pass; audit append-only by API pass; class bulk form NOT EXPOSED. Zero page errors, CSP reports, 5xx and native dialogs. Retained: student PB1021A (payment history) and section PB1021. | [PB1022-FIN](../../evidence/production-browser/2026-10-18-pb1022-fin/README.md) |
 | Next owner and remaining cases | NOT RUN |
 
 Allowed case outcomes: PASS, FAIL, BLOCKED, NOT RUN, EXCLUDED BY SELECTION (EXCLUDED BY GREP for automation). Explain missing UI surfaces and unavailable fixtures. A feature with skipped mandatory cases remains incomplete. Reconcile separate delivery evidence for email/push; a toast or simulated transport is not delivery.

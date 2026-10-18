@@ -1,0 +1,94 @@
+{
+ "name": "payments-1",
+ "scope": "payments R01, R02, M01",
+ "origin": "https://myscolai.com",
+ "candidate": "bfaa158e4b2ee3763344bf116d1aa4024121197a",
+ "deployedRevision": "bfaa158e4b2ee3763344bf116d1aa4024121197a",
+ "worktreeDirty": 42,
+ "browser": "155.0.8059.80",
+ "startedUtc": "2026-10-18T11:59:00.151Z",
+ "results": [
+  {
+   "case": "payments-R01: per-fee amounts due and \"pay all overdue\" reconcile with the read",
+   "outcome": "PASS",
+   "tuitionDue": 11000,
+   "registrationDue": 1000,
+   "allOverdue": 12000,
+   "items": [
+    "Scolarité #1",
+    "Scolarité #2",
+    "Scolarité #3",
+    "Scolarité #4",
+    "Scolarité #5",
+    "Scolarité #6",
+    "Scolarité #7",
+    "Scolarité #8",
+    "Scolarité #9",
+    "Scolarité #10",
+    "Inscription #1"
+   ]
+  },
+  {
+   "case": "payments-R01: multi-fee selection by fee and single-installment \"Payer\" each total the selection",
+   "outcome": "PASS",
+   "tuitionOnly": "11.000,00",
+   "both": "12.000,00",
+   "single": "1.100,00"
+  },
+  {
+   "case": "payments-R02: desk methods offered; a check requires its number and due date (French, no request)",
+   "outcome": "FAIL",
+   "error": "no French check refusal"
+  },
+  {
+   "case": "payments-R02: empty, zero, negative and insufficient amounts cannot submit; refusals are French",
+   "outcome": "PASS",
+   "emptyDisabled": true,
+   "zero": "disabled",
+   "negative": [
+    "Le montant doit être supérieur à 0 Mode de paiement * Espèces Espèces Espèces Chèque Virement bancaire Carte de crédit Date de paiement * 18 octobre 2026 Référence (facultatif) Notes (facultatif) 💰 Caisse TOTAL SÉLECTIONNÉ 12"
+   ],
+   "insufficient": [
+    "Liquidités insuffisantes. Ajoutez 11500.00 MAD pour couvrir les échéances sélectionnées."
+   ]
+  },
+  {
+   "case": "payments-M01: record one cash payment across both owned fees (installments picked by name)",
+   "outcome": "PASS",
+   "paymentId": "0BrBIyxgcf",
+   "receipt": "RCP-20261018-5GONPJPZEG",
+   "prompt": "Paiement enregistré Reçu N° RCP-20261018-5GONPJPZEG 3.200,00 MAD Fermer Imprimer le reçu Fermer",
+   "toasts": [
+    "Paiement enregistré avec succès"
+   ]
+  },
+  {
+   "case": "payments-M01: reload reconciles amount, allocation, remaining balance and status",
+   "outcome": "PASS",
+   "receipt": "RCP-20261018-5GONPJPZEG",
+   "allocations": [
+    "lt54nIWmd7:1000.00",
+    "DTJ2S975VB:2200.00"
+   ],
+   "tuition": "partiallyPaid",
+   "registration": "paid",
+   "summary": "3200.00"
+  }
+ ],
+ "diagnostics": [],
+ "writes": [
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments"
+  }
+ ],
+ "mcpReads": [],
+ "nativeDialogs": [],
+ "apiWrites": [],
+ "completedUtc": "2026-10-18T11:59:32.571Z",
+ "counts": {
+  "PASS": 5,
+  "FAIL": 1
+ }
+}

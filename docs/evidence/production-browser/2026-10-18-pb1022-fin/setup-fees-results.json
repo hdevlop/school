@@ -1,0 +1,31 @@
+{
+ "status": 200,
+ "created": 2,
+ "fees": [
+  "FT01:1000:1:overdue",
+  "FT00:11000:10:overdue"
+ ],
+ "summary": {
+  "totalFees": 2,
+  "netAmount": "12000.00",
+  "totalPaid": "0",
+  "totalDiscount": "0.00",
+  "totalDue": "12000.00",
+  "paidCount": 0,
+  "pendingCount": 0,
+  "overdueCount": 2,
+  "totalOverdueAmount": "12000.00",
+  "totalUnpaidAmount": "12000.00",
+  "avgPaymentAmount": "0",
+  "paymentCount": 0,
+  "lastPayment": null
+ },
+ "writes": [
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/fees/bulk",
+   "status": 200
+  }
+ ]
+}

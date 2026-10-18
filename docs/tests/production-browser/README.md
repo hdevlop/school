@@ -6,7 +6,7 @@ This folder replaces the root School connected acceptance plan. Each feature has
 
 ## Recorded checklist progress
 
-As of 2026-10-17: **54 of 225 cases complete; 171 remain unchecked**.
+As of 2026-10-18: **67 of 225 cases complete; 158 remain unchecked**.
 The 225 cases are in 56 feature checklists; the folder also contains planning
 and shared guidance. Checked cases link to retained evidence on their recorded
 source revisions. This reconciliation runs no new tests and does not accept all

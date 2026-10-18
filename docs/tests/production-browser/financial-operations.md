@@ -21,7 +21,7 @@ Accounting-capable identity, denied role, owned financial fixtures. Use an ident
 Run only within the recorded production fixture scope; otherwise mark these cases BLOCKED.
 
 - [ ] **financial-operations-M01**: Execute check transitions, credits and rollover only through their dedicated checklists; refresh affected panels after each approved action. Result: **PARTIAL** — owned check deposit/bounce and panel refresh passed. Credit browser cases are BLOCKED and rollover commit was NOT RUN.
-- [ ] **financial-operations-M02**: Notification generation, audit append-only enforcement, concurrency and rollback stay separately tracked API/database obligations. Result: **NOT RUN** — API/database obligation; concurrency covered locally in the Finance concurrency run.
+- [ ] **financial-operations-M02**: Notification generation, audit append-only enforcement, concurrency and rollback stay separately tracked API/database obligations. Result: **PARTIAL** — PB1022-FIN: audit entries cannot be changed through the API (PUT, PATCH and DELETE 404, entry unchanged; teacher 403). The database has no trigger or rule, so append-only is not a database guarantee; notification generation NOT RUN on production; concurrency covered locally in the Finance concurrency run.
 
 ## Finish and evidence
 

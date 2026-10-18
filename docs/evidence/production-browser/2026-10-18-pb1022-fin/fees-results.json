@@ -1,0 +1,212 @@
+{
+ "name": "fees",
+ "scope": "fees R01, R02, M01, M02, M03",
+ "origin": "https://myscolai.com",
+ "candidate": "bfaa158e4b2ee3763344bf116d1aa4024121197a",
+ "deployedRevision": "bfaa158e4b2ee3763344bf116d1aa4024121197a",
+ "worktreeDirty": 42,
+ "browser": "155.0.8059.80",
+ "startedUtc": "2026-10-18T11:56:31.542Z",
+ "results": [
+  {
+   "case": "fees-R01: header count and stat cards equal the unfiltered read",
+   "outcome": "PASS",
+   "count": 107,
+   "cards": {
+    "Encaissé à ce jour": "869.133,00 MAD",
+    "Espèces": "128.734,00 MAD",
+    "Chèque": "130.018,00 MAD",
+    "Virement bancaire": "125.680,00 MAD",
+    "Carte bancaire": "295.602,00 MAD",
+    "Montant en retard": "899.051,00 MAD"
+   }
+  },
+  {
+   "case": "fees-R01: class filter CM2 narrows rows and totals to CM2",
+   "outcome": "PASS",
+   "count": 15
+  },
+  {
+   "case": "fees-R01: section filter PB1021 lists exactly the two owned students",
+   "outcome": "PASS",
+   "count": 2
+  },
+  {
+   "case": "fees-R01: student search by code and by name",
+   "outcome": "PASS",
+   "byCode": 2,
+   "byName": 1
+  },
+  {
+   "case": "fees-R01: status filters (en retard, en cours, payé) match the read",
+   "outcome": "PASS",
+   "labels": [
+    "Tous",
+    "En retard",
+    "En cours",
+    "Payé"
+   ],
+   "counts": {
+    "En retard": 60,
+    "En cours": 0,
+    "Payé": 46
+   }
+  },
+  {
+   "case": "fees-R01: schedule filter Mensuel follows the server read",
+   "outcome": "PASS",
+   "count": 101,
+   "all": 107
+  },
+  {
+   "case": "fees-R01: the class filter has an accessible name",
+   "outcome": "PASS"
+  },
+  {
+   "case": "fees-R02: a historical year shows its own list and stays through navigation and reload",
+   "outcome": "PASS",
+   "active": "2025-2026",
+   "historical": "2024-2025",
+   "read": 100,
+   "picked": {
+    "year": "2024-2025",
+    "count": 100
+   },
+   "back": {
+    "year": "2024-2025",
+    "count": 100
+   },
+   "reloaded": {
+    "year": "2024-2025",
+    "count": 100
+   },
+   "restored": {
+    "year": "2025-2026",
+    "count": 107
+   },
+   "yearSwitcher": [
+    "2024-2025",
+    "2025-2026 (active)"
+   ]
+  },
+  {
+   "case": "fees-M01: create two owned charges for student-B with a billing date and discounts; preview reconciles",
+   "outcome": "PASS",
+   "calendarStaysOpen": false,
+   "dateButton": "1 novembre 2025",
+   "cantineNet": "2800",
+   "manuelsNet": "250",
+   "cantineSummary": "Versements : 8 — Total: 2.800,00 MAD",
+   "first": "1 01/11/2025 350,00 MAD",
+   "last": "8 01/06/2026 350,00 MAD",
+   "toasts": []
+  },
+  {
+   "case": "fees-M01: reopened charges reconcile gross, discount, net, schedule, installments and status",
+   "outcome": "PASS",
+   "cantine": {
+    "status": "overdue",
+    "first": "overdue"
+   },
+   "manuels": {
+    "status": "overdue"
+   }
+  },
+  {
+   "case": "fees-M02: one charge per selected type, none for the other owned student; a duplicate type is refused",
+   "outcome": "PASS",
+   "duplicateStatus": 200,
+   "created": 0,
+   "message": "Frais créés avec succès",
+   "note": "duplicate silently skipped under a generic success message"
+  },
+  {
+   "case": "fees-M02: class/section bulk form",
+   "outcome": "NOT EXPOSED",
+   "reason": "The class bulk-fee button was removed from /fees in e29ee12 (2026-10-17); ClassBulkFeeForm is not mounted anywhere"
+  },
+  {
+   "case": "fees-M03: edit the monthly discount (100) and notes; reload shows net 2.400,00 and installments follow",
+   "outcome": "PASS",
+   "installments": 8
+  },
+  {
+   "case": "fees-M03: a negative discount is refused in the form in French; no request",
+   "outcome": "PASS"
+  },
+  {
+   "case": "fees-M03: a monthly discount above the monthly amount is refused in the form and by the API, in French; prior values stay",
+   "outcome": "PASS",
+   "api": 400,
+   "message": "La remise ne peut pas dépasser le montant des frais (par période pour des frais récurrents)"
+  },
+  {
+   "case": "fees-M03: invalid billing dates are refused in French and the prior values stay (API; the edit form has no date field)",
+   "outcome": "PASS",
+   "messages": [
+    "La date de début de facturation doit être comprise dans la période d'inscription de l'élève pour cette année scolaire, à partir de sa date d'inscription",
+    "Date de début de facturation invalide"
+   ]
+  },
+  {
+   "case": "Cleanup: delete both owned charges from the student page (UI); student-B has no fee",
+   "outcome": "PASS"
+  }
+ ],
+ "diagnostics": [],
+ "writes": [
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/fees/bulk"
+  },
+  {
+   "as": "admin",
+   "method": "PUT",
+   "path": "/api/fees/:id"
+  },
+  {
+   "as": "admin",
+   "method": "DELETE",
+   "path": "/api/fees/:id"
+  },
+  {
+   "as": "admin",
+   "method": "DELETE",
+   "path": "/api/fees/:id"
+  }
+ ],
+ "mcpReads": [],
+ "nativeDialogs": [],
+ "apiWrites": [
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/fees/bulk",
+   "status": 200
+  },
+  {
+   "as": "admin",
+   "method": "PUT",
+   "path": "/fees/:id",
+   "status": 400
+  },
+  {
+   "as": "admin",
+   "method": "PUT",
+   "path": "/fees/:id",
+   "status": 400
+  },
+  {
+   "as": "admin",
+   "method": "PUT",
+   "path": "/fees/:id",
+   "status": 400
+  }
+ ],
+ "completedUtc": "2026-10-18T11:58:55.068Z",
+ "counts": {
+  "PASS": 16,
+  "NOT EXPOSED": 1
+ }
+}
