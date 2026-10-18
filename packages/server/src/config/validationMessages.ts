@@ -45,6 +45,17 @@ for (const [key, text] of Object.entries(english)) {
 const ZOD_LOCALES = { en: z.locales.en(), fr: z.locales.fr(), ar: z.locales.ar(), es: z.locales.es() } as const;
 type ZodLocale = keyof typeof ZOD_LOCALES;
 
+/**
+ * zod installs its English messages with a top-level `config(en())` in a
+ * package marked `"sideEffects": false`, so the production bundle drops it:
+ * every default message read "Invalid input", which matches no locale and
+ * reached French users as is. Installed here, where the lookup depends on it.
+ */
+export function installZodDefaultMessages() {
+  z.config(ZOD_LOCALES.en);
+}
+installZodDefaultMessages();
+
 function zodMessage(locale: ZodLocale, issue: Issue): string | undefined {
   const result = ZOD_LOCALES[locale].localeError(issue as never);
   return typeof result === 'string' ? result : result?.message;

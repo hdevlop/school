@@ -8,7 +8,7 @@ import { translate } from 'najm-i18n';
 import { LANGUAGE_HEADER, translations } from '@sms/contracts/locales';
 import { Body, Controller, Post, Validate } from '../../src/najm';
 import { i18nConfig, validationConfig } from '../../src/config/coreConfig';
-import { translateIssueMessage } from '../../src/config/validationMessages';
+import { installZodDefaultMessages, translateIssueMessage } from '../../src/config/validationMessages';
 import { applyCreditDto } from '../../src/modules/financial/credits/CreditDto';
 import { num } from '../../src/shared/fields';
 
@@ -111,6 +111,21 @@ describe('translated validation issues', () => {
     const message = first(z.object({ title: z.string() }), {}, 'fr');
     expect(message).not.toMatch(/Invalid input/);
     expect(message).toMatch(/invalide|attendu/i);
+  });
+
+  // The production bundle drops zod's own `config(en())` (its package is
+  // marked side-effect free), and an invalid payment type reached French
+  // users as "Invalid input". The server installs the English defaults itself.
+  it('translates a default message even when the bundle dropped zod\'s English locale', () => {
+    const paymentType = z.object({ paymentType: z.enum(['recurring', 'oneTime']) });
+    try {
+      z.config({ localeError: undefined });
+      expect(issuesOf(paymentType, { paymentType: 'weekly' })[0]).toMatchObject({ message: 'Invalid input' });
+      installZodDefaultMessages();
+      expect(first(paymentType, { paymentType: 'weekly' }, 'fr')).toBe('Option invalide : une valeur parmi "recurring"|"oneTime" attendue');
+    } finally {
+      installZodDefaultMessages();
+    }
   });
 
   it('translates a message that is already a catalog key', () => {
