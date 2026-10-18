@@ -99,6 +99,8 @@ export class TeacherRepository {
   // ========================================
 
   private buildTeacherQuery() {
+    // Each section keeps its own subjects. Combining both sets per class
+    // invents section/subject pairs when the edit form submits them again.
     return this.db
       .select({
         ...teacherSelect,
@@ -119,7 +121,7 @@ export class TeacherRepository {
             FROM (
               SELECT 
                 ${classes.id} as class_id,
-                array_agg(DISTINCT ${sections.id}) as section_ids,
+                ARRAY[${sections.id}] as section_ids,
                 array_agg(DISTINCT ${subjects.id}) as subject_ids
               FROM ${teacherAssignments}
               INNER JOIN ${sections} ON ${teacherAssignments.sectionId} = ${sections.id}
@@ -127,7 +129,7 @@ export class TeacherRepository {
               INNER JOIN ${subjects} ON ${teacherAssignments.subjectId} = ${subjects.id}
               WHERE ${teacherAssignments.teacherId} = ${teachers.id}
                 AND ${classes.academicYear} = ${this.year.label}
-              GROUP BY ${classes.id}
+              GROUP BY ${classes.id}, ${sections.id}
             ) grouped
           ),
           '[]'::json

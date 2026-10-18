@@ -84,4 +84,39 @@ describe('teacher identity and assignment years on the marked PostgreSQL fixture
         .toBe('history-assignment-2025');
     });
   });
+
+  it('round-trips different subjects in the same class without inventing assignments', async () => {
+    const { sections, subjects, teacherAssignments } = await import('../../src/database/schema');
+    const { TeacherService } = await import('../../src/modules/teachers/TeacherService');
+    await rolledBack(async (tx) => {
+      const { repo, inYear } = await scopedHistoryRepository(TeacherRepository, tx);
+      await tx.insert(sections).values({
+        id: 'history-pair-section', name: 'Pair regression', classId: 'history-class-2026',
+      });
+      await tx.insert(subjects).values({
+        id: 'history-pair-subject', code: 'PAIR-REGRESSION', name: 'Pair regression',
+      });
+      await tx.insert(teacherAssignments).values({
+        id: 'history-pair-assignment', teacherId: 'history-teacher',
+        classId: 'history-class-2026', sectionId: 'history-pair-section', subjectId: 'history-pair-subject',
+      });
+
+      await inYear('history-year-2026', async () => {
+        const pairs = (rows: Awaited<ReturnType<typeof repo.getClasses>>) =>
+          rows.map((row) => `${row.id}/${row.section.id}/${row.subject.id}`).sort();
+        const before = pairs(await repo.getClasses('history-teacher'));
+        expect(before.length).toBeGreaterThan(1);
+        const teacher = await repo.getById('history-teacher');
+        const expanded = teacher!.assignments.flatMap((line) => line.sectionIds.flatMap((sectionId) =>
+          line.subjectIds.map((subjectId) => `${line.classId}/${sectionId}/${subjectId}`))).sort();
+        expect(expanded).toEqual(before);
+
+        // Exercise the exact list the browser resubmits through the real
+        // repository-backed replacement operation, not a mocked SQL result.
+        const replace = (TeacherService.prototype as any).replaceTeacherAssignments;
+        await replace.call({ teacherRepository: repo }, 'history-teacher', teacher!.assignments);
+        expect(pairs(await repo.getClasses('history-teacher'))).toEqual(before);
+      });
+    });
+  });
 });
