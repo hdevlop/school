@@ -1,6 +1,6 @@
 # Registration
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PASS** (4/4) on `7022277`, 2026-10-18. Evidence: [PB1023-PEOPLE](../../evidence/production-browser/2026-10-18-pb1023-people/README.md).
 
 Entry point: `/register`. Original coverage: A extension.
 
@@ -12,15 +12,15 @@ A unique controlled email and an agreed user cleanup path. Use an identity allow
 
 ## Browser checks
 
-- [ ] **registration-R01**: Open registration signed out; labels and login link work.
-- [ ] **registration-R02**: Submit empty, malformed-email and weak/mismatched-password forms; show actionable validation.
+- [x] **registration-R01**: Open registration signed out; labels and login link work. Result: **PASS** — signed out, the French labels show and the login link opens `/login`.
+- [x] **registration-R02**: Submit empty, malformed-email and weak/mismatched-password forms; show actionable validation. Result: **PASS** — empty, malformed-email, short, no-uppercase and mismatched passwords are refused in French with no request.
 
 ## Owned-fixture mutations
 
 Run only within the recorded production fixture scope; otherwise mark these cases BLOCKED.
 
-- [ ] **registration-M01**: Register one owned identity; success returns to login without an authenticated session or privileged role.
-- [ ] **registration-M02**: Try the owned duplicate identity once; no second account is created. A new unverified/roleless account cannot reach protected data.
+- [x] **registration-M01**: Register one owned identity; success returns to login without an authenticated session or privileged role. Result: **PASS** — one registration returns to `/login` with the approval message; no session cookie, no role, status pending, email unverified.
+- [x] **registration-M02**: Try the owned duplicate identity once; no second account is created. A new unverified/roleless account cannot reach protected data. Result: **PASS** — a second registration gets 409 with feedback and one account remains; the new account cannot sign in (403, message in English, see the evidence findings).
 
 ## Finish and evidence
 

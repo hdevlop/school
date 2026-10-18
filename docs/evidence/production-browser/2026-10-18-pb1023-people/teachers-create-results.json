@@ -1,0 +1,50 @@
+{
+  "origin": "https://myscolai.com",
+  "checks": [
+    {
+      "label": "Empty personal step refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Negative salary refused in professional step",
+      "result": "PASS"
+    },
+    {
+      "label": "Personal values survive backward navigation",
+      "result": "PASS"
+    },
+    {
+      "label": "Unsubmitted professional draft survives Previous navigation",
+      "result": "PASS"
+    },
+    {
+      "label": "Incomplete assignment refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser creates exactly one teacher",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher persists after reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher links exact staff identity and salary",
+      "result": "PASS"
+    },
+    {
+      "label": "Initial class section subject stored once",
+      "result": "PASS"
+    }
+  ],
+  "createStatus": 200,
+  "result": "PASS",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/teachers"
+    }
+  ]
+}

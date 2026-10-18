@@ -1,0 +1,90 @@
+{
+  "origin": "https://myscolai.com",
+  "checks": [
+    {
+      "label": "Owned account created",
+      "result": "PASS"
+    },
+    {
+      "label": "Denied account authenticates",
+      "result": "PASS"
+    },
+    {
+      "label": "Actual role confirmed as teacher",
+      "result": "PASS"
+    },
+    {
+      "label": "Unassigned teacher roster excludes owned student",
+      "result": "PASS"
+    },
+    {
+      "label": "Denied GET /students/:owned-id",
+      "result": "PASS"
+    },
+    {
+      "label": "Denied PUT /students/:owned-id",
+      "result": "PASS"
+    },
+    {
+      "label": "Denied DELETE /students/:owned-id",
+      "result": "PASS"
+    },
+    {
+      "label": "Denied POST /students",
+      "result": "PASS"
+    },
+    {
+      "label": "Denied GET /students/:owned-id/enrollments",
+      "result": "PASS"
+    },
+    {
+      "label": "Refusals preserve student identity and placement",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher browser sign-in accepted",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher browser shows empty owned roster",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher browser has no create action",
+      "result": "PASS"
+    }
+  ],
+  "responses": [
+    {
+      "operation": "list",
+      "status": 200
+    },
+    {
+      "operation": "GET /students/:owned-id",
+      "status": 404
+    },
+    {
+      "operation": "PUT /students/:owned-id",
+      "status": 404
+    },
+    {
+      "operation": "DELETE /students/:owned-id",
+      "status": 403
+    },
+    {
+      "operation": "POST /students",
+      "status": 403
+    },
+    {
+      "operation": "GET /students/:owned-id/enrollments",
+      "status": 403
+    }
+  ],
+  "cleanup": [
+    {
+      "entity": "user",
+      "removed": true
+    }
+  ],
+  "result": "PASS"
+}

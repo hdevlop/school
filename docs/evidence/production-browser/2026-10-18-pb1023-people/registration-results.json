@@ -1,0 +1,68 @@
+{
+ "name": "registration",
+ "scope": "registration R01, R02, M01, M02",
+ "origin": "https://myscolai.com",
+ "candidate": "70222772c52a04d7c91f1a4426b71db19e6869a2",
+ "deployedRevision": "70222772c52a04d7c91f1a4426b71db19e6869a2",
+ "worktreeDirty": 21,
+ "browser": "155.0.8059.80",
+ "startedUtc": "2026-10-18T14:38:54.174Z",
+ "results": [
+  {
+   "case": "registration-R01: signed out, the page shows its labels and the login link works",
+   "outcome": "PASS",
+   "linkTo": "/login"
+  },
+  {
+   "case": "registration-R02: empty, malformed email, weak and mismatched passwords are refused in French before any request",
+   "outcome": "PASS",
+   "empty": true,
+   "malformedAndWeak": true,
+   "noUppercase": true,
+   "mismatch": true
+  },
+  {
+   "case": "registration-M01: one owned registration returns to login with no session and no role",
+   "outcome": "PASS",
+   "status": 200,
+   "authCookies": [],
+   "userStatus": "pending",
+   "emailVerified": false
+  },
+  {
+   "case": "registration-M02: a second registration of the same email adds no account; the new account reaches no protected data",
+   "outcome": "PASS",
+   "dupStatus": 409,
+   "feedbackShown": true,
+   "login": 403,
+   "loginMessage": "Account is inactive. Please contact support.",
+   "reads": {}
+  },
+  {
+   "case": "cleanup",
+   "outcome": "PASS",
+   "status": 200
+  }
+ ],
+ "diagnostics": [],
+ "writes": [],
+ "mcpReads": [],
+ "nativeDialogs": [],
+ "residue": 0,
+ "posts": [
+  "/api/auth/register",
+  "/api/auth/register"
+ ],
+ "apiWrites": [
+  {
+   "as": "admin",
+   "method": "DELETE",
+   "path": "/users/:id",
+   "status": 200
+  }
+ ],
+ "completedUtc": "2026-10-18T14:39:06.629Z",
+ "counts": {
+  "PASS": 5
+ }
+}

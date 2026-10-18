@@ -1,0 +1,61 @@
+{
+  "origin": "https://myscolai.com",
+  "checks": [
+    {
+      "label": "Cleanup ownership matches exact student and parent",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned student and parent created no login account",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned fee has no recorded payment",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned unpaid fee removed through MCP",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser confirms exact owned student deletion",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted student remains absent after reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted student detail returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted student parent link removed",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned unlinked parent removed through MCP",
+      "result": "PASS"
+    },
+    {
+      "label": "Final owned student residue zero",
+      "result": "PASS"
+    },
+    {
+      "label": "Final owned parent residue zero",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted owned fee unavailable",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "DELETE",
+      "path": "/api/students/:owned-id"
+    }
+  ]
+}

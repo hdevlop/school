@@ -1,0 +1,89 @@
+{
+ "name": "profiles",
+ "scope": "student-profile R01-R03, teacher-profile R01-R02 (read-only)",
+ "origin": "https://myscolai.com",
+ "candidate": "70222772c52a04d7c91f1a4426b71db19e6869a2",
+ "deployedRevision": "70222772c52a04d7c91f1a4426b71db19e6869a2",
+ "worktreeDirty": 21,
+ "browser": "155.0.8059.80",
+ "startedUtc": "2026-10-18T14:37:07.421Z",
+ "results": [
+  {
+   "case": "student-profile-R01: the row and the direct URL open the same identity, class, section and status",
+   "outcome": "PASS",
+   "placement": {
+    "cls": "CE6",
+    "section": "A"
+   },
+   "status": "active"
+  },
+  {
+   "case": "student-profile-R02: every tab renders without a load failure; attendance, parents and avatar agree with the API",
+   "outcome": "PASS",
+   "tabs": [
+    "Aperçu",
+    "Années scolaires",
+    "Présence",
+    "Notes",
+    "Frais",
+    "Transport",
+    "Alertes"
+   ],
+   "parents": 2,
+   "attendance": [
+    0,
+    0,
+    0
+   ],
+   "apiRows": 0
+  },
+  {
+   "case": "student-profile-R03: the fee record link keeps the student; the transport tab names the same student's pickup",
+   "outcome": "PASS",
+   "feesPath": "/students/:id/fees",
+   "feeRowsClickableOnProfilePage": 0,
+   "transportLinks": 0,
+   "transportDate": "2025-01-12"
+  },
+  {
+   "case": "teacher-profile-R01: identity, employment, classes, subjects, schedule and pay match the API",
+   "outcome": "PASS",
+   "tabs": [
+    "Vue d'ensemble",
+    "Détails",
+    "Emploi du temps",
+    "Paie"
+   ],
+   "classesShown": 9,
+   "classesApi": 9
+  },
+  {
+   "case": "teacher-profile-R02: the 2024-2025 timetable matches the teacher's published Class routines",
+   "outcome": "PASS",
+   "routines": 9,
+   "sections": [
+    "3AC A",
+    "2AC A",
+    "1AC A",
+    "CE6 A",
+    "CM2 A",
+    "CM1 A",
+    "CE2 A",
+    "CE1 A",
+    "CP A"
+   ],
+   "lessons": 18,
+   "sectionsShown": 9,
+   "routines2025_2026": 0
+  }
+ ],
+ "diagnostics": [],
+ "writes": [],
+ "mcpReads": [],
+ "nativeDialogs": [],
+ "apiWrites": [],
+ "completedUtc": "2026-10-18T14:38:07.907Z",
+ "counts": {
+  "PASS": 5
+ }
+}

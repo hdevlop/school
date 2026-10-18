@@ -1,0 +1,65 @@
+{
+  "origin": "https://myscolai.com",
+  "checks": [
+    {
+      "label": "Cleanup exact teacher chain ownership verified",
+      "result": "PASS"
+    },
+    {
+      "label": "Assignment controls remove every owned line",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser saves empty assignment list",
+      "result": "PASS"
+    },
+    {
+      "label": "No assignments remain after reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Cancel deletion preserves teacher",
+      "result": "PASS"
+    },
+    {
+      "label": "Browser deletes exact owned teacher",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted teacher remains absent on reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted teacher returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted staff returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Deleted login returns 404",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned teacher and staff residue zero",
+      "result": "PASS"
+    },
+    {
+      "label": "Owned and denied login residue zero",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "PUT",
+      "path": "/api/teachers/:owned-id"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/teachers/:owned-id"
+    }
+  ]
+}

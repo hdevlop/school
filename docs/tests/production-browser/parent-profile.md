@@ -1,6 +1,6 @@
 # Parent profile
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PASS** (3/3) on `7022277`, 2026-10-18. Evidence: [PB1023-PEOPLE](../../evidence/production-browser/2026-10-18-pb1023-people/README.md).
 
 Entry point: `/parents/[id]`. Original coverage: D04, D10.
 
@@ -12,9 +12,9 @@ Owned parent with child and another without children. Use an identity allowed by
 
 ## Browser checks
 
-- [ ] **parent-profile-R01**: Open profile directly and through the parent list; identity and children agree.
-- [ ] **parent-profile-R02**: Inspect personal, children, financial and document tabs actually exposed; empty states are accurate.
-- [ ] **parent-profile-R03**: Follow a child link; wrong-parent access and private/internal fields remain denied.
+- [x] **parent-profile-R01**: Open profile directly and through the parent list; identity and children agree. Result: **PASS** — from the list and by direct URL, the same parent and child.
+- [x] **parent-profile-R02**: Inspect personal, children, financial and document tabs actually exposed; empty states are accurate. Result: **PASS** — Overview and Details are the exposed tabs; children, a zero balance, CIN and email are shown.
+- [x] **parent-profile-R03**: Follow a child link; wrong-parent access and private/internal fields remain denied. Result: **PASS** — the child link opens the same student; a parent account linked to no family gets 404 for the parent, its children and the student, and its browser shows none of their fields.
 
 ## Owned-fixture mutations
 

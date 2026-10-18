@@ -1,0 +1,42 @@
+{
+  "origin": "https://myscolai.com",
+  "checks": [
+    {
+      "label": "Edit reloads professional salary",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher identity edit saved",
+      "result": "PASS"
+    },
+    {
+      "label": "Identity edit preserves exact section subject pairs",
+      "result": "PASS"
+    },
+    {
+      "label": "Linked staff identity updated without changing salary",
+      "result": "PASS"
+    },
+    {
+      "label": "Identity edit survives reload",
+      "result": "PASS"
+    }
+  ],
+  "beforePairs": [
+    "2025-2026-SC09/SB00",
+    "2025-2026-SC10/SB01"
+  ],
+  "editStatus": 200,
+  "afterPairs": [
+    "2025-2026-SC09/SB00",
+    "2025-2026-SC10/SB01"
+  ],
+  "result": "PASS",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "PUT",
+      "path": "/api/teachers/:owned-id"
+    }
+  ]
+}

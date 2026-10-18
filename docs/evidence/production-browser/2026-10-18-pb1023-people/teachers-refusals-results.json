@@ -1,0 +1,74 @@
+{
+  "origin": "https://myscolai.com",
+  "checks": [
+    {
+      "label": "Duplicate teacher CIN refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Duplicate creates no teacher",
+      "result": "PASS"
+    },
+    {
+      "label": "Duplicate creates no linked staff",
+      "result": "PASS"
+    },
+    {
+      "label": "Separate denied account created",
+      "result": "PASS"
+    },
+    {
+      "label": "Denied account authenticates",
+      "result": "PASS"
+    },
+    {
+      "label": "Denied role confirmed as teacher",
+      "result": "PASS"
+    },
+    {
+      "label": "Denied GET /teachers/:owned-id",
+      "result": "PASS"
+    },
+    {
+      "label": "Denied PUT /teachers/:owned-id",
+      "result": "PASS"
+    },
+    {
+      "label": "Denied DELETE /teachers/:owned-id",
+      "result": "PASS"
+    },
+    {
+      "label": "Denied POST /teachers/assign-subject",
+      "result": "PASS"
+    },
+    {
+      "label": "Denied mutations preserve teacher",
+      "result": "PASS"
+    }
+  ],
+  "responses": [
+    {
+      "operation": "GET /teachers/:owned-id",
+      "status": 404
+    },
+    {
+      "operation": "PUT /teachers/:owned-id",
+      "status": 403
+    },
+    {
+      "operation": "DELETE /teachers/:owned-id",
+      "status": 403
+    },
+    {
+      "operation": "POST /teachers/assign-subject",
+      "status": 403
+    }
+  ],
+  "cleanup": [
+    {
+      "entity": "denied-user",
+      "removed": true
+    }
+  ],
+  "result": "PASS"
+}

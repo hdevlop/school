@@ -1,6 +1,6 @@
 # Teacher profile
 
-Status: **PARTIAL** (1/3 cases complete) on `bc4e665`, 2026-10-16. Evidence: [PB1016r browser results](../../evidence/production-browser/2026-10-16-pb1016r/browser-results.json). Full profile tabs and timetable checks remain open.
+Status: **PASS** (3/3) on `7022277`, 2026-10-18. Evidence: [PB1023-PEOPLE](../../evidence/production-browser/2026-10-18-pb1023-people/README.md). Earlier evidence: [PB1016r browser results](../../evidence/production-browser/2026-10-16-pb1016r/browser-results.json).
 
 Entry point: `/teachers/[id]`. Original coverage: D06, D10.
 
@@ -12,8 +12,8 @@ Owned teacher with class, subject and routine fixtures. Use an identity allowed 
 
 ## Browser checks
 
-- [ ] **teacher-profile-R01**: Inspect identity, academic details, classes, subjects, schedule, payments and documents as exposed.
-- [ ] **teacher-profile-R02**: Compare timetable with Class routines; whole lessons and assignments match.
+- [x] **teacher-profile-R01**: Inspect identity, academic details, classes, subjects, schedule, payments and documents as exposed. Result: **PASS** — all four tabs render; name, CIN, email, salary and the nine classes agree with the API.
+- [x] **teacher-profile-R02**: Compare timetable with Class routines; whole lessons and assignments match. Result: **PASS** — 2025-2026 has no routines on the demo, so 2024-2025 was compared: nine sections and 18 weekly lessons match the teacher's published routines.
 - [x] **teacher-profile-R03**: Open a forbidden profile in another context; projection excludes unauthorized/private fields. Result: **PASS** — the unauthorized teacher profile shows not found; the two expected 404 responses are retained in the browser diagnostics.
 
 ## Owned-fixture mutations

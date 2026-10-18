@@ -1,0 +1,90 @@
+{
+  "origin": "https://myscolai.com",
+  "date": "2026-10-18T14:11:07.537Z",
+  "results": [
+    {
+      "test": "access-fixture-email-unused",
+      "outcome": "PASS"
+    },
+    {
+      "test": "owned-denied-role-account-created",
+      "outcome": "PASS"
+    },
+    {
+      "test": "denied-role-can-authenticate",
+      "outcome": "PASS"
+    },
+    {
+      "test": "denied-role-me-confirms-actual-teacher",
+      "outcome": "PASS"
+    },
+    {
+      "test": "teacher-denied-GET-/users",
+      "outcome": "PASS"
+    },
+    {
+      "test": "teacher-denied-GET-/users/:owned-id",
+      "outcome": "PASS"
+    },
+    {
+      "test": "teacher-denied-PUT-/users/:owned-id",
+      "outcome": "PASS"
+    },
+    {
+      "test": "teacher-denied-DELETE-/users/:owned-id",
+      "outcome": "PASS"
+    },
+    {
+      "test": "teacher-denied-POST-/auth/invite",
+      "outcome": "PASS"
+    },
+    {
+      "test": "refused-mutations-preserve-owned-account",
+      "outcome": "PASS"
+    },
+    {
+      "test": "denied-role-browser-login-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "users-page-redirects-denied-role-and-hides-create",
+      "outcome": "PASS"
+    },
+    {
+      "test": "admin-can-deactivate-owned-user",
+      "outcome": "PASS"
+    },
+    {
+      "test": "old-bearer-is-rejected-after-deactivation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "inactive-account-cannot-log-in",
+      "outcome": "PASS"
+    },
+    {
+      "test": "admin-can-reactivate-owned-user",
+      "outcome": "PASS"
+    },
+    {
+      "test": "reactivated-user-can-log-in-with-existing-password",
+      "outcome": "PASS"
+    },
+    {
+      "test": "no-unhandled-page-errors",
+      "outcome": "PASS"
+    }
+  ],
+  "counts": {
+    "PASS": 18,
+    "FAIL": 0
+  },
+  "failure": null,
+  "diagnostics": [],
+  "cleanup": [
+    {
+      "removed": true
+    }
+  ],
+  "fixtureResidue": null
+}

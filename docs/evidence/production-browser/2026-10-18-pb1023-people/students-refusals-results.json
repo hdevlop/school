@@ -1,0 +1,68 @@
+{
+  "origin": "https://myscolai.com",
+  "checks": [
+    {
+      "label": "empty student code refused",
+      "result": "PASS"
+    },
+    {
+      "label": "empty refusal translated to French",
+      "result": "PASS"
+    },
+    {
+      "label": "whitespace student code refused",
+      "result": "PASS"
+    },
+    {
+      "label": "whitespace refusal translated to French",
+      "result": "PASS"
+    },
+    {
+      "label": "duplicate student code refused",
+      "result": "PASS"
+    },
+    {
+      "label": "padded duplicate student code refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Blank code edit refused",
+      "result": "PASS"
+    },
+    {
+      "label": "Refused creates leave student count unchanged",
+      "result": "PASS"
+    },
+    {
+      "label": "Refused nested submissions create no parent",
+      "result": "PASS"
+    },
+    {
+      "label": "Refused edit preserves original identity",
+      "result": "PASS"
+    }
+  ],
+  "responses": [
+    {
+      "variant": "empty",
+      "status": 400
+    },
+    {
+      "variant": "whitespace",
+      "status": 400
+    },
+    {
+      "variant": "duplicate",
+      "status": 409
+    },
+    {
+      "variant": "padded duplicate",
+      "status": 409
+    },
+    {
+      "variant": "blank code edit",
+      "status": 400
+    }
+  ],
+  "result": "PASS"
+}

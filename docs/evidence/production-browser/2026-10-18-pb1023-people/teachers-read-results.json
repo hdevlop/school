@@ -1,0 +1,71 @@
+{
+  "origin": "https://myscolai.com",
+  "checks": [
+    {
+      "label": "fr-desktop saved identity and class visible",
+      "result": "PASS"
+    },
+    {
+      "label": "Email filter preserves exact teacher",
+      "result": "PASS"
+    },
+    {
+      "label": "Active status filter matches saved teacher",
+      "result": "PASS"
+    },
+    {
+      "label": "No-match feedback displayed",
+      "result": "PASS"
+    },
+    {
+      "label": "Clearing no-match restores exact teacher",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop keyboard card link opens correct profile",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-desktop details identify same teacher and four assignments",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone saved identity and class visible",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone keyboard card link opens correct profile",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone details identify same teacher and four assignments",
+      "result": "PASS"
+    },
+    {
+      "label": "fr-phone page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone saved identity and class visible",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone keyboard card link opens correct profile",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone details identify same teacher and four assignments",
+      "result": "PASS"
+    },
+    {
+      "label": "ar-phone page fits viewport",
+      "result": "PASS"
+    },
+    {
+      "label": "Teacher phone Arabic RTL",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS",
+  "diagnostics": []
+}

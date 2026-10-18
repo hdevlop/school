@@ -1,6 +1,6 @@
 # Staff
 
-Status: **NOT RUN**. Target: `https://myscolai.com`.
+Status: **PASS** (4/4) on `7022277`, 2026-10-18. Evidence: [PB1023-PEOPLE](../../evidence/production-browser/2026-10-18-pb1023-people/README.md).
 
 Entry point: `/staff`. Original coverage: D07.
 
@@ -12,15 +12,15 @@ Owned staff profile and known role/zone choices. Use an identity allowed by the 
 
 ## Browser checks
 
-- [ ] **staff-R01**: Search/filter staff; status and assigned role are correct.
-- [ ] **staff-R02**: Open role-dependent fields; hourly, driver and assignment controls match the selected role.
+- [x] **staff-R01**: Search/filter staff; status and assigned role are correct. Result: **PASS** — category and name filters, the no-match state and clearing it (najm-kit 3.6.3); status and role on cards and table.
+- [x] **staff-R02**: Open role-dependent fields; hourly, driver and assignment controls match the selected role. Result: **PASS** — hourly, driver licence and assignment controls follow the selected role.
 
 ## Owned-fixture mutations
 
 Run only within the recorded production fixture scope; otherwise mark these cases BLOCKED.
 
-- [ ] **staff-M01**: Create/edit owned staff; check required role-dependent fields, hours/rates and reload.
-- [ ] **staff-M02**: Change only owned employment status; remove owned references before safe deletion.
+- [x] **staff-M01**: Create/edit owned staff; check required role-dependent fields, hours/rates and reload. Result: **PASS** — hourly staff created, edited and reloaded with its rate and hours; French and Arabic phone views.
+- [x] **staff-M02**: Change only owned employment status; remove owned references before safe deletion. Result: **PASS** — status changes; a monthly cleaner's zone assignment is ended before deletion; a teacher account is refused every staff route.
 
 ## Finish and evidence
 

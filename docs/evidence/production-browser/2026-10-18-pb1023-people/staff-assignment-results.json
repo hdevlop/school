@@ -1,0 +1,78 @@
+{
+  "origin": "https://myscolai.com",
+  "date": "2026-10-18T14:19:17.513Z",
+  "results": [
+    {
+      "test": "assignment-fixtures-are-unused",
+      "outcome": "PASS"
+    },
+    {
+      "test": "cleaner-cannot-submit-without-zone-and-sees-French-error",
+      "outcome": "PASS"
+    },
+    {
+      "test": "UI-create-cleaner-with-zone-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "MCP-confirms-owned-cleaner-current-zone-and-monthly-pay",
+      "outcome": "PASS"
+    },
+    {
+      "test": "edit-reopens-saved-zone-and-monthly-salary",
+      "outcome": "PASS"
+    },
+    {
+      "test": "table-displays-owned-current-zone-assignment",
+      "outcome": "PASS"
+    },
+    {
+      "test": "role-filter-keeps-only-owned-cleaner",
+      "outcome": "PASS"
+    },
+    {
+      "test": "supported-MCP-removal-of-current-assignment-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "assignment-is-ended-with-history-preserved",
+      "outcome": "PASS"
+    },
+    {
+      "test": "UI-delete-after-ending-owned-reference-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "deleted-cleaner-returns-404",
+      "outcome": "PASS"
+    },
+    {
+      "test": "no-unhandled-page-errors",
+      "outcome": "PASS"
+    }
+  ],
+  "counts": {
+    "PASS": 12,
+    "FAIL": 0
+  },
+  "failure": null,
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/staff"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/staff/:owned-id"
+    }
+  ],
+  "cleanup": [
+    {
+      "type": "zone",
+      "removed": true
+    }
+  ],
+  "staffResidue": 0,
+  "zoneResidue": 0
+}

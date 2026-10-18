@@ -1,0 +1,177 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "70222772c52a04d7c91f1a4426b71db19e6869a2",
+  "date": "2026-10-18T14:24:33.969Z",
+  "results": [
+    {
+      "test": "fixture-identities-unused",
+      "outcome": "PASS"
+    },
+    {
+      "test": "setup-owned-parent-created",
+      "outcome": "PASS",
+      "detail": 200
+    },
+    {
+      "test": "duplicate-phone-refused-with-specific-feedback-and-one-parent",
+      "outcome": "PASS",
+      "detail": {
+        "status": 409,
+        "matches": 1
+      }
+    },
+    {
+      "test": "duplicate-email-refused-with-specific-feedback-and-one-parent",
+      "outcome": "PASS",
+      "detail": {
+        "status": 409,
+        "matches": 1
+      }
+    },
+    {
+      "test": "student-with-nested-parent-accepted",
+      "outcome": "PASS",
+      "detail": 200
+    },
+    {
+      "test": "exactly-one-owned-student-created",
+      "outcome": "PASS"
+    },
+    {
+      "test": "nested-parent-reuses-the-owned-parent-without-a-duplicate",
+      "outcome": "PASS",
+      "detail": {
+        "linked": [
+          "iZh6i"
+        ],
+        "sameCin": 1,
+        "added": 1
+      }
+    },
+    {
+      "test": "linked-parent-card-has-no-orphan-state-and-API-lists-the-child",
+      "outcome": "PASS",
+      "detail": {
+        "orphanMarks": 0,
+        "children": 1
+      }
+    },
+    {
+      "test": "profile-through-list-and-direct-show-same-identity-and-child",
+      "outcome": "PASS",
+      "detail": [
+        {
+          "parent": true,
+          "child": true,
+          "excerpt": "Tableau de bord Élèves Parents Enseignants Personnel Financier Présence Alertes Annonces Conduite Évaluations Examens Notes Calendrier Planning Académique Transport Contrôle d’accès Apparence Notifications Paramètres Déconnecter Houda Berrada PB1023 Ses enfants en un coup d'œil. Retour aux parents Modifier dimanche 18 octobre 2026 Aperçu Détails Total des enfants 1 Moyenne générale — Assiduité glo"
+        },
+        {
+          "parent": true,
+          "child": true,
+          "excerpt": "Tableau de bord Élèves Parents Enseignants Personnel Financier Présence Alertes Annonces Conduite Évaluations Examens Notes Calendrier Planning Académique Transport Contrôle d’accès Apparence Notifications Paramètres Déconnecter Houda Berrada PB1023 Ses enfants en un coup d'œil. Retour aux parents Modifier dimanche 18 octobre 2026 Aperçu Détails Total des enfants 1 Moyenne générale — Assiduité glo"
+        }
+      ]
+    },
+    {
+      "test": "profile-tabs-show-personal-children-and-financial-state",
+      "outcome": "PASS",
+      "detail": {
+        "tabs": [
+          "Aperçu",
+          "Détails"
+        ]
+      }
+    },
+    {
+      "test": "child-link-opens-the-same-student",
+      "outcome": "PASS",
+      "detail": {
+        "path": "/students/:owned-id"
+      }
+    },
+    {
+      "test": "parent-role-exists",
+      "outcome": "PASS"
+    },
+    {
+      "test": "setup-wrong-parent-account",
+      "outcome": "PASS",
+      "detail": 200
+    },
+    {
+      "test": "wrong-parent-can-sign-in",
+      "outcome": "PASS"
+    },
+    {
+      "test": "wrong-parent-API-reads-are-refused",
+      "outcome": "PASS",
+      "detail": {
+        "parent": 404,
+        "children": 404,
+        "student": 404
+      }
+    },
+    {
+      "test": "wrong-parent-browser-session",
+      "outcome": "PASS"
+    },
+    {
+      "test": "wrong-parent-sees-no-private-parent-fields",
+      "outcome": "PASS",
+      "detail": {
+        "url": "/parents/iZh6i"
+      }
+    }
+  ],
+  "cleanup": [
+    {
+      "entity": "wrong-parent-user",
+      "status": 200
+    },
+    {
+      "entity": "student",
+      "status": 200
+    },
+    {
+      "entity": "parent",
+      "status": 200
+    }
+  ],
+  "residue": {
+    "parents": 0,
+    "students": 0
+  },
+  "failure": null,
+  "diagnostics": [
+    {
+      "type": "responseerror",
+      "method": "POST",
+      "path": "/api/parents",
+      "status": 409
+    },
+    {
+      "type": "responseerror",
+      "method": "POST",
+      "path": "/api/parents",
+      "status": 409
+    }
+  ],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/parents"
+    },
+    {
+      "method": "POST",
+      "path": "/api/parents"
+    },
+    {
+      "method": "POST",
+      "path": "/api/students"
+    }
+  ],
+  "counts": {
+    "PASS": 17,
+    "FAIL": 0
+  }
+}

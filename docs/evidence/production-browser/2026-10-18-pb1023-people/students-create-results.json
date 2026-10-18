@@ -1,0 +1,44 @@
+{
+  "origin": "https://myscolai.com",
+  "checks": [
+    {
+      "label": "Empty first step stays open with translated validation",
+      "result": "PASS"
+    },
+    {
+      "label": "Whitespace student code refused by browser",
+      "result": "PASS"
+    },
+    {
+      "label": "Student fields survive backward navigation",
+      "result": "PASS"
+    },
+    {
+      "label": "Nested parent survives backward navigation",
+      "result": "PASS"
+    },
+    {
+      "label": "Three-step browser submission creates exactly one student",
+      "result": "PASS"
+    },
+    {
+      "label": "Created student survives reload",
+      "result": "PASS"
+    },
+    {
+      "label": "Exactly one owned parent linked",
+      "result": "PASS"
+    }
+  ],
+  "createStatus": 200,
+  "result": "FAIL",
+  "error": "Nested fee mismatch",
+  "visible": "",
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/students"
+    }
+  ]
+}
