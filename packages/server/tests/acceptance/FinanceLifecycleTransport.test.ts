@@ -169,6 +169,8 @@ describe('real PostgreSQL finance lifecycle over authenticated HTTP and MCP', ()
         expect([401, 403]).toContain((await request(path, 'GET', undefined, token)).status);
       }
       expect([401, 403]).toContain((await request('/payments', 'POST', {}, token)).status);
+      expect([401, 403]).toContain((await request('/student-credits/apply', 'POST',
+        { studentId, amount: 1 }, token)).status);
     }
   });
 

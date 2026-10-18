@@ -97,6 +97,8 @@ afterAll(async () => {
     await db.delete(paymentAllocations).where(eq(paymentAllocations.paymentId, recordedPaymentId));
     await db.delete(payments).where(eq(payments.id, recordedPaymentId));
   }
+  await db.delete(financialAuditLogs).where(inArray(financialAuditLogs.entityId,
+    [fixture.oldAllocation, fixture.newAllocation]));
   await db.delete(paymentAllocations).where(eq(paymentAllocations.paymentId, fixture.payment));
   await db.delete(payments).where(eq(payments.id, fixture.payment));
   await db.delete(feeInstallments).where(eq(feeInstallments.feeId, fixture.oldFee));
@@ -105,6 +107,9 @@ afterAll(async () => {
   await db.delete(feeTypes).where(eq(feeTypes.id, fixture.feeType));
   expect(await db.select({ id: paymentAllocations.id }).from(paymentAllocations)
     .where(eq(paymentAllocations.paymentId, fixture.payment))).toEqual([]);
+  expect(await db.select({ id: financialAuditLogs.id }).from(financialAuditLogs)
+    .where(inArray(financialAuditLogs.entityId, [fixture.oldAllocation, fixture.newAllocation])))
+    .toEqual([]);
 });
 
 describe('authenticated allocation year scope on the marked PostgreSQL fixture', () => {

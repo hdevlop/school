@@ -15,6 +15,7 @@ const { feeTypes } = await import('../../src/modules/financial/feeTypes/feeTypeS
 const { fees, feeInstallments } = await import('../../src/modules/financial/fees/feeSchema');
 const { rolloverRuns, rolloverRunItems } = await import('../../src/modules/financial/rollover/rolloverSchema');
 const { financialAuditLogs } = await import('../../src/modules/financial/auditLog/auditLogSchema');
+const { settings } = await import('../../src/modules/settings/settingSchema');
 const { server } = await import('../../src/index');
 const suffix = crypto.randomUUID().slice(0, 8);
 const typeId = `history-rollover-rest-type-${suffix}`;
@@ -122,6 +123,8 @@ afterAll(async () => {
 
 describe('authenticated financial rollover', () => {
   it('previews explicit years, commits under target context and retries without duplicates', async () => {
+    const settingsBefore = await db.select().from(settings).orderBy(settings.id);
+    const feesBefore = await db.select().from(fees).orderBy(fees.id);
     expect((await request('/rollover/preview', '2025-2026', 'POST', payload)).status).toBe(409);
     const preview = await request('/rollover/preview', '2026-2027', 'POST', payload);
     expect(preview.status).toBe(200);
@@ -129,6 +132,9 @@ describe('authenticated financial rollover', () => {
     expect(preview.body.data.preview.proposedFees).toBe(1);
     expect(preview.body.data.preview.details.proposedFees[0].studentId).toBe('history-student-01');
     expect((await request('/rollover/preview', '2026-2027', 'POST', payload)).body.data.id).toBe(runId);
+    // A preview persists its run/audit, but must not bill or activate a year.
+    expect(await db.select().from(settings).orderBy(settings.id)).toEqual(settingsBefore);
+    expect(await db.select().from(fees).orderBy(fees.id)).toEqual(feesBefore);
     expect((await request('/rollover/commit', '2025-2026', 'POST', {
       ...payload, runId, confirmSettingsUpdate: false,
     })).status).toBe(409);
@@ -148,6 +154,7 @@ describe('authenticated financial rollover', () => {
     })).status).toBe(200);
     expect(await db.select().from(rolloverRunItems).where(eq(rolloverRunItems.runId, runId!)))
       .toHaveLength(1);
+    expect(await db.select().from(settings).orderBy(settings.id)).toEqual(settingsBefore);
 
     const { Client } = await import('@modelcontextprotocol/sdk/client/index.js');
     const { StreamableHTTPClientTransport } = await import('@modelcontextprotocol/sdk/client/streamableHttp.js');

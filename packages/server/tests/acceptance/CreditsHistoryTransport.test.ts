@@ -112,6 +112,29 @@ describe('student credit shared balance and selected target year', () => {
     expect((await request('/student-credits/student/history-student-01', '2026-2027')).body.data)
       .toContainEqual(expect.objectContaining({ id: lot.id }));
 
+    // Rejected applications must leave both the available credit and the
+    // target installments unchanged, including sub-cent input at transport.
+    const beforeLots = await db.select().from(studentCreditLots)
+      .where(eq(studentCreditLots.id, lot.id));
+    const beforeInstallments = await db.select().from(feeInstallments)
+      .where(inArray(feeInstallments.id, [fixture.oldInstallment, fixture.newInstallment]));
+    const beforeAllocations = await db.select().from(paymentAllocations)
+      .where(eq(paymentAllocations.paymentId, paymentId!));
+    for (const amount of [0, -1, 0.001, 101]) {
+      const rejected = await request('/student-credits/apply', '2026-2027', 'POST',
+        { studentId: 'history-student-01', amount });
+      expect(rejected.status, `Credit amount ${amount} must be refused`).toBe(400);
+      expect(await db.select().from(studentCreditLots).where(eq(studentCreditLots.id, lot.id)))
+        .toEqual(beforeLots);
+      expect(await db.select().from(feeInstallments)
+        .where(inArray(feeInstallments.id, [fixture.oldInstallment, fixture.newInstallment])))
+        .toEqual(beforeInstallments);
+      expect(await db.select().from(paymentAllocations)
+        .where(eq(paymentAllocations.paymentId, paymentId!))).toEqual(beforeAllocations);
+      expect(await db.select().from(studentCreditApplications)
+        .where(eq(studentCreditApplications.creditLotId, lot.id))).toEqual([]);
+    }
+
     const wrongTarget = await request('/student-credits/apply', '2024-2025', 'POST',
       { studentId: 'history-student-01', amount: 30 });
     expect(wrongTarget.status).toBe(400);
