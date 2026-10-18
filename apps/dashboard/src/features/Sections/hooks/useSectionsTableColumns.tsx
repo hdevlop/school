@@ -1,11 +1,14 @@
 import { useMemo } from 'react';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { createSectionSchema } from '../config/sectionSchemas';
 
 export const useSectionsTableColumns = () => {
   const { t } = useTranslation();
 
-  return useMemo(() => [
+  return useMemo(() => {
+    const schema = createSectionSchema(t);
+    return [
     {
       accessorKey: "id",
       header: t('sections.table.id'),
@@ -23,7 +26,11 @@ export const useSectionsTableColumns = () => {
       meta: {
         editable: true,
         editor: 'text',
-        validate: (v) => (!v || !String(v).trim() ? 'Required' : null),
+        validate: (v) => {
+          if (!v || !String(v).trim()) return t('validationMessages.sectionNameIsRequired');
+          const result = schema.shape.name.safeParse(v);
+          return result.success ? null : result.error.issues[0].message;
+        },
       },
       cell: ({ getValue }) => (
         <div className="font-medium text-sm">
@@ -94,8 +101,11 @@ export const useSectionsTableColumns = () => {
         editable: true,
         editor: 'number',
         min: 1,
-        max: 200,
-        validate: (v) => (v == null || v < 1 ? 'Must be ≥ 1' : null),
+        max: 100,
+        validate: (v) => {
+          const result = schema.shape.maxStudents.unwrap().safeParse(v);
+          return result.success ? null : result.error.issues[0].message;
+        },
       },
       cell: ({ getValue }) => (
         <div className="font-medium text-sm">
@@ -114,5 +124,6 @@ export const useSectionsTableColumns = () => {
       },
       size: 120,
     },
-  ], [t]);
+    ];
+  }, [t]);
 };

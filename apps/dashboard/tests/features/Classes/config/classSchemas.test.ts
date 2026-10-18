@@ -22,4 +22,11 @@ describe('classSchema', () => {
   it('needs a level, because the year rollover groups classes by it', () => {
     expect(classSchema.safeParse({ ...valid, level: '' }).success).toBe(false);
   });
+
+  it('keeps a selected cycle and explicitly clears an unassigned cycle', () => {
+    expect(classSchema.parse({ ...valid, cycleId: 'cycle-primary' }).cycleId).toBe('cycle-primary');
+    expect(classSchema.parse({ ...valid, cycleId: '__none__' }).cycleId).toBeNull();
+    expect(classSchema.parse({ ...valid, cycleId: null }).cycleId).toBeNull();
+    expect(classSchema.parse(valid).cycleId).toBeUndefined();
+  });
 });

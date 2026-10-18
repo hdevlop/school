@@ -20,6 +20,10 @@ export const createClassSchema = (t: T) => {
     name: z.string().min(1, t('validationMessages.classNameIsRequired')).max(50, t('validationMessages.classNameTooLong')),
     description: z.string().max(500, t('validationMessages.descriptionTooLong')).optional(),
     level: z.string().min(1, t('validationMessages.classLevelIsRequired')),
+    cycleId: z.preprocess(
+      (value) => value === '__none__' || value === '' ? null : value,
+      z.string().min(1).nullish(),
+    ),
   });
 };
 

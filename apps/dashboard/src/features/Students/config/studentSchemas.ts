@@ -55,7 +55,7 @@ export const createStudentSchemas = (t: T) => {
     id: optionalId,
     classId: requiredId(t('validationMessages.classIsRequired')),
     sectionId: requiredId(t('validationMessages.sectionIsRequired')),
-    studentCode: z.string(),
+    studentCode: z.string().trim().min(1, t('validationMessages.required')),
     name: nameField,
     arabicName: z.string().trim().max(100, t('validationMessages.arabicNameTooLong')).nullish(),
     email: emailField,

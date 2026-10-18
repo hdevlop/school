@@ -9,12 +9,21 @@ import { GraduationCap, FileText, Layers } from 'lucide-react'
 import { useDialog } from '@/shared/useDialog'
 import { createClassSchema } from '../config/classSchemas'
 import { useTranslation } from 'najm-i18n/react'
+import { useCycles } from '@/features/Cycles/hooks/useCycles'
 
 const ClassForm = ({ classData = null}) => {
 
-   const { t } = useTranslation();
+   const { t, language } = useTranslation();
    const classSchema = useMemo(() => createClassSchema(t), [t]);
    const { pop } = useDialog();
+   const { cycles, isCyclesLoading } = useCycles();
+   const cycleOptions = [
+      { value: '__none__', label: t('common.notAssigned') },
+      ...(cycles || []).map(cycle => ({
+         value: cycle.id,
+         label: cycle.labels?.[language] || cycle.name,
+      })),
+   ];
 
    const defaultValues = {
       ...(classData?.id && { id: classData.id }),
@@ -22,6 +31,7 @@ const ClassForm = ({ classData = null}) => {
       // ("CE1", "Middle", "asdasd") that a quick Create submitted as real.
       name: classData?.name ?? '',
       level: classData?.level ?? '',
+      cycleId: classData?.cycleId ?? '__none__',
       description: classData?.description ?? '',
    }
 
@@ -64,6 +74,16 @@ const ClassForm = ({ classData = null}) => {
                         icon={Layers}
                      />
                   </div>
+
+                  <FormInput
+                     name='cycleId'
+                     type='select'
+                     formLabel={t('classes.form.cycle')}
+                     placeholder={t('classes.form.cycle')}
+                     icon={Layers}
+                     items={cycleOptions}
+                     disabled={isCyclesLoading}
+                  />
 
                   {/* Description Section */}
                   <FormSectionHeader

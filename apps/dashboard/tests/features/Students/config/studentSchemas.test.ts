@@ -23,6 +23,14 @@ const student = {
 };
 
 describe('studentSchema', () => {
+  it('requires a nonblank student code and trims its surrounding whitespace', () => {
+    for (const studentCode of ['', '   ']) {
+      expect(studentSchema.safeParse({ ...student, studentCode }).success).toBe(false);
+      expect(studentProfileEditSchema.safeParse({ ...student, studentCode }).success).toBe(false);
+    }
+    expect(studentSchema.parse({ ...student, studentCode: ' STU-001 ' }).studentCode).toBe('STU-001');
+  });
+
   it('preserves an optional Arabic name and allows clearing it', () => {
     expect(studentSchema.parse({ ...student, arabicName: '  ياسمين العلوي  ' }).arabicName).toBe('ياسمين العلوي');
     expect(studentProfileEditSchema.parse({ ...student, arabicName: '' }).arabicName).toBe('');

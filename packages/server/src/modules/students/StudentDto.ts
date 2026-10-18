@@ -34,7 +34,7 @@ const studentSchema = z.object({
   id: optionalId,
   classId: requiredId,
   sectionId: requiredId,
-  studentCode: z.string(),
+  studentCode: z.string().trim().min(1, 'validationMessages.required'),
   name: nameField,
   arabicName: z.string().trim().max(100, 'Arabic name too long').nullish(),
   email: emailField.optional(),
