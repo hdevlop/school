@@ -416,6 +416,7 @@
       "notFound": "No user found with the provided information",
       "adminRoleNotFound": "Admin role not found",
       "idExists": "User ID already exists",
+      "emailExists": "An account with this email already exists",
       "emailOrPhoneRequired": "Enter an email address or a phone number",
       "phoneExists": "This phone number is already used by another account"
     },
