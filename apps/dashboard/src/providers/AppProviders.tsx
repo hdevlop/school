@@ -7,6 +7,7 @@ import { schoolI18n } from '@sms/contracts/locales';
 import { auth } from '@/najm.auth';
 import { languageHeader } from '@/lib/requestHeaders';
 import type { SchoolUiSnapshot } from '@/najm.server';
+import { ZodLanguage } from './zodLanguage';
 
 // Below lg every table is one card list that reveals rows as the page scrolls.
 // Module scope keeps the object stable, so no table re-renders for it.
@@ -25,6 +26,7 @@ export function AppProviders({  children,snapshot}: Readonly<{ children: ReactNo
       formDevTools={false}
       tableDefaults={TABLE_DEFAULTS}
     >
+      <ZodLanguage />
       {children}
     </NajmAppProvider>
   );
