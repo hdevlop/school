@@ -40,7 +40,7 @@ export default function RoutineDayList({ days, periods, entries, duties = [], de
         ))}
       </div>
 
-      <h2 className="shrink-0 px-1 text-sm font-semibold">{dayLabel}</h2>
+      <h2 className="shrink-0 px-1 text-sm font-semibold text-foreground">{dayLabel}</h2>
 
       <NajmScroll key={shownDay} axis="y" autoHide="scroll" className="flex-1">
         <ol className="flex flex-col gap-2 pe-2 pb-20" role="tabpanel" aria-label={dayLabel}>
