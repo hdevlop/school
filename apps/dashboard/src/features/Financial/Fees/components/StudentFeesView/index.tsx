@@ -330,6 +330,8 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
     try {
       const compactPayment = Boolean(scopedTarget?.installment);
       const paymentData = await openDialog({
+        // Names the dialog for screen readers; the payment header shows the same words.
+        title: t('payments.dialogs.createButton'),
         children: (
           <MultiFeesPayment
             studentId={studentId}
@@ -340,7 +342,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
         showButtons: false,
         width: compactPayment ? 'xl' : 'full',
         height: compactPayment ? 'auto' : 'full',
-        className: 'p-0 bg-transparent border-none shadow-none',
+        className: 'p-0 bg-transparent border-none shadow-none [&>[data-slot=dialog-header]]:sr-only',
       });
 
       if (paymentData) {

@@ -110,6 +110,7 @@ const FeeInstallmentsTable = ({
                   if (input) input.indeterminate = somePayableSelected;
                }}
                onChange={() => toggleAllFeeInstallments(visibleFee.id, [visibleFee])}
+               aria-label={t('installments.selectAllPayable')}
                className="h-4 w-4 cursor-pointer rounded text-blue-600 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed"
             />
          ),
@@ -125,6 +126,7 @@ const FeeInstallmentsTable = ({
                   checked={!!isSelected}
                   disabled={!isPayable}
                   onChange={() => toggleInstallment(inst)}
+                  aria-label={t('installments.number', { number: inst.number })}
                   className="h-4 w-4 cursor-pointer rounded text-blue-600 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed"
                   title={isPayable ? t('installments.selectInstallment') : t('installments.noAvailableBalance')}
                />
@@ -322,6 +324,7 @@ export const InstallmentList = ({ studentFees }) => {
                               onClick={(event) => event.stopPropagation()}
                               onChange={() => toggleAllFeeInstallments(fee.id, [{ ...fee, installments: stats.due }])}
                               title={stats.due.length === 0 ? t('installments.nothingDue') : undefined}
+                              aria-label={t('installments.selectFeeDue', { fee: fee.name })}
                               className="h-4 w-4 shrink-0 cursor-pointer rounded text-blue-600 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed"
                            />
                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted text-lg">{fee.icon}</span>

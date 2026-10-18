@@ -206,6 +206,8 @@
     "nothingDue": "Rien à payer pour le moment",
     "dueAmount": "À payer : {{amount}}",
     "selectInstallment": "Sélectionner l’échéance",
+    "selectAllPayable": "Sélectionner toutes les échéances payables",
+    "selectFeeDue": "Sélectionner ce qui est dû : {{fee}}",
     "noAvailableBalance": "Aucun solde disponible",
     "number": "Échéance n° {{number}}",
     "reservedAmount": "Réservé {{amount}}",
@@ -1623,6 +1625,9 @@
   },
   "status": {
     "upcoming": "À venir",
+    "deposited": "Déposé",
+    "bounced": "Rejeté",
+    "voided": "Annulé",
     "active": "Actif",
     "inactive": "Inactif",
     "pending": "En attente",
@@ -2367,7 +2372,7 @@
   "fees": {
     "stats": {
       "collected": "Encaissé à ce jour",
-      "tpe": "TPE",
+      "tpe": "Carte bancaire",
       "overdueAmount": "Montant en retard"
     },
     "classBulk": {
@@ -2510,6 +2515,7 @@
       "allocationsRetrieved": "Affectations récupérées avec succès",
       "bulkCreated": "Frais créés avec succès",
       "bulkDeleted": "Enregistrements Frais supprimés avec succès",
+      "someSkipped": "{{created}} frais créés ; {{skipped}} déjà facturés à cet élève, ignorés",
       "created": "Frais créé avec succès",
       "dataRetrieved": "Données Frais récupérées avec succès",
       "deleted": "Frais supprimé avec succès",
@@ -2557,6 +2563,7 @@
       "invalidNetAmount": "Le montant après remise doit être positif",
       "discountExceedsAmount": "La remise ne peut pas dépasser le montant des frais (par période pour des frais récurrents)",
       "cannotPayCancelledInstallment": "Une échéance annulée ne peut pas être payée",
+      "alreadyCharged": "Ces frais sont déjà facturés à cet élève pour cette année",
       "installmentNumberExists": "Une échéance avec ce numéro existe déjà pour ces frais",
       "allocationNotFound": "Affectation de paiement introuvable",
       "paymentNotFound": "Paiement introuvable",

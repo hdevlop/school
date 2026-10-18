@@ -206,6 +206,8 @@
     "nothingDue": "لا شيء مستحق حاليًا",
     "dueAmount": "المستحق: {{amount}}",
     "selectInstallment": "اختيار القسط",
+    "selectAllPayable": "تحديد كل الأقساط القابلة للدفع",
+    "selectFeeDue": "تحديد المستحق: {{fee}}",
     "noAvailableBalance": "لا يوجد رصيد متاح",
     "number": "القسط رقم {{number}}",
     "reservedAmount": "محجوز {{amount}}",
@@ -1108,6 +1110,9 @@
   },
   "status": {
     "upcoming": "قادم",
+    "deposited": "مودع",
+    "bounced": "مرفوض",
+    "voided": "ملغى",
     "active": "نشط",
     "inactive": "غير نشط",
     "pending": "قيد الانتظار",
@@ -1655,7 +1660,7 @@
   "fees": {
     "stats": {
       "collected": "المحصل حتى اليوم",
-      "tpe": "TPE",
+      "tpe": "البطاقة البنكية",
       "overdueAmount": "المبلغ المتأخر"
     },
     "classBulk": {
@@ -1798,6 +1803,7 @@
       "allocationsRetrieved": "تم جلب التخصيصات بنجاح",
       "bulkCreated": "تم إنشاء الرسوم بنجاح",
       "bulkDeleted": "تم حذف سجلات الرسوم بنجاح",
+      "someSkipped": "تم إنشاء {{created}} من الرسوم؛ وتم تجاهل {{skipped}} مفروضة مسبقًا على هذا التلميذ",
       "created": "تم إنشاء الرسوم بنجاح",
       "dataRetrieved": "تم جلب بيانات الرسوم بنجاح",
       "deleted": "تم حذف الرسوم بنجاح",
@@ -1845,6 +1851,7 @@
       "invalidNetAmount": "يجب أن يكون المبلغ بعد التخفيض موجبًا",
       "discountExceedsAmount": "لا يمكن أن يتجاوز الخصم مبلغ الرسوم (لكل فترة في الرسوم المتكررة)",
       "cannotPayCancelledInstallment": "لا يمكن دفع قسط ملغى",
+      "alreadyCharged": "هذه الرسوم مفروضة مسبقًا على هذا التلميذ لهذه السنة",
       "installmentNumberExists": "يوجد مسبقًا قسط بهذا الرقم لهذه الرسوم",
       "allocationNotFound": "تخصيص الدفعة غير موجود",
       "paymentNotFound": "الدفعة غير موجودة",

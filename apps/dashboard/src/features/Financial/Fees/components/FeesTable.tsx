@@ -17,6 +17,7 @@ import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { createBulkFeesApi } from '@/services/feeApi';
 import { withFeeYear } from '../utils/feeUtils';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
@@ -56,6 +57,7 @@ function FeesTableForYear() {
     deleteFee,
     isUpdating,
     isDeleting,
+    refetch,
   } = useFees({ schedule: scheduleFilter });
 
   const isAllClasses = selectedClassId === 'all';
@@ -193,7 +195,19 @@ function FeesTableForYear() {
         form: 'bulk-fee-form',
         text: t('fees.dialogs.createButton'),
         onClick: async (feeData) => {
-          return await withAcademicYear(openedYear, () => createBulkFeesApi(withFeeYear(feeData, openedYear)));
+          const result = await withAcademicYear(openedYear, () => createBulkFeesApi(withFeeYear(feeData, openedYear)));
+          // The server skips a fee type the student already has in that year
+          // and still answers with success; say so instead of closing quietly.
+          const created = Array.isArray(result?.data) ? result.data.length : 0;
+          const skipped = (feeData?.fees?.length ?? 0) - created;
+          if (created === 0) {
+            toast.error(t('fees.errors.alreadyCharged'));
+            throw new Error(t('fees.errors.alreadyCharged'));
+          }
+          await refetch();
+          if (skipped > 0) toast.warning(t('fees.success.someSkipped', { created, skipped }));
+          else toast.success(t('fees.success.bulkCreated'));
+          return result;
         }
       }
     });

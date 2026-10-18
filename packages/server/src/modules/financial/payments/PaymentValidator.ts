@@ -83,6 +83,8 @@ export function computeIdempotencyHash(payload: Record<string, any>): string {
 export class PaymentValidator {
   @I18n('fees.errors') private ft!: (key: string) => string;
   @I18n('payments.errors') private pt!: (key: string, params?: Record<string, unknown>) => string;
+  // A refusal names the status in the request language, never its code.
+  @I18n('status') private statusLabel!: (status: string) => string;
 
   constructor(
     private paymentRepository: PaymentRepository,
@@ -119,12 +121,12 @@ export class PaymentValidator {
   }
 
   ensureVoidable(status: string) {
-    if (!canTransition(status, 'voided')) Err(409, this.pt('cannotVoidStatus', { status }));
+    if (!canTransition(status, 'voided')) Err(409, this.pt('cannotVoidStatus', { status: this.statusLabel(status) }));
   }
 
   ensureCheckTransition(payment: { paymentMethod: string; status: string }, status: string) {
     if (payment.paymentMethod !== 'check') Err(400, this.pt('checkStatusChecksOnly'));
-    if (!canTransition(payment.status, status)) Err(409, this.pt('checkTransitionInvalid', { from: payment.status, to: status }));
+    if (!canTransition(payment.status, status)) Err(409, this.pt('checkTransitionInvalid', { from: this.statusLabel(payment.status), to: this.statusLabel(status) }));
   }
 
   ensureMethodEditable(previousMethod: string, requestedMethod?: string) {

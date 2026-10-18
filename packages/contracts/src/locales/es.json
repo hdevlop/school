@@ -206,6 +206,8 @@
     "nothingDue": "Nada pendiente de pago",
     "dueAmount": "A pagar: {{amount}}",
     "selectInstallment": "Seleccionar cuota",
+    "selectAllPayable": "Seleccionar todas las cuotas pagables",
+    "selectFeeDue": "Seleccionar lo pendiente: {{fee}}",
     "noAvailableBalance": "Sin saldo disponible",
     "number": "Cuota n.º {{number}}",
     "reservedAmount": "Reservado {{amount}}",
@@ -1094,6 +1096,9 @@
   },
   "status": {
     "upcoming": "Próximo",
+    "deposited": "Depositado",
+    "bounced": "Rechazado",
+    "voided": "Anulado",
     "active": "Activo",
     "inactive": "Inactivo",
     "pending": "Pendiente",
@@ -1641,7 +1646,7 @@
   "fees": {
     "stats": {
       "collected": "Cobrado hasta hoy",
-      "tpe": "TPE",
+      "tpe": "Tarjeta",
       "overdueAmount": "Importe vencido"
     },
     "classBulk": {
@@ -1784,6 +1789,7 @@
       "allocationsRetrieved": "Asignaciones obtenidas correctamente",
       "bulkCreated": "Cuotas creadas correctamente",
       "bulkDeleted": "Registros de Cuota eliminados correctamente",
+      "someSkipped": "{{created}} cuotas creadas; se omitieron {{skipped}} ya cobradas a este alumno",
       "created": "Cuota creado correctamente",
       "dataRetrieved": "Datos de Cuota obtenidos correctamente",
       "deleted": "Cuota eliminado correctamente",
@@ -1831,6 +1837,7 @@
       "invalidNetAmount": "El importe tras el descuento debe ser positivo",
       "discountExceedsAmount": "El descuento no puede superar el importe de la cuota (por periodo en una cuota recurrente)",
       "cannotPayCancelledInstallment": "No se puede pagar una cuota cancelada",
+      "alreadyCharged": "Estas cuotas ya están cobradas a este alumno este año",
       "installmentNumberExists": "Ya existe una cuota con este número para esta tarifa",
       "allocationNotFound": "Asignación de pago no encontrada",
       "paymentNotFound": "Pago no encontrado",

@@ -52,8 +52,9 @@ payments [part 1](payments-1-results.json), [part 2](payments-2-results.json)
 and [recheck after fixes](payments-3-results.json),
 [layout and language](visual-results.json),
 [audit append-only](audit-append-only-results.json),
-[finance acceptance tests](finance-acceptance-results.json) and
-[cleanup](cleanup-results.json). Parts 1 and 2 keep their failed attempts;
+[finance acceptance tests](finance-acceptance-results.json),
+[cleanup](cleanup-results.json) and the
+[follow-up fixes](followups-results.json) (9/9 PASS, no native dialog). Parts 1 and 2 keep their failed attempts;
 part 3 reruns those cases on the fixed code. Every run had zero page errors,
 zero CSP reports and zero 5xx except the fee-type delete before fix 1.
 
@@ -92,6 +93,25 @@ zero CSP reports and zero 5xx except the fee-type delete before fix 1.
 9. **The installment preview showed ISO dates** (2026-09-01); it now uses the
    school's date format.
 
+Follow-up, after `69b13c7` (same server, [results](followups-results.json)):
+
+10. **Creating fees from `/fees` said nothing and did not refresh the list.**
+    A type the student already has, which the server skips, now keeps the form
+    open with "Ces frais sont déjà facturés à cet élève pour cette année"; a
+    mix names both counts; a new charge confirms and the list updates.
+11. **Void and bounce reasons used the browser's `window.prompt`.** The payment
+    history now asks in the cheques page's reason form (Cancel and an empty
+    reason send nothing), the stale view closes first, and the history,
+    balances and installments refresh: the row kept "En attente" before.
+12. **Status badges and refusals showed codes.** The history read "Bounced" and
+    "Voided"; the shared `status` catalog lacked `deposited`, `bounced` and
+    `voided`. "Impossible de passer un chèque de bounced à deposited" now reads
+    "… de Rejeté à Déposé", from the same words. Test: `PaymentStatusMessages.test.ts`.
+13. **The `/fees` card total said "TPE"** in every language; it is "Carte
+    bancaire" / "Card".
+14. **The payment dialog and its checkboxes had no accessible name**; they are
+    "Enregistrer le paiement", the fee and the installment number.
+
 ## Findings not fixed
 
 Najm Kit (shared components):
@@ -107,21 +127,14 @@ Najm Kit (shared components):
 
 School:
 
-- The payment dialog has no accessible name (empty heading), and its per-fee
-  checkboxes are unnamed.
-- Creating fees from `/fees` closes the dialog with no confirmation. Its
-  picker also offers types the student already has; such a line is skipped
-  under "Frais créés avec succès".
-- Void and bounce reasons on the payment history use the browser's
-  `window.prompt`; the cheques page uses a proper form.
-- The `/fees` totals say "TPE" while the method select says "Carte de crédit".
-- The fee type table shows a raw ID column.
+- The `/fees` student picker still offers types the student already has
+  (now refused with a message, see fix 10).
+- The fee type table shows a raw ID column, as eight other tables do.
 - A server error's message is returned to the client (the SQL text above);
   production error masking needs checking.
 - Audit entries are append-only only because no route changes them; the
   database has no trigger or rule.
 - `paymentCloseoutOn` is stored and validated but enforced nowhere.
-- `checkTransitionInvalid` and `cannotVoidStatus` interpolate raw status codes.
 
 ## Writes and cleanup
 

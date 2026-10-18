@@ -206,6 +206,8 @@
     "nothingDue": "Nothing due yet",
     "dueAmount": "Due: {{amount}}",
     "selectInstallment": "Select installment",
+    "selectAllPayable": "Select all payable installments",
+    "selectFeeDue": "Select what is due: {{fee}}",
     "noAvailableBalance": "No available balance",
     "number": "Installment #{{number}}",
     "reservedAmount": "Reserved {{amount}}",
@@ -990,6 +992,9 @@
   },
   "status": {
     "upcoming": "Upcoming",
+    "deposited": "Deposited",
+    "bounced": "Bounced",
+    "voided": "Voided",
     "active": "Active",
     "inactive": "Inactive",
     "pending": "Pending",
@@ -1403,7 +1408,7 @@
   "fees": {
     "stats": {
       "collected": "Collected to date",
-      "tpe": "TPE",
+      "tpe": "Card",
       "overdueAmount": "Overdue amount"
     },
     "classBulk": {
@@ -1433,6 +1438,7 @@
       "created": "Fee created successfully",
       "bulkCreated": "Fees created successfully",
       "updated": "Fee updated successfully",
+      "someSkipped": "{{created}} fees created; {{skipped}} already charged to this student were skipped",
       "deleted": "Fee deleted successfully",
       "allDeleted": "All fees deleted successfully",
       "paymentsRetrieved": "Payments retrieved successfully",
@@ -1527,6 +1533,7 @@
       "invalidNetAmount": "The amount after discount must be positive",
       "discountExceedsAmount": "The discount cannot exceed the fee amount (per period for a recurring fee)",
       "cannotPayCancelledInstallment": "A cancelled installment cannot be paid",
+      "alreadyCharged": "These fees are already charged to this student for this year",
       "installmentNumberExists": "An installment with this number already exists for this fee",
       "studentNotEnrolledInAcademicYear": "The student was not enrolled in this school year",
       "effectiveDateOutsideEnrollmentPeriod": "The billing start date must fall within the student's enrollment period for this school year, on or after their enrollment date",
