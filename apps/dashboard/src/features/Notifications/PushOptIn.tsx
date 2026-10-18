@@ -6,18 +6,7 @@ import { Bell } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { useNotificationCommands, usePushConfig } from './useNotifications';
 import { isNotFoundError } from '@/services/apiError';
-
-const toBytes = (value: string) => {
-  const normalized = value.replace(/-/g, '+').replace(/_/g, '/');
-  const raw = atob(normalized.padEnd(normalized.length + ((4 - normalized.length % 4) % 4), '='));
-  return Uint8Array.from(raw, (char) => char.charCodeAt(0));
-};
-const toBase64Url = (buffer: ArrayBuffer | null) => {
-  if (!buffer) return '';
-  let value = '';
-  for (const byte of new Uint8Array(buffer)) value += String.fromCharCode(byte);
-  return btoa(value).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-};
+import { enablePushOnThisDevice, isPushSupported } from './pushSubscription';
 
 export function PushOptIn() {
   const { t } = useTranslation();
@@ -31,7 +20,7 @@ export function PushOptIn() {
   const refresh = useCallback(async () => {
     setError(null);
     setStatus('loading');
-    if (!window.isSecureContext || !('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) return setStatus('unsupported');
+    if (!isPushSupported()) return setStatus('unsupported');
     if (Notification.permission === 'denied') return setStatus('denied');
     try {
       const registration = await navigator.serviceWorker.ready;
@@ -48,11 +37,10 @@ export function PushOptIn() {
     if (status !== 'ready' || !config.isSuccess || !config.data.enabled || !config.data.publicKey) return;
     setError(null);
     setStatus('loading');
-    let createdSubscription: PushSubscription | null = null;
     try {
-      const registration = await navigator.serviceWorker.ready;
-      const existing = await registration.pushManager.getSubscription();
       if (!next) {
+        const registration = await navigator.serviceWorker.ready;
+        const existing = await registration.pushManager.getSubscription();
         const endpoint = existing?.endpoint;
         if (endpoint) {
           try {
@@ -68,27 +56,11 @@ export function PushOptIn() {
         }
         setEnabled(false);
       } else {
-        if (await Notification.requestPermission() !== 'granted') return setStatus('denied');
-        const subscription = existing ?? await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: toBytes(config.data.publicKey) });
-        if (!existing) createdSubscription = subscription;
-        await commands.subscribe.mutateAsync({ endpoint: subscription.endpoint, p256dh: toBase64Url(subscription.getKey('p256dh')), auth: toBase64Url(subscription.getKey('auth')) });
+        if (await enablePushOnThisDevice(config.data.publicKey, commands.subscribe.mutateAsync, t('notifications.pushError')) === 'denied') return setStatus('denied');
         setEnabled(true);
       }
       setStatus('ready');
     } catch (reason) {
-      if (createdSubscription) {
-        // Do not leave a new browser subscription behind when its server
-        // registration fails. Existing subscriptions belong to earlier opt-ins.
-        try {
-          if (!await createdSubscription.unsubscribe() && await (await navigator.serviceWorker.ready).pushManager.getSubscription()) {
-            throw new Error(t('notifications.pushError'));
-          }
-        } catch {
-          setError(t('notifications.pushError'));
-          setStatus('ready');
-          return;
-        }
-      }
       setError(reason instanceof Error ? reason.message : t('notifications.pushError'));
       setStatus('ready');
     }

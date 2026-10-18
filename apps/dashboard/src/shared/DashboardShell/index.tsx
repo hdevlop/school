@@ -18,6 +18,7 @@ import { ThemeSettingsSheets, type ThemeSettingsSheet } from '@/features/Setting
 import { SchoolSettingsSheet } from '@/features/Settings/components/SchoolSettingsSheet';
 import { ViewingYearBanner } from '@/features/AcademicYears/components/ViewingYearBanner';
 import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
+import { PushPromptBanner } from '@/features/Notifications/PushPromptBanner';
 import { NavigationActionsProvider } from './NavigationActions';
 
 const STUDENT_FEES_PATH = /^\/students\/[^/]+\/fees(?:\/|$)/;
@@ -159,6 +160,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
 
       <div className={cn('dashboard-content flex min-w-0 flex-1 flex-col h-full min-h-0', isHome ? 'gap-0 lg:gap-2 lg:px-2 lg:pt-2 lg:pb-2' : 'gap-2 px-3 pt-2 pb-2 lg:px-2')}>
         <ViewingYearBanner />
+        <PushPromptBanner />
         <div className="flex min-h-0 flex-1 flex-col">{children}</div>
       </div>
 
