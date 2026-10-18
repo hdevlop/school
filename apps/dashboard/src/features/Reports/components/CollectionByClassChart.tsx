@@ -57,7 +57,7 @@ const CustomTooltip = ({ active, payload, majorMoney, t }: any) => {
 const CollectionByClassChart: React.FC<Props> = ({ academicYear, className = '' }) => {
   const { t } = useTranslation();
   const { majorMoney } = useSchoolFormat();
-  const { data, isLoading } = useFinanceCollectionByClass(academicYear);
+  const { data, isLoading, error, refetch } = useFinanceCollectionByClass(academicYear);
 
   const rows: ClassRow[] = useMemo(() => Array.isArray(data) ? data : [], [data]);
 
@@ -72,8 +72,10 @@ const CollectionByClassChart: React.FC<Props> = ({ academicYear, className = '' 
       icon={BarChart2}
       className={`flex w-full h-full ${className}`}
       loading={isLoading}
+      error={error}
+      onRetry={() => refetch()}
       skeleton={<NSkeletonChart />}
-      noData={!isLoading && rows.length === 0}
+      noData={!isLoading && !error && rows.length === 0}
       noDataText={t('reports.collection.noData')}
     >
       <div className="flex flex-col h-full gap-3">

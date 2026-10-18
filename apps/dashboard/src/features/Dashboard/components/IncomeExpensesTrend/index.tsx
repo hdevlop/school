@@ -19,7 +19,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import DashboardEmptyState from '../DashboardEmptyState';
 import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
-import { hasNoFigures, monthValue } from '../../config/monthTrend';
+import { cashTrendRows, hasNoFigures } from '../../config/monthTrend';
 
 interface IncomeExpensesTrendProps {
   className?: string;
@@ -27,7 +27,6 @@ interface IncomeExpensesTrendProps {
 }
 
 const MONTH_KEYS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-const EXCLUDED_MONTH_KEYS = new Set(['jul', 'aug']);
 const CURRENT_MONTH_KEY = MONTH_KEYS[new Date().getMonth()];
 
 const toLabel = (month: string, t: (k: string) => string) => {
@@ -132,16 +131,12 @@ const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '
   const chartData = useMemo<ChartRow[]>(
     () => {
       const monthly: TrendRow[] = Array.isArray(payload) ? payload : payload?.monthly ?? [];
-      return monthly
+      return cashTrendRows(monthly, businessDate)
         .map((row) => ({
           month: toLabel(row.month, t),
-          income: monthValue(row.income, row.month, businessDate),
-          expenses: monthValue(row.expenses, row.month, businessDate),
-        }))
-        .filter((row, idx) => {
-          const originalKey = MONTH_KEYS[Number(monthly[idx]?.month.split('-')[1]) - 1];
-          return !EXCLUDED_MONTH_KEYS.has(originalKey);
-        });
+          income: row.income,
+          expenses: row.expenses,
+        }));
     },
     [payload, t, businessDate],
   );

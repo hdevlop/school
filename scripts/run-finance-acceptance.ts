@@ -23,7 +23,7 @@ try {
 const modules = ['Allocations', 'Credits', 'Expenses', 'Fees', 'FeeTypes', 'FinancialAudit',
   'FinancialNotifications', 'Installments', 'Payments', 'Payroll', 'Rollover'];
 const cases = [...modules.flatMap(name => [`${name}HistoryDatabase`, `${name}HistoryTransport`]),
-  'FinanceLifecycleTransport'];
+  'FinanceLifecycleTransport', 'FinanceReportErrorsTransport'];
 const requested = process.argv.slice(2);
 if (requested.some(name => !cases.includes(name))) throw new Error(`Choose from: ${cases.join(', ')}`);
 const selected = requested.length ? requested : cases;

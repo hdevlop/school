@@ -1,5 +1,26 @@
 import { describe, expect, it } from 'bun:test';
-import { hasNoFigures, isFutureMonth, monthValue } from '@/features/Dashboard/config/monthTrend';
+import { cashTrendRows, hasNoFigures, isFutureMonth, monthValue } from '@/features/Dashboard/config/monthTrend';
+
+describe('reported monthly cash', () => {
+  const months = [
+    { month: '2026-06', income: 100, expenses: 10 },
+    { month: '2026-07', income: 20, expenses: 5 },
+    { month: '2026-08', income: 30, expenses: 7 },
+  ];
+
+  it('keeps July and August cash so historical charts reconcile with the year', () => {
+    const rows = cashTrendRows(months, '2026-09-01');
+    expect(rows).toEqual(months);
+    expect(rows.reduce((sum, row) => sum + row.income!, 0)).toBe(150);
+    expect(rows.reduce((sum, row) => sum + row.expenses!, 0)).toBe(22);
+  });
+
+  it('keeps summer months present while future figures remain unknown', () => {
+    expect(cashTrendRows(months, '2026-07-14')).toEqual([
+      months[0], months[1], { month: '2026-08', income: null, expenses: null },
+    ]);
+  });
+});
 
 describe('isFutureMonth', () => {
   it('treats the business month and earlier as happened', () => {

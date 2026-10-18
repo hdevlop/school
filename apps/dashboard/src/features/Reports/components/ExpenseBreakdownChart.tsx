@@ -15,6 +15,7 @@ import { useFinanceExpenseBreakdown } from '@/features/Dashboard/hooks/useDashbo
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
 import DashboardEmptyState from '@/features/Dashboard/components/DashboardEmptyState';
+import { summarizeExpenseBreakdown, type ExpenseBreakdownRow } from '../config/expenseBreakdown';
 
 const COLORS = [
   '#1e40af', '#f97316', '#10b981', '#f59e0b', '#8b5cf6',
@@ -22,8 +23,6 @@ const COLORS = [
   '#14b8a6', '#f43f5e', '#a855f7', '#eab308', '#22c55e',
   '#3b82f6',
 ];
-
-type BreakdownRow = { category: string; total: number; count: number };
 
 interface Props {
   academicYear?: string;
@@ -49,39 +48,24 @@ const ExpenseBreakdownChart: React.FC<Props> = ({ academicYear, className = '' }
   const { majorMoney } = useSchoolFormat();
   const { data, isLoading, error, refetch } = useFinanceExpenseBreakdown(academicYear);
 
-  // Filter out "utilities" to free up a slot in the legend (it rarely ranks in
-  // the top categories and crowds the chart — its amount still rolls into
-  // "other" because we filter BEFORE sorting/slicing).
-  const rows: BreakdownRow[] = useMemo(
-    () => (Array.isArray(data) ? data : []).filter((r) => r.category !== 'utilities'),
+  const rows: ExpenseBreakdownRow[] = useMemo(
+    () => Array.isArray(data) ? data : [],
     [data],
   );
 
-  const total = rows.reduce((s, r) => s + r.total, 0);
-  const noData = rows.length === 0 || rows.every((row) => Number(row.total ?? 0) === 0);
-
-  const top5 = useMemo(() => {
-    const sorted = [...rows].sort((a, b) => b.total - a.total);
-    const top = sorted.slice(0, 5);
-    const othersTotal = sorted.slice(5).reduce((s, r) => s + r.total, 0);
-    const othersCount = sorted.slice(5).reduce((s, r) => s + r.count, 0);
-    if (othersTotal > 0) {
-      top.push({ category: 'other', total: othersTotal, count: othersCount });
-    }
-    return top;
-  }, [rows]);
+  const { total, noData, categories } = useMemo(() => summarizeExpenseBreakdown(rows), [rows]);
 
   const chartData = useMemo(
     () => {
       const categoryLabel = (key: string) => t(`expenses.categories.${key}`);
-      return top5.map((r) => ({
+      return categories.map((r) => ({
         category: r.category,
         name: categoryLabel(r.category),
         value: r.total,
         count: r.count,
       }));
     },
-    [top5, t],
+    [categories, t],
   );
 
   return (

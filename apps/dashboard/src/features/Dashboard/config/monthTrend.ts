@@ -13,6 +13,18 @@ export function monthValue(value: number | null | undefined, month: string, busi
   return isFutureMonth(month, businessDate) ? null : Number(value ?? 0);
 }
 
+/** Cash covers reporting months, including July closeout and August receipts. */
+export function cashTrendRows(
+  rows: readonly { month: string; income: number; expenses: number }[],
+  businessDate: string | undefined,
+) {
+  return rows.map(row => ({
+    month: row.month,
+    income: monthValue(row.income, row.month, businessDate),
+    expenses: monthValue(row.expenses, row.month, businessDate),
+  }));
+}
+
 /** True when no month that has happened carries a figure. */
 export function hasNoFigures<T>(rows: readonly T[], read: (row: T) => readonly (number | null)[]): boolean {
   return rows.every((row) => read(row).every((value) => !value));
