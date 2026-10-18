@@ -82,7 +82,7 @@ function LessonCard({ lesson, showSubject }: { lesson: WeekLesson; showSubject: 
 function ClassCell({ lesson, showSubject }: { lesson: WeekLesson; showSubject: boolean }) {
   return (
     <div className={`flex h-full min-w-0 flex-col items-center justify-center gap-0.5 rounded-md px-1.5 py-1 text-center ${colorFor(lesson.subjectId)}`}>
-      <span className="truncate text-base font-bold leading-tight">{lesson.place}</span>
+      <span title={lesson.place} className="max-w-full truncate text-base font-bold leading-tight">{lesson.place}</span>
       {showSubject ? <span dir="auto" className="max-w-full truncate text-xs font-medium opacity-85">{lesson.subjectName}</span> : null}
       {lesson.room ? (
         <span className="flex items-center gap-1 text-[0.7rem] opacity-75"><DoorOpen className="size-3" aria-hidden="true" />{lesson.room}</span>
@@ -170,6 +170,7 @@ export default function TeacherWeek({ schedules, today }: { schedules: RoutineSc
               key={day}
               type="button"
               role="tab"
+              aria-label={routineDayLabel(day, t)}
               aria-selected={day === shownDay}
               onClick={() => setPickedDay(day)}
               className={`flex flex-col items-center rounded-lg py-1.5 text-xs font-semibold ${day === shownDay ? 'bg-primary text-primary-foreground' : day === today ? 'text-primary' : 'text-muted-foreground'}`}

@@ -139,9 +139,10 @@ async checkEndDateAfterStart(startDate: Date | string, endDate: Date | string) {
 async checkEndTimeAfterStartForSameDay(
   startDate: Date | string,
   endDate: Date | string,
-  startTime: string,
-  endTime: string
+  startTime?: string | null,
+  endTime?: string | null
 ) {
+  if (!startTime || !endTime) return true;
   const start = new Date(startDate);
   const end = new Date(endDate);
   const sameDay = start.toDateString() === end.toDateString();
@@ -181,8 +182,8 @@ async checkRegistrationDeadlineValid(
 async validateEventDates(
   startDate: Date | string,
   endDate: Date | string,
-  startTime: string,
-  endTime: string,
+  startTime?: string | null,
+  endTime?: string | null,
   registrationDeadline?: Date | string | null
 ) {
   await this.checkEndDateAfterStart(startDate, endDate);

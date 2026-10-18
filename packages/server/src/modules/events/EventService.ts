@@ -116,14 +116,12 @@ export class EventService {
 
     const startDate = normalizedData.startDate ?? current.startDate;
     const endDate = normalizedData.endDate ?? current.endDate;
-    const startTime = normalizedData.startTime ?? current.startTime;
-    const endTime = normalizedData.endTime ?? current.endTime;
-    const registrationDeadline = normalizedData.registrationDeadline ?? current.registrationDeadline;
+    const startTime = normalizedData.startTime !== undefined ? normalizedData.startTime : current.startTime;
+    const endTime = normalizedData.endTime !== undefined ? normalizedData.endTime : current.endTime;
+    const registrationDeadline = normalizedData.registrationDeadline !== undefined ? normalizedData.registrationDeadline : current.registrationDeadline;
     this.eventValidator.ensureInSelectedYear(startDate, endDate);
 
-    if (startDate && endDate && startTime && endTime) {
-      await this.eventValidator.validateEventDates(startDate, endDate, startTime, endTime, registrationDeadline ?? undefined);
-    }
+    await this.eventValidator.validateEventDates(startDate, endDate, startTime, endTime, registrationDeadline ?? undefined);
 
     return await this.eventRepository.update(id, normalizedData);
   }

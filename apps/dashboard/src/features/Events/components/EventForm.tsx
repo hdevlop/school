@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
+import { format } from 'date-fns';
 import {
   Activity,
   Building,
@@ -24,17 +25,17 @@ import {
 } from '../config/eventOptions';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolToday } from '@/hooks/useSchoolFormat';
 
 const toDateInput = (value?: string | Date | null) => {
   if (!value) return undefined;
-  if (value instanceof Date) return value.toISOString().split('T')[0];
+  if (value instanceof Date) return format(value, 'yyyy-MM-dd');
   return String(value).slice(0, 10);
 };
 
-const emptyToUndefined = (value) => (value === '' || value === null ? undefined : value);
-
 const EventForm = ({ event = null, initialDate = null }) => {
   const { t } = useTranslation();
+  const today = useSchoolToday();
   const eventSchema = useMemo(() => createEventSchema(t), [t]);
   const { pop } = useDialog();
   const { classes, isClassesLoading } = useClasses();
@@ -48,7 +49,7 @@ const EventForm = ({ event = null, initialDate = null }) => {
     : event?.classId || event?.class?.id
       ? [event.classId || event.class.id]
       : [];
-  const selectedDate = toDateInput(initialDate) || new Date().toISOString().split('T')[0];
+  const selectedDate = toDateInput(initialDate) || today;
 
   const defaultValues = {
     ...(event?.id && { id: event.id }),
@@ -77,17 +78,18 @@ const EventForm = ({ event = null, initialDate = null }) => {
 
   const handleSubmit = async (formData) => {
     const classIds = [...new Set((formData.classIds || []).filter(Boolean))];
+    const optionalField = (value) => value === '' || value == null ? (event?.id ? null : undefined) : value;
     const payload = {
       ...formData,
       classIds,
       classId: classIds[0] || null,
       sectionId: null,
-      startTime: emptyToUndefined(formData.startTime),
-      endTime: emptyToUndefined(formData.endTime),
-      location: emptyToUndefined(formData.location),
-      capacity: emptyToUndefined(formData.capacity),
-      registrationDeadline: emptyToUndefined(formData.registrationDeadline),
-      description: emptyToUndefined(formData.description),
+      startTime: optionalField(formData.startTime),
+      endTime: optionalField(formData.endTime),
+      location: optionalField(formData.location),
+      capacity: optionalField(formData.capacity),
+      registrationDeadline: optionalField(formData.registrationDeadline),
+      description: optionalField(formData.description),
     };
 
     if (!payload.endDate) payload.endDate = payload.startDate;

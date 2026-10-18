@@ -5,18 +5,23 @@ import { useDialog } from '@/shared/useDialog';
 
 import React, { useCallback, useMemo, useState } from 'react';
 import {
+  addMonths,
+  addWeeks,
   eachDayOfInterval,
   endOfMonth,
   endOfWeek,
   format,
   isSameDay,
   isSameMonth,
+  isWithinInterval,
   startOfMonth,
   startOfWeek,
 } from 'date-fns';
 import {
   Bell,
   CalendarDays,
+  ChevronLeft,
+  ChevronRight,
   Clock,
   Megaphone,
   Pencil,
@@ -195,7 +200,7 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
   }, [currentDate, viewMode]);
 
   const getItemsForDay = useCallback(
-    (day: Date) => calendarItems.filter((item) => isSameDay(item.date, day)),
+    (day: Date) => calendarItems.filter((item) => isWithinInterval(day, { start: item.date, end: item.endDate || item.date })),
     [calendarItems],
   );
 
@@ -210,6 +215,12 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
     setSelectedDate(day);
     if (viewMode === 'week') setCurrentDate(day);
   }, [viewMode]);
+
+  const movePeriod = (direction: number) => {
+    const move = (day: Date) => viewMode === 'month' ? addMonths(day, direction) : addWeeks(day, direction);
+    setCurrentDate(move(currentDate));
+    setSelectedDate(move(selectedDate || currentDate));
+  };
 
   const openEventDialog = (event = null) => {
     const isEdit = Boolean(event?.id);
@@ -283,10 +294,10 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
   };
 
   const headerLabel = viewMode === 'month'
-    ? displayDate(currentDate, { month: 'long', year: 'numeric' })
-    : t('calendar.weekOf', { date: displayDate(startOfWeek(currentDate, { weekStartsOn: 1 }), { month: 'short', day: 'numeric', year: 'numeric' }) });
+    ? displayDate(toDateInput(currentDate), { month: 'long', year: 'numeric' })
+    : t('calendar.weekOf', { date: displayDate(toDateInput(startOfWeek(currentDate, { weekStartsOn: 1 })), { month: 'short', day: 'numeric', year: 'numeric' }) });
   const selectedDisplayDate = selectedDate || currentDate;
-  const selectedDayLabel = displayDate(selectedDisplayDate, { weekday: 'long', day: 'numeric', month: 'long' });
+  const selectedDayLabel = displayDate(toDateInput(selectedDisplayDate), { weekday: 'long', day: 'numeric', month: 'long' });
   const selectedItems = getItemsForDay(selectedDisplayDate);
   const maxItems = viewMode === 'week' ? 7 : 4;
 
@@ -322,6 +333,12 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
 
           {/* Compact phone actions; only the selected tab's label expands. */}
           <div className="ml-auto flex min-w-0 max-w-full flex-wrap items-center justify-end gap-2">
+            <NButton size="icon" variant="plain" className="size-8" onClick={() => movePeriod(-1)} aria-label={t('common.previous')} title={t('common.previous')}>
+              <ChevronLeft className="size-4 rtl:rotate-180" aria-hidden />
+            </NButton>
+            <NButton size="icon" variant="plain" className="size-8" onClick={() => movePeriod(1)} aria-label={t('common.next')} title={t('common.next')}>
+              <ChevronRight className="size-4 rtl:rotate-180" aria-hidden />
+            </NButton>
             <NButton
               size="sm"
               variant="plain"
@@ -411,9 +428,14 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
                       key={day.toISOString()}
                       role="button"
                       tabIndex={0}
+                      aria-label={displayDate(toDateInput(day), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                      aria-pressed={Boolean(isSelected)}
                       onClick={() => handleSelectDate(day)}
                       onKeyDown={(event) => {
-                        if (event.key === 'Enter' || event.key === ' ') handleSelectDate(day);
+                        if (event.key === 'Enter' || event.key === ' ') {
+                          event.preventDefault();
+                          handleSelectDate(day);
+                        }
                       }}
                       className={cn(
                         'group relative flex min-h-0 min-w-0 flex-col gap-1.5 border-r border-b bg-muted/60 p-2 text-left outline-none transition-colors last:border-r-0 max-sm:h-14 max-sm:items-center max-sm:gap-1 max-sm:p-1',

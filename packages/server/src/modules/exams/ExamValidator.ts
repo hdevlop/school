@@ -132,9 +132,7 @@ export class ExamValidator {
   async validate(data, excludeId: string = null) {
     const isUpdate = excludeId !== null;
 
-    if (isUpdate) {
-      await this.ensureExists(excludeId);
-    }
+    const current = isUpdate ? await this.ensureExists(excludeId) : null;
 
     const {
       id,
@@ -167,14 +165,18 @@ export class ExamValidator {
     if (passingMarks !== undefined && totalMarks !== undefined) {
       await this.ensurePassingMarksValid(passingMarks, totalMarks);
     } else if (isUpdate && (passingMarks !== undefined || totalMarks !== undefined)) {
-      const exam = await this.examRepository.getById(excludeId);
+      const exam = current;
       const actualPassingMarks = passingMarks !== undefined ? passingMarks : exam.passingMarks;
       const actualTotalMarks = totalMarks !== undefined ? totalMarks : exam.totalMarks;
       await this.ensurePassingMarksValid(actualPassingMarks, actualTotalMarks);
     }
 
-    if (startTime && endTime) {
-      await this.ensureEndTimeAfterStartTime(startTime, endTime);
+    if (startTime !== undefined || endTime !== undefined) {
+      const actualStartTime = startTime !== undefined ? startTime : current?.startTime;
+      const actualEndTime = endTime !== undefined ? endTime : current?.endTime;
+      if (actualStartTime && actualEndTime) {
+        await this.ensureEndTimeAfterStartTime(actualStartTime, actualEndTime);
+      }
     }
 
     return data;
