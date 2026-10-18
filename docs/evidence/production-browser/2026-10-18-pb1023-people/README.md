@@ -114,7 +114,9 @@ Two read-shape issues in the scripts were not product failures:
   record, and the list's dialog still closes before opening it
   ([results](profile-fixes-results.json)).
 - **The transport start date is unformatted.** The Transport tab shows
-  `2025-01-12`, where the other tabs use `01/09/2025`.
+  `2025-01-12`, where the other tabs use `01/09/2025`. **Fixed in
+  `e6db5eb`.** On the demo, the start date reads `12/01/2025` and the tab
+  shows no raw ISO date ([results](transport-dates-results.json)).
 - **The not-found subtext offers a retry.** An unknown teacher's profile says
   "Enseignant introuvable", then "Cette liste n'a pas pu être chargée.
   Veuillez réessayer" with a Retry button. A retry cannot help a deleted

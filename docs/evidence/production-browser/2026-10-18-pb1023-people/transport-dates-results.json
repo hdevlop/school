@@ -1,0 +1,27 @@
+{
+ "name": "transport-dates",
+ "scope": "student-profile Transport tab date format (read-only)",
+ "origin": "https://myscolai.com",
+ "candidate": "e6db5eb912ac3f597bcb486763920f63b2ce45a6",
+ "deployedRevision": "e6db5eb912ac3f597bcb486763920f63b2ce45a6",
+ "worktreeDirty": 0,
+ "browser": "155.0.8059.80",
+ "startedUtc": "2026-10-18T16:47:56.732Z",
+ "results": [
+  {
+   "case": "student-profile Transport: start date and history use the school date format",
+   "outcome": "PASS",
+   "startDate": "DATE DE DÉBUT 12/01/2025 Modif",
+   "rawIso": 0
+  }
+ ],
+ "diagnostics": [],
+ "writes": [],
+ "mcpReads": [],
+ "nativeDialogs": [],
+ "apiWrites": [],
+ "completedUtc": "2026-10-18T16:48:03.141Z",
+ "counts": {
+  "PASS": 1
+ }
+}
