@@ -1,0 +1,71 @@
+{
+  "unchanged": true,
+  "before": {
+    "fees": {
+      "count": 2,
+      "sha256": "a3d26ba536c5d11412bbca2e0bdb1b740b22b43553b6c02fa5fa970f2511a89e"
+    },
+    "fee_installments": {
+      "count": 1,
+      "sha256": "e5c02fc5187a219d5993fd7578acd6d8e3e339a67a626b4dd8b2be895c0f664f"
+    },
+    "payments": {
+      "count": 1,
+      "sha256": "28548c4b6bd15127a5d90b3e800181aa7ae2d3ed85c19df2e73ecd1d633f088f"
+    },
+    "payment_allocations": {
+      "count": 1,
+      "sha256": "8f60abc47693055d0d3479e5701d42de4b465661012b138980c269ea7d51fec9"
+    },
+    "settings": {
+      "count": 1,
+      "sha256": "8b765abdd4fbc58958651fc4621a81f623393aae896b079b567bd52f94fe473e"
+    },
+    "academic_years": {
+      "count": 3,
+      "sha256": "58e20f818d8cd1c64ebcf9e7410bb0f0d8a31af9ba289bdaf800166d28e21d4a"
+    },
+    "students": {
+      "count": 10,
+      "sha256": "633c215a2d316a3494ed0ff1562d1c67c7a7fc0799809200aee11c46c1c88875"
+    },
+    "student_enrollments": {
+      "count": 23,
+      "sha256": "17ad9b1f70e83b98642b64068c93041e287f5b77f3ded98bae57634cdc461f2c"
+    }
+  },
+  "after": {
+    "fees": {
+      "count": 2,
+      "sha256": "a3d26ba536c5d11412bbca2e0bdb1b740b22b43553b6c02fa5fa970f2511a89e"
+    },
+    "fee_installments": {
+      "count": 1,
+      "sha256": "e5c02fc5187a219d5993fd7578acd6d8e3e339a67a626b4dd8b2be895c0f664f"
+    },
+    "payments": {
+      "count": 1,
+      "sha256": "28548c4b6bd15127a5d90b3e800181aa7ae2d3ed85c19df2e73ecd1d633f088f"
+    },
+    "payment_allocations": {
+      "count": 1,
+      "sha256": "8f60abc47693055d0d3479e5701d42de4b465661012b138980c269ea7d51fec9"
+    },
+    "settings": {
+      "count": 1,
+      "sha256": "8b765abdd4fbc58958651fc4621a81f623393aae896b079b567bd52f94fe473e"
+    },
+    "academic_years": {
+      "count": 3,
+      "sha256": "58e20f818d8cd1c64ebcf9e7410bb0f0d8a31af9ba289bdaf800166d28e21d4a"
+    },
+    "students": {
+      "count": 10,
+      "sha256": "633c215a2d316a3494ed0ff1562d1c67c7a7fc0799809200aee11c46c1c88875"
+    },
+    "student_enrollments": {
+      "count": 23,
+      "sha256": "17ad9b1f70e83b98642b64068c93041e287f5b77f3ded98bae57634cdc461f2c"
+    }
+  }
+}

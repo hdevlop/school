@@ -1,0 +1,54 @@
+{
+  "origin": "http://127.0.0.1:3108",
+  "checks": [
+    {
+      "label": "fr: visible students agrees with independent fixture expectation",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr: visible feesToCreate agrees with independent fixture expectation",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr: visible alreadyExist agrees with independent fixture expectation",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr: visible notEnrolled agrees with independent fixture expectation",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr: visible errors agrees with independent fixture expectation",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr: visible projectedTotal agrees with independent fixture expectation",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar: visible students agrees with independent fixture expectation",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar: visible feesToCreate agrees with independent fixture expectation",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar: visible alreadyExist agrees with independent fixture expectation",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar: visible notEnrolled agrees with independent fixture expectation",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar: visible errors agrees with independent fixture expectation",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar: visible projectedTotal agrees with independent fixture expectation",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": []
+}

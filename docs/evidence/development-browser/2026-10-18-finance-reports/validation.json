@@ -1,6 +1,6 @@
 {
   "date": "2026-10-18",
-  "baseCommit": "0ae8f19a9ffd44708e8290a2bbab93ed93b4feb3",
+  "baseCommit": "4fa9e4469412bbd92c0e9c86b46391aa67171664",
   "workingTree": true,
   "checks": [
     {
@@ -11,7 +11,7 @@
     },
     {
       "command": "bun run test:config",
-      "pass": 0,
+      "pass": 547,
       "fail": 0
     },
     {
@@ -83,8 +83,8 @@
     "resolution": "Verified the current pinned shared-source contract; final test records the generic MCP refusal, with actionable MCP messaging retained as a limitation"
   },
   "release": {
-    "committed": false,
-    "deployed": false,
+    "commitActionPerformedByThisSession": false,
+    "deploymentVerified": false,
     "productionAcceptance": false
   }
 }

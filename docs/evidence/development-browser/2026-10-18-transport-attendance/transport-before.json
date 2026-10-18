@@ -1,0 +1,102 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "owned vehicle starts empty with correct capacity",
+      "outcome": "PASS"
+    },
+    {
+      "label": "cancel assignment sends no route write",
+      "outcome": "PASS"
+    },
+    {
+      "label": "empty assignment is refused in French without a write",
+      "outcome": "PASS"
+    },
+    {
+      "label": "pickup defaults from the selected student",
+      "outcome": "PASS"
+    },
+    {
+      "label": "transport save returns success: POST /api/:owned-id",
+      "outcome": "PASS"
+    },
+    {
+      "label": "one active route persists with exact pickup and dropoff",
+      "outcome": "PASS"
+    },
+    {
+      "label": "assignment fills the vehicle and disables another add",
+      "outcome": "PASS"
+    },
+    {
+      "label": "transport list survives reload",
+      "outcome": "PASS"
+    },
+    {
+      "label": "student profile shows the same active route",
+      "outcome": "PASS"
+    },
+    {
+      "label": "transport save returns success: PUT /api/student-routes/:owned-id",
+      "outcome": "PASS"
+    },
+    {
+      "label": "pickup edit updates the existing route without duplication",
+      "outcome": "PASS"
+    },
+    {
+      "label": "transport save returns success: POST /api/student-routes/:owned-id/reassign",
+      "outcome": "PASS"
+    },
+    {
+      "label": "reassignment retains one completed and one active route",
+      "outcome": "PASS"
+    },
+    {
+      "label": "profile shows prior route history after replacement",
+      "outcome": "PASS"
+    },
+    {
+      "label": "cancel ending retains one active assignment",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ending the assignment succeeds",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ending leaves two historical rows and no active duplicate",
+      "outcome": "PASS"
+    }
+  ],
+  "findings": [
+    {
+      "label": "replaced route absent from old vehicle active list",
+      "outcome": "FAIL"
+    },
+    {
+      "label": "history stays visible after final unassignment",
+      "outcome": "FAIL"
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/:id"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/:id/:owned-id"
+    },
+    {
+      "method": "POST",
+      "path": "/api/:id/:owned-id/:id"
+    },
+    {
+      "method": "POST",
+      "path": "/api/:id/:owned-id/:id"
+    }
+  ]
+}

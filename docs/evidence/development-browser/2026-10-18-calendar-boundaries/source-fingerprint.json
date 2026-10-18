@@ -1,0 +1,15 @@
+{
+  "capturedAt": "2026-10-18T15:52:56.332Z",
+  "baseCommit": "d9238ff991ec30c0db6ce1c7a64d34785aa4b7b9",
+  "workingTreeChanges": true,
+  "files": {
+    "scripts/run-calendar-acceptance.ts": "24fa1deaaeffec1a90e7ecc12e32c49178cd908c3a32759cd1544b0b54e6186b",
+    "packages/server/tests/acceptance/CalendarBoundariesTransport.test.ts": "4b49989784b86868bf08766cc5359302ffdb95f8835d4ebe5b8b2a95a3699723",
+    "packages/server/src/shared/businessDate.ts": "d51532db92b30d910996ae18e8e673291c18a94ce7a02600ccd21c4aff091b38",
+    "packages/server/src/modules/academicYears/AcademicYearService.ts": "d7e3bd5140e0f71f9499bf6bd8ab72ec15bc551186fe3752385e0963f3cfe086",
+    "packages/server/src/modules/academicYears/AcademicYearValidator.ts": "b55ca5b3455c67f9d5113d8ba220d92a5d40ce3f12dfd9b840957006ba008547",
+    "packages/server/src/modules/financial/payments/PaymentService.ts": "2faca7ad92a78c35953cf638e8a36cb95df74ac46090354abf36c942264c2ba5",
+    "packages/server/src/modules/financial/payments/PaymentRepository.ts": "b7cd1bf401e2b8ed14c413e901ce79156e0fc50833e62c1865ddbd5db136d38b",
+    "package.json": "314a4bbd7fa5c8634f67cde1a8ac262d98c95a22009f5efe168316b7da780bba"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "capturedAt": "2026-10-18T14:09:29.989Z",
+  "baseCommit": "70222772c52a04d7c91f1a4426b71db19e6869a2",
+  "workingTreeChanges": true,
+  "origin": "http://127.0.0.1:3102",
+  "academicYear": "2026-2027",
+  "files": {
+    "apps/dashboard/src/features/Students/components/StudentProfile/Transport/index.tsx": "949192f7699a2638cf2efb8fc1458ee10af18217bfab53656be19ee033b21589",
+    "apps/dashboard/src/features/Transport/components/VehicleStudentsPanel.tsx": "af5477e4394e14b43ae14072abdbed57f08a4ae89803d7690c9975aee965df0d",
+    "packages/server/src/modules/transport/vehicles/VehicleRepository.ts": "00e95833a4d9550ec8afbb32f63569606989c77d4f20ea2c57ae80d81c71636e",
+    "packages/server/src/modules/transport/vehicles/VehicleService.ts": "21d3ed74e885672228da492c86e6d907b7329b761a6e07852df629f5bee44271",
+    "packages/server/src/modules/transport/vehicles/VehicleValidator.ts": "dedff538d435a67b1448543901b015c34c9f35b9d0f3c9986088223fd93df988",
+    "packages/server/tests/security/VehicleDelete.test.ts": "82bd84fff54f41ff85568a61ddfdf73aff46b15bde94b9562958ffe6783cfa80",
+    "packages/server/tests/security/VehicleMileage.test.ts": "968ea8ab92e3f2ca8e8842eab3634801b7b2b28a6f6e507c1c0b145ce46c9311",
+    "packages/server/tests/acceptance/VehicleDeletionDatabase.test.ts": "f5f51eb3df8d060ff3940616af3db4b65f9b25bf452e39cce6b4775cc899d3f4",
+    "packages/contracts/src/locales/ar.json": "aa03205ba6512288a5fb6dfd4af9afa7e1eae67f478543650704100b975c4224",
+    "packages/contracts/src/locales/en.json": "22c5529077d3624247f40b589baaa8c8d0d3b5661707861268b8029371e02cf4",
+    "packages/contracts/src/locales/es.json": "2cb3afe5536510cfde4f9112fe0f8835078dd1ac3d8591e88e9618a590651b7e",
+    "packages/contracts/src/locales/fr.json": "e3f3341f63298f7509e717d8497505e2d1327ae5d03ac5445428dd36b3ddfc51"
+  }
+}

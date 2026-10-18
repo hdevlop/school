@@ -1,0 +1,38 @@
+{
+  "gates": [
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "command": "bun run lint"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "command": "bun run typecheck"
+    },
+    {
+      "name": "config",
+      "exitCode": 0,
+      "command": "bun run test:config"
+    },
+    {
+      "name": "i18n",
+      "exitCode": 0,
+      "command": "bun run i18n:check"
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "command": "bun run build"
+    }
+  ],
+  "passingFinalAssertions": 71,
+  "automatedTestsPassed": 547,
+  "beforeFixFailures": 1,
+  "buildEnvironment": {
+    "NAJM_NEXT_DIST_DIR": ".next-rollover-validation-20261018"
+  },
+  "diffCheck": "git diff --check: exit 0",
+  "deployment": "NOT RUN",
+  "productionBrowser": "NOT RUN"
+}

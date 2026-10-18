@@ -1,0 +1,43 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Blank vehicle form is translated and makes no write",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Negative mileage is translated and makes no write",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Duplicate plate is refused with translated 409",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Unique plate saves vehicle with untouched optional purchase date",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Reload and live read preserve plate, mileage and active state",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [
+    {
+      "type": "http",
+      "status": 409,
+      "path": "/api/:id"
+    }
+  ],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/:id"
+    },
+    {
+      "method": "POST",
+      "path": "/api/:id"
+    }
+  ],
+  "harnessNote": "This segment stopped after five passed checks because the script expected 12345 instead of the valid decimal input 12345.00. The same saved vehicle continued in vehicle-edit-delete.json; this is not a product failure."
+}

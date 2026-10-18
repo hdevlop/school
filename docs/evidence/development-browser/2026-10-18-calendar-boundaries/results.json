@@ -1,0 +1,60 @@
+{
+  "recordedAt": "2026-10-18T15:52:56.326Z",
+  "integration": {
+    "command": "bun --env-file=apps/dashboard/.env.local run test:calendar:integration",
+    "exitCode": 0,
+    "pass": 11,
+    "fail": 0,
+    "assertions": 169,
+    "dates": [
+      "2027-06-30",
+      "2027-07-01",
+      "2027-07-14",
+      "2027-07-15",
+      "2027-08-01",
+      "2027-09-01"
+    ],
+    "clock": "APP_BUSINESS_DATE in isolated child process only",
+    "transport": "Actual HTTP on loopback port 5544 and PostgreSQL",
+    "database": "Owned temporary school_calendar_boundary_test"
+  },
+  "regressions": {
+    "command": "bun test packages/server/tests/academicYears/AcademicYearLifecycle.test.ts packages/contracts/tests/academicYears.test.ts",
+    "exitCode": 0,
+    "pass": 33,
+    "fail": 0
+  },
+  "boundaries": {
+    "command": "bun run test:boundaries",
+    "exitCode": 0,
+    "pass": 28,
+    "fail": 0,
+    "workspaceImportScan": "PASS"
+  },
+  "totalUniqueTests": 72,
+  "lint": {
+    "command": "bun run lint",
+    "exitCode": 0,
+    "focusedFinalRunnerAndTestLint": "PASS"
+  },
+  "types": {
+    "command": "bun run --cwd packages/server typecheck:test",
+    "exitCode": 0
+  },
+  "diffCheck": {
+    "command": "git diff --check",
+    "exitCode": 0
+  },
+  "runtimeChanges": false,
+  "newBrowserAcceptance": false,
+  "productionBuild": "NOT REPEATED: tests, runner, script entrypoint and documentation only",
+  "deployment": "NOT RUN",
+  "productionAcceptance": "NOT RUN",
+  "developmentRecovery": {
+    "origin": "http://127.0.0.1:3102",
+    "wasNotListeningAtFinalCheck": true,
+    "command": "bun run dev",
+    "healthStatus": 200,
+    "status": "ready"
+  }
+}

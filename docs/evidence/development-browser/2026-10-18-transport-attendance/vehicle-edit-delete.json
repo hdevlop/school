@@ -1,0 +1,36 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Vehicle edit saves successfully",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Edit survives reload with exact stored mileage",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Cancel delete makes no write and retains vehicle",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Unreferenced vehicle deletes successfully",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Deleted vehicle is no longer readable",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "PUT",
+      "path": "/api/:id/:owned-id"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/:id/:owned-id"
+    }
+  ]
+}

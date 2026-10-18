@@ -1,0 +1,18 @@
+{
+  "capturedAt": "2026-10-18T15:14:32.131Z",
+  "origin": "http://127.0.0.1:3108",
+  "sourceYear": "2024-2025",
+  "targetYear": "2026-2027",
+  "database": "New owned local clone of the marked history acceptance fixture",
+  "baseCommit": "f36d2c1fbb6d3c5a9faf99c55d15e4a44d12f91d",
+  "workingTreeChanges": true,
+  "files": {
+    "apps/dashboard/src/features/Financial/Operations/components/RolloverDialogContent.tsx": "5b86fd6e2cb8c0cd64a0b1b5bf277e23a25c36775d6849d9af2a3078fff3ecd9",
+    "apps/dashboard/src/services/financialOperationsApi.ts": "d7f8e04ac54875deedc0ae6edf86717795115271bbf66010c057231bdf02a619",
+    "packages/server/src/modules/financial/rollover/RolloverService.ts": "a27626434208264ba10e748c433eba2b83bf0ee090e735389d90a20a5a5ceb23",
+    "packages/server/src/modules/financial/rollover/RolloverRepository.ts": "d6e6f644429f6e9929055f0a2fc4e239a1194769b95b1120b12da0c418d1b043",
+    "packages/server/src/modules/financial/rollover/RolloverValidator.ts": "53b3adde055a3f98cc9e7bf3072c238678c25f653133af0a87292a882ec44cb2",
+    "packages/server/src/modules/financial/rollover/RolloverDto.ts": "a4dce0bc3fe54c18f3f528a948b00e4116f66bad0ba0d98b8ed8c6314a11cd2c",
+    "package.json": "796a325a4798d9bfe4cf3a6be2840661beb881e6fd14801ca59daccef0170020"
+  }
+}

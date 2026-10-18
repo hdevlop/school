@@ -1,0 +1,320 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "fr-desktop: card plate, mileage and translated active state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: card plate, mileage and translated maintenance state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: card plate, mileage and translated retired state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: current mileage has a translated table column",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: table plate, mileage and translated active state match card",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: table plate, mileage and translated maintenance state match card",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: table plate, mileage and translated retired state match card",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: descending mileage sort compares numeric decimal readings",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: ascending mileage sort puts 9.5 before 12543.5",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: plate search narrows table to exact owned identity",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: switching to cards preserves plate search",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: mileage survives reload and view switch",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: document fits viewport",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-desktop: card plate, mileage and translated active state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-desktop: card plate, mileage and translated maintenance state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-desktop: card plate, mileage and translated retired state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-desktop: current mileage has a translated table column",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-desktop: table plate, mileage and translated active state match card",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-desktop: table plate, mileage and translated maintenance state match card",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-desktop: table plate, mileage and translated retired state match card",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-desktop: descending mileage sort compares numeric decimal readings",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-desktop: ascending mileage sort puts 9.5 before 12543.5",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-desktop: plate search narrows table to exact owned identity",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-desktop: switching to cards preserves plate search",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-desktop: mileage survives reload and view switch",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-desktop: document fits viewport",
+      "outcome": "PASS"
+    },
+    {
+      "label": "en-desktop: card plate, mileage and translated active state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "en-desktop: card plate, mileage and translated maintenance state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "en-desktop: card plate, mileage and translated retired state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "en-desktop: current mileage has a translated table column",
+      "outcome": "PASS"
+    },
+    {
+      "label": "en-desktop: table plate, mileage and translated active state match card",
+      "outcome": "PASS"
+    },
+    {
+      "label": "en-desktop: table plate, mileage and translated maintenance state match card",
+      "outcome": "PASS"
+    },
+    {
+      "label": "en-desktop: table plate, mileage and translated retired state match card",
+      "outcome": "PASS"
+    },
+    {
+      "label": "en-desktop: descending mileage sort compares numeric decimal readings",
+      "outcome": "PASS"
+    },
+    {
+      "label": "en-desktop: ascending mileage sort puts 9.5 before 12543.5",
+      "outcome": "PASS"
+    },
+    {
+      "label": "en-desktop: plate search narrows table to exact owned identity",
+      "outcome": "PASS"
+    },
+    {
+      "label": "en-desktop: switching to cards preserves plate search",
+      "outcome": "PASS"
+    },
+    {
+      "label": "en-desktop: mileage survives reload and view switch",
+      "outcome": "PASS"
+    },
+    {
+      "label": "en-desktop: document fits viewport",
+      "outcome": "PASS"
+    },
+    {
+      "label": "es-desktop: card plate, mileage and translated active state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "es-desktop: card plate, mileage and translated maintenance state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "es-desktop: card plate, mileage and translated retired state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "es-desktop: current mileage has a translated table column",
+      "outcome": "PASS"
+    },
+    {
+      "label": "es-desktop: table plate, mileage and translated active state match card",
+      "outcome": "PASS"
+    },
+    {
+      "label": "es-desktop: table plate, mileage and translated maintenance state match card",
+      "outcome": "PASS"
+    },
+    {
+      "label": "es-desktop: table plate, mileage and translated retired state match card",
+      "outcome": "PASS"
+    },
+    {
+      "label": "es-desktop: descending mileage sort compares numeric decimal readings",
+      "outcome": "PASS"
+    },
+    {
+      "label": "es-desktop: ascending mileage sort puts 9.5 before 12543.5",
+      "outcome": "PASS"
+    },
+    {
+      "label": "es-desktop: plate search narrows table to exact owned identity",
+      "outcome": "PASS"
+    },
+    {
+      "label": "es-desktop: switching to cards preserves plate search",
+      "outcome": "PASS"
+    },
+    {
+      "label": "es-desktop: mileage survives reload and view switch",
+      "outcome": "PASS"
+    },
+    {
+      "label": "es-desktop: document fits viewport",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-phone: card plate, mileage and translated active state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-phone: card plate, mileage and translated maintenance state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-phone: card plate, mileage and translated retired state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-phone: name search identifies same decimal-odometer vehicle",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-phone: reload preserves all stored readings",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-phone: document fits viewport",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-phone: phone uses cards with no unavailable table switch",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: card plate, mileage and translated active state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: card plate, mileage and translated maintenance state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: card plate, mileage and translated retired state match fixture",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: name search identifies same decimal-odometer vehicle",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: reload preserves all stored readings",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: document fits viewport",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: phone uses cards with no unavailable table switch",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: Arabic phone uses RTL",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Supporting read retains exact active vehicle readings",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Supporting read retains exact maintenance vehicle readings",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Supporting read retains exact retired vehicle readings",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Read and view-switch journeys make no vehicle writes",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "writes": [],
+  "variants": [
+    {
+      "language": "fr",
+      "tag": "fr-desktop"
+    },
+    {
+      "language": "ar",
+      "tag": "ar-desktop"
+    },
+    {
+      "language": "en",
+      "tag": "en-desktop"
+    },
+    {
+      "language": "es",
+      "tag": "es-desktop"
+    },
+    {
+      "language": "fr",
+      "phone": true,
+      "tag": "fr-phone"
+    },
+    {
+      "language": "ar",
+      "phone": true,
+      "theme": "dark",
+      "tag": "ar-phone"
+    }
+  ]
+}

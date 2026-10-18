@@ -1,0 +1,57 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "browser": "isolated Chromium, fresh sessions",
+  "controlledNetworkFailure": true,
+  "checks": [
+    {
+      "name": "fr: trend error guidance and retry are translated",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr: expenses error guidance and retry are translated",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr: collection error guidance and retry are translated",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr: trend keyboard retry recovers from real server",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr: expenses keyboard retry recovers from real server",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr: collection keyboard retry recovers from real server",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar: trend error guidance and retry are translated",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar: expenses error guidance and retry are translated",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar: collection error guidance and retry are translated",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar: trend touch retry recovers from real server",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar: expenses touch retry recovers from real server",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar: collection touch retry recovers from real server",
+      "outcome": "PASS"
+    }
+  ],
+  "requests": [],
+  "errors": []
+}

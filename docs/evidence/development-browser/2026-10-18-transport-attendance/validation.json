@@ -1,0 +1,60 @@
+{
+  "recordedAt": "2026-10-18T14:12:05.443Z",
+  "sourceFingerprintMatches": true,
+  "gates": [
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "command": "bun run lint"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "command": "bun run typecheck"
+    },
+    {
+      "name": "security",
+      "exitCode": 0,
+      "command": "bun run test:security"
+    },
+    {
+      "name": "server-i18n",
+      "exitCode": 0,
+      "command": "bun run test:server-i18n"
+    },
+    {
+      "name": "i18n",
+      "exitCode": 0,
+      "command": "bun run i18n:check"
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "command": "bun run build"
+    }
+  ],
+  "tests": {
+    "config": 547,
+    "security": 127,
+    "server-i18n": 18,
+    "markedPostgreSQL": 7
+  },
+  "configCommand": "bun run test:config",
+  "configExitCode": 0,
+  "databaseCommand": "bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/VehicleDeletionDatabase.test.ts",
+  "databaseExitCode": 0,
+  "databaseScope": "Local marked school_history_test only; transactions rolled back",
+  "buildEnvironment": {
+    "NAJM_NEXT_DIST_DIR": ".next-transport-attendance-20261018"
+  },
+  "browserAssertionsPassed": 93,
+  "explicitBeforeFixFailures": 3,
+  "additionalOdometerScreenshotFinding": 1,
+  "diffCheck": "git diff --check: exit 0",
+  "warnings": [
+    "Existing najm-chatbot/pg deprecation warning"
+  ],
+  "deployment": "NOT RUN",
+  "productionBrowser": "NOT RUN",
+  "automatedTestsPassed": 699
+}

@@ -1,0 +1,26 @@
+{
+  "origin": "http://127.0.0.1:3108",
+  "checks": [
+    {
+      "label": "Initial browser preview succeeds with recurring fee only",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Preview leaves fees, installments, settings and academic years unchanged",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Changing discount options permits a new preview",
+      "outcome": "FAIL"
+    }
+  ],
+  "diagnostics": [
+    {
+      "type": "http",
+      "status": 409,
+      "path": "/api/rollover/preview"
+    }
+  ],
+  "changedOptionsPreviewStatus": 409,
+  "message": "Cette clé d'idempotence a déjà servi pour un autre contenu"
+}

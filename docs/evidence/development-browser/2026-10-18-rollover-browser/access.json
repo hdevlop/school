@@ -1,0 +1,43 @@
+{
+  "origin": "http://127.0.0.1:3108",
+  "checks": [
+    {
+      "label": "Denied identity is actually a signed-in teacher",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Teacher cannot preview a rollover",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Teacher cannot commit a rollover",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Denied actions leave charges, schedules, settings and years unchanged",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Teacher financial-operations route redirects to permitted home",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Teacher has no rollover control",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Denials preserve the authenticated session",
+      "outcome": "PASS"
+    }
+  ],
+  "responses": [
+    {
+      "operation": "preview",
+      "status": 403
+    },
+    {
+      "operation": "commit",
+      "status": 403
+    }
+  ]
+}

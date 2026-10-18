@@ -1,0 +1,6 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "error": "Une erreur est survenue\n\nSomething went wrong\n\nRéessayer",
+  "finding": "English fallback message inside a French error state",
+  "acceptedInFinalCounts": false
+}

@@ -1,0 +1,9 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "expected": "409; preserve vehicle, active route and history",
+  "cancelSendsNoDelete": true,
+  "status": 200,
+  "activeOwnedRouteStillPresent": false,
+  "unpaidFeeStillPresent": true,
+  "outcome": "FAIL"
+}

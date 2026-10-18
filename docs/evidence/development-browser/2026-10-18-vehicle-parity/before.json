@@ -1,0 +1,9 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "diagnostics": [],
+  "writes": [],
+  "cardMileage": 1,
+  "tableMileageHeader": 0,
+  "tableMileage": 0,
+  "outcome": "FAIL"
+}

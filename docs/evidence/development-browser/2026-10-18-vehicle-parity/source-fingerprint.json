@@ -1,0 +1,15 @@
+{
+  "capturedAt": "2026-10-18T14:42:00.213Z",
+  "origin": "http://127.0.0.1:3102",
+  "academicYear": "2026-2027",
+  "baseCommit": "70222772c52a04d7c91f1a4426b71db19e6869a2",
+  "workingTreeChanges": true,
+  "files": {
+    "apps/dashboard/src/features/Vehicles/hooks/useVehiclesTableColumns.tsx": "2b6c48b857cb8af8a528dd8351a2596de8876beb92a4a9010b20b12394540d25",
+    "apps/dashboard/src/features/Vehicles/components/VehicleCard.tsx": "fd271041f3880eeb1539b357a609d3712e937cf75dec2e2c790dacfb9fba270b",
+    "apps/dashboard/src/features/Vehicles/components/VehiclesTable.tsx": "5bf3d402744e862488413b49f6f9d9f88c238737d2cbfcf03e4f058c9051fc9d",
+    "packages/server/src/modules/transport/vehicles/VehicleService.ts": "21d3ed74e885672228da492c86e6d907b7329b761a6e07852df629f5bee44271",
+    "packages/server/src/modules/transport/vehicles/VehicleValidator.ts": "dedff538d435a67b1448543901b015c34c9f35b9d0f3c9986088223fd93df988",
+    "package.json": "796a325a4798d9bfe4cf3a6be2840661beb881e6fd14801ca59daccef0170020"
+  }
+}

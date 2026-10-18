@@ -1,0 +1,59 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "actualRole": "parent",
+  "checks": [
+    {
+      "label": "parent cannot read school transport routes",
+      "outcome": "PASS"
+    },
+    {
+      "label": "parent cannot assign a student route",
+      "outcome": "PASS"
+    },
+    {
+      "label": "parent cannot mark student attendance",
+      "outcome": "PASS"
+    },
+    {
+      "label": "denied parent signs in successfully",
+      "outcome": "PASS"
+    },
+    {
+      "label": "parent transport page redirects to its permitted home",
+      "outcome": "PASS"
+    },
+    {
+      "label": "denied page does not disclose owned transport data",
+      "outcome": "PASS"
+    },
+    {
+      "label": "parent attendance cannot submit an unrelated roster",
+      "outcome": "PASS"
+    },
+    {
+      "label": "parent attendance read is limited to its own records",
+      "outcome": "PASS"
+    },
+    {
+      "label": "denied actions preserve signed-in session",
+      "outcome": "PASS"
+    }
+  ],
+  "responses": [
+    {
+      "method": "GET",
+      "resource": "student-routes",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "resource": "student-routes",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "resource": "attendance",
+      "status": 403
+    }
+  ]
+}

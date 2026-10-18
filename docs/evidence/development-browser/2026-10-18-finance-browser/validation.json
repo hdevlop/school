@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-18",
+  "origin": "http://127.0.0.1:3102",
+  "academicYear": "2026-2027",
+  "browser": "isolated headless Chromium (Chrome channel), fresh sessions",
+  "browserVersion": "155.0.8059.80",
+  "baseCommit": "4fa9e4469412bbd92c0e9c86b46391aa67171664",
+  "workingTree": true,
+  "files": [
+    {
+      "path": "apps/dashboard/src/features/Reports/components/CollectionByClassChart.tsx",
+      "sha256": "314acbba5147939e29622000dde115eb6ffcd4f7609413f442d7976b6e540ddd"
+    },
+    {
+      "path": "apps/dashboard/src/features/Reports/components/ExpenseBreakdownChart.tsx",
+      "sha256": "f9c61c4e0c57677816140cd6b2b1abca64c31a685639ef8f2b4d34de21563cb0"
+    },
+    {
+      "path": "apps/dashboard/src/features/Dashboard/components/IncomeExpensesTrend/index.tsx",
+      "sha256": "eae56bb09be065c3a034b60430d1f94f7066cb964f13dc4a1ac3aec9a95e9dc9"
+    }
+  ],
+  "counts": {
+    "pass": 73,
+    "fail": 0
+  },
+  "checks": [
+    {
+      "command": "node .cache/finance-browser/check.mjs",
+      "exitCode": 0,
+      "assertions": 61
+    },
+    {
+      "command": "node .cache/finance-browser/error-check.mjs",
+      "exitCode": 0,
+      "assertions": 12
+    },
+    {
+      "command": "bun run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run build",
+      "exitCode": 0,
+      "outputDirectory": ".next-finance-browser-20261018"
+    }
+  ],
+  "cleanup": {
+    "financialFixturesCreated": 0,
+    "financialMutationsObserved": 0,
+    "browserContextsClosed": true,
+    "note": "Fresh local logins create normal authentication sessions; no financial fixture cleanup was required"
+  },
+  "excludedAttempts": [
+    "Bun probe interrupted while navigation was pending; Node probe completed; no product cause attributed",
+    "Axis selector assumed old Recharts structure; corrected from the actual DOM",
+    "Read-only audit-list POST and MCP discovery misclassified as mutations; corrected from route source and RPC methods",
+    "Initial screenshots caught chart animation; final captures wait for complete pie geometry"
+  ],
+  "limitations": [
+    "Isolated Chromium and phone emulation, not connected-browser or physical-device acceptance",
+    "Controlled browser network failures, not unmocked deployed server failure",
+    "Summer axis verified; future summer cash data and payment cutoff enforcement remain untested",
+    "No production change or production checklist acceptance"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "Browser create starts current mileage at the initial reading",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Reload and live read retain a zero nonnegative traveled distance",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Baseline above saved odometer is refused with translated 400",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Refused edit retains exact readings",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Valid initial reading correction saves",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Correction preserves current odometer and computes traveled distance 345",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [
+    {
+      "type": "http",
+      "status": 400,
+      "path": "/api/:id/:owned-id"
+    }
+  ],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/:id"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/:id/:owned-id"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/:id/:owned-id"
+    }
+  ],
+  "cleanup": {
+    "removed": true,
+    "absent": true
+  }
+}

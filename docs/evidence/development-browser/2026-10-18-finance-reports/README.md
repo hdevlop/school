@@ -68,3 +68,7 @@ development server. No deployment, real email/push delivery, export feature,
 credit UI or payment-cutoff enforcement was added. Production checkboxes stay
 unchanged. Full browser verification of the three chart changes and the real
 production failure state remains open.
+
+The subsequent [development browser run](../2026-10-18-finance-browser/README.md)
+verifies the chart changes and controlled connectivity failure/retry behavior
+in isolated Chromium. The unmocked production failure state remains open.

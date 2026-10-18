@@ -1,0 +1,93 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "fr: referenced vehicle deletion is a translated 409 (active)",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr: refused deletion preserves vehicle",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr: referenced vehicle deletion is a translated 409 (historical)",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr: refused deletion preserves vehicle",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr: active route and remaining history survive refusal",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr: refusal leaves exactly one unpaid transport fee",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar: referenced vehicle deletion is a translated 409 (active)",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar: refused deletion preserves vehicle",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar: referenced vehicle deletion is a translated 409 (historical)",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar: refused deletion preserves vehicle",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar: active route and remaining history survive refusal",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar: refusal leaves exactly one unpaid transport fee",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [
+    {
+      "type": "http",
+      "status": 409,
+      "path": "/api/:id/:owned-id"
+    },
+    {
+      "type": "http",
+      "status": 409,
+      "path": "/api/:id/:owned-id"
+    },
+    {
+      "type": "http",
+      "status": 409,
+      "path": "/api/:id/:owned-id"
+    },
+    {
+      "type": "http",
+      "status": 409,
+      "path": "/api/:id/:owned-id"
+    }
+  ],
+  "writes": [
+    {
+      "method": "DELETE",
+      "path": "/api/:id/:owned-id"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/:id/:owned-id"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/:id/:owned-id"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/:id/:owned-id"
+    }
+  ]
+}

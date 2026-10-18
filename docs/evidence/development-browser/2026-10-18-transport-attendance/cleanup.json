@@ -1,0 +1,26 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "year": "2026-2027",
+  "removed": {
+    "routes": 2,
+    "attendance": 2,
+    "unpaidFees": 2,
+    "students": 2,
+    "vehicles": 2,
+    "sections": 2,
+    "accounts": 1
+  },
+  "alreadyAbsentVehicles": 2,
+  "verified": [
+    "Owned student child records empty",
+    "Owned student is 404",
+    "Owned student child records empty",
+    "Owned student is 404",
+    "Owned vehicle is 404",
+    "Owned vehicle is 404",
+    "Owned section is 404",
+    "Owned section is 404",
+    "Temporary parent account is 404"
+  ],
+  "outcome": "PASS"
+}

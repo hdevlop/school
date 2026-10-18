@@ -1,0 +1,98 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "checks": [
+    {
+      "label": "fr-desktop: ended assignment absent from active vehicle Navette Agdal 1018",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: occupancy is zero after ending Navette Agdal 1018",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: ended assignment absent from active vehicle Navette Hassan 1018",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: occupancy is zero after ending Navette Hassan 1018",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: both historical vehicles stay visible with no active route",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: history survives reload",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-desktop: no horizontal overflow",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-phone: ended assignment absent from active vehicle Navette Agdal 1018",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-phone: occupancy is zero after ending Navette Agdal 1018",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-phone: ended assignment absent from active vehicle Navette Hassan 1018",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-phone: occupancy is zero after ending Navette Hassan 1018",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-phone: both historical vehicles stay visible with no active route",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-phone: history survives reload",
+      "outcome": "PASS"
+    },
+    {
+      "label": "fr-phone: no horizontal overflow",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: ended assignment absent from active vehicle Navette Agdal 1018",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: occupancy is zero after ending Navette Agdal 1018",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: ended assignment absent from active vehicle Navette Hassan 1018",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: occupancy is zero after ending Navette Hassan 1018",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: both historical vehicles stay visible with no active route",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: history survives reload",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: no horizontal overflow",
+      "outcome": "PASS"
+    },
+    {
+      "label": "one transport fee across assignment and replacement",
+      "outcome": "PASS"
+    },
+    {
+      "label": "two exact dated completed routes remain in API",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": []
+}

@@ -1,0 +1,30 @@
+{
+  "database": "school_rollover_browser_20261018",
+  "ownedMarkerConfirmed": true,
+  "originalFixture": {
+    "settings": {
+      "count": 1,
+      "matchesCloneBaseline": true
+    },
+    "academic_years": {
+      "count": 3,
+      "matchesCloneBaseline": true
+    },
+    "fees": {
+      "count": 2,
+      "matchesClonedOriginalRows": true
+    }
+  },
+  "demoOrigin": "http://127.0.0.1:3102",
+  "cloneFinalCounts": {
+    "owned_fees": 4,
+    "runs": 12
+  },
+  "demoHealthStatus": 200,
+  "preflight": "PASS",
+  "outcome": "PASS",
+  "isolatedServerStopped": true,
+  "ownedDatabaseRemoved": true,
+  "absenceVerified": true,
+  "cleanupMethod": "Dropped only the newly created, exact-name database after verifying its private ownership marker and zero connections"
+}

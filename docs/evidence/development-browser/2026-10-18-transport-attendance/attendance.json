@@ -1,0 +1,89 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "fullRosterOwned": true,
+  "checks": [
+    {
+      "label": "supporting read proves entire selected roster is owned",
+      "outcome": "PASS"
+    },
+    {
+      "label": "browser contains exactly the two owned roster rows",
+      "outcome": "PASS"
+    },
+    {
+      "label": "controlled students have no pre-existing marks",
+      "outcome": "PASS"
+    },
+    {
+      "label": "draft changes mark without sending a write",
+      "outcome": "PASS"
+    },
+    {
+      "label": "switching date resets draft without changing saved attendance",
+      "outcome": "PASS"
+    },
+    {
+      "label": "search hides only an owned row; full save scope stays controlled",
+      "outcome": "PASS"
+    },
+    {
+      "label": "one save persists absent and late for the full controlled roster",
+      "outcome": "PASS"
+    },
+    {
+      "label": "both marks survive reload",
+      "outcome": "PASS"
+    },
+    {
+      "label": "mark correction updates one record rather than duplicating it",
+      "outcome": "PASS"
+    },
+    {
+      "label": "empty owned section cannot save",
+      "outcome": "PASS"
+    },
+    {
+      "label": "returning to section restores its saved marks",
+      "outcome": "PASS"
+    },
+    {
+      "label": "saved late mark does not leak into another date",
+      "outcome": "PASS"
+    },
+    {
+      "label": "returning to date restores late mark",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Arabic phone cards display the same saved present and late marks",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Arabic touch save corrects the same record",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Arabic phone uses RTL without horizontal overflow",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/:id"
+    },
+    {
+      "method": "POST",
+      "path": "/api/:id"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/:id/:owned-id"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/:id/:owned-id"
+    }
+  ]
+}

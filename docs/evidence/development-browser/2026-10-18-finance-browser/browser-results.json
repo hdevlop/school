@@ -1,0 +1,520 @@
+{
+  "origin": "http://127.0.0.1:3102",
+  "academicYear": "2026-2027",
+  "browser": "isolated headless Chromium (Chrome channel), fresh sessions",
+  "checks": [
+    {
+      "name": "fr-desktop-light: expense total includes all categories and utilities",
+      "outcome": "PASS",
+      "details": {
+        "expectedMajor": 142308
+      }
+    },
+    {
+      "name": "fr-desktop-light: displayed legend reconciles to the whole total",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-desktop-light: one Other bucket includes utility spending",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-desktop-light: all six pie sectors render with visible geometry",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-desktop-light: all 12 reporting months include July and August",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-desktop-light: collection row count matches the local API",
+      "outcome": "PASS",
+      "details": {
+        "classes": 9
+      }
+    },
+    {
+      "name": "fr-desktop-light: class amounts reconcile 1",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-desktop-light: class amounts reconcile 2",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-desktop-light: class amounts reconcile 3",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-desktop-light: class amounts reconcile 4",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-desktop-light: class amounts reconcile 5",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-desktop-light: class amounts reconcile 6",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-desktop-light: class amounts reconcile 7",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-desktop-light: class amounts reconcile 8",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-desktop-light: class amounts reconcile 9",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-desktop-light: page language and direction are correct",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-desktop-light: viewport has no horizontal overflow",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-desktop-light: total survives reload",
+      "outcome": "PASS"
+    },
+    {
+      "name": "controlled collection failure: alert and retry are visible",
+      "outcome": "PASS"
+    },
+    {
+      "name": "controlled collection failure: empty feedback is absent",
+      "outcome": "PASS"
+    },
+    {
+      "name": "controlled collection failure: message is localized",
+      "outcome": "PASS"
+    },
+    {
+      "name": "keyboard retry reads the real server and restores collection rows",
+      "outcome": "PASS"
+    },
+    {
+      "name": "successful retry removes the failure alert",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-phone-dark: expense total includes all categories and utilities",
+      "outcome": "PASS",
+      "details": {
+        "expectedMajor": 142308
+      }
+    },
+    {
+      "name": "fr-phone-dark: displayed legend reconciles to the whole total",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-phone-dark: one Other bucket includes utility spending",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-phone-dark: all six pie sectors render with visible geometry",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-phone-dark: compact month axis includes the final reporting month",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-phone-dark: collection row count matches the local API",
+      "outcome": "PASS",
+      "details": {
+        "classes": 9
+      }
+    },
+    {
+      "name": "fr-phone-dark: class amounts reconcile 1",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-phone-dark: class amounts reconcile 2",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-phone-dark: class amounts reconcile 3",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-phone-dark: class amounts reconcile 4",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-phone-dark: class amounts reconcile 5",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-phone-dark: class amounts reconcile 6",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-phone-dark: class amounts reconcile 7",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-phone-dark: class amounts reconcile 8",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-phone-dark: class amounts reconcile 9",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-phone-dark: page language and direction are correct",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-phone-dark: viewport has no horizontal overflow",
+      "outcome": "PASS"
+    },
+    {
+      "name": "fr-phone-dark: total survives reload",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar-phone-dark: expense total includes all categories and utilities",
+      "outcome": "PASS",
+      "details": {
+        "expectedMajor": 142308
+      }
+    },
+    {
+      "name": "ar-phone-dark: displayed legend reconciles to the whole total",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar-phone-dark: one Other bucket includes utility spending",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar-phone-dark: all six pie sectors render with visible geometry",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar-phone-dark: compact month axis includes the final reporting month",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar-phone-dark: collection row count matches the local API",
+      "outcome": "PASS",
+      "details": {
+        "classes": 9
+      }
+    },
+    {
+      "name": "ar-phone-dark: class amounts reconcile 1",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar-phone-dark: class amounts reconcile 2",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar-phone-dark: class amounts reconcile 3",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar-phone-dark: class amounts reconcile 4",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar-phone-dark: class amounts reconcile 5",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar-phone-dark: class amounts reconcile 6",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar-phone-dark: class amounts reconcile 7",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar-phone-dark: class amounts reconcile 8",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar-phone-dark: class amounts reconcile 9",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar-phone-dark: page language and direction are correct",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar-phone-dark: viewport has no horizontal overflow",
+      "outcome": "PASS"
+    },
+    {
+      "name": "ar-phone-dark: total survives reload",
+      "outcome": "PASS"
+    },
+    {
+      "name": "no browser finance mutation requests",
+      "outcome": "PASS"
+    },
+    {
+      "name": "no unhandled browser errors",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [
+    {
+      "variant": "fr-desktop-light",
+      "type": "requestfailed",
+      "path": "/api/dashboard/finance/reports/collection-by-class",
+      "controlled": true
+    },
+    {
+      "variant": "fr-desktop-light",
+      "type": "requestfailed",
+      "path": "/api/dashboard/finance/reports/collection-by-class",
+      "controlled": true
+    }
+  ],
+  "requests": [
+    {
+      "variant": "fr-desktop-light",
+      "path": "/api/dashboard/finance/reports/expense-breakdown",
+      "status": 200
+    },
+    {
+      "variant": "fr-desktop-light",
+      "path": "/api/dashboard/finance/trend",
+      "status": 200
+    },
+    {
+      "variant": "fr-desktop-light",
+      "path": "/api/dashboard/finance/reports/collection-by-class",
+      "status": 200
+    },
+    {
+      "variant": "fr-desktop-light",
+      "path": "/api/dashboard/finance/reports/expense-breakdown",
+      "status": 200
+    },
+    {
+      "variant": "fr-desktop-light",
+      "path": "/api/dashboard/finance/trend",
+      "status": 200
+    },
+    {
+      "variant": "fr-desktop-light",
+      "path": "/api/dashboard/finance/reports/collection-by-class",
+      "status": 200
+    },
+    {
+      "variant": "fr-desktop-light",
+      "path": "/api/dashboard/finance/reports/expense-breakdown",
+      "status": 200
+    },
+    {
+      "variant": "fr-desktop-light",
+      "path": "/api/dashboard/finance/trend",
+      "status": 200
+    },
+    {
+      "variant": "fr-desktop-light",
+      "path": "/api/dashboard/finance/reports/collection-by-class",
+      "status": 200
+    },
+    {
+      "variant": "fr-phone-dark",
+      "path": "/api/dashboard/finance/reports/expense-breakdown",
+      "status": 200
+    },
+    {
+      "variant": "fr-phone-dark",
+      "path": "/api/dashboard/finance/trend",
+      "status": 200
+    },
+    {
+      "variant": "fr-phone-dark",
+      "path": "/api/dashboard/finance/reports/collection-by-class",
+      "status": 200
+    },
+    {
+      "variant": "fr-phone-dark",
+      "path": "/api/dashboard/finance/reports/expense-breakdown",
+      "status": 200
+    },
+    {
+      "variant": "fr-phone-dark",
+      "path": "/api/dashboard/finance/trend",
+      "status": 200
+    },
+    {
+      "variant": "fr-phone-dark",
+      "path": "/api/dashboard/finance/reports/collection-by-class",
+      "status": 200
+    },
+    {
+      "variant": "ar-phone-dark",
+      "path": "/api/dashboard/finance/reports/expense-breakdown",
+      "status": 200
+    },
+    {
+      "variant": "ar-phone-dark",
+      "path": "/api/dashboard/finance/trend",
+      "status": 200
+    },
+    {
+      "variant": "ar-phone-dark",
+      "path": "/api/dashboard/finance/reports/collection-by-class",
+      "status": 200
+    },
+    {
+      "variant": "ar-phone-dark",
+      "path": "/api/dashboard/finance/reports/expense-breakdown",
+      "status": 200
+    },
+    {
+      "variant": "ar-phone-dark",
+      "path": "/api/dashboard/finance/trend",
+      "status": 200
+    },
+    {
+      "variant": "ar-phone-dark",
+      "path": "/api/dashboard/finance/reports/collection-by-class",
+      "status": 200
+    }
+  ],
+  "mutations": [],
+  "discovery": [
+    {
+      "path": "/api/financial-audit-logs/list"
+    },
+    {
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "path": "/api/financial-audit-logs/list"
+    },
+    {
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "path": "/api/financial-audit-logs/list"
+    },
+    {
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "path": "/api/financial-audit-logs/list"
+    },
+    {
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "path": "/api/financial-audit-logs/list"
+    },
+    {
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "path": "/api/financial-audit-logs/list"
+    },
+    {
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "path": "/api/financial-audit-logs/list"
+    },
+    {
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    }
+  ],
+  "screenshots": [
+    {
+      "variant": "fr-desktop-light",
+      "path": ".cache/finance-browser/fr-desktop-light.png"
+    },
+    {
+      "variant": "fr-desktop-light",
+      "region": "expenses",
+      "path": ".cache/finance-browser/fr-desktop-light-expenses.png"
+    },
+    {
+      "variant": "fr-desktop-light",
+      "region": "collection",
+      "path": ".cache/finance-browser/fr-desktop-light-collection.png"
+    },
+    {
+      "variant": "fr-phone-dark",
+      "path": ".cache/finance-browser/fr-phone-dark.png"
+    },
+    {
+      "variant": "fr-phone-dark",
+      "region": "expenses",
+      "path": ".cache/finance-browser/fr-phone-dark-expenses.png"
+    },
+    {
+      "variant": "fr-phone-dark",
+      "region": "collection",
+      "path": ".cache/finance-browser/fr-phone-dark-collection.png"
+    },
+    {
+      "variant": "ar-phone-dark",
+      "path": ".cache/finance-browser/ar-phone-dark.png"
+    },
+    {
+      "variant": "ar-phone-dark",
+      "region": "expenses",
+      "path": ".cache/finance-browser/ar-phone-dark-expenses.png"
+    },
+    {
+      "variant": "ar-phone-dark",
+      "region": "collection",
+      "path": ".cache/finance-browser/ar-phone-dark-collection.png"
+    }
+  ],
+  "browserVersion": "155.0.8059.80",
+  "controlledErrorText": "Une erreur est survenue\n\nCette liste n'a pas pu être chargée. Veuillez réessayer.\n\nRéessayer",
+  "counts": {
+    "pass": 61,
+    "fail": 0
+  }
+}

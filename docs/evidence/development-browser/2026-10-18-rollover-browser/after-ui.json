@@ -1,0 +1,252 @@
+{
+  "origin": "http://127.0.0.1:3108",
+  "checks": [
+    {
+      "label": "Default source is previous year and target is active year",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Commit cannot run without preview",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Cancel unopened preview sends no rollover write",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Equal years disable preview",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Default options preview succeeds",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Default options preview has expected fee count and net amount",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Default options preview leaves fees, installments, settings and years unchanged",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Repeated unchanged preview succeeds",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Repeated unchanged preview has expected fee count and net amount",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Repeated unchanged preview leaves fees, installments, settings and years unchanged",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Repeated preview reuses the same durable run",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Changing discounts invalidates the previous preview",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Copy-discount preview succeeds",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Copy-discount preview has expected fee count and net amount",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Copy-discount preview leaves fees, installments, settings and years unchanged",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Changed discount gets a fresh idempotency key and run",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Include one-time preview succeeds",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Include one-time preview has expected fee count and net amount",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Include one-time preview leaves fees, installments, settings and years unchanged",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Changing one-time selection gets a fresh key",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Source year change and return succeeds",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Source year change and return has expected fee count and net amount",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Source year change and return leaves fees, installments, settings and years unchanged",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Changing source year also rotates the preview key",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Target year change and return succeeds",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Target year change and return has expected fee count and net amount",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Target year change and return leaves fees, installments, settings and years unchanged",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Changing target year also rotates the preview key",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Preview request uses selected target year scope",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Preview identifies exact controlled student, fee types and target dates",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Browser commits exactly two intended fees",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Commit explicitly keeps academic activation separate",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Commit button is disabled after success",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Committed fees match exact target amounts and discounts",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Committed schedule has ten teaching months plus one one-time charge",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Billing dates span September through June without summer months",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Commit preserves active settings byte-for-byte",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Reopened preview detects both existing fees and proposes none",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Committing duplicate preview skips both without creating charges",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Duplicate commit also preserves settings",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: translated preview identifies existing fees",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: dialog fits viewport",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: Arabic dialog inherits RTL",
+      "outcome": "PASS"
+    },
+    {
+      "label": "ar-phone: cancel preview does not commit",
+      "outcome": "PASS"
+    },
+    {
+      "label": "en-desktop: translated preview identifies existing fees",
+      "outcome": "PASS"
+    },
+    {
+      "label": "en-desktop: dialog fits viewport",
+      "outcome": "PASS"
+    },
+    {
+      "label": "en-desktop: cancel preview does not commit",
+      "outcome": "PASS"
+    },
+    {
+      "label": "es-desktop: translated preview identifies existing fees",
+      "outcome": "PASS"
+    },
+    {
+      "label": "es-desktop: dialog fits viewport",
+      "outcome": "PASS"
+    },
+    {
+      "label": "es-desktop: cancel preview does not commit",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Supporting HTTP retry returns the original committed run without mutations",
+      "outcome": "PASS"
+    },
+    {
+      "label": "Supporting HTTP refuses coupled active-settings update",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "responses": [
+    {
+      "label": "Default options preview",
+      "status": 200,
+      "operation": "preview"
+    },
+    {
+      "label": "Repeated unchanged preview",
+      "status": 200,
+      "operation": "preview"
+    },
+    {
+      "label": "Copy-discount preview",
+      "status": 200,
+      "operation": "preview"
+    },
+    {
+      "label": "Include one-time preview",
+      "status": 200,
+      "operation": "preview"
+    },
+    {
+      "label": "Source year change and return",
+      "status": 200,
+      "operation": "preview"
+    },
+    {
+      "label": "Target year change and return",
+      "status": 200,
+      "operation": "preview"
+    },
+    {
+      "operation": "commit",
+      "status": 200
+    }
+  ],
+  "scope": "Owned marked database clone only",
+  "committedRunCount": 2
+}
