@@ -10916,10 +10916,10 @@
     }
    ]
   },
-  "bae55eda88499127": {
+  "b814da8cc5f1066b": {
    "statements": [
     {
-     "sql": "select \"teachers\".\"id\", \"teachers\".\"staff_id\", \"staff\".\"user_id\", \"staff\".\"cin\", \"staff\".\"name\", \"users\".\"email\", \"staff\".\"phone\", \"staff\".\"address\", \"staff\".\"gender\", \"teachers\".\"specialization\", \"staff\".\"salary\", \"staff\".\"compensation_mode\", \"staff\".\"hourly_rate\", \"staff\".\"hire_date\", \"teachers\".\"years_of_experience\", \"staff\".\"bank_account\", \"staff\".\"emergency_contact\", \"staff\".\"emergency_phone\", \"staff\".\"status\", \"staff\".\"employment_type\", \"staff\".\"workload_hours\", \"teachers\".\"academic_degrees\", \"users\".\"image\", \"teachers\".\"created_at\", \"teachers\".\"updated_at\", \n        COALESCE(\n          (\n            SELECT json_agg(\n              json_build_object(\n                'classId', class_id,\n                'sectionIds', section_ids,\n                'subjectIds', subject_ids\n              )\n            )\n            FROM (\n              SELECT \n                \"classes\".\"id\" as class_id,\n                array_agg(DISTINCT \"sections\".\"id\") as section_ids,\n                array_agg(DISTINCT \"subjects\".\"id\") as subject_ids\n              FROM \"teacher_assignments\"\n              INNER JOIN \"sections\" ON \"teacher_assignments\".\"section_id\" = \"sections\".\"id\"\n              INNER JOIN \"classes\" ON \"sections\".\"class_id\" = \"classes\".\"id\"\n              INNER JOIN \"subjects\" ON \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\"\n              WHERE \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\"\n                AND \"classes\".\"academic_year\" = $1\n              GROUP BY \"classes\".\"id\"\n            ) grouped\n          ),\n          '[]'::json\n        )\n       as \"assignments\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where \"teachers\".\"id\" in (select \"teachers\".\"id\" from \"teachers\" inner join \"staff\" \"_sc_staff_1\" on \"teachers\".\"staff_id\" = \"_sc_staff_1\".\"id\" where \"_sc_staff_1\".\"user_id\" = $2) order by \"teachers\".\"created_at\" desc",
+     "sql": "select \"teachers\".\"id\", \"teachers\".\"staff_id\", \"staff\".\"user_id\", \"staff\".\"cin\", \"staff\".\"name\", \"users\".\"email\", \"staff\".\"phone\", \"staff\".\"address\", \"staff\".\"gender\", \"teachers\".\"specialization\", \"staff\".\"salary\", \"staff\".\"compensation_mode\", \"staff\".\"hourly_rate\", \"staff\".\"hire_date\", \"teachers\".\"years_of_experience\", \"staff\".\"bank_account\", \"staff\".\"emergency_contact\", \"staff\".\"emergency_phone\", \"staff\".\"status\", \"staff\".\"employment_type\", \"staff\".\"workload_hours\", \"teachers\".\"academic_degrees\", \"users\".\"image\", \"teachers\".\"created_at\", \"teachers\".\"updated_at\", \n        COALESCE(\n          (\n            SELECT json_agg(\n              json_build_object(\n                'classId', class_id,\n                'sectionIds', section_ids,\n                'subjectIds', subject_ids\n              )\n            )\n            FROM (\n              SELECT \n                \"classes\".\"id\" as class_id,\n                ARRAY[\"sections\".\"id\"] as section_ids,\n                array_agg(DISTINCT \"subjects\".\"id\") as subject_ids\n              FROM \"teacher_assignments\"\n              INNER JOIN \"sections\" ON \"teacher_assignments\".\"section_id\" = \"sections\".\"id\"\n              INNER JOIN \"classes\" ON \"sections\".\"class_id\" = \"classes\".\"id\"\n              INNER JOIN \"subjects\" ON \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\"\n              WHERE \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\"\n                AND \"classes\".\"academic_year\" = $1\n              GROUP BY \"classes\".\"id\", \"sections\".\"id\"\n            ) grouped\n          ),\n          '[]'::json\n        )\n       as \"assignments\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where \"teachers\".\"id\" in (select \"teachers\".\"id\" from \"teachers\" inner join \"staff\" \"_sc_staff_1\" on \"teachers\".\"staff_id\" = \"_sc_staff_1\".\"id\" where \"_sc_staff_1\".\"user_id\" = $2) order by \"teachers\".\"created_at\" desc",
      "params": [
       "2025-2026",
       "user-1"
@@ -10928,10 +10928,10 @@
     }
    ]
   },
-  "e4690383362fd651": {
+  "7a904a6e8a597505": {
    "statements": [
     {
-     "sql": "select \"teachers\".\"id\", \"teachers\".\"staff_id\", \"staff\".\"user_id\", \"staff\".\"cin\", \"staff\".\"name\", \"users\".\"email\", \"staff\".\"phone\", \"staff\".\"address\", \"staff\".\"gender\", \"teachers\".\"specialization\", \"staff\".\"salary\", \"staff\".\"compensation_mode\", \"staff\".\"hourly_rate\", \"staff\".\"hire_date\", \"teachers\".\"years_of_experience\", \"staff\".\"bank_account\", \"staff\".\"emergency_contact\", \"staff\".\"emergency_phone\", \"staff\".\"status\", \"staff\".\"employment_type\", \"staff\".\"workload_hours\", \"teachers\".\"academic_degrees\", \"users\".\"image\", \"teachers\".\"created_at\", \"teachers\".\"updated_at\", \n        COALESCE(\n          (\n            SELECT json_agg(\n              json_build_object(\n                'classId', class_id,\n                'sectionIds', section_ids,\n                'subjectIds', subject_ids\n              )\n            )\n            FROM (\n              SELECT \n                \"classes\".\"id\" as class_id,\n                array_agg(DISTINCT \"sections\".\"id\") as section_ids,\n                array_agg(DISTINCT \"subjects\".\"id\") as subject_ids\n              FROM \"teacher_assignments\"\n              INNER JOIN \"sections\" ON \"teacher_assignments\".\"section_id\" = \"sections\".\"id\"\n              INNER JOIN \"classes\" ON \"sections\".\"class_id\" = \"classes\".\"id\"\n              INNER JOIN \"subjects\" ON \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\"\n              WHERE \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\"\n                AND \"classes\".\"academic_year\" = $1\n              GROUP BY \"classes\".\"id\"\n            ) grouped\n          ),\n          '[]'::json\n        )\n       as \"assignments\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where 1 = 0 order by \"teachers\".\"created_at\" desc",
+     "sql": "select \"teachers\".\"id\", \"teachers\".\"staff_id\", \"staff\".\"user_id\", \"staff\".\"cin\", \"staff\".\"name\", \"users\".\"email\", \"staff\".\"phone\", \"staff\".\"address\", \"staff\".\"gender\", \"teachers\".\"specialization\", \"staff\".\"salary\", \"staff\".\"compensation_mode\", \"staff\".\"hourly_rate\", \"staff\".\"hire_date\", \"teachers\".\"years_of_experience\", \"staff\".\"bank_account\", \"staff\".\"emergency_contact\", \"staff\".\"emergency_phone\", \"staff\".\"status\", \"staff\".\"employment_type\", \"staff\".\"workload_hours\", \"teachers\".\"academic_degrees\", \"users\".\"image\", \"teachers\".\"created_at\", \"teachers\".\"updated_at\", \n        COALESCE(\n          (\n            SELECT json_agg(\n              json_build_object(\n                'classId', class_id,\n                'sectionIds', section_ids,\n                'subjectIds', subject_ids\n              )\n            )\n            FROM (\n              SELECT \n                \"classes\".\"id\" as class_id,\n                ARRAY[\"sections\".\"id\"] as section_ids,\n                array_agg(DISTINCT \"subjects\".\"id\") as subject_ids\n              FROM \"teacher_assignments\"\n              INNER JOIN \"sections\" ON \"teacher_assignments\".\"section_id\" = \"sections\".\"id\"\n              INNER JOIN \"classes\" ON \"sections\".\"class_id\" = \"classes\".\"id\"\n              INNER JOIN \"subjects\" ON \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\"\n              WHERE \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\"\n                AND \"classes\".\"academic_year\" = $1\n              GROUP BY \"classes\".\"id\", \"sections\".\"id\"\n            ) grouped\n          ),\n          '[]'::json\n        )\n       as \"assignments\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where 1 = 0 order by \"teachers\".\"created_at\" desc",
      "params": [
       "2025-2026"
      ],
@@ -10939,10 +10939,10 @@
     }
    ]
   },
-  "1b7b931b5a4fa08c": {
+  "11b2e2299e306d9c": {
    "statements": [
     {
-     "sql": "select \"teachers\".\"id\", \"teachers\".\"staff_id\", \"staff\".\"user_id\", \"staff\".\"cin\", \"staff\".\"name\", \"users\".\"email\", \"staff\".\"phone\", \"staff\".\"address\", \"staff\".\"gender\", \"teachers\".\"specialization\", \"staff\".\"salary\", \"staff\".\"compensation_mode\", \"staff\".\"hourly_rate\", \"staff\".\"hire_date\", \"teachers\".\"years_of_experience\", \"staff\".\"bank_account\", \"staff\".\"emergency_contact\", \"staff\".\"emergency_phone\", \"staff\".\"status\", \"staff\".\"employment_type\", \"staff\".\"workload_hours\", \"teachers\".\"academic_degrees\", \"users\".\"image\", \"teachers\".\"created_at\", \"teachers\".\"updated_at\", \n        COALESCE(\n          (\n            SELECT json_agg(\n              json_build_object(\n                'classId', class_id,\n                'sectionIds', section_ids,\n                'subjectIds', subject_ids\n              )\n            )\n            FROM (\n              SELECT \n                \"classes\".\"id\" as class_id,\n                array_agg(DISTINCT \"sections\".\"id\") as section_ids,\n                array_agg(DISTINCT \"subjects\".\"id\") as subject_ids\n              FROM \"teacher_assignments\"\n              INNER JOIN \"sections\" ON \"teacher_assignments\".\"section_id\" = \"sections\".\"id\"\n              INNER JOIN \"classes\" ON \"sections\".\"class_id\" = \"classes\".\"id\"\n              INNER JOIN \"subjects\" ON \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\"\n              WHERE \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\"\n                AND \"classes\".\"academic_year\" = $1\n              GROUP BY \"classes\".\"id\"\n            ) grouped\n          ),\n          '[]'::json\n        )\n       as \"assignments\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" order by \"teachers\".\"created_at\" desc",
+     "sql": "select \"teachers\".\"id\", \"teachers\".\"staff_id\", \"staff\".\"user_id\", \"staff\".\"cin\", \"staff\".\"name\", \"users\".\"email\", \"staff\".\"phone\", \"staff\".\"address\", \"staff\".\"gender\", \"teachers\".\"specialization\", \"staff\".\"salary\", \"staff\".\"compensation_mode\", \"staff\".\"hourly_rate\", \"staff\".\"hire_date\", \"teachers\".\"years_of_experience\", \"staff\".\"bank_account\", \"staff\".\"emergency_contact\", \"staff\".\"emergency_phone\", \"staff\".\"status\", \"staff\".\"employment_type\", \"staff\".\"workload_hours\", \"teachers\".\"academic_degrees\", \"users\".\"image\", \"teachers\".\"created_at\", \"teachers\".\"updated_at\", \n        COALESCE(\n          (\n            SELECT json_agg(\n              json_build_object(\n                'classId', class_id,\n                'sectionIds', section_ids,\n                'subjectIds', subject_ids\n              )\n            )\n            FROM (\n              SELECT \n                \"classes\".\"id\" as class_id,\n                ARRAY[\"sections\".\"id\"] as section_ids,\n                array_agg(DISTINCT \"subjects\".\"id\") as subject_ids\n              FROM \"teacher_assignments\"\n              INNER JOIN \"sections\" ON \"teacher_assignments\".\"section_id\" = \"sections\".\"id\"\n              INNER JOIN \"classes\" ON \"sections\".\"class_id\" = \"classes\".\"id\"\n              INNER JOIN \"subjects\" ON \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\"\n              WHERE \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\"\n                AND \"classes\".\"academic_year\" = $1\n              GROUP BY \"classes\".\"id\", \"sections\".\"id\"\n            ) grouped\n          ),\n          '[]'::json\n        )\n       as \"assignments\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" order by \"teachers\".\"created_at\" desc",
      "params": [
       "2025-2026"
      ],
@@ -10979,10 +10979,10 @@
     }
    ]
   },
-  "c426c798649414ad": {
+  "bceea5d1be1a0220": {
    "statements": [
     {
-     "sql": "select \"teachers\".\"id\", \"teachers\".\"staff_id\", \"staff\".\"user_id\", \"staff\".\"cin\", \"staff\".\"name\", \"users\".\"email\", \"staff\".\"phone\", \"staff\".\"address\", \"staff\".\"gender\", \"teachers\".\"specialization\", \"staff\".\"salary\", \"staff\".\"compensation_mode\", \"staff\".\"hourly_rate\", \"staff\".\"hire_date\", \"teachers\".\"years_of_experience\", \"staff\".\"bank_account\", \"staff\".\"emergency_contact\", \"staff\".\"emergency_phone\", \"staff\".\"status\", \"staff\".\"employment_type\", \"staff\".\"workload_hours\", \"teachers\".\"academic_degrees\", \"users\".\"image\", \"teachers\".\"created_at\", \"teachers\".\"updated_at\", \n        COALESCE(\n          (\n            SELECT json_agg(\n              json_build_object(\n                'classId', class_id,\n                'sectionIds', section_ids,\n                'subjectIds', subject_ids\n              )\n            )\n            FROM (\n              SELECT \n                \"classes\".\"id\" as class_id,\n                array_agg(DISTINCT \"sections\".\"id\") as section_ids,\n                array_agg(DISTINCT \"subjects\".\"id\") as subject_ids\n              FROM \"teacher_assignments\"\n              INNER JOIN \"sections\" ON \"teacher_assignments\".\"section_id\" = \"sections\".\"id\"\n              INNER JOIN \"classes\" ON \"sections\".\"class_id\" = \"classes\".\"id\"\n              INNER JOIN \"subjects\" ON \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\"\n              WHERE \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\"\n                AND \"classes\".\"academic_year\" = $1\n              GROUP BY \"classes\".\"id\"\n            ) grouped\n          ),\n          '[]'::json\n        )\n       as \"assignments\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (\"teachers\".\"id\" in (select \"teachers\".\"id\" from \"teachers\" inner join \"staff\" \"_sc_staff_1\" on \"teachers\".\"staff_id\" = \"_sc_staff_1\".\"id\" where \"_sc_staff_1\".\"user_id\" = $2) and \"teachers\".\"id\" = $3) limit $4",
+     "sql": "select \"teachers\".\"id\", \"teachers\".\"staff_id\", \"staff\".\"user_id\", \"staff\".\"cin\", \"staff\".\"name\", \"users\".\"email\", \"staff\".\"phone\", \"staff\".\"address\", \"staff\".\"gender\", \"teachers\".\"specialization\", \"staff\".\"salary\", \"staff\".\"compensation_mode\", \"staff\".\"hourly_rate\", \"staff\".\"hire_date\", \"teachers\".\"years_of_experience\", \"staff\".\"bank_account\", \"staff\".\"emergency_contact\", \"staff\".\"emergency_phone\", \"staff\".\"status\", \"staff\".\"employment_type\", \"staff\".\"workload_hours\", \"teachers\".\"academic_degrees\", \"users\".\"image\", \"teachers\".\"created_at\", \"teachers\".\"updated_at\", \n        COALESCE(\n          (\n            SELECT json_agg(\n              json_build_object(\n                'classId', class_id,\n                'sectionIds', section_ids,\n                'subjectIds', subject_ids\n              )\n            )\n            FROM (\n              SELECT \n                \"classes\".\"id\" as class_id,\n                ARRAY[\"sections\".\"id\"] as section_ids,\n                array_agg(DISTINCT \"subjects\".\"id\") as subject_ids\n              FROM \"teacher_assignments\"\n              INNER JOIN \"sections\" ON \"teacher_assignments\".\"section_id\" = \"sections\".\"id\"\n              INNER JOIN \"classes\" ON \"sections\".\"class_id\" = \"classes\".\"id\"\n              INNER JOIN \"subjects\" ON \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\"\n              WHERE \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\"\n                AND \"classes\".\"academic_year\" = $1\n              GROUP BY \"classes\".\"id\", \"sections\".\"id\"\n            ) grouped\n          ),\n          '[]'::json\n        )\n       as \"assignments\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (\"teachers\".\"id\" in (select \"teachers\".\"id\" from \"teachers\" inner join \"staff\" \"_sc_staff_1\" on \"teachers\".\"staff_id\" = \"_sc_staff_1\".\"id\" where \"_sc_staff_1\".\"user_id\" = $2) and \"teachers\".\"id\" = $3) limit $4",
      "params": [
       "2025-2026",
       "user-1",
@@ -10993,10 +10993,10 @@
     }
    ]
   },
-  "c158e90a2a05681d": {
+  "0a36261e859f7884": {
    "statements": [
     {
-     "sql": "select \"teachers\".\"id\", \"teachers\".\"staff_id\", \"staff\".\"user_id\", \"staff\".\"cin\", \"staff\".\"name\", \"users\".\"email\", \"staff\".\"phone\", \"staff\".\"address\", \"staff\".\"gender\", \"teachers\".\"specialization\", \"staff\".\"salary\", \"staff\".\"compensation_mode\", \"staff\".\"hourly_rate\", \"staff\".\"hire_date\", \"teachers\".\"years_of_experience\", \"staff\".\"bank_account\", \"staff\".\"emergency_contact\", \"staff\".\"emergency_phone\", \"staff\".\"status\", \"staff\".\"employment_type\", \"staff\".\"workload_hours\", \"teachers\".\"academic_degrees\", \"users\".\"image\", \"teachers\".\"created_at\", \"teachers\".\"updated_at\", \n        COALESCE(\n          (\n            SELECT json_agg(\n              json_build_object(\n                'classId', class_id,\n                'sectionIds', section_ids,\n                'subjectIds', subject_ids\n              )\n            )\n            FROM (\n              SELECT \n                \"classes\".\"id\" as class_id,\n                array_agg(DISTINCT \"sections\".\"id\") as section_ids,\n                array_agg(DISTINCT \"subjects\".\"id\") as subject_ids\n              FROM \"teacher_assignments\"\n              INNER JOIN \"sections\" ON \"teacher_assignments\".\"section_id\" = \"sections\".\"id\"\n              INNER JOIN \"classes\" ON \"sections\".\"class_id\" = \"classes\".\"id\"\n              INNER JOIN \"subjects\" ON \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\"\n              WHERE \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\"\n                AND \"classes\".\"academic_year\" = $1\n              GROUP BY \"classes\".\"id\"\n            ) grouped\n          ),\n          '[]'::json\n        )\n       as \"assignments\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (1 = 0 and \"teachers\".\"id\" = $2) limit $3",
+     "sql": "select \"teachers\".\"id\", \"teachers\".\"staff_id\", \"staff\".\"user_id\", \"staff\".\"cin\", \"staff\".\"name\", \"users\".\"email\", \"staff\".\"phone\", \"staff\".\"address\", \"staff\".\"gender\", \"teachers\".\"specialization\", \"staff\".\"salary\", \"staff\".\"compensation_mode\", \"staff\".\"hourly_rate\", \"staff\".\"hire_date\", \"teachers\".\"years_of_experience\", \"staff\".\"bank_account\", \"staff\".\"emergency_contact\", \"staff\".\"emergency_phone\", \"staff\".\"status\", \"staff\".\"employment_type\", \"staff\".\"workload_hours\", \"teachers\".\"academic_degrees\", \"users\".\"image\", \"teachers\".\"created_at\", \"teachers\".\"updated_at\", \n        COALESCE(\n          (\n            SELECT json_agg(\n              json_build_object(\n                'classId', class_id,\n                'sectionIds', section_ids,\n                'subjectIds', subject_ids\n              )\n            )\n            FROM (\n              SELECT \n                \"classes\".\"id\" as class_id,\n                ARRAY[\"sections\".\"id\"] as section_ids,\n                array_agg(DISTINCT \"subjects\".\"id\") as subject_ids\n              FROM \"teacher_assignments\"\n              INNER JOIN \"sections\" ON \"teacher_assignments\".\"section_id\" = \"sections\".\"id\"\n              INNER JOIN \"classes\" ON \"sections\".\"class_id\" = \"classes\".\"id\"\n              INNER JOIN \"subjects\" ON \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\"\n              WHERE \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\"\n                AND \"classes\".\"academic_year\" = $1\n              GROUP BY \"classes\".\"id\", \"sections\".\"id\"\n            ) grouped\n          ),\n          '[]'::json\n        )\n       as \"assignments\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (1 = 0 and \"teachers\".\"id\" = $2) limit $3",
      "params": [
       "2025-2026",
       "id-1",
@@ -11006,10 +11006,10 @@
     }
    ]
   },
-  "8dd78759b0de9e8d": {
+  "636d167c6f215365": {
    "statements": [
     {
-     "sql": "select \"teachers\".\"id\", \"teachers\".\"staff_id\", \"staff\".\"user_id\", \"staff\".\"cin\", \"staff\".\"name\", \"users\".\"email\", \"staff\".\"phone\", \"staff\".\"address\", \"staff\".\"gender\", \"teachers\".\"specialization\", \"staff\".\"salary\", \"staff\".\"compensation_mode\", \"staff\".\"hourly_rate\", \"staff\".\"hire_date\", \"teachers\".\"years_of_experience\", \"staff\".\"bank_account\", \"staff\".\"emergency_contact\", \"staff\".\"emergency_phone\", \"staff\".\"status\", \"staff\".\"employment_type\", \"staff\".\"workload_hours\", \"teachers\".\"academic_degrees\", \"users\".\"image\", \"teachers\".\"created_at\", \"teachers\".\"updated_at\", \n        COALESCE(\n          (\n            SELECT json_agg(\n              json_build_object(\n                'classId', class_id,\n                'sectionIds', section_ids,\n                'subjectIds', subject_ids\n              )\n            )\n            FROM (\n              SELECT \n                \"classes\".\"id\" as class_id,\n                array_agg(DISTINCT \"sections\".\"id\") as section_ids,\n                array_agg(DISTINCT \"subjects\".\"id\") as subject_ids\n              FROM \"teacher_assignments\"\n              INNER JOIN \"sections\" ON \"teacher_assignments\".\"section_id\" = \"sections\".\"id\"\n              INNER JOIN \"classes\" ON \"sections\".\"class_id\" = \"classes\".\"id\"\n              INNER JOIN \"subjects\" ON \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\"\n              WHERE \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\"\n                AND \"classes\".\"academic_year\" = $1\n              GROUP BY \"classes\".\"id\"\n            ) grouped\n          ),\n          '[]'::json\n        )\n       as \"assignments\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where \"teachers\".\"id\" = $2 limit $3",
+     "sql": "select \"teachers\".\"id\", \"teachers\".\"staff_id\", \"staff\".\"user_id\", \"staff\".\"cin\", \"staff\".\"name\", \"users\".\"email\", \"staff\".\"phone\", \"staff\".\"address\", \"staff\".\"gender\", \"teachers\".\"specialization\", \"staff\".\"salary\", \"staff\".\"compensation_mode\", \"staff\".\"hourly_rate\", \"staff\".\"hire_date\", \"teachers\".\"years_of_experience\", \"staff\".\"bank_account\", \"staff\".\"emergency_contact\", \"staff\".\"emergency_phone\", \"staff\".\"status\", \"staff\".\"employment_type\", \"staff\".\"workload_hours\", \"teachers\".\"academic_degrees\", \"users\".\"image\", \"teachers\".\"created_at\", \"teachers\".\"updated_at\", \n        COALESCE(\n          (\n            SELECT json_agg(\n              json_build_object(\n                'classId', class_id,\n                'sectionIds', section_ids,\n                'subjectIds', subject_ids\n              )\n            )\n            FROM (\n              SELECT \n                \"classes\".\"id\" as class_id,\n                ARRAY[\"sections\".\"id\"] as section_ids,\n                array_agg(DISTINCT \"subjects\".\"id\") as subject_ids\n              FROM \"teacher_assignments\"\n              INNER JOIN \"sections\" ON \"teacher_assignments\".\"section_id\" = \"sections\".\"id\"\n              INNER JOIN \"classes\" ON \"sections\".\"class_id\" = \"classes\".\"id\"\n              INNER JOIN \"subjects\" ON \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\"\n              WHERE \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\"\n                AND \"classes\".\"academic_year\" = $1\n              GROUP BY \"classes\".\"id\", \"sections\".\"id\"\n            ) grouped\n          ),\n          '[]'::json\n        )\n       as \"assignments\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where \"teachers\".\"id\" = $2 limit $3",
      "params": [
       "2025-2026",
       "id-1",
@@ -11093,10 +11093,10 @@
     }
    ]
   },
-  "e01113a24de29d3f": {
+  "a8546fd8b13a8292": {
    "statements": [
     {
-     "sql": "select \"teachers\".\"id\", \"teachers\".\"staff_id\", \"staff\".\"user_id\", \"staff\".\"cin\", \"staff\".\"name\", \"users\".\"email\", \"staff\".\"phone\", \"staff\".\"address\", \"staff\".\"gender\", \"teachers\".\"specialization\", \"staff\".\"salary\", \"staff\".\"compensation_mode\", \"staff\".\"hourly_rate\", \"staff\".\"hire_date\", \"teachers\".\"years_of_experience\", \"staff\".\"bank_account\", \"staff\".\"emergency_contact\", \"staff\".\"emergency_phone\", \"staff\".\"status\", \"staff\".\"employment_type\", \"staff\".\"workload_hours\", \"teachers\".\"academic_degrees\", \"users\".\"image\", \"teachers\".\"created_at\", \"teachers\".\"updated_at\", \n        COALESCE(\n          (\n            SELECT json_agg(\n              json_build_object(\n                'classId', class_id,\n                'sectionIds', section_ids,\n                'subjectIds', subject_ids\n              )\n            )\n            FROM (\n              SELECT \n                \"classes\".\"id\" as class_id,\n                array_agg(DISTINCT \"sections\".\"id\") as section_ids,\n                array_agg(DISTINCT \"subjects\".\"id\") as subject_ids\n              FROM \"teacher_assignments\"\n              INNER JOIN \"sections\" ON \"teacher_assignments\".\"section_id\" = \"sections\".\"id\"\n              INNER JOIN \"classes\" ON \"sections\".\"class_id\" = \"classes\".\"id\"\n              INNER JOIN \"subjects\" ON \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\"\n              WHERE \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\"\n                AND \"classes\".\"academic_year\" = $1\n              GROUP BY \"classes\".\"id\"\n            ) grouped\n          ),\n          '[]'::json\n        )\n       as \"assignments\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where \"staff\".\"cin\" = $2 limit $3",
+     "sql": "select \"teachers\".\"id\", \"teachers\".\"staff_id\", \"staff\".\"user_id\", \"staff\".\"cin\", \"staff\".\"name\", \"users\".\"email\", \"staff\".\"phone\", \"staff\".\"address\", \"staff\".\"gender\", \"teachers\".\"specialization\", \"staff\".\"salary\", \"staff\".\"compensation_mode\", \"staff\".\"hourly_rate\", \"staff\".\"hire_date\", \"teachers\".\"years_of_experience\", \"staff\".\"bank_account\", \"staff\".\"emergency_contact\", \"staff\".\"emergency_phone\", \"staff\".\"status\", \"staff\".\"employment_type\", \"staff\".\"workload_hours\", \"teachers\".\"academic_degrees\", \"users\".\"image\", \"teachers\".\"created_at\", \"teachers\".\"updated_at\", \n        COALESCE(\n          (\n            SELECT json_agg(\n              json_build_object(\n                'classId', class_id,\n                'sectionIds', section_ids,\n                'subjectIds', subject_ids\n              )\n            )\n            FROM (\n              SELECT \n                \"classes\".\"id\" as class_id,\n                ARRAY[\"sections\".\"id\"] as section_ids,\n                array_agg(DISTINCT \"subjects\".\"id\") as subject_ids\n              FROM \"teacher_assignments\"\n              INNER JOIN \"sections\" ON \"teacher_assignments\".\"section_id\" = \"sections\".\"id\"\n              INNER JOIN \"classes\" ON \"sections\".\"class_id\" = \"classes\".\"id\"\n              INNER JOIN \"subjects\" ON \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\"\n              WHERE \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\"\n                AND \"classes\".\"academic_year\" = $1\n              GROUP BY \"classes\".\"id\", \"sections\".\"id\"\n            ) grouped\n          ),\n          '[]'::json\n        )\n       as \"assignments\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where \"staff\".\"cin\" = $2 limit $3",
      "params": [
       "2025-2026",
       "CD456",
@@ -11106,10 +11106,10 @@
     }
    ]
   },
-  "4429fd7af24dd8dc": {
+  "7e6a8423c5da8332": {
    "statements": [
     {
-     "sql": "select \"teachers\".\"id\", \"teachers\".\"staff_id\", \"staff\".\"user_id\", \"staff\".\"cin\", \"staff\".\"name\", \"users\".\"email\", \"staff\".\"phone\", \"staff\".\"address\", \"staff\".\"gender\", \"teachers\".\"specialization\", \"staff\".\"salary\", \"staff\".\"compensation_mode\", \"staff\".\"hourly_rate\", \"staff\".\"hire_date\", \"teachers\".\"years_of_experience\", \"staff\".\"bank_account\", \"staff\".\"emergency_contact\", \"staff\".\"emergency_phone\", \"staff\".\"status\", \"staff\".\"employment_type\", \"staff\".\"workload_hours\", \"teachers\".\"academic_degrees\", \"users\".\"image\", \"teachers\".\"created_at\", \"teachers\".\"updated_at\", \n        COALESCE(\n          (\n            SELECT json_agg(\n              json_build_object(\n                'classId', class_id,\n                'sectionIds', section_ids,\n                'subjectIds', subject_ids\n              )\n            )\n            FROM (\n              SELECT \n                \"classes\".\"id\" as class_id,\n                array_agg(DISTINCT \"sections\".\"id\") as section_ids,\n                array_agg(DISTINCT \"subjects\".\"id\") as subject_ids\n              FROM \"teacher_assignments\"\n              INNER JOIN \"sections\" ON \"teacher_assignments\".\"section_id\" = \"sections\".\"id\"\n              INNER JOIN \"classes\" ON \"sections\".\"class_id\" = \"classes\".\"id\"\n              INNER JOIN \"subjects\" ON \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\"\n              WHERE \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\"\n                AND \"classes\".\"academic_year\" = $1\n              GROUP BY \"classes\".\"id\"\n            ) grouped\n          ),\n          '[]'::json\n        )\n       as \"assignments\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where \"users\".\"email\" = $2 limit $3",
+     "sql": "select \"teachers\".\"id\", \"teachers\".\"staff_id\", \"staff\".\"user_id\", \"staff\".\"cin\", \"staff\".\"name\", \"users\".\"email\", \"staff\".\"phone\", \"staff\".\"address\", \"staff\".\"gender\", \"teachers\".\"specialization\", \"staff\".\"salary\", \"staff\".\"compensation_mode\", \"staff\".\"hourly_rate\", \"staff\".\"hire_date\", \"teachers\".\"years_of_experience\", \"staff\".\"bank_account\", \"staff\".\"emergency_contact\", \"staff\".\"emergency_phone\", \"staff\".\"status\", \"staff\".\"employment_type\", \"staff\".\"workload_hours\", \"teachers\".\"academic_degrees\", \"users\".\"image\", \"teachers\".\"created_at\", \"teachers\".\"updated_at\", \n        COALESCE(\n          (\n            SELECT json_agg(\n              json_build_object(\n                'classId', class_id,\n                'sectionIds', section_ids,\n                'subjectIds', subject_ids\n              )\n            )\n            FROM (\n              SELECT \n                \"classes\".\"id\" as class_id,\n                ARRAY[\"sections\".\"id\"] as section_ids,\n                array_agg(DISTINCT \"subjects\".\"id\") as subject_ids\n              FROM \"teacher_assignments\"\n              INNER JOIN \"sections\" ON \"teacher_assignments\".\"section_id\" = \"sections\".\"id\"\n              INNER JOIN \"classes\" ON \"sections\".\"class_id\" = \"classes\".\"id\"\n              INNER JOIN \"subjects\" ON \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\"\n              WHERE \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\"\n                AND \"classes\".\"academic_year\" = $1\n              GROUP BY \"classes\".\"id\", \"sections\".\"id\"\n            ) grouped\n          ),\n          '[]'::json\n        )\n       as \"assignments\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where \"users\".\"email\" = $2 limit $3",
      "params": [
       "2025-2026",
       "t@school.test",
@@ -14697,19 +14697,19 @@
   "repository:students getByStudentCode (unscoped)|role:custom-role": "128905d3c5a7f63e",
   "repository:students getByStudentCode (unscoped)|anonymous": "128905d3c5a7f63e",
   "repository:students getByStudentCode (unscoped)|outside-request": "128905d3c5a7f63e",
-  "repository:teachers getAll|role:teacher": "bae55eda88499127",
-  "repository:teachers getAll|role:parent": "e4690383362fd651",
-  "repository:teachers getAll|role:student": "e4690383362fd651",
-  "repository:teachers getAll|role:admin": "1b7b931b5a4fa08c",
-  "repository:teachers getAll|role:principal": "1b7b931b5a4fa08c",
-  "repository:teachers getAll|role:accounting": "1b7b931b5a4fa08c",
-  "repository:teachers getAll|role:secretary": "1b7b931b5a4fa08c",
-  "repository:teachers getAll|role:driver": "1b7b931b5a4fa08c",
-  "repository:teachers getAll|role:assistant": "1b7b931b5a4fa08c",
-  "repository:teachers getAll|role:supervisor": "1b7b931b5a4fa08c",
-  "repository:teachers getAll|role:custom-role": "e4690383362fd651",
-  "repository:teachers getAll|anonymous": "e4690383362fd651",
-  "repository:teachers getAll|outside-request": "1b7b931b5a4fa08c",
+  "repository:teachers getAll|role:teacher": "b814da8cc5f1066b",
+  "repository:teachers getAll|role:parent": "7a904a6e8a597505",
+  "repository:teachers getAll|role:student": "7a904a6e8a597505",
+  "repository:teachers getAll|role:admin": "11b2e2299e306d9c",
+  "repository:teachers getAll|role:principal": "11b2e2299e306d9c",
+  "repository:teachers getAll|role:accounting": "11b2e2299e306d9c",
+  "repository:teachers getAll|role:secretary": "11b2e2299e306d9c",
+  "repository:teachers getAll|role:driver": "11b2e2299e306d9c",
+  "repository:teachers getAll|role:assistant": "11b2e2299e306d9c",
+  "repository:teachers getAll|role:supervisor": "11b2e2299e306d9c",
+  "repository:teachers getAll|role:custom-role": "7a904a6e8a597505",
+  "repository:teachers getAll|anonymous": "7a904a6e8a597505",
+  "repository:teachers getAll|outside-request": "11b2e2299e306d9c",
   "repository:teachers getOwnedCount|role:teacher": "72afa9b88d68987f",
   "repository:teachers getOwnedCount|role:parent": "bcc884c7daa3cbe7",
   "repository:teachers getOwnedCount|role:student": "bcc884c7daa3cbe7",
@@ -14723,19 +14723,19 @@
   "repository:teachers getOwnedCount|role:custom-role": "bcc884c7daa3cbe7",
   "repository:teachers getOwnedCount|anonymous": "bcc884c7daa3cbe7",
   "repository:teachers getOwnedCount|outside-request": "c4d278e036708ce9",
-  "repository:teachers getById|role:teacher": "c426c798649414ad",
-  "repository:teachers getById|role:parent": "c158e90a2a05681d",
-  "repository:teachers getById|role:student": "c158e90a2a05681d",
-  "repository:teachers getById|role:admin": "8dd78759b0de9e8d",
-  "repository:teachers getById|role:principal": "8dd78759b0de9e8d",
-  "repository:teachers getById|role:accounting": "8dd78759b0de9e8d",
-  "repository:teachers getById|role:secretary": "8dd78759b0de9e8d",
-  "repository:teachers getById|role:driver": "8dd78759b0de9e8d",
-  "repository:teachers getById|role:assistant": "8dd78759b0de9e8d",
-  "repository:teachers getById|role:supervisor": "8dd78759b0de9e8d",
-  "repository:teachers getById|role:custom-role": "c158e90a2a05681d",
-  "repository:teachers getById|anonymous": "c158e90a2a05681d",
-  "repository:teachers getById|outside-request": "8dd78759b0de9e8d",
+  "repository:teachers getById|role:teacher": "bceea5d1be1a0220",
+  "repository:teachers getById|role:parent": "0a36261e859f7884",
+  "repository:teachers getById|role:student": "0a36261e859f7884",
+  "repository:teachers getById|role:admin": "636d167c6f215365",
+  "repository:teachers getById|role:principal": "636d167c6f215365",
+  "repository:teachers getById|role:accounting": "636d167c6f215365",
+  "repository:teachers getById|role:secretary": "636d167c6f215365",
+  "repository:teachers getById|role:driver": "636d167c6f215365",
+  "repository:teachers getById|role:assistant": "636d167c6f215365",
+  "repository:teachers getById|role:supervisor": "636d167c6f215365",
+  "repository:teachers getById|role:custom-role": "0a36261e859f7884",
+  "repository:teachers getById|anonymous": "0a36261e859f7884",
+  "repository:teachers getById|outside-request": "636d167c6f215365",
   "repository:teachers getByUserId|role:teacher": "a0363855f510a0c0",
   "repository:teachers getByUserId|role:parent": "b98d3af7d97c1c7a",
   "repository:teachers getByUserId|role:student": "b98d3af7d97c1c7a",
@@ -14762,32 +14762,32 @@
   "repository:teachers getOwnedRecord|role:custom-role": "c170c93f3e81bd9d",
   "repository:teachers getOwnedRecord|anonymous": "c170c93f3e81bd9d",
   "repository:teachers getOwnedRecord|outside-request": "75cdfdbf350c6672",
-  "repository:teachers getByCin (unscoped)|role:teacher": "e01113a24de29d3f",
-  "repository:teachers getByCin (unscoped)|role:parent": "e01113a24de29d3f",
-  "repository:teachers getByCin (unscoped)|role:student": "e01113a24de29d3f",
-  "repository:teachers getByCin (unscoped)|role:admin": "e01113a24de29d3f",
-  "repository:teachers getByCin (unscoped)|role:principal": "e01113a24de29d3f",
-  "repository:teachers getByCin (unscoped)|role:accounting": "e01113a24de29d3f",
-  "repository:teachers getByCin (unscoped)|role:secretary": "e01113a24de29d3f",
-  "repository:teachers getByCin (unscoped)|role:driver": "e01113a24de29d3f",
-  "repository:teachers getByCin (unscoped)|role:assistant": "e01113a24de29d3f",
-  "repository:teachers getByCin (unscoped)|role:supervisor": "e01113a24de29d3f",
-  "repository:teachers getByCin (unscoped)|role:custom-role": "e01113a24de29d3f",
-  "repository:teachers getByCin (unscoped)|anonymous": "e01113a24de29d3f",
-  "repository:teachers getByCin (unscoped)|outside-request": "e01113a24de29d3f",
-  "repository:teachers getByEmail (unscoped)|role:teacher": "4429fd7af24dd8dc",
-  "repository:teachers getByEmail (unscoped)|role:parent": "4429fd7af24dd8dc",
-  "repository:teachers getByEmail (unscoped)|role:student": "4429fd7af24dd8dc",
-  "repository:teachers getByEmail (unscoped)|role:admin": "4429fd7af24dd8dc",
-  "repository:teachers getByEmail (unscoped)|role:principal": "4429fd7af24dd8dc",
-  "repository:teachers getByEmail (unscoped)|role:accounting": "4429fd7af24dd8dc",
-  "repository:teachers getByEmail (unscoped)|role:secretary": "4429fd7af24dd8dc",
-  "repository:teachers getByEmail (unscoped)|role:driver": "4429fd7af24dd8dc",
-  "repository:teachers getByEmail (unscoped)|role:assistant": "4429fd7af24dd8dc",
-  "repository:teachers getByEmail (unscoped)|role:supervisor": "4429fd7af24dd8dc",
-  "repository:teachers getByEmail (unscoped)|role:custom-role": "4429fd7af24dd8dc",
-  "repository:teachers getByEmail (unscoped)|anonymous": "4429fd7af24dd8dc",
-  "repository:teachers getByEmail (unscoped)|outside-request": "4429fd7af24dd8dc",
+  "repository:teachers getByCin (unscoped)|role:teacher": "a8546fd8b13a8292",
+  "repository:teachers getByCin (unscoped)|role:parent": "a8546fd8b13a8292",
+  "repository:teachers getByCin (unscoped)|role:student": "a8546fd8b13a8292",
+  "repository:teachers getByCin (unscoped)|role:admin": "a8546fd8b13a8292",
+  "repository:teachers getByCin (unscoped)|role:principal": "a8546fd8b13a8292",
+  "repository:teachers getByCin (unscoped)|role:accounting": "a8546fd8b13a8292",
+  "repository:teachers getByCin (unscoped)|role:secretary": "a8546fd8b13a8292",
+  "repository:teachers getByCin (unscoped)|role:driver": "a8546fd8b13a8292",
+  "repository:teachers getByCin (unscoped)|role:assistant": "a8546fd8b13a8292",
+  "repository:teachers getByCin (unscoped)|role:supervisor": "a8546fd8b13a8292",
+  "repository:teachers getByCin (unscoped)|role:custom-role": "a8546fd8b13a8292",
+  "repository:teachers getByCin (unscoped)|anonymous": "a8546fd8b13a8292",
+  "repository:teachers getByCin (unscoped)|outside-request": "a8546fd8b13a8292",
+  "repository:teachers getByEmail (unscoped)|role:teacher": "7e6a8423c5da8332",
+  "repository:teachers getByEmail (unscoped)|role:parent": "7e6a8423c5da8332",
+  "repository:teachers getByEmail (unscoped)|role:student": "7e6a8423c5da8332",
+  "repository:teachers getByEmail (unscoped)|role:admin": "7e6a8423c5da8332",
+  "repository:teachers getByEmail (unscoped)|role:principal": "7e6a8423c5da8332",
+  "repository:teachers getByEmail (unscoped)|role:accounting": "7e6a8423c5da8332",
+  "repository:teachers getByEmail (unscoped)|role:secretary": "7e6a8423c5da8332",
+  "repository:teachers getByEmail (unscoped)|role:driver": "7e6a8423c5da8332",
+  "repository:teachers getByEmail (unscoped)|role:assistant": "7e6a8423c5da8332",
+  "repository:teachers getByEmail (unscoped)|role:supervisor": "7e6a8423c5da8332",
+  "repository:teachers getByEmail (unscoped)|role:custom-role": "7e6a8423c5da8332",
+  "repository:teachers getByEmail (unscoped)|anonymous": "7e6a8423c5da8332",
+  "repository:teachers getByEmail (unscoped)|outside-request": "7e6a8423c5da8332",
   "token:AlertGuards.Alert|role:teacher": "ad09a95e4f05dc5d",
   "token:AlertGuards.Alert|role:parent": "26ea2ed4e4d98bee",
   "token:AlertGuards.Alert|role:student": "8215233f17097a46",
