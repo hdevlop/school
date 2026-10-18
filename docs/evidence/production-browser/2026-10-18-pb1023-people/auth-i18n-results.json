@@ -1,0 +1,59 @@
+{
+ "name": "auth-i18n",
+ "scope": "pending account sign-in refusal in fr, ar, es, en",
+ "origin": "https://myscolai.com",
+ "candidate": "6f1f20a522fb2b46cc981f9567a7fc1727d264bd",
+ "deployedRevision": "6f1f20a522fb2b46cc981f9567a7fc1727d264bd",
+ "worktreeDirty": 22,
+ "browser": "155.0.8059.80",
+ "startedUtc": "2026-10-18T14:57:46.469Z",
+ "results": [
+  {
+   "case": "pending account sign-in is refused in the request language (API)",
+   "outcome": "PASS",
+   "fr": {
+    "status": 403,
+    "message": "Ce compte n'est pas actif. Contactez l'établissement."
+   },
+   "ar": {
+    "status": 403,
+    "message": "هذا الحساب غير نشط. يرجى التواصل مع المؤسسة."
+   },
+   "es": {
+    "status": 403,
+    "message": "Esta cuenta no está activa. Contacte con el centro."
+   },
+   "en": {
+    "status": 403,
+    "message": "Account is inactive. Please contact support."
+   }
+  },
+  {
+   "case": "the French login page shows the refusal in French",
+   "outcome": "PASS",
+   "shown": "Ce compte n'est pas actif. Contactez l'établissement."
+  },
+  {
+   "case": "cleanup",
+   "outcome": "PASS",
+   "status": 200
+  }
+ ],
+ "diagnostics": [],
+ "writes": [],
+ "mcpReads": [],
+ "nativeDialogs": [],
+ "residue": 0,
+ "apiWrites": [
+  {
+   "as": "admin",
+   "method": "DELETE",
+   "path": "/users/:id",
+   "status": 200
+  }
+ ],
+ "completedUtc": "2026-10-18T14:57:53.746Z",
+ "counts": {
+  "PASS": 3
+ }
+}

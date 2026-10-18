@@ -103,8 +103,11 @@ Two read-shape issues in the scripts were not product failures:
   - `roles.errors.roleInUse`
   - every `oauth*` and `credentialSetup*` message
 
-  The wrong-password message is French because School defines that key. Fixed
-  separately; see the ledger.
+  The wrong-password message is French because School defines that key.
+  **Fixed in `6f1f20a`.** All 51 keys were added in the four languages, and a
+  server i18n test now requires them. On the demo, a pending account's sign-in
+  is refused in French, Arabic, Spanish and English, and the French login page
+  shows it in French ([results](auth-i18n-results.json)).
 - **Fee rows open a fee record only from the profile dialog.** On
   `/students/:id`, the Fees tab's rows are not clickable.
 - **The transport start date is unformatted.** The Transport tab shows
