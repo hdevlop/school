@@ -1,89 +1,24 @@
 "use client";
 
-import React from 'react';
-import { Phone, Mail, Calendar, Clock, Shield, User, UserCheck, Hash, Settings, Key, Activity } from 'lucide-react';
-import { cn, NAvatar, NErrorState, NEmptyState, NStatCard, NBadge, statusTextClass, NLoadingState } from 'najm-kit';
+import { Hash, Mail, Phone, Shield, User, UserCheck } from 'lucide-react';
+import { Card, NAvatar, NBadge, NEmptyState, NSection, NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { Card } from 'najm-kit';
-import { useSchoolFormat } from '@/hooks/useSchoolFormat';
-import { NSection, NSectionInfo } from 'najm-kit';
 
-import { Label } from 'najm-kit';
-
-const UserHeader = ({ user }) => {
-  return (
-    <Card className="flex p-5 items-center flex-col md:flex-row md:gap-4">
-      <NAvatar src={user.image} fallback={user.name} size='xl' version={user?.updatedAt} />
-      <div className="flex flex-col justify-center items-center md:items-start md:gap-0.5">
-        <Label className="text-2xl font-bold ">{user.name}</Label>
-        <Label className="text-md ">{user.email}</Label>
-        <NBadge status={user.status} look="minimal" />
-      </div>
-    </Card>
-  );
-};
-
-const UserView = ({ user, isLoading, error, onRetry }) => {
+const UserView = ({ user }) => {
   const { t } = useTranslation();
-  const { displayDate } = useSchoolFormat();
 
-    // ---------- Loading/Error Check ----------
-  if (isLoading) return <NLoadingState label={t('common.loading')} fullScreen />;
-  if (error) return <NErrorState message={typeof error === 'string' ? error : error?.message} onRetry={onRetry} />;
   if (!user) return <NEmptyState title={t('users.errors.notFound')} />;
 
-  // ---------- Destructuring ----------
-  const {
-    id,
-    email,
-    status,
-    role,
-    phone,
-    createdAt,
-    updatedAt,
-    lastLoginAt,
-    analytics = {},
-  } = user || {};
-
-  // ---------- Derived Values ----------
-  const {
-    totalLogins = 0,
-    totalSessions = 0,
-    totalTimeSpent = 0,
-    recentActivities = [],
-    recentSessions = [],
-  } = analytics;
-
-
-
-  // ---------- Render ----------
   return (
-    <div className="flex flex-col gap-4 h-full w-full overflow-auto ">
-
-      {/* Header */}
-      <UserHeader user={user} />
-
-      {/* User Stats */}
-      {Object.keys(analytics).length > 0 && (
-        <div className="grid grid-cols-2 gap-4">
-          <NStatCard
-            icon={Activity}
-            label="Total Logins"
-            value={`${totalLogins} Total`}
-            subtext="All time logins"
-            classNames={{ icon: "bg-blue-50 text-blue-500" }}
-          />
-          <NStatCard
-            icon={Clock}
-            label="Time Spent"
-            value={`${totalTimeSpent} Hours`}
-            subtext={`${totalSessions} sessions`}
-            classNames={{ icon: "bg-green-50 text-green-500" }}
-          />
+    <div className="flex flex-col gap-4 h-full w-full overflow-auto">
+      <Card className="flex p-5 items-center flex-col md:flex-row md:gap-4">
+        <NAvatar src={user.image} fallback={user.name} size="xl" version={user.updatedAt} />
+        <div className="flex flex-col items-center md:items-start md:gap-0.5 min-w-0">
+          <p className="text-2xl font-bold break-words">{user.name}</p>
+          <p className="break-all">{user.email}</p>
+          <NBadge status={user.status} look="minimal" />
         </div>
-      )}
-
-      {/* Account Information */}
+      </Card>
       <NSection
         icon={User}
         title={t('users.view.accountInformation')}
@@ -91,173 +26,12 @@ const UserView = ({ user, isLoading, error, onRetry }) => {
         background="bg-card"
         className="border shadow-sm"
       >
-        <NSectionInfo
-          icon={Hash}
-          label="User ID"
-          value={id}
-        />
-        {email && (
-          <NSectionInfo
-            icon={Mail}
-            label="Email"
-            value={email}
-          />
-        )}
-        {phone && (
-          <NSectionInfo
-            icon={Phone}
-            label="Phone"
-            value={phone}
-          />
-        )}
-        {role && (
-          <NSectionInfo
-            icon={Shield}
-            label="Role"
-            value={role}
-            valueColor="font-medium text-primary"
-          />
-        )}
+        <NSectionInfo icon={Hash} label={t('users.table.id')} value={user.id} />
+        {user.email && <NSectionInfo icon={Mail} label={t('users.table.email')} value={user.email} />}
+        {user.phone && <NSectionInfo icon={Phone} label={t('teachers.form.phone')} value={user.phone} />}
+        <NSectionInfo icon={Shield} label={t('users.table.role')} value={user.role || t('common.notAssigned')} />
+        <NSectionInfo icon={UserCheck} label={t('users.table.status')} value={<NBadge status={user.status} />} />
       </NSection>
-
-      {/* Account Details */}
-      <NSection
-        icon={Settings}
-        title={t('users.view.accountDetails')}
-        iconColor="text-purple-500"
-        background="bg-card"
-        className="border shadow-sm"
-      >
-        {createdAt && (
-          <NSectionInfo
-            icon={Calendar}
-            label="Created"
-            value={displayDate(createdAt)}
-          />
-        )}
-        {updatedAt && (
-          <NSectionInfo
-            icon={Calendar}
-            label="Last Updated"
-            value={displayDate(updatedAt)}
-          />
-        )}
-        {lastLoginAt && (
-          <NSectionInfo
-            icon={Key}
-            label="Last Login"
-            value={displayDate(lastLoginAt)}
-          />
-        )}
-        <NSectionInfo
-          icon={UserCheck}
-          label="Status"
-          value={status}
-          valueColor={cn("font-medium", statusTextClass(status, undefined, 'neutral'))}
-        />
-      </NSection>
-
-      {/* Recent Activities */}
-      {recentActivities.length > 0 && (
-        <NSection
-          icon={Activity}
-          title={t('users.view.recentActivities')}
-          iconColor="text-green-500"
-          background="bg-card"
-          className="border shadow-sm"
-        >
-          <div className="flex flex-col gap-4">
-            {recentActivities.map((activity, index) => (
-              <div key={index} className="border rounded-lg p-4">
-                <div className="flex flex-row justify-between items-start mb-2">
-                  <div className="font-medium">{activity.action || 'Activity'}</div>
-                  <div className="text-xs text-muted-foreground">
-                    {displayDate(activity.timestamp)}
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  {activity.description && (
-                    <NSectionInfo
-                      label="Description"
-                      value={activity.description}
-                      valueColor="text-muted-foreground text-sm"
-                    />
-                  )}
-                  {activity.module && (
-                    <NSectionInfo
-                      label="Module"
-                      value={activity.module}
-                      className="text-xs"
-                    />
-                  )}
-                  {activity.ipAddress && (
-                    <NSectionInfo
-                      label="IP Address"
-                      value={activity.ipAddress}
-                      className="text-xs"
-                    />
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </NSection>
-      )}
-
-      {/* Recent Sessions */}
-      {recentSessions.length > 0 && (
-        <NSection
-          icon={Clock}
-          title={t('users.view.recentSessions')}
-          iconColor="text-yellow-500"
-          background="bg-card"
-          className="border shadow-sm"
-        >
-          <div className="flex flex-col gap-4">
-            {recentSessions.map((session, index) => (
-              <div key={index} className="border rounded-lg p-4">
-                <div className="flex flex-row justify-between items-start mb-2">
-                  <div className="font-medium">Session #{index + 1}</div>
-                  <div className="text-xs text-muted-foreground">
-                    {session.duration}h
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <NSectionInfo
-                    icon={Calendar}
-                    label="Started"
-                    value={displayDate(session.startTime)}
-                    className="text-xs"
-                  />
-                  {session.endTime && (
-                    <NSectionInfo
-                      icon={Calendar}
-                      label="Ended"
-                      value={displayDate(session.endTime)}
-                      className="text-xs"
-                    />
-                  )}
-                  {session.ipAddress && (
-                    <NSectionInfo
-                      label="IP Address"
-                      value={session.ipAddress}
-                      className="text-xs"
-                    />
-                  )}
-                  {session.userAgent && (
-                    <NSectionInfo
-                      label="Browser"
-                      value={session.userAgent}
-                      className="text-xs"
-                    />
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </NSection>
-      )}
-
     </div>
   );
 };

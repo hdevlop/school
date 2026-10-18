@@ -7,6 +7,7 @@ import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Eye, KeyRound, Pencil, Trash2, UserCog, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import UserForm from './UserForm';
+import UserView from './UserView';
 import ResetAccessDialog from './ResetAccessDialog';
 import { useUsers } from '../hooks/useUsers';
 import { useTranslation } from 'najm-i18n/react';
@@ -54,7 +55,7 @@ function UsersTable() {
   const handleView = (user) => {
     openDialog({
       title: t('users.dialogs.viewTitle'),
-      children: <UserForm user={user} />,
+      children: <UserView user={user} />,
       showButtons: false,
     });
   };

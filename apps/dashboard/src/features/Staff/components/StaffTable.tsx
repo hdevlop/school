@@ -279,7 +279,7 @@ const StaffTable = () => {
       cell: ({ getValue }) => {
         const status = getValue() as string;
         const tone = status === 'active' ? 'bg-emerald-600' : status === 'onLeave' ? 'bg-amber-500' : status === 'suspended' ? 'bg-rose-600' : 'bg-slate-600';
-        return <Badge className={`border-transparent text-white shadow-sm ${tone}`}>{status || 'unknown'}</Badge>;
+        return <Badge className={`border-transparent text-white shadow-sm ${tone}`}>{status ? t(`staff.status.${status}`) : t('common.notSpecified')}</Badge>;
       },
     },
   ], [t, language, majorMoney]);

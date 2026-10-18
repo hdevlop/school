@@ -8,7 +8,7 @@ export const usersValidationSchema = (t) => z.object({
     roleId: z.string().min(1, { message: t('users.validation.roleRequired') }),
 })
 
-// Edit = identity and role only. Credentials are never set from here: an admin
+// Edit = identity, role and account status. Credentials are never set from here: an admin
 // recovers an account with the Reset access action, which picks the right
 // consequence, forces a replacement and leaves an audit record behind.
 export const updateUsersValidationSchema = (t) => z.object({
@@ -17,6 +17,7 @@ export const updateUsersValidationSchema = (t) => z.object({
     email: z.string().email({ message: t('users.validation.emailInvalid') }),
     roleId: z.string().min(1, { message: t('users.validation.roleRequired') }),
     image: z.any().optional(),
+    status: z.enum(['active', 'inactive', 'pending']),
 })
 
 // Keep the old exports for backward compatibility until all references are updated

@@ -41,7 +41,7 @@ const ParentCard = ({ data }) => {
     <div
       role="link"
       tabIndex={0}
-      aria-label={`View ${parent.name}`}
+      aria-label={`${t('common.view')} ${parent.name}`}
       onClick={() => router.push(`/parents/${parent.id}`)}
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {

@@ -1,6 +1,7 @@
 'use client'
 
 import { NForm } from 'najm-kit'
+import { formatStatusLabel } from 'najm-kit/format'
 import { FormInput } from 'najm-kit';
 import React from 'react'
 import { Mail, User, Shield } from 'lucide-react'
@@ -11,7 +12,7 @@ import { useTranslation } from 'najm-i18n/react'
 
 const UserForm = ({ user = null, mode = 'create' }) => {
 
-   const { t } = useTranslation();
+   const { t, language } = useTranslation();
    const { pop } = useDialog();
    const { roles } = useRoles();
 
@@ -24,6 +25,7 @@ const UserForm = ({ user = null, mode = 'create' }) => {
       email: user?.email || '',
       image: user?.image || null,
       roleId: user?.roleId || '',
+      ...(isUpdateMode && { status: user?.status ?? 'active' }),
    }
 
    const roleOptions = roles?.map(role => ({
@@ -88,6 +90,19 @@ const UserForm = ({ user = null, mode = 'create' }) => {
                   icon={Shield}
                   items={roleOptions}
                />
+
+               {isUpdateMode && (
+                  <FormInput
+                     name='status'
+                     type='select'
+                     formLabel={t('users.table.status')}
+                     items={['active', 'inactive', 'pending'].map(value => ({
+                        value,
+                        label: formatStatusLabel(value, { t, language }),
+                     }))}
+                     required
+                  />
+               )}
 
                {!isUpdateMode && (
                   <p className='text-sm text-muted-foreground'>

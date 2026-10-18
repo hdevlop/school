@@ -2,8 +2,16 @@ import { deleteFileByPathApi, uploadFileApi } from './fileApi';
 import { api, formApi } from './http';
 
 export const getUsersApi = async () => {
-  const res = await api.get('/users');
-  return res.data;
+  // The API defaults to 50 accounts; NTable searches and paginates this list
+  // locally, so stopping at the first API page hides the remaining accounts.
+  const users: any[] = [];
+  const limit = 100;
+  for (let offset = 0; ; offset += limit) {
+    const res = await api.get('/users', { params: { limit, offset } });
+    const page = res.data.data;
+    users.push(...page);
+    if (page.length < limit) return { ...res.data, data: users };
+  }
 };
 
 export const getUserByIdApi = async (id) => {
