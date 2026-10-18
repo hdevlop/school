@@ -115,7 +115,7 @@ describe('payment state guards', () => {
   it.each([
     { payment: null, status: 404, message: 'Payment not found' },
     { payment: { paymentMethod: 'cash', status: 'deposited' }, status: 400, message: 'Check status changes are only allowed for check payments' },
-    { payment: { paymentMethod: 'check', status: 'pending' }, status: 409, message: 'Cannot transition check from pending to completed' },
+    { payment: { paymentMethod: 'check', status: 'pending' }, status: 409, message: 'Cannot transition check from Pending to Completed' },
   ])('rejects invalid check changes before further reads or writes: %j', async ({ payment, status, message }) => {
     const { service, calls } = checkHarness(payment);
     await expect(service.updateCheckStatus('payment-1', { status: 'completed' }))
