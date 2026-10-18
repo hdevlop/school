@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-18",
+  "baseCommit": "0ae8f19a9ffd44708e8290a2bbab93ed93b4feb3",
+  "workingTree": true,
+  "checks": [
+    {
+      "command": "bun test apps/dashboard/tests/features/Reports/config/expenseBreakdown.test.ts apps/dashboard/tests/features/Dashboard/config/monthTrend.test.ts",
+      "pass": 12,
+      "fail": 0,
+      "note": "Included in the configuration suite below"
+    },
+    {
+      "command": "bun run test:config",
+      "pass": 0,
+      "fail": 0
+    },
+    {
+      "command": "bun --env-file=apps/dashboard/.env.local scripts/run-finance-acceptance.ts FinanceReportErrorsTransport",
+      "pass": 3,
+      "fail": 0
+    },
+    {
+      "command": "bun run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "bun run build",
+      "exitCode": 0,
+      "outputDirectory": ".next-finance-reports-20261018"
+    }
+  ],
+  "files": [
+    {
+      "path": "apps/dashboard/src/features/Reports/components/ExpenseBreakdownChart.tsx",
+      "sha256": "e4539d9656863758fd6604bd719cc01d3b7b259c71e7071ee227e24b54961731"
+    },
+    {
+      "path": "apps/dashboard/src/features/Reports/config/expenseBreakdown.ts",
+      "sha256": "7709c309acedbc4b421ee26305c4e473bcfd0b24f90d5bddf0c56376a900f007"
+    },
+    {
+      "path": "apps/dashboard/src/features/Reports/components/CollectionByClassChart.tsx",
+      "sha256": "7576144c2dc6e1625ac550e09b3282c074d7fd08bf60fc4fc257f9e3dbb9f6c3"
+    },
+    {
+      "path": "apps/dashboard/src/features/Dashboard/components/IncomeExpensesTrend/index.tsx",
+      "sha256": "bce1a8a36724120ba62763df1f14f9d06bcfbcc38c33c8563118eb29447a20fd"
+    },
+    {
+      "path": "apps/dashboard/src/features/Dashboard/config/monthTrend.ts",
+      "sha256": "3dad13059c0d9e75bad5f33e7562382732e57eef461f4acc9a41305f75eade76"
+    },
+    {
+      "path": "apps/dashboard/tests/features/Reports/config/expenseBreakdown.test.ts",
+      "sha256": "7d3f7681609f3aaaf34b6f278b4212f6cd50f19206e1e044918fea656a9eaf7a"
+    },
+    {
+      "path": "apps/dashboard/tests/features/Dashboard/config/monthTrend.test.ts",
+      "sha256": "a855e96bb2b6c1bb0277a04996e50a4027f0462b06bcccd7fc266b928767d079"
+    },
+    {
+      "path": "packages/server/tests/acceptance/FinanceReportErrorsTransport.test.ts",
+      "sha256": "f53a7b26e64d273205452dba7119fd166a0e4c9b0a21c9c76c76b4151a972d4a"
+    },
+    {
+      "path": "scripts/run-finance-acceptance.ts",
+      "sha256": "8a4a68d208496e0f113501afbba551b3469bbedf8d39717b191c7facbd80e0e5"
+    }
+  ],
+  "browser": {
+    "discovery": "no available browser",
+    "casesExecuted": 0
+  },
+  "initialAttempt": {
+    "accepted": false,
+    "pass": 2,
+    "fail": 1,
+    "reason": "Test expected the actionable REST domain message in MCP; shared MCP suppresses ordinary domain messages too",
+    "resolution": "Verified the current pinned shared-source contract; final test records the generic MCP refusal, with actionable MCP messaging retained as a limitation"
+  },
+  "release": {
+    "committed": false,
+    "deployed": false,
+    "productionAcceptance": false
+  }
+}

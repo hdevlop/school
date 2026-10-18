@@ -1,0 +1,18 @@
+{
+  "database": "isolated local school_history_test",
+  "fixtureMarker": "academic-history-alerts-v1",
+  "startupMode": "development",
+  "testedResponseMode": "production",
+  "pass": 3,
+  "fail": 0,
+  "cases": [
+    "finance errors at the production response boundary > masks database details in REST and MCP and recovers after the fault",
+    "finance errors at the production response boundary > masks explicit-server-error details in REST and MCP and recovers after the fault",
+    "finance errors at the production response boundary > preserves REST client errors and safely refuses the same MCP call"
+  ],
+  "limitations": [
+    "Repository fault injection; production response handling, not production startup or deployment",
+    "A real PostgreSQL missing-column query and an explicit server error exercise internal failures",
+    "MCP generalizes ordinary domain failures as well as internal errors; REST preserves the 409 message"
+  ]
+}
