@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { useStudentRoutes } from '@/features/Transport/hooks/useStudentRoutes'
 import { TransportAssignmentForm } from '@/features/Transport/components/TransportAssignmentForm'
 import { useTranslation } from 'najm-i18n/react'
+import { useSchoolFormat } from '@/hooks/useSchoolFormat'
 
 type Props = {
   studentId?: string
@@ -16,6 +17,7 @@ type Props = {
 
 function TransportHistory({ routes }: { routes: any[] }) {
   const { t } = useTranslation()
+  const { displayDateOnly } = useSchoolFormat()
   if (!routes.length) return null
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-5">
@@ -24,7 +26,7 @@ function TransportHistory({ routes }: { routes: any[] }) {
         {routes.map((route: any) => (
           <div key={route.id} className="flex items-center justify-between gap-4 py-3 text-sm">
             <div><p className="font-medium text-slate-800">{route.vehicle?.name}</p><p className="text-xs text-slate-500">{route.pickupLocation}</p></div>
-            <p className="text-xs text-slate-500">{route.assignmentDate} → {route.unassignmentDate || '—'}</p>
+            <p className="text-xs text-slate-500">{displayDateOnly(route.assignmentDate)} → {route.unassignmentDate ? displayDateOnly(route.unassignmentDate) : '—'}</p>
           </div>
         ))}
       </div>
@@ -34,6 +36,7 @@ function TransportHistory({ routes }: { routes: any[] }) {
 
 export default function TransportTab({ studentId, student, isLoading: isStudentLoading }: Props) {
   const { t } = useTranslation()
+  const { displayDateOnly } = useSchoolFormat()
   const { openDialog } = useDialog()
   const {
     routes,
@@ -149,7 +152,7 @@ export default function TransportTab({ studentId, student, isLoading: isStudentL
             </div>
             <div className="rounded-2xl border border-slate-200 p-4">
               <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500"><CalendarDays className="h-4 w-4" />{t('transport.form.startDate')}</p>
-              <p className="mt-2 font-medium text-slate-900">{active.assignmentDate}</p>
+              <p className="mt-2 font-medium text-slate-900">{displayDateOnly(active.assignmentDate)}</p>
             </div>
           </div>
         </div>
