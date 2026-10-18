@@ -80,7 +80,7 @@ Two read-shape issues in the scripts were not product failures:
 | parents-M02 | PASS: duplicate CIN, phone and email each get 409 with their own French message and leave one parent. A student created with that parent's CIN is linked to the existing parent, with no second one | [lifecycle](parents-lifecycle-results.json), [supplement](parents-supplement-results.json) |
 | student-profile-R01 | PASS: the row's "Voir" dialog and the direct URL show the same name, code, class CE6, section A and status | [profiles](profiles-results.json) |
 | student-profile-R02 | PASS: all seven tabs render without a load failure; two parents, the attendance counts and the photo agree with the API | [profiles](profiles-results.json) |
-| student-profile-R03 | PASS for fees: a fee row opens `/students/:id/fees` for the same student. The Transport tab has no link to follow; it shows the same student's pickup | [profiles](profiles-results.json) |
+| student-profile-R03 | PASS for fees: a fee row opens `/students/:id/fees` for the same student, from the list's dialog and, since `d9238ff`, from the `/students/:id` page. The Transport tab has no link to follow; it shows the same student's pickup | [profiles](profiles-results.json), [recheck](profile-fixes-results.json) |
 | teacher-profile-R01 | PASS: all four tabs render; name, CIN, email, salary and nine classes agree with the API | [profiles](profiles-results.json) |
 | teacher-profile-R02 | PASS: 2025-2026 has no class routines on the demo, so 2024-2025 was compared. Nine sections and 18 weekly lessons match the teacher's published routines | [profiles](profiles-results.json) |
 | parent-profile-R01 | PASS: from the list and by URL, the same parent and child | [supplement](parents-supplement-results.json) |
@@ -109,13 +109,19 @@ Two read-shape issues in the scripts were not product failures:
   is refused in French, Arabic, Spanish and English, and the French login page
   shows it in French ([results](auth-i18n-results.json)).
 - **Fee rows open a fee record only from the profile dialog.** On
-  `/students/:id`, the Fees tab's rows are not clickable.
+  `/students/:id`, the Fees tab's rows are not clickable. **Fixed in
+  `d9238ff`.** On the demo, a row on the page opens that student's fee
+  record, and the list's dialog still closes before opening it
+  ([results](profile-fixes-results.json)).
 - **The transport start date is unformatted.** The Transport tab shows
   `2025-01-12`, where the other tabs use `01/09/2025`.
 - **The not-found subtext offers a retry.** An unknown teacher's profile says
   "Enseignant introuvable", then "Cette liste n'a pas pu être chargée.
   Veuillez réessayer" with a Retry button. A retry cannot help a deleted
-  record.
+  record. **Fixed in `d9238ff`.** On the demo, the Overview and Details tabs
+  of a missing teacher show only "Enseignant introuvable", with no retry; an
+  existing teacher's profile is unchanged
+  ([results](profile-fixes-results.json)).
 
 ## Environment note
 

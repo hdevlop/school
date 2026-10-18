@@ -1,0 +1,51 @@
+{
+ "name": "profile-fixes",
+ "scope": "student-profile R03 fee rows, teacher profile not-found (read-only)",
+ "origin": "https://myscolai.com",
+ "candidate": "d9238ff991ec30c0db6ce1c7a64d34785aa4b7b9",
+ "deployedRevision": "d9238ff991ec30c0db6ce1c7a64d34785aa4b7b9",
+ "worktreeDirty": 28,
+ "browser": "155.0.8059.80",
+ "startedUtc": "2026-10-18T15:56:59.189Z",
+ "results": [
+  {
+   "case": "student-profile-R03: a fee row on /students/:id opens the same student's fee record",
+   "outcome": "PASS",
+   "path": "/students/N-R8Y/fees",
+   "feeId": "present"
+  },
+  {
+   "case": "student-profile-R03: the students list dialog still closes before opening the fee record",
+   "outcome": "PASS",
+   "path": "/students/N-R8Y/fees",
+   "dialogOpen": false
+  },
+  {
+   "case": "teacher profile: a missing teacher says \"Enseignant introuvable\" with no failed-list text or retry",
+   "outcome": "PASS",
+   "Vue d'ensemble": {
+    "retry": 0,
+    "failedText": false
+   },
+   "Détails": {
+    "retry": 0,
+    "failedText": false
+   }
+  },
+  {
+   "case": "teacher profile: an existing teacher still renders its overview and details",
+   "outcome": "PASS",
+   "teacher": "sopCS",
+   "cin": "shown"
+  }
+ ],
+ "diagnostics": [],
+ "writes": [],
+ "mcpReads": [],
+ "nativeDialogs": [],
+ "apiWrites": [],
+ "completedUtc": "2026-10-18T15:57:14.905Z",
+ "counts": {
+  "PASS": 4
+ }
+}
