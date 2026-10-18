@@ -68,8 +68,20 @@ export const createFeeSchemas = (t: T) => {
       numberField(z.number({ error: t('fees.validation.amountInvalid') }).min(0, t('fees.validation.discountNegative'))),
     );
   const schedule = z.enum(SCHEDULE_VALUES, { error: required });
+  /**
+   * The discount is per period of a recurring fee and covers a one-time fee
+   * whole, so it can never exceed the amount; the server refuses it too.
+   */
+  const discountWithinAmount = (
+    data: { baseAmount?: number; discountAmount?: number },
+    context: z.RefinementCtx,
+  ) => {
+    if (data.baseAmount !== undefined && (data.discountAmount ?? 0) > data.baseAmount) {
+      context.addIssue({ code: 'custom', path: ['discountAmount'], message: t('fees.validation.discountTooLarge') });
+    }
+  };
 
-  const fee = z.object({
+  const feeFields = z.object({
     id: optionalId,
     studentId: requiredId,
     feeTypeId: requiredId,
@@ -82,9 +94,10 @@ export const createFeeSchemas = (t: T) => {
     assignedBy: optionalId.nullable(),
     notes: z.string().max(1000, tooLong).optional().nullable(),
   });
+  const fee = feeFields.superRefine(discountWithinAmount);
 
   /** One line of a bulk list: the student is named once, above the list. */
-  const bulkFeeItem = fee.omit({ studentId: true });
+  const bulkFeeItem = feeFields.omit({ studentId: true }).superRefine(discountWithinAmount);
   const feeList = z.array(bulkFeeItem).min(1, t('fees.validation.feesRequired'));
 
   const bulkFeeForm = z.object({ studentId: requiredId, fees: feeList });
@@ -108,6 +121,7 @@ export const createFeeSchemas = (t: T) => {
     discountReason: z.string().max(500, tooLong).optional().nullable(),
     notes: z.string().max(1000, tooLong).optional().nullable(),
   }).superRefine((data, context) => {
+    discountWithinAmount(data, context);
     if (data.academicYear && (!data.effectiveDate || !isDateOnly(data.effectiveDate))) {
       context.addIssue({ code: 'custom', path: ['effectiveDate'], message: t('fees.validation.chargeDateRequired') });
     }

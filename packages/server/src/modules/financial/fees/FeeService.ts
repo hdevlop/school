@@ -155,6 +155,7 @@ export class FeeService {
     const baseAmount = data.baseAmount !== undefined ? data.baseAmount : feeType.amount;
 
     const schedule = feeType.paymentType === 'oneTime' ? 'oneTime' : data.schedule; // FIX: SEC-014 — enforce catalog policy.
+    this.feeValidator.ensureDiscountWithinAmount(baseAmount, data.discountAmount);
     const { grossAmount, netAmount, totalDiscount } = calculateFeeAmounts(
       feeType.paymentType,
       baseAmount,
@@ -361,6 +362,11 @@ export class FeeService {
       const baseAmount = data.baseAmount !== undefined
         ? data.baseAmount
         : (existingFee.baseAmount || feeType.amount);
+      // A lowered amount alone clamps the stored discount (see calculateFeeAmounts);
+      // a discount the request names must fit the amount.
+      if (data.discountAmount !== undefined) {
+        this.feeValidator.ensureDiscountWithinAmount(baseAmount, discountAmount);
+      }
 
       const amounts = calculateFeeAmounts(
         feeType.paymentType,

@@ -88,6 +88,7 @@ export class FeeTypeService {
 
   async delete(id: string) {
     await this.feeTypeValidator.checkExists(id);
+    await this.feeTypeValidator.ensureNotInUse(id);
     return await this.feeTypeRepository.delete(id);
   }
 

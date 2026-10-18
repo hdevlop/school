@@ -41,6 +41,7 @@ const FeeTypeCard = ({ data }: any) => {
             label={t('feeTypes.table.category')}
             value={categoryLabel === categoryKey ? feeType.category : categoryLabel}
             valueColor="text-primary"
+            maxChars={32}
           />
 
           <NSectionInfo

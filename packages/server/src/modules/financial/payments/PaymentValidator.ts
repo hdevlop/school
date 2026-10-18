@@ -3,7 +3,6 @@ import { PaymentRepository } from './PaymentRepository';
 import { StudentValidator } from '../../students/StudentValidator';
 import { InstallmentValidator } from '../installments/InstallmentValidator';
 import { FeeRepository } from '../fees/FeeRepository';
-import { validateAllocationAmount } from '../utils';
 import { AllocationRepository } from '../allocations/AllocationRepository';
 import { InstallmentRepository } from '../installments/InstallmentRepository';
 import { createHash } from 'crypto';
@@ -294,14 +293,9 @@ export class PaymentValidator {
       const installmentKey = `${allocation.feeId}:${allocation.number}`;
       const alreadyAllocated = toCents(resolvedInstallment.paidAmount || 0)
         + (plannedByInstallment.get(installmentKey) || 0);
-      const validation = validateAllocationAmount(
-        Number(allocation.amount),
-        Number(resolvedInstallment.amount || 0),
-        alreadyAllocated / 100,
-      );
-
-      if (!validation.valid) {
-        Err(400, validation.error || 'Invalid allocation amount');
+      const availableCents = toCents(resolvedInstallment.amount || 0) - alreadyAllocated;
+      if (toCents(allocation.amount) > availableCents) {
+        Err(400, this.pt('allocationExceedsAvailable', { amount: allocation.amount, available: (availableCents / 100).toFixed(2), number: allocation.number }));
       }
 
       plannedByInstallment.set(

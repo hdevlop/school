@@ -220,7 +220,8 @@ export const calculateFeeAmounts = (
   } else {
     // Recurring fee
     grossAmount = baseAmount * monthsRemaining;
-    totalDiscount = discountVal * monthsRemaining;
+    // Never more than the fee, as the server stores it.
+    totalDiscount = Math.min(discountVal * monthsRemaining, grossAmount);
 
     switch (schedule) {
       case 'monthly':

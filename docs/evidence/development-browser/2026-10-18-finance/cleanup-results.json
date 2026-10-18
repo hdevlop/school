@@ -1,0 +1,63 @@
+{
+ "beforeA": {
+  "fees": [
+   "FT00:partiallyPaid:5500",
+   "FT01:paid:1000"
+  ],
+  "payments": [
+   "cash:completed:3200.00",
+   "cash:completed:1100.00",
+   "check:completed:1100.00",
+   "check:bounced:1100.00",
+   "cash:voided:1100.00",
+   "check:completed:1100.00",
+   "check:bounced:1100.00",
+   "cash:voided:1100.00"
+  ]
+ },
+ "deleteB": 200,
+ "deleteA": {
+  "status": 409,
+  "message": "Cet élève a un historique de paiements ou de crédits et ne peut pas être supprimé. Mettez fin à son inscription à la place."
+ },
+ "deleteTeacher": 200,
+ "deleteSection": {
+  "status": 409,
+  "message": "Cette section a des élèves ; déplacez-les avant de la supprimer ou de la déplacer"
+ },
+ "residue": {
+  "students": [
+   "PB1021A"
+  ],
+  "section": 1,
+  "feeTypes": 0,
+  "teacherLogin": "sign-in refused",
+  "pendingChecks": 0
+ },
+ "writes": [
+  {
+   "as": "admin",
+   "method": "DELETE",
+   "path": "/students/:id",
+   "status": 200
+  },
+  {
+   "as": "admin",
+   "method": "DELETE",
+   "path": "/students/:id",
+   "status": 409
+  },
+  {
+   "as": "admin",
+   "method": "DELETE",
+   "path": "/teachers/:id",
+   "status": 200
+  },
+  {
+   "as": "admin",
+   "method": "DELETE",
+   "path": "/sections/:id",
+   "status": 409
+  }
+ ]
+}

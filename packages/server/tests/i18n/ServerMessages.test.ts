@@ -52,6 +52,15 @@ function referencedKeys() {
 }
 
 describe('server error messages', () => {
+  it('translates the shared user validator duplicate-email refusal in every language', () => {
+    // This key is used inside published najm-auth, outside School's source scan.
+    for (const language of LANGUAGES) {
+      const message = lookup(language, 'users.errors.emailExists');
+      expect(typeof message).toBe('string');
+      expect(message).toBe(lookup(language, 'auth.errors.emailExists'));
+    }
+  });
+
   it('names a catalog key instead of an English literal', () => {
     const literals = files.flatMap(({ path, text }) =>
       [...text.matchAll(/Err(?:\.\w+)?\(\s*(?:\d{3}\s*,\s*)?(['`])((?:\\.|(?!\1).)*)\1/g)]
@@ -64,6 +73,16 @@ describe('server error messages', () => {
   it('never forwards another error\'s message as the refusal', () => {
     const forwarded = files.flatMap(({ path, text }) =>
       [...text.matchAll(/Err(?:\.\w+)?\(\s*(?:\d{3}\s*,\s*)?([\w?.]*\.message)\b/g)]
+        .map((match) => `${path}: ${match[1]}`));
+    expect(forwarded).toEqual([]);
+  });
+
+  // An over-allocated payment answered "Allocation amount (2000) exceeds
+  // remaining balance" in every language: a helper's `.error` text with a
+  // literal fallback.
+  it('never forwards a helper\'s error text or falls back to a literal', () => {
+    const forwarded = files.flatMap(({ path, text }) =>
+      [...text.matchAll(/Err(?:\.\w+)?\(\s*(?:\d{3}\s*,\s*)?([\w?.]*\.error\b|[^,()]+\|\|\s*['`])/g)]
         .map((match) => `${path}: ${match[1]}`));
     expect(forwarded).toEqual([]);
   });

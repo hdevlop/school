@@ -158,10 +158,10 @@
     },
     "otherAction": "عملية مالية أخرى",
     "checkStatuses": {
-      "pending": "????",
-      "deposited": "????",
-      "completed": "????",
-      "bounced": "?????"
+      "pending": "معلق",
+      "deposited": "مودع",
+      "completed": "محصّل",
+      "bounced": "مرفوض"
     },
     "fromYear": "من السنة",
     "toYear": "إلى السنة",
@@ -1843,6 +1843,7 @@
       "invalidStatus": "حالة الرسوم غير صالحة",
       "invalidDiscount": "التخفيض غير صالح",
       "invalidNetAmount": "يجب أن يكون المبلغ بعد التخفيض موجبًا",
+      "discountExceedsAmount": "لا يمكن أن يتجاوز الخصم مبلغ الرسوم (لكل فترة في الرسوم المتكررة)",
       "cannotPayCancelledInstallment": "لا يمكن دفع قسط ملغى",
       "installmentNumberExists": "يوجد مسبقًا قسط بهذا الرقم لهذه الرسوم",
       "allocationNotFound": "تخصيص الدفعة غير موجود",
@@ -1904,6 +1905,7 @@
       "amountInvalid": "أدخل مبلغًا صحيحًا",
       "baseAmountPositive": "يجب أن يكون المبلغ أكبر من 0",
       "discountNegative": "لا يمكن أن يكون الخصم سالبًا",
+      "discountTooLarge": "لا يمكن أن يتجاوز الخصم المبلغ (لكل فترة في الرسوم المتكررة)",
       "feesRequired": "أضف رسمًا واحدًا على الأقل",
       "chargeDateRequired": "اختر تاريخ لائحة القسم في هذه السنة الدراسية",
       "chargeDateInTerm": "اختر تاريخ فوترة بين شتنبر ويونيو"
@@ -2966,6 +2968,7 @@
       "invalidPaymentType": "نوع الدفع غير صالح",
       "idExists": "نوع الرسوم هذا موجود مسبقًا",
       "nameAlreadyExists": "يوجد مسبقًا نوع رسوم بهذا الاسم",
+      "inUse": "تستخدم رسوم التلاميذ نوع الرسوم هذا، لذا لا يمكن حذفه",
       "notFound": "نوع الرسوم غير موجود",
       "invalidAmount": "يجب أن يكون المبلغ أكبر من 0",
       "amountTooLarge": "لا يمكن أن يتجاوز المبلغ 1,000,000"
@@ -3395,6 +3398,7 @@
       "checkDueDate": "تاريخ استحقاق الشيك",
       "checkNumber": "رقم الشيك",
       "checkNumberPlaceholder": "أدخل رقم الشيك",
+      "checkDueDatePlaceholder": "اختر تاريخ الاستحقاق",
       "notes": "ملاحظات",
       "notesPlaceholder": "أدخل ملاحظات",
       "paymentDate": "تاريخ الدفع",
@@ -4722,7 +4726,7 @@
     "sections": {
       "schedule": "الجدول",
       "eventDetails": "تفاصيل الحدث",
-      "placeAndAudience": "?????? ????????"
+      "placeAndAudience": "المكان والجمهور"
     },
     "form": {
       "noClasses": "لم يتم العثور على أقسام",

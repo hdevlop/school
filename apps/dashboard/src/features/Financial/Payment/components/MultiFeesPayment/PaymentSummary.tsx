@@ -42,33 +42,35 @@ export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
 
             <div className={`flex flex-col gap-2.5 ${compact ? '' : 'min-h-0 flex-1'}`}>
                {/* Cashier Register Display */}
-               <div className="shrink-0 bg-linear-to-br from-green-900/30 to-emerald-900/30 border border-green-500/30 rounded-lg p-3">
-                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3">
+               {/* Columns follow the register's own width: the dialog's left
+                   column is too narrow for three amounts on a desktop screen. */}
+               <div className="@container shrink-0 bg-linear-to-br from-green-900/30 to-emerald-900/30 border border-green-500/30 rounded-lg p-3">
+                  <div className="grid grid-cols-1 gap-2 @lg:grid-cols-3 @lg:gap-3">
 
-                     <div className="flex items-center justify-between gap-2 text-center sm:flex-col sm:justify-start">
+                     <div className="flex items-center justify-between gap-2 text-center @lg:flex-col @lg:justify-start">
                         <Label className="text-gray-400 text-[10px] uppercase ">
                            {t('payments.register.totalSelected')}
                         </Label>
-                        <Label className="text-base sm:text-xl font-bold text-white">
+                        <Label className="text-base @lg:text-xl font-bold text-white">
                            {majorMoney(debtSelected)}
                         </Label>
                      </div>
 
-                     <div className="flex items-center justify-between gap-2 text-center sm:flex-col sm:justify-start">
+                     <div className="flex items-center justify-between gap-2 text-center @lg:flex-col @lg:justify-start">
                         <Label className="text-gray-400 text-[10px] uppercase ">
                            {t('payments.register.cashReceived')}
                         </Label>
-                        <Label className="text-base sm:text-xl font-bold text-blue-400 ">
+                        <Label className="text-base @lg:text-xl font-bold text-blue-400 ">
                            {majorMoney(cashReceived)}
                         </Label>
                      </div>
 
-                     <div className="flex items-center justify-between gap-2 text-center sm:flex-col sm:justify-start">
+                     <div className="flex items-center justify-between gap-2 text-center @lg:flex-col @lg:justify-start">
                         {/* Less cash than selected is money still owed, not change. */}
                         <Label className="text-gray-400 text-[10px] uppercase  ">
                            {change < 0 ? t('payments.register.missing') : `💸 ${t('payments.register.giveCustomer')}`}
                         </Label>
-                        <Label className={`text-base sm:text-xl font-bold  ${change < 0 ? 'text-red-400' :
+                        <Label className={`text-base @lg:text-xl font-bold  ${change < 0 ? 'text-red-400' :
                            change === 0 ? 'text-green-400' :
                               'text-green-300'
                            }`}>

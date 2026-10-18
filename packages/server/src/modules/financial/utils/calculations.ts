@@ -103,8 +103,9 @@ export const calculateFeeAmounts = (
     periods = 1;
   } else {
     grossCents = baseCents * monthsRemaining;
-    totalDiscountCents = discountCents * monthsRemaining;
-    
+    // Never more than the fee, like a one-time discount.
+    totalDiscountCents = Math.min(discountCents * monthsRemaining, grossCents);
+
     switch (schedule) {
       case 'monthly':
         periods = monthsRemaining;

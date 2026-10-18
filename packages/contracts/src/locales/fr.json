@@ -159,9 +159,9 @@
     "otherAction": "Autre opération financière",
     "checkStatuses": {
       "pending": "En attente",
-      "deposited": "D?pos?",
-      "completed": "Encaiss?",
-      "bounced": "Rejet?"
+      "deposited": "Déposé",
+      "completed": "Encaissé",
+      "bounced": "Rejeté"
     },
     "fromYear": "Année source",
     "toYear": "Année cible",
@@ -2555,6 +2555,7 @@
       "invalidStatus": "Statut de frais invalide",
       "invalidDiscount": "Remise invalide",
       "invalidNetAmount": "Le montant après remise doit être positif",
+      "discountExceedsAmount": "La remise ne peut pas dépasser le montant des frais (par période pour des frais récurrents)",
       "cannotPayCancelledInstallment": "Une échéance annulée ne peut pas être payée",
       "installmentNumberExists": "Une échéance avec ce numéro existe déjà pour ces frais",
       "allocationNotFound": "Affectation de paiement introuvable",
@@ -2616,6 +2617,7 @@
       "amountInvalid": "Saisissez un montant valide",
       "baseAmountPositive": "Le montant doit être supérieur à 0",
       "discountNegative": "La remise ne peut pas être négative",
+      "discountTooLarge": "La remise ne peut pas dépasser le montant (par période pour des frais récurrents)",
       "feesRequired": "Ajoutez au moins un frais",
       "chargeDateRequired": "Choisissez la date de la liste de classe dans cette année scolaire",
       "chargeDateInTerm": "Choisissez une date de facturation entre septembre et juin"
@@ -3595,6 +3597,7 @@
       "invalidPaymentType": "Type de paiement invalide",
       "idExists": "Ce type de frais existe déjà",
       "nameAlreadyExists": "Un type de frais avec ce nom existe déjà",
+      "inUse": "Des frais d'élèves utilisent ce type de frais ; il ne peut pas être supprimé",
       "notFound": "Type de frais introuvable",
       "invalidAmount": "Le montant doit être supérieur à 0",
       "amountTooLarge": "Le montant ne peut pas dépasser 1 000 000"
@@ -4024,6 +4027,7 @@
       "checkDueDate": "Date d'échéance du chèque",
       "checkNumber": "Numéro de chèque",
       "checkNumberPlaceholder": "Entrez le numéro de chèque",
+      "checkDueDatePlaceholder": "Sélectionnez la date d'échéance",
       "notes": "Notes",
       "notesPlaceholder": "Entrez des notes",
       "paymentDate": "Date de paiement",

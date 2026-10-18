@@ -176,6 +176,7 @@ const PaymentDetailsFormContent = () => {
                         icon={Hash}
                         formLabel={t('payments.form.checkNumber')}
                         placeholder={t('payments.form.checkNumberPlaceholder')}
+                        required={true}
                     />
 
                     <FormInput
@@ -183,6 +184,8 @@ const PaymentDetailsFormContent = () => {
                         type='date'
                         icon={CalendarClock}
                         formLabel={t('payments.form.checkDueDate')}
+                        placeholder={t('payments.form.checkDueDatePlaceholder')}
+                        required={true}
                     />
                     <FormInput
                         name='checkBank'

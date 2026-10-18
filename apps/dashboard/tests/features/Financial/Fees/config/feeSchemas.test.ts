@@ -37,6 +37,17 @@ describe('feeSchema', () => {
     expect(feeSchema.safeParse({ ...fee, discountAmount: -1 }).success).toBe(false);
   });
 
+  // The discount is per period, so above the amount the server would store a
+  // discount larger than the fee and a net of 0.
+  it('refuses a discount above the amount, but allows a full one', () => {
+    const tooLarge = feeSchema.safeParse({ ...fee, baseAmount: 400, discountAmount: 401 });
+    expect(tooLarge.success).toBe(false);
+    expect(tooLarge.error?.issues[0]).toMatchObject({ path: ['discountAmount'], message: 'fees.validation.discountTooLarge' });
+    expect(feeSchema.safeParse({ ...fee, baseAmount: 400, discountAmount: 400 }).success).toBe(true);
+    expect(bulkFeeFormSchema.safeParse({ studentId: 'st1', fees: [{ ...item, baseAmount: '300', discountAmount: '350' }] }).success).toBe(false);
+    expect(classBulkFeeFormSchema.safeParse({ classId: 'cls1', feeTypeId: 'ft1', schedule: 'annually', baseAmount: 100, discountAmount: 150 }).success).toBe(false);
+  });
+
   it('reads a cleared base amount (null from the number input) as not given', () => {
     const parsed = feeSchema.parse({ ...fee, baseAmount: null });
 

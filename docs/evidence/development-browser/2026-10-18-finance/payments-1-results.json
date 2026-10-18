@@ -1,0 +1,97 @@
+{
+ "name": "payments-1",
+ "scope": "payments R01, R02, M01",
+ "origin": "http://127.0.0.1:3102",
+ "candidate": "db257c4b36b0e54e44f25224fa9146cc0b7d3850",
+ "worktreeDirty": 46,
+ "browser": "155.0.8059.80",
+ "startedUtc": "2026-10-18T00:06:07.861Z",
+ "results": [
+  {
+   "case": "payments-R01: per-fee amounts due and \"pay all overdue\" reconcile with the read",
+   "outcome": "PASS",
+   "tuitionDue": 2200,
+   "registrationDue": 1000,
+   "allOverdue": 3200,
+   "items": [
+    "Scolarité #1",
+    "Scolarité #2",
+    "Inscription #1"
+   ]
+  },
+  {
+   "case": "payments-R01: multi-fee selection by fee and single-installment \"Payer\" each total the selection",
+   "outcome": "PASS",
+   "tuitionOnly": "2.200,00",
+   "both": "3.200,00",
+   "single": "1.100,00"
+  },
+  {
+   "case": "payments-R02: desk methods offered; a check requires its number and due date (French, no request)",
+   "outcome": "FAIL",
+   "error": "no French check refusal"
+  },
+  {
+   "case": "payments-R02: empty, zero, negative and insufficient amounts cannot submit; refusals are French",
+   "outcome": "PASS",
+   "emptyDisabled": true,
+   "zero": "disabled",
+   "negative": [
+    "Le montant doit être supérieur à 0 Mode de paiement * Espèces Espèces Espèces Chèque Virement bancaire Carte de crédit Date de paiement * 18 octobre 2026 Référence (facultatif) Notes (facultatif) 💰 Caisse TOTAL SÉLECTIONNÉ 3"
+   ],
+   "insufficient": [
+    "Liquidités insuffisantes. Ajoutez 2700.00 MAD pour couvrir les échéances sélectionnées."
+   ]
+  },
+  {
+   "case": "payments-M01: record one cash payment across both owned fees (pay all overdue)",
+   "outcome": "PASS",
+   "paymentId": "YbX-c96sPb",
+   "receipt": "RCP-20261018-HQFHOJSEIV",
+   "prompt": "Paiement enregistré Reçu N° RCP-20261018-HQFHOJSEIV 3.200,00 MAD Fermer Imprimer le reçu Fermer",
+   "toasts": [
+    "Paiement enregistré avec succès"
+   ]
+  },
+  {
+   "case": "payments-M01: reload reconciles amount, allocation, remaining balance and status",
+   "outcome": "PASS",
+   "receipt": "RCP-20261018-HQFHOJSEIV",
+   "allocations": [
+    "2oLo5HKagN:1000.00",
+    "FlYqomwWPk:2200.00"
+   ],
+   "tuition": "partiallyPaid",
+   "registration": "paid",
+   "summary": "3200.00"
+  }
+ ],
+ "diagnostics": [],
+ "writes": [
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments"
+  }
+ ],
+ "mcpReads": [
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list"
+ ],
+ "apiWrites": [],
+ "completedUtc": "2026-10-18T00:06:40.191Z",
+ "counts": {
+  "PASS": 5,
+  "FAIL": 1
+ }
+}

@@ -1,0 +1,216 @@
+{
+ "name": "payments-2",
+ "scope": "payments R02 (check refusal), M02, M03; financial-operations R01",
+ "origin": "http://127.0.0.1:3102",
+ "candidate": "db257c4b36b0e54e44f25224fa9146cc0b7d3850",
+ "worktreeDirty": 46,
+ "browser": "155.0.8059.80",
+ "startedUtc": "2026-10-18T00:10:49.676Z",
+ "results": [
+  {
+   "case": "payments-R02: a check requires its number and due date; refusals French, placeholder translated, no request",
+   "outcome": "PASS",
+   "placeholder": "Sélectionnez la date d'échéance"
+  },
+  {
+   "case": "payments-M02: more cash than selected records only the selection and shows the change to give back",
+   "outcome": "PASS",
+   "change": "400,00",
+   "amount": "1100.00",
+   "receipt": "RCP-20261018-MVQMHEFQA4"
+  },
+  {
+   "case": "payments-M02: the API refuses an allocation above the installment, in French, and records nothing",
+   "outcome": "FAIL",
+   "error": "English: Allocation amount (2000) exceeds remaining balance (1100.00)"
+  },
+  {
+   "case": "payments-M02: a double-click on \"Enregistrer\" records one payment",
+   "outcome": "PASS",
+   "postsSent": 1,
+   "completedPaymentsOf1100": 2,
+   "installment4": "paid"
+  },
+  {
+   "case": "payments-M02: replaying a payment with the same idempotency key returns the first and records once",
+   "outcome": "PASS",
+   "first": 200,
+   "second": 200,
+   "sameId": true
+  },
+  {
+   "case": "payments-M03: record an owned check for installment 5; it is pending and reserves the installment",
+   "outcome": "PASS",
+   "receipt": "RCP-20261018-3DIN-DGOFF",
+   "installment5": "pending"
+  },
+  {
+   "case": "financial-operations-R01 (local): the pending check is listed and the count equals the read",
+   "outcome": "PASS",
+   "count": 1,
+   "row": " Pbtest Alpha Pbtest Alpha PB1021A PB1021-CHK-5 Banque PB1021 25/10/2026 1.100,00 MAD En attente Déposer ",
+   "panels": [
+    "Chèques en attente"
+   ]
+  },
+  {
+   "case": "payments-M03: deposit, then encash the check from the payment history; totals and history follow",
+   "outcome": "FAIL",
+   "error": "raw status in toast: Chèque marqué deposited | Chèque marqué completed"
+  },
+  {
+   "case": "payments-M03: cancelling the bounce prompt sends nothing; a bounce with a reason frees the installment",
+   "outcome": "PASS",
+   "toasts": [
+    "Chèque marqué bounced"
+   ],
+   "installment6": "pending",
+   "prompts": [
+    {
+     "as": "admin",
+     "type": "prompt",
+     "message": "Motif du rejet du chèque",
+     "answer": "(dismissed)"
+    },
+    {
+     "as": "admin",
+     "type": "prompt",
+     "message": "Motif du rejet du chèque",
+     "answer": "PB1021 provision insuffisante"
+    }
+   ]
+  },
+  {
+   "case": "payments-M03: void the over-tendered cash payment with a reason; installment 3 is due again",
+   "outcome": "PASS",
+   "status": "voided",
+   "toasts": [],
+   "installment3": "pending"
+  },
+  {
+   "case": "payments-M03: summary and history agree after the transitions",
+   "outcome": "PASS",
+   "completed": 6500,
+   "statuses": [
+    "cash:completed:3200.00",
+    "cash:completed:1100.00",
+    "cash:completed:1100.00",
+    "check:completed:1100.00",
+    "check:bounced:1100.00",
+    "cash:voided:1100.00"
+   ]
+  }
+ ],
+ "diagnostics": [],
+ "writes": [
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments/:id/check-status"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments/:id/check-status"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments/:id/check-status"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments/:id/void"
+  }
+ ],
+ "mcpReads": [
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list"
+ ],
+ "nativeDialogs": [
+  {
+   "as": "admin",
+   "type": "prompt",
+   "message": "Motif du rejet du chèque",
+   "answer": "(dismissed)"
+  },
+  {
+   "as": "admin",
+   "type": "prompt",
+   "message": "Motif du rejet du chèque",
+   "answer": "PB1021 provision insuffisante"
+  },
+  {
+   "as": "admin",
+   "type": "prompt",
+   "message": "Motif de l'annulation de ce paiement",
+   "answer": "PB1021 annulation de test"
+  }
+ ],
+ "apiWrites": [
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/payments",
+   "status": 400
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/payments",
+   "status": 200
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/payments",
+   "status": 200
+  }
+ ],
+ "completedUtc": "2026-10-18T00:11:52.289Z",
+ "counts": {
+  "PASS": 9,
+  "FAIL": 2
+ }
+}

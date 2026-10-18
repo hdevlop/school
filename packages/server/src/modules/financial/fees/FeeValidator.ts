@@ -2,7 +2,7 @@ import { Err, I18n, Service } from '../../../najm';
 import { FeeRepository } from './FeeRepository';
 import { StudentValidator } from '../../students/StudentValidator';
 import { FeeTypeValidator } from '../feeTypes/FeeTypeValidator';
-import { FeeEffectiveDateError, isValidDateOnly } from '../utils';
+import { FeeEffectiveDateError, isValidDateOnly, toCents } from '../utils';
 
 @Service()
 export class FeeValidator {
@@ -133,6 +133,15 @@ export class FeeValidator {
       Err(400, this.t('invalidStatus'));
     }
     return true;
+  }
+
+  /**
+   * A recurring fee's discount is per period and a one-time fee's covers it
+   * whole. Above the amount, the total discount would exceed the gross and the
+   * net would silently read 0.
+   */
+  ensureDiscountWithinAmount(baseAmount: number | string | null | undefined, discountAmount: number | string | null | undefined) {
+    if (toCents(discountAmount ?? 0) > toCents(baseAmount ?? 0)) Err(400, this.t('discountExceedsAmount'));
   }
 
   async validateDiscountAmount(netAmount: number, discountAmount: number) {

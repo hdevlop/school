@@ -1,0 +1,116 @@
+{
+ "name": "payments-3",
+ "scope": "payments M02/M03 recheck after fixes",
+ "origin": "http://127.0.0.1:3102",
+ "candidate": "db257c4b36b0e54e44f25224fa9146cc0b7d3850",
+ "worktreeDirty": 49,
+ "browser": "155.0.8059.80",
+ "startedUtc": "2026-10-18T00:19:14.989Z",
+ "results": [
+  {
+   "case": "payments-M02: the API refuses an allocation above the installment in French and records nothing",
+   "outcome": "PASS",
+   "fr": "L'affectation de 2000 dépasse le disponible de 1100.00 pour l'échéance n°8",
+   "ar": "التخصيص بمبلغ 2000 يتجاوز المتاح 1100.00 للقسط رقم 8"
+  },
+  {
+   "case": "payments-M03: deposit and encash toasts name the status in French",
+   "outcome": "PASS",
+   "deposit": [
+    "Chèque marqué Déposé"
+   ],
+   "complete": [
+    "Chèque marqué Encaissé"
+   ]
+  },
+  {
+   "case": "payments-M03: bounce toast names the status in French; void from the row menu confirms with a toast",
+   "outcome": "PASS",
+   "bounce": [
+    "Chèque marqué Rejeté"
+   ],
+   "voidToasts": [
+    "Paiement annulé"
+   ]
+  }
+ ],
+ "diagnostics": [],
+ "writes": [
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments/:id/check-status"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments/:id/check-status"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments/:id/check-status"
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/payments/:id/void"
+  }
+ ],
+ "mcpReads": [
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list"
+ ],
+ "nativeDialogs": [
+  {
+   "as": "admin",
+   "type": "prompt",
+   "message": "Motif du rejet du chèque",
+   "answer": "PB1021 provision insuffisante"
+  },
+  {
+   "as": "admin",
+   "type": "prompt",
+   "message": "Motif de l'annulation de ce paiement",
+   "answer": "PB1021 annulation de test"
+  }
+ ],
+ "apiWrites": [
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/payments",
+   "status": 400
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/payments",
+   "status": 400
+  }
+ ],
+ "completedUtc": "2026-10-18T00:19:52.981Z",
+ "counts": {
+  "PASS": 3
+ }
+}

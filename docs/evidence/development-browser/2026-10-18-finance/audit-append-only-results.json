@@ -1,0 +1,44 @@
+{
+ "listStatus": 200,
+ "count": 5,
+ "entryAction": "payment.voided",
+ "attempts": {
+  "PUT": 404,
+  "PATCH": 404,
+  "DELETE": 404
+ },
+ "unchanged": true,
+ "teacherList": 403,
+ "writes": [
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/financial-audit-logs/list",
+   "status": 200
+  },
+  {
+   "as": "admin",
+   "method": "PUT",
+   "path": "/financial-audit-logs/:id",
+   "status": 404
+  },
+  {
+   "as": "admin",
+   "method": "PATCH",
+   "path": "/financial-audit-logs/:id",
+   "status": 404
+  },
+  {
+   "as": "admin",
+   "method": "DELETE",
+   "path": "/financial-audit-logs/:id",
+   "status": 404
+  },
+  {
+   "as": "teacher-a",
+   "method": "POST",
+   "path": "/financial-audit-logs/list",
+   "status": 403
+  }
+ ]
+}

@@ -11,7 +11,7 @@ interface InstallmentPreviewTableProps {
 
 const InstallmentPreviewTable = ({ installments, visible = true }: InstallmentPreviewTableProps) => {
    const { t } = useTranslation()
-   const { majorMoney } = useSchoolFormat()
+   const { majorMoney, displayDateOnly } = useSchoolFormat()
 
    if (!visible || !installments || installments.length === 0) return null
 
@@ -44,7 +44,7 @@ const InstallmentPreviewTable = ({ installments, visible = true }: InstallmentPr
                   {installments.map((inst) => (
                      <tr key={inst.number} className="border-b last:border-b-0">
                         <td className="px-3 py-1.5 text-muted-foreground">{inst.number}</td>
-                        <td className="px-3 py-1.5">{inst.dueDate}</td>
+                        <td className="px-3 py-1.5">{displayDateOnly(inst.dueDate)}</td>
                         <td className="px-3 py-1.5 text-right font-medium">{majorMoney(inst.amount)}</td>
                      </tr>
                   ))}

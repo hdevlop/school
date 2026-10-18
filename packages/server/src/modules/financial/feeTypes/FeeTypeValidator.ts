@@ -60,6 +60,10 @@ export class FeeTypeValidator {
     return existingFeeType;
   }
 
+  async ensureNotInUse(id: string) {
+    if (await this.feeTypeRepository.isInUse(id)) Err(409, this.t('inUse'));
+  }
+
   async checkNameExists(name) {
     const feeType = await this.feeTypeRepository.getByName(name);
     if (!feeType) {

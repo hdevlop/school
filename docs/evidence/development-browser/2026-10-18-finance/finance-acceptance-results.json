@@ -1,0 +1,26 @@
+[
+  {
+    "name": "FinancialAuditHistoryDatabase",
+    "exitCode": 0,
+    "pass": 1,
+    "fail": 0
+  },
+  {
+    "name": "FinancialAuditHistoryTransport",
+    "exitCode": 0,
+    "pass": 2,
+    "fail": 0
+  },
+  {
+    "name": "FinancialNotificationsHistoryDatabase",
+    "exitCode": 0,
+    "pass": 1,
+    "fail": 0
+  },
+  {
+    "name": "FinancialNotificationsHistoryTransport",
+    "exitCode": 0,
+    "pass": 1,
+    "fail": 0
+  }
+]

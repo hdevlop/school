@@ -1,0 +1,119 @@
+{
+  "runDate": "2026-10-18",
+  "origin": "http://127.0.0.1:3102",
+  "target": "Existing development demo and its local database; owner authorized changing demo data on 2026-10-18",
+  "source": {
+    "baseCommit": "db257c4b36b0e54e44f25224fa9146cc0b7d3850",
+    "workingTree": true,
+    "note": "Fingerprint after the accepted runs. The tree also holds the Payments coder's uncommitted receipt and cheque-replacement work, which the dev server served during the run.",
+    "files": [
+      {
+        "path": "apps/dashboard/src/features/Financial/FeeTypes/components/FeeTypeCard.tsx",
+        "sha256": "048e52a3b22acc76054a7749335fe50859806a18f31a68084d5de2766e09042c"
+      },
+      {
+        "path": "apps/dashboard/src/features/Financial/Fees/components/InstallmentPreviewTable.tsx",
+        "sha256": "105cbb96cfa4ff30e0c59a2305cf18b163837d91d0f2411b457cfb38fcf62118"
+      },
+      {
+        "path": "apps/dashboard/src/features/Financial/Fees/config/feeSchemas.ts",
+        "sha256": "3464d10da43a10ac543d5770e3fdf910c9aaf7bfdb41026dea872d9ca98f276d"
+      },
+      {
+        "path": "apps/dashboard/src/features/Financial/Fees/utils/feeUtils.ts",
+        "sha256": "d49422be5aed1d1936b5018951753b4f9b313d99870d97c4aa6189d07661a5af"
+      },
+      {
+        "path": "apps/dashboard/src/features/Financial/Payment/components/MultiFeesPayment/PaymentForm.tsx",
+        "sha256": "3eb1a9676db76e5722e1bc5b1e6396cf4ca80f4880f8be60b14e6ddb4e3ce07a"
+      },
+      {
+        "path": "apps/dashboard/src/features/Financial/Payment/components/MultiFeesPayment/PaymentSummary.tsx",
+        "sha256": "9570e8544fae827031c6dcb1b7ac11de779b7fcac50c2384a0622986e89e3113"
+      },
+      {
+        "path": "apps/dashboard/src/features/Financial/Payment/components/PaymentsTable.tsx",
+        "sha256": "d83bdf50c7a43ef23cb363ede1a1dc7f21b1305257505a15d0244dca252f3f91"
+      },
+      {
+        "path": "packages/contracts/src/locales/ar.json",
+        "sha256": "cb89543691c14adc38d03cd6cd686474cc331b506d412e4b5cb88cc499769532"
+      },
+      {
+        "path": "packages/contracts/src/locales/en.json",
+        "sha256": "47ccd9fdf2961d14b8e4597bbab3706607e4b086b1fb8b825832b86d401e5a57"
+      },
+      {
+        "path": "packages/contracts/src/locales/es.json",
+        "sha256": "d6f877b40fafcc49cc287ccce596cbfb799cba9746b430f90dbd1c1bb25c6a7b"
+      },
+      {
+        "path": "packages/contracts/src/locales/fr.json",
+        "sha256": "8a7055639352512fed197405ff3c4c82156f94c7c6d04c06c18c34b355b34377"
+      },
+      {
+        "path": "packages/server/src/modules/financial/feeTypes/FeeTypeRepository.ts",
+        "sha256": "c42318b49f164a893ac2a4f07091e25dfdd7b4ff62a8ca630f7f0b97a4452b2e"
+      },
+      {
+        "path": "packages/server/src/modules/financial/feeTypes/FeeTypeService.ts",
+        "sha256": "77a4e634c6261a27c1568e06315fa2d8ed7dcb8229d2aa55d17e4fab7ced59b2"
+      },
+      {
+        "path": "packages/server/src/modules/financial/feeTypes/FeeTypeValidator.ts",
+        "sha256": "afef00a22670e42de430b3802c4f525f8816056c95025625cf109a7da4773a0f"
+      },
+      {
+        "path": "packages/server/src/modules/financial/fees/FeeService.ts",
+        "sha256": "cde41f0622b3de9c005daf533ed1f3f39193b701bbd8d65c80cb9dde695aee46"
+      },
+      {
+        "path": "packages/server/src/modules/financial/fees/FeeValidator.ts",
+        "sha256": "f9c60a46b39794c1a7b40e0c02db92429d2fe446f029202817852f125fe571cc"
+      },
+      {
+        "path": "packages/server/src/modules/financial/payments/PaymentValidator.ts",
+        "sha256": "d4b6cfb4ee149e5335506c27a1addcb13fca00238e397c0a639af0c3b00bd6a4"
+      },
+      {
+        "path": "packages/server/src/modules/financial/utils/calculations.ts",
+        "sha256": "df87ec4591c15fdb5c7fd38480dd59a01a5efc5ac493d7ef14ac0fb619744d42"
+      },
+      {
+        "path": "packages/server/src/modules/financial/utils/recalculations.ts",
+        "sha256": "7b43f1da6836a461582007675bae827e8139b744eb40c9cadaaad542255bd277"
+      }
+    ]
+  },
+  "browser": {
+    "channel": "Chrome",
+    "version": "155.0.8059.80",
+    "headless": true,
+    "locale": "fr-FR",
+    "viewports": [
+      "1440x900",
+      "390x844"
+    ],
+    "extraLocale": "ar (RTL)"
+  },
+  "identities": {
+    "allowed": "admin (local seed admin)",
+    "denied": "teacher-a (run-owned teacher login, removed at the end)"
+  },
+  "checks": {
+    "lint": "bun run lint: exit 0",
+    "typecheck": "bun run typecheck: exit 0",
+    "test:finance": "146 pass, 0 fail",
+    "test:security": "106 pass, 0 fail (adds FeeTypeDelete and FeeDiscountBounds)",
+    "test:server-i18n": "17 pass, 0 fail (adds the helper-error/literal-fallback guard; fails on the pre-fix PaymentValidator)",
+    "test:config": "529 pass, 0 fail (adds the discount schema test and the catalog \"?\" guard)",
+    "i18n:check": "Missing keys: none",
+    "finance acceptance (school_history_test)": "FinancialAudit and FinancialNotifications database and transport: 5 pass, 0 fail",
+    "build": "bun run build: exit 0"
+  },
+  "limitations": [
+    "Local development target, not production; no production checklist case is ticked from these results.",
+    "One academic year exists locally, so fees-R02 (historical year) could not run.",
+    "The dev server and browser disagree on the Casablanca date around midnight UTC; date-dependent steps used explicit dates."
+  ]
+}

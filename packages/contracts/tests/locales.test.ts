@@ -56,6 +56,17 @@ describe('schoolI18n', () => {
     }
   });
 
+  // A write in the wrong encoding turned "Déposé" into "D?pos?" and whole
+  // Arabic words into "????": a letter between question marks, or two in a
+  // row, is a lost character, never punctuation.
+  it('has no letter lost to a question mark', () => {
+    for (const catalog of [en, fr, ar, es]) {
+      const damaged = leaves(catalog as Catalog).filter(([, value]) =>
+        /\?\?|[\p{L}]\?[\p{L}]/u.test(String(value)));
+      expect(damaged).toEqual([]);
+    }
+  });
+
   it('falls back to English for a key a translation does not define', () => {
     const french = new Set(leaves(fr as Catalog).map(([key]) => key));
     const missing = leaves(en as Catalog).find(([key]) => !french.has(key));

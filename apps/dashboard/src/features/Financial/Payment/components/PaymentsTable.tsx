@@ -65,21 +65,32 @@ function PaymentsTable({studentId}) {
     });
   };
 
+  // As on the cheques page: a refusal is shown rather than escaping as an
+  // unhandled rejection, and the check status reads in the page language.
+  const runAction = async (action: () => Promise<unknown>, success: string) => {
+    try {
+      await action();
+      await refetch();
+      toast.success(success);
+    } catch (actionError: any) {
+      toast.error(actionError?.message || t('financialOperations.failed'));
+    }
+  };
+
   const handleView = (payment) => {
     const updateCheck = async (status) => {
       const reason = status === 'bounced' ? window.prompt(t('payments.dialogs.bounceReason')) : undefined;
       if (status === 'bounced' && !reason) return;
-      await updateCheckStatusApi(payment.id, { status, reason });
-      await refetch();
-      toast.success(t('payments.success.checkMarked', { status }));
+      await runAction(
+        () => updateCheckStatusApi(payment.id, { status, reason }),
+        t('payments.success.checkMarked', { status: t(`financialOperations.checkStatuses.${status}`) }),
+      );
     };
 
     const voidPayment = async () => {
       const reason = window.prompt(t('payments.dialogs.voidReason'));
       if (!reason) return;
-      await voidPaymentApi(payment.id, reason);
-      await refetch();
-      toast.success(t('payments.success.voided'));
+      await runAction(() => voidPaymentApi(payment.id, reason), t('payments.success.voided'));
     };
 
     openDialog({
@@ -142,8 +153,7 @@ function PaymentsTable({studentId}) {
       onConfirm: async () => {
         const reason = window.prompt(t('payments.dialogs.voidReason'));
         if (!reason) return;
-        await voidPaymentApi(payment.id, reason);
-        await refetch();
+        await runAction(() => voidPaymentApi(payment.id, reason), t('payments.success.voided'));
       }
     });
   };

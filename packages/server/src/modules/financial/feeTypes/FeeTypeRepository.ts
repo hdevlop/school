@@ -1,6 +1,6 @@
 import { Repository } from '../../../najm';
 import { eq, desc, count, sql } from 'drizzle-orm';
-import { feeTypes } from '../../../database/schema';
+import { fees, feeTypes } from '../../../database/schema';
 import { DB } from '../../../database/db';
 
 const feeTypeSelect = {
@@ -99,6 +99,13 @@ export class FeeTypeRepository {
   // ========================================
   // DELETE_METHODS
   // ========================================
+
+  // Any year's fee counts: the foreign key restricts the delete either way.
+  async isInUse(id: string) {
+    const [row] = await this.db.select({ id: fees.id }).from(fees)
+      .where(eq(fees.feeTypeId, id)).limit(1);
+    return !!row;
+  }
 
   async delete(id: string) {
     const [deletedFeeType] = await this.db

@@ -1,0 +1,209 @@
+{
+ "name": "fee-types",
+ "scope": "fee-types R01, M01, M02",
+ "origin": "http://127.0.0.1:3102",
+ "candidate": "db257c4b36b0e54e44f25224fa9146cc0b7d3850",
+ "worktreeDirty": 51,
+ "browser": "155.0.8059.80",
+ "startedUtc": "2026-10-18T00:31:36.084Z",
+ "results": [
+  {
+   "case": "fee-types-R01: card view agrees with the read (name, category, amount)",
+   "outcome": "PASS",
+   "cards": 9,
+   "truncatedCategory": []
+  },
+  {
+   "case": "fee-types-R01: table rows agree with the read: category, amount and payment type (recurrence)",
+   "outcome": "PASS",
+   "rows": 9,
+   "headers": [
+    "ID",
+    "NOM",
+    "CATÉGORIE",
+    "MONTANT",
+    "TYPE DE PAIEMENT",
+    "DESCRIPTION",
+    "STATUT"
+   ]
+  },
+  {
+   "case": "fee-types-R01: name search and category filter narrow the list",
+   "outcome": "PASS",
+   "byName": 1,
+   "byCategory": 1
+  },
+  {
+   "case": "fee-types-M01: empty, short-name, zero, negative and too-large amounts are refused in French; no request sent",
+   "outcome": "PASS",
+   "empty": [
+    "Le nom doit contenir au moins 2 caractères",
+    "Le montant est obligatoire"
+   ],
+   "shortZero": [
+    "Le nom doit contenir au moins 2 caractères",
+    "Le montant doit être supérieur à 0"
+   ],
+   "negative": [
+    "Le nom doit contenir au moins 2 caractères",
+    "Le montant doit être supérieur à 0"
+   ],
+   "tooLarge": [
+    "Le nom doit contenir au moins 2 caractères",
+    "Ce montant est trop élevé"
+   ]
+  },
+  {
+   "case": "fee-types-M01: the payment type select offers only Récurrent and Unique",
+   "outcome": "PASS",
+   "options": [
+    "Récurrent",
+    "Unique"
+   ]
+  },
+  {
+   "case": "fee-types-M01: create an owned one-time type; it lists and reads back exactly",
+   "outcome": "PASS",
+   "toast": false,
+   "row": " etMd8 PB1021 Atelier Autre 150,00 MAD Unique Fixture PB1021 Actif "
+  },
+  {
+   "case": "fee-types-M01: edit the owned type (amount 175, Récurrent); reload shows the change",
+   "outcome": "PASS",
+   "prior": "150.00",
+   "row": " etMd8 PB1021 Atelier Autre 175,00 MAD Récurrent Fixture PB1021 Actif ",
+   "tableViewPersisted": false
+  },
+  {
+   "case": "fee-types-M01: the API refuses an invalid recurrence and amount in French; the record is unchanged",
+   "outcome": "PASS",
+   "messages": [
+    "Option invalide : une valeur parmi \"recurring\"|\"oneTime\" attendue",
+    "Le montant est trop élevé",
+    "Le montant doit être supérieur à 0"
+   ]
+  },
+  {
+   "case": "Setup: owned charge on student-B referencing the owned type (API)",
+   "outcome": "PASS",
+   "status": 200
+  },
+  {
+   "case": "fee-types-M02: deleting the referenced type is a safe, translated conflict; the type and charge remain",
+   "outcome": "PASS",
+   "status": 409,
+   "message": "Des frais d'élèves utilisent ce type de frais ; il ne peut pas être supprimé",
+   "toasts": [
+    "Des frais d'élèves utilisent ce type de frais ; il ne peut pas être supprimé"
+   ]
+  },
+  {
+   "case": "fee-types-M02: after removing the owned charge, the owned type deletes and is gone on reload",
+   "outcome": "PASS"
+  },
+  {
+   "case": "Denied identity: teacher-A cannot create, edit or delete fee types (API 403) and stays signed in",
+   "outcome": "PASS",
+   "list": 403,
+   "post": 403,
+   "delete": 403,
+   "me": 200
+  },
+  {
+   "case": "Denied identity: teacher-A opening /fee-types sees no fee type data",
+   "outcome": "PASS",
+   "url": "/home",
+   "heading": "Bon retour, Pbtest"
+  }
+ ],
+ "diagnostics": [],
+ "writes": [
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/api/fee-types"
+  },
+  {
+   "as": "admin",
+   "method": "PUT",
+   "path": "/api/fee-types/:id"
+  },
+  {
+   "as": "admin",
+   "method": "DELETE",
+   "path": "/api/fee-types/:id"
+  },
+  {
+   "as": "admin",
+   "method": "DELETE",
+   "path": "/api/fee-types/:id"
+  }
+ ],
+ "mcpReads": [
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list",
+  "tools/list"
+ ],
+ "nativeDialogs": [],
+ "apiWrites": [
+  {
+   "as": "admin",
+   "method": "PUT",
+   "path": "/fee-types/:id",
+   "status": 400
+  },
+  {
+   "as": "admin",
+   "method": "PUT",
+   "path": "/fee-types/:id",
+   "status": 400
+  },
+  {
+   "as": "admin",
+   "method": "PUT",
+   "path": "/fee-types/:id",
+   "status": 400
+  },
+  {
+   "as": "admin",
+   "method": "POST",
+   "path": "/fees",
+   "status": 200
+  },
+  {
+   "as": "admin",
+   "method": "DELETE",
+   "path": "/fees/:id",
+   "status": 200
+  },
+  {
+   "as": "teacher-a",
+   "method": "POST",
+   "path": "/fee-types",
+   "status": 403
+  },
+  {
+   "as": "teacher-a",
+   "method": "DELETE",
+   "path": "/fee-types/FT8",
+   "status": 403
+  }
+ ],
+ "completedUtc": "2026-10-18T00:32:12.412Z",
+ "counts": {
+  "PASS": 13
+ }
+}

@@ -107,29 +107,3 @@ export function calculateStudentFeeSummary(fees: Array<{
     }
   );
 }
-
-/**
- * Validate that allocation amounts don't exceed the installment or fee amounts
- */
-export function validateAllocationAmount(
-  allocationAmount: number,
-  installmentAmount: number,
-  alreadyAllocated: number
-): { valid: boolean; error?: string } {
-  if (allocationAmount <= 0) {
-    return {
-      valid: false,
-      error: 'Allocation amount must be greater than 0',
-    };
-  }
-
-  const remainingCents = toCents(installmentAmount) - toCents(alreadyAllocated);
-  if (toCents(allocationAmount) > remainingCents) {
-    return {
-      valid: false,
-      error: `Allocation amount (${allocationAmount}) exceeds remaining balance (${(remainingCents / 100).toFixed(2)})`,
-    };
-  }
-
-  return { valid: true };
-}

@@ -1829,6 +1829,7 @@
       "invalidStatus": "Estado de cuota no válido",
       "invalidDiscount": "Descuento no válido",
       "invalidNetAmount": "El importe tras el descuento debe ser positivo",
+      "discountExceedsAmount": "El descuento no puede superar el importe de la cuota (por periodo en una cuota recurrente)",
       "cannotPayCancelledInstallment": "No se puede pagar una cuota cancelada",
       "installmentNumberExists": "Ya existe una cuota con este número para esta tarifa",
       "allocationNotFound": "Asignación de pago no encontrada",
@@ -1890,6 +1891,7 @@
       "amountInvalid": "Introduce un importe válido",
       "baseAmountPositive": "El importe debe ser mayor que 0",
       "discountNegative": "El descuento no puede ser negativo",
+      "discountTooLarge": "El descuento no puede superar el importe (por periodo en una cuota recurrente)",
       "feesRequired": "Añade al menos una cuota",
       "chargeDateRequired": "Elige la fecha de la lista de clase en este curso escolar",
       "chargeDateInTerm": "Elige una fecha de cobro entre septiembre y junio"
@@ -2952,6 +2954,7 @@
       "invalidPaymentType": "Tipo de pago no válido",
       "idExists": "Este tipo de cuota ya existe",
       "nameAlreadyExists": "Ya existe un tipo de cuota con este nombre",
+      "inUse": "Hay cuotas de estudiantes que usan este tipo de cuota, así que no se puede eliminar",
       "notFound": "Tipo de cuota no encontrado",
       "invalidAmount": "El importe debe ser mayor que 0",
       "amountTooLarge": "El importe no puede superar 1.000.000"
@@ -3381,6 +3384,7 @@
       "checkDueDate": "Fecha de vencimiento del cheque",
       "checkNumber": "Número de cheque",
       "checkNumberPlaceholder": "Ingrese el número de cheque",
+      "checkDueDatePlaceholder": "Seleccione la fecha de vencimiento",
       "notes": "Notas",
       "notesPlaceholder": "Ingrese notas",
       "paymentDate": "Fecha de pago",
@@ -4708,7 +4712,7 @@
     "sections": {
       "schedule": "Horario",
       "eventDetails": "Detalles del evento",
-      "placeAndAudience": "Lugar y p?blico"
+      "placeAndAudience": "Lugar y público"
     },
     "form": {
       "noClasses": "No se encontraron clases",
