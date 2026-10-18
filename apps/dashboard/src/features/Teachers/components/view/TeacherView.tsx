@@ -3,11 +3,12 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, CalendarDays, CreditCard, LayoutDashboard, Pencil, UserRound } from 'lucide-react';
-import { NButton, NErrorState, NajmScroll, NLoadingState, NPageHeader, NPageHeaderActions, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
+import { NButton, NEmptyState, NErrorState, NForbiddenState, NajmScroll, NLoadingState, NPageHeader, NPageHeaderActions, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { getTeacherByIdApi } from '@/services/teacherApi';
+import { isAuthorizationError, isNotFoundError } from '@/services/apiError';
 import { useYearScopedDetail } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSubjects } from '@/features/Subjects/hooks/useSubjects';
@@ -45,7 +46,7 @@ const TeacherView: React.FC<TeacherViewProps> = ({ teacherId }) => {
   const [tab, setTab] = useState<TeacherTab>('overview');
 
   const overviewQuery = useTeacherOverview(teacherId);
-  const { data: teacher, isLoading, isError, refetch } = useYearScopedDetail({
+  const { data: teacher, isLoading, error, refetch } = useYearScopedDetail({
     resource: 'teachers',
     parts: ['detail', teacherId],
     fetch: () => getTeacherByIdApi(teacherId),
@@ -81,15 +82,16 @@ const TeacherView: React.FC<TeacherViewProps> = ({ teacherId }) => {
   };
 
   // Details and payroll read the teacher record; the overview has its own.
+  // Only a failed request offers a retry: one cannot bring back a deleted
+  // teacher or grant access.
   const recordState = isLoading ? (
     <NLoadingState surface="panel" label={t('common.loading')} className="min-h-80" />
-  ) : isError || !teacher ? (
-    <NErrorState
-      surface="panel"
-      title={t('teachers.profile.teacherNotFound')}
-      onRetry={() => void refetch()}
-      className="min-h-80"
-    />
+  ) : !teacher && (!error || isNotFoundError(error)) ? (
+    <NEmptyState surface="panel" icon={UserRound} title={t('teachers.profile.teacherNotFound')} className="min-h-80" />
+  ) : !teacher && isAuthorizationError(error) ? (
+    <NForbiddenState surface="panel" className="min-h-80" />
+  ) : !teacher ? (
+    <NErrorState surface="panel" onRetry={() => void refetch()} className="min-h-80" />
   ) : null;
 
   return (

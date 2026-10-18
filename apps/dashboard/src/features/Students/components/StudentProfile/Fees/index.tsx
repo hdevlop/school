@@ -2,6 +2,7 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { AlertTriangle, CalendarClock, CheckCircle2, CircleDollarSign, Clock, CreditCard, FileText, SearchX } from 'lucide-react';
 import { useCallback, useMemo } from 'react';
 import { NBadge, NCard, NStatCard, NEmptyState } from 'najm-kit';
@@ -14,6 +15,8 @@ import FeeCategoryIcon from '@/features/Financial/Fees/components/FeeCategoryIco
 
 interface FeesTabProps {
   studentId?: string;
+  // The students list's profile dialog closes itself first; without one, the
+  // tab navigates to the fee record directly (the /students/:id page).
   onOpenFeeRecord?: (feeId?: string) => void;
 }
 
@@ -89,6 +92,7 @@ const getFeeStatus = (fee: any, remaining: number, overdueCount: number) => {
 export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
   const { majorMoney, displayDateOnly } = useSchoolFormat();
   const { t } = useTranslation();
+  const router = useRouter();
   // The viewed year's fees, totals and installments; every year's with history off.
   const { viewingYear } = useViewingAcademicYear();
   const { studentFees, isStudentFeesLoading } = useFees({ studentId, studentYear: viewingYear, enabled: false });
@@ -166,8 +170,11 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
   }, [studentFees]);
 
   const handleFeeClick = useCallback((fee: any) => {
-    onOpenFeeRecord?.(fee?.id);
-  }, [onOpenFeeRecord]);
+    if (onOpenFeeRecord) return onOpenFeeRecord(fee?.id);
+    if (!studentId) return;
+    const query = fee?.id ? `?feeId=${encodeURIComponent(fee.id)}` : '';
+    router.push(`/students/${studentId}/fees${query}`);
+  }, [onOpenFeeRecord, router, studentId]);
 
   const columns = useMemo(() => [
     {
@@ -355,8 +362,8 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
           showCheckbox={false}
           showPagination={false}
           dynamicHeight={false}
-          onRowClick={onOpenFeeRecord ? handleFeeClick : undefined}
-          getRowClassName={() => onOpenFeeRecord ? 'cursor-pointer hover:bg-slate-50' : undefined}
+          onRowClick={handleFeeClick}
+          getRowClassName={() => 'cursor-pointer hover:bg-slate-50'}
           renderEmpty={() => (
             <NEmptyState
               surface="panel"

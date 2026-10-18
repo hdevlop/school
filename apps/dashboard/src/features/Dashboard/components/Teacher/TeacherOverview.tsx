@@ -1,9 +1,9 @@
 'use client';
 
-import { CalendarDays } from 'lucide-react';
-import { NButton, NErrorState } from 'najm-kit';
+import { CalendarDays, UserRound } from 'lucide-react';
+import { NButton, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { isNotFoundError } from '@/services/apiError';
+import { isAuthorizationError, isNotFoundError } from '@/services/apiError';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTeacherOverview } from '../../hooks/useTeacherDashboard';
 import TeacherKpis from './TeacherKpis';
@@ -48,15 +48,14 @@ const TeacherOverview = ({ teacherId, onViewDetails }: TeacherOverviewProps) => 
 
   // Without an overview every figure below would read 0, which says "nothing
   // to do" about a teacher this reader cannot see or a request that failed.
+  // Only a failed request offers a retry: one cannot bring back a deleted
+  // teacher or grant access.
   if (loadError) {
-    return (
-      <NErrorState
-        surface="panel"
-        title={isNotFoundError(loadError) ? t('teachers.profile.teacherNotFound') : t('common.feedback.errorTitle')}
-        onRetry={retry}
-        className="min-h-80"
-      />
-    );
+    if (isNotFoundError(loadError)) {
+      return <NEmptyState surface="panel" icon={UserRound} title={t('teachers.profile.teacherNotFound')} className="min-h-80" />;
+    }
+    if (isAuthorizationError(loadError)) return <NForbiddenState surface="panel" className="min-h-80" />;
+    return <NErrorState surface="panel" title={t('common.feedback.errorTitle')} onRetry={retry} className="min-h-80" />;
   }
 
   return (
