@@ -18,6 +18,10 @@ export class VehicleValidator {
     }
   }
 
+  async ensureCanDelete(id: string) {
+    if (await this.vehicleRepository.isInUse(id)) Err(409, this.t('hasReferences'));
+  }
+
   async isVehicleExists(id) {
     const existingVehicle = await this.vehicleRepository.getById(id);
     return !!existingVehicle;
@@ -136,9 +140,11 @@ export class VehicleValidator {
 
   async validate(data, excludeId = null) {
     const isUpdate = excludeId !== null;
+    let existingVehicle = null;
 
     if (isUpdate) {
-      await this.checkVehicleExists(excludeId);
+      existingVehicle = await this.vehicleRepository.getById(excludeId);
+      if (!existingVehicle) Err(404, this.t('notFound'));
     }
 
     const { id, licensePlate, year, type, status, fuelType, tankCapacity, purchasePrice } = data;
@@ -154,6 +160,12 @@ export class VehicleValidator {
     if (fuelType) this.validateFuelType(fuelType);
     if (tankCapacity) this.validateFuelCapacity(tankCapacity);
     if (purchasePrice) this.validatePurchasePrice(purchasePrice);
+    if (data.initialMileage != null || data.currentMileage != null) {
+      await this.checkCurrentMileageValid(
+        data.initialMileage ?? existingVehicle?.initialMileage,
+        data.currentMileage ?? existingVehicle?.currentMileage,
+      );
+    }
 
     return data;
   }
@@ -163,8 +175,8 @@ export class VehicleValidator {
   // ========================================
 
   async checkCurrentMileageValid(
-    initialMileage?: number | null,
-    currentMileage?: number | null
+    initialMileage?: number | string | null,
+    currentMileage?: number | string | null
   ) {
     if (
       initialMileage !== undefined &&
@@ -172,7 +184,7 @@ export class VehicleValidator {
       currentMileage !== undefined &&
       currentMileage !== null
     ) {
-      if (currentMileage < initialMileage) {
+      if (Number(currentMileage) < Number(initialMileage)) {
         Err(400, this.t('currentMileageLessThanInitial'));
       }
     }

@@ -1,5 +1,5 @@
 import { DB } from '../../../database/db';
-import { vehicles } from '../../../database/schema';
+import { vehicles, studentRoutes, vehicleAssignments, busAssistantAssignments, refuels, maintenance } from '../../../database/schema';
 import { count, eq, desc, sql } from 'drizzle-orm';
 import { Repository } from '../../../najm';
 import { getVehicleBaseFields, getVehicleComputedFields } from './VehicleUtils';
@@ -127,6 +127,27 @@ export class VehicleRepository {
   // ========================================
   // DELETEMETHODS
   // ========================================
+
+  async lockForDeletion(id: string) {
+    await this.db.select({ id: vehicles.id }).from(vehicles).where(eq(vehicles.id, id)).limit(1).for('update');
+  }
+
+  /** Vehicles are shared assets; retain references from every school year. */
+  async isInUse(id: string) {
+    const references = [
+      { table: studentRoutes, vehicleId: studentRoutes.vehicleId },
+      { table: vehicleAssignments, vehicleId: vehicleAssignments.vehicleId },
+      { table: busAssistantAssignments, vehicleId: busAssistantAssignments.vehicleId },
+      { table: refuels, vehicleId: refuels.vehicleId },
+      { table: maintenance, vehicleId: maintenance.vehicleId },
+    ];
+    for (const reference of references) {
+      const [result] = await this.db.select({ count: count() }).from(reference.table)
+        .where(eq(reference.vehicleId, id));
+      if (Number(result?.count) > 0) return true;
+    }
+    return false;
+  }
 
   async delete(id) {
     const [deletedVehicle] = await this.db

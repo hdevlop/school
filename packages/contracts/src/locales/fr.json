@@ -4856,6 +4856,7 @@
       "invalidFuelType": "Type de carburant invalide",
       "invalidYear": "L'année doit être comprise entre {{minYear}} et {{currentYear}}",
       "licensePlateExists": "Un véhicule avec cette plaque d'immatriculation existe déjà",
+      "hasReferences": "Ce véhicule possède des affectations de transport ou un historique d’exploitation et ne peut pas être supprimé",
       "invalidEngineHours": "Les heures moteur doivent être un nombre positif",
       "invalidMileage": "Le kilométrage doit être un nombre positif",
       "invalidFuelCapacity": "La capacité du réservoir doit être un nombre positif",

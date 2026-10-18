@@ -4766,6 +4766,7 @@
       "invalidFuelType": "نوع الوقود غير صالح",
       "invalidYear": "يجب أن تكون السنة بين {{minYear}} و{{currentYear}}",
       "licensePlateExists": "توجد مسبقًا مركبة بهذه اللوحة",
+      "hasReferences": "لا يمكن حذف هذه المركبة لوجود تعيينات نقل أو سجل تشغيل مرتبط بها",
       "invalidEngineHours": "يجب أن تكون ساعات المحرك عددًا موجبًا",
       "invalidMileage": "يجب أن يكون عدد الكيلومترات عددًا موجبًا",
       "invalidFuelCapacity": "يجب أن تكون سعة الخزان عددًا موجبًا",

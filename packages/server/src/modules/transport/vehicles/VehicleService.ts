@@ -43,8 +43,8 @@ export class VehicleService {
       purchasePrice: data.purchasePrice,
       status: data.status || 'active',
       fuelType: data.fuelType || 'diesel',
-      initialMileage: data.initialMileage || '0',
-      currentMileage: data.currentMileage,
+      initialMileage: data.initialMileage ?? 0,
+      currentMileage: data.currentMileage ?? data.initialMileage ?? 0,
       notes: data.notes
     }
 
@@ -68,8 +68,11 @@ export class VehicleService {
     return await this.vehicleRepository.update(id, data);
   }
 
+  @Transaction()
   async delete(id: string) {
+    await this.vehicleRepository.lockForDeletion(id);
     await this.vehicleValidator.checkVehicleExists(id);
+    await this.vehicleValidator.ensureCanDelete(id);
     return await this.vehicleRepository.delete(id);
   }
 

@@ -4517,6 +4517,7 @@
     "errors": {
       "notFound": "Vehicle not found",
       "licensePlateExists": "A vehicle with this license plate already exists",
+      "hasReferences": "This vehicle has transport assignments or operational history and cannot be deleted",
       "idExists": "Vehicle ID already exists",
       "invalidType": "Invalid vehicle type",
       "invalidStatus": "Invalid vehicle status",

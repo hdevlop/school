@@ -223,11 +223,11 @@ export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => 
             </div>
           ))}
         </div>
-      ) : routes.length === 0 ? (
+      ) : currentRoutes.length === 0 ? (
         <p className="text-xs text-muted-foreground text-center py-4">{t('transport.panel.noStudentsAssigned')}</p>
       ) : (
         <div className="flex flex-col gap-1.5">
-          {(routes as any[]).map((route: any) => (
+          {currentRoutes.map((route: any) => (
             <div key={route.id} className="flex items-center justify-between rounded-lg border px-3 py-2 bg-gray-50/50 text-sm">
               <div className="min-w-0">
                 <p className="font-medium truncate">{route.student?.name}</p>

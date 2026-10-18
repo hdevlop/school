@@ -4752,6 +4752,7 @@
       "invalidFuelType": "Tipo de combustible no válido",
       "invalidYear": "El año debe estar entre {{minYear}} y {{currentYear}}",
       "licensePlateExists": "Ya existe un vehículo con esta matrícula",
+      "hasReferences": "Este vehículo tiene asignaciones de transporte o un historial operativo y no se puede eliminar",
       "invalidEngineHours": "Las horas de motor deben ser un número positivo",
       "invalidMileage": "El kilometraje debe ser un número positivo",
       "invalidFuelCapacity": "La capacidad del depósito debe ser un número positivo",

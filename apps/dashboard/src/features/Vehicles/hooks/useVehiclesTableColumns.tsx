@@ -58,6 +58,17 @@ export const useVehiclesTableColumns = () => {
       ),
     },
     {
+      id: "currentMileage",
+      accessorFn: (vehicle) => vehicle.currentMileage == null ? null : Number(vehicle.currentMileage),
+      header: t('vehicles.card.currentMileage'),
+      enableSorting: true,
+      cell: ({ getValue }) => (
+        <div className="text-sm whitespace-nowrap">
+          {getValue() == null ? '—' : `${getValue().toLocaleString()} km`}
+        </div>
+      ),
+    },
+    {
       accessorKey: "type",
       header: t('vehicles.table.type'),
       enableSorting: true,

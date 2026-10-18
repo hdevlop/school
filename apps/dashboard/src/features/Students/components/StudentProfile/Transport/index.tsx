@@ -14,6 +14,24 @@ type Props = {
   isLoading?: boolean
 }
 
+function TransportHistory({ routes }: { routes: any[] }) {
+  const { t } = useTranslation()
+  if (!routes.length) return null
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-white p-5">
+      <h4 className="flex items-center gap-2 font-semibold text-slate-900"><History className="h-4 w-4" />{t('transport.profile.history')}</h4>
+      <div className="mt-3 divide-y divide-slate-100">
+        {routes.map((route: any) => (
+          <div key={route.id} className="flex items-center justify-between gap-4 py-3 text-sm">
+            <div><p className="font-medium text-slate-800">{route.vehicle?.name}</p><p className="text-xs text-slate-500">{route.pickupLocation}</p></div>
+            <p className="text-xs text-slate-500">{route.assignmentDate} → {route.unassignmentDate || '—'}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
 export default function TransportTab({ studentId, student, isLoading: isStudentLoading }: Props) {
   const { t } = useTranslation()
   const { openDialog } = useDialog()
@@ -80,11 +98,14 @@ export default function TransportTab({ studentId, student, isLoading: isStudentL
 
   if (!active) {
     return (
-      <div className="flex min-h-[420px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-blue-600 shadow-sm"><Bus className="h-7 w-7" /></div>
-        <h3 className="mt-5 text-lg font-semibold text-slate-900">{t('transport.profile.noAssignment')}</h3>
-        <p className="mt-2 max-w-md text-sm text-slate-600">{t('transport.profile.noAssignmentDescription')}</p>
-        <NButton className="mt-5 gap-2" onClick={() => void openAssignment('assign')}><Bus className="h-4 w-4" />{t('transport.profile.assign')}</NButton>
+      <div className="space-y-5">
+        <div className="flex min-h-[420px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-blue-600 shadow-sm"><Bus className="h-7 w-7" /></div>
+          <h3 className="mt-5 text-lg font-semibold text-slate-900">{t('transport.profile.noAssignment')}</h3>
+          <p className="mt-2 max-w-md text-sm text-slate-600">{t('transport.profile.noAssignmentDescription')}</p>
+          <NButton className="mt-5 gap-2" onClick={() => void openAssignment('assign')}><Bus className="h-4 w-4" />{t('transport.profile.assign')}</NButton>
+        </div>
+        <TransportHistory routes={history} />
       </div>
     )
   }
@@ -140,19 +161,7 @@ export default function TransportTab({ studentId, student, isLoading: isStudentL
         </div>
       </div>
 
-      {history.length > 0 ? (
-        <section className="rounded-2xl border border-slate-200 bg-white p-5">
-          <h4 className="flex items-center gap-2 font-semibold text-slate-900"><History className="h-4 w-4" />{t('transport.profile.history')}</h4>
-          <div className="mt-3 divide-y divide-slate-100">
-            {history.map((route: any) => (
-              <div key={route.id} className="flex items-center justify-between gap-4 py-3 text-sm">
-                <div><p className="font-medium text-slate-800">{route.vehicle?.name}</p><p className="text-xs text-slate-500">{route.pickupLocation}</p></div>
-                <p className="text-xs text-slate-500">{route.assignmentDate} → {route.unassignmentDate || '—'}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      ) : null}
+      <TransportHistory routes={history} />
     </div>
   )
 }
