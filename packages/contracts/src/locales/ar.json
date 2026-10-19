@@ -3396,7 +3396,7 @@
     "errors": {
       "recordFailed": "تعذر تسجيل الدفع. حاول مرة أخرى.",
       "studentMissing": "معلومات التلميذ مفقودة",
-      "insufficientCash": "المبلغ غير كافٍ. أضف {{amount}} درهم لتغطية الأقساط المحددة.",
+      "insufficientCash": "المبلغ غير كافٍ. أضف {{amount}} لتغطية الأقساط المحددة.",
       "amountRequired": "مبلغ الدفع مطلوب",
       "notFound": "الدفعة غير موجودة",
       "paymentNotFound": "الدفعة غير موجودة",
@@ -3446,7 +3446,7 @@
       "bank": "البنك",
       "referencePlaceholder": "رقم الإيصال أو المرجع…",
       "reference": "المرجع (اختياري)",
-      "amountReceived": "المبلغ المستلم (درهم)",
+      "amountReceived": "المبلغ المستلم ({{currency}})",
       "replaceCheckWithCash": "عند الحفظ، سيتم إلغاء دفعة الشيك تلقائيًا وإصدار إيصال نقدي جديد بنفس المبلغ والأقساط. تحقق من تاريخ الدفع أعلاه.",
       "amount": "المبلغ",
       "amountPlaceholder": "أدخل المبلغ",

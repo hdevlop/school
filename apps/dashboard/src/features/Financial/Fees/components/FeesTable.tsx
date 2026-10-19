@@ -1,7 +1,7 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { Schedule } from '@sms/contracts';
 import { NPageHeader, NPageHeaderActions, NEmptyState, NButton, NErrorState, NForbiddenState, NStatCard, NStatCardSkeleton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
@@ -12,6 +12,8 @@ import EditFeeForm from './EditFeeForm';
 import { useFees } from '../hooks/useFees';
 import { useTranslation } from 'najm-i18n/react';
 import FeeCard from './FeeCard';
+import { FeesMobileToolbar, type FeeTableFilter } from './FeesMobileToolbar';
+import { defaultFeeSection, resolveFeeRosterSelection, type FeeRosterSelection } from '../utils/feeRosterSelection';
 import { useStudents } from '@/features/Students/hooks/useStudents';
 import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
@@ -29,6 +31,12 @@ import { useViewingAcademicYear, useViewingYearKey } from '@/features/AcademicYe
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import { toMinorUnits, useSchoolFormat } from '@/hooks/useSchoolFormat';
 
+function CreateFeeForm({ feeTypes }) {
+  // The full student picker is needed only after opening the create dialog.
+  const { students } = useStudents();
+  return <FeeForm students={students} feeTypes={feeTypes} />;
+}
+
 function FeesTableForYear() {
 
   const { t } = useTranslation();
@@ -36,44 +44,44 @@ function FeesTableForYear() {
   const router = useRouter();
   const { openDialog, confirmDelete } = useDialog();
 
-  const { students } = useStudents();
   const { feeTypes } = useFeeTypes();
-  const { classes } = useClasses();
-  const { sections } = useSections();
+  const { classes, isClassesLoading, error: classesError } = useClasses();
+  const { sections, isSectionsLoading, error: sectionsError } = useSections();
   const { isAcademicYearLoading } = useActiveAcademicYear();
   const { viewingYear } = useViewingAcademicYear();
 
-  const [selectedClassId, setSelectedClassId] = useState('all');
-  const [selectedSectionId, setSelectedSectionId] = useState('');
+  const [selection, setSelection] = useState<FeeRosterSelection | null>(null);
+  const { classId: selectedClassId, sectionId: selectedSectionId } = resolveFeeRosterSelection(classes, sections, selection);
+  const catalogsReady = !isClassesLoading && !isSectionsLoading && !classesError && !sectionsError;
+  const rosterReady = Boolean(catalogsReady && selectedClassId);
+  const isAllClasses = selectedClassId === 'all';
+  const setSelectedClassId = useCallback((classId: string) => {
+    setSelection({ classId, sectionId: defaultFeeSection(sections, classId) });
+  }, [sections]);
+  const setSelectedSectionId = useCallback((sectionId: string) => {
+    setSelection({ classId: selectedClassId, sectionId: sectionId === '__all__' ? '' : sectionId });
+  }, [selectedClassId]);
   const [searchText, setSearchText] = useState('');
   const [statusFilter, setStatusFilter] = useState('__all__');
   const [scheduleFilter, setScheduleFilter] = useState<Schedule>();
 
   const {
     fees,
-    error,
+    error: feesError,
     isFeesLoading,
     updateFee,
     deleteFee,
     isUpdating,
     isDeleting,
     refetch,
-  } = useFees({ schedule: scheduleFilter });
-
-  const isAllClasses = selectedClassId === 'all';
-
-  useEffect(() => {
-    if (selectedClassId !== 'all' && !classes?.some((schoolClass) => schoolClass.id === selectedClassId)) {
-      setSelectedClassId(classes?.[0]?.id || '');
-    }
-  }, [classes, selectedClassId]);
-
-  useEffect(() => {
-    if (selectedSectionId && !sections?.some((section) =>
-      section.id === selectedSectionId && (isAllClasses || section.classId === selectedClassId))) {
-      setSelectedSectionId('');
-    }
-  }, [selectedClassId, selectedSectionId, sections, isAllClasses]);
+  } = useFees({
+    schedule: scheduleFilter,
+    classId: isAllClasses ? undefined : selectedClassId || undefined,
+    sectionId: selectedSectionId || undefined,
+    enabled: rosterReady,
+  });
+  const error = classesError ?? sectionsError ?? feesError;
+  const isLoading = isAcademicYearLoading || isClassesLoading || isSectionsLoading || (rosterReady && isFeesLoading);
 
   const filteredFees = useMemo(() => {
     const query = searchText.trim().toLowerCase();
@@ -124,7 +132,7 @@ function FeesTableForYear() {
 
   const columns = useFeesTableColumns();
 
-  const filters = useMemo(() => [
+  const filters = useMemo<FeeTableFilter[]>(() => [
     {
       name: 'class',
       type: 'combobox',
@@ -140,8 +148,8 @@ function FeesTableForYear() {
       type: 'select',
       showIcon: false,
       placeholder: t('fees.filters.section'),
-      value: selectedSectionId,
-      onChange: (value: string) => setSelectedSectionId(value === '__all__' ? '' : value),
+      value: selectedSectionId || '__all__',
+      onChange: setSelectedSectionId,
       options: [{ value: '__all__', label: t('common.all') }, ...sectionOptions],
       disabled: sectionOptions.length === 0,
       className: 'w-full sm:w-28 xl:w-28',
@@ -182,14 +190,14 @@ function FeesTableForYear() {
       ],
       className: 'w-full lg:w-36',
     },
-  ], [t, selectedClassId, selectedSectionId, searchText, statusFilter, scheduleFilter, classOptions, sectionOptions]);
+  ], [t, selectedClassId, selectedSectionId, setSelectedClassId, setSelectedSectionId, searchText, statusFilter, scheduleFilter, classOptions, sectionOptions]);
 
   const handleAddClick = () => {
     if (!viewingYear) return;
     const openedYear = viewingYear;
     openDialog({
       title: t('fees.dialogs.createTitle'),
-      children: <FeeForm students={students} feeTypes={feeTypes} />,
+      children: <CreateFeeForm feeTypes={feeTypes} />,
       width: '6xl',
       primaryButton: {
         form: 'bulk-fee-form',
@@ -247,7 +255,7 @@ function FeesTableForYear() {
     });
   };
 
-  const isFilteredEmpty = filteredFees.length === 0 && (scheduleFilter !== undefined || !!fees?.length);
+  const isFilteredEmpty = filteredFees.length === 0 && (catalogsReady || scheduleFilter !== undefined || !!fees?.length);
   const noDataText = !selectedClassId
       ? (t('fees.noData.selectClass') || 'Select a class to view fees')
       : isFilteredEmpty
@@ -262,7 +270,7 @@ function FeesTableForYear() {
       <NPageHeader
         icon={CircleDollarSign}
         title={t('navigation.fees')}
-        subtitle={isCountUnknown(error, fees, isFeesLoading || isAcademicYearLoading)
+        subtitle={isCountUnknown(error, fees, isLoading)
           ? undefined
           : t('fees.subtitle.count', { count: total })}
       >
@@ -271,7 +279,7 @@ function FeesTableForYear() {
         </NPageHeaderActions>
       </NPageHeader>
 
-      {isFeesLoading || isAcademicYearLoading ? (
+      {isLoading ? (
         <div className="grid shrink-0 grid-cols-2 gap-3 xl:grid-cols-6">
           {Array.from({ length: 6 }, (_, index) => <NStatCardSkeleton key={index} />)}
         </div>
@@ -333,12 +341,15 @@ function FeesTableForYear() {
         isFilteredEmpty={isFilteredEmpty}
         columns={columns}
         filters={filters}
+        renderToolbar={() => (
+          <FeesMobileToolbar filters={filters} onCreate={handleAddClick} loading={isLoading} />
+        )}
         onCreate={handleAddClick}
         onView={handleView}
         onRowClick={handleView}
         onEdit={handleEdit}
         onDelete={handleDelete}
-        loading={isFeesLoading || isAcademicYearLoading}
+        loading={isLoading}
         error={failedToLoad ? error : null}
         renderError={(currentError) => (
           isAuthorizationError(currentError)
@@ -347,6 +358,7 @@ function FeesTableForYear() {
         )}
         renderCard={FeeCard}
         classNames={{
+          header: '[&_[data-ntable-mobile-toolbar]]:hidden',
           cards: 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5',
         }}
         addButtonText={t('fees.dialogs.createButton')}

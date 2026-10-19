@@ -33,7 +33,7 @@ export class FeeController {
   @Get()
   @CanSchoolWide('read:fees')
   @Validate({ query: listFeesQueryDto })
-  @McpTool({ description: 'List student fee totals in the selected year, optionally filtered by payment schedule', readOnly: true })
+  @McpTool({ description: 'List student fee totals in the selected year, optionally filtered by class, section and payment schedule', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getFees(@Query() filters: ListFeesQueryDto = {}) {
     return this.feeService.getAll(filters);

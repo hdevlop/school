@@ -138,7 +138,7 @@ const FeeItem = ({
                 type='number'
                 icon={DollarSign}
                 formLabel={t('fees.form.amount') || 'Amount'}
-                placeholder="0.00"
+                placeholder="0"
                 required
              />
 

@@ -1,6 +1,7 @@
 import { amountInWordsFR } from './amountInWords';
 import { DEFAULT_RECEIPT_LANGUAGE, type ReceiptLanguage, type Schedule } from '@sms/contracts';
 import { ar, fr } from '@sms/contracts/locales';
+import { createSchoolMoneyFormatter } from '@/hooks/schoolMoneyFormat';
 
 export interface ReceiptItem {
   feeType: string;
@@ -39,10 +40,6 @@ function formatDate(dateStr: string, locale: string): string {
   return d.toLocaleDateString(locale, { day: '2-digit', month: '2-digit', year: 'numeric', calendar: 'gregory', numberingSystem: 'latn' });
 }
 
-function formatAmount(amount: number, currency: string, locale: string): string {
-  return new Intl.NumberFormat(locale, { style: 'currency', currency, numberingSystem: 'latn' }).format(amount);
-}
-
 // FIX: SEC-003 — data stays text even in the hand-written print document.
 function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/g, (char) => ({
@@ -74,7 +71,7 @@ export function buildReceiptHtml(data: ReceiptData) {
   const method = Object.hasOwn(methods, data.paymentMethod) ? methods[data.paymentMethod] : data.paymentMethod;
   const amountWords = language === 'fr' && data.currency === 'MAD' ? amountInWordsFR(data.amount) : '';
   const paymentDate = formatDate(data.paymentDate, locale);
-  const money = (amount: number) => formatAmount(amount, data.currency, locale);
+  const money = createSchoolMoneyFormatter({ locale: `${locale}-u-nu-latn`, currency: data.currency });
   const periods = (item: ReceiptItem) => {
     if (!item.dueDates?.length || item.schedule === 'oneTime' || item.schedule === 'annually') return '';
     let dates: string;

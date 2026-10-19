@@ -324,7 +324,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
       );
 
       selectInstallments(selectedTargets);
-      setPaymentDetails({ amount: totalSelected.toFixed(2) });
+      setPaymentDetails({ amount: String(Number(totalSelected.toFixed(2))) });
     }
 
     try {

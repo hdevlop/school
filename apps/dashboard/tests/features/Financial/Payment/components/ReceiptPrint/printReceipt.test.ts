@@ -55,7 +55,7 @@ it('prints from the opener, with no script in the receipt, after the logo settle
 
 it('keeps the full payment distinct from its allocation to a school year', () => {
   const html = buildReceiptHtml({ ...input, amount: 1500, feeYear: '2025-2026', yearAllocatedAmount: 500 });
-  const money = (amount: number) => new Intl.NumberFormat('fr-MA', { style: 'currency', currency: 'MAD' }).format(amount);
+  const money = (amount: number) => `${new Intl.NumberFormat('fr-MA', { maximumFractionDigits: 0 }).format(amount)}\u00a0dh`;
   expect(html).toContain(`class="amount-figure" dir="ltr">${money(1500)}`);
   expect(html).toContain('2025-2026');
   expect(html).toContain(money(500));
@@ -85,8 +85,8 @@ it('prints an Arabic receipt in RTL, with localized dates and amounts and no Fre
   expect(html).toContain('نقداً');
   expect(html).toContain('المخصص لهذه السنة');
   expect(html).toContain('يرجى الاحتفاظ بهذا الوصل.');
-  expect(html).toContain(new Intl.NumberFormat('ar-MA', { style: 'currency', currency: 'MAD', numberingSystem: 'latn' }).format(100));
-  expect(html).toContain(new Intl.NumberFormat('ar-MA', { style: 'currency', currency: 'MAD', numberingSystem: 'latn' }).format(50));
+  expect(html).toContain('100\u00a0dh');
+  expect(html).toContain('50\u00a0dh');
   expect(html).not.toContain('REÇU DE PAIEMENT');
   expect(html).not.toContain('Espèces');
   expect(html).not.toContain('dirhams');
@@ -115,8 +115,8 @@ it('prints each fee type, its payment portion and installment balance in both la
       { feeType: 'Scolarité <CM1>', academicYear: '2025-2026', amount: 100, remainingAmount: 250 },
       { feeType: 'Transport', academicYear: '2026-2027', amount: 50, remainingAmount: 0 },
     ] });
-    const money = (amount: number) => new Intl.NumberFormat(language === 'ar' ? 'ar-MA' : 'fr-MA',
-      { style: 'currency', currency: 'MAD', numberingSystem: 'latn' }).format(amount);
+    const money = (amount: number) => `${new Intl.NumberFormat(language === 'ar' ? 'ar-MA' : 'fr-MA',
+      { maximumFractionDigits: 0, numberingSystem: 'latn' }).format(amount)}\u00a0dh`;
     expect(html).toContain('Scolarité &lt;CM1&gt;');
     expect(html).toContain('Transport');
     expect(html).toContain('2025-2026');
@@ -160,9 +160,7 @@ it('identifies the paid monthly installments without an extra balance explanatio
       }));
     }
     expect(html).not.toContain('balance-note');
-    expect(html).toContain(new Intl.NumberFormat(locale, {
-      style: 'currency', currency: 'MAD', numberingSystem: 'latn',
-    }).format(0));
+    expect(html).toContain('0\u00a0dh');
   }
 });
 
@@ -181,8 +179,8 @@ it('lists only full month names without years or ranges', () => {
 it('separates overpayment credit from fee payments, including a credit-only payment', () => {
   const item = { feeType: 'Transport', academicYear: '2026-2027', amount: 90.10, remainingAmount: 0 };
   expect(buildReceiptHtml({ ...input, amount: 100.20, items: [item] }))
-    .toContain('Crédit non affecté <bdi>10,10');
-  expect(buildReceiptHtml({ ...input, items: [] })).toContain('Crédit non affecté <bdi>100,00');
+    .toContain('Crédit non affecté <bdi>10\u00a0dh');
+  expect(buildReceiptHtml({ ...input, items: [] })).toContain('Crédit non affecté <bdi>100\u00a0dh');
 });
 
 it('opens the print window before fetching fresh details and prints only after the read succeeds', async () => {

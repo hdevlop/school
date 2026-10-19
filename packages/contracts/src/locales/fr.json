@@ -4025,7 +4025,7 @@
     "errors": {
       "recordFailed": "Échec de l'enregistrement du paiement. Veuillez réessayer.",
       "studentMissing": "Les informations de l'élève sont manquantes",
-      "insufficientCash": "Liquidités insuffisantes. Ajoutez {{amount}} MAD pour couvrir les échéances sélectionnées.",
+      "insufficientCash": "Liquidités insuffisantes. Ajoutez {{amount}} pour couvrir les échéances sélectionnées.",
       "amountRequired": "Le montant du paiement est requis",
       "notFound": "Paiement introuvable",
       "paymentNotFound": "Paiement introuvable",
@@ -4075,7 +4075,7 @@
       "bank": "Banque",
       "referencePlaceholder": "N° de reçu, réf…",
       "reference": "Référence (facultatif)",
-      "amountReceived": "Montant reçu (MAD)",
+      "amountReceived": "Montant reçu ({{currency}})",
       "replaceCheckWithCash": "L’enregistrement annulera automatiquement le paiement par chèque et créera un nouveau reçu en espèces pour le même montant et les mêmes échéances. Vérifiez la date de paiement ci-dessus.",
       "amount": "Montant",
       "amountPlaceholder": "Entrez le montant",

@@ -3205,7 +3205,7 @@
     "errors": {
       "recordFailed": "Failed to record payment. Please try again.",
       "studentMissing": "Student information is missing",
-      "insufficientCash": "Insufficient cash. Add {{amount}} MAD to cover the selected installments.",
+      "insufficientCash": "Insufficient cash. Add {{amount}} to cover the selected installments.",
       "amountRequired": "Payment amount is required",
       "notFound": "Payment not found",
       "paymentNotFound": "Payment not found",
@@ -3269,7 +3269,7 @@
       "bank": "Bank",
       "referencePlaceholder": "Receipt #, Ref #...",
       "reference": "Reference (Optional)",
-      "amountReceived": "Amount Received (MAD)",
+      "amountReceived": "Amount Received ({{currency}})",
       "replaceCheckWithCash": "Saving will automatically void the cheque payment and issue a new cash receipt for the same amount and installments. Check the payment date above.",
       "basicInformation": "Basic Information",
       "paymentInformation": "Payment Information",

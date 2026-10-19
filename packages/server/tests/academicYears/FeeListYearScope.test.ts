@@ -86,6 +86,46 @@ describe('normal fee list year scope', () => {
     expect(statements.at(-1)!.sql).not.toContain('"fees"."schedule" =');
   });
 
+  it('accepts class and section IDs while rejecting empty or non-string IDs', () => {
+    expect(listFeesQueryDto.parse({ classId: 'cp', sectionId: 'cp-a' })).toEqual({ classId: 'cp', sectionId: 'cp-a' });
+    for (const key of ['classId', 'sectionId']) {
+      for (const value of ['', 42, null]) expect(listFeesQueryDto.safeParse({ [key]: value }).success).toBe(false);
+    }
+  });
+
+  it('filters the selected year placement in SQL before calculating totals, including independent filters', async () => {
+    const statements: Array<{ sql: string; params: unknown[] }> = [];
+    const repo = new FeeRepository();
+    (repo as any).year = oldYear;
+    repo.db = drizzle(async (sql, params) => {
+      statements.push({ sql, params });
+      return { rows: [] };
+    }) as any;
+    const service = new FeeService(repo, {} as any, {} as any, {} as any, {} as any,
+      {} as any, {} as any, {} as any, {} as any);
+
+    for (const filters of [
+      { classId: 'cp', sectionId: 'cp-a', schedule: 'monthly' as const },
+      { classId: 'cp' },
+      { sectionId: 'cp-a' },
+      {},
+    ]) {
+      await service.getAll(filters);
+      const query = statements.at(-1)!;
+      const predicate = query.sql.slice(query.sql.lastIndexOf('where'), query.sql.indexOf('group by'));
+      expect(predicate.includes('"classes"."id" =')).toBe(Boolean(filters.classId));
+      expect(predicate.includes('"sections"."id" =')).toBe(Boolean(filters.sectionId));
+      if (filters.classId) expect(query.params).toContain(filters.classId);
+      if (filters.sectionId) expect(query.params).toContain(filters.sectionId);
+      expect(query.params).toContain(oldYear.id);
+      expect(query.params).toContain(oldYear.label);
+      // Class/section come from the selected enrollment, never the student's current projection.
+      expect(query.sql).toContain('"fee_year_last_placement"."class_id"');
+      expect(predicate).not.toContain('"students"."class_id"');
+      expect(predicate).not.toContain('"students"."section_id"');
+    }
+  });
+
   it('validates the requested year and lists the fees of the resolved year', async () => {
     const { service, calls } = serviceHarness();
     expect(await service.getAll()).toHaveLength(1);

@@ -12,9 +12,11 @@ import { buildDeskPaymentMethodOptions } from '../../config/paymentOptions';
 import { usePaymentStore } from '../../store/paymentStore';
 import { toast } from 'sonner';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 export const PaymentForm = ({ studentId }) => {
     const { t } = useTranslation();
+    const { majorMoney } = useSchoolFormat();
     const paymentDetailsSchema = useMemo(() => createPaymentSchemas(t).details, [t]);
     const { pop } = useDialog();
     const paymentDetails = usePaymentStore((state) => state.paymentDetails);
@@ -53,7 +55,7 @@ export const PaymentForm = ({ studentId }) => {
 
         if (!shouldAutoAllocate && totalAllocated > cashReceived) {
             const difference = Math.abs(totalAllocated - cashReceived);
-            toast.error(t('payments.errors.insufficientCash', { amount: difference.toFixed(2) }));
+            toast.error(t('payments.errors.insufficientCash', { amount: majorMoney(difference) }));
             return;
         }
 
@@ -101,11 +103,12 @@ export const PaymentForm = ({ studentId }) => {
 
 const PaymentDetailsFormContent = () => {
     const { t } = useTranslation();
+    const { currency } = useSchoolFormat();
     const { watch, getValues, setValue } = useFormContext();
     const setPaymentDetails = usePaymentStore((state) => state.setPaymentDetails);
     const totalAllocated = usePaymentStore((state) => state.getTotalAllocated());
     const paymentMethod = useWatch({ name: 'paymentMethod' });
-    const formatAmount = (amount: number) => (amount > 0 ? amount.toFixed(2) : '');
+    const formatAmount = (amount: number) => (amount > 0 ? String(Number(amount.toFixed(2))) : '');
     const lastAutoAmount = useRef(formatAmount(totalAllocated));
 
     useEffect(() => {
@@ -137,8 +140,8 @@ const PaymentDetailsFormContent = () => {
                     name='amount'
                     type='number'
                     icon={DollarSign}
-                    formLabel={t('payments.form.amountReceived')}
-                    placeholder='0.00'
+                    formLabel={t('payments.form.amountReceived', { currency: currency === 'MAD' ? 'dh' : currency })}
+                    placeholder='0'
                     required={true}
                 />
 

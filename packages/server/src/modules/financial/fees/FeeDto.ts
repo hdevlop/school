@@ -45,7 +45,11 @@ export const deleteFeesBulkDto = z.preprocess(
 
 export const feeIdParam = z.object({ id: z.string().min(1) });
 export const studentIdParam = z.object({ studentId: z.string().min(1) });
-export const listFeesQueryDto = z.object({ schedule: scheduleEnum.optional() });
+export const listFeesQueryDto = z.object({
+  schedule: scheduleEnum.optional(),
+  classId: z.string().min(1).optional(),
+  sectionId: z.string().min(1).optional(),
+});
 export type ListFeesQueryDto = z.infer<typeof listFeesQueryDto>;
 // The normal list year is resolved by the shared REST/MCP request scope.
 export const overdueStudentBody = studentIdParam;

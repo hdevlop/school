@@ -165,7 +165,7 @@ export class FeeRepository {
     }));
   }
 
-  async getAll(studentId?: string, schedule?: ListFeesQueryDto['schedule']) {
+  async getAll(studentId?: string, schedule?: ListFeesQueryDto['schedule'], roster: Pick<ListFeesQueryDto, 'classId' | 'sectionId'> = {}) {
     const { id: academicYearId, label: academicYear } = this.year;
     const today = formatDateOnly(getBusinessDate());
     // Pick one placement per enrollment before joining fees. Joining every
@@ -270,6 +270,8 @@ export class FeeRepository {
       // Keep a fee with unresolved enrollment visible, with unknown class.
       .where(and(
         studentId ? eq(students.id, studentId) : undefined,
+        roster.classId ? eq(classes.id, roster.classId) : undefined,
+        roster.sectionId ? eq(sections.id, roster.sectionId) : undefined,
         or(isNotNull(studentEnrollments.id), isNotNull(fees.id)),
         // Filter before aggregating so balances and collection metrics use only matching fees.
         schedule ? eq(fees.schedule, schedule) : undefined,

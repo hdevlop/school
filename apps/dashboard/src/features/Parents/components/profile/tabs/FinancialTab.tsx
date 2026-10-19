@@ -21,7 +21,7 @@ interface FinancialTabProps {
 
 const FinancialTab: React.FC<FinancialTabProps> = ({ parentId }) => {
   const { t } = useTranslation();
-  const { displayDateOnly } = useSchoolFormat();
+  const { displayDateOnly, majorMoney } = useSchoolFormat();
   const [children, setChildren] = useState<any[]>([]);
   const [childrenFees, setChildrenFees] = useState<{[key: string]: any[]}>({});
   const [loading, setLoading] = useState(true);
@@ -86,10 +86,10 @@ const FinancialTab: React.FC<FinancialTabProps> = ({ parentId }) => {
     });
 
     return {
-      totalFees: totalFees.toFixed(2),
-      paidFees: paidFees.toFixed(2),
-      pendingFees: pendingFees.toFixed(2),
-      overdueFees: overdueFees.toFixed(2),
+      totalFees,
+      paidFees,
+      pendingFees,
+      overdueFees,
     };
   };
 
@@ -121,22 +121,22 @@ const FinancialTab: React.FC<FinancialTabProps> = ({ parentId }) => {
         <InfoWidget
           title={t('parents.profile.totalFees')}
           image={feesImage}
-          value={`$${stats.totalFees}`}
+          value={majorMoney(stats.totalFees)}
         />
         <InfoWidget
           title={t('parents.profile.paidFees')}
           image={feesImage}
-          value={`$${stats.paidFees}`}
+          value={majorMoney(stats.paidFees)}
         />
         <InfoWidget
           title={t('parents.profile.pendingFees')}
           image={feesImage}
-          value={`$${stats.pendingFees}`}
+          value={majorMoney(stats.pendingFees)}
         />
         <InfoWidget
           title={t('parents.profile.overdueFees')}
           image={feesImage}
-          value={`$${stats.overdueFees}`}
+          value={majorMoney(stats.overdueFees)}
         />
       </div>
 
@@ -180,7 +180,7 @@ const FinancialTab: React.FC<FinancialTabProps> = ({ parentId }) => {
                         </Label>
                       </div>
                       <Label className="text-sm text-muted-foreground">
-                        {t('parents.profile.totalFees')}: ${childTotal.toFixed(2)}
+                        {t('parents.profile.totalFees')}: {majorMoney(childTotal)}
                       </Label>
                     </div>
 
@@ -215,7 +215,7 @@ const FinancialTab: React.FC<FinancialTabProps> = ({ parentId }) => {
 
                             <div className="flex items-center gap-3">
                               <Label className="text-lg font-bold text-primary">
-                                ${parseFloat(fee.amount || 0).toFixed(2)}
+                                {majorMoney(fee.amount || 0)}
                               </Label>
                               <Badge className={getStatusBadgeColor(fee.paymentStatus)}>
                                 {t(`fees.paymentStatus.${fee.paymentStatus}`)}

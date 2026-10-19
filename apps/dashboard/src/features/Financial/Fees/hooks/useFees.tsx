@@ -14,6 +14,8 @@ type UseFeesOptions = {
   studentId?: string;
   enabled?: boolean;
   schedule?: Schedule;
+  classId?: string;
+  sectionId?: string;
   /** The students owing fees of any year: the fees table's outstanding view. */
   allYears?: boolean;
   /** The student's fees of this year instead of the viewed one. */
@@ -24,7 +26,7 @@ type UseFeesOptions = {
 
 export const useFees = (options?: UseFeesOptions) => {
   const { t, language } = useTranslation();
-  const { feeId, studentId, enabled = true, schedule, allYears = false, studentYear, studentAllYears = false } = options || {};
+  const { feeId, studentId, enabled = true, schedule, classId, sectionId, allYears = false, studentYear, studentAllYears = false } = options || {};
   const { viewingYear } = useViewingAcademicYear();
   const mutationYear = studentYear ?? viewingYear;
 
@@ -43,8 +45,12 @@ export const useFees = (options?: UseFeesOptions) => {
   // fees of any year, which the outstanding view needs whatever year is viewed.
   const yearFees = useYearScopedList({
     resource: 'fees',
-    parts: schedule ? ['schedule', schedule] : [],
-    fetch: () => feeApi.getFeesApi(schedule),
+    parts: [
+      ...(schedule ? ['schedule', schedule] : []),
+      ...(classId ? ['class', classId] : []),
+      ...(sectionId ? ['section', sectionId] : []),
+    ],
+    fetch: () => feeApi.getFeesApi({ schedule, classId, sectionId }),
     enabled: enabled && !allYears,
   });
   const allYearFees = crud.useGetByParam('scope', allYears ? 'outstanding' : undefined, enabled && allYears);

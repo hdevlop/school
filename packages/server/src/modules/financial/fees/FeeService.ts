@@ -56,7 +56,7 @@ export class FeeService {
   }
 
   async getAll(filters: ListFeesQueryDto = {}) {
-    return this.feeRepository.getAll(undefined, filters.schedule);
+    return this.feeRepository.getAll(undefined, filters.schedule, filters);
   }
 
   /**

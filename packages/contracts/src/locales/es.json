@@ -3382,7 +3382,7 @@
     "errors": {
       "recordFailed": "No se pudo registrar el pago. Inténtalo de nuevo.",
       "studentMissing": "Falta la información del estudiante",
-      "insufficientCash": "Efectivo insuficiente. Añade {{amount}} MAD para cubrir las cuotas seleccionadas.",
+      "insufficientCash": "Efectivo insuficiente. Añade {{amount}} para cubrir las cuotas seleccionadas.",
       "amountRequired": "El importe del pago es obligatorio",
       "notFound": "Pago no encontrado",
       "paymentNotFound": "Pago no encontrado",
@@ -3432,7 +3432,7 @@
       "bank": "Banco",
       "referencePlaceholder": "N.º de recibo, ref…",
       "reference": "Referencia (opcional)",
-      "amountReceived": "Importe recibido (MAD)",
+      "amountReceived": "Importe recibido ({{currency}})",
       "replaceCheckWithCash": "Al guardar, se anulará automáticamente el pago con cheque y se emitirá un nuevo recibo en efectivo por el mismo importe y las mismas cuotas. Compruebe la fecha de pago indicada arriba.",
       "amount": "Monto",
       "amountPlaceholder": "Ingrese el monto",

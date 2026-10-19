@@ -5,28 +5,9 @@ import { useNajmFormat } from 'najm-kit';
 import { SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
 import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
 import { formatSchoolDate, schoolDateFormat, schoolTimeFormat, todayInTimeZone } from './schoolDateFormat';
+import { createSchoolMoneyFormatter } from './schoolMoneyFormat';
 
-export function toMinorUnits(amount: number | string | null | undefined, fractionDigits: number): number | null {
-  if (amount == null || amount === '') return null;
-  const text = String(amount).trim();
-  const decimal = /^(-?)(\d+)(?:\.(\d+))?$/.exec(text);
-  if (!decimal) {
-    const value = Number(text);
-    return Number.isFinite(value)
-      ? toMinorUnits(value.toFixed(fractionDigits + 1), fractionDigits)
-      : null;
-  }
-
-  const [, sign, whole, fraction = ''] = decimal;
-  const scale = BigInt(10) ** BigInt(fractionDigits);
-  const digits = fraction.slice(0, fractionDigits).padEnd(fractionDigits, '0');
-  let minor = BigInt(whole) * scale + BigInt(digits || '0');
-  if (fraction[fractionDigits] && fraction[fractionDigits] >= '5') minor += BigInt(1);
-  if (sign) minor = -minor;
-  return minor <= BigInt(Number.MAX_SAFE_INTEGER) && minor >= BigInt(Number.MIN_SAFE_INTEGER)
-    ? Number(minor)
-    : null;
-}
+export { toMinorUnits } from './schoolMoneyFormat';
 
 function calendarDateValue(value: Date | number | string | null | undefined) {
   return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)
@@ -41,14 +22,11 @@ export function useSchoolFormat() {
   const settings = Array.isArray(publicSettings) ? publicSettings[0] : publicSettings;
   const dateFormat = schoolDateFormat(settings?.dateFormat);
   const timeFormat = schoolTimeFormat(settings?.timeFormat);
-  const { money, date, percent } = format;
+  const { date, percent } = format;
   const currency = format.currency ?? SCHOOL_DEFAULT_CURRENCY;
-  const fractionDigits = useMemo(() => new Intl.NumberFormat(format.locale, {
-    style: 'currency',
-    currency,
-  }).resolvedOptions().maximumFractionDigits, [format.locale, currency]);
-  const majorMoney = useCallback((amount: number | string | null | undefined) =>
-    money(toMinorUnits(amount, fractionDigits)), [money, fractionDigits]);
+  const majorMoney = useMemo(() => createSchoolMoneyFormatter({
+    locale: format.locale, currency, placeholder: format.placeholder,
+  }), [format.locale, currency, format.placeholder]);
   const displayDate = useCallback((
     value: Date | number | string | null | undefined,
     options?: Intl.DateTimeFormatOptions,
