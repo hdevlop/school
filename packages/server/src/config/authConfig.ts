@@ -42,10 +42,40 @@ function accountInviteLogo() {
   };
 }
 
+/**
+ * The invitation mail in School's colors (`theme/theme.json`): the secondary
+ * navy for the header, the primary coral for the button and accents, the
+ * accent blush for the expiry note. The coral is a little darker than the
+ * dashboard's so white text on the button keeps a 4.5:1 contrast. The logo is
+ * drawn for a light background, so it sits on a white plate over the navy.
+ */
+const accountInviteTheme = {
+  pageBackground: '#f3f6fb',
+  border: '#dbe4f3',
+  headerBackground: '#1e3a5f',
+  headerText: '#ffffff',
+  eyebrow: '#ffb3ba',
+  accent: '#cc434d',
+  button: '#cc434d',
+  buttonText: '#ffffff',
+  ink: '#14284d',
+  text: '#41506b',
+  muted: '#6b7790',
+  link: '#1e3a5f',
+  panelBackground: '#eef3fb',
+  panelTitle: '#1e3a5f',
+  panelText: '#52607a',
+  noteBackground: '#fff1f2',
+  noteText: '#7a2f35',
+  logoBackground: '#ffffff',
+  logoHeight: 96,
+};
+
 export const authConfig = () =>
   auth({
     appName: APP_NAME,
     accountInviteLogo: accountInviteLogo(),
+    accountInviteTheme,
     frontendUrl: process.env.FRONTEND_URL,
     dialect: 'pg',
     encryptionKey: process.env.NAJM_ENCRYPTION_KEY,

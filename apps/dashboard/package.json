@@ -62,7 +62,7 @@
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.8.0",
-    "najm-auth": "6.6.0",
+    "najm-auth": "6.9.0",
     "najm-chatbot": "3.7.0",
     "najm-kit": "3.6.3",
     "najm-next": "0.10.0",
