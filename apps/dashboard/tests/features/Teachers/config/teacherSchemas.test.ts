@@ -27,6 +27,13 @@ const assignments = {
 };
 
 describe('teacherPersonalSchema', () => {
+  it('requires email for a new invitation, while allowing an existing phone-only profile', () => {
+    expect(teacherPersonalSchema.safeParse({ ...personal, email: '' }).success).toBe(false);
+    expect(teacherPersonalSchema.safeParse({ ...personal, email: '   ' }).success).toBe(false);
+    expect(createTeacherSchemas(english, { requireEmail: false }).personal.safeParse({ ...personal, email: '' }).success).toBe(true);
+    expect(teacherPersonalSchema.safeParse({ ...personal, email: 'invalid' }).success).toBe(false);
+  });
+
   it('defaults a new teacher to active', () => {
     expect(teacherPersonalSchema.parse(personal).status).toBe('active');
   });

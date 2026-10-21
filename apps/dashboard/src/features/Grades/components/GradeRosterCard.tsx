@@ -44,6 +44,9 @@ export default function GradeRosterCard({ data: row, canEdit, onEdit, onToggleSt
   const showMarks = editable || hasMarks;
   const hasFeedback = !!(row.feedback ?? '').trim();
   const showFeedback = feedbackOpen || hasFeedback;
+  const isUnsaved = row.isUnsaved
+    || String(marks) !== String(row.marksObtained ?? '')
+    || feedback !== (row.feedback ?? '');
 
   const commitMarks = () => {
     if (invalid) return;
@@ -62,7 +65,7 @@ export default function GradeRosterCard({ data: row, canEdit, onEdit, onToggleSt
     >
       <NBadge status={status} />
     </NButton>
-  ) : <NBadge status={status} />;
+  ) : isUnsaved ? null : <NBadge status={status} />;
 
   return (
     <div className="flex flex-col gap-2 px-3 py-2.5">
@@ -73,6 +76,7 @@ export default function GradeRosterCard({ data: row, canEdit, onEdit, onToggleSt
           <div className="mt-0.5 flex min-w-0 items-center gap-2">
             <span className="truncate text-xs text-muted-foreground">{row.studentCode}</span>
             {statusBadge}
+            {isUnsaved ? <span className="text-xs font-medium text-amber-700 dark:text-amber-400">{t('grades.messages.unsaved')}</span> : null}
           </div>
         </div>
         {showMarks ? (

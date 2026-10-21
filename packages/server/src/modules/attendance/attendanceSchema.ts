@@ -23,6 +23,7 @@ export const attendance = pgTable('attendance', {
   academicYearId: text('academic_year_id').references(() => academicYears.id, { onDelete: 'restrict' }),
   date: date('date').notNull(),
   status: attendanceStatusEnum('status').notNull().default('present'),
+  arrivalTime: text('arrival_time'),
   notes: text('notes'),
   markedBy: text('marked_by').references(() => users.id),
   lastUpdatedBy: text('last_updated_by').references(() => users.id),

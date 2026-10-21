@@ -70,6 +70,7 @@ const ClassForm = ({ classData = null}) => {
                         name='level'
                         type='text'
                         formLabel={t('classes.form.level')}
+                        required
                         placeholder={t('classes.form.levelPlaceholder')}
                         icon={Layers}
                      />

@@ -12,7 +12,8 @@ const behaviorRewardInput = z.object({
   recognitionLevel: behaviorRecognitionLevelEnum,
   description: z.string().trim().min(1, 'Description is required').max(2000, 'Description is too long'),
   rewardType: behaviorRewardTypeEnum,
-  points: z.number().int('Points must be an integer').min(0).max(100),
+  points: z.number().int('Points must be an integer')
+    .min(0, 'validationMessages.pointsRange').max(100, 'validationMessages.pointsRange'),
   rewardNote: z.string().trim().max(1000, 'Reward note is too long').nullable().optional(),
 });
 

@@ -1,4 +1,5 @@
 'use client';
+import { SCHOOL_DEFAULT_DATE_FORMAT, SCHOOL_DEFAULT_TIME_FORMAT } from '@sms/contracts';
 
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useFormState, type Control } from 'react-hook-form';
@@ -79,8 +80,8 @@ function settingsFormDefaults(settings: AdminSettings) {
     timeZone: settings?.timeZone || schoolApp.preferences.defaultTimeZone,
     language: settings?.language || schoolI18n.defaultLanguage,
     theme: settings?.theme === 'dark' ? ('dark' as const) : ('light' as const),
-    dateFormat: settings?.dateFormat || 'MM/DD/YYYY' as const,
-    timeFormat: settings?.timeFormat || '12' as const,
+    dateFormat: settings?.dateFormat || SCHOOL_DEFAULT_DATE_FORMAT,
+    timeFormat: settings?.timeFormat || SCHOOL_DEFAULT_TIME_FORMAT,
     currency: settings?.currency || SCHOOL_DEFAULT_CURRENCY,
   };
 }

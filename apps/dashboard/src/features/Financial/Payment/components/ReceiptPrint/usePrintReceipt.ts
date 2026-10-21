@@ -7,6 +7,7 @@ import { printReceipt, type ReceiptData } from './printReceipt';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { useTranslation } from 'najm-i18n/react';
+import { useNThemeBrandingSlot } from 'najm-theme/react';
 import { getPaymentByIdApi } from '@/services/paymentApi';
 
 /** All receipt entry points share the school's current identity. */
@@ -14,6 +15,7 @@ export function usePrintReceipt() {
   const [isPrinting, setIsPrinting] = useState(false);
   const { t } = useTranslation();
   const { publicSettings, isSettingsLoading } = usePublicSettings();
+  const schoolLogo = useNThemeBrandingSlot('authLogo');
   const settings = Array.isArray(publicSettings) ? publicSettings[0] : publicSettings;
 
   return {
@@ -23,7 +25,7 @@ export function usePrintReceipt() {
         ...data,
         language: settings?.receiptLanguage ?? DEFAULT_RECEIPT_LANGUAGE,
         schoolName: settings?.schoolName || schoolApp.appName,
-        schoolLogo: '/images/branding/school-logo-monochrome.png',
+        schoolLogo: settings?.schoolLogo || schoolLogo || undefined,
         schoolAddress: settings?.schoolAddress || undefined,
         schoolPhone: settings?.schoolPhone || undefined,
       };

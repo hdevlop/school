@@ -31,5 +31,5 @@ export function useResetLogin() {
     ? [{ label: t('users.accessReset.action'), icon: KeyRound, separatorBefore: true, onSelect: () => openReset(userId) }]
     : []);
 
-  return { canReset, resetItems };
+  return { canReset, resetItems, openReset };
 }

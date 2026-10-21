@@ -47,6 +47,20 @@ describe('behaviorRewardSchema', () => {
     expect(behaviorRewardSchema.safeParse({ ...reward, points: 0 }).success).toBe(true);
   });
 
+  it('uses translated range feedback in every language', () => {
+    for (const language of ['en', 'fr', 'es', 'ar'] as const) {
+      const t = (key: string) => schoolI18n.translate(language, key as never);
+      for (const points of [-1, 101]) {
+        const result = createBehaviorRewardSchema(t).safeParse({ ...reward, points });
+        expect(result.success).toBe(false);
+        expect(result.error!.issues.find(issue => issue.path[0] === 'points')?.message)
+          .toBe(t('validationMessages.pointsRange'));
+        expect(t('validationMessages.pointsRange')).not.toBe('validationMessages.pointsRange');
+      }
+      expect(createBehaviorRewardSchema(t).safeParse({ ...reward, points: 100 }).success).toBe(true);
+    }
+  });
+
   it('needs both halves of the timestamp the form joins', () => {
     expect(behaviorRewardSchema.safeParse({ ...reward, behaviorDate: '' }).success).toBe(false);
     expect(behaviorRewardSchema.safeParse({ ...reward, behaviorTime: '' }).success).toBe(false);

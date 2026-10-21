@@ -18,6 +18,10 @@ export class TeacherValidator {
     private subjectValidator: SubjectValidator,
   ) { }
 
+  ensureInvitationEmail(email?: string, password?: string) {
+    if (!password?.trim() && !email?.trim()) Err(400, this.tt('invitationEmailRequired'));
+  }
+
   ensureDatedRosterAccess(onDate: string, year: { reportingStartsOn: string; reportingEndsOn: string }, role?: string) {
     if (role !== 'admin' && role !== 'principal') Err(403, this.tt('datedRosterUnreviewed'));
     if (onDate < year.reportingStartsOn || onDate > year.reportingEndsOn) Err(400, this.tt('dateOutsideYear'));

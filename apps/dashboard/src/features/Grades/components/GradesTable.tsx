@@ -25,6 +25,7 @@ import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import { useTranslation } from 'najm-i18n/react';
+import { EMPTY_GRADE_DRAFT, gradeDraftKey, useGradeDraftStore } from '../store/gradeDraftStore';
 
 const PASS_THRESHOLD = 50;
 type GradeSourceType = 'assessment' | 'exam';
@@ -84,11 +85,13 @@ function GradesTableForYear() {
   const [sourceType, setSourceType] = useState<GradeSourceType>('assessment');
   const [sourceId, setSourceId] = useState('');
 
-  // Draft of unsaved edits keyed by studentId. Cell edits and status toggles
-  // land here instead of hitting the API, so the user can review everything and
-  // then persist the whole roster with a single Save button (like Attendance).
-  const [draft, setDraft] = useState<Record<string, { marksObtained?: any; status?: string; feedback?: string }>>({});
-  const resetDraft = useCallback(() => setDraft({}), []);
+  const yearKey = useViewingYearKey();
+  const draftKey = gradeDraftKey(user?.id ?? '', yearKey, sourceType, sourceId, sectionId);
+  const draft = useGradeDraftStore((state) => state.drafts[draftKey] ?? EMPTY_GRADE_DRAFT);
+  const patchDraft = useGradeDraftStore((state) => state.patch);
+  const clearDraft = useGradeDraftStore((state) => state.clear);
+  const resetDraft = useCallback(() => clearDraft(draftKey), [clearDraft, draftKey]);
+  useEffect(() => { void useGradeDraftStore.persist?.rehydrate(); }, []);
 
   // A teacher grades only what they teach: their own assignments narrow the
   // class, section and subject choices. Other roles see every option.
@@ -152,11 +155,7 @@ function GradesTableForYear() {
     clearSource();
   }, [clearSource]);
 
-  // Discard unsaved edits whenever the roster context switches, so drafts never
-  // leak across a different section / assessment / exam.
-  useEffect(() => {
-    resetDraft();
-  }, [sectionId, sourceId, sourceType, resetDraft]);
+  // Drafts stay attached to their source and section when filters change.
   const subjectOptions = useMemo(
     () => (subjects || [])
       .filter((s) => !ownAssignments || ownAssignments.some((a) =>
@@ -288,14 +287,14 @@ function GradesTableForYear() {
   const roster = useMemo(
     () => baseRoster.map((r) => {
       const d = draft[r.studentId];
-      return d ? { ...r, ...d } : r;
+      return d ? { ...r, ...d, isUnsaved: true } : { ...r, isUnsaved: false };
     }),
     [baseRoster, draft]
   );
 
   const stats = useMemo(() => {
-    const withGrade = roster.filter((r) => r.gradeId);
-    const total = roster.length;
+    const withGrade = baseRoster.filter((r) => r.gradeId);
+    const total = baseRoster.length;
     let passing = 0;
     let highest: number | null = null;
     let lowest: number | null = null;
@@ -308,9 +307,10 @@ function GradesTableForYear() {
     }
     const passRate = withGrade.length > 0 ? Math.round((passing / withGrade.length) * 100) : 0;
     return { total, passing, highest, lowest, passRate };
-  }, [roster]);
+  }, [baseRoster]);
 
   const canEdit = (row) =>
+    !isSubmittingBatch &&
     !!sourceId &&
     (!!row.assessmentId || !!row.examId) &&
     !!row.classId &&
@@ -319,8 +319,8 @@ function GradesTableForYear() {
     !!row.teacherId;
 
   const applyDraft = useCallback((studentId: string, patch: Record<string, any>) => {
-    setDraft((prev) => ({ ...prev, [studentId]: { ...prev[studentId], ...patch } }));
-  }, []);
+    patchDraft(draftKey, studentId, patch);
+  }, [patchDraft, draftKey]);
 
   const handleCellEdit = async (row, columnId, value) => {
     if (columnId === 'marksObtained') {
@@ -485,6 +485,7 @@ function GradesTableForYear() {
                 hasChanges={hasChanges}
                 isSubmitting={isSubmittingBatch}
                 onSubmit={handleSubmit}
+                onReset={resetDraft}
                 canSubmit={canSubmit}
                 submitTitle={canSubmit ? t('grades.toolbar.save') : t('grades.toolbar.selectSource')}
               />

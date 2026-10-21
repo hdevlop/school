@@ -147,6 +147,9 @@ export const useGradesTableColumns = ({
         const canToggleStatus = canEdit(row.original) && isToggleable;
         return (
           <div className="flex items-center gap-2">
+            {row.original.isUnsaved ? (
+              <span className="text-sm font-medium text-amber-700 dark:text-amber-400">{t('grades.messages.unsaved')}</span>
+            ) : null}
             {canToggleStatus ? (
               <NButton
                 type="button"
@@ -161,9 +164,9 @@ export const useGradesTableColumns = ({
               >
                 <NBadge status={v} />
               </NButton>
-            ) : (
+            ) : !row.original.isUnsaved ? (
               <NBadge status={v} />
-            )}
+            ) : null}
           </div>
         );
       },

@@ -101,3 +101,12 @@ describe('calculateTotalFees', () => {
     expect(calculateTotalFees([])).toBe(0);
   });
 });
+
+describe('new student billing preview', () => {
+  it('bills an October admission for nine months, including discounts', () => {
+    const context = { academicYear: '2026-2027', effectiveDate: '2026-10-21' };
+    expect(calculateFeeAmounts('recurring', 2000, 'monthly', 0, context).netAmount).toBe(18000);
+    expect(calculateFeeAmounts('recurring', 2000, 'monthly', 100, context).netAmount).toBe(17100);
+    expect(calculateFeeAmounts('recurring', 2000, 'monthly', 0, { ...context, effectiveDate: '2026-11-21' }).netAmount).toBe(16000);
+  });
+});

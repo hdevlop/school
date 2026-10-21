@@ -26,6 +26,52 @@ const validPersonal = {
 const validEmployment = { compensationMode: 'monthly', salary: '3000', hireDate: '2026-09-01' };
 
 describe('staff form schemas', () => {
+  it('validates required driver fields on the employment step', () => {
+    const { details } = createStaffSchemas(translatorFor('en'), '2026-10-21');
+    const result = details.safeParse({ ...validEmployment, role: 'driver' });
+    expect(result.success).toBe(false);
+    expect(messagesByPath(result.error!)).toMatchObject({
+      licenseNumber: en.staff.validation.licenseNumberRequired,
+      licenseType: en.staff.validation.licenseTypeRequired,
+      licenseExpiry: en.staff.validation.licenseExpiryRequired,
+    });
+    expect(details.safeParse({ ...validEmployment, role: 'secretary' }).success).toBe(true);
+    const missingSalary = details.safeParse({ ...validEmployment, salary: '', role: 'driver' });
+    expect(missingSalary.success).toBe(false);
+    expect(messagesByPath(missingSalary.error!)).toMatchObject({
+      salary: en.staff.validation.salaryRequired,
+      licenseNumber: en.staff.validation.licenseNumberRequired,
+      licenseType: en.staff.validation.licenseTypeRequired,
+      licenseExpiry: en.staff.validation.licenseExpiryRequired,
+    });
+  });
+
+  it('refuses expired and impossible dates, and accepts a license expiring today', () => {
+    for (const language of Object.keys(CATALOGS)) {
+      const { details } = createStaffSchemas(translatorFor(language), '2026-10-21');
+      const driver = { ...validEmployment, role: 'driver', licenseNumber: 'DL12345', licenseType: 'D' };
+      const expired = details.safeParse({ ...driver, licenseExpiry: '2026-10-05' });
+      expect(expired.success).toBe(false);
+      expect(messagesByPath(expired.error!).licenseExpiry).toBe(lookup(language, 'staff.validation.licenseExpired'));
+      expect(details.safeParse({ ...driver, licenseExpiry: '2026-02-30' }).success).toBe(false);
+      for (const licenseExpiry of ['2026-10-21', '2030-01-01']) {
+        expect(details.safeParse({ ...driver, licenseExpiry }).success).toBe(true);
+      }
+    }
+  });
+
+  it('requires a vehicle on the assignment step for drivers and bus assistants', () => {
+    const { assignmentStep } = createStaffSchemas(translatorFor('en'));
+    for (const role of ['driver', 'busAssistant']) {
+      for (const assignments of [undefined, [], [{}]]) {
+        const result = assignmentStep.safeParse({ role, assignments });
+        expect(result.success).toBe(false);
+        expect(messagesByPath(result.error!)['assignments.0.vehicleId']).toBe(en.staff.validation.vehicleRequired);
+      }
+      expect(assignmentStep.safeParse({ role, assignments: [{ vehicleId: 'bus1' }] }).success).toBe(true);
+    }
+  });
+
   it('names every refusal by a key present in all four catalogs', () => {
     const asked = new Set<string>();
     createStaffSchemas((key) => {

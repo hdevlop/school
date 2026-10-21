@@ -10,9 +10,9 @@ const numberField = (schema: z.ZodNumber): any =>
     return trimmed === '' ? value : Number(trimmed);
   }, schema);
 
-/** A cleared number input holds `null`; an optional field reads it as not given. */
+/** Both a new input and a cleared input represent an omitted optional number. */
 const optionalNumberField = (schema: z.ZodNumber): any =>
-  z.preprocess((value) => (value === null ? undefined : value), numberField(schema).optional());
+  z.preprocess((value) => (value === null || (typeof value === 'string' && value.trim() === '') ? undefined : value), numberField(schema).optional());
 
 /**
  * What the section form accepts. It takes `t` so a refused field reads in the

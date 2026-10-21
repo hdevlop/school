@@ -1,0 +1,94 @@
+{
+  "baseRevision": "3aa3ca1693353387ba685e211e68fcdd86526527",
+  "workingTree": "Shared uncommitted checkout; unrelated edits preserved",
+  "files": [
+    {
+      "path": "apps/dashboard/src/app/not-found.tsx",
+      "sha256": "c491238bf1382788c01c3a389274882a1870a18c85bef2623427ac822dda2d87"
+    },
+    {
+      "path": "apps/dashboard/src/features/BehaviorRewards/config/behaviorRewardSchemas.ts",
+      "sha256": "6c667c6d834059c08c6d7603eb7504192b31b989a251cffede749b25674ead72"
+    },
+    {
+      "path": "packages/server/src/modules/behaviorRewards/BehaviorRewardDto.ts",
+      "sha256": "62113a5a216b38f0f6424272149b7e00649c12f3d1a6190d178d16c65673b721"
+    },
+    {
+      "path": "apps/dashboard/src/features/Attendance/components/StaffAttendanceDetails.tsx",
+      "sha256": "9c8ab1514de7b612b18337c26a207e752ea14f711960f87461bc63192537c0ca"
+    },
+    {
+      "path": "apps/dashboard/src/features/Attendance/components/StaffAttendanceTable.tsx",
+      "sha256": "2078a235941ef236cff59c8bf947d49e8a983a1ae050d301e615b26bb1b64793"
+    },
+    {
+      "path": "apps/dashboard/src/features/Attendance/components/RosterCard.tsx",
+      "sha256": "565b7489f6f2d1c8469edac6a06ccdcb5479d55b46ef8384bb916d870bd10df9"
+    },
+    {
+      "path": "apps/dashboard/src/features/Attendance/config/staffAttendanceDetails.ts",
+      "sha256": "f1d387ce2c1bf84a5fb42341c8ab5a3e848d4033b69304a89dc7ff72bbecf98e"
+    },
+    {
+      "path": "apps/dashboard/src/features/Attendance/hooks/useAttendanceRoster.tsx",
+      "sha256": "958b5091e4db7aca8a00fc98b2909f19834c74cf5437baabf68f9dba560d03f8"
+    },
+    {
+      "path": "apps/dashboard/src/features/Attendance/hooks/useAttendanceTableColumns.tsx",
+      "sha256": "38633258a2c425f8306e04581ad10b3377d4d1be18d287a07ef03e436213b214"
+    },
+    {
+      "path": "apps/dashboard/src/features/Attendance/hooks/useAttendance.tsx",
+      "sha256": "92c87bf8f87d80b05e8f73c2c690227f5bb85b299bc458d86ba95a4fa50156a7"
+    },
+    {
+      "path": "apps/dashboard/src/services/attendanceApi.ts",
+      "sha256": "2bfbc750f525f4d728e5cd6649da1c906b7674979d2292ab8cf2c6507a87777c"
+    },
+    {
+      "path": "packages/server/src/modules/attendance/AttendanceDto.ts",
+      "sha256": "1562aeba9cbaad5bc9f0c27d207218742b71d641d02848e4506b363cf658a098"
+    },
+    {
+      "path": "packages/server/src/modules/attendance/AttendanceRepository.ts",
+      "sha256": "d6a8ddedc74a2a3336e70f3263cfa868b01574b75fc49b7cc65afa856c86b529"
+    },
+    {
+      "path": "packages/server/src/modules/attendance/AttendanceService.ts",
+      "sha256": "bc1955f332c844fe70d34b0c828d93bf32b8383f3d8518145726fb6d2f19d129"
+    },
+    {
+      "path": "packages/server/src/modules/attendance/attendanceSchema.ts",
+      "sha256": "930386280aa2ef8ff8082414077f95e30c6042f86735bd6ef9fb4d3ac17ca146"
+    },
+    {
+      "path": "packages/server/src/database/migrations/0071_grey_shadowcat.sql",
+      "sha256": "4bc8427b6ba0e3468e3d2dd90a9bde9f66d75262072c5827f7cd132630d14486"
+    },
+    {
+      "path": "packages/server/src/database/migrations/meta/0071_snapshot.json",
+      "sha256": "248760c990a87aa0c7557cd402eaafc2bb0116f9aad8de716c3cf673fb3bd553"
+    },
+    {
+      "path": "packages/server/src/database/migrations/meta/_journal.json",
+      "sha256": "ab8d2926d5df541a98eded75761c5b64b8c1638e7efba497e3e3290f89a5f9bc"
+    },
+    {
+      "path": "packages/contracts/src/locales/en.json",
+      "sha256": "2815e60e1ddaf4d39e1a9c1c6626537e4f4c4f1ddae976991089f8c8c6b91a09"
+    },
+    {
+      "path": "packages/contracts/src/locales/fr.json",
+      "sha256": "9f101c2a6513b101141ac8e40ce0a2db72a3956aa0fe563d4181b2cf9039ec63"
+    },
+    {
+      "path": "packages/contracts/src/locales/ar.json",
+      "sha256": "a58924feec8d74d2870891245a20435a9de2896efa976ba00ef293b30a37ecb1"
+    },
+    {
+      "path": "packages/contracts/src/locales/es.json",
+      "sha256": "4b36ea21bec5a7114bf70de3a5735f1ba17bd4f9fdbc0098ee52cf03f84f6690"
+    }
+  ]
+}

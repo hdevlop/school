@@ -4,6 +4,7 @@ import { attendanceStatusEnum, attendanceTypeEnum } from '../../shared/enums';
 
 const mcpRequiredId = z.string().min(1, 'ID is required');
 const notesField = z.string().max(500, 'Notes too long').optional();
+const arrivalTimeField = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'validationMessages.arrivalTimeInvalid').nullish();
 
 const createAttendanceInputSchema = z.object({
   type: attendanceTypeEnum.default('student'),
@@ -15,6 +16,7 @@ const createAttendanceInputSchema = z.object({
   date: dateField,
   status: attendanceStatusEnum.default('present'),
   notes: notesField,
+  arrivalTime: arrivalTimeField,
 });
 
 export const createAttendanceInputDto = createAttendanceInputSchema;
@@ -56,6 +58,7 @@ export const createAttendanceDto = createAttendanceInputSchema.superRefine((data
 export const updateAttendanceDto = z.object({
   status: attendanceStatusEnum.optional(),
   notes: z.string().max(500, 'Notes too long').optional(),
+  arrivalTime: arrivalTimeField,
 });
 
 export const updateAttendanceStatusDto = z.object({
@@ -71,6 +74,7 @@ export const staffAttendanceRosterItemDto = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format'),
   status: attendanceStatusEnum.default('present'),
   notes: notesField.nullable(),
+  arrivalTime: arrivalTimeField,
 });
 
 export const upsertStaffAttendanceRosterDto = z.object({
@@ -120,6 +124,7 @@ export type StaffAttendanceDto = {
   date: string;
   status: AttendanceStatus;
   notes?: string;
+  arrivalTime?: string | null;
 };
 
 export type CreateAttendanceDto = StudentAttendanceDto | StaffAttendanceDto;

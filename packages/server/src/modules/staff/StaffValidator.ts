@@ -3,6 +3,8 @@ import { matchPermission } from 'najm-auth/client';
 import { Err, I18n, Service } from '../../najm';
 import { StaffRepository } from './StaffRepository';
 import { StaffRoleRepository } from './roles/StaffRoleRepository';
+import { isDateOnly } from '@sms/contracts/academic-years';
+import { getBusinessDateOnly } from '../../shared/businessDate';
 
 /** The signed-in user behind a staff request. In-process callers pass none. */
 export type StaffActor = { permissions: string[] };
@@ -46,6 +48,13 @@ export class StaffValidator {
     }
     for (const key of ['licenseNumber', 'licenseType', 'licenseExpiry']) {
       if (!partial && !profile[key]) Err(400, this.t('driverFieldRequired', { field: key }));
+    }
+    // Both REST and MCP reach this check, including partial profile edits.
+    if (profile.licenseExpiry !== undefined) {
+      if (typeof profile.licenseExpiry !== 'string' || !isDateOnly(profile.licenseExpiry)) {
+        Err(400, this.t('driverLicenseExpiryInvalid'));
+      }
+      if (profile.licenseExpiry < getBusinessDateOnly()) Err(400, this.t('driverLicenseExpired'));
     }
   }
 

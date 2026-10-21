@@ -34,11 +34,13 @@ describe('normal attendance year writes', () => {
     await service.mark({ type: 'student', studentId: 'student-1', sectionId: 'section-1',
       date: '2025-10-01', status: 'present' }, { id: 'admin-1', role: 'admin' });
     await service.mark({ type: 'staff', staffId: 'staff-1',
-      date: '2025-10-01', status: 'present' }, { id: 'admin-1', role: 'admin', permissions: ['*:*'] });
+      date: '2025-10-01', status: 'late', arrivalTime: '09:10', notes: 'Delayed bus' },
+    { id: 'admin-1', role: 'admin', permissions: ['*:*'] });
 
     expect(created).toHaveLength(2);
     expect(created.map((row) => row.academicYearId)).toEqual(['year-1', 'year-1']);
     expect(created[0].sectionId).toBe('section-1');
     expect(created[1].staffId).toBe('staff-1');
+    expect(created[1]).toMatchObject({ arrivalTime: '09:10', notes: 'Delayed bus', status: 'late' });
   });
 });

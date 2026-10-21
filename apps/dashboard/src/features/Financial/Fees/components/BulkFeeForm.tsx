@@ -49,6 +49,7 @@ const FeeItem = ({
    showInstallmentPreview = true,
    showEffectiveDateField = true,
    studentEnrollmentDate = null,
+   studentAcademicYear = null,
 }) => {
     const { setValue } = useFormContext();
     const { t } = useTranslation();
@@ -63,7 +64,8 @@ const FeeItem = ({
     // A new line has no year until submit; preview it in the viewed year, which
     // the fee is created in, not the school year of today's date.
     const { viewingYear } = useViewingAcademicYear()
-    const academicYear = useWatch({ name: `${prefix}.academicYear` }) || viewingYear
+    const lineAcademicYear = useWatch({ name: `${prefix}.academicYear` })
+    const academicYear = studentAcademicYear || lineAcademicYear || viewingYear
     // The server bills from the student's enrollment to the end of the year and
     // refuses any other date, so the calendar offers only those days.
     const yearCalendar = useViewingYearCalendar()
@@ -183,12 +185,14 @@ export const BulkFeeFormContent = ({
    showInstallmentPreview = true,
    students = [],
    enrollmentDate = null,
+   academicYear = null,
    showEffectiveDateField = true,
 }: {
    feeTypes: any[]
    showInstallmentPreview?: boolean
    students?: any[]
    enrollmentDate?: string | null
+   academicYear?: string | null
    showEffectiveDateField?: boolean
 }) => {
    const { t, language } = useTranslation()
@@ -220,6 +224,7 @@ export const BulkFeeFormContent = ({
             showInstallmentPreview={showInstallmentPreview}
             showEffectiveDateField={showEffectiveDateField}
             studentEnrollmentDate={resolvedEnrollmentDate}
+            studentAcademicYear={academicYear}
          />
       </DynamicArray>
    )

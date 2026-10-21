@@ -1,0 +1,46 @@
+{
+  "baseRevision": "3aa3ca1693353387ba685e211e68fcdd86526527",
+  "workingTree": "Uncommitted fixes alongside preserved concurrent changes",
+  "files": [
+    {
+      "path": "apps/dashboard/src/features/Staff/components/StaffForm.tsx",
+      "sha256": "a02cf5690c2f04dbd85db81c1db8235f01580305c50173d55d987ff2fab59b9c"
+    },
+    {
+      "path": "apps/dashboard/src/features/Staff/config/staffSchemas.ts",
+      "sha256": "42080d3be92e0c315f2f0372d4b5c745758a48938bfeb07472dcb612706c900c"
+    },
+    {
+      "path": "apps/dashboard/src/features/Transport/components/VehicleStudentsPanel.tsx",
+      "sha256": "66f1d7093250f370577cf2ed8042f6ac12db6ac1fb30d459a98a37d0d2f4b0e3"
+    },
+    {
+      "path": "apps/dashboard/tests/features/Staff/config/staffSchemas.test.ts",
+      "sha256": "0dc0cdf39202ce1cdd856807c221e1e6172de8bdc1cbce769141474027314b2a"
+    },
+    {
+      "path": "packages/server/src/modules/staff/StaffValidator.ts",
+      "sha256": "59c8ca8b2f9e198ddd39bf90ab1f6e7706a3ed928e24d33b0e2d613e82b21bc9"
+    },
+    {
+      "path": "packages/server/tests/security/StaffDriverLicense.test.ts",
+      "sha256": "de2e1777f383aa50380ef113aa48151e1bdc5a932241a7e97bb45f7716dffccd"
+    },
+    {
+      "path": "packages/contracts/src/locales/en.json",
+      "sha256": "21c27acb82dcc4ec5691c046a4135e1d61ebbb3ea5197f0e9579b88d07a48dad"
+    },
+    {
+      "path": "packages/contracts/src/locales/fr.json",
+      "sha256": "333b191718f3799b0ce2f58f21eba916400d07dd02cf85046aa8a468f830feef"
+    },
+    {
+      "path": "packages/contracts/src/locales/ar.json",
+      "sha256": "b111c76f5eef1a115b998736805f282f85d38e5dc050f3b9b60e4bd5e29faac7"
+    },
+    {
+      "path": "packages/contracts/src/locales/es.json",
+      "sha256": "d578cb85b5e93788ef67451ddc00e195f8e3f7743728ca6971b7dab00dfa69e6"
+    }
+  ]
+}

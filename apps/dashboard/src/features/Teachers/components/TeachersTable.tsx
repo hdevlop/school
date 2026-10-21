@@ -28,7 +28,7 @@ function TeachersTable() {
   const canCreate = can('create:teachers');
   const canUpdate = can('update:teachers');
   const canDelete = can('delete:teachers');
-  const { canReset, resetItems } = useResetLogin();
+  const { canReset, resetItems, openReset } = useResetLogin();
   const router = useRouter();
   const columns = useTeachersTableColumns();
   const rawFilters = useTeachersTableFilters();
@@ -56,6 +56,10 @@ function TeachersTable() {
     announceInvitation(response?.data?.emailSent, data.email, {
       sent: t('teachers.invitation.sent', { email: data.email }),
       notSent: t('teachers.invitation.notSent'),
+      notSentAction: canReset && response?.data?.userId ? {
+        label: t('users.accessReset.action'),
+        onClick: () => openReset(response.data.userId),
+      } : undefined,
     });
     return response;
   };

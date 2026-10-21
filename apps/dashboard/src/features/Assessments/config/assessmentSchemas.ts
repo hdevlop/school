@@ -43,7 +43,10 @@ export const createAssessmentSchema = (t: T) => {
     sectionId: optionalId,
     sectionIds: z.array(requiredId).min(1, t('validationMessages.selectAtLeastOneSection')),
     subjectId: requiredId,
-    teacherId: requiredId,
+    teacherId: z.preprocess(
+      (value) => value ?? '',
+      z.string().trim().min(1, t('assessments.errors.teacherRequired')),
+    ),
     teacherAssignmentId: optionalId,
     title: z.string().min(3, t('validationMessages.titleMustBeAtLeast3Characters')).max(200, t('validationMessages.titleTooLong')),
     description: z.string().max(1000, t('validationMessages.descriptionTooLong')).optional().nullable(),
@@ -59,6 +62,9 @@ export const createAssessmentSchema = (t: T) => {
     instructions: z.string().max(2000, t('validationMessages.instructionsTooLong')).optional().nullable(),
     status: z.enum(ASSESSMENT_STATUS_VALUES).default('scheduled'),
     assessmentId: optionalId,
+  }).refine((data) => data.passingMarks <= data.totalMarks, {
+    path: ['passingMarks'],
+    message: t('assessments.errors.passingMarksExceedsTotal'),
   });
 };
 

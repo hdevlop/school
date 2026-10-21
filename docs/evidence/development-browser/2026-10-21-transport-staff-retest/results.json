@@ -1,0 +1,210 @@
+{
+  "origin": "http://localhost:3102",
+  "date": "2026-10-21",
+  "browser": "Chrome 155.0.8059.86",
+  "transport": "standalone Playwright",
+  "academicYear": "2026-2027",
+  "desktop": {
+    "width": 1440,
+    "height": 1000
+  },
+  "phone": {
+    "width": 390,
+    "height": 844
+  },
+  "results": [
+    {
+      "case": "Vehicle creation",
+      "result": "PASS",
+      "httpStatus": 200,
+      "capacity": 30
+    },
+    {
+      "case": "Transport occupancy",
+      "result": "PASS",
+      "before": "0/30",
+      "afterReload": "1/30"
+    },
+    {
+      "case": "Student assignment and automatic fees",
+      "result": "PASS",
+      "httpStatus": 200,
+      "beforeTotal": 18000,
+      "afterTotal": 21600,
+      "tuition": {
+        "monthly": 2000,
+        "total": 18000,
+        "installments": 9
+      },
+      "transportFee": {
+        "monthly": 400,
+        "total": 3600,
+        "installments": 9,
+        "firstDue": "2026-10-21",
+        "lastDue": "2027-06-21"
+      }
+    },
+    {
+      "case": "Staff roles and conditional license fields",
+      "result": "PASS",
+      "roles": [
+        "Accountant",
+        "Assistant",
+        "Bus Assistant",
+        "Cleaner",
+        "Driver",
+        "General Supervisor",
+        "IT Support",
+        "Librarian",
+        "Other",
+        "Principal",
+        "Receptionist",
+        "Secretary",
+        "Security"
+      ]
+    },
+    {
+      "case": "Empty vehicle setup guidance",
+      "result": "FAIL",
+      "fixture": "GET /api/vehicles response data=[] only in one development browser page",
+      "vehicleOptions": 0,
+      "error": "Vehicle is required",
+      "setupGuidance": false,
+      "createVehicleAction": false,
+      "phoneHorizontalOverflow": false
+    },
+    {
+      "case": "Expired driver license",
+      "result": "FAIL",
+      "submittedExpiry": "2026-10-05",
+      "createHttpStatus": 200,
+      "persistedExpiry": "2026-10-05",
+      "warningObserved": false
+    },
+    {
+      "case": "Staff validation timing",
+      "result": "FAIL",
+      "invalidName": "A",
+      "invalidControlsAfterBlur": 0,
+      "invalidControlsAfterNext": 3,
+      "visibleErrorsAfterNext": [
+        "Name must be at least 2 characters",
+        "CIN must be at least 8 characters",
+        "Role is required",
+        "Invalid phone number",
+        "Address is required"
+      ]
+    },
+    {
+      "case": "Student assignment success notification",
+      "result": "FAIL",
+      "toastObserver": "MutationObserver on child-list and attributes; collect [data-sonner-toast]",
+      "successToastEvents": 0,
+      "sourceCorroboration": "assign success invalidates queries without toast; unassign calls toast.success"
+    },
+    {
+      "case": "Create Student tuition preview",
+      "result": "PASS",
+      "monthly": 2000,
+      "admissionDate": "2026-10-21",
+      "preview": 18000,
+      "savedTuition": 18000,
+      "studentSavedFromPreview": false
+    }
+  ],
+  "ownedRecords": {
+    "vehicleId": "NmO7A",
+    "staffId": "n2U0i",
+    "driverAssignmentId": "o_pYr",
+    "studentId": "FMLIk",
+    "studentRouteId": "UNIFU",
+    "feeIds": [
+      "-Iu9jutHc6",
+      "3x4A5UDphi"
+    ]
+  },
+  "limits": [
+    "Empty-school condition tested by browser response fixture; no school reset",
+    "Only English exercised; empty-vehicle step also inspected at phone size",
+    "External browser requests blocked; map provider unavailable",
+    "No production requests, changes or deployment",
+    "No application source changes"
+  ],
+  "cleanup": {
+    "operations": [
+      {
+        "tool": "student-routes_delete",
+        "id": "UNIFU",
+        "result": "removed"
+      },
+      {
+        "tool": "fees_delete_by_id",
+        "id": "-Iu9jutHc6",
+        "result": "removed"
+      },
+      {
+        "tool": "fees_delete_by_id",
+        "id": "3x4A5UDphi",
+        "result": "removed"
+      },
+      {
+        "tool": "students_delete_by_id",
+        "id": "FMLIk",
+        "result": "removed"
+      },
+      {
+        "tool": "vehicle-assignments_delete",
+        "id": "o_pYr",
+        "result": "removed"
+      },
+      {
+        "tool": "staff_delete_by_id",
+        "id": "n2U0i",
+        "result": "removed"
+      },
+      {
+        "tool": "vehicles_delete_by_id",
+        "id": "NmO7A",
+        "result": "removed"
+      }
+    ],
+    "readBack": [
+      {
+        "type": "student",
+        "id": "FMLIk",
+        "status": 404
+      },
+      {
+        "type": "staff",
+        "id": "n2U0i",
+        "status": 404
+      },
+      {
+        "type": "vehicle",
+        "id": "NmO7A",
+        "status": 404
+      },
+      {
+        "type": "studentRoute",
+        "id": "UNIFU",
+        "status": 404
+      },
+      {
+        "type": "driverAssignment",
+        "id": "o_pYr",
+        "status": 404
+      },
+      {
+        "type": "fee",
+        "id": "-Iu9jutHc6",
+        "status": 404
+      },
+      {
+        "type": "fee",
+        "id": "3x4A5UDphi",
+        "status": 404
+      }
+    ],
+    "allNotFound": true
+  }
+}

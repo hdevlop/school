@@ -2,6 +2,7 @@ import { Service, Err, I18n } from '../../najm';
 import { SettingsRepository } from './SettingsRepository';
 import { defaultSchoolYearCalendar, isValidSchoolYearCalendar, parseSchoolYearLabel } from '@sms/contracts/academic-years';
 import type { UpdateSettingsDto } from './SettingsDto';
+import { schoolDayPeriods, type SchoolDaySettings } from '@sms/contracts/routines';
 
 const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
 
@@ -37,6 +38,14 @@ export class SettingsValidator {
 
   ensureTeachingDaysKeepAssignments(hasConflict: boolean) {
     if (hasConflict) Err(409, this.t('teachingDaysInUse'));
+  }
+
+  ensureSchoolDay(school: SchoolDaySettings) {
+    try {
+      schoolDayPeriods(school);
+    } catch {
+      Err(400, this.t('invalidSchoolDay'));
+    }
   }
 
   ensureYearSettingsUnchanged(data: UpdateSettingsDto, current: { startMonth: string; endMonth: string; currentAcademicYear: string }) {

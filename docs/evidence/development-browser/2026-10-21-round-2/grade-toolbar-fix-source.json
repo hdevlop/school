@@ -1,0 +1,10 @@
+{
+  "baseRevision": "3aa3ca1693353387ba685e211e68fcdd86526527",
+  "files": {
+    "apps/dashboard/src/features/Grades/components/GradesHeader.tsx": "393ef612bdbf57aef3a738dcf275a7c8114cb9aad6552e7ebaca0f3013d65773",
+    "apps/dashboard/src/features/Grades/components/GradesTable.tsx": "fa516247a22724b7fcab9f2aeb6c2a97c9b3c8ab737da262b285f3546d7bd459",
+    "apps/dashboard/src/features/Grades/components/GradeRosterCard.tsx": "73b176a3e98ace971ccc72b9af865bd83fc6d370ac8310f53b92c818d709306a",
+    "apps/dashboard/src/features/Grades/store/gradeDraftStore.ts": "63f763b4eb1ad584d007d86f4deeb32a3c0ea7db347e9fc4d71766296f0184c0",
+    "apps/dashboard/src/features/Settings/components/sections/SecuritySection.tsx": "778c7d9255ab18e248593af3f77fcab90e11e00970c5cdee8ff01869540ee77f"
+  }
+}

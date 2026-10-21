@@ -142,7 +142,7 @@ describe('settings over the history fixture', () => {
 
     // The newest row holds the active year: a second one switched years and
     // registered an open 2027-2028 on the way.
-    const second = { schoolName: 'Second school', schoolPhone: '212600000000', schoolEmail: '',
+    const second = { schoolName: 'Second school', schoolPhone: '212600000000', schoolEmail: 'contact@school.test', schoolAddress: 'Demo address',
       currentAcademicYear: '2027-2028' };
     for (const token of [adminToken, principalToken]) {
       const created = await request('/settings', undefined, 'POST', second, token);
@@ -180,7 +180,7 @@ describe('settings over the history fixture', () => {
       expect(withoutEdit(after)).toEqual(withoutEdit(edited));
 
       const create = await client.callTool({ name: 'settings_create', arguments: { schoolName: 'Second school',
-        schoolPhone: '212600000000', schoolEmail: '', currentAcademicYear: '2027-2028' } }) as
+        schoolPhone: '212600000000', schoolEmail: 'contact@school.test', schoolAddress: 'Demo address', currentAcademicYear: '2027-2028' } }) as
         { content: Array<{ text: string }>; isError?: boolean };
       expect(create.isError).toBe(true);
       expect((await db.select().from(settings)).length).toBe(1);

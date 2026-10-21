@@ -21,14 +21,16 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 type KpiCardProps = {
   title: string;
   value: string | number;
+  subtext?: string;
   icon: React.ComponentType<{ className?: string }>;
 };
 
-const KpiCard: React.FC<KpiCardProps> = ({ title, value, icon }) => (
+const KpiCard: React.FC<KpiCardProps> = ({ title, value, icon, subtext }) => (
   <NStatCard
     icon={icon}
     label={title}
     value={value}
+    subtext={subtext}
     classNames={{
       label: 'max-sm:whitespace-normal',
       value: 'max-sm:wrap-anywhere max-sm:leading-snug',
@@ -89,6 +91,7 @@ const FinanceKpis: React.FC = () => {
       <KpiCard
         title={showYearCash ? t('dashboard.finance.expensesYear') : t('dashboard.finance.expensesMonth')}
         value={majorMoney(expenses)}
+        subtext={t('dashboard.finance.expensesHelp')}
         icon={TrendingDown}
       />
       <KpiCard

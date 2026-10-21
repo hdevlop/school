@@ -1,0 +1,174 @@
+{
+  "date": "2026-10-21",
+  "origin": "http://localhost:3102",
+  "academicYear": "2026-2027",
+  "browser": "Chrome 155.0.8059.86",
+  "transport": "Standalone Playwright with installed Chrome; no browser plugin",
+  "results": [
+    {
+      "case": "Guessed rewards URL has a useful 404 and dashboard link",
+      "result": "PASS",
+      "status": 404
+    },
+    {
+      "case": "404 dashboard link navigates home",
+      "result": "PASS"
+    },
+    {
+      "case": "Reward points above 100 show friendly range feedback",
+      "result": "PASS"
+    },
+    {
+      "case": "Unmarked staff require an explicit attendance status before details",
+      "result": "PASS"
+    },
+    {
+      "case": "Real register save persists late status, arrival 09:15 and note for only owned staff",
+      "result": "PASS",
+      "status": 200,
+      "writes": 1
+    },
+    {
+      "case": "Arrival and note survive reload",
+      "result": "PASS"
+    },
+    {
+      "case": "Notes-only edit saves with unchanged status and arrival",
+      "result": "PASS"
+    },
+    {
+      "case": "Legacy roster update omitting arrival preserves saved time and record ID",
+      "result": "PASS"
+    },
+    {
+      "case": "API refuses impossible arrival time with translated validation",
+      "result": "PASS",
+      "status": 400
+    },
+    {
+      "case": "Arrival and note can be cleared explicitly",
+      "result": "PASS"
+    },
+    {
+      "case": "Phone card arrival and note correction persists with no horizontal overflow",
+      "result": "PASS"
+    },
+    {
+      "case": "Arabic dark phone 404 has translated link, RTL and no overflow",
+      "result": "PASS",
+      "dir": "rtl",
+      "dark": true,
+      "overflow": false,
+      "status": 404
+    },
+    {
+      "case": "Arabic phone details editor restores saved arrival and note with translated labels",
+      "result": "PASS"
+    },
+    {
+      "case": "Arabic phone rewards range validation is translated",
+      "result": "PASS"
+    },
+    {
+      "case": "en API reward points range refusal is translated",
+      "result": "PASS",
+      "status": 400
+    },
+    {
+      "case": "fr API reward points range refusal is translated",
+      "result": "PASS",
+      "status": 400
+    },
+    {
+      "case": "es API reward points range refusal is translated",
+      "result": "PASS",
+      "status": 400
+    },
+    {
+      "case": "ar API reward points range refusal is translated",
+      "result": "PASS",
+      "status": 400
+    },
+    {
+      "case": "Other staff attendance records remain unchanged",
+      "result": "PASS",
+      "beforeCount": 0,
+      "afterCount": 0
+    }
+  ],
+  "diagnostics": {
+    "mainPageErrors": [],
+    "harnessNotes": [
+      "One cold behavior-rewards navigation exceeded a 10-second load timeout; route became usable and was tested",
+      "Calendar/time controls and Arabic dialog actions were exercised with normal clicks or keyboard activation",
+      "A harness variable scope was corrected before any staff fixture was created"
+    ]
+  },
+  "migration": {
+    "file": "packages/server/src/database/migrations/0071_grey_shadowcat.sql",
+    "sql": "ALTER TABLE \"attendance\" ADD COLUMN \"arrival_time\" text;",
+    "preflight": {
+      "host": "localhost",
+      "database": "school",
+      "solePendingMigration": "0071_grey_shadowcat"
+    },
+    "localApplied": true,
+    "productionApplied": false
+  },
+  "cleanup": {
+    "readBack": [
+      {
+        "type": "attendance",
+        "id": "Dz7ZN",
+        "status": 404
+      },
+      {
+        "type": "staff",
+        "id": "E_saL",
+        "status": 404
+      }
+    ],
+    "allNotFound": true,
+    "createdLogin": false,
+    "otherStaffAttendanceUnchanged": true
+  },
+  "verification": {
+    "focused": {
+      "pass": 55,
+      "fail": 0
+    },
+    "configurationSuite": {
+      "pass": 587,
+      "fail": 0,
+      "files": 82
+    },
+    "boundaryTests": {
+      "pass": 28,
+      "fail": 0
+    },
+    "workspaceGraph": "PASS",
+    "lint": "PASS (no warnings after dependency correction)",
+    "typecheck": "PASS",
+    "serverTestTypecheck": "PASS after final test extension",
+    "i18nCheck": "PASS",
+    "dbCheck": "PASS",
+    "productionBuild": "PASS (.next-minor-findings)",
+    "broaderAcademicYears": {
+      "pass": 399,
+      "fail": 1,
+      "failure": "TeachingDays.test.ts: creates routines with school days instead of a caller override",
+      "reason": "Concurrent ClassRoutineService.create uses repository.getSchoolDay(); the unrelated test mock omits it",
+      "isolatedReproduction": {
+        "pass": 4,
+        "fail": 1
+      }
+    }
+  },
+  "limits": [
+    "Existing unrelated edits preserved, including concurrent attendance/register and routine work",
+    "English desktop and phone plus Arabic dark phone; French and Spanish reward refusal checked through API/catalog tests",
+    "No successful reward was created; validation-only reward submissions were refused",
+    "No production request, migration, configuration change, commit, push or deployment",
+    "Temporary screenshots reviewed locally; no sessions, credentials or raw personal-data responses retained"
+  ]
+}

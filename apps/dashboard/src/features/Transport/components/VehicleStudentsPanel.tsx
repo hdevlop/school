@@ -154,6 +154,7 @@ export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => 
         loading: isAssigning,
         onClick: async (data: any) => {
           await assignStudent(data, openedYear)
+          toast.success(t('studentRoutes.success.assigned'))
         },
       },
     })

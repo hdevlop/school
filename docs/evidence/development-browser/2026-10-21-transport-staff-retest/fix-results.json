@@ -1,0 +1,251 @@
+{
+  "date": "2026-10-21",
+  "origin": "http://localhost:3102",
+  "academicYear": "2026-2027",
+  "browser": "Chrome 155.0.8059.86",
+  "transport": "standalone Playwright; installed Chrome; no browser plugin",
+  "results": [
+    {
+      "case": "Name validates on blur before Next",
+      "result": "PASS"
+    },
+    {
+      "case": "Name correction clears error",
+      "result": "PASS"
+    },
+    {
+      "case": "Expired date shows immediate inline error",
+      "result": "PASS"
+    },
+    {
+      "case": "Next stays on employment step for expired license",
+      "result": "PASS"
+    },
+    {
+      "case": "License valid today advances to assignments",
+      "result": "PASS"
+    },
+    {
+      "case": "Driver required license number validates on blur in step 2",
+      "result": "PASS"
+    },
+    {
+      "case": "Empty vehicle guidance appears immediately after selecting Driver",
+      "result": "PASS"
+    },
+    {
+      "case": "Empty assignment step shows setup action",
+      "result": "PASS"
+    },
+    {
+      "case": "Create vehicle inside staff wizard returns and selects new vehicle",
+      "result": "PASS"
+    },
+    {
+      "case": "Vehicle setup preserves all staff steps",
+      "result": "PASS"
+    },
+    {
+      "case": "Valid driver saves with created vehicle and license expiring today",
+      "result": "PASS",
+      "httpStatus": 200
+    },
+    {
+      "case": "REST rejects expired partial update and leaves saved expiry unchanged",
+      "result": "PASS",
+      "httpStatus": 400
+    },
+    {
+      "case": "REST rejects expired new driver",
+      "result": "PASS",
+      "httpStatus": 400
+    },
+    {
+      "case": "MCP rejects expired driver update",
+      "result": "PASS"
+    },
+    {
+      "case": "Assignment shows success toast after real HTTP save",
+      "result": "PASS",
+      "httpStatus": 200
+    },
+    {
+      "case": "Assignment persists through reload with nine monthly transport installments",
+      "result": "PASS",
+      "total": 21600
+    },
+    {
+      "case": "Phone empty-vehicle setup has no horizontal overflow",
+      "result": "PASS"
+    },
+    {
+      "case": "Cancel nested vehicle creation preserves staff draft",
+      "result": "PASS"
+    },
+    {
+      "case": "Failed vehicle lookup shows retry rather than empty setup",
+      "result": "PASS"
+    },
+    {
+      "case": "Vehicle lookup retry restores options",
+      "result": "PASS"
+    },
+    {
+      "case": "License required error appears even while salary is blank",
+      "result": "PASS"
+    },
+    {
+      "case": "French phone translated expired-license feedback",
+      "result": "PASS"
+    },
+    {
+      "case": "French phone translated setup action",
+      "result": "PASS",
+      "dir": "ltr",
+      "overflow": false
+    },
+    {
+      "case": "Arabic phone translated expired-license feedback",
+      "result": "PASS"
+    },
+    {
+      "case": "Arabic phone translated setup action",
+      "result": "PASS",
+      "dir": "rtl",
+      "overflow": false
+    },
+    {
+      "case": "Expired create leaves no staff record",
+      "result": "PASS"
+    }
+  ],
+  "diagnostics": {
+    "mainPageErrors": [],
+    "harnessNotes": [
+      "Calendar today has an aria-label prefixed with Today; selector corrected to data-day",
+      "French staff role uses the saved label Chauffeur; catalog fallback differs",
+      "Arabic phone Next activated by keyboard because the development badge intercepted pointer events",
+      "Initial cleanup readback used an expired cookie and returned 401; authenticated bearer readback then returned 404 for every fixture"
+    ]
+  },
+  "fixtures": {
+    "studentId": "LH53F",
+    "staffId": "Achzh",
+    "vehicleId": "rvjA5",
+    "studentRouteId": "78cEH",
+    "driverAssignmentId": "VMrfT",
+    "feeIds": [
+      "rz2-IbS7AQ",
+      "d9gjqf2Jal"
+    ],
+    "createdLogins": 0
+  },
+  "cleanup": {
+    "operations": [
+      {
+        "tool": "student-routes_delete",
+        "id": "78cEH",
+        "removed": true
+      },
+      {
+        "tool": "fees_delete_by_id",
+        "id": "rz2-IbS7AQ",
+        "removed": true
+      },
+      {
+        "tool": "fees_delete_by_id",
+        "id": "d9gjqf2Jal",
+        "removed": true
+      },
+      {
+        "tool": "students_delete_by_id",
+        "id": "LH53F",
+        "removed": true
+      },
+      {
+        "tool": "vehicle-assignments_delete",
+        "id": "VMrfT",
+        "removed": true
+      },
+      {
+        "tool": "staff_delete_by_id",
+        "id": "Achzh",
+        "removed": true
+      },
+      {
+        "tool": "vehicles_delete_by_id",
+        "id": "rvjA5",
+        "removed": true
+      }
+    ],
+    "readBack": [
+      {
+        "type": "student",
+        "id": "LH53F",
+        "status": 404
+      },
+      {
+        "type": "staff",
+        "id": "Achzh",
+        "status": 404
+      },
+      {
+        "type": "vehicle",
+        "id": "rvjA5",
+        "status": 404
+      },
+      {
+        "type": "studentRoute",
+        "id": "78cEH",
+        "status": 404
+      },
+      {
+        "type": "driverAssignment",
+        "id": "VMrfT",
+        "status": 404
+      },
+      {
+        "type": "fee",
+        "id": "rz2-IbS7AQ",
+        "status": 404
+      },
+      {
+        "type": "fee",
+        "id": "d9gjqf2Jal",
+        "status": 404
+      }
+    ],
+    "allNotFound": true
+  },
+  "verification": {
+    "focusedSchemaAndValidatorTests": {
+      "pass": 11,
+      "fail": 0
+    },
+    "serverI18nAndLicenseTests": {
+      "pass": 23,
+      "fail": 0
+    },
+    "configurationSuite": {
+      "pass": 582,
+      "fail": 0,
+      "files": 81
+    },
+    "boundaries": {
+      "pass": 28,
+      "fail": 0,
+      "graphPassed": true
+    },
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "i18nCheck": "PASS",
+    "productionBuild": "PASS (.next-transport-staff)"
+  },
+  "limits": [
+    "Empty and failed vehicle-list cases used browser-only response fixtures; mutation responses were real",
+    "English desktop and English/French/Arabic phone checks; Spanish translations verified by tests only",
+    "External browser requests blocked; map-provider acceptance excluded",
+    "No production requests, changes or deployment",
+    "Existing unrelated working-tree changes preserved"
+  ]
+}

@@ -23,6 +23,7 @@ export const attendanceSelect = {
   date: attendance.date,
   status: attendance.status,
   notes: attendance.notes,
+  arrivalTime: attendance.arrivalTime,
   markedBy: attendance.markedBy,
   createdAt: attendance.createdAt,
   updatedAt: attendance.updatedAt,
@@ -204,7 +205,7 @@ export class AttendanceRepository {
   }
 
   async upsertStaffRoster(
-    items: Array<{ staffId: string; date: string; status: string; notes?: string | null }>,
+    items: Array<{ staffId: string; date: string; status: string; notes?: string | null; arrivalTime?: string | null }>,
     userId: string,
   ) {
     const rows = await this.db
@@ -216,6 +217,7 @@ export class AttendanceRepository {
         date: item.date,
         status: item.status as 'present' | 'absent' | 'late',
         notes: item.notes ?? null,
+        arrivalTime: item.arrivalTime ?? null,
         markedBy: userId,
       })))
       .onConflictDoUpdate({
@@ -225,6 +227,8 @@ export class AttendanceRepository {
         set: {
           status: sql`excluded.status`,
           notes: sql`excluded.notes`,
+          arrivalTime: sql`case when ${inArray(attendance.staffId, items.filter(item => item.arrivalTime !== undefined).map(item => item.staffId))}
+            then excluded.arrival_time else ${attendance.arrivalTime} end`,
           academicYearId: sql`excluded.academic_year_id`,
           lastUpdatedBy: userId,
           updatedAt: sql`CURRENT_TIMESTAMP`,

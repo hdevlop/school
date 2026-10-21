@@ -41,7 +41,7 @@ function StudentAttendanceTableForYear() {
   const { t } = useTranslation();
   const { sections, isSectionsLoading } = useSections();
   const { classes, isClassesLoading } = useClasses();
-  const { attendance, submitRoster, isSubmittingRoster } = useStudentAttendance();
+  const { attendance, submitRoster, isSubmittingRoster, isAttendanceLoading, error: attendanceError } = useStudentAttendance();
   // Marks are read for the viewed year only, so the register stays on its days.
   const [selectedDate, setSelectedDate] = useViewingYearDate(useSchoolToday());
   // With a viewing year the register lists the students enrolled and placed on
@@ -309,6 +309,7 @@ function StudentAttendanceTableForYear() {
           { value: 'present', label: t('attendance.roster.present') },
           { value: 'absent', label: t('attendance.roster.absent') },
           { value: 'late', label: t('attendance.roster.late') },
+          { value: 'unmarked', label: t('attendance.roster.unmarked') },
         ],
       },
     ],
@@ -370,7 +371,8 @@ function StudentAttendanceTableForYear() {
           isSubmitting={isSubmitting}
           stats={roster.stats}
           onSubmit={roster.handleSubmit}
-          canSubmit={canSubmit && filteredStudents.length > 0 && !isStudentsLoading}
+          onMarkAllPresent={() => roster.markAllAs('present')}
+          canSubmit={canSubmit && filteredStudents.length > 0 && !isStudentsLoading && !isAttendanceLoading && !attendanceError}
           submitTitle={submitTitle}
         />
       </RosterFilters>
@@ -380,8 +382,8 @@ function StudentAttendanceTableForYear() {
         data={visibleStudents}
         isFilteredEmpty={filteredStudents.length > 0 && visibleStudents.length === 0}
         columns={columns}
-        loading={isStudentsLoading || isSectionsLoading || isClassesLoading}
-        error={hasFailedToLoad(studentsError, filteredStudents) ? studentsError : null}
+        loading={isStudentsLoading || isSectionsLoading || isClassesLoading || isAttendanceLoading}
+        error={attendanceError || (hasFailedToLoad(studentsError, filteredStudents) ? studentsError : null)}
         renderError={(currentError) => (
           isAuthorizationError(currentError)
             ? <NForbiddenState surface="panel" />

@@ -20,6 +20,48 @@ import { useTeachers } from '@/features/Teachers/hooks/useTeachers'
 import { localDateInput } from 'najm-kit/format'
 import { useAcademicYearOptions, useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear'
 import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYear'
+import { eligibleAssessmentTeachers } from '../config/assessmentTeachers'
+
+const AssessmentTeacherSelect = () => {
+  const { t } = useTranslation();
+  const { setValue } = useFormContext();
+  const { teachers, isTeachersLoading } = useTeachers();
+  const [classId, sectionIds, subjectId, teacherId] = useWatch({
+    name: ['classId', 'sectionIds', 'subjectId', 'teacherId'],
+  });
+  const teacherOptions = useMemo(() => eligibleAssessmentTeachers(
+    teachers || [], classId, sectionIds || [], subjectId,
+  ).map((teacher: any) => ({ value: teacher.id, label: teacher.name || teacher.email || teacher.id })),
+  [teachers, classId, sectionIds, subjectId]);
+
+  useEffect(() => {
+    if (!isTeachersLoading && teachers && teacherId
+      && !teacherOptions.some((option) => option.value === teacherId)) {
+      setValue('teacherId', '', { shouldValidate: true, shouldDirty: true });
+    }
+  }, [teachers, isTeachersLoading, teacherId, teacherOptions, setValue]);
+
+  return <FormInput
+    name="teacherId"
+    type="select"
+    formLabel={t('assessments.form.teacher')}
+    placeholder={t('assessments.form.teacherPlaceholder')}
+    formDescription={teacherOptions.length ? undefined : t('assessments.form.teacherAssignmentHint')}
+    icon={User}
+    items={teacherOptions}
+    required
+    disabled={isTeachersLoading || !classId || !sectionIds?.length || !subjectId}
+  />;
+};
+
+const AssessmentGradingValidation = () => {
+  const { trigger } = useFormContext();
+  const [totalMarks, passingMarks] = useWatch({ name: ['totalMarks', 'passingMarks'] });
+  useEffect(() => {
+    void trigger('passingMarks');
+  }, [totalMarks, passingMarks, trigger]);
+  return null;
+};
 
 const SectionsMultiselect = ({ initialClassId }) => {
   const { t } = useTranslation();
@@ -74,7 +116,6 @@ const AssessmentForm = ({ assessment = null }) => {
 
   const { classes, isClassesLoading } = useClasses();
   const { subjects, isSubjectsLoading } = useSubjects();
-  const { teachers, isTeachersLoading } = useTeachers();
 
   const typeOptions = buildAssessmentTypeOptions(t);
   const statusOptions = buildAssessmentStatusOptions(t);
@@ -116,11 +157,6 @@ const AssessmentForm = ({ assessment = null }) => {
     label: s.code ? `${s.name} (${s.code})` : s.name,
   })) || [];
 
-  const teacherOptions = teachers?.map((t) => ({
-    value: t.id,
-    label: t.name || t.email || t.id,
-  })) || [];
-
   const handleSubmit = async (formData) => {
     const sectionIds = [...new Set((formData.sectionIds || []).filter(Boolean))];
     pop({
@@ -148,6 +184,7 @@ const AssessmentForm = ({ assessment = null }) => {
           defaultValues={defaultValues}
           onSubmit={handleSubmit}
         >
+          <AssessmentGradingValidation />
           <div className='flex flex-col gap-4'>
 
             <FormSectionHeader
@@ -218,16 +255,7 @@ const AssessmentForm = ({ assessment = null }) => {
                 disabled={isSubjectsLoading}
               />
 
-              <FormInput
-                name='teacherId'
-                type='select'
-                formLabel={t('assessments.form.teacher')}
-                placeholder={t('assessments.form.teacherPlaceholder')}
-                icon={User}
-                items={teacherOptions}
-                required={true}
-                disabled={isTeachersLoading}
-              />
+              <AssessmentTeacherSelect />
             </div>
 
             <FormSectionHeader

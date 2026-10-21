@@ -144,6 +144,7 @@ export function buildReceiptHtml(data: ReceiptData) {
       width: 24mm;
       height: 24mm;
       object-fit: contain;
+      filter: grayscale(1);
       margin: 0 auto 2mm;
     }
     .school-name { font-size: 11pt; line-height: 1.2; font-weight: 700; }

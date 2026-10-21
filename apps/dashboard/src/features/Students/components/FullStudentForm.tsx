@@ -2,10 +2,11 @@
 
 import { useCallback, useMemo, useRef, useState } from 'react'
 import type { ComponentProps, ComponentType, ReactNode } from 'react'
-import { WizardForm } from 'najm-kit'
+import { NButton, NEmptyState, WizardForm } from 'najm-kit'
+import { useRouter } from 'next/navigation'
 import { useDialog } from '@/shared/useDialog'
 import type { StepConfig } from 'najm-kit'
-import { Loader2 } from 'lucide-react'
+import { GraduationCap, Loader2 } from 'lucide-react'
 import { getStudentDefaultValues, StudentFormContent } from './SimpleStudentForm'
 import { BulkParentFormContent } from '@/features/Parents/components/BulkParentForm'
 import { createFullStudentSchemas } from '../config/fullStudentSchemas'
@@ -16,6 +17,7 @@ import { useTranslation } from 'najm-i18n/react'
 import { StudentTransportFormContent } from '@/features/Transport/components/StudentTransportFormContent'
 import { normalizeLocationValue } from 'najm-kit/location'
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole'
+import { useSetViewingYear, useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear'
 
 type StudentWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLabel'> & {
   submitLabel?: ReactNode
@@ -30,6 +32,9 @@ const FullStudentForm = ({
   onSubmitStudent,
 }) => {
   const { pop } = useDialog()
+  const router = useRouter()
+  const setViewingYear = useSetViewingYear()
+  const { activeYear } = useViewingAcademicYear()
   const { t } = useTranslation()
   const { isSchoolWide, can } = useViewerRole()
   const canCreateFees = isSchoolWide && can('create:fees')
@@ -39,6 +44,12 @@ const FullStudentForm = ({
     fullStudent, studentWithoutFees, studentWithTransport: studentWithTransportSchema,
   } = useMemo(() => createFullStudentSchemas(t), [t])
   const formSchema = canCreateFees ? fullStudent : studentWithoutFees
+  // Each wizard step receives only its declared fields. Carry the admission
+  // date into Fees so its preview uses the same date as the final request,
+  // including edits made before navigating through the step header.
+  const studentFeesSchema = useMemo(() => feesSchema.extend({
+    enrollmentDate: studentWithTransportSchema.shape.enrollmentDate,
+  }), [feesSchema, studentWithTransportSchema])
   const [transportSelected, setTransportSelected] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const submissionPromiseRef = useRef<Promise<unknown> | null>(null)
@@ -82,11 +93,12 @@ const FullStudentForm = ({
     ...(canCreateFees ? [{
       id: 'fees',
       title: feesStepTitle,
-      schema: feesSchema,
-      fields: ['fees'],
+      schema: studentFeesSchema,
+      fields: ['fees', 'enrollmentDate'],
       render: () => (
         <BulkFeeFormContent
           feeTypes={feeTypes}
+          academicYear={activeYear}
           showInstallmentPreview={false}
           showEffectiveDateField={false}
         />
@@ -107,7 +119,7 @@ const FullStudentForm = ({
         <StudentTransportFormContent feeTypes={feeTypes} />
       ),
     }] : []),
-  ], [canCreateFees, canAssignTransport, classes, feeTypes, feesSchema, feesStepTitle, parentsSchema, parentsStepTitle, studentWithTransportSchema, studentStepTitle, transportSchema, transportSelected, transportStepTitle])
+  ], [activeYear, canCreateFees, canAssignTransport, classes, feeTypes, studentFeesSchema, feesStepTitle, parentsSchema, parentsStepTitle, studentWithTransportSchema, studentStepTitle, transportSchema, transportSelected, transportStepTitle])
 
   const defaultValues = useMemo(() => ({
     ...initialStudentValues,
@@ -181,6 +193,26 @@ const FullStudentForm = ({
     }
   }, [canCreateFees, canAssignTransport, classes, feeTypes, onSubmitStudent, pop])
 
+  if (classes.length === 0) {
+    return (
+      <NEmptyState
+        surface='panel'
+        icon={GraduationCap}
+        title={t('students.form.noClassesTitle')}
+        description={t(can('create:classes') ? 'students.form.noClassesHint' : 'students.form.noClassesAdminHint')}
+        action={can('create:classes') ? (
+          <NButton onClick={async () => {
+            await pop()
+            setViewingYear(activeYear)
+            router.push('/classes')
+          }}>
+            {t('students.form.manageClasses')}
+          </NButton>
+        ) : undefined}
+      />
+    )
+  }
+
   return (
     <div className='h-full min-h-0' aria-busy={isSubmitting}>
       <StudentWizardForm
@@ -188,7 +220,9 @@ const FullStudentForm = ({
         schema={formSchema}
         defaultValues={defaultValues}
         onStepComplete={(stepIndex, data) => {
-          if (stepIndex === 0) setTransportSelected(canAssignTransport && Boolean(data.transportEnabled))
+          if (stepIndex === 0) {
+            setTransportSelected(canAssignTransport && Boolean(data.transportEnabled))
+          }
         }}
         onSubmit={handleSubmit}
         className={isSubmitting ? 'pointer-events-none select-none' : undefined}

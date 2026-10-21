@@ -57,6 +57,7 @@ describe('school-wide teaching days', () => {
     const repository = {
       getPublishedForSection: async () => null,
       getSchoolTeachingDays: async () => ['monday', 'wednesday'],
+      getSchoolDay: async () => ({ schoolStartTime: '08:00', schoolEndTime: '15:00', lunchBreakDuration: 30 }),
       createSchedule: async (data: unknown) => { saved = data; return { id: 'new-routine' }; },
     };
     const service = new ClassRoutineService(repository as any, { ensureSectionInSelectedYear: async () => ({}) } as any);

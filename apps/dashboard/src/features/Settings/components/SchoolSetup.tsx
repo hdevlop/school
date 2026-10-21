@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { Building2, CalendarRange, DollarSign, Globe, Languages, Loader2, LogOut, Mail, Phone, School } from 'lucide-react';
 import { Card, FormInput, NAJM_CURRENCY_OPTIONS, NButton, NForm } from 'najm-kit';
+import { FormLocationInput } from 'najm-kit/location';
 import { clearNajmUiPreferences } from 'najm-kit/server';
 import { SignOutButton } from 'najm-auth/client/react';
 import { useTranslation } from 'najm-i18n/react';
@@ -35,6 +36,7 @@ const SchoolSetup: React.FC<{ canInstall: boolean }> = ({ canInstall }) => {
     schoolName: '',
     schoolPhone: '',
     schoolEmail: '',
+    schoolLocation: { address: '', latitude: null, longitude: null },
     currentAcademicYear: yearOptions[0].value,
     timeZone: schoolApp.preferences.defaultTimeZone,
     language: schoolI18n.defaultLanguage,
@@ -44,7 +46,8 @@ const SchoolSetup: React.FC<{ canInstall: boolean }> = ({ canInstall }) => {
 
   const handleSubmit = async (data: SchoolSetupValues) => {
     try {
-      await installSchool(data);
+      const { schoolLocation, ...fields } = data;
+      await installSchool({ ...fields, schoolAddress: schoolLocation.address, schoolAddressLatitude: schoolLocation.latitude, schoolAddressLongitude: schoolLocation.longitude });
     } catch (error) {
       // The request has already shown its refusal. A conflict means another
       // administrator or tab installed the school first, so this form's job is
@@ -120,8 +123,10 @@ const SchoolSetup: React.FC<{ canInstall: boolean }> = ({ canInstall }) => {
                 icon={Mail}
                 iconColor="#8b5cf6"
                 placeholder="info@myschool.edu"
+                required
               />
             </div>
+            <FormLocationInput name="schoolLocation" formLabel={t('settings.school.schoolAddress')} required />
             <div className="grid gap-3 sm:grid-cols-2">
               <FormInput
                 name="currentAcademicYear"

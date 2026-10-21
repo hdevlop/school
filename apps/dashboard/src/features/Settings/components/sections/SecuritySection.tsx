@@ -33,15 +33,20 @@ const SecuritySection: React.FC = () => {
       {groups.map(({ title, description, fields }) => (
         <SettingsGroup key={title} title={t(title)} description={t(description)} className="gap-0 divide-y divide-border/60 sm:grid-cols-1">
           {fields.map(({ name, label, icon }) => (
-            <FormInput
-              key={name}
-              type="switch"
-              name={name}
-              label={t(label)}
-              icon={icon}
-              variant="ghost"
-              className="min-h-13 py-2"
-            />
+            <fieldset key={name} disabled={name === 'twoFactorEnabled'} className="min-w-0">
+              <FormInput
+                type="switch"
+                name={name}
+                label={t(label)}
+                icon={icon}
+                variant="ghost"
+                className="min-h-13 py-2"
+                disabled={name === 'twoFactorEnabled'}
+              />
+              {name === 'twoFactorEnabled' && (
+                <p className="pb-2 text-sm text-muted-foreground">{t('settings.security.twoFactorUnavailable')}</p>
+              )}
+            </fieldset>
           ))}
         </SettingsGroup>
       ))}

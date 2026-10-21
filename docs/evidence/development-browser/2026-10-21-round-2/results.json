@@ -1,0 +1,255 @@
+{
+  "origin": "http://localhost:3102",
+  "date": "2026-10-21",
+  "pass": 38,
+  "fail": 1,
+  "cases": [
+    {
+      "area": "assessment",
+      "name": "Missing teacher has a clear inline error",
+      "status": "PASS"
+    },
+    {
+      "area": "assessment",
+      "name": "Passing marks above total show inline before submission",
+      "status": "PASS"
+    },
+    {
+      "area": "assessment",
+      "name": "Changing total marks revalidates the passing-mark error",
+      "status": "PASS"
+    },
+    {
+      "area": "assessment",
+      "name": "Teacher dropdown exactly matches section and subject assignments",
+      "status": "PASS",
+      "eligible": 1,
+      "totalTeachers": 13
+    },
+    {
+      "area": "assessment",
+      "name": "Changing subject clears an incompatible teacher",
+      "status": "PASS"
+    },
+    {
+      "area": "assessment",
+      "name": "Multi-section teacher choices require every section",
+      "status": "PASS",
+      "eligible": 0
+    },
+    {
+      "area": "assessment",
+      "name": "Invalid forms sent no assessment mutation",
+      "status": "PASS"
+    },
+    {
+      "area": "expense",
+      "name": "Approving a 150 dh expense leaves paid-expense month/year totals unchanged",
+      "status": "PASS"
+    },
+    {
+      "area": "expense",
+      "name": "Dashboard explains the approved-versus-paid distinction",
+      "status": "PASS"
+    },
+    {
+      "area": "expense",
+      "name": "Owned approved expense fixture cleaned up",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Save grades has a visible label and starts disabled",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Typing shows Unsaved and does not write a grade",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Draft survives reload and reopening the same roster",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Draft stays isolated when switching assessment sources",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Draft survives navigating away and back",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Reset removes the draft without creating a grade",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Save creates one persisted grade and updates highest/lowest/pass rate",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Saved grade survives reload without an unsaved indicator",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Editing and saving an existing grade persists the update",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Phone grade stat labels fit without overlap",
+      "status": "FAIL",
+      "details": [
+        {
+          "itemWidth": 32,
+          "labelWidth": 58,
+          "overflows": true
+        },
+        {
+          "itemWidth": 32,
+          "labelWidth": 55,
+          "overflows": true
+        },
+        {
+          "itemWidth": 32,
+          "labelWidth": 64,
+          "overflows": true
+        }
+      ]
+    },
+    {
+      "area": "grades",
+      "name": "Phone grade entry shows unsaved state and accessible Save/Reset controls",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Owned grade and assessment fixtures cleaned up",
+      "status": "PASS"
+    },
+    {
+      "area": "locales",
+      "name": "Localized assessment validation and layout",
+      "status": "PASS",
+      "language": "en",
+      "width": 1440
+    },
+    {
+      "area": "locales",
+      "name": "Dashboard paid-expense label and explanation",
+      "status": "PASS",
+      "language": "en",
+      "width": 1440
+    },
+    {
+      "area": "locales",
+      "name": "Localized assessment validation and layout",
+      "status": "PASS",
+      "language": "en",
+      "width": 390
+    },
+    {
+      "area": "locales",
+      "name": "Dashboard paid-expense label and explanation",
+      "status": "PASS",
+      "language": "en",
+      "width": 390
+    },
+    {
+      "area": "locales",
+      "name": "Localized assessment validation and layout",
+      "status": "PASS",
+      "language": "fr",
+      "width": 1440
+    },
+    {
+      "area": "locales",
+      "name": "Dashboard paid-expense label and explanation",
+      "status": "PASS",
+      "language": "fr",
+      "width": 1440
+    },
+    {
+      "area": "locales",
+      "name": "Localized assessment validation and layout",
+      "status": "PASS",
+      "language": "fr",
+      "width": 390
+    },
+    {
+      "area": "locales",
+      "name": "Dashboard paid-expense label and explanation",
+      "status": "PASS",
+      "language": "fr",
+      "width": 390
+    },
+    {
+      "area": "locales",
+      "name": "Localized assessment validation and layout",
+      "status": "PASS",
+      "language": "ar",
+      "width": 1440
+    },
+    {
+      "area": "locales",
+      "name": "Dashboard paid-expense label and explanation",
+      "status": "PASS",
+      "language": "ar",
+      "width": 1440
+    },
+    {
+      "area": "locales",
+      "name": "Localized assessment validation and layout",
+      "status": "PASS",
+      "language": "ar",
+      "width": 390
+    },
+    {
+      "area": "locales",
+      "name": "Dashboard paid-expense label and explanation",
+      "status": "PASS",
+      "language": "ar",
+      "width": 390
+    },
+    {
+      "area": "locales",
+      "name": "Localized assessment validation and layout",
+      "status": "PASS",
+      "language": "es",
+      "width": 1440
+    },
+    {
+      "area": "locales",
+      "name": "Dashboard paid-expense label and explanation",
+      "status": "PASS",
+      "language": "es",
+      "width": 1440
+    },
+    {
+      "area": "locales",
+      "name": "Localized assessment validation and layout",
+      "status": "PASS",
+      "language": "es",
+      "width": 390
+    },
+    {
+      "area": "locales",
+      "name": "Dashboard paid-expense label and explanation",
+      "status": "PASS",
+      "language": "es",
+      "width": 390
+    },
+    {
+      "area": "locales",
+      "name": "No unhandled page errors across locale and viewport checks",
+      "status": "PASS"
+    }
+  ]
+}

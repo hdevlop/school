@@ -75,6 +75,12 @@ describe('settingsSchema defaults', () => {
 });
 
 describe('settingsSchema validation', () => {
+  it('requires contact details and starts with Moroccan date and time formats', () => {
+    expect(settingsSchema.safeParse({ ...minimal, schoolEmail: '' }).success).toBe(false);
+    expect(settingsSchema.safeParse({ ...minimal, schoolLocation: { address: '  ', latitude: null, longitude: null } }).success).toBe(false);
+    expect(settingsSchema.parse(minimal)).toMatchObject({ dateFormat: 'DD/MM/YYYY', timeFormat: '24' });
+    expect(settingsSchema.parse({ ...minimal, dateFormat: 'MM/DD/YYYY', timeFormat: '12' })).toMatchObject({ dateFormat: 'MM/DD/YYYY', timeFormat: '12' });
+  });
   it('defaults receipt printing to French and accepts only French or Arabic independently of UI language', () => {
     expect(settingsSchema.parse(minimal).receiptLanguage).toBe('fr');
     for (const receiptLanguage of ['fr', 'ar'] as const) {
@@ -111,13 +117,13 @@ describe('settingsSchema validation', () => {
 });
 
 describe('schoolSetupSchema', () => {
-  const setup = { schoolName: 'Ecole Al Amal', schoolPhone: '212600000000', schoolEmail: '', currentAcademicYear: '2026-2027' };
+  const setup = { schoolName: 'Ecole Al Amal', schoolPhone: '212600000000', schoolEmail: 'contact@school.test', schoolLocation: { address: 'Demo address', latitude: null, longitude: null }, currentAcademicYear: '2026-2027' };
 
   it('fills the school preferences a new installation starts with', () => {
     const parsed = schoolSetupSchema.parse(setup);
     expect(parsed.currency).toBe('MAD');
     expect(parsed.timeZone).toBe('Africa/Casablanca');
-    expect(Object.keys(parsed).sort()).toEqual(['currency', 'currentAcademicYear', 'language', 'schoolEmail', 'schoolName', 'schoolPhone', 'timeZone']);
+    expect(Object.keys(parsed).sort()).toEqual(['currency', 'currentAcademicYear', 'language', 'schoolEmail', 'schoolLocation', 'schoolName', 'schoolPhone', 'timeZone']);
   });
 
   it('requires a school name, a phone and a consecutive-year label', () => {

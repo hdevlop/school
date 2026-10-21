@@ -182,6 +182,7 @@ export class TeacherService {
 
   @Transaction()
   async create(data: CreateTeacherDto) {
+    this.teacherValidator.ensureInvitationEmail(data.email, data.password);
     if (data.userId) await this.teacherValidator.ensureUserIdUnique(data.userId);
     if (data.id) await this.teacherValidator.ensureIdUnique(data.id);
     await this.teacherValidator.ensureCinUnique(data.cin);

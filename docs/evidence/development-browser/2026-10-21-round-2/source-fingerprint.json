@@ -1,0 +1,20 @@
+{
+  "baseRevision": "3aa3ca1693353387ba685e211e68fcdd86526527",
+  "files": {
+    "apps/dashboard/src/features/Assessments/components/AssessmentForm.tsx": "3926d90396756ccdc01988d1493e31e02e9dc6e41baf12f4ffda3b85d39bac48",
+    "apps/dashboard/src/features/Assessments/config/assessmentSchemas.ts": "8981b183ea2df3615f0c6bd9dd5ee103512ec15ab493b74ebc117dc39fffcd5b",
+    "apps/dashboard/src/features/Assessments/config/assessmentTeachers.ts": "fb55c84d7e7143d204a2f30d5eb9d8c715544ad46930bde8ca45b58558e14a4b",
+    "apps/dashboard/src/features/Grades/components/GradesTable.tsx": "fa516247a22724b7fcab9f2aeb6c2a97c9b3c8ab737da262b285f3546d7bd459",
+    "apps/dashboard/src/features/Grades/components/GradesHeader.tsx": "35f2733e6baf82ff0db99b05141b6f106cc5b79995f0063741c8c9e26e1965b5",
+    "apps/dashboard/src/features/Grades/components/GradeRosterCard.tsx": "73b176a3e98ace971ccc72b9af865bd83fc6d370ac8310f53b92c818d709306a",
+    "apps/dashboard/src/features/Grades/hooks/useGradesTableColumns.tsx": "f56e21831301cbb206136e48a57fa5e089b3842ed8fb977644038bbc10661dcd",
+    "apps/dashboard/src/features/Grades/hooks/useGrades.tsx": "486045e74eedd33221f6e3e507f047340c64e72684240ff9f5687191c40c42a5",
+    "apps/dashboard/src/features/Grades/store/gradeDraftStore.ts": "63f763b4eb1ad584d007d86f4deeb32a3c0ea7db347e9fc4d71766296f0184c0",
+    "apps/dashboard/src/features/Dashboard/components/FinanceKpis/index.tsx": "0d90cc86c2ce2b0893020a6db9d8af113fac3069f420294591e0bd8c40c1ccf9",
+    "packages/server/src/modules/dashboard/finance/FinanceDashboardRepository.ts": "374bba8405872c4c3433a4eec70378678875cd0ced6cd38c39c5edab18ccf694",
+    "packages/contracts/src/locales/en.json": "284cc5eb511cbe9c83e78d8809c5cac768eaffe149dac480aaea80f0e85eb913",
+    "packages/contracts/src/locales/fr.json": "5027c5e218b3cae427fb800b026a0afa374c950941ffd978752f45bf1fc2c4e6",
+    "packages/contracts/src/locales/ar.json": "e4c091a17bc34ff16ed9f08ffcac1d346be18156b72208e792b8a0da035bd439",
+    "packages/contracts/src/locales/es.json": "f3affc0f00b283b0953dadbc1a117b1c725ff278136bb7ea153c1b934da4bdf1"
+  }
+}

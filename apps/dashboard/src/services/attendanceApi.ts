@@ -59,6 +59,7 @@ export const upsertStaffAttendanceRosterApi = async (items: Array<{
   date: string;
   status: 'present' | 'absent' | 'late';
   notes?: string | null;
+  arrivalTime?: string | null;
 }>) => {
   const res = await api.post('/attendance/staff/bulk', { items });
   return res.data;

@@ -30,9 +30,16 @@ export function invitationNotice(
 export function announceInvitation(
   emailSent: unknown,
   email: string | null | undefined,
-  messages: { sent: string; notSent: string },
+  messages: {
+    sent: string;
+    notSent: string;
+    notSentAction?: { label: string; onClick: () => void };
+  },
 ) {
   const notice = invitationNotice(emailSent, email);
   if (notice === 'sent') toast.info(messages.sent);
-  else if (notice === 'notSent') toast.warning(messages.notSent);
+  else if (notice === 'notSent') toast.warning(messages.notSent, {
+    action: messages.notSentAction,
+    duration: 10000,
+  });
 }

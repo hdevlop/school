@@ -31,12 +31,15 @@ const optionalText = <S extends z.ZodType>(schema: S) =>
  * Keeping the parts and the whole in one place is what stops a field from
  * being validated on one screen and not the other.
  */
-export const createTeacherSchemas = (t: T) => {
+export const createTeacherSchemas = (t: T, { requireEmail = true } = {}) => {
   const optionalId = z.preprocess(
     (value) => (value === '' ? undefined : value),
     z.string().min(1, t('validationMessages.idCannotBeEmpty')).nullish().optional(),
   );
-  const emailField = z.string().email(t('validationMessages.invalidEmailFormat')).or(z.literal(''));
+  const validEmail = z.string().trim().email(t('validationMessages.invalidEmailFormat'));
+  const emailField = requireEmail
+    ? z.string().trim().min(1, t('teachers.errors.invitationEmailRequired')).email(t('validationMessages.invalidEmailFormat'))
+    : validEmail.or(z.literal(''));
   const phoneField = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, t('validationMessages.invalidPhoneNumber'));
   const nameField = z
     .string()

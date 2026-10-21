@@ -219,6 +219,12 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
         className={sectionHeaderClassName}
       />
 
+      {!placementReadOnly && selectedClassId && sectionOptions.length === 0 && (
+        <p role='status' className='text-sm text-muted-foreground'>
+          {t('students.form.noSectionsHint')}
+        </p>
+      )}
+
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
         <FormInput
           name='classId'

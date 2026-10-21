@@ -43,6 +43,15 @@ export class ClassRoutineRepository {
     return school?.teachingDays ?? [...DEFAULT_TEACHING_DAYS];
   }
 
+  async getSchoolDay() {
+    const [school] = await this.db.select({
+      schoolStartTime: settings.schoolStartTime,
+      schoolEndTime: settings.schoolEndTime,
+      lunchBreakDuration: settings.lunchBreakDuration,
+    }).from(settings).orderBy(desc(settings.createdAt)).limit(1);
+    return school;
+  }
+
   async getPeriods(includeInactive = false, scheduleId?: string) {
     const conditions = [scheduleId
       ? eq(routinePeriods.scheduleId, scheduleId)

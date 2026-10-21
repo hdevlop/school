@@ -1,0 +1,400 @@
+{
+  "origin": "http://localhost:3102",
+  "date": "2026-10-21",
+  "pass": 53,
+  "fail": 0,
+  "cases": [
+    {
+      "area": "grades",
+      "name": "Save grades has a visible label and starts disabled",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Typing shows Unsaved and does not write a grade",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Draft survives reload and reopening the same roster",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Draft stays isolated when switching assessment sources",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Draft survives navigating away and back",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Reset removes the draft without creating a grade",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Save creates one persisted grade and updates highest/lowest/pass rate",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Saved grade survives reload without an unsaved indicator",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Editing and saving an existing grade persists the update",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Phone grade stat labels fit without overlap",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Phone grade entry shows unsaved state and accessible Save/Reset controls",
+      "status": "PASS"
+    },
+    {
+      "area": "grades",
+      "name": "Owned grade and assessment fixtures cleaned up",
+      "status": "PASS"
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "en",
+      "width": 320,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "en",
+      "width": 360,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "en",
+      "width": 390,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "en",
+      "width": 768,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "en",
+      "width": 1440,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "en",
+      "width": 320,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "en",
+      "width": 360,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "en",
+      "width": 390,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "en",
+      "width": 768,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "en",
+      "width": 1440,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "fr",
+      "width": 320,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "fr",
+      "width": 360,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "fr",
+      "width": 390,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "fr",
+      "width": 768,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "fr",
+      "width": 1440,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "fr",
+      "width": 320,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "fr",
+      "width": 360,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "fr",
+      "width": 390,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "fr",
+      "width": 768,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "fr",
+      "width": 1440,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "ar",
+      "width": 320,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "ar",
+      "width": 360,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "ar",
+      "width": 390,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "ar",
+      "width": 768,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "ar",
+      "width": 1440,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "ar",
+      "width": 320,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "ar",
+      "width": 360,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "ar",
+      "width": 390,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "ar",
+      "width": 768,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "ar",
+      "width": 1440,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "es",
+      "width": 320,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "es",
+      "width": 360,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "es",
+      "width": 390,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "es",
+      "width": 768,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "es",
+      "width": 1440,
+      "dirty": false
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "es",
+      "width": 320,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "es",
+      "width": 360,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "es",
+      "width": 390,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "es",
+      "width": 768,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Grade toolbar labels and actions fit",
+      "status": "PASS",
+      "language": "es",
+      "width": 1440,
+      "dirty": true
+    },
+    {
+      "area": "grade-layout",
+      "name": "Layout matrix sent no grade mutations and produced no unhandled page errors",
+      "status": "PASS"
+    }
+  ],
+  "additionalChecks": [
+    {
+      "area": "settings",
+      "name": "Unavailable two-factor explanation visible and switch disabled",
+      "status": "PASS"
+    }
+  ]
+}

@@ -8,7 +8,7 @@ import { useAuth } from 'najm-auth/client/react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
-import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
+import { useActiveAcademicYear, usePublicSettings } from '@/features/Settings/hooks/useSettings';
 import { useViewingAcademicYear, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -35,6 +35,7 @@ function ClassRoutinePageForYear() {
   const { openDialog } = useDialog();
   const { classes, isClassesLoading } = useClasses();
   const { academicYear, isAcademicYearLoading } = useActiveAcademicYear();
+  const { publicSettings } = usePublicSettings();
   // The viewing year when whole-school history is on; otherwise the active one.
   const { viewingYear } = useViewingAcademicYear();
   const listedYear = viewingYear ?? academicYear;
@@ -69,6 +70,15 @@ function ClassRoutinePageForYear() {
   const { data: routine, isPending: routinePending } = useRoutine(scheduleId);
   const routineLoading = Boolean(scheduleId) && routinePending;
   const { data: assignments = [] } = useRoutineAssignments(sectionId);
+  const hoursDiffer = useMemo(() => {
+    if (!routine?.periods.length || !publicSettings || routine.academicYear !== academicYear) return false;
+    const periods = [...routine.periods].sort((a, b) => a.startTime.localeCompare(b.startTime));
+    const minutes = (value: string) => { const [h, m] = value.split(':').map(Number); return h * 60 + m; };
+    const breaks = periods.filter((period) => period.isBreak).reduce((sum, period) => sum + minutes(period.endTime) - minutes(period.startTime), 0);
+    return minutes(periods[0].startTime) !== minutes(publicSettings.schoolStartTime ?? '')
+      || minutes(periods.at(-1)!.endTime) !== minutes(publicSettings.schoolEndTime ?? '')
+      || breaks !== publicSettings.lunchBreakDuration;
+  }, [routine, publicSettings, academicYear]);
 
   useEffect(() => {
     setClassId((current) => activeClasses.some((item) => item.id === current)
@@ -239,6 +249,8 @@ function ClassRoutinePageForYear() {
           ) : null}
         </div>
       </NFilterBar>
+
+      {hoursDiffer && <p role="status" className="shrink-0 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-100">{t('classRoutines.ui.schoolHoursMismatch')}</p>}
 
       {busy || schedulesLoading || routineLoading ? (
         <NajmScroll axis="y" autoHide="scroll" className="flex-1">

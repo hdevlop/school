@@ -937,14 +937,14 @@
       "studentsYear": "Estudiantes",
       "teachersCurrent": "Profesores (actuales)",
       "incomeYear": "Ingresos",
-      "expensesYear": "Gastos",
+      "expensesYear": "Gastos pagados",
       "netBalanceYear": "Saldo neto",
       "collectionRateYear": "Tasa de cobro",
       "daysOverdue": "Días de retraso",
       "expenseCount": "Cantidad de gastos",
-      "expenses": "Expenses",
+      "expenses": "Gastos pagados",
       "expensesByCategory": "Gastos por categoría",
-      "expensesMonth": "Gastos (Mes)",
+      "expensesMonth": "Gastos pagados (mes)",
       "income": "Ingresos",
       "incomeMonth": "Ingresos (Mes)",
       "incomeVsExpenses": "Ingresos vs Gastos",
@@ -955,7 +955,8 @@
       "overdueFees": "Cuotas vencidas",
       "recentPayments": "Pagos recientes",
       "totalStudents": "Total de estudiantes",
-      "totalTeachers": "Total de profesores"
+      "totalTeachers": "Total de profesores",
+      "expensesHelp": "Solo gastos y nóminas pagados. La aprobación por sí sola no se incluye."
     },
     "attendance": {
       "studentsTitle": "Asistencia de estudiantes",
@@ -992,6 +993,7 @@
     }
   },
   "common": {
+    "backToDashboard": "Volver al panel",
     "feedback": {
       "loadingLabel": "Cargando...",
       "emptyTitle": "No hay datos disponibles",
@@ -1360,7 +1362,8 @@
         "updateSupervision": "Actualizar supervisión",
         "removeSupervision": "Eliminar supervisión",
         "addTeachingPeriod": "Añadir periodo lectivo",
-        "addBreak": "Añadir descanso"
+        "addBreak": "Añadir descanso",
+        "useSchoolHours": "Usar el horario escolar"
       },
       "dialogs": {
         "daysTitle": "Días lectivos",
@@ -1471,7 +1474,9 @@
       },
       "errors": {
         "loadFailed": "No se pudo cargar el horario."
-      }
+      },
+      "schoolHoursDraft": "El horario prepara seis clases y el almuerzo. Revise la distribución y guarde para aplicarla.",
+      "schoolHoursMismatch": "Este horario difiere de los ajustes de la escuela. Abra Períodos y use el horario escolar para revisar una distribución ajustada."
     }
   },
   "payroll": {
@@ -1646,6 +1651,11 @@
       "late": "Tarde"
     },
     "roster": {
+      "arrivalTime": "Hora de llegada",
+      "details": "Llegada y nota",
+      "applyDetails": "Aplicar al registro",
+      "detailsSaveHint": "Guarde la asistencia para conservar estos datos.",
+      "markBeforeDetails": "Marque primero la asistencia",
       "studentTitle": "Asistencia de estudiantes",
       "teacherTitle": "Asistencia de profesores",
       "staffTitle": "Asistencia del personal",
@@ -1685,7 +1695,10 @@
       "noStudentsInSection": "No se encontraron alumnos en la sección seleccionada.",
       "resetFilters": "Restablecer filtros",
       "search": "Buscar",
-      "submitError": "Error al guardar la asistencia"
+      "submitError": "Error al guardar la asistencia",
+      "unmarked": "Sin registrar",
+      "unsavedMarks": "{{count}} marcas sin guardar",
+      "markAllPresent": "Marcar todos presentes"
     }
   },
   "fees": {
@@ -2404,7 +2417,8 @@
       "totalMarks": "Nota total",
       "totalMarksPlaceholder": "Ingrese la nota total",
       "type": "Tipo",
-      "typePlaceholder": "Seleccione el tipo"
+      "typePlaceholder": "Seleccione el tipo",
+      "teacherAssignmentHint": "Elige una clase, secciones y asignatura. Solo se muestran los docentes asignados a todas las secciones seleccionadas."
     },
     "status": {
       "active": "Activo",
@@ -3024,7 +3038,9 @@
     "messages": {
       "pageTitle": "Notas",
       "resetChanges": "Restablecer cambios",
-      "nothingToSave": "No hay nada que guardar."
+      "nothingToSave": "No hay nada que guardar.",
+      "unsaved": "Sin guardar",
+      "unsavedChanges": "Notas sin guardar. Pulsa Guardar notas para aplicarlas. Los borradores permanecen en esta pestaña para esta lista."
     },
     "subtitle": {
       "count": "Estudiantes: {{count}}"
@@ -3587,7 +3603,7 @@
       "maxStudents": "Máx. estudiantes",
       "maxStudentsPlaceholder": "Ingrese el máximo de estudiantes",
       "roomNumber": "Número de aula",
-      "roomNumberPlaceholder": "Ingrese el número de aula",
+      "roomNumberPlaceholder": "Ej.: 101",
       "sectionInformation": "Información de la sección",
       "sectionName": "Nombre de la sección",
       "sectionNamePlaceholder": "Ingrese el nombre de la sección"
@@ -3620,6 +3636,8 @@
       "bulkDeleted": "Miembros del personal eliminados con éxito"
     },
     "errors": {
+      "driverLicenseExpiryInvalid": "Introduzca una fecha de vencimiento válida (AAAA-MM-DD).",
+      "driverLicenseExpired": "El permiso de conducir ha caducado.",
       "notFound": "Miembro del personal no encontrado",
       "employeeCodeExists": "Ya existe un miembro del personal con este código de empleado",
       "cinExists": "Ya existe un miembro del personal con este CIN",
@@ -3699,6 +3717,9 @@
       "temporary": "Temporal"
     },
     "form": {
+      "noVehiclesTitle": "Cree primero un vehículo",
+      "vehicleSetupHint": "Un conductor o acompañante necesita un vehículo. Puede crear uno en el paso Asignaciones sin perder este formulario.",
+      "vehicleSetupAskAdmin": "Pida a un administrador que cree un vehículo y vuelva a intentarlo.",
       "bankAccountPlaceholder": "Introduce la cuenta bancaria",
       "workloadHoursPlaceholder": "Introduce las horas mensuales",
       "hourlyRatePlaceholder": "Introduce la tarifa por hora",
@@ -3771,6 +3792,7 @@
       "fullDay": "Jornada completa"
     },
     "validation": {
+      "licenseExpired": "El permiso debe ser válido hoy o en una fecha posterior.",
       "required": "Este campo es obligatorio",
       "tooLong": "Este valor es demasiado largo",
       "nameMin": "El nombre debe tener al menos 2 caracteres",
@@ -3957,7 +3979,8 @@
       "missing": "Falta la configuración de la escuela",
       "registeredCalendarLocked": "El calendario de un año registrado solo se modifica con una corrección revisada",
       "activateThroughYears": "Active el año registrado desde la gestión de años escolares",
-      "teachingDaysInUse": "Mueva o elimine las clases y las supervisiones de este día antes de cambiar los días lectivos."
+      "teachingDaysInUse": "Mueva o elimine las clases y las supervisiones de este día antes de cambiar los días lectivos.",
+      "invalidSchoolDay": "El horario debe permitir el almuerzo y al menos seis clases de cinco minutos."
     },
     "academic": {
       "semesterPlaceholder": "Semestre",
@@ -4019,7 +4042,8 @@
       "studentAccessEnabled": "Acceso de estudiantes",
       "teacherAccessEnabled": "Acceso de profesores",
       "title": "Título",
-      "twoFactorAuth": "Autenticación de dos factores"
+      "twoFactorAuth": "Autenticación de dos factores",
+      "twoFactorUnavailable": "No disponible: esta aplicación no aplica la autenticación de dos factores."
     },
     "seed": {
       "button": "Confirmar",
@@ -4190,7 +4214,13 @@
       "studentCode": "Código del estudiante",
       "studentCodePlaceholder": "Ingrese el código del estudiante",
       "studentImage": "Imagen del estudiante",
-      "arabicName": "Nombre en árabe"
+      "arabicName": "Nombre en árabe",
+      "noClassesTitle": "Crea una clase antes de matricular alumnos",
+      "noClassesHint": "Añade una clase y al menos una sección, y vuelve aquí para matricular un alumno.",
+      "noClassesAdminHint": "Pide a un administrador que añada una clase y una sección antes de matricular alumnos.",
+      "manageClasses": "Gestionar clases",
+      "classesLoadFailed": "No se pudieron cargar las clases. Inténtalo de nuevo.",
+      "noSectionsHint": "Esta clase no tiene secciones. Añade una en Académico → Secciones, o pide ayuda a un administrador, antes de matricular un alumno."
     },
     "status": {
       "active": "Activo",
@@ -4461,6 +4491,7 @@
   "teachers": {
     "errors": {
       "hasAssignmentHistory": "Este docente tiene asignaciones de clase en un curso escolar. Elimínelas antes de borrar al docente",
+      "invitationEmailRequired": "El correo es obligatorio para enviar el enlace de activación del profesor",
       "notFound": "Docente no encontrado",
       "datedRosterUnreviewed": "Las listas fechadas de un docente requieren un historial de asignaciones revisado",
       "dateOutsideYear": "La fecha está fuera del periodo del año escolar",
@@ -4539,7 +4570,8 @@
       "yearsOfExperiencePlaceholder": "Ingrese los años de experiencia",
       "noAssignments": "Sin asignaciones",
       "addAssignment": "Añadir asignación",
-      "noAssignmentsAdded": "Aún no se han añadido asignaciones."
+      "noAssignmentsAdded": "Aún no se han añadido asignaciones.",
+      "emailHelp": "Usa el correo personal del profesor. Recibirá un enlace de activación para elegir su contraseña."
     },
     "profile": {
       "table": {
@@ -4619,7 +4651,7 @@
     },
     "invitation": {
       "sent": "Correo de invitación enviado a {{email}}. El profesor activa la cuenta desde el enlace.",
-      "notSent": "El profesor se creó, pero no se pudo enviar el correo de invitación. Vuelve a enviarlo con «Restablecer acceso» en la página Usuarios."
+      "notSent": "El profesor se ha creado, pero no se pudo enviar la invitación. Comprueba el correo y usa «Restablecer acceso» para reintentar. Si sigue fallando, pide a un administrador que revise el envío de correo."
     }
   },
   "vehicleAssignments": {
@@ -5742,6 +5774,8 @@
     }
   },
   "validationMessages": {
+    "pointsRange": "Los puntos deben estar entre 0 y 100.",
+    "arrivalTimeInvalid": "Introduzca una hora de llegada válida (HH:MM).",
     "locale": "es",
     "aRealYyyyMmDdYearlyEnrollmentDateIs": "Se requiere una fecha real de matrícula anual con formato AAAA-MM-DD",
     "aStaffAttendanceRosterCannotExceed1000Records": "Una lista de asistencia del personal no puede superar los 1000 registros",
@@ -5976,6 +6010,8 @@
     "incidentDateIsRequired": "La fecha del incidente es obligatoria",
     "incidentTimeIsRequired": "La hora del incidente es obligatoria",
     "behaviorDateIsRequired": "La fecha de la conducta es obligatoria",
-    "behaviorTimeIsRequired": "La hora de la conducta es obligatoria"
+    "behaviorTimeIsRequired": "La hora de la conducta es obligatoria",
+    "schoolEmailRequired": "El correo de la escuela es obligatorio",
+    "schoolAddressRequired": "La dirección de la escuela es obligatoria"
   }
 }

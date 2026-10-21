@@ -71,6 +71,13 @@ describe('Settings edits and the active year', () => {
       .toEqual({ schoolName: 'Al Amal' });
   });
 
+  it('rejects a school day that cannot fit lunch before writing', async () => {
+    const writes: object[] = [];
+    await expect(service({ currentAcademicYear: '2026-2027', schoolStartTime: '08:00', schoolEndTime: '15:00', lunchBreakDuration: 30 }, writes)
+      .update({ schoolEndTime: '08:20' })).rejects.toThrow('Set school hours');
+    expect(writes).toEqual([]);
+  });
+
   // The newest settings row holds the active year, so a second one switched
   // the year without activation, and registered an open year on the way.
   it('refuses a second installation instead of switching the active year', async () => {
@@ -95,7 +102,7 @@ describe('Settings edits and the active year', () => {
 
   it('retains an explicitly selected receipt language during installation', async () => {
     const writes: Array<Record<string, unknown>> = [];
-    await service(null, writes).create({ schoolName: 'Al Amal', schoolPhone: '212600000000', schoolEmail: '', currentAcademicYear: '2026-2027', receiptLanguage: 'ar' });
+    await service(null, writes).create({ schoolName: 'Al Amal', schoolAddress: 'Demo address', schoolPhone: '212600000000', schoolEmail: 'contact@school.test', currentAcademicYear: '2026-2027', receiptLanguage: 'ar' });
     expect(writes[0].receiptLanguage).toBe('ar');
   });
 });

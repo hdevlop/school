@@ -44,12 +44,12 @@ function StudentsTable() {
   const canDelete = !isFamily && can('delete:students');
   const title = role === 'parent' ? t('navigation.myChildren')
     : role === 'student' ? t('navigation.myProfile') : t('navigation.students');
-  const { classes } = useClasses();
+  const { classes, refetch: refetchClasses } = useClasses();
   // A new student is placed in the active year, as the server requires,
   // whichever year is viewed, so the form offers the active year's classes.
   const { viewingYear, activeYear } = useViewingAcademicYear();
   const viewsOtherYear = !!viewingYear && !!activeYear && viewingYear !== activeYear;
-  const { classes: activeYearClasses } = useClasses({ academicYear: activeYear, enabled: viewsOtherYear });
+  const { classes: activeYearClasses, refetch: refetchActiveYearClasses } = useClasses({ academicYear: activeYear, enabled: viewsOtherYear });
   const newStudentClasses = viewsOtherYear ? activeYearClasses : classes;
   // Fee types only fill the new-student form.
   const { feeTypes } = useFeeTypes({ enabled: canCreate });
@@ -89,6 +89,14 @@ function StudentsTable() {
   };
 
   const handleAddClick = async () => {
+    // Only a successful lookup can establish that setup is missing. Refresh
+    // before opening so a loading or failed request never looks like no classes.
+    if (!activeYear) return;
+    const classResult = await (viewsOtherYear ? refetchActiveYearClasses() : refetchClasses());
+    if (classResult.isError || !Array.isArray(classResult.data?.data)) {
+      toast.error(t('students.form.classesLoadFailed'));
+      return;
+    }
     const resolvedBusinessDate = isBusinessDateLoading
       ? await refetchBusinessDate()
       : businessDate;
@@ -99,7 +107,7 @@ function StudentsTable() {
         : t('students.dialogs.createTitle'),
       children: (
         <FullStudentForm
-          classes={newStudentClasses}
+          classes={classResult.data.data}
           feeTypes={feeTypes || []}
           // A new student is placed in the active year, which refuses an
           // admission outside it; after that year ends, today would be.

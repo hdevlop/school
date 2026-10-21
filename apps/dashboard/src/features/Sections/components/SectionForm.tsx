@@ -75,7 +75,7 @@ const SectionForm = ({ section = null }) => {
 
                      <FormInput
                         name='roomNumber'
-                        type='text'
+                        type='number'
                         formLabel={t('sections.form.roomNumber')}
                         placeholder={t('sections.form.roomNumberPlaceholder')}
                         icon={DoorOpen}

@@ -11,6 +11,14 @@ const sectionSchema = createSectionSchema(english);
 const valid = { classId: 'cls1', name: 'A' };
 
 describe('sectionSchema', () => {
+  it.each(['', '  ', null, undefined])('allows an omitted room number (%j)', roomNumber => {
+    expect(sectionSchema.parse({ ...valid, roomNumber }).roomNumber).toBeUndefined();
+  });
+
+  it('refuses a room label because the API accepts numeric room numbers', () => {
+    expect(sectionSchema.safeParse({ ...valid, roomNumber: 'Lab A' }).success).toBe(false);
+  });
+
   it('defaults a new section to thirty seats and active', () => {
     const parsed = sectionSchema.parse(valid);
 

@@ -821,19 +821,19 @@
       "totalStudents": "Total Students",
       "totalTeachers": "Total Teachers",
       "incomeMonth": "Income (month)",
-      "expensesMonth": "Expenses (month)",
+      "expensesMonth": "Paid expenses (month)",
       "netBalance": "Net Balance",
       "collectionRateYTD": "Collection Rate YTD",
       "studentsYear": "Students",
       "teachersCurrent": "Teachers (current)",
       "incomeYear": "Income",
-      "expensesYear": "Expenses",
+      "expensesYear": "Paid expenses",
       "netBalanceYear": "Net Balance",
       "collectionRateYear": "Collection Rate",
       "studentsByGender": "Students by Gender",
       "incomeVsExpenses": "Income vs Expenses",
       "income": "Income",
-      "expenses": "Expenses",
+      "expenses": "Paid expenses",
       "agingBalance": "Aging Balance",
       "agingCurrent": "Current",
       "aging1_30": "1–30 days",
@@ -848,7 +848,8 @@
       "noRecentPayments": "No recent payments",
       "expensesByCategory": "Expenses by category",
       "noExpensesRecorded": "No expenses recorded",
-      "expenseCount": "{{count}} expense(s)"
+      "expenseCount": "{{count}} expense(s)",
+      "expensesHelp": "Paid expenses and payroll only. Approval alone is excluded."
     },
     "cards": {},
     "attendance": {
@@ -886,6 +887,7 @@
     }
   },
   "common": {
+    "backToDashboard": "Back to dashboard",
     "feedback": {
       "loadingLabel": "Loading...",
       "emptyTitle": "No data available",
@@ -1219,7 +1221,8 @@
       "missing": "School settings are missing",
       "registeredCalendarLocked": "Registered year calendars require a reviewed correction",
       "activateThroughYears": "Activate the registered year through academic-year operations",
-      "teachingDaysInUse": "Move or remove the lessons and supervision assigned to this day before changing teaching days."
+      "teachingDaysInUse": "Move or remove the lessons and supervision assigned to this day before changing teaching days.",
+      "invalidSchoolDay": "Set school hours that fit lunch and at least six teaching periods of five minutes."
     },
     "system": {
       "title": "System Settings",
@@ -1325,7 +1328,8 @@
       "teacherAccessEnabled": "Teacher Portal Access",
       "studentAccessEnabled": "Student Portal Access",
       "apiKey": "API Key",
-      "apiKeyDescription": "This key is used for system operations and integrations."
+      "apiKeyDescription": "This key is used for system operations and integrations.",
+      "twoFactorUnavailable": "Unavailable: two-factor authentication is not enforced by this application."
     },
     "saveSettings": "Save settings"
   },
@@ -2047,7 +2051,13 @@
       "occupationPlaceholder": "Enter occupation",
       "existingParentFound": "Existing Parent Found",
       "existingParentFoundDescription": "We found an existing parent with the same {field}. Would you like to link this parent instead of creating a new one?",
-      "arabicName": "Arabic name"
+      "arabicName": "Arabic name",
+      "noClassesTitle": "Create a class before enrolling students",
+      "noClassesHint": "Add a class and at least one section, then return here to enroll a student.",
+      "noClassesAdminHint": "Ask a school administrator to add a class and section before enrolling students.",
+      "manageClasses": "Manage classes",
+      "classesLoadFailed": "Could not load classes. Please try again.",
+      "noSectionsHint": "This class has no sections. Add one in Academic → Sections, or ask an administrator, before enrolling a student."
     },
     "dialogs": {
       "deleteWarning": "This permanently deletes the student and their academic records, unpaid fees and transport assignments across all school years. Linked parents are kept. This cannot be undone. Students with payment or credit history cannot be deleted.",
@@ -2544,6 +2554,8 @@
       "bulkDeleted": "Staff members deleted successfully"
     },
     "errors": {
+      "driverLicenseExpiryInvalid": "Enter a valid license expiry date (YYYY-MM-DD).",
+      "driverLicenseExpired": "The driver's license has expired.",
       "notFound": "Staff member not found",
       "employeeCodeExists": "A staff member with this employee code already exists",
       "cinExists": "A staff member with this CIN already exists",
@@ -2630,6 +2642,9 @@
       "fullDay": "Full Day"
     },
     "form": {
+      "noVehiclesTitle": "Create a vehicle first",
+      "vehicleSetupHint": "A driver or bus assistant needs a vehicle. You can create one in the Assignments step without losing this form.",
+      "vehicleSetupAskAdmin": "Ask an administrator to create a vehicle, then retry.",
       "bankAccountPlaceholder": "Enter bank account",
       "workloadHoursPlaceholder": "Enter monthly hours",
       "hourlyRatePlaceholder": "Enter hourly rate",
@@ -2701,6 +2716,7 @@
       "notSent": "The staff member was created, but the invitation email could not be sent. Send it again with \"Reset access\" on the Users page."
     },
     "validation": {
+      "licenseExpired": "License expiry must be today or later.",
       "required": "This field is required",
       "tooLong": "This value is too long",
       "nameMin": "Name must be at least 2 characters",
@@ -2845,6 +2861,7 @@
     },
     "errors": {
       "idExists": "Teacher ID already exists",
+      "invitationEmailRequired": "Email is required to send the teacher's activation link",
       "notFound": "Teacher not found",
       "cinExists": "A teacher with this CIN already exists",
       "emailExists": "A teacher with this email already exists",
@@ -2936,7 +2953,8 @@
       "searchTeacher": "Search teacher...",
       "teacher": "Teacher",
       "teacherPlaceholder": "Select teacher",
-      "noAssignmentsAdded": "No assignments added yet."
+      "noAssignmentsAdded": "No assignments added yet.",
+      "emailHelp": "Use the teacher’s own email address. They will receive an activation link to choose their password."
     },
     "status": {
       "active": "Active",
@@ -3071,7 +3089,7 @@
     },
     "invitation": {
       "sent": "Invitation email sent to {{email}}. The teacher activates the account from the link.",
-      "notSent": "The teacher was created, but the invitation email could not be sent. Send it again with \"Reset access\" on the Users page."
+      "notSent": "The teacher was created, but the invitation email could not be sent. Check the email address and use \"Reset access\" to retry. If it still fails, ask an administrator to check email delivery."
     }
   },
   "drivers": {
@@ -3608,7 +3626,7 @@
       "class": "Class",
       "classPlaceholder": "Select a class",
       "roomNumber": "Room Number",
-      "roomNumberPlaceholder": "e.g., 101, Lab A",
+      "roomNumberPlaceholder": "e.g., 101",
       "maxStudents": "Maximum Students",
       "maxStudentsPlaceholder": "Enter capacity",
       "status": "Status"
@@ -3645,7 +3663,9 @@
     "messages": {
       "pageTitle": "Grades",
       "resetChanges": "Reset changes",
-      "nothingToSave": "Nothing to save."
+      "nothingToSave": "Nothing to save.",
+      "unsaved": "Unsaved",
+      "unsavedChanges": "Unsaved grades. Click Save grades to apply them. Drafts stay in this tab for this roster."
     },
     "subtitle": {
       "count": "Students: {{count}}"
@@ -3923,7 +3943,8 @@
       "passingMarks": "Passing Marks",
       "passingMarksPlaceholder": "Enter passing marks",
       "status": "Status",
-      "statusPlaceholder": "Select status"
+      "statusPlaceholder": "Select status",
+      "teacherAssignmentHint": "Choose a class, sections and subject. Only teachers assigned to every selected section are listed."
     },
     "dialogs": {
       "createTitle": "Create Assessment",
@@ -4893,7 +4914,8 @@
         "updateSupervision": "Update supervision",
         "removeSupervision": "Remove supervision",
         "addTeachingPeriod": "Add teaching period",
-        "addBreak": "Add break / recess"
+        "addBreak": "Add break / recess",
+        "useSchoolHours": "Use school hours"
       },
       "dialogs": {
         "daysTitle": "Teaching days",
@@ -5004,7 +5026,9 @@
       },
       "errors": {
         "loadFailed": "The routine could not be loaded."
-      }
+      },
+      "schoolHoursDraft": "School hours prepare six lessons and lunch. Review the layout and save to apply it.",
+      "schoolHoursMismatch": "This timetable differs from the school day in Settings. Open Periods and use school hours to review an aligned layout."
     }
   },
   "payroll": {
@@ -5224,6 +5248,11 @@
       "late": "Late"
     },
     "roster": {
+      "arrivalTime": "Arrival time",
+      "details": "Arrival & note",
+      "applyDetails": "Apply to register",
+      "detailsSaveHint": "Save attendance to keep these details.",
+      "markBeforeDetails": "Mark attendance first",
       "studentTitle": "Student Attendance",
       "teacherTitle": "Teacher Attendance",
       "staffTitle": "Staff Attendance",
@@ -5263,7 +5292,10 @@
       "noStudents": "No students found.",
       "noStudentsInSection": "No students found in the selected section.",
       "resetFilters": "Reset filters",
-      "search": "Search"
+      "search": "Search",
+      "unmarked": "Not recorded",
+      "unsavedMarks": "{{count}} unsaved marks",
+      "markAllPresent": "Mark all present"
     }
   },
   "behaviorRewards": {
@@ -6455,6 +6487,8 @@
     }
   },
   "validationMessages": {
+    "pointsRange": "Points must be between 0 and 100.",
+    "arrivalTimeInvalid": "Enter a valid arrival time (HH:MM).",
     "locale": "en",
     "aRealYyyyMmDdYearlyEnrollmentDateIs": "A real YYYY-MM-DD yearly enrollment date is required",
     "aStaffAttendanceRosterCannotExceed1000Records": "A staff attendance roster cannot exceed 1000 records",
@@ -6689,6 +6723,8 @@
     "incidentDateIsRequired": "Incident date is required",
     "incidentTimeIsRequired": "Incident time is required",
     "behaviorDateIsRequired": "Behavior date is required",
-    "behaviorTimeIsRequired": "Behavior time is required"
+    "behaviorTimeIsRequired": "Behavior time is required",
+    "schoolEmailRequired": "School email is required",
+    "schoolAddressRequired": "School address is required"
   }
 }

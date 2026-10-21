@@ -21,6 +21,7 @@ import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/service
 import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
 import { useViewingYearDate } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useSchoolToday } from '@/hooks/useSchoolFormat';
+import StaffAttendanceDetails from './StaffAttendanceDetails';
 
 function StaffAttendanceTable() {
   const { t } = useTranslation();
@@ -30,7 +31,7 @@ function StaffAttendanceTable() {
   const [selectedDate, setSelectedDate] = useViewingYearDate(useSchoolToday());
   const { staff, error: staffError, isStaffLoading } = useStaff({ attendanceRoster: true, attendanceDate: selectedDate });
   const { activeStaffRoles, isStaffRolesLoading } = useStaffRoles({ activeOnly: true });
-  const { attendance, submitRoster, isSubmittingRoster, isAttendanceLoading } = useStaffAttendance({ date: selectedDate });
+  const { attendance, submitRoster, isSubmittingRoster, isAttendanceLoading, error: attendanceError } = useStaffAttendance({ date: selectedDate });
   const staffRows = staff || [];
 
   const roster = useAttendanceRoster({
@@ -42,7 +43,13 @@ function StaffAttendanceTable() {
     onDateChange: setSelectedDate,
   });
 
-  const columns = useStaffRosterColumns({ getStatus: roster.getStatus, setStatus: roster.setStatus });
+  const { getDetails, getStatus, setDetails } = roster;
+  const renderDetails = useCallback((person: any) => (
+    <StaffAttendanceDetails name={person.name} details={getDetails(person.id)}
+      disabled={getStatus(person.id) === 'unmarked'}
+      onChange={(details) => setDetails(person.id, details)} />
+  ), [getDetails, getStatus, setDetails]);
+  const columns = useStaffRosterColumns({ getStatus: roster.getStatus, setStatus: roster.setStatus, renderDetails });
 
   // The staff register is the same nine-column table as the student one and was
   // squeezed the same way below the card breakpoint.
@@ -54,9 +61,9 @@ function StaffAttendanceTable() {
         setStatus={roster.setStatus}
         detail={t(`staff.roles.${props.data?.role}`)}
         avatarSrc={props.data?.image || getStaffAvatar(props.data?.role, props.data?.gender)}
-      />
+      >{renderDetails(props.data)}</RosterCard>
     ),
-    [t, roster.getStatus, roster.setStatus],
+    [t, roster.getStatus, roster.setStatus, renderDetails],
   );
   const rawFilters = useStaffRosterFilters(
     { value: roster.selectedDate, onChange: roster.goToDate },
@@ -107,7 +114,8 @@ function StaffAttendanceTable() {
           isSubmitting={isSubmittingRoster}
           stats={roster.stats}
           onSubmit={roster.handleSubmit}
-          canSubmit={total > 0 && !isStaffLoading && !isAttendanceLoading && !isStaffRolesLoading}
+          onMarkAllPresent={() => roster.markAllAs('present')}
+          canSubmit={total > 0 && !isStaffLoading && !isAttendanceLoading && !isStaffRolesLoading && !attendanceError}
         />
       </RosterFilters>
 
@@ -117,7 +125,7 @@ function StaffAttendanceTable() {
         isFilteredEmpty={total > 0 && visibleStaff.length === 0}
         columns={columns}
         loading={isStaffLoading || isAttendanceLoading || isStaffRolesLoading}
-        error={hasFailedToLoad(staffError, staffRows) ? staffError : null}
+        error={attendanceError || (hasFailedToLoad(staffError, staffRows) ? staffError : null)}
         renderError={(currentError) => (
           isAuthorizationError(currentError)
             ? <NForbiddenState surface="panel" />

@@ -1,3 +1,4 @@
+import { SCHOOL_DEFAULT_DATE_FORMAT, SCHOOL_DEFAULT_TIME_FORMAT } from '@sms/contracts';
 import {
   SETTINGS_DATE_FORMAT_VALUES,
   type SchoolDateFormat,
@@ -5,10 +6,10 @@ import {
 } from '@/features/Settings/config/dateTimeFormats';
 
 export const schoolDateFormat = (value: unknown): SchoolDateFormat =>
-  SETTINGS_DATE_FORMAT_VALUES.includes(value as SchoolDateFormat) ? value as SchoolDateFormat : 'MM/DD/YYYY';
+  SETTINGS_DATE_FORMAT_VALUES.includes(value as SchoolDateFormat) ? value as SchoolDateFormat : SCHOOL_DEFAULT_DATE_FORMAT;
 
 export const schoolTimeFormat = (value: unknown): SchoolTimeFormat =>
-  value === '24' ? '24' : '12';
+  value === '12' || value === '24' ? value : SCHOOL_DEFAULT_TIME_FORMAT;
 
 type FormatOptions = {
   locale: string;

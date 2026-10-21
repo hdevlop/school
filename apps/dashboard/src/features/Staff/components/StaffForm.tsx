@@ -3,7 +3,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ComponentProps, ComponentType, ReactNode } from 'react';
 import { Activity, Award, Briefcase, Calendar, Car, CreditCard, FileText, Hash, HeartPulse, IdCard, Loader2, Mail, MapPin, Phone, User, UserRound, Wallet } from 'lucide-react';
-import { AvatarFormInput, FormInput, NFormSectionHeader as FormSectionHeader, WizardForm } from 'najm-kit';
+import { AvatarFormInput, FormInput as KitFormInput, NButton, NEmptyState, NErrorState, NFormSectionHeader as FormSectionHeader, WizardForm } from 'najm-kit';
+import { useFormContext } from 'react-hook-form';
 import { useDialog } from '@/shared/useDialog';
 import type { StepConfig } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
@@ -14,6 +15,30 @@ import { useCycles } from '@/features/Cycles/hooks/useCycles';
 import { useZones } from '../hooks/useZones';
 import { useVehicles } from '../hooks/useVehicles';
 import { createStaffSchemas } from '../config/staffSchemas';
+import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
+import { useVehicles as useManageVehicles } from '@/features/Vehicles/hooks/useVehicles';
+import VehicleForm from '@/features/Vehicles/components/VehicleForm';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
+
+// WizardForm 3.6.3 owns its form and has no validation-mode option. Keep that
+// owner and validate the existing controls on blur, then as errors are corrected.
+const FormInput = (props: ComponentProps<typeof KitFormInput>) => {
+  const form = useFormContext();
+  const touched = useRef(false);
+  const discrete = ['select', 'multiselect', 'date', 'switch'].includes(props.type);
+  return (
+    <div className="contents" onBlurCapture={(event) => {
+      if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
+      touched.current = true;
+      void form.trigger(props.name);
+    }}>
+      <KitFormInput {...props} onChange={(value) => {
+        props.onChange?.(value);
+        if (discrete || touched.current || form.getFieldState(props.name).error) void form.trigger(props.name);
+      }} />
+    </div>
+  );
+};
 
 type StaffWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLabel'> & {
   submitLabel?: ReactNode;
@@ -137,7 +162,8 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const submissionPromiseRef = useRef<Promise<unknown> | null>(null);
   const showAssignmentsStep = staffRoleHasAssignments(selectedRole);
-  const schemas = useMemo(() => createStaffSchemas(t), [t]);
+  const { businessDate } = useBusinessDate();
+  const schemas = useMemo(() => createStaffSchemas(t, businessDate), [t, businessDate]);
 
   useEffect(() => {
     setSelectedRole(defaultValues.role);
@@ -156,7 +182,7 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
       {
         id: 'details',
         title: t('staff.form.employmentInformation'),
-        schema: schemas.employment.merge(schemas.driverDetails),
+        schema: schemas.details,
         // `role` is carried (not validated here) so the step can branch on it, e.g. driver license fields.
         fields: [...Object.keys(schemas.employment.shape), ...Object.keys(schemas.driverDetails.shape), 'role'],
         render: ({ form }) => <DetailsStep form={form} />,
@@ -167,7 +193,7 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
       visibleSteps.push({
         id: 'assignments',
         title: t('staff.form.assignments'),
-        schema: schemas.assignments,
+        schema: schemas.assignmentStep,
         // `role` is carried (not validated here) so the step can show role-based assignment fields.
         fields: ['assignments', 'classIds', 'role'],
         render: ({ form }) => <AssignmentsStep form={form} />,
@@ -234,6 +260,8 @@ const PersonalStep = ({ form, lockedRole, onRoleChange }) => {
   const { t, language } = useTranslation();
   const { activeStaffRoles } = useStaffRoles({ activeOnly: true });
   const role = form.watch('role');
+  const needsVehicle = role === 'driver' || role === 'busAssistant';
+  const { vehicles, isVehiclesLoading, isError: vehicleError } = useVehicles({ enabled: needsVehicle });
 
   useEffect(() => {
     onRoleChange?.(role);
@@ -277,6 +305,10 @@ const PersonalStep = ({ form, lockedRole, onRoleChange }) => {
           <FormInput name="status" type="select" formLabel={t('staff.table.status')} placeholder={t('staff.form.statusPlaceholder')} items={statusOptions} icon={Activity} required />
         </div>
       </div>
+
+      {needsVehicle && !isVehiclesLoading && !vehicleError && Array.isArray(vehicles) && vehicles.length === 0 && (
+        <p role="status" className="rounded-lg border bg-muted/40 p-3 text-sm">{t('staff.form.vehicleSetupHint')}</p>
+      )}
 
       <FormSectionHeader icon={Mail} title={t('parents.form.contactInformation')} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4">
@@ -347,11 +379,28 @@ const DetailsStep = ({ form }) => {
 
 const AssignmentsStep = ({ form }) => {
   const { t, language } = useTranslation();
+  const { push } = useDialog();
+  const { can } = useViewerRole();
   const role = form.watch('role');
   const { classes } = useClasses({ enabled: role === 'assistant' });
   const { cycles } = useCycles({ activeOnly: true, enabled: role === 'accountant' });
   const { zones } = useZones({ enabled: role === 'cleaner' || role === 'security' });
-  const { vehicles } = useVehicles({ enabled: role === 'driver' || role === 'busAssistant' });
+  const { vehicles, isVehiclesLoading, isError: vehicleError, refetch: refetchVehicles, createVehicle, isCreating } = useManageVehicles({ enabled: role === 'driver' || role === 'busAssistant' });
+
+  const handleCreateVehicle = () => push({
+    title: t('vehicles.dialogs.createTitle'),
+    children: <VehicleForm />,
+    primaryButton: {
+      form: 'vehicle-form',
+      text: t('vehicles.dialogs.createButton'),
+      loading: isCreating,
+      onClick: async (data) => {
+        const response = await createVehicle(data);
+        await refetchVehicles();
+        form.setValue('assignments.0.vehicleId', response.data.id, { shouldDirty: true, shouldValidate: true });
+      },
+    },
+  });
 
   const zoneOptions = useMemo(() => (zones || []).map((zone) => ({
     value: zone.id,
@@ -390,7 +439,21 @@ const AssignmentsStep = ({ form }) => {
               <FormInput name="assignments.0.zoneId" type="select" formLabel={t('staff.form.zone')} placeholder={t('staff.form.zone')} items={zoneOptions} icon={MapPin} required />
             )}
             {(role === 'driver' || role === 'busAssistant') && (
-              <FormInput name="assignments.0.vehicleId" type="select" formLabel={t('staff.form.vehicle')} placeholder={t('staff.form.vehicle')} items={vehicleOptions} icon={Car} required />
+              <div className="space-y-3 md:col-span-2">
+                {vehicleError ? (
+                  <NErrorState surface="panel" onRetry={() => void refetchVehicles()} />
+                ) : isVehiclesLoading ? (
+                  <p role="status" className="text-sm text-muted-foreground">{t('common.loading')}</p>
+                ) : Array.isArray(vehicles) && vehicles.length === 0 ? (
+                  <NEmptyState surface="panel" icon={Car} title={t('staff.form.noVehiclesTitle')}
+                    description={t('staff.form.vehicleSetupHint')}
+                    action={can('create:vehicles') ? (
+                      <NButton type="button" onClick={handleCreateVehicle}>{t('vehicles.dialogs.createButton')}</NButton>
+                    ) : <p className="text-sm">{t('staff.form.vehicleSetupAskAdmin')}</p>}
+                  />
+                ) : null}
+                <FormInput name="assignments.0.vehicleId" type="select" formLabel={t('staff.form.vehicle')} placeholder={t('staff.form.vehicle')} items={vehicleOptions} icon={Car} required />
+              </div>
             )}
             {role === 'accountant' && (
               <FormInput name="assignments.0.cycleId" type="select" formLabel={t('staff.form.cycle')} placeholder={t('staff.form.cycle')} items={cycleOptions} icon={Briefcase} required />

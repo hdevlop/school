@@ -3,7 +3,7 @@ import { NBadge, NAvatar } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useStudentsTableColumns } from '@/features/Students/hooks/useStudentsTableColumns';
 import RosterMarks from '../components/RosterMarks';
-import type { RosterStatus } from './useAttendanceRoster';
+import type { RosterStatus, RosterMark } from './useAttendanceRoster';
 import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
@@ -11,8 +11,9 @@ const ROSTER_KEEP_COLUMNS = new Set(['select', 'studentCode', 'name', 'email', '
 
 
 interface RosterColumnsOptions {
-  getStatus: (id: string) => RosterStatus;
+  getStatus: (id: string) => RosterMark;
   setStatus: (id: string, status: RosterStatus) => void;
+  renderDetails?: (person: any) => React.ReactNode;
 }
 
 const statusCell = ({ getStatus, setStatus }: RosterColumnsOptions, label: string) => ({
@@ -45,7 +46,7 @@ export const useTeacherRosterColumns = ({ getStatus, setStatus }: RosterColumnsO
   return useStaffRosterColumns({ getStatus, setStatus });
 };
 
-export const useStaffRosterColumns = ({ getStatus, setStatus }: RosterColumnsOptions) => {
+export const useStaffRosterColumns = ({ getStatus, setStatus, renderDetails }: RosterColumnsOptions) => {
   const { t } = useTranslation();
 
   return useMemo(() => [
@@ -99,7 +100,11 @@ export const useStaffRosterColumns = ({ getStatus, setStatus }: RosterColumnsOpt
       },
     },
     statusCell({ getStatus, setStatus }, t('common.status')),
-  ], [t, getStatus, setStatus]);
+    ...(renderDetails ? [{
+      id: 'attendanceDetails', header: t('attendance.roster.details'), enableSorting: false,
+      cell: ({ row }: any) => renderDetails(row.original),
+    }] : []),
+  ], [t, getStatus, setStatus, renderDetails]);
 };
 
 export const useStudentAttendanceTableColumns = () => {

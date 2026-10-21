@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { NAJM_CURRENCIES, NAJM_TIME_ZONES } from 'najm-kit/server';
-import { CALENDAR_SYSTEM_VALUES, DEFAULT_RECEIPT_LANGUAGE, RECEIPT_LANGUAGES } from '@sms/contracts';
+import { CALENDAR_SYSTEM_VALUES, DEFAULT_RECEIPT_LANGUAGE, RECEIPT_LANGUAGES, SCHOOL_DEFAULT_DATE_FORMAT, SCHOOL_DEFAULT_TIME_FORMAT } from '@sms/contracts';
 import { parseSchoolYearLabel } from '@sms/contracts/academic-years';
 import { schoolI18n } from '@sms/contracts/locales';
 import { DEFAULT_TEACHING_DAYS, ROUTINE_DAYS } from '@sms/contracts/routines';
@@ -45,10 +45,10 @@ export const SETTINGS_THEME_VALUES = ['light', 'dark'] as const;
  * reads in the page's language.
  */
 export const createSettingsSchemas = (t: T) => {
-  const emailField = z.string().email(t('validationMessages.invalidEmailFormat')).or(z.literal(''));
+  const emailField = z.string().trim().min(1, t('validationMessages.schoolEmailRequired')).email(t('validationMessages.invalidEmailFormat'));
   const phoneField = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, t('validationMessages.invalidPhoneNumber'));
   const locationValueSchema = z.object({
-    address: z.string().max(500, t('validationMessages.addressTooLong')),
+    address: z.string().trim().min(1, t('validationMessages.schoolAddressRequired')).max(500, t('validationMessages.addressTooLong')),
     latitude: z.number().min(-90).max(90).nullable(),
     longitude: z.number().min(-180).max(180).nullable(),
   });
@@ -109,8 +109,8 @@ export const createSettingsSchemas = (t: T) => {
     timeZone: z.enum(NAJM_TIME_ZONES).default(schoolApp.preferences.defaultTimeZone),
     language: z.enum(schoolI18n.supportedLanguages).default(schoolI18n.defaultLanguage),
     theme: z.enum(SETTINGS_THEME_VALUES).default('light'),
-    dateFormat: z.enum(SETTINGS_DATE_FORMAT_VALUES).default('MM/DD/YYYY'),
-    timeFormat: z.enum(SETTINGS_TIME_FORMAT_VALUES).default('12'),
+    dateFormat: z.enum(SETTINGS_DATE_FORMAT_VALUES).default(SCHOOL_DEFAULT_DATE_FORMAT),
+    timeFormat: z.enum(SETTINGS_TIME_FORMAT_VALUES).default(SCHOOL_DEFAULT_TIME_FORMAT),
     currency: z.enum(NAJM_CURRENCIES).default(SCHOOL_DEFAULT_CURRENCY),
 
     // Academic Calendar Settings
@@ -127,7 +127,7 @@ export const createSettingsSchemas = (t: T) => {
    * the server's defaults until the administrator opens the settings screen.
    */
   const schoolSetup = settings
-    .pick({ schoolName: true, schoolPhone: true, schoolEmail: true, timeZone: true, language: true, currency: true })
+    .pick({ schoolName: true, schoolPhone: true, schoolEmail: true, schoolLocation: true, timeZone: true, language: true, currency: true })
     .extend({
       currentAcademicYear: z.string().refine(
         (value) => parseSchoolYearLabel(value) !== null,

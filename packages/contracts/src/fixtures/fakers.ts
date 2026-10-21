@@ -51,12 +51,8 @@ export function phone() {
 }
 
 export function email(firstName, lastName) {
-  const domains = [
-    'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com',
-    'live.com', 'icloud.com', 'aol.com',
-    'mail.com', 'protonmail.com', 'gmx.com',
-    'yandex.com', 'zoho.com', 'web.de', 'free.fr'
-  ];
+  // Reserved domain: generated identities must never target a real mailbox.
+  const domains = ['school.test'];
 
   const cleanFirstName = firstName.toLowerCase().replace(/[^a-z0-9]/g, '');
   const cleanLastName = lastName.toLowerCase().replace(/[^a-z0-9]/g, '');

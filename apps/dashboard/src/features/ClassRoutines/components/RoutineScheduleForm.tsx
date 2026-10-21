@@ -25,6 +25,8 @@ import { z } from 'zod';
 import { useTranslation } from 'najm-i18n/react';
 import type { RoutineScheduleFormProps, TimelineItem } from '../types';
 import { routinePeriodLabel } from '../utils/labels';
+import { schoolDayPeriods } from '@sms/contracts/routines';
+import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
 
 const toMinutes = (value: string) => {
   const [hours, minutes] = value.split(':').map(Number);
@@ -119,6 +121,11 @@ export default function RoutineScheduleForm({
   const { pop } = useDialog();
   const { t } = useTranslation();
   const time = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, t('classRoutines.ui.validation.timeFormat'));
+  const { publicSettings, isSettingsLoading, isError } = usePublicSettings();
+  const configuredPeriods = (() => {
+    try { return schoolDayPeriods(publicSettings ?? {}); }
+    catch { return null; }
+  })();
   const timelineItemSchema = z.object({
     type: z.enum(['lesson', 'break']),
     name: z.string().trim().min(1, t('classRoutines.ui.validation.nameRequired')).max(80),
@@ -222,6 +229,9 @@ export default function RoutineScheduleForm({
       </div>
 
       <div className="flex flex-col gap-2 pt-1 sm:flex-row sm:flex-wrap sm:justify-center">
+        <NButton type="button" variant="outline" disabled={isSettingsLoading || isError || !publicSettings || !configuredPeriods} className="min-h-11" onClick={() => { if (configuredPeriods) replace(configuredPeriods.map((period) => ({ ...period, name: routinePeriodLabel(period.name, t) }))); }}>
+          {t('classRoutines.ui.actions.useSchoolHours')}
+        </NButton>
         <NButton type="button" variant="outline" className="min-h-11" onClick={() => addRow('lesson')}>
           <Plus className="h-4 w-4" /> {t('classRoutines.ui.actions.addTeachingPeriod')}
         </NButton>
@@ -229,6 +239,8 @@ export default function RoutineScheduleForm({
           <Plus className="h-4 w-4" /> {t('classRoutines.ui.actions.addBreak')}
         </NButton>
       </div>
+      <p className="text-xs text-muted-foreground">{t('classRoutines.ui.schoolHoursDraft')}</p>
+      {!configuredPeriods && <p role="alert" className="text-sm text-destructive">{t('settings.errors.invalidSchoolDay')}</p>}
     </NForm>
   );
 }

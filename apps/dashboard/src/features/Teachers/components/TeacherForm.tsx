@@ -24,6 +24,9 @@ type TeacherWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLab
 
 const TeacherWizardForm = WizardForm as ComponentType<TeacherWizardFormProps>
 
+// Reserve two lines for field feedback so validation does not move controls.
+const teacherFieldGrid = 'grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4 [&_[data-slot=form-item]]:grid [&_[data-slot=form-item]]:content-start [&_[data-slot=form-item]]:grid-rows-[auto_auto_minmax(2.5rem,auto)]'
+
 // ============================================
 // Default Values Helper Functions
 // ============================================
@@ -59,7 +62,8 @@ export const getTeacherAssignmentsDefaultValues = (teacher = null) => ({
 const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeacher }) => {
    const { pop } = useDialog()
    const { t } = useTranslation()
-   const teacherSchemas = useMemo(() => createTeacherSchemas(t), [t])
+   const requireEmail = !teacher
+   const teacherSchemas = useMemo(() => createTeacherSchemas(t, { requireEmail }), [t, requireEmail])
    const [isSubmitting, setIsSubmitting] = useState(false)
    const submissionPromiseRef = useRef<Promise<unknown> | null>(null)
 
@@ -71,7 +75,7 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
          fields: Object.keys(teacherSchemas.personal.shape),
          render: () => (
             <>
-               <PersonalInfoContent />
+               <PersonalInfoContent requireEmail={requireEmail} />
             </>
          ),
       },
@@ -97,7 +101,7 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
             </>
          ),
       },
-   ], [classes, subjects, t, teacherSchemas])
+   ], [classes, subjects, t, teacherSchemas, requireEmail])
 
    const defaultValues = useMemo(() => ({
       ...getTeacherPersonalDefaultValues(teacher),
@@ -154,7 +158,7 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
 // ============================================
 // Step 1: Personal Information
 // ============================================
-export const PersonalInfoContent = () => {
+export const PersonalInfoContent = ({ requireEmail = true }) => {
    const { t } = useTranslation()
    const status = useWatch({ name: 'status' })
    const genderOptions = buildGenderOptions(t)
@@ -169,6 +173,8 @@ export const PersonalInfoContent = () => {
             title={t('teachers.form.personalInformation')}
          />
 
+         {requireEmail && <p className='mb-3 text-xs text-muted-foreground'>{t('teachers.form.emailHelp')}</p>}
+
          <div className='grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4'>
             <AvatarFormInput
                name='image'
@@ -178,7 +184,7 @@ export const PersonalInfoContent = () => {
                previewStyle={{ width: 180, height: 200 }}
             />
 
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4'>
+            <div className={teacherFieldGrid}>
                <FormInput
                   name='name'
                   type='text'
@@ -211,7 +217,7 @@ export const PersonalInfoContent = () => {
                   formLabel={t('teachers.form.email')}
                   placeholder={t('teachers.form.emailPlaceholder')}
                   icon={Mail}
-                  required={true}
+                  required={requireEmail}
                />
 
                <FormInput
@@ -277,7 +283,7 @@ export const ProfessionalInfoContent = () => {
             title={t('teachers.form.professionalInformation')}
          />
 
-         <div className='grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4'>
+         <div className={teacherFieldGrid}>
             <FormInput
                name='specialization'
                type='text'

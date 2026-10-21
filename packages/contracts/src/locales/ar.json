@@ -932,19 +932,19 @@
       "totalStudents": "إجمالي الطلاب",
       "totalTeachers": "إجمالي المعلمين",
       "incomeMonth": "الإيرادات (الشهر)",
-      "expensesMonth": "المصروفات (الشهر)",
+      "expensesMonth": "المصاريف المدفوعة (الشهر)",
       "netBalance": "الرصيد الصافي",
       "collectionRateYTD": "معدل التحصيل منذ بداية السنة",
       "studentsYear": "التلاميذ",
       "teachersCurrent": "المعلمون (حاليًا)",
       "incomeYear": "الإيرادات",
-      "expensesYear": "المصروفات",
+      "expensesYear": "المصاريف المدفوعة",
       "netBalanceYear": "الرصيد الصافي",
       "collectionRateYear": "معدل التحصيل",
       "studentsByGender": "الطلاب حسب الجنس",
       "incomeVsExpenses": "الإيرادات مقابل المصروفات",
       "income": "الإيرادات",
-      "expenses": "المصروفات",
+      "expenses": "المصاريف المدفوعة",
       "agingBalance": "الأرصدة المستحقة",
       "agingCurrent": "حالي",
       "aging1_30": "1–30 يوم",
@@ -959,7 +959,8 @@
       "noRecentPayments": "لا توجد مدفوعات حديثة",
       "expenseCount": "عدد المصاريف",
       "expensesByCategory": "المصاريف حسب الفئة",
-      "noExpensesRecorded": "لا توجد مصاريف مسجلة"
+      "noExpensesRecorded": "لا توجد مصاريف مسجلة",
+      "expensesHelp": "المصاريف والرواتب المدفوعة فقط. الموافقة وحدها لا تُحتسب."
     },
     "cards": {
       "recentOperations": {
@@ -1006,6 +1007,7 @@
     }
   },
   "common": {
+    "backToDashboard": "العودة إلى لوحة التحكم",
     "feedback": {
       "loadingLabel": "جاري التحميل...",
       "emptyTitle": "لا توجد بيانات",
@@ -1374,7 +1376,8 @@
         "updateSupervision": "تحديث الإشراف",
         "removeSupervision": "حذف الإشراف",
         "addTeachingPeriod": "إضافة حصة دراسية",
-        "addBreak": "إضافة استراحة"
+        "addBreak": "إضافة استراحة",
+        "useSchoolHours": "استخدام أوقات المدرسة"
       },
       "dialogs": {
         "daysTitle": "أيام الدراسة",
@@ -1485,7 +1488,9 @@
       },
       "errors": {
         "loadFailed": "تعذر تحميل الجدول."
-      }
+      },
+      "schoolHoursDraft": "تُجهّز أوقات المدرسة ست حصص واستراحة الغداء. راجع الجدول ثم احفظ لتطبيقه.",
+      "schoolHoursMismatch": "يختلف هذا الجدول عن أوقات المدرسة. افتح الفترات واستخدم أوقات المدرسة لمراجعة الجدول."
     }
   },
   "payroll": {
@@ -1660,6 +1665,11 @@
       "late": "متأخر"
     },
     "roster": {
+      "arrivalTime": "وقت الوصول",
+      "details": "الوصول والملاحظة",
+      "applyDetails": "تطبيق على السجل",
+      "detailsSaveHint": "احفظ الحضور للاحتفاظ بهذه التفاصيل.",
+      "markBeforeDetails": "سجّل الحضور أولاً",
       "studentTitle": "حضور الطلاب",
       "teacherTitle": "حضور المعلمين",
       "staffTitle": "حضور الموظفين",
@@ -1699,7 +1709,10 @@
       "noStudentsInSection": "لم يتم العثور على طلاب في الفصل المحدد.",
       "resetFilters": "إعادة تعيين التصفية",
       "search": "بحث",
-      "submitError": "فشل حفظ الحضور"
+      "submitError": "فشل حفظ الحضور",
+      "unmarked": "غير مسجل",
+      "unsavedMarks": "{{count}} علامات حضور غير محفوظة",
+      "markAllPresent": "تحديد الجميع حاضرين"
     }
   },
   "fees": {
@@ -2418,7 +2431,8 @@
       "totalMarks": "مجموع النقاط",
       "totalMarksPlaceholder": "أدخل مجموع النقاط",
       "type": "النوع",
-      "typePlaceholder": "اختر النوع"
+      "typePlaceholder": "اختر النوع",
+      "teacherAssignmentHint": "اختر الصف والأقسام والمادة. تظهر فقط أسماء الأساتذة المكلّفين بالمادة في جميع الأقسام المختارة."
     },
     "status": {
       "active": "نشط",
@@ -3038,7 +3052,9 @@
     "messages": {
       "pageTitle": "النقط",
       "resetChanges": "إعادة تعيين التغييرات",
-      "nothingToSave": "لا يوجد ما يُحفظ."
+      "nothingToSave": "لا يوجد ما يُحفظ.",
+      "unsaved": "غير محفوظ",
+      "unsavedChanges": "توجد نقط غير محفوظة. اضغط على حفظ النقط لتطبيقها. تبقى المسودات في علامة التبويب هذه لهذه اللائحة."
     },
     "subtitle": {
       "count": "الطلاب: {{count}}"
@@ -3601,7 +3617,7 @@
       "maxStudents": "الحد الأقصى للتلاميذ",
       "maxStudentsPlaceholder": "أدخل الحد الأقصى للتلاميذ",
       "roomNumber": "رقم القاعة",
-      "roomNumberPlaceholder": "أدخل رقم القاعة",
+      "roomNumberPlaceholder": "مثال: 101",
       "sectionInformation": "معلومات الفوج",
       "sectionName": "اسم الفوج",
       "sectionNamePlaceholder": "أدخل اسم الفوج"
@@ -3634,6 +3650,8 @@
       "bulkDeleted": "تم حذف الموظفين بنجاح"
     },
     "errors": {
+      "driverLicenseExpiryInvalid": "أدخل تاريخ انتهاء صلاحية صحيحاً للرخصة (YYYY-MM-DD).",
+      "driverLicenseExpired": "انتهت صلاحية رخصة القيادة.",
       "notFound": "الموظف غير موجود",
       "employeeCodeExists": "يوجد موظف بهذا الرمز الوظيفي بالفعل",
       "cinExists": "يوجد موظف برقم التعريف الوطني هذا بالفعل",
@@ -3713,6 +3731,9 @@
       "temporary": "مؤقت"
     },
     "form": {
+      "noVehiclesTitle": "أنشئ مركبة أولاً",
+      "vehicleSetupHint": "يحتاج السائق أو مرافق الحافلة إلى مركبة. يمكنك إنشاء واحدة في خطوة التعيينات دون فقدان بيانات هذا النموذج.",
+      "vehicleSetupAskAdmin": "اطلب من المسؤول إنشاء مركبة، ثم أعد المحاولة.",
       "bankAccountPlaceholder": "أدخل الحساب البنكي",
       "workloadHoursPlaceholder": "أدخل الساعات الشهرية",
       "hourlyRatePlaceholder": "أدخل الأجر بالساعة",
@@ -3785,6 +3806,7 @@
       "fullDay": "يوم كامل"
     },
     "validation": {
+      "licenseExpired": "يجب أن تكون رخصة القيادة سارية اليوم أو في تاريخ لاحق.",
       "required": "هذا الحقل مطلوب",
       "tooLong": "هذه القيمة طويلة جدًا",
       "nameMin": "يجب أن يتكون الاسم من حرفين على الأقل",
@@ -3971,7 +3993,8 @@
       "missing": "إعدادات المدرسة غير موجودة",
       "registeredCalendarLocked": "تقويم السنة المسجلة لا يُعدَّل إلا عبر تصحيح مُراجَع",
       "activateThroughYears": "فعّل السنة المسجلة من خلال إدارة السنوات الدراسية",
-      "teachingDaysInUse": "انقل أو احذف الحصص والمراقبة المخصصة لهذا اليوم قبل تغيير أيام التدريس."
+      "teachingDaysInUse": "انقل أو احذف الحصص والمراقبة المخصصة لهذا اليوم قبل تغيير أيام التدريس.",
+      "invalidSchoolDay": "يجب أن تتسع أوقات المدرسة لاستراحة الغداء وست حصص لا تقل مدة كل منها عن خمس دقائق."
     },
     "academic": {
       "semesterPlaceholder": "الفصل الدراسي",
@@ -4033,7 +4056,8 @@
       "studentAccessEnabled": "وصول التلاميذ",
       "teacherAccessEnabled": "وصول الأساتذة",
       "title": "العنوان",
-      "twoFactorAuth": "المصادقة الثنائية"
+      "twoFactorAuth": "المصادقة الثنائية",
+      "twoFactorUnavailable": "غير متاح: هذا التطبيق لا يفرض المصادقة الثنائية."
     },
     "seed": {
       "button": "تأكيد",
@@ -4204,7 +4228,13 @@
       "studentCode": "رمز التلميذ",
       "studentCodePlaceholder": "أدخل رمز التلميذ",
       "studentImage": "صورة التلميذ",
-      "arabicName": "الاسم بالعربية"
+      "arabicName": "الاسم بالعربية",
+      "noClassesTitle": "أنشئ صفاً قبل تسجيل التلاميذ",
+      "noClassesHint": "أضف صفاً وقسماً واحداً على الأقل، ثم عُد لتسجيل تلميذ.",
+      "noClassesAdminHint": "اطلب من مدير المدرسة إضافة صف وقسم قبل تسجيل التلاميذ.",
+      "manageClasses": "إدارة الصفوف",
+      "classesLoadFailed": "تعذر تحميل الصفوف. يرجى المحاولة مجدداً.",
+      "noSectionsHint": "هذا الصف لا يحتوي على أقسام. أضف قسماً من الشؤون الدراسية ← الأقسام، أو اطلب من المدير ذلك، قبل تسجيل تلميذ."
     },
     "status": {
       "active": "نشط",
@@ -4475,6 +4505,7 @@
   "teachers": {
     "errors": {
       "hasAssignmentHistory": "لدى هذا المعلم تكليفات صفية في سنة دراسية. أزلها قبل حذف المعلم",
+      "invitationEmailRequired": "البريد الإلكتروني مطلوب لإرسال رابط تفعيل حساب الأستاذ",
       "notFound": "الأستاذ غير موجود",
       "datedRosterUnreviewed": "تتطلب قوائم الأستاذ المؤرخة سجل إسنادات مُراجَعًا",
       "dateOutsideYear": "التاريخ خارج فترة السنة الدراسية",
@@ -4553,7 +4584,8 @@
       "yearsOfExperiencePlaceholder": "أدخل سنوات الخبرة",
       "noAssignments": "لا توجد تكليفات",
       "addAssignment": "إضافة تعيين",
-      "noAssignmentsAdded": "لم تتم إضافة أي تعيين بعد."
+      "noAssignmentsAdded": "لم تتم إضافة أي تعيين بعد.",
+      "emailHelp": "استخدم البريد الإلكتروني الشخصي للأستاذ. سيتلقى رابط تفعيل لاختيار كلمة المرور."
     },
     "profile": {
       "table": {
@@ -4633,7 +4665,7 @@
     },
     "invitation": {
       "sent": "تم إرسال بريد الدعوة إلى {{email}}. يفعّل الأستاذ حسابه من الرابط.",
-      "notSent": "تم إنشاء الأستاذ، لكن تعذّر إرسال بريد الدعوة. أعد إرساله عبر «إعادة تعيين الوصول» في صفحة المستخدمين."
+      "notSent": "تم إنشاء الأستاذ، لكن تعذر إرسال الدعوة. تحقق من البريد الإلكتروني واستخدم «إعادة تعيين الوصول» للمحاولة مجدداً. إذا استمر الخطأ، اطلب من المدير التحقق من خدمة البريد."
     }
   },
   "vehicleAssignments": {
@@ -5756,6 +5788,8 @@
     }
   },
   "validationMessages": {
+    "pointsRange": "يجب أن تكون النقاط بين 0 و100.",
+    "arrivalTimeInvalid": "أدخل وقت وصول صحيحاً (HH:MM).",
     "locale": "ar",
     "aRealYyyyMmDdYearlyEnrollmentDateIs": "يلزم تاريخ تسجيل سنوي حقيقي بصيغة YYYY-MM-DD",
     "aStaffAttendanceRosterCannotExceed1000Records": "لا يمكن أن تتجاوز قائمة حضور الموظفين 1000 سجل",
@@ -5990,6 +6024,8 @@
     "incidentDateIsRequired": "تاريخ الحادثة مطلوب",
     "incidentTimeIsRequired": "وقت الحادثة مطلوب",
     "behaviorDateIsRequired": "تاريخ السلوك مطلوب",
-    "behaviorTimeIsRequired": "وقت السلوك مطلوب"
+    "behaviorTimeIsRequired": "وقت السلوك مطلوب",
+    "schoolEmailRequired": "البريد الإلكتروني للمدرسة مطلوب",
+    "schoolAddressRequired": "عنوان المدرسة مطلوب"
   }
 }

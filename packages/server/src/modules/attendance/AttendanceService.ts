@@ -196,6 +196,7 @@ export class AttendanceService {
       date: data.date,
       status: data.status,
       notes: data.notes,
+      arrivalTime: data.arrivalTime,
       markedBy: user.id,
     });
   }
@@ -215,7 +216,7 @@ export class AttendanceService {
   }
 
   async update(id: string, data: UpdateAttendanceDto, user: { id: string; role?: string; teacherId?: string }) {
-    const ATTENDANCE_UPDATE_KEYS = ['status', 'notes'];
+    const ATTENDANCE_UPDATE_KEYS = ['status', 'notes', 'arrivalTime'];
     const attendanceData = pickProps(data, ATTENDANCE_UPDATE_KEYS);
 
     const record = await this.getById(id, user.role);

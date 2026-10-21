@@ -1,0 +1,23 @@
+{
+  "baseRevision": "3aa3ca1693353387ba685e211e68fcdd86526527",
+  "files": {
+    "apps/dashboard/src/features/Classes/components/ClassForm.tsx": "570956367de3180515f3d82d8efdeeee794510364ac082c47975a1c7a983b3d4",
+    "apps/dashboard/src/features/Financial/Fees/components/BulkFeeForm.tsx": "87091e399f50de818bf7d30a567772360c28b1b946c1b0cdfedff68fd4b6de2f",
+    "apps/dashboard/src/features/Sections/components/SectionForm.tsx": "d74ea0326f638f5b7a9ca332b375790427006fdf8f0c7c4aa5eb405b1d92b241",
+    "apps/dashboard/src/features/Sections/config/sectionSchemas.ts": "e1d92cac19d648bbf3b2d0b3d4c935ee1b7d84b0939fd8bae3e57cfd81532d46",
+    "apps/dashboard/src/features/Students/components/FullStudentForm.tsx": "1c41c5f2a1bf90db22dc288ddb2af8ad7b90009c6fa8c2a118acc5ac51be34e7",
+    "apps/dashboard/src/features/Students/components/SimpleStudentForm.tsx": "aac8e14790044919cf28c4b83ab7f39443b16b298973d5251f193638450c48fe",
+    "apps/dashboard/src/features/Students/components/StudentsTable.tsx": "c40ce752dc3ff5766b5b02404242fdf7951c4e5bf51354c4026590b884ec7277",
+    "apps/dashboard/src/features/Teachers/components/TeacherForm.tsx": "eb6d6ec975bdbb1fccbad05c0941a0d5f3dd101a229c15ac0e735199d4f46475",
+    "apps/dashboard/src/features/Teachers/components/TeachersTable.tsx": "6dd218042f081dd12747887a5d1e22af23b39a82cf3b6dbe4c47420ea9d1c482",
+    "apps/dashboard/src/features/Teachers/config/teacherSchemas.ts": "e3d6bc7df37b8e3bd803b5df48898e800ef67a6d42eec1fddd92d65005d88333",
+    "apps/dashboard/src/features/Users/hooks/useResetLogin.tsx": "47c3d042a0ba1d25ed48ae8a707ed317d1043c7eb01d45dfdfebc72d0251d1f2",
+    "apps/dashboard/src/shared/invitationNotice.ts": "03bcce3a828ffdd57e8ae158504c18261545b49086841d915f137f909f337c45",
+    "packages/server/src/modules/teachers/TeacherService.ts": "dee49cd8c3af5bef8055d9fcf1e89d54d8eec0dd7c54f360103859f47bf5a4f8",
+    "packages/server/src/modules/teachers/TeacherValidator.ts": "80fccab606f3f1d78ff043737a0cc91fd3d4d7e2424209dd6c6807d7a379ab42",
+    "packages/contracts/src/locales/en.json": "284cc5eb511cbe9c83e78d8809c5cac768eaffe149dac480aaea80f0e85eb913",
+    "packages/contracts/src/locales/fr.json": "5027c5e218b3cae427fb800b026a0afa374c950941ffd978752f45bf1fc2c4e6",
+    "packages/contracts/src/locales/es.json": "f3affc0f00b283b0953dadbc1a117b1c725ff278136bb7ea153c1b934da4bdf1",
+    "packages/contracts/src/locales/ar.json": "e4c091a17bc34ff16ed9f08ffcac1d346be18156b72208e792b8a0da035bd439"
+  }
+}

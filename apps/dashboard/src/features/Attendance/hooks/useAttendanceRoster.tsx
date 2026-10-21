@@ -6,7 +6,9 @@ import { useTranslation } from 'najm-i18n/react';
 import { shiftLocalISODate } from '@/lib/utils';
 import { useSchoolToday } from '@/hooks/useSchoolFormat';
 
-export type RosterStatus = 'present' | 'absent' | 'late';
+import { changedRosterMarks, rosterMark, type RosterMark, type RosterStatus } from '../config/rosterMarks';
+import { changedStaffRosterMarks, staffAttendanceDetails, type StaffAttendanceDetails } from '../config/staffAttendanceDetails';
+export type { RosterStatus, RosterMark } from '../config/rosterMarks';
 type Kind = 'student' | 'staff';
 
 interface Options {
@@ -41,6 +43,7 @@ export const useAttendanceRoster = ({
   const today = useSchoolToday();
   const [internalDate, setInternalDate] = useState(today);
   const [draft, setDraft] = useState<Record<string, RosterStatus>>({});
+  const [detailDraft, setDetailDraft] = useState<Record<string, StaffAttendanceDetails>>({});
   const selectedDate = controlledDate ?? internalDate;
 
   const setSelectedDate = useCallback((date: string) => {
@@ -52,7 +55,8 @@ export const useAttendanceRoster = ({
   // also move without goToDate, e.g. when the viewed school year changes.
   useEffect(() => {
     setDraft({});
-  }, [selectedDate]);
+    setDetailDraft({});
+  }, [selectedDate, kind, attendanceMode, allSections, studentContext?.sectionId, studentContext?.teacherAssignmentId]);
 
   const fkKey = kind === 'student' ? 'studentId' : 'staffId';
 
@@ -85,12 +89,17 @@ export const useAttendanceRoster = ({
     return map;
   }, [existingAttendance, selectedDate, fkKey, kind, attendanceMode, allSections, studentContext?.sectionId, studentContext?.teacherAssignmentId]);
 
-  const getStatus = useCallback((id: string): RosterStatus => {
-    if (draft[id]) return draft[id];
-    const existing = existingByPerson.get(id);
-    if (existing && ['present', 'absent', 'late'].includes(existing.status)) return existing.status;
-    return 'present';
-  }, [draft, existingByPerson]);
+  const getStatus = useCallback((id: string): RosterMark =>
+    rosterMark(draft[id], existingByPerson.get(id)?.status), [draft, existingByPerson]);
+
+  const changes = useMemo(() => kind === 'staff'
+    ? changedStaffRosterMarks(roster, draft, detailDraft, existingByPerson)
+    : changedRosterMarks(roster, draft, existingByPerson), [kind, roster, draft, detailDraft, existingByPerson]);
+
+  const getDetails = useCallback((id: string) => detailDraft[id] ?? staffAttendanceDetails(existingByPerson.get(id)), [detailDraft, existingByPerson]);
+  const setDetails = useCallback((id: string, details: StaffAttendanceDetails) => {
+    setDetailDraft((previous) => ({ ...previous, [id]: details }));
+  }, []);
 
   const setStatus = useCallback((id: string, status: RosterStatus) => {
     setDraft((prev) => {
@@ -105,19 +114,21 @@ export const useAttendanceRoster = ({
   }, [existingByPerson]);
 
   const stats = useMemo(() => {
-    const s = { total: roster.length, present: 0, absent: 0, late: 0 };
+    const s = { total: roster.length, present: 0, absent: 0, late: 0, unmarked: 0, pending: changes.length };
     roster.forEach((p) => { s[getStatus(p.id)]++; });
     return s;
-  }, [roster, getStatus]);
+  }, [roster, getStatus, changes.length]);
 
   const shiftDate = useCallback((days: number) => {
     setSelectedDate(shiftLocalISODate(selectedDate, days));
     setDraft({});
+    setDetailDraft({});
   }, [selectedDate, setSelectedDate]);
 
   const goToDate = useCallback((v: string) => {
     setSelectedDate(v);
     setDraft({});
+    setDetailDraft({});
   }, [setSelectedDate]);
 
   const markAllAs = useCallback((status: RosterStatus) => {
@@ -128,7 +139,7 @@ export const useAttendanceRoster = ({
     });
   }, [roster]);
 
-  const resetDraft = useCallback(() => setDraft({}), []);
+  const resetDraft = useCallback(() => { setDraft({}); setDetailDraft({}); }, []);
 
   const handleSubmit = useCallback(async () => {
     if (kind === 'student' && !allSections && !studentContext?.sectionId) {
@@ -140,15 +151,6 @@ export const useAttendanceRoster = ({
       toast.error(t('attendance.errors.selectTeacherSubject'));
       return;
     }
-
-    const changes = roster
-      .map((p) => {
-        const existing = existingByPerson.get(p.id);
-        const current = getStatus(p.id);
-        if (existing && existing.status === current) return null;
-        return { person: p, status: current, existing };
-      })
-      .filter(Boolean) as { person: any; status: RosterStatus; existing?: any }[];
 
     if (changes.length === 0) {
       toast.info(t('attendance.roster.nothingToSave'));
@@ -168,6 +170,11 @@ export const useAttendanceRoster = ({
         if (!allSections && studentContext?.subjectId) payload.subjectId = studentContext.subjectId;
       }
       if (existing) payload.id = existing.id;
+      if (kind === 'staff') {
+        const details = getDetails(person.id);
+        payload.arrivalTime = details.arrivalTime || null;
+        payload.notes = details.notes;
+      }
       return payload;
     });
 
@@ -175,16 +182,13 @@ export const useAttendanceRoster = ({
       await onSubmitBatch(payloads);
       toast.success(t('attendance.roster.submitSuccess'));
       setDraft({});
+      setDetailDraft({});
     } catch (err: any) {
       toast.error(err?.response?.data?.message || err?.message || t('attendance.roster.submitError'));
     }
-  }, [roster, existingByPerson, getStatus, kind, fkKey, selectedDate, onSubmitBatch, studentContext, attendanceMode, allSections, t]);
+  }, [changes, kind, fkKey, selectedDate, onSubmitBatch, studentContext, attendanceMode, allSections, t, getDetails]);
 
-  const hasUnrecordedRows = useMemo(
-    () => kind === 'staff' && roster.some((person) => !existingByPerson.has(person.id)),
-    [kind, roster, existingByPerson],
-  );
-  const hasChanges = Object.keys(draft).length > 0 || hasUnrecordedRows;
+  const hasChanges = changes.length > 0;
   const isToday = selectedDate === today;
   const goToToday = useCallback(() => goToDate(today), [goToDate, today]);
 
@@ -195,6 +199,8 @@ export const useAttendanceRoster = ({
     stats,
     getStatus,
     setStatus,
+    getDetails,
+    setDetails,
     shiftDate,
     goToDate,
     goToToday,

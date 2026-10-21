@@ -11,3 +11,4 @@ export * from './landing';
 export * from './classNames';
 export * from './payroll';
 export * from './receipts';
+export * from './schoolDefaults';

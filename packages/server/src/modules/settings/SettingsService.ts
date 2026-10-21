@@ -5,7 +5,7 @@ import type { CreateSettingsDto, UpdateSettingsDto } from './SettingsDto';
 import { getBusinessClockInfo } from '../../shared';
 import { AcademicYearRepository } from '../academicYears/AcademicYearRepository';
 import { DEFAULT_TEACHING_DAYS } from '@sms/contracts/routines';
-import { DEFAULT_RECEIPT_LANGUAGE } from '@sms/contracts';
+import { DEFAULT_RECEIPT_LANGUAGE, SCHOOL_DEFAULT_DATE_FORMAT, SCHOOL_DEFAULT_TIME_FORMAT } from '@sms/contracts';
 
 @Service()
 export class SettingsService {
@@ -33,6 +33,7 @@ export class SettingsService {
   @Transaction()
   async create(data: CreateSettingsDto) {
     this.settingsValidator.ensureNotInstalled(await this.settingsRepository.getAdminSettings());
+    this.settingsValidator.ensureSchoolDay(data);
 
     let activeYear = await this.academicYears.findByLabel(data.currentAcademicYear);
     if (!activeYear) {
@@ -104,8 +105,8 @@ export class SettingsService {
       timeZone: data.timeZone || 'UTC',
       language: data.language || 'en',
       theme: data.theme || 'light',
-      dateFormat: data.dateFormat || 'MM/DD/YYYY',
-      timeFormat: data.timeFormat || '12',
+      dateFormat: data.dateFormat || SCHOOL_DEFAULT_DATE_FORMAT,
+      timeFormat: data.timeFormat || SCHOOL_DEFAULT_TIME_FORMAT,
       currency: data.currency || 'USD',
 
       // Academic Calendar Settings
@@ -128,6 +129,9 @@ export class SettingsService {
     // Registered years own their calendars and the active year moves only
     // through activation, so an ordinary Settings edit can change neither.
     this.settingsValidator.ensureYearSettingsUnchanged(data, current);
+    if (data.schoolStartTime !== undefined || data.schoolEndTime !== undefined || data.lunchBreakDuration !== undefined) {
+      this.settingsValidator.ensureSchoolDay({ ...current, ...data });
+    }
     if (data.teachingDays !== undefined) {
       this.settingsValidator.ensureTeachingDaysKeepAssignments(
         await this.settingsRepository.teachingDayConflict(current.currentAcademicYear, data.teachingDays),

@@ -1,6 +1,7 @@
 import { Service, Transaction } from '../../najm';
 import { ClassRoutineRepository } from './ClassRoutineRepository';
 import { ClassRoutineValidator } from './ClassRoutineValidator';
+import { schoolDayPeriods } from '@sms/contracts/routines';
 import type {
   CreateRoutineEntryDto,
   CreateRoutineDutyDto,
@@ -13,17 +14,6 @@ import type {
   UpdateRoutineScheduleDto,
   RoutineLayoutDto,
 } from './ClassRoutineDto';
-
-// School runs 8:30–15:30: three morning lessons, the 11:30 pause, three afternoon ones.
-const defaultLayout: RoutineLayoutDto = { periods: [
-  { type: 'lesson', name: 'Period 1', startTime: '08:30', endTime: '09:30' },
-  { type: 'lesson', name: 'Period 2', startTime: '09:30', endTime: '10:30' },
-  { type: 'lesson', name: 'Period 3', startTime: '10:30', endTime: '11:30' },
-  { type: 'break', name: 'Lunch break', startTime: '11:30', endTime: '12:30' },
-  { type: 'lesson', name: 'Period 4', startTime: '12:30', endTime: '13:30' },
-  { type: 'lesson', name: 'Period 5', startTime: '13:30', endTime: '14:30' },
-  { type: 'lesson', name: 'Period 6', startTime: '14:30', endTime: '15:30' },
-] };
 
 @Service()
 export class ClassRoutineService {
@@ -95,13 +85,14 @@ export class ClassRoutineService {
     await this.validator.ensureSectionInSelectedYear(data.sectionId);
     const existing = await this.repository.getPublishedForSection(data.sectionId);
     if (existing) return this.getById(existing.id);
+    const periods = schoolDayPeriods(await this.repository.getSchoolDay());
     const schedule = await this.repository.createSchedule({
       ...data,
       activeDays: await this.repository.getSchoolTeachingDays(),
       status: 'published',
       publishedAt: new Date().toISOString(),
     });
-    return this.updateLayout(schedule.id, defaultLayout);
+    return this.updateLayout(schedule.id, { periods });
   }
 
   async update(id: string, data: UpdateRoutineScheduleDto) {

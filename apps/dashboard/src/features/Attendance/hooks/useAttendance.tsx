@@ -193,6 +193,7 @@ export const useStaffAttendance = (options?) => {
         date: item.date,
         status: item.status,
         notes: item.notes ?? null,
+        arrivalTime: item.arrivalTime ?? null,
       })));
       await queryClient.refetchQueries({ queryKey: ['attendance-staff'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard', 'attendance'] });

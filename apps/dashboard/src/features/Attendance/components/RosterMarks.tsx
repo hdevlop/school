@@ -4,7 +4,7 @@ import { Check, Clock, X } from 'lucide-react';
 import { NButton } from 'najm-kit';
 import { cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import type { RosterStatus } from '../hooks/useAttendanceRoster';
+import type { RosterStatus, RosterMark } from '../hooks/useAttendanceRoster';
 
 const IDLE = 'border-2 border-slate-300 bg-white text-slate-500 shadow-none hover:border-slate-500 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:bg-slate-800';
 
@@ -32,7 +32,7 @@ export const ROSTER_STATUS_META: Record<RosterStatus, { labelKey: string; icon: 
 };
 
 interface RosterMarksProps {
-  current: RosterStatus;
+  current: RosterMark;
   onSelect: (status: RosterStatus) => void;
   className?: string;
 }
@@ -47,6 +47,8 @@ interface RosterMarksProps {
 export default function RosterMarks({ current, onSelect, className }: RosterMarksProps) {
   const { t } = useTranslation();
   return (
+    <div className="flex flex-col items-center gap-1">
+    <span className="min-h-4 text-xs text-muted-foreground">{current === 'unmarked' ? t('attendance.roster.unmarked') : '\u00a0'}</span>
     <div className={cn('flex w-full justify-center gap-2', className)}>
       {ROSTER_STATUSES.map((status) => {
         const meta = ROSTER_STATUS_META[status];
@@ -76,6 +78,7 @@ export default function RosterMarks({ current, onSelect, className }: RosterMark
           </NButton>
         );
       })}
+    </div>
     </div>
   );
 }

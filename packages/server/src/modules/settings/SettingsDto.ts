@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { academicYearField, emailField, num, phoneField } from '../../shared/fields';
+import { academicYearField, num, phoneField } from '../../shared/fields';
 import { calendarSystemEnum, languageEnum } from '../../shared/enums';
 import { latitudeDto, longitudeDto, placeIdDto } from '../../shared/locationDto';
 import { ROUTINE_DAYS } from '@sms/contracts/routines';
@@ -10,12 +10,12 @@ import { RECEIPT_LANGUAGES } from '@sms/contracts';
 // SettingsService.create fills the defaults of a new installation.
 const settingsSchema = z.object({
   schoolName: z.string().min(2, 'School name must be at least 2 characters').max(200, 'School name too long'),
-  schoolAddress: z.string().max(500, 'School address too long').optional(),
+  schoolAddress: z.string().trim().min(1, 'School address is required').max(500, 'School address too long'),
   schoolAddressPlaceId: placeIdDto,
   schoolAddressLatitude: latitudeDto,
   schoolAddressLongitude: longitudeDto,
   schoolPhone: phoneField,
-  schoolEmail: emailField,
+  schoolEmail: z.string().trim().min(1, 'School email is required').email('Invalid email format'),
   schoolWebsite: z.string().url('Must be a valid URL').max(255, 'School website URL too long').optional(),
   schoolLogo: z.string().url('Must be a valid image URL').max(255, 'School logo URL too long').optional(),
   receiptLanguage: z.enum(RECEIPT_LANGUAGES).optional(),

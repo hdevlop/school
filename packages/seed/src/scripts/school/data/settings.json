@@ -1,41 +1,41 @@
 {
-  "schoolName": "Henri Lambert",
-  "schoolAddress": "Route de la Mecque, qods, Casablanca 20150, Morocco",
-  "schoolPhone": "+212664823515",
-  "schoolEmail": "Henri.lambert@school.ma",
-  "schoolWebsite": "https://www.henrilambert.ma",
-  "schoolLogo": "https://www.henrilambert.ma/assets/logo.png",
+  "schoolName": "MyScolAI Demo School",
+  "schoolAddress": "Fictional demo address, Casablanca, Morocco",
+  "schoolPhone": "+212600000000",
+  "schoolEmail": "contact@school.test",
+  "schoolWebsite": "https://school.test",
+  "schoolLogo": "",
   "currentAcademicYear": "2026-2027",
   "gradingScale": {
     "A": {
       "min": 90,
       "max": 100,
-      "points": 4.0
+      "points": 4
     },
     "B": {
       "min": 80,
       "max": 89,
-      "points": 3.0
+      "points": 3
     },
     "C": {
       "min": 70,
       "max": 79,
-      "points": 2.0
+      "points": 2
     },
     "D": {
       "min": 60,
       "max": 69,
-      "points": 1.0
+      "points": 1
     },
     "F": {
       "min": 0,
       "max": 59,
-      "points": 0.0
+      "points": 0
     }
   },
-  "attendanceRequirement": 85.00,
+  "attendanceRequirement": 85,
   "maxClassSize": 28,
-  "minimumPassingGrade": 60.00,
+  "minimumPassingGrade": 60,
   "defaultExamDuration": 90,
   "calendarSystem": "SEMESTER",
   "startMonth": "september",
@@ -55,7 +55,7 @@
   "disciplinaryAlerts": true,
   "achievementAlerts": true,
   "maintenanceNotifications": true,
-  "twoFactorEnabled": true,
+  "twoFactorEnabled": false,
   "sessionTimeout": "60",
   "passwordRequireSymbols": true,
   "loginNotifications": true,

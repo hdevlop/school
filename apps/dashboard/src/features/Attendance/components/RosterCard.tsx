@@ -1,18 +1,20 @@
 'use client';
 
 import { NAvatar } from 'najm-kit';
+import type { ReactNode } from 'react';
 import { Label } from 'najm-kit';
-import type { RosterStatus } from '../hooks/useAttendanceRoster';
+import type { RosterStatus, RosterMark } from '../hooks/useAttendanceRoster';
 import RosterMarks from './RosterMarks';
 
 interface RosterCardProps {
   data: any;
-  getStatus: (id: string) => RosterStatus;
+  getStatus: (id: string) => RosterMark;
   setStatus: (id: string, status: RosterStatus) => void;
   /** The line under the name: a student's code and class, a staff member's role. */
   detail?: string;
   avatarSrc?: string | null;
   classNames?: { avatar?: any };
+  children?: ReactNode;
 }
 
 /**
@@ -31,6 +33,7 @@ export default function RosterCard({
   detail,
   avatarSrc,
   classNames,
+  children,
 }: RosterCardProps) {
   if (!data) return null;
 
@@ -54,6 +57,7 @@ export default function RosterCard({
         current={getStatus(data.id)}
         onSelect={(status) => setStatus(data.id, status)}
       />
+      {children}
     </div>
   );
 }

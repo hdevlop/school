@@ -33,6 +33,30 @@ const build = () => {
   return { service, writes };
 };
 
+describe('new routine school hours', () => {
+  it('uses configured hours and lunch when creating a schedule', async () => {
+    let layout: any;
+    const service = new ClassRoutineService({
+      getPublishedForSection: async () => null,
+      getSchoolTeachingDays: async () => ['monday'],
+      getSchoolDay: async () => ({ schoolStartTime: '08:00', schoolEndTime: '15:00', lunchBreakDuration: 30 }),
+      createSchedule: async () => ({ id: 'new' }),
+    } as any, { ensureSectionInSelectedYear: async () => undefined } as any);
+    service.updateLayout = async (_id, value) => { layout = value; return value as any; };
+    await service.create({ sectionId: 'section' } as any);
+    expect(layout.periods[0].startTime).toBe('08:00');
+    expect(layout.periods.at(-1).endTime).toBe('15:00');
+    expect(layout.periods.find((period: any) => period.type === 'break')).toMatchObject({ startTime: '11:15', endTime: '11:45' });
+  });
+
+  it('preserves an existing published timetable', async () => {
+    const service = new ClassRoutineService({ getPublishedForSection: async () => ({ id: 'existing' }) } as any,
+      { ensureSectionInSelectedYear: async () => undefined } as any);
+    service.getById = async (id) => ({ id, preserved: true }) as any;
+    expect(await service.create({ sectionId: 'section' } as any)).toEqual({ id: 'existing', preserved: true } as any);
+  });
+});
+
 describe('routine nested-content updates', () => {
   it('preserves groups on a parent-only update and advances the entry version', async () => {
     const { service, writes } = build();

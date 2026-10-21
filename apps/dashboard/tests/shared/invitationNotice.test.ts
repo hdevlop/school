@@ -1,8 +1,28 @@
-import { describe, expect, it } from 'bun:test';
+import { describe, expect, it, mock, spyOn } from 'bun:test';
+import { toast } from 'sonner';
 
-import { invitationNotice } from '@/shared/invitationNotice';
+import { announceInvitation, invitationNotice } from '@/shared/invitationNotice';
 
 describe('invitationNotice', () => {
+  it('offers recovery for a failed invitation without reporting success', () => {
+    const warning = spyOn(toast, 'warning').mockImplementation(() => 'notice');
+    const info = spyOn(toast, 'info').mockImplementation(() => 'notice');
+    const retry = mock(() => undefined);
+    try {
+      announceInvitation(false, 'a@example.com', {
+        sent: 'Sent', notSent: 'Not sent', notSentAction: { label: 'Reset access', onClick: retry },
+      });
+      expect(info).not.toHaveBeenCalled();
+      expect(warning).toHaveBeenCalledWith('Not sent', {
+        action: { label: 'Reset access', onClick: retry }, duration: 10000,
+      });
+      expect(retry).not.toHaveBeenCalled();
+    } finally {
+      warning.mockRestore();
+      info.mockRestore();
+    }
+  });
+
   it('says whether the activation mail left', () => {
     expect(invitationNotice(true, 'a@example.com')).toBe('sent');
     expect(invitationNotice(false, 'a@example.com')).toBe('notSent');

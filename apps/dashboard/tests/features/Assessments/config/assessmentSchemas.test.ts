@@ -54,7 +54,7 @@ describe('assessmentSchema', () => {
     expect(parsed.status).toBe('scheduled');
     // `duration` has no default; the other two do, and the form relies on them
     // when a section is created from a shortcut rather than the full dialog.
-    expect(assessmentSchema.parse({ ...validInput, totalMarks: undefined }).totalMarks).toBe(20);
+    expect(assessmentSchema.parse({ ...validInput, totalMarks: undefined, passingMarks: 10 }).totalMarks).toBe(20);
     expect(assessmentSchema.parse({ ...validInput, passingMarks: undefined }).passingMarks).toBe(10);
   });
 
@@ -76,6 +76,23 @@ describe('assessmentSchema', () => {
 
     expect(result.success).toBe(false);
     expect(result.error?.issues[0]?.message).toBe('Select at least one section');
+  });
+
+  it('names the missing teacher in the inline error', () => {
+    for (const teacherId of ['', undefined, '   ']) {
+      const result = assessmentSchema.safeParse({ ...validInput, teacherId });
+      expect(result.error?.issues).toContainEqual(expect.objectContaining({
+        path: ['teacherId'], message: 'A teacher is required',
+      }));
+    }
+  });
+
+  it('attaches invalid passing marks to the field before submission', () => {
+    const result = assessmentSchema.safeParse({ ...validInput, totalMarks: '20', passingMarks: '21' });
+    expect(result.error?.issues).toContainEqual(expect.objectContaining({
+      path: ['passingMarks'], message: 'Passing marks cannot exceed total marks',
+    }));
+    expect(assessmentSchema.safeParse({ ...validInput, totalMarks: '20', passingMarks: '20' }).success).toBe(true);
   });
 
   it('holds duration inside a single school day', () => {

@@ -29,7 +29,10 @@ export const createBehaviorRewardSchema = (t: T) => z.object({
   recognitionLevel: z.enum(BEHAVIOR_RECOGNITION_LEVEL_VALUES),
   description: z.string().trim().min(1, t('validationMessages.descriptionIsRequired')).max(2000, t('validationMessages.descriptionIsTooLong')),
   rewardType: z.enum(BEHAVIOR_REWARD_TYPE_VALUES),
-  points: z.coerce.number().int(t('validationMessages.pointsMustBeAnInteger')).min(0).max(100),
+  points: z.coerce.number(t('validationMessages.pointsMustBeAnInteger'))
+    .int(t('validationMessages.pointsMustBeAnInteger'))
+    .min(0, t('validationMessages.pointsRange'))
+    .max(100, t('validationMessages.pointsRange')),
   rewardNote: z.string().trim().max(1000, t('validationMessages.rewardNoteIsTooLong')).optional().nullable(),
 });
 

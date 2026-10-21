@@ -31,9 +31,11 @@ describe('school date formatting', () => {
   });
 
   test('uses saved-setting fallbacks for missing or invalid values', () => {
-    expect(schoolDateFormat(undefined)).toBe('MM/DD/YYYY');
-    expect(schoolDateFormat('unexpected')).toBe('MM/DD/YYYY');
-    expect(schoolTimeFormat(undefined)).toBe('12');
+    expect(schoolDateFormat(undefined)).toBe('DD/MM/YYYY');
+    expect(schoolDateFormat('unexpected')).toBe('DD/MM/YYYY');
+    expect(schoolDateFormat('MM/DD/YYYY')).toBe('MM/DD/YYYY');
+    expect(schoolTimeFormat(undefined)).toBe('24');
+    expect(schoolTimeFormat('12')).toBe('12');
     expect(schoolTimeFormat('24')).toBe('24');
   });
 });

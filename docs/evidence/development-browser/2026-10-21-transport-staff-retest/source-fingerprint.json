@@ -1,0 +1,38 @@
+{
+    "baseRevision":  "3aa3ca1693353387ba685e211e68fcdd86526527",
+    "workingTree":  "Existing uncommitted changes retained",
+    "files":  [
+                  {
+                      "path":  "apps/dashboard/src/features/Staff/components/StaffForm.tsx",
+                      "sha256":  "97e077a8f1dde9943f5668c6cdb3b9a84f58443526ed8075f5b52ade00c23274"
+                  },
+                  {
+                      "path":  "apps/dashboard/src/features/Staff/config/staffSchemas.ts",
+                      "sha256":  "854a4953a39a82d062e6cf5ea9cd14cf94c5e160bf1060479fc99e363b34a19d"
+                  },
+                  {
+                      "path":  "apps/dashboard/src/features/Transport/components/VehicleStudentsPanel.tsx",
+                      "sha256":  "af5477e4394e14b43ae14072abdbed57f08a4ae89803d7690c9975aee965df0d"
+                  },
+                  {
+                      "path":  "apps/dashboard/src/features/Transport/hooks/useStudentRoutes.tsx",
+                      "sha256":  "1b49f3e2c6a1983ad24806036af568e682c4787755066b264e4a95d6b5f5f453"
+                  },
+                  {
+                      "path":  "apps/dashboard/src/features/Students/components/FullStudentForm.tsx",
+                      "sha256":  "1c41c5f2a1bf90db22dc288ddb2af8ad7b90009c6fa8c2a118acc5ac51be34e7"
+                  },
+                  {
+                      "path":  "apps/dashboard/src/features/Financial/Fees/components/BulkFeeForm.tsx",
+                      "sha256":  "87091e399f50de818bf7d30a567772360c28b1b946c1b0cdfedff68fd4b6de2f"
+                  },
+                  {
+                      "path":  "packages/server/src/modules/staff/StaffValidator.ts",
+                      "sha256":  "49c17851537588476be8219b3b4e5947a1b5a3f9c3956884a90fa63bd1ee7c94"
+                  },
+                  {
+                      "path":  "packages/server/src/modules/transport/studentRoutes/StudentRouteService.ts",
+                      "sha256":  "f254ffe836a0ecd497981b9e10a9736571c5e6ebe4eac51b399c30918711869f"
+                  }
+              ]
+}
