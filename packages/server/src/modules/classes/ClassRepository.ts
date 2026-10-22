@@ -1,5 +1,5 @@
 import { DB } from '../../database/db';
-import { classes, sections, students, teacherAssignments, teachers, staff, parents, studentParents, users, subjects, studentEnrollments, studentEnrollmentPlacements } from '../../database/schema';
+import { classes, sections, students, teacherAssignments, teachers, staff, parents, studentParents, users, subjects, studentEnrollments, studentEnrollmentPlacements, assistantAssignments, cycles } from '../../database/schema';
 import { eq, ne, count, countDistinct, and, desc, inArray, sql, type SQL } from 'drizzle-orm';
 import { Repository } from '../../najm';
 import { classNameAliases } from '@sms/contracts';
@@ -153,6 +153,28 @@ export class ClassRepository {
   async getInSelectedYear(id: string) {
     const [result] = await this.buildClassQuery(eq(classes.id, id)).limit(1);
     return result;
+  }
+
+  async lockForMutation(id: string) {
+    await this.db.select({ id: classes.id }).from(classes)
+      .where(this.readCondition(eq(classes.id, id))).for('update');
+  }
+
+  async getAssignedStaff(id: string) {
+    return this.db.selectDistinct({ name: staff.name }).from(assistantAssignments)
+      .innerJoin(staff, eq(assistantAssignments.staffId, staff.id))
+      .where(eq(assistantAssignments.classId, id));
+  }
+
+  async getCycle(id: string) {
+    const [cycle] = await this.db.select().from(cycles).where(eq(cycles.id, id)).limit(1);
+    return cycle;
+  }
+
+  async findDefaultCycle(names: readonly string[]) {
+    const [cycle] = await this.db.select().from(cycles)
+      .where(and(inArray(cycles.name, [...names]), eq(cycles.active, true))).limit(1);
+    return cycle;
   }
 
   async getCount() {

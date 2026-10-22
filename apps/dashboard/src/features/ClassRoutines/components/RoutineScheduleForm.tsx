@@ -239,7 +239,6 @@ export default function RoutineScheduleForm({
           <Plus className="h-4 w-4" /> {t('classRoutines.ui.actions.addBreak')}
         </NButton>
       </div>
-      <p className="text-xs text-muted-foreground">{t('classRoutines.ui.schoolHoursDraft')}</p>
       {!configuredPeriods && <p role="alert" className="text-sm text-destructive">{t('settings.errors.invalidSchoolDay')}</p>}
     </NForm>
   );

@@ -1,13 +1,15 @@
-import { Service } from '../../najm';
+import { Service, Transaction } from '../../najm';
 import { SectionRepository } from './SectionRepository';
 import { SectionValidator } from './SectionValidator';
 import type { CreateSectionDto, CreateSectionsBulkDto, UpdateSectionDto } from './SectionDto';
+import { StudentEnrollmentService } from '../studentEnrollments/StudentEnrollmentService';
 
 @Service()
 export class SectionService {
   constructor(
     private sectionRepository: SectionRepository,
     private sectionValidator: SectionValidator,
+    private enrollments: StudentEnrollmentService,
   ) { }
 
   // The selected year's sections. A section belongs to its class's year, so
@@ -56,12 +58,18 @@ export class SectionService {
   }
 
   // Only the selected year's sections change, and only within that year.
+  @Transaction()
   async update(id: string, data: UpdateSectionDto) {
     const currentSection = await this.sectionValidator.ensureInSelectedYear(id);
+    await this.sectionRepository.lockForMutation(id);
+    if (data.maxStudents !== undefined) {
+      await this.enrollments.ensureSectionCapacity(id, null, null, { capacity: data.maxStudents, additionalStudents: 0 });
+    }
 
     if (data.classId && data.classId !== currentSection.classId) {
       await this.sectionValidator.ensureClassInSelectedYear(data.classId);
       await this.sectionValidator.ensureHasNoStudents(id);
+      await this.sectionValidator.ensureHasNoAssignments(id);
     }
 
     if (data.name || data.classId) {
@@ -74,15 +82,21 @@ export class SectionService {
   }
 
 
+  @Transaction()
   async delete(id: string) {
     await this.sectionValidator.ensureInSelectedYear(id);
+    await this.sectionRepository.lockForMutation(id);
     await this.sectionValidator.ensureHasNoStudents(id);
+    await this.sectionValidator.ensureHasNoAssignments(id);
     return await this.sectionRepository.delete(id);
   }
 
   // The selected year's sections only.
+  @Transaction()
   async deleteAll() {
-    return await this.sectionRepository.deleteAll();
+    const rows = await this.sectionRepository.getAll();
+    for (const row of [...rows].sort((a, b) => a.id.localeCompare(b.id))) await this.delete(row.id);
+    return { deletedCount: rows.length, deletedSections: rows };
   }
 
   async clearForSeedReset() {

@@ -30,6 +30,8 @@ function build(activeYearId = 'year-current', legacyProjection = false, yearStat
     getClassAndSection: async (classId: string, sectionId: string) => ({
       classId, sectionId, academicYear: oldYear.label,
     }),
+    lockSectionCapacity: async () => ({ name: 'A', maxStudents: 30, academicYear: oldYear.label }),
+    sectionPeakOccupancy: async () => 0,
     create: async (data: object) => { writes.push('create-enrollment'); return { ...enrollment, ...data }; },
     addPlacement: async (data: object) => { writes.push('add-placement'); return { id: 'new-placement', ...data }; },
     getById: async () => enrollment,

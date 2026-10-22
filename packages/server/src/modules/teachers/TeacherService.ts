@@ -308,9 +308,11 @@ export class TeacherService {
   }
 
   @Transaction()
-  async delete(id: string) {
+  async delete(id: string, actorRole?: string) {
     const teacher = await this.teacherValidator.ensureExists(id);
-    await this.teacherValidator.ensureNoAssignmentHistory(id);
+    await this.teacherValidator.ensureDeletionAllowed(id, actorRole);
+    // The teacher FK removes teaching assignments in every year. This and the
+    // linked staff/login deletion share the transaction; a refusal rolls it all back.
     const deletedTeacher = await this.teacherRepository.delete(id);
     if (teacher.staffId) await this.staffService.delete(teacher.staffId);
     this.storage.delete('teachers', `${id}_avatar.png`).catch(() => {});
@@ -353,9 +355,9 @@ export class TeacherService {
     return createdTeachers;
   }
 
-  async deleteBulk(ids: DeleteBulkTeacherDto) {
+  async deleteBulk(ids: DeleteBulkTeacherDto, actorRole?: string) {
     const results = await Promise.all(
-      ids.map((id) => this.delete(id))
+      ids.map((id) => this.delete(id, actorRole))
     );
     return {
       deletedCount: results.length,

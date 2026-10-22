@@ -59,6 +59,9 @@ export class StudentEnrollmentService {
     this.validator.ensureActiveEnrollmentDate(data.enrolledOn, active);
     this.validator.ensureActiveTransferDate(data.placement.validFrom, active);
     if (data.leftOn) this.validator.ensureActiveEndDate(data.leftOn, active);
+    await this.ensureSectionCapacity(data.placement.sectionId, data.placement.validFrom,
+      [data.placement.validTo, data.leftOn].filter((date): date is string => !!date).sort()[0] ?? null,
+      { excludeEnrollmentId: id });
     const corrected = await this.enrollments.correct(id, data, actor.id);
     this.validator.ensureDatedRecordsRemainValid(await this.enrollments.hasInvalidDatedRecords(enrollment.studentId));
     const placements = await this.enrollments.listPlacements(id);
@@ -73,6 +76,7 @@ export class StudentEnrollmentService {
   }
 
   private async ensurePlacement(yearId: string, classId: string, sectionId: string) {
+    await this.enrollments.lockSectionCapacity(sectionId);
     const year = await this.years.requireId(yearId);
     this.validator.ensurePlacementYear(year.status);
     const placement = this.validator.ensureClassSection(await this.enrollments.getClassAndSection(classId, sectionId));
@@ -80,12 +84,29 @@ export class StudentEnrollmentService {
     return year;
   }
 
+  async ensureSectionCapacity(sectionId: string, from: string | null, until: string | null, options: {
+    yearId?: string; excludeEnrollmentId?: string; capacity?: number; additionalStudents?: number;
+  } = {}) {
+    const year = await this.years.requireId(options.yearId ?? this.year.id);
+    const section = this.validator.ensureClassSection(await this.enrollments.lockSectionCapacity(sectionId));
+    this.validator.ensureClassYear(section.academicYear, year.label);
+    const end = new Date(`${year.reportingEndsOn}T00:00:00Z`);
+    end.setUTCDate(end.getUTCDate() + 1);
+    const occupied = await this.enrollments.sectionPeakOccupancy(sectionId, year.id,
+      from ?? year.reportingStartsOn, until ?? end.toISOString().slice(0, 10), options.excludeEnrollmentId);
+    this.validator.ensureSectionCapacity(occupied, options.capacity ?? section.maxStudents, section.name, options.additionalStudents);
+  }
+
   async resolveNewStudentPlacement(classId: string, sectionId: string, enrolledOn: string) {
     this.validator.ensureNewEnrollmentDate(enrolledOn);
+    // Reserve the section before inserting a student (and its FK KEY SHARE).
+    // The enclosing StudentService transaction retains this lock through save.
+    await this.enrollments.lockSectionCapacity(sectionId);
     const placement = this.validator.ensureClassSection(await this.enrollments.getClassAndSection(classId, sectionId));
     const year = await this.years.requireLabel(placement!.academicYear);
     const settings = await this.settings.getAdminSettings();
     this.validator.ensureNewStudentYear(year, settings?.activeAcademicYearId, enrolledOn);
+    await this.ensureSectionCapacity(sectionId, enrolledOn, null, { yearId: year.id });
     return year;
   }
 
@@ -94,6 +115,7 @@ export class StudentEnrollmentService {
     this.validator.ensureNewEnrollmentDate(enrolledOn);
     const year = await this.ensurePlacement(this.year.id, classId, sectionId);
     this.validator.ensureEnrollmentInYear(enrolledOn, year);
+    await this.ensureSectionCapacity(sectionId, enrolledOn, null, { yearId: year.id });
     return year;
   }
 
@@ -163,6 +185,7 @@ export class StudentEnrollmentService {
     this.validator.ensureEnrollmentUnique(await this.enrollments.getByStudentAndYear(data.studentId, year.id));
     const settings = await this.settings.getAdminSettings();
     this.validator.ensureActiveEnrollmentDate(data.enrolledOn, settings?.activeAcademicYearId === year.id);
+    await this.ensureSectionCapacity(data.sectionId, data.enrolledOn, null, { yearId: year.id });
     if (settings?.activeAcademicYearId === year.id && student!.classId && student!.sectionId &&
       (student!.classId !== data.classId || student!.sectionId !== data.sectionId) &&
       !await this.enrollments.hasRecordedPlacement(data.studentId, student!.classId, student!.sectionId)) {
@@ -202,6 +225,7 @@ export class StudentEnrollmentService {
     const current = this.validator.ensureTransferPlacement(await this.enrollments.getOpenPlacement(id), data);
     const settings = await this.settings.getAdminSettings();
     this.validator.ensureActiveTransferDate(data.validFrom, settings?.activeAcademicYearId === year.id);
+    await this.ensureSectionCapacity(data.sectionId, data.validFrom, null, { yearId: year.id, excludeEnrollmentId: id });
     await this.enrollments.closePlacement(current!.id, data.validFrom);
     const placement = await this.enrollments.addPlacement({
       enrollmentId: id,

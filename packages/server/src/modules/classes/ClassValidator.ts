@@ -7,7 +7,7 @@ import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidato
 
 @Service()
 export class ClassValidator {
-  @I18n('classes.errors') private t!: (key: string) => string;
+  @I18n('classes.errors') private t!: (key: string, params?: Record<string, unknown>) => string;
   @Year() private readonly year!: ResolvedAcademicYear;
 
   constructor(
@@ -59,6 +59,17 @@ export class ClassValidator {
     if (hasSections) {
       Err(409, this.t('hasSections'));
     }
+  }
+
+  async ensureHasNoStaff(classId: string) {
+    const linked = await this.classRepository.getAssignedStaff(classId);
+    if (linked.length) Err(409, this.t('hasStaff', { names: linked.map(item => item.name).join(', ') }));
+  }
+
+  async ensureCycleSelectable(id?: string | null, currentId?: string | null) {
+    if (!id || id === currentId) return;
+    const cycle = await this.classRepository.getCycle(id);
+    if (!cycle || !cycle.active) Err(409, this.t('inactiveCycle'));
   }
 
   async ensureClassId(classId?: string, className?: string) {

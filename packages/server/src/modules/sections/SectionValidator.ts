@@ -8,7 +8,7 @@ import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidato
 
 @Service()
 export class SectionValidator {
-  @I18n('sections.errors') private t!: (key: string) => string;
+  @I18n('sections.errors') private t!: (key: string, params?: Record<string, unknown>) => string;
   @Year() private readonly year!: ResolvedAcademicYear;
 
   constructor(
@@ -85,6 +85,11 @@ export class SectionValidator {
     if (hasStudents) {
       Err(409, this.t('hasStudents'));
     }
+  }
+
+  async ensureHasNoAssignments(sectionId: string) {
+    const linked = await this.sectionRepository.getAssignedPeople(sectionId);
+    if (linked.length) Err(409, this.t('hasAssignments', { names: [...new Set(linked.map(item => item.name))].join(', ') }));
   }
 
   async ensureSectionInClass(sectionId?: string, sectionName?: string, classId?: string, className?: string) {

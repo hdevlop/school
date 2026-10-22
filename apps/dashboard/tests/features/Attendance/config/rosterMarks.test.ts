@@ -21,3 +21,32 @@ describe('explicit attendance marks', () => {
     expect(changedRosterMarks(roster, { one: 'late' }, saved)[0].existing?.id).toBe('saved');
   });
 });
+
+describe('student attendance defaults', () => {
+  const roster = [{ id: 'one' }, { id: 'two' }];
+
+  it('selects Present for new students and includes them in the pending save', () => {
+    expect(rosterMark(undefined, undefined, 'present')).toBe('present');
+    expect(changedRosterMarks(roster, {}, new Map(), 'present')).toEqual([
+      { person: roster[0], status: 'present', existing: undefined },
+      { person: roster[1], status: 'present', existing: undefined },
+    ]);
+  });
+
+  it('preserves recorded absence and lateness instead of replacing them with defaults', () => {
+    const saved = new Map([
+      ['one', { id: 'saved-one', status: 'absent' }],
+      ['two', { id: 'saved-two', status: 'late' }],
+    ]);
+    expect(rosterMark(undefined, 'absent', 'present')).toBe('absent');
+    expect(rosterMark(undefined, 'late', 'present')).toBe('late');
+    expect(changedRosterMarks(roster, {}, saved, 'present')).toEqual([]);
+  });
+
+  it('lets a new student be marked absent while the rest remain Present', () => {
+    expect(changedRosterMarks(roster, { one: 'absent' }, new Map(), 'present')).toEqual([
+      { person: roster[0], status: 'absent', existing: undefined },
+      { person: roster[1], status: 'present', existing: undefined },
+    ]);
+  });
+});

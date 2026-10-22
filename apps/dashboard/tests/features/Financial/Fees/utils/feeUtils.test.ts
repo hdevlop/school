@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { calculateFeeAmounts, calculateTotalFees, getFeeDiscountPerPeriod, getFeeTypeDisplayName, getStudentFeesDisplayData, withFeeYear } from '@/features/Financial/Fees/utils/feeUtils';
+import { calculateFeeAmounts, calculateTotalFees, getFeeDiscountAmount, getFeeDiscountPerPeriod, getFeeEditNetAmount, prepareFeeEdit, getFeeTypeDisplayName, getStudentFeesDisplayData, withFeeYear } from '@/features/Financial/Fees/utils/feeUtils';
 import { translations } from '@sms/contracts/locales';
 
 const seededFeeTypes = [
@@ -84,6 +84,27 @@ describe('withFeeYear', () => {
 });
 
 describe('fee edit discount units', () => {
+  it('preserves an October admission and its monthly discount on open and unchanged save', () => {
+    const fee = { id: 'october', paymentType: 'recurring', schedule: 'monthly', baseAmount: 1100,
+      grossAmount: 9900, netAmount: 9000, discountAmount: 900, effectiveDate: '2026-10-22' };
+    const values = { baseAmount: '1100', schedule: 'monthly', discountAmount: '100', notes: '' };
+    expect(getFeeDiscountAmount(fee)).toBe(900);
+    expect(getFeeDiscountPerPeriod(fee)).toBe(100);
+    expect(getFeeEditNetAmount(fee, values)).toBe(9000);
+    expect(prepareFeeEdit(fee, values)).toEqual({ id: 'october' });
+    expect(prepareFeeEdit(fee, { ...values, notes: 'Only notes changed' })).toEqual({ id: 'october', notes: 'Only notes changed' });
+    expect(getFeeEditNetAmount(fee, { ...values, discountAmount: 200 })).toBe(8100);
+    expect(getFeeEditNetAmount(fee, { ...values, schedule: 'quarterly' })).toBe(9000);
+    expect(getFeeDiscountAmount({ ...fee, discountAmount: undefined, discount: 900 })).toBe(900);
+  });
+
+  it('does not round a saved aggregate discount when the displayed monthly rate is unchanged', () => {
+    const fee = { id: 'cents', schedule: 'monthly', baseAmount: 100, grossAmount: 900, netAmount: 889.99, discountAmount: 10.01 };
+    const values = { baseAmount: 100, schedule: 'monthly', discountAmount: getFeeDiscountPerPeriod(fee) };
+    expect(getFeeEditNetAmount(fee, values)).toBe(889.99);
+    expect(prepareFeeEdit(fee, values)).toEqual({ id: 'cents' });
+  });
+
   it('shows the monthly rate instead of the stored yearly total', () => {
     expect(getFeeDiscountPerPeriod({ schedule: 'monthly', baseAmount: 100, grossAmount: 1000, discountAmount: 100 })).toBe(10);
     expect(getFeeDiscountPerPeriod({ schedule: 'quarterly', baseAmount: 100, grossAmount: 500, discountAmount: 50 })).toBe(10);

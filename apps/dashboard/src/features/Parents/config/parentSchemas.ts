@@ -28,22 +28,20 @@ export const createParentSchemas = (t: T) => {
       .nullable()
       .optional(),
   );
-  const cinField = z.string().min(8, t('validationMessages.cinMustBeAtLeast8Characters')).max(20, t('validationMessages.cinTooLong'));
+  const cinField = z.string().trim().min(8, t('validationMessages.cinMustBeAtLeast8Characters')).max(20, t('validationMessages.cinTooLong'));
   const addressField = z.string().max(500, t('validationMessages.addressTooLong')).optional();
 
   /**
    * One parent or guardian.
    *
-   * Almost everything is optional because the school often has only a name, a
-   * phone and a CIN when a child is enrolled, and a half-filled record is worth
-   * more than none. A contact or CIN can be filled in later; a guardian with no
-   * email or phone has a school record without a login.
+   * File imports may retain incomplete records from the school's workbook.
+   * Manual entry extends this schema to require phone and CIN.
    *
    * `image` accepts a `File` as well as a string: the same schema validates both
    * a freshly picked upload and a record loaded back from the API with a stored
    * path.
    */
-  const parent = z.object({
+  const importParent = z.object({
     id: optionalId,
     name: nameField,
     email: emailField.optional(),
@@ -61,6 +59,11 @@ export const createParentSchemas = (t: T) => {
     financialResponsibility: z.boolean().optional().default(false),
   });
 
+  const parent = importParent.extend({
+    phone: z.string().trim().min(1, t('validationMessages.required')).pipe(phoneField),
+    cin: z.string().trim().min(1, t('validationMessages.required')).pipe(cinField),
+  });
+
   /**
    * A list of parents, as the bulk form and the full student form submit it.
    *
@@ -72,9 +75,10 @@ export const createParentSchemas = (t: T) => {
     parents: z.array(parent).optional().default([]),
   });
 
-  return { parent, parents };
+  return { parent, parents, importParent };
 };
 
 type ParentSchemas = ReturnType<typeof createParentSchemas>;
 export type ParentFormValues = z.input<ParentSchemas['parent']>;
+export type ParentImportValues = z.input<ParentSchemas['importParent']>;
 export type ParentsFormValues = z.input<ParentSchemas['parents']>;

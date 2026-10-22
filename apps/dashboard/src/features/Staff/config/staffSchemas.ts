@@ -22,7 +22,8 @@ export const createStaffSchemas = (t: T, today = new Date().toISOString().slice(
     /^(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/,
     t('staff.validation.dateInvalid'),
   );
-  const optionalDateString = dateString.optional().or(z.literal(''));
+  // Persisted open-ended assignments return null for their optional dates.
+  const optionalDateString = dateString.nullish().or(z.literal(''));
   const phoneString = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, t('staff.validation.phoneInvalid'));
   const nameString = z.string().min(2, t('staff.validation.nameMin')).max(100, tooLong);
   const number = () => z.coerce.number(t('staff.validation.numberInvalid'));
@@ -62,12 +63,12 @@ export const createStaffSchemas = (t: T, today = new Date().toISOString().slice(
   const assignment = z.object({
     zoneId: z.string().optional().or(z.literal('')),
     classId: z.string().optional().or(z.literal('')),
-    sectionId: z.string().optional().or(z.literal('')),
+    sectionId: z.string().nullish().or(z.literal('')),
     cycleId: z.string().optional().or(z.literal('')),
     vehicleId: z.string().optional().or(z.literal('')),
     startDate: optionalDateString,
     endDate: optionalDateString,
-    notes: optionalString(z.string().max(1000, tooLong)),
+    notes: optionalString(z.string().max(1000, tooLong)).nullable(),
   });
 
   const assignments = z.object({
@@ -110,13 +111,11 @@ export const createStaffSchemas = (t: T, today = new Date().toISOString().slice(
       if ((data.role === 'cleaner' || data.role === 'security') && data.assignments?.some((item) => !item.zoneId)) {
         issue(ctx, ['assignments', 0, 'zoneId'], t('staff.validation.zoneRequired'));
       }
-      if (data.role === 'assistant' && !(data.classIds?.length)) {
-        issue(ctx, ['classIds'], t('staff.validation.classRequired'));
-      }
       if ((data.role === 'driver' || data.role === 'busAssistant') && (!data.assignments?.length || data.assignments.some((item) => !item.vehicleId))) {
         issue(ctx, ['assignments', 0, 'vehicleId'], t('staff.validation.vehicleRequired'));
       }
-      if (data.role === 'accountant' && data.assignments?.some((item) => !item.cycleId)) {
+      if (data.role === 'accountant' && data.assignments?.some((item) => !item.cycleId
+        && Object.values(item).some(value => value !== undefined && value !== null && value !== ''))) {
         issue(ctx, ['assignments', 0, 'cycleId'], t('staff.validation.cycleRequired'));
       }
   };

@@ -106,7 +106,6 @@ export function StudentTransportFormContent({ feeTypes = [] }: Props) {
       {enabled ? (
         <>
           <div>
-            <p className="mb-3 text-sm text-muted-foreground">{t('transport.form.chooseVehicleHint')}</p>
             {isVehiclesLoading ? (
               <NSkeleton className="h-10 w-full rounded-md" />
             ) : (
@@ -134,6 +133,7 @@ export function StudentTransportFormContent({ feeTypes = [] }: Props) {
           <div className="grid gap-4 lg:grid-cols-2">
             <div className="space-y-2">
               <FormLocationInput
+                classNames={{ status: "hidden" }}
                 name="transportAssignment.pickup"
                 formLabel={t('transport.form.pickupLocation')}
                 placeholder={t('transport.form.pickupPlaceholder')}
@@ -148,6 +148,7 @@ export function StudentTransportFormContent({ feeTypes = [] }: Props) {
               </button>
             </div>
             <FormLocationInput
+              classNames={{ status: "hidden" }}
               name="transportAssignment.dropoff"
               formLabel={t('transport.form.dropoffLocation')}
               placeholder={t('transport.form.dropoffPlaceholder')}
@@ -171,14 +172,10 @@ export function StudentTransportFormContent({ feeTypes = [] }: Props) {
                 <span className="font-semibold text-primary">{majorMoney(transportFeeType.amount)}</span>
               ) : null}
             </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {transportFeeType ? t('transport.form.monthlyBilling') : t('transport.form.missingFeeType')}
-            </p>
+            {!transportFeeType && <p className="mt-1 text-xs text-destructive">{t('transport.form.missingFeeType')}</p>}
           </div>
         </>
-      ) : (
-        <p className="text-sm text-muted-foreground">{t('transport.form.optionalDescription')}</p>
-      )}
+      ) : null}
     </div>
   )
 }

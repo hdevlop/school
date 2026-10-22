@@ -11,8 +11,10 @@ import { loginIdentity, loginIdentityUpdate } from '../../shared/loginIdentity';
 import type {
   CreateParentDto,
   CreateParentsBulkDto,
+  ImportParentDto,
   UpdateParentDto,
 } from './ParentDto';
+import { createParentDto, importParentDto } from './ParentDto';
 
 @Service()
 export class ParentService {
@@ -91,6 +93,17 @@ export class ParentService {
 
   @Transaction()
   async create(data: CreateParentDto) {
+    const contacts = createParentDto.pick({ phone: true, cin: true }).parse(data);
+    return this.createParent({ ...data, ...contacts });
+  }
+
+  @Transaction()
+  async createForImport(data: ImportParentDto) {
+    const contacts = importParentDto.pick({ phone: true, cin: true }).parse(data);
+    return this.createParent({ ...data, ...contacts });
+  }
+
+  private async createParent(data: ImportParentDto) {
     if (data.userId) await this.parentValidator.ensureUserIdUnique(data.userId);
     if (data.id) await this.parentValidator.ensureIdUnique(data.id);
     if (data.gender) await this.parentValidator.ensureGenderValid(data.gender);
@@ -284,14 +297,16 @@ export class ParentService {
    * yet. Each parent created here is invited like one added from the parents
    * page, so the result reports whether each activation mail left.
    */
-  async processParents(student?, parents?) {
+  async processParents(student?, parents?, source: 'manual' | 'import' = 'manual') {
     if (isEmpty(parents)) return;
 
     const studentId = student?.id;
     const linkedParentIds = [];
     const invitations: { name: string; email?: string; emailSent: boolean }[] = [];
     const createNew = async (parentData) => {
-      const created = await this.create(parentData);
+      const created = source === 'import'
+        ? await this.createForImport(parentData)
+        : await this.create(parentData);
       if ('emailSent' in created) {
         invitations.push({ name: created.name, email: parentData.email, emailSent: Boolean(created.emailSent) });
       }

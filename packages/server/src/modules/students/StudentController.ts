@@ -6,6 +6,7 @@ import { isAdmin, isAdministrator } from '../../auth';
 import {
   createStudentDto,
   createStudentsBulkDto,
+  importStudentDto,
   deleteBulkStudentDto,
   studentIdParam,
   studentListQuery,
@@ -13,6 +14,7 @@ import {
   updateStudentDto,
   type CreateStudentsBulkDto,
   type CreateStudentDto,
+  type ImportStudentDto,
   type DeleteBulkStudentDto,
   type StudentListQuery,
   type UpdateStudentDto,
@@ -82,6 +84,15 @@ export class StudentController {
   @ResMsg('students.success.created')
   async create(@Body() body: CreateStudentDto, @User() user: { id: string; role: string }) {
     return this.studentService.create(body, user);
+  }
+
+  // File imports may omit guardian contacts; ordinary REST/MCP creation stays strict.
+  @Post('/import')
+  @CanCreate()
+  @Validate(importStudentDto)
+  @ResMsg('students.success.created')
+  async importStudent(@Body() body: ImportStudentDto, @User() user: { id: string; role: string }) {
+    return this.studentService.createForImport(body, user);
   }
 
   @Post('/seed')

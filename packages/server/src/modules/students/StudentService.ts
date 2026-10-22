@@ -1,6 +1,6 @@
 import { Service, Transaction, Events, EventService, Inject, TransactionService } from '../../najm';
 import { StudentEnrollmentService } from '../studentEnrollments/StudentEnrollmentService';
-import type {CreateStudentDto, CreateStudentsBulkDto, UpdateStudentDto,} from './StudentDto';
+import type {CreateStudentDto, CreateStudentsBulkDto, ImportStudentDto, UpdateStudentDto,} from './StudentDto';
 import { StudentRouteService } from '../transport/studentRoutes/StudentRouteService';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { Year } from '../academicYears/requestYear';
@@ -88,6 +88,11 @@ export class StudentService {
   }
 
   @Transaction()
+  async createForImport(data: ImportStudentDto, actor: { id: string; role: string }) {
+    return this.createStudent(data, actor, undefined, 'import');
+  }
+
+  @Transaction()
   async createForSeed(data: CreateStudentDto) {
     if (!isSeeding()) throw new Error('Student demo creation requires seed mode');
     const year = await this.studentEnrollments.resolveSeedStudentPlacement(
@@ -98,10 +103,10 @@ export class StudentService {
     return this.createStudent(data, undefined, year);
   }
 
-  private async createStudent(data: CreateStudentDto, actor?: { id: string; role: string }, seedYear?: ResolvedAcademicYear) {
+  private async createStudent(data: ImportStudentDto, actor?: { id: string; role: string }, seedYear?: ResolvedAcademicYear, source: 'manual' | 'import' = 'manual') {
     // FIX: SEC-001 — authorize and validate before provisioning or file writes.
     if (!(seedYear && isSeeding())) this.studentValidator.ensureNestedCreateAllowed(data, actor);
-    const validatedData = this.studentValidator.parseNestedCreate(data);
+    const validatedData = this.studentValidator.parseNestedCreate(data, source);
     data = { ...data, ...validatedData };
     const actorId = actor?.id;
     const parentsToProcess = [
@@ -180,7 +185,7 @@ export class StudentService {
       enrolledOn: data.yearEnrolledOn,
     }, actorId || user!.id);
 
-    const linkedParents = await this.parentService.processParents(student, parentsToProcess);
+    const linkedParents = await this.parentService.processParents(student, parentsToProcess, source);
     await this.feeService.processFees(student, validatedData.fees, actor ?? { id: user!.id }, data.yearEnrolledOn, year.label);
 
     if (data.transportAssignment) {

@@ -104,12 +104,6 @@ const UserForm = ({ user = null, mode = 'create' }) => {
                   />
                )}
 
-               {!isUpdateMode && (
-                  <p className='text-sm text-muted-foreground'>
-                     {t('users.form.invitationHint')}
-                  </p>
-               )}
-
             </NForm>
 
          </div>

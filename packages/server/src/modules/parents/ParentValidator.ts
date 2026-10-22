@@ -1,7 +1,7 @@
 import { Service, Err, I18n, t } from '../../najm';
 import { ParentRepository } from './ParentRepository';
 import { UserValidator } from '../../auth';
-import type { CreateParentDto } from './ParentDto';
+import type { ImportParentDto } from './ParentDto';
 
 @Service()
 export class ParentValidator {
@@ -13,7 +13,7 @@ export class ParentValidator {
   ) { }
 
   /** Reuse only a stable identifier; a shared name alone cannot identify a guardian. */
-  async findReusable(data: CreateParentDto) {
+  async findReusable(data: ImportParentDto) {
     const matches = await Promise.all([
       data.cin ? this.parentRepository.getByCin(data.cin) : undefined,
       data.phone ? this.parentRepository.getByPhone(data.phone) : undefined,

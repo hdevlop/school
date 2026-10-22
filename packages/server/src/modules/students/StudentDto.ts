@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createParentDto } from '../parents/ParentDto';
+import { createParentDto, importParentDto } from '../parents/ParentDto';
 import { createFeeDto } from '../financial/fees/FeeDto';
 import {
   addressField,
@@ -69,6 +69,9 @@ export const createStudentDto = studentSchema.omit({ id: true }).extend({
 });
 
 export const createStudentsBulkDto = z.array(createStudentDto);
+export const importStudentDto = createStudentDto.extend({
+  parents: z.array(z.union([z.string().min(1), importParentDto])).optional(),
+});
 // Credentials are not part of a profile edit. `omit` alone would only strip a
 // password, leaving an admin who sent one believing it had been set, so the
 // field is declared `never`: present means rejected, absent means fine.
@@ -94,6 +97,7 @@ export const deleteBulkStudentDto = z.object({
 });
 
 export type CreateStudentDto = z.input<typeof createStudentDto>;
+export type ImportStudentDto = z.input<typeof importStudentDto>;
 export type UpdateStudentDto = z.input<typeof updateStudentDto>;
 export type CreateStudentsBulkDto = z.input<typeof createStudentsBulkDto>;
 export type DeleteBulkStudentDto = z.infer<typeof deleteBulkStudentDto>;

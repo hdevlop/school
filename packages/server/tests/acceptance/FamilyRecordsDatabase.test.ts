@@ -19,11 +19,12 @@ const { registerYearPropertyInjector, runWithResolvedYear } = await import('../.
 const { StudentRepository } = await import('../../src/modules/students/StudentRepository');
 const { StudentService } = await import('../../src/modules/students/StudentService');
 const { StudentValidator } = await import('../../src/modules/students/StudentValidator');
-const { createStudentDto } = await import('../../src/modules/students/StudentDto');
+const { importStudentDto } = await import('../../src/modules/students/StudentDto');
 const { ParentRepository } = await import('../../src/modules/parents/ParentRepository');
 const { ParentChildrenRepository } = await import('../../src/modules/parents/ParentChildrenRepository');
 const { ParentService } = await import('../../src/modules/parents/ParentService');
 const { ParentValidator } = await import('../../src/modules/parents/ParentValidator');
+const { importParentDto } = await import('../../src/modules/parents/ParentDto');
 const { StudentEnrollmentRepository } = await import('../../src/modules/studentEnrollments/StudentEnrollmentRepository');
 const { withEnglishMessages } = await import('../support/englishMessages');
 const rollback = Symbol('rollback');
@@ -81,7 +82,7 @@ describe('family records on the local history fixture, rolled back', () => {
         const admin = { id: 'history-admin', role: 'admin' };
         const created: string[] = [];
         for (const code of ['family-probe-1', 'family-probe-2']) {
-          const row = await asActor(admin, () => service.create(createStudentDto.parse({
+          const row = await asActor(admin, () => service.createForImport(importStudentDto.parse({
             studentCode: code, name: 'Family Probe Student', arabicName: 'ياسمين العلوي', gender: 'F',
             classId: 'history-class-2026', sectionId: 'history-section-2026-a',
             enrollmentDate: '2026-09-01', yearEnrolledOn: '2026-09-01',
@@ -97,6 +98,21 @@ describe('family records on the local history fixture, rolled back', () => {
         const parentActor = { id: parent.userId!, role: 'parent' };
         const roster = await asActor(parentActor, () => studentRepo.getAll());
         expect(roster.map(row => row.id).sort()).toEqual(created.toSorted());
+        expect(roster.every(row => row.missingParentDetails === true)).toBe(true);
+        await tx.update(parents).set({ cin: 'FAMILY99' }).where(eq(parents.id, parent.id));
+        expect((await asActor(parentActor, () => studentRepo.getAll())).every(row => row.missingParentDetails === false)).toBe(true);
+
+        const withoutParent = await asActor(admin, () => service.createForImport(importStudentDto.parse({
+          studentCode: 'family-probe-no-parent', name: 'Family Probe Without Guardian', gender: 'F',
+          classId: 'history-class-2026', sectionId: 'history-section-2026-a',
+          enrollmentDate: '2026-09-01', yearEnrolledOn: '2026-09-01',
+        }), admin));
+        expect((await asActor(admin, () => studentRepo.getAll({ studentId: withoutParent.id })))[0].missingParentDetails).toBe(true);
+        const incomplete = await asActor(admin, () => parentService.createForImport(importParentDto.parse({ name: 'Family Probe Additional Guardian', relationshipType: 'guardian' })));
+        await asActor(admin, () => parentService.linkStudent(incomplete.id, created[0]));
+        expect((await asActor(admin, () => studentRepo.getAll({ studentId: created[0] })))[0].missingParentDetails).toBe(true);
+        // Keep the original sibling-link assertions below focused on their shared parent.
+        await tx.delete(studentParents).where(eq(studentParents.parentId, incomplete.id));
         expect(roster.every(row => row.arabicName === 'ياسمين العلوي')).toBe(true);
         expect((await asActor(admin, () => studentRepo.getById(created[0])))?.arabicName).toBe('ياسمين العلوي');
         const children = await asActor(parentActor, () => childrenRepo.getChildren(parent.id));
@@ -118,7 +134,7 @@ describe('family records on the local history fixture, rolled back', () => {
           assert.ok(Array.isArray(payloads));
           const loginsBefore = invitedRoles.length;
           for (const [index, payload] of payloads.entries()) {
-            const imported = await asActor(admin, () => service.create(createStudentDto.parse({
+            const imported = await asActor(admin, () => service.createForImport(importStudentDto.parse({
               ...payload, studentCode: `family-workbook-${index}`,
               classId: 'history-class-2026', sectionId: 'history-section-2026-a',
             }), admin));

@@ -28,7 +28,7 @@ export const createSectionSchema = (t: T) => {
   );
   const requiredId = z.preprocess(
     (value) => value ?? '',
-    z.string().min(1, t('validationMessages.idIsRequired')),
+    z.string().min(1, t('academic.classRequired')),
   );
   const validNumber = { error: t('validationMessages.mustBeAValidNumber') };
 

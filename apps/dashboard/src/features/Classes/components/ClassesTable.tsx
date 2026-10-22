@@ -1,8 +1,12 @@
 "use client"
 
+import { useLayoutEffect } from 'react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, useTableStore } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
+import { useAcademicTableActions } from '@/features/Classes/hooks/useAcademicTableActions';
+import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
+import { deleteClassApi } from '@/services/classApi';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { School, Plus, SearchX } from 'lucide-react';
 import ClassForm from './ClassForm';
@@ -14,6 +18,16 @@ import { useClassesTableFilters } from '../hooks/useClassesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
+function InitialClassPageSize() {
+  const setPageSizeFromUser = useTableStore.use.setPageSizeFromUser();
+  useLayoutEffect(() => {
+    // Keep Najm's page-size selector and its single pagination owner. Mark the
+    // initial size as chosen so cards and layout measurements cannot replace it.
+    setPageSizeFromUser(10);
+  }, [setPageSizeFromUser]);
+  return null;
+}
+
 function ClassesTable() {
 
   const { t } = useTranslation();
@@ -24,15 +38,15 @@ function ClassesTable() {
     classes,
     createClass,
     updateClass,
-    deleteClass,
     error,
     isClassesLoading,
     isUpdating,
     isCreating,
-    isDeleting
   } = useClasses();
 
-  const { openDialog, confirmDelete } = useDialog();
+  const { openDialog } = useDialog();
+  const tableActions = useAcademicTableActions('classes', deleteClassApi);
+  const tableMode = useRememberedTableMode('classes', 'table');
 
   const handleAddClick = () => {
     openDialog({
@@ -73,19 +87,6 @@ function ClassesTable() {
   };
 
 
-  const handleDelete = (classData) => {
-    confirmDelete({
-      title: t('common.delete'),
-      warningText: t('common.deleteConfirm'),
-      cancelText: t('common.cancel'),
-      itemName: classData.name,
-      confirmText: t('classes.dialogs.deleteButton'),
-      loading: isDeleting,
-      onConfirm: async () => {
-        await deleteClass(classData.id);
-      }
-    });
-  };
 
   const total = classes?.length ?? 0;
 
@@ -110,7 +111,10 @@ function ClassesTable() {
         onCreate={handleAddClick}
         onView={handleView}
         onEdit={handleEdit}
-        onDelete={handleDelete}
+        {...tableActions}
+        {...tableMode}
+        dynamicHeight={false}
+        renderToolbar={() => <InitialClassPageSize />}
         loading={isClassesLoading}
         error={hasFailedToLoad(error, classes) ? error : null}
         renderError={(currentError) => (
@@ -142,7 +146,6 @@ function ClassesTable() {
             description={t('emptyStates.filtered.description')}
           />
         )}
-        defaultMode='table'
       />
     </div>
   );

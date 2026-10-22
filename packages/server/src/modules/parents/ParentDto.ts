@@ -18,7 +18,7 @@ const parentSchema = z.object({
   gender: genderEnum.optional(),
   address: addressField,
   dateOfBirth: optionalDateField,
-  cin: z.preprocess(value => value === '' ? null : value, cinField.nullish()),
+  cin: z.preprocess(value => value === '' ? null : value, z.string().trim().pipe(cinField).nullish()),
   occupation: z.string().max(100, 'Occupation too long').optional(),
   nationality: z.string().max(100, 'Nationality too long').optional(),
   maritalStatus: maritalStatusEnum.optional(),
@@ -28,10 +28,15 @@ const parentSchema = z.object({
   financialResponsibility: z.boolean().optional().default(false),
 });
 
-export const createParentDto = parentSchema.omit({ id: true }).extend({
+// Only the student file-import path accepts incomplete guardian contacts.
+export const importParentDto = parentSchema.omit({ id: true }).extend({
   id: z.string().min(1).optional(),
   userId: z.string().min(1).optional(),
   password: z.string().min(8, 'Password must be at least 8 characters long').optional(),
+});
+export const createParentDto = importParentDto.extend({
+  phone: phoneField,
+  cin: z.string().trim().pipe(cinField),
 });
 export const createParentsBulkDto = z.array(createParentDto);
 // Credentials are not part of a profile edit. `omit` alone would only strip a
@@ -62,6 +67,7 @@ export const deleteBulkParentDto = z.object({
 });
 
 export type CreateParentDto = z.infer<typeof createParentDto>;
+export type ImportParentDto = z.infer<typeof importParentDto>;
 export type UpdateParentDto = z.infer<typeof updateParentDto>;
 export type CreateParentsBulkDto = z.infer<typeof createParentsBulkDto>;
 export type ParentSearchQueryDto = z.infer<typeof parentSearchQueryDto>;

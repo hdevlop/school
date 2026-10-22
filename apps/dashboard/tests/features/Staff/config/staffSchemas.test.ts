@@ -26,6 +26,40 @@ const validPersonal = {
 const validEmployment = { compensationMode: 'monthly', salary: '3000', hireDate: '2026-09-01' };
 
 describe('staff form schemas', () => {
+  it('allows editing persisted assignments with null optional fields without imposing dates', () => {
+    const { assignmentStep, full } = createStaffSchemas(translatorFor('en'));
+    for (const role of ['cleaner', 'security', 'assistant', 'accountant', 'busAssistant']) {
+      const assignments = [{
+        ...(role === 'assistant' ? { classId: 'class1', sectionId: null }
+          : role === 'accountant' ? { cycleId: 'cycle1' }
+          : role === 'busAssistant' ? { vehicleId: 'bus1' } : { zoneId: 'zone1' }),
+        startDate: null, endDate: null, notes: null,
+      }];
+      expect(assignmentStep.safeParse({ role, assignments }).success, role).toBe(true);
+      const updated = full.parse({ ...validPersonal, ...validEmployment, name: 'Fatima Updated', salary: '2600', role, assignments });
+      expect(updated.salary).toBe(2600);
+      expect(updated.assignments?.[0]).toMatchObject({ startDate: null, endDate: null, notes: null });
+    }
+    expect(assignmentStep.safeParse({ role: 'cleaner', assignments: [{ zoneId: 'zone1', startDate: 'invalid' }] }).success).toBe(false);
+  });
+
+  it('allows support staff to be created without class assignments', () => {
+    const { assignmentStep, full } = createStaffSchemas(translatorFor('en'));
+    expect(assignmentStep.safeParse({ role: 'assistant', classIds: [], assignments: [] }).success).toBe(true);
+    expect(full.safeParse({ ...validPersonal, ...validEmployment, role: 'assistant', classIds: [] }).success).toBe(true);
+    expect(assignmentStep.safeParse({ role: 'secretary', classIds: [], assignments: [] }).success).toBe(true);
+  });
+
+  it('allows an accountant without a cycle while refusing an incomplete dated assignment', () => {
+    const { assignmentStep, full } = createStaffSchemas(translatorFor('en'));
+    for (const assignments of [undefined, [], [{}], [{ cycleId: '', startDate: null, endDate: null, notes: null }]]) {
+      expect(assignmentStep.safeParse({ role: 'accountant', assignments }).success).toBe(true);
+      expect(full.safeParse({ ...validPersonal, ...validEmployment, role: 'accountant', assignments }).success).toBe(true);
+    }
+    const incomplete = assignmentStep.safeParse({ role: 'accountant', assignments: [{ startDate: '2026-10-01' }] });
+    expect(incomplete.success).toBe(false);
+    expect(messagesByPath(incomplete.error!)['assignments.0.cycleId']).toBe(en.staff.validation.cycleRequired);
+  });
   it('validates required driver fields on the employment step', () => {
     const { details } = createStaffSchemas(translatorFor('en'), '2026-10-21');
     const result = details.safeParse({ ...validEmployment, role: 'driver' });

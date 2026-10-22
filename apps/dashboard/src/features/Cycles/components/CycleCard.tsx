@@ -19,7 +19,9 @@ const CycleCard = ({ data }: any) => {
       <div className="min-w-0 flex-1 flex flex-col gap-2">
         <div className="flex flex-wrap items-center gap-2">
           <Label className="text-md font-bold">{cycle?.labels?.[language] || cycle.name}</Label>
-          {!cycle.active && <Badge className="bg-slate-200 text-xs text-slate-700">{t('status.inactive')}</Badge>}
+          <Badge className={cycle.active ? 'bg-emerald-100 text-xs text-emerald-700' : 'bg-slate-200 text-xs text-slate-700'}>
+            {t(cycle.active ? 'status.active' : 'status.inactive')}
+          </Badge>
         </div>
         <div className="space-y-2">
           <NSectionInfo icon={Hash} iconColor="text-muted-foreground" label={t('cycles.form.sortOrder')} value={cycle.sortOrder ?? 0} />

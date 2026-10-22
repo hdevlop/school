@@ -7,6 +7,7 @@ import { createParentSchemas } from '@/features/Parents/config/parentSchemas';
 // The English catalog, so a message a test reads proves its key exists.
 const english = (key: string, params?: Record<string, unknown>) => schoolI18n.translate('en', key as never, params as never);
 const parentSchema = createParentSchemas(english).parent;
+const importParentSchema = createParentSchemas(english).importParent;
 const parentsSchema = createParentSchemas(english).parents;
 
 const parent = {
@@ -17,10 +18,19 @@ const parent = {
 };
 
 describe('parentSchema', () => {
-  it('accepts a named guardian before phone and CIN are known', () => {
+  it('requires phone and CIN for manual parent entry', () => {
     expect(parentSchema.safeParse(parent).success).toBe(true);
-    expect(parentSchema.safeParse({ name: 'Fatima Alaoui', relationshipType: 'guardian' }).success).toBe(true);
-    expect(parentSchema.parse({ ...parent, phone: '', cin: '' })).toMatchObject({ phone: null, cin: null });
+    for (const value of [undefined, null, '', '        ']) {
+      expect(parentSchema.safeParse({ ...parent, phone: value }).success).toBe(false);
+      expect(parentSchema.safeParse({ ...parent, cin: value }).success).toBe(false);
+    }
+  });
+
+  it('permits missing import contacts while validating supplied values', () => {
+    expect(importParentSchema.safeParse({ name: 'Fatima Alaoui', relationshipType: 'guardian' }).success).toBe(true);
+    expect(importParentSchema.parse({ ...parent, phone: '', cin: '' })).toMatchObject({ phone: null, cin: null });
+    expect(importParentSchema.safeParse({ ...parent, phone: 'bad' }).success).toBe(false);
+    expect(importParentSchema.safeParse({ ...parent, cin: 'bad' }).success).toBe(false);
   });
 
   it('accepts every relationship, marital status and gender the API accepts', () => {
@@ -78,6 +88,6 @@ describe('parentsSchema', () => {
 
   it('validates each guardian in the list', () => {
     expect(parentsSchema.safeParse({ parents: [parent, parent] }).success).toBe(true);
-    expect(parentsSchema.safeParse({ parents: [parent, { ...parent, cin: '' }] }).success).toBe(true);
+    expect(parentsSchema.safeParse({ parents: [parent, { ...parent, cin: '' }] }).success).toBe(false);
   });
 });

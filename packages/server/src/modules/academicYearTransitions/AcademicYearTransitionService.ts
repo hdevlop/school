@@ -3,6 +3,7 @@ import { Service, Transaction } from '../../najm';
 import { SectionRepository } from '../sections/SectionRepository';
 import { SettingsRepository } from '../settings/SettingsRepository';
 import { StudentEnrollmentRepository } from '../studentEnrollments/StudentEnrollmentRepository';
+import { StudentEnrollmentService } from '../studentEnrollments/StudentEnrollmentService';
 import { AcademicYearMigrationIssueRepository } from '../academicYearMigrationIssues/AcademicYearMigrationIssueRepository';
 import { AcademicYearValidator } from '../academicYears/AcademicYearValidator';
 import { AcademicYearTransitionRepository } from './AcademicYearTransitionRepository';
@@ -29,6 +30,7 @@ export class AcademicYearTransitionService {
     private migrationIssues: AcademicYearMigrationIssueRepository,
     private runs: AcademicYearTransitionRepository,
     private validator: AcademicYearTransitionValidator,
+    private enrollmentService: StudentEnrollmentService,
   ) {}
 
   async preview(targetYearId: string, data: PreviewAcademicYearTransitionDto) {
@@ -224,6 +226,7 @@ export class AcademicYearTransitionService {
       placementId: string | null;
     }> = [];
     for (const item of preview.proposed) {
+      await this.enrollmentService.ensureSectionCapacity(item.targetSectionId, data.preview.enrolledOn, null, { yearId: targetYearId });
       const enrollment = await this.enrollments.create({
         studentId: item.studentId,
         academicYearId: targetYearId,

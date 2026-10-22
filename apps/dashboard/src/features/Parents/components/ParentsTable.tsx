@@ -19,6 +19,11 @@ import { useRouter } from 'next/navigation';
 import { usePermissions } from 'najm-auth/client/react';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import { announceInvitation } from '@/shared/invitationNotice';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { deleteParentApi } from '@/services/parentApi';
+import { deleteSelection } from '@/shared/deleteSelection';
+import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
 
 const getParentRowClassName = (parent) => {
   const isOrphaned = parent?.isOrphaned === true || Number(parent?.totalChildren) === 0;
@@ -30,6 +35,7 @@ const getParentRowClassName = (parent) => {
 function ParentsTable() {
 
   const { t } = useTranslation();
+  const tableMode = useRememberedTableMode('parents');
   const router = useRouter();
   // A teacher reads parents; only roles that may change them get the actions.
   const { can } = usePermissions();
@@ -38,18 +44,18 @@ function ParentsTable() {
   const canDelete = can('delete:parents');
   // Opening a parent keeps an explicitly viewed year.
   const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
+  const queryClient = useQueryClient();
   const columns = useParentsTableColumns();
   const scope = useClassSectionTableScope();
   const parentFilters = useParentsTableFilters();
-  const rawFilters = useMemo(() => [...parentFilters, ...scope.filters], [parentFilters, scope.filters]);
+  const rawFilters = useMemo(() => [...scope.filters, ...parentFilters.filters], [scope.filters, parentFilters.filters]);
+  const hasSelection = scope.hasSelection || parentFilters.hasSelection;
 
   const {
     parents,
     createParent,
     updateParent,
     deleteParent,
-    isBulkDeleting,
-    bulkDeleteParents,
     error,
     isParentsLoading,
     isUpdating,
@@ -57,8 +63,9 @@ function ParentsTable() {
     isDeleting
   } = useParents();
   const filteredParents = useMemo(() => (parents || []).filter((parent) =>
-    matchesAnyChild(parent.childPlacements, scope.classId, scope.sectionId)),
-  [parents, scope.classId, scope.sectionId]);
+    matchesAnyChild(parent.childPlacements, scope.classId, scope.sectionId)
+      && parentFilters.matches(parent)),
+  [parents, scope.classId, scope.sectionId, parentFilters.matches]);
 
   const { openDialog, confirmDelete } = useDialog();
 
@@ -123,15 +130,19 @@ function ParentsTable() {
       cancelText: t('common.cancel'),
       itemName: t('parents.dialogs.bulkDeleteItemName', { count: ids.length }),
       confirmText: t('parents.dialogs.deleteButton'),
-      loading: isBulkDeleting,
       onConfirm: async () => {
-        await bulkDeleteParents(ids);
-        setRowSelection({});
+        const result = await deleteSelection(ids, deleteParentApi);
+        setRowSelection(Object.fromEntries(result.failed.map(({ id }) => [id, true])));
+        await Promise.all(['parents', 'students'].map(key => queryClient.invalidateQueries({ queryKey: [key] })));
+        if (result.deleted.length) toast.success(t('common.deletedCount', { count: result.deleted.length }));
+        if (result.failed.length) toast.error(t('common.deleteFailedCount', { count: result.failed.length }), {
+          description: [...new Set(result.failed.map(item => item.message))].join(' · '),
+        });
       }
     });
   };
 
-  const total = parents?.length ?? 0;
+  const total = filteredParents.length;
 
   return (
     <div className='flex flex-col gap-2 w-full h-full'>
@@ -147,6 +158,8 @@ function ParentsTable() {
 
       <NTable
         data={filteredParents}
+        isFilteredEmpty={filteredParents.length === 0 && !!parents?.length}
+        getRowId={(parent) => parent.id}
         columns={columns}
         filters={rawFilters}
         onCreate={canCreate ? handleAddClick : undefined}
@@ -154,6 +167,7 @@ function ParentsTable() {
         onEdit={canUpdate ? handleEdit : undefined}
         onDelete={canDelete ? handleDelete : undefined}
         onBulkDelete={canDelete ? handleBulkDelete : undefined}
+        showDeleteSelection
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
         loading={isParentsLoading}
@@ -170,10 +184,10 @@ function ParentsTable() {
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={scope.hasSelection ? SearchX : FEATURE_ICONS.parents}
-            title={t(scope.hasSelection ? 'emptyStates.filtered.title' : 'emptyStates.parents.title')}
-            description={t(scope.hasSelection ? 'emptyStates.filtered.description' : 'emptyStates.parents.description')}
-            action={scope.hasSelection || !canCreate ? undefined : (
+            icon={hasSelection ? SearchX : FEATURE_ICONS.parents}
+            title={t(hasSelection ? 'emptyStates.filtered.title' : 'emptyStates.parents.title')}
+            description={t(hasSelection ? 'emptyStates.filtered.description' : 'emptyStates.parents.description')}
+            action={hasSelection || !canCreate ? undefined : (
               <NButton size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('parents.dialogs.createButton')}
@@ -189,7 +203,7 @@ function ParentsTable() {
             description={t('emptyStates.filtered.description')}
           />
         )}
-        defaultMode='cards'
+        {...tableMode}
       />
     </div>
   );

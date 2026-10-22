@@ -335,7 +335,7 @@ const PayrollTable = () => {
           />
           <NStatCard
             icon={Banknote}
-            label={t('payroll.stats.payroll')}
+            label={t('payroll.stats.totalPayroll')}
             value={majorMoney(totalPayroll)}
           />
           <NStatCard
@@ -345,7 +345,7 @@ const PayrollTable = () => {
           />
           <NStatCard
             icon={Clock}
-            label={t('payroll.stats.hourlyMonthly')}
+            label={t('payroll.stats.paidStaff')}
             value={`${paidCount} / ${tableRows.length}`}
           />
         </div>

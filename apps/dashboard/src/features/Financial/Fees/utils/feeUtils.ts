@@ -139,12 +139,42 @@ export const isOneTimePaymentType = (feeTypes: FeeType[], feeTypeId: string): bo
 };
 
 /** Convert the stored aggregate back to the per-period value expected by edits. */
+export const getFeeDiscountAmount = (fee: {
+  discountAmount?: string | number | null; discount?: string | number | null;
+  grossAmount?: string | number | null; netAmount?: string | number | null;
+}) => Math.max(0, Number(fee.discountAmount ?? fee.discount
+  ?? Math.max(0, Number(fee.grossAmount || 0) - Number(fee.netAmount || 0))) || 0);
+
 export const getFeeDiscountPerPeriod = (fee: {
   schedule?: string; baseAmount?: string | number; grossAmount?: string | number; discountAmount?: string | number;
+  discount?: string | number; paymentType?: string;
 }) => {
-  const periods = fee.schedule === 'oneTime' ? 1
+  const periods = fee.schedule === 'oneTime' || fee.paymentType === 'oneTime' ? 1
     : Math.max(1, Math.round(Number(fee.grossAmount || 0) / Number(fee.baseAmount || 1)));
-  return Math.round(Number(fee.discountAmount || 0) * 100 / periods) / 100;
+  return Math.round(getFeeDiscountAmount(fee) * 100 / periods) / 100;
+};
+
+/** An unchanged edit must never round or re-submit stored financial totals. */
+export const prepareFeeEdit = (fee: any, values: any) => {
+  const update: Record<string, unknown> = { id: fee.id };
+  if (Number(values.baseAmount) !== Number(fee.baseAmount)) update.baseAmount = Number(values.baseAmount);
+  if (values.schedule !== fee.schedule) update.schedule = values.schedule;
+  if (Number(values.discountAmount) !== getFeeDiscountPerPeriod(fee)) update.discountAmount = Number(values.discountAmount);
+  if ((values.notes ?? '') !== (fee.notes ?? '')) update.notes = values.notes;
+  return update;
+};
+
+/** The edit cannot change billing dates; retain the saved chargeable month count. */
+export const getFeeEditNetAmount = (fee: any, values: any) => {
+  const changes = prepareFeeEdit(fee, values);
+  if (changes.baseAmount === undefined && changes.schedule === undefined && changes.discountAmount === undefined) {
+    return Number(fee.netAmount || 0);
+  }
+  const months = values.schedule === 'oneTime' || fee.paymentType === 'oneTime' ? 1
+    : Math.max(1, Math.round(Number(fee.grossAmount || 0) / Number(fee.baseAmount || 1)));
+  const baseCents = Math.round(Number(values.baseAmount || 0) * 100);
+  const discountCents = Math.round(Number(values.discountAmount || 0) * 100);
+  return Math.max(0, baseCents - discountCents) * months / 100;
 };
 
 // ========================================

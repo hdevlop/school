@@ -43,6 +43,7 @@ import { useParents } from '../../hooks/useParents';
 import ParentForm from '../SimpleParentForm';
 import ParentAttentionCard from './ParentAttentionCard';
 import ParentDetailsTab from './ParentDetailsTab';
+import { FamilyLinkButton } from '../FamilyLinkActions';
 
 const TABS = ['overview', 'details'] as const;
 type ParentTab = (typeof TABS)[number];
@@ -301,6 +302,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
         subtitle={text('subtitle')}
       >
         <NPageHeaderActions className="gap-2">
+          <FamilyLinkButton target={{ parentId }} linkedIds={children.map(child => child.id)} />
           <NButton
             type="button"
             variant="outline"

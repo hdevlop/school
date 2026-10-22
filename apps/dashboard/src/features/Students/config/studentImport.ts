@@ -1,11 +1,11 @@
 import { findClassByName, GENDER_VALUES, STUDENT_STATUS_VALUES, type Gender, type StudentStatus } from '@sms/contracts';
 import { isDateOnly } from '@sms/contracts/academic-years';
 import { firstYearEnrolledOn } from './newStudentEnrollment';
-import { createParentSchemas, type ParentFormValues } from '@/features/Parents/config/parentSchemas';
+import { createParentSchemas, type ParentImportValues } from '@/features/Parents/config/parentSchemas';
 
 // The import reports which guardian fields failed, never their messages, so the
 // schema's translator is irrelevant here.
-const parentSchema = createParentSchemas((key) => key).parent;
+const parentSchema = createParentSchemas((key) => key).importParent;
 
 /**
  * The columns an import reads. Exported table columns use these same keys,
@@ -52,7 +52,7 @@ export interface StudentImportPayload {
   sectionId: string;
   enrollmentDate: string;
   yearEnrolledOn: string;
-  parents?: ParentFormValues[];
+  parents?: ParentImportValues[];
 }
 
 interface ImportClass {
@@ -127,7 +127,7 @@ export function buildStudentImport(
     const dateOfBirth = date('dateOfBirth');
     const enrollmentDate = date('enrollmentDate') ?? admissionDate;
 
-    let guardian: ParentFormValues | undefined;
+    let guardian: ParentImportValues | undefined;
     const guardianName = field('guardianName');
     const guardianPhone = field('guardianPhone') || field('guardianPhone2');
     const guardianEmail = field('guardianEmail');

@@ -1,7 +1,7 @@
 import { Repository } from '../../najm';
 import { DB } from '../../database/db';
 import { alerts, subjects, teacherAssignments } from '../../database/schema';
-import { and, count, eq, exists, or, type SQLWrapper } from 'drizzle-orm';
+import { and, count, eq, exists, or, sql, type SQLWrapper } from 'drizzle-orm';
 
 export const subjectSelect = {
   id: subjects.id,
@@ -55,7 +55,7 @@ export class SubjectRepository {
 
   async getByCode(code) {
     const [result] = await this.buildSubjectQuery()
-      .where(eq(subjects.code, code))
+      .where(sql`upper(btrim(${subjects.code})) = ${code.trim().toUpperCase()}`)
       .limit(1);
     return result;
   }

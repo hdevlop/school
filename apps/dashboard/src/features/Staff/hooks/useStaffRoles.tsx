@@ -24,7 +24,8 @@ export const useStaffRoles = (options?) => {
 };
 
 export const useStaffRoleMutations = () => {
-  const crud = useEntityCRUD(ROLE_QUERY_KEYS, {
+  // The first key also names CRUD's translation namespace; invalidate both lists.
+  const crud = useEntityCRUD(['staffRoles', ...ROLE_QUERY_KEYS], {
     create: staffRolesApi.createStaffRoleApi,
     update: staffRolesApi.updateStaffRoleApi,
     delete: staffRolesApi.deleteStaffRoleApi,

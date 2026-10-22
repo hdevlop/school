@@ -7,7 +7,7 @@ export const useSubjectsTableFilters = () => {
   return useMemo(() => [
     {
       name: 'name',
-      placeholder: t('subjects.filters.searchByName'),
+      placeholder: t('academic.subjectSearch'),
       type: 'text',
     }
   ], [t]);

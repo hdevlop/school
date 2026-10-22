@@ -52,6 +52,11 @@ export const createStudentApi = async (data) => {
   return res.data;
 };
 
+export const importStudentApi = async (data) => {
+  const res = await api.post('/students/import', data);
+  return res.data;
+};
+
 export const updateStudentApi = async (data) => {
   const res = await formApi.put(`/students/${data.id}`, data);
   return res.data;

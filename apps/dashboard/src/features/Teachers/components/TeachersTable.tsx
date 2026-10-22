@@ -20,11 +20,20 @@ import { useTeachersTableColumns } from '../hooks/useTeachersTableColumns';
 import { useTeachersTableFilters } from '../hooks/useTeachersTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { deleteTeacherApi } from '@/services/teacherApi';
+import { deleteSelection } from '@/shared/deleteSelection';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 
 function TeachersTable() {
 
   const { t } = useTranslation();
-  const { can } = useViewerRole();
+  const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
+  const queryClient = useQueryClient();
+  const { viewingYear } = useViewingAcademicYear();
+  const { can, role } = useViewerRole();
   const canCreate = can('create:teachers');
   const canUpdate = can('update:teachers');
   const canDelete = can('delete:teachers');
@@ -39,8 +48,6 @@ function TeachersTable() {
     updateTeacher,
     deleteTeacher,
 
-    isBulkDeleting,
-    bulkDeleteTeachers,
     error,
     isTeachersLoading,
     isDeleting
@@ -104,13 +111,17 @@ function TeachersTable() {
   const handleDelete = (teacher) => {
     confirmDelete({
       title: t('common.delete'),
-      warningText: t('common.deleteConfirm'),
+      warningText: t(role === 'admin' ? 'teachers.dialogs.deleteWarning' : 'common.deleteConfirm'),
       cancelText: t('common.cancel'),
       itemName: teacher.name,
       confirmText: t('teachers.dialogs.deleteButton'),
       loading: isDeleting,
       onConfirm: async () => {
-        await deleteTeacher(teacher.id);
+        try {
+          await deleteTeacher(teacher.id);
+        } catch {
+          // The mutation reports the refusal in a toast. Resolve to close this confirmation.
+        }
       }
     });
   };
@@ -124,16 +135,21 @@ function TeachersTable() {
     ...(canDelete ? [{ label: t('common.delete'), icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(teacher) }] : []),
   ];
 
-  const handleBulkDelete = (ids) => {
+  const handleBulkDelete = (ids: string[]) => {
     confirmDelete({
       title: t('common.delete'),
-      warningText: t('common.deleteConfirm'),
+      warningText: t(role === 'admin' ? 'teachers.dialogs.bulkDeleteWarning' : 'common.deleteConfirm'),
       cancelText: t('common.cancel'),
       itemName: t('teachers.dialogs.bulkDeleteItemName', { count: ids.length }),
       confirmText: t('teachers.dialogs.deleteButton'),
-      loading: isBulkDeleting,
       onConfirm: async () => {
-        await bulkDeleteTeachers(ids);
+        const result = await deleteSelection(ids, id => withAcademicYear(viewingYear, () => deleteTeacherApi(id)));
+        setRowSelection(Object.fromEntries(result.failed.map(({ id }) => [id, true])));
+        await queryClient.invalidateQueries({ queryKey: ['teachers'] });
+        if (result.deleted.length) toast.success(t('common.deletedCount', { count: result.deleted.length }));
+        if (result.failed.length) toast.error(t('common.deleteFailedCount', { count: result.failed.length }), {
+          description: [...new Set(result.failed.map(item => item.message))].join(' · '),
+        });
       }
     });
   };
@@ -154,6 +170,7 @@ function TeachersTable() {
 
       <NTable
         data={teachers}
+        getRowId={(teacher) => teacher.id}
         columns={columns}
         filters={rawFilters}
         onCreate={canCreate ? handleAddClick : undefined}
@@ -161,6 +178,8 @@ function TeachersTable() {
         onEdit={canUpdate ? handleEdit : undefined}
         onDelete={canDelete ? handleDelete : undefined}
         onBulkDelete={canDelete ? handleBulkDelete : undefined}
+        rowSelection={rowSelection}
+        onRowSelectionChange={setRowSelection}
         menu={canReset ? { row: rowMenu } : undefined}
         loading={isTeachersLoading}
         error={hasFailedToLoad(error, teachers) ? error : null}

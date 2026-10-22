@@ -1,8 +1,8 @@
 'use client';
 
-import { NButton } from 'najm-kit';
+import { NButton, SimpleTooltip } from 'najm-kit';
 
-import { Loader2, Send, Users, CheckCircle2, XCircle, Clock3 } from 'lucide-react';
+import { Loader2, Send, Users, CheckCircle2, XCircle, Clock3, CircleDashed } from 'lucide-react';
 import { cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 
@@ -13,7 +13,7 @@ interface Props {
   isSubmitting?: boolean;
   stats: Stats;
   onSubmit: () => void;
-  onMarkAllPresent: () => void;
+  onMarkAllPresent?: () => void;
   canSubmit?: boolean;
   submitTitle?: string;
 }
@@ -37,11 +37,12 @@ function StatItem({
     : 'text-foreground';
 
   return (
-    <div className="flex min-w-0 items-center justify-center gap-1.5 text-xs sm:text-sm">
-      <Icon className={cn('h-3.5 w-3.5 shrink-0', toneClass)} />
-      <span className="min-w-0 text-muted-foreground">{label}:</span>
-      <span className={cn('font-mono font-semibold', toneClass)}>{value}</span>
-    </div>
+    <SimpleTooltip content={`${label}: ${value}`}>
+      <button type="button" aria-label={`${label}: ${value}`} className="flex cursor-help items-center justify-center gap-1.5 px-2 text-xs outline-offset-4 sm:text-sm">
+        <Icon aria-hidden="true" className={cn('h-3.5 w-3.5 shrink-0', toneClass)} />
+        <span className={cn('font-mono font-semibold whitespace-nowrap', toneClass)}>{value}</span>
+      </button>
+    </SimpleTooltip>
   );
 }
 
@@ -55,17 +56,14 @@ export default function RosterHeader({
 
   return (
     <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-2 sm:flex-none">
-      <NButton type="button" variant="outline" disabled={isSubmitting || !canSubmit} onClick={onMarkAllPresent} className="h-10 w-full sm:w-auto">
+      {onMarkAllPresent && <NButton type="button" variant="outline" disabled={isSubmitting || !canSubmit} onClick={onMarkAllPresent} className="h-10 w-full sm:w-auto">
         {t('attendance.roster.markAllPresent')}
-      </NButton>
-      <div className="grid min-w-0 flex-1 grid-cols-2 items-center gap-x-3 gap-y-2 rounded-md border bg-card px-3 py-2 sm:flex sm:h-10 sm:flex-none sm:gap-4 sm:py-0">
+      </NButton>}
+      <div className="flex h-10 min-w-0 items-center divide-x divide-border rounded-md border bg-card px-1">
         <StatItem icon={Users} label={t('attendance.roster.total')} value={stats.total} tone="blue" />
-        <StatItem icon={Clock3} label={t('attendance.roster.unmarked')} value={stats.unmarked} />
-        <span className="hidden h-4 w-px shrink-0 bg-border sm:block" />
+        <StatItem icon={CircleDashed} label={t('attendance.roster.unmarked')} value={stats.unmarked} />
         <StatItem icon={CheckCircle2} label={t('attendance.roster.present')} value={stats.present} tone="emerald" />
-        <span className="hidden h-4 w-px shrink-0 bg-border sm:block" />
         <StatItem icon={XCircle} label={t('attendance.roster.absent')} value={stats.absent} tone="red" />
-        <span className="hidden h-4 w-px shrink-0 bg-border sm:block" />
         <StatItem icon={Clock3} label={t('attendance.roster.late')} value={stats.late} tone="amber" />
       </div>
       {stats.pending > 0 && <span role="status" className="order-last basis-full text-end text-xs text-amber-700 dark:text-amber-300">{t('attendance.roster.unsavedMarks', { count: stats.pending })}</span>}

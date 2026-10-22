@@ -320,7 +320,7 @@ export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, SettingsValidator, [SettingsRepository]);
   registerSeedDeps(seedContainer, SettingsService, [SettingsRepository, SettingsValidator, AcademicYearRepository]);
   registerSeedDeps(seedContainer, AcademicYearValidator, [AcademicYearRepository]);
-  registerSeedDeps(seedContainer, AcademicYearTransitionService, [AcademicYearValidator, SettingsRepository, StudentEnrollmentRepository, SectionRepository, AcademicYearMigrationIssueRepository, AcademicYearTransitionRepository, AcademicYearTransitionValidator]);
+  registerSeedDeps(seedContainer, AcademicYearTransitionService, [AcademicYearValidator, SettingsRepository, StudentEnrollmentRepository, SectionRepository, AcademicYearMigrationIssueRepository, AcademicYearTransitionRepository, AcademicYearTransitionValidator, StudentEnrollmentService]);
   registerSeedDeps(seedContainer, AcademicYearService, [AcademicYearRepository, AcademicYearValidator, SettingsRepository, AcademicYearTransitionService, StudentEnrollmentService]);
   registerSeedDeps(seedContainer, StudentEnrollmentService, [StudentEnrollmentRepository, AcademicYearValidator, SettingsRepository, AcademicYearMigrationIssueRepository, StudentEnrollmentValidator]);
   registerSeedDeps(seedContainer, AcademicSourceService, [AcademicYearValidator, SectionRepository, AcademicSourceValidator]);
@@ -332,7 +332,7 @@ export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, ClassService, [ClassRepository, ClassValidator, SettingsRepository]);
 
   registerSeedDeps(seedContainer, SectionValidator, [SectionRepository, ClassRepository, SettingsRepository]);
-  registerSeedDeps(seedContainer, SectionService, [SectionRepository, SectionValidator]);
+  registerSeedDeps(seedContainer, SectionService, [SectionRepository, SectionValidator, StudentEnrollmentService]);
 
   registerSeedDeps(seedContainer, ClassRoutineValidator, [ClassRoutineRepository]);
   registerSeedDeps(seedContainer, ClassRoutineService, [ClassRoutineRepository, ClassRoutineValidator]);

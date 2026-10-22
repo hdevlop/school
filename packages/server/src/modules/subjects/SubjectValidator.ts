@@ -28,6 +28,15 @@ export class SubjectValidator {
     }
   }
 
+  refuseDuplicateCode(error: unknown): never {
+    const cause = (error as { cause?: unknown })?.cause ?? error;
+    const { code, constraint_name: constraint } = (cause ?? {}) as { code?: string; constraint_name?: string };
+    if (code === '23505' && ['subjects_code_normalized_unique', 'subjects_code_unique'].includes(constraint ?? '')) {
+      Err(409, this.t('codeExists'));
+    }
+    throw error;
+  }
+
   async ensureNameUnique(name: string, excludeId?: string) {
     const existing = await this.subjectRepository.getByName(name);
     if (existing && existing.id !== excludeId) {

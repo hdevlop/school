@@ -33,14 +33,15 @@ const FeeCard = ({ data }: any) => {
           : ''
       }`}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-start gap-3 pe-8">
         <NAvatar
           src={student?.image}
           fallback={student?.name}
           size="sm"
+          className="shrink-0"
         />
-        <div className="flex-1 min-w-0">
-          <Label className="text-sm font-bold text-foreground block truncate">
+        <div className="min-w-0 flex-1 basis-32">
+          <Label className="text-sm font-bold text-foreground block whitespace-normal break-words">
             {student?.name}
           </Label>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -54,11 +55,11 @@ const FeeCard = ({ data }: any) => {
           </div>
         </div>
         {isPaid ? (
-          <NBadge status="paid" look="solid" showIcon className="mr-2">
+          <NBadge status="paid" look="solid" showIcon className="basis-auto shrink-0">
             {t('fees.status.paid') || 'Paid'}
           </NBadge>
         ) : hasFees && hasOverdue && (
-          <NBadge status="overdue" look="solid" showIcon className="mr-2">
+          <NBadge status="overdue" look="solid" showIcon className="basis-auto shrink-0">
             {t('fees.status.overdue') || 'Overdue'}
           </NBadge>
         )}

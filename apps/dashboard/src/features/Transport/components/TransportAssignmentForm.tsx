@@ -59,6 +59,7 @@ function AssignmentFields({ lockVehicleId }: { lockVehicleId?: string }) {
       />
       <div className="grid gap-4 md:grid-cols-2">
         <FormLocationInput
+          classNames={{ status: "hidden" }}
           name="pickup"
           formLabel={t('transport.form.pickupLocation')}
           placeholder={t('transport.form.pickupPlaceholder')}
@@ -69,6 +70,7 @@ function AssignmentFields({ lockVehicleId }: { lockVehicleId?: string }) {
           onProviderMetaChange={(meta) => form.setValue('pickupPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
         />
         <FormLocationInput
+          classNames={{ status: "hidden" }}
           name="dropoff"
           formLabel={t('transport.form.dropoffLocation')}
           placeholder={t('transport.form.dropoffPlaceholder')}

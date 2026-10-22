@@ -3,6 +3,9 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
+import { useAcademicTableActions } from '@/features/Classes/hooks/useAcademicTableActions';
+import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
+import { deleteSubjectApi } from '@/services/subjectApi';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { BookOpen, Plus, SearchX } from 'lucide-react';
 import React from 'react';
@@ -25,15 +28,15 @@ function SubjectsTable() {
     subjects,
     createSubject,
     updateSubject,
-    deleteSubject,
     error,
     isSubjectsLoading,
     isUpdating,
     isCreating,
-    isDeleting
   } = useSubjects();
 
-  const { openDialog, confirmDelete } = useDialog();
+  const { openDialog } = useDialog();
+  const tableActions = useAcademicTableActions('subjects', deleteSubjectApi);
+  const tableMode = useRememberedTableMode('subjects', 'table');
 
   const handleAddClick = () => {
     openDialog({
@@ -53,7 +56,7 @@ function SubjectsTable() {
   const handleView = (subject) => {
     openDialog({
       title: t('subjects.dialogs.viewTitle'),
-      children: <SubjectCard data={subject} />,
+      children: <SubjectCard data={subject} details />,
       showButtons: false,
     });
   };
@@ -73,19 +76,6 @@ function SubjectsTable() {
     });
   };
 
-  const handleDelete = (subject) => {
-    confirmDelete({
-      title: t('common.delete'),
-      warningText: t('common.deleteConfirm'),
-      cancelText: t('common.cancel'),
-      itemName: subject.name,
-      confirmText: t('subjects.dialogs.deleteButton'),
-      loading: isDeleting,
-      onConfirm: async () => {
-        await deleteSubject(subject.id);
-      }
-    });
-  };
 
   const total = subjects?.length ?? 0;
 
@@ -109,7 +99,8 @@ function SubjectsTable() {
         onCreate={handleAddClick}
         onView={handleView}
         onEdit={handleEdit}
-        onDelete={handleDelete}
+        {...tableActions}
+        {...tableMode}
         loading={isSubjectsLoading}
         error={hasFailedToLoad(error, subjects) ? error : null}
         renderError={(currentError) => (
@@ -141,7 +132,6 @@ function SubjectsTable() {
             description={t('emptyStates.filtered.description')}
           />
         )}
-        defaultMode='table'
       />
     </div>
   );

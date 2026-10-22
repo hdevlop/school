@@ -129,6 +129,7 @@ export function getFeeBaseFields() {
       netAmount: fees.netAmount,
       paidAmount: fees.paidAmount,
       discountAmount: fees.discountAmount,
+      discountReason: fees.discountReason,
       status: fees.status,
       notes: fees.notes,
       createdAt: fees.createdAt,

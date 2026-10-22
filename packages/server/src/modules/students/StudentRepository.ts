@@ -93,6 +93,16 @@ export class StudentRepository {
       .selectDistinctOn([students.createdAt, studentEnrollments.id], {
         ...studentSelect,
         status: studentEnrollments.status,
+        // Return only completeness, not guardian identity/contact values.
+        missingParentDetails: sql<boolean>`(
+          NOT EXISTS (SELECT 1 FROM ${studentParents} WHERE ${studentParents.studentId} = ${students.id})
+          OR EXISTS (
+            SELECT 1 FROM ${studentParents}
+            INNER JOIN ${parents} ON ${parents.id} = ${studentParents.parentId}
+            WHERE ${studentParents.studentId} = ${students.id}
+              AND (NULLIF(TRIM(${parents.phone}), '') IS NULL OR NULLIF(TRIM(${parents.cin}), '') IS NULL)
+          )
+        )`,
         classId: studentEnrollmentPlacements.classId,
         sectionId: studentEnrollmentPlacements.sectionId,
         class: {

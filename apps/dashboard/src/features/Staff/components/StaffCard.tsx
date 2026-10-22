@@ -1,11 +1,12 @@
 "use client";
 
 import React from 'react';
-import { Phone, Mail, Wallet } from 'lucide-react';
+import { Phone, Mail, Wallet, MapPinned } from 'lucide-react';
 import { NBadge, Label, NAvatar, NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { getStaffAvatar } from '../utils/staffAvatar';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { formatAssignments } from '../utils/staffAssignments';
 
 const resolveRoleLabel = (staff, language, t) => {
   if (!staff?.role) return '-';
@@ -16,7 +17,7 @@ const resolveRoleLabel = (staff, language, t) => {
   return t(key) === key ? staff.role : t(key);
 };
 
-const StaffCard = ({ data }) => {
+const StaffCard = ({ data, details = false }) => {
   const { t, language } = useTranslation();
   const { majorMoney } = useSchoolFormat();
   const staff = data;
@@ -53,10 +54,21 @@ const StaffCard = ({ data }) => {
         <div className="space-y-2">
 
           <NSectionInfo
+            icon={MapPinned}
+            iconColor="text-muted-foreground"
+            label={t('staff.table.assignments')}
+            value={<span className="whitespace-normal break-words">{formatAssignments(staff, language)}</span>}
+            className="flex-wrap items-start"
+          />
+
+          <NSectionInfo
             icon={Phone}
             iconColor="text-muted-foreground"
             label={t('staff.table.phone')}
             value={staff?.phone || '-'}
+            maxChars={details ? Infinity : 12}
+            valueColor={details ? 'min-w-0 whitespace-pre-wrap [overflow-wrap:anywhere]' : undefined}
+            className={details ? 'flex-wrap items-start [&>svg]:shrink-0' : undefined}
           />
 
           <NSectionInfo
@@ -64,7 +76,9 @@ const StaffCard = ({ data }) => {
             iconColor="text-muted-foreground"
             label={t('staff.form.email')}
             value={staff?.email || '-'}
-            maxChars={22}
+            maxChars={details ? Infinity : 22}
+            valueColor={details ? 'min-w-0 whitespace-pre-wrap [overflow-wrap:anywhere]' : undefined}
+            className={details ? 'flex-wrap items-start [&>svg]:shrink-0' : undefined}
           />
 
           <NSectionInfo

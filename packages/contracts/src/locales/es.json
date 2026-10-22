@@ -928,6 +928,8 @@
       "widgetsRetrieved": "Widgets del panel recuperados exitosamente"
     },
     "finance": {
+      "collectionRateDueHint": "Importes pagados de cuotas ya vencidas. Se excluyen las cuotas pagadas por adelantado.",
+      "collectionRateDue": "Tasa de cobro de cuotas vencidas",
       "aging1_30": "1-30 días",
       "aging31_60": "31-60 días",
       "aging60plus": "60+ días",
@@ -993,6 +995,10 @@
     }
   },
   "common": {
+    "filters": "Filtros",
+    "deleteFailedCount": "No se pudieron eliminar {{count}} registro(s)",
+    "deletedCount": "{{count}} registro(s) eliminado(s)",
+    "deleteSelected": "Eliminar selección ({{count}})",
     "backToDashboard": "Volver al panel",
     "feedback": {
       "loadingLabel": "Cargando...",
@@ -1507,6 +1513,8 @@
       "beforeHire": "El período de nómina no puede ser anterior al mes de contratación del empleado."
     },
     "stats": {
+      "paidStaff": "Pagados / Personal",
+      "totalPayroll": "Total de nóminas (pagadas + pendientes)",
       "period": "Periodo",
       "payroll": "Nómina",
       "pending": "Pendiente",
@@ -2085,8 +2093,8 @@
     "teachers": {
       "create": "¿Crear este profesor?",
       "update": "¿Actualizar este profesor?",
-      "delete": "¿Eliminar este profesor? Esta acción no se puede deshacer.",
-      "bulkDelete": "¿Eliminar estos profesores? Esta acción no se puede deshacer.",
+      "delete": "¿Eliminar este profesor? Esta acción no se puede deshacer. Se eliminarán permanentemente el docente, su cuenta de acceso y sus asignaciones docentes de todos los cursos escolares.",
+      "bulkDelete": "¿Eliminar estos profesores? Esta acción no se puede deshacer. Se eliminarán permanentemente los docentes seleccionados, sus cuentas de acceso y sus asignaciones docentes de todos los cursos escolares.",
       "deleteAll": "¿Eliminar todos los profesores? Esta acción no se puede deshacer.",
       "assignSubject": "¿Asignar esta materia al profesor?",
       "unassignSubject": "¿Desasignar esta materia del profesor?",
@@ -2585,7 +2593,9 @@
       "nameExists": "Ya existe una clase con este nombre",
       "invalidAcademicYear": "Formato de año escolar no válido",
       "hasSections": "Elimine las secciones de esta clase antes de eliminarla",
-      "classRequired": "La clase es obligatoria"
+      "classRequired": "La clase es obligatoria",
+      "hasStaff": "Personal asignado a esta clase: {{names}}. Quite sus asignaciones antes de eliminarla.",
+      "inactiveCycle": "Seleccione un ciclo activo."
     },
     "subtitle": {
       "count": "Total: {{count}}"
@@ -3150,6 +3160,13 @@
     }
   },
   "parents": {
+    "family": {
+      "selectParent": "Seleccionar un padre o madre",
+      "linkParent": "Vincular padre o madre",
+      "unlink": "Desvincular",
+      "unlinkWarning": "¿Eliminar este vínculo familiar? Se conservarán las fichas del padre o madre y del estudiante.",
+      "immediateChanges": "Los vínculos familiares se guardan inmediatamente, por separado de la ficha del estudiante."
+    },
     "subtitle": {
       "count": "Total: {{count}}"
     },
@@ -3194,6 +3211,8 @@
       "createTitle": "Crear un nuevo padre o madre"
     },
     "filters": {
+      "missingDetails": "Datos de los padres incompletos",
+      "withoutStudents": "Sin alumnos",
       "filterByRelationship": "Filtrar por relación",
       "searchByEmail": "Buscar por correo...",
       "searchByName": "Buscar por nombre..."
@@ -3232,6 +3251,9 @@
       "noParentsAdded": "Aún no se han añadido padres."
     },
     "profile": {
+      "selectStudent": "Seleccionar alumno",
+      "unlinkStudent": "Desvincular alumno",
+      "linkStudent": "Vincular alumno",
       "activeStudents": "Estudiantes activos",
       "additionalInfo": "Información adicional",
       "addressInfo": "Dirección",
@@ -3388,6 +3410,7 @@
       "voidReason": "Motivo de la anulación de este pago"
     },
     "register": {
+      "amountToRecord": "Importe a registrar",
       "missing": "Faltante",
       "giveCustomer": "Cambio",
       "title": "Caja",
@@ -3396,6 +3419,7 @@
       "selectedItems": "Seleccionados: {{count}}"
     },
     "errors": {
+      "checkNumberExists": "Ya hay un cheque con este número registrado para este alumno.",
       "recordFailed": "No se pudo registrar el pago. Inténtalo de nuevo.",
       "studentMissing": "Falta la información del estudiante",
       "insufficientCash": "Efectivo insuficiente. Añade {{amount}} para cubrir las cuotas seleccionadas.",
@@ -3581,7 +3605,8 @@
       "hasStudents": "Esta sección tiene alumnos; muévalos antes de eliminarla o moverla",
       "sectionRequired": "La sección es obligatoria",
       "validationFailed": "No se pudo identificar la sección",
-      "classOutsideSelectedYear": "La clase de la sección debe pertenecer al año escolar seleccionado"
+      "classOutsideSelectedYear": "La clase de la sección debe pertenecer al año escolar seleccionado",
+      "hasAssignments": "Docentes o personal asignados: {{names}}. Reasígnelos antes de eliminar o mover esta sección."
     },
     "subtitle": {
       "count": "Total: {{count}}"
@@ -4174,6 +4199,7 @@
       "viewTitle": "Detalles"
     },
     "filters": {
+      "missingParentDetails": "Datos de los padres incompletos",
       "filterByClass": "Filtrar por clase",
       "filterBySection": "Filtrar por sección",
       "searchByName": "Buscar por nombre..."
@@ -4270,7 +4296,7 @@
       "noPreviousSchoolRecorded": "Escuela anterior no registrada",
       "noMedicalConditionsRecorded": "No hay condiciones médicas registradas",
       "noParentsLinked": "No hay padres vinculados a este estudiante",
-      "noParentsLinkedHelp": "Los padres pueden vincularse al editar el perfil del estudiante",
+      "noParentsLinkedHelp": "La información de los padres está pendiente de completar.",
       "noResponsibilities": "No hay responsabilidades especiales registradas",
       "emergencyContact": "Contacto de emergencia",
       "financialResponsibility": "Responsabilidad financiera",
@@ -4394,7 +4420,7 @@
       }
     },
     "card": {
-      "massarCode": "Código Massar"
+      "massarCode": "Código"
     }
   },
   "cycles": {
@@ -4409,11 +4435,16 @@
     "form": {
       "cycleInformation": "Información del ciclo",
       "name": "Nombre",
+      "namePlaceholder": "Ej.: Primaria",
       "labels": "Etiquetas",
       "labelFr": "Etiqueta en francés",
+      "labelFrPlaceholder": "Ej.: Primaire",
       "labelAr": "Etiqueta en árabe",
+      "labelArPlaceholder": "Ej.: الابتدائي",
       "labelEs": "Etiqueta en español",
+      "labelEsPlaceholder": "Ej.: Primaria",
       "sortOrder": "Orden",
+      "sortOrderPlaceholder": "Ej.: 1",
       "active": "Activo"
     },
     "dialogs": {
@@ -4491,6 +4522,7 @@
   "teachers": {
     "errors": {
       "hasAssignmentHistory": "Este docente tiene asignaciones de clase en un curso escolar. Elimínelas antes de borrar al docente",
+      "hasRecordedHistory": "Este docente tiene evaluaciones, exámenes, registros de asistencia o clases en un horario. Desactívelo para conservar estos registros.",
       "invitationEmailRequired": "El correo es obligatorio para enviar el enlace de activación del profesor",
       "notFound": "Docente no encontrado",
       "datedRosterUnreviewed": "Las listas fechadas de un docente requieren un historial de asignaciones revisado",
@@ -4507,6 +4539,8 @@
       "count": "Total: {{count}}"
     },
     "dialogs": {
+      "deleteWarning": "Se eliminarán permanentemente el docente, su cuenta de acceso y sus asignaciones docentes de todos los cursos escolares.",
+      "bulkDeleteWarning": "Se eliminarán permanentemente los docentes seleccionados, sus cuentas de acceso y sus asignaciones docentes de todos los cursos escolares.",
       "bulkDeleteItemName": "elemento",
       "createButton": "Crear",
       "createTitle": "Crear",
@@ -5448,7 +5482,8 @@
       "endOutsideInterval": "La fecha de fin está fuera del periodo de matrícula",
       "noOpenPlacementEnd": "No hay una ubicación abierta que finalizar",
       "endBeforePlacement": "La fecha de fin debe ser posterior al inicio de la ubicación actual",
-      "futureEnd": "Una matrícula del año activo no puede terminar en el futuro"
+      "futureEnd": "Una matrícula del año activo no puede terminar en el futuro",
+      "sectionFull": "La sección {{name}} está completa (máximo {{capacity}} estudiantes)."
     }
   },
   "calendar": {
@@ -6013,5 +6048,13 @@
     "behaviorTimeIsRequired": "La hora de la conducta es obligatoria",
     "schoolEmailRequired": "El correo de la escuela es obligatorio",
     "schoolAddressRequired": "La dirección de la escuela es obligatoria"
+  },
+  "academic": {
+    "accountantAssignmentOptional": "La asignación a un ciclo es opcional. Puede añadirla más tarde.",
+    "deleteWarning": "Los registros vinculados están protegidos. Los registros eliminados no se pueden recuperar.",
+    "classRequired": "Seleccione una clase.",
+    "cycleNameRequired": "El nombre del ciclo es obligatorio.",
+    "subjectSearch": "Buscar por nombre o código de asignatura...",
+    "staffAssignmentOptional": "La asignación de clases es opcional. Puede añadirla más tarde."
   }
 }

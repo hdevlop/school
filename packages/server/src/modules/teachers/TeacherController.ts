@@ -181,8 +181,8 @@ export class TeacherController {
   @Validate(deleteBulkTeacherDto)
   @McpTool({ description: 'Delete multiple teachers by IDs', confirm: { level: 'danger', message: 'confirm.teachers.bulkDelete' } })
   @ResMsg('teachers.success.bulkDeleted')
-  async deleteBulk(@Body() body: DeleteBulkTeacherDto) {
-    return this.teacherService.deleteBulk(body);
+  async deleteBulk(@Body() body: DeleteBulkTeacherDto, @User() user: { role?: string }) {
+    return this.teacherService.deleteBulk(body, user?.role);
   }
 
   @Delete('/:id')
@@ -190,8 +190,8 @@ export class TeacherController {
   @Validate({ params: teacherIdParam })
   @McpTool({ description: 'Delete a teacher by ID', confirm: { level: 'danger', message: 'confirm.teachers.delete' } })
   @ResMsg('teachers.success.deleted')
-  async deleteById(@Params('id') id: string) {
-    return this.teacherService.delete(id);
+  async deleteById(@Params('id') id: string, @User() user: { role?: string }) {
+    return this.teacherService.delete(id, user?.role);
   }
 
   @Delete()

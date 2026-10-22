@@ -7,14 +7,14 @@ import { FormInput, NForm, NFormSectionHeader as FormSectionHeader } from 'najm-
 import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
 
-const cycleSchema = z.object({
+const createCycleSchema = (t: (key: string) => string) => z.object({
   id: z.string().optional(),
-  name: z.string().min(1),
+  name: z.string().trim().min(1, t('academic.cycleNameRequired')),
   labels: z.object({
     fr: z.string().optional().or(z.literal('')),
     ar: z.string().optional().or(z.literal('')),
     es: z.string().optional().or(z.literal('')),
-  }).optional(),
+  }).passthrough().optional(),
   sortOrder: z.coerce.number().int().min(0).optional().default(0),
   active: z.boolean().optional().default(true),
 });
@@ -43,6 +43,7 @@ const CycleForm = ({ cycle = null }) => {
     sortOrder: cycle?.sortOrder ?? 0,
     active: cycle?.active ?? true,
     labels: {
+      ...cycle?.labels,
       fr: cycle?.labels?.fr || '',
       ar: cycle?.labels?.ar || '',
       es: cycle?.labels?.es || '',
@@ -52,18 +53,18 @@ const CycleForm = ({ cycle = null }) => {
   return (
     <NForm
       id="cycle-form"
-      schema={cycleSchema}
+      schema={createCycleSchema(t)}
       defaultValues={defaultValues}
       onSubmit={(data) => pop(cleanCyclePayload(data))}
     >
       <div className="flex flex-col gap-4">
         <FormSectionHeader icon={CalendarRange} title={t('cycles.form.cycleInformation')} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormInput name="name" type="text" formLabel={t('cycles.form.name')} icon={CalendarRange} required />
-          <FormInput name="sortOrder" type="number" formLabel={t('cycles.form.sortOrder')} icon={Hash} />
-          <FormInput name="labels.fr" type="text" formLabel={t('cycles.form.labelFr')} icon={Languages} />
-          <FormInput name="labels.ar" type="text" formLabel={t('cycles.form.labelAr')} icon={Languages} />
-          <FormInput name="labels.es" type="text" formLabel={t('cycles.form.labelEs')} icon={Languages} />
+          <FormInput name="name" type="text" formLabel={t('cycles.form.name')} placeholder={t('cycles.form.namePlaceholder')} icon={CalendarRange} required />
+          <FormInput name="sortOrder" type="number" formLabel={t('cycles.form.sortOrder')} placeholder={t('cycles.form.sortOrderPlaceholder')} icon={Hash} />
+          <FormInput name="labels.fr" type="text" formLabel={t('cycles.form.labelFr')} placeholder={t('cycles.form.labelFrPlaceholder')} icon={Languages} />
+          <FormInput name="labels.ar" type="text" formLabel={t('cycles.form.labelAr')} placeholder={t('cycles.form.labelArPlaceholder')} icon={Languages} />
+          <FormInput name="labels.es" type="text" formLabel={t('cycles.form.labelEs')} placeholder={t('cycles.form.labelEsPlaceholder')} icon={Languages} />
           <FormInput name="active" type="switch" formLabel={t('cycles.form.active')} icon={ToggleRight} />
         </div>
       </div>

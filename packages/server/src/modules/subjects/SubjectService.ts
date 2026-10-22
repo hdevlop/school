@@ -19,16 +19,26 @@ export class SubjectService {
   }
 
   async create(data: CreateSubjectDto) {
+    data = { ...data, code: data.code.trim().toUpperCase() };
     await this.subjectValidator.ensureCodeUnique(data.code);
-    return this.subjectRepository.create(data);
+    try {
+      return await this.subjectRepository.create(data);
+    } catch (error) {
+      this.subjectValidator.refuseDuplicateCode(error);
+    }
   }
 
   async update(id: string, data: UpdateSubjectDto) {
+    if (data.code !== undefined) data = { ...data, code: data.code.trim().toUpperCase() };
     await this.subjectValidator.ensureExists(id);
     if (data.code) {
       await this.subjectValidator.ensureCodeUnique(data.code, id);
     }
-    return this.subjectRepository.update(id, data);
+    try {
+      return await this.subjectRepository.update(id, data);
+    } catch (error) {
+      this.subjectValidator.refuseDuplicateCode(error);
+    }
   }
 
   // A subject is shared by every year; one that any year uses stays.

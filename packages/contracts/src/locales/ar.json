@@ -929,6 +929,8 @@
       "totalExpenses": "مجموع المصاريف"
     },
     "finance": {
+      "collectionRateDueHint": "المبالغ المدفوعة من الأقساط المستحقة حتى اليوم. لا تشمل الأقساط المدفوعة مسبقاً.",
+      "collectionRateDue": "نسبة تحصيل الأقساط المستحقة",
       "totalStudents": "إجمالي الطلاب",
       "totalTeachers": "إجمالي المعلمين",
       "incomeMonth": "الإيرادات (الشهر)",
@@ -1007,6 +1009,10 @@
     }
   },
   "common": {
+    "filters": "الفلاتر",
+    "deleteFailedCount": "تعذر حذف {{count}} سجل",
+    "deletedCount": "تم حذف {{count}} سجل",
+    "deleteSelected": "حذف المحدد ({{count}})",
     "backToDashboard": "العودة إلى لوحة التحكم",
     "feedback": {
       "loadingLabel": "جاري التحميل...",
@@ -1521,6 +1527,8 @@
       "beforeHire": "لا يمكن أن تسبق فترة الأجر شهر توظيف الموظف."
     },
     "stats": {
+      "paidStaff": "المدفوع لهم / الموظفون",
+      "totalPayroll": "إجمالي الرواتب (المدفوعة وغير المدفوعة)",
       "period": "الفترة",
       "payroll": "الرواتب",
       "pending": "قيد الانتظار",
@@ -2099,8 +2107,8 @@
     "teachers": {
       "create": "هل تريد إنشاء هذا المعلم؟",
       "update": "هل تريد تحديث هذا المعلم؟",
-      "delete": "هل تريد حذف هذا المعلم؟ لا يمكن التراجع عن هذا الإجراء.",
-      "bulkDelete": "هل تريد حذف هؤلاء المعلمين؟ لا يمكن التراجع عن هذا الإجراء.",
+      "delete": "هل تريد حذف هذا المعلم؟ لا يمكن التراجع عن هذا الإجراء. سيُحذف المعلم وحساب دخوله وتكليفاته التدريسية في جميع السنوات الدراسية نهائيًا.",
+      "bulkDelete": "هل تريد حذف هؤلاء المعلمين؟ لا يمكن التراجع عن هذا الإجراء. سيُحذف المعلمون المحددون وحسابات دخولهم وتكليفاتهم التدريسية في جميع السنوات الدراسية نهائيًا.",
       "deleteAll": "هل تريد حذف جميع المعلمين؟ لا يمكن التراجع عن هذا الإجراء.",
       "assignSubject": "هل تريد إسناد هذه المادة للمعلم؟",
       "unassignSubject": "هل تريد إلغاء إسناد هذه المادة من المعلم؟",
@@ -2599,7 +2607,9 @@
       "nameExists": "يوجد قسم بهذا الاسم مسبقاً",
       "invalidAcademicYear": "صيغة السنة الدراسية غير صالحة",
       "hasSections": "احذف شعب هذا القسم قبل حذفه",
-      "classRequired": "القسم مطلوب"
+      "classRequired": "القسم مطلوب",
+      "hasStaff": "الموظفون المعينون في هذا القسم: {{names}}. أزل تعييناتهم قبل حذفه.",
+      "inactiveCycle": "يرجى اختيار سلك نشط."
     },
     "subtitle": {
       "count": "الإجمالي: {{count}}"
@@ -3164,6 +3174,13 @@
     }
   },
   "parents": {
+    "family": {
+      "selectParent": "اختر ولي أمر",
+      "linkParent": "ربط ولي أمر",
+      "unlink": "إلغاء الربط",
+      "unlinkWarning": "هل تريد إلغاء هذا الربط العائلي؟ سيتم الاحتفاظ بسجلي ولي الأمر والتلميذ.",
+      "immediateChanges": "تُحفظ الروابط العائلية فوراً، بشكل مستقل عن بيانات التلميذ."
+    },
     "subtitle": {
       "count": "الإجمالي: {{count}}"
     },
@@ -3208,6 +3225,8 @@
       "createTitle": "إنشاء ولي أمر جديد"
     },
     "filters": {
+      "missingDetails": "بيانات أولياء الأمور ناقصة",
+      "withoutStudents": "بدون تلاميذ",
       "filterByRelationship": "تصفية حسب العلاقة",
       "searchByEmail": "ابحث بالبريد الإلكتروني...",
       "searchByName": "ابحث بالاسم..."
@@ -3246,6 +3265,9 @@
       "noParentsAdded": "لم تتم إضافة أي ولي أمر بعد."
     },
     "profile": {
+      "selectStudent": "اختر تلميذا",
+      "unlinkStudent": "إلغاء الربط",
+      "linkStudent": "ربط تلميذ",
       "activeStudents": "التلاميذ النشطون",
       "additionalInfo": "معلومات إضافية",
       "addressInfo": "العنوان",
@@ -3402,6 +3424,7 @@
       "voidReason": "سبب إلغاء هذه الدفعة"
     },
     "register": {
+      "amountToRecord": "المبلغ المراد تسجيله",
       "missing": "الناقص",
       "giveCustomer": "الباقي للزبون",
       "title": "الصندوق",
@@ -3410,6 +3433,7 @@
       "selectedItems": "المحدد: {{count}}"
     },
     "errors": {
+      "checkNumberExists": "سبق تسجيل شيك بهذا الرقم لهذا التلميذ.",
       "recordFailed": "تعذر تسجيل الدفع. حاول مرة أخرى.",
       "studentMissing": "معلومات التلميذ مفقودة",
       "insufficientCash": "المبلغ غير كافٍ. أضف {{amount}} لتغطية الأقساط المحددة.",
@@ -3595,7 +3619,8 @@
       "hasStudents": "في هذه الشعبة تلاميذ؛ انقلهم قبل حذفها أو نقلها",
       "sectionRequired": "الشعبة مطلوبة",
       "validationFailed": "تعذّر تحديد الشعبة",
-      "classOutsideSelectedYear": "يجب أن ينتمي قسم الشعبة إلى السنة الدراسية المحددة"
+      "classOutsideSelectedYear": "يجب أن ينتمي قسم الشعبة إلى السنة الدراسية المحددة",
+      "hasAssignments": "الأساتذة أو الموظفون المعينون: {{names}}. أعد تعيينهم قبل حذف هذه المجموعة أو نقلها."
     },
     "subtitle": {
       "count": "الإجمالي: {{count}}"
@@ -4188,6 +4213,7 @@
       "viewTitle": "التفاصيل"
     },
     "filters": {
+      "missingParentDetails": "بيانات أولياء الأمور ناقصة",
       "filterByClass": "تصفية حسب القسم",
       "filterBySection": "تصفية حسب الفوج",
       "searchByName": "ابحث بالاسم..."
@@ -4284,7 +4310,7 @@
       "noPreviousSchoolRecorded": "لا توجد مدرسة سابقة مسجلة",
       "noMedicalConditionsRecorded": "لا توجد حالات صحية مسجلة",
       "noParentsLinked": "لا يوجد ولي أمر مرتبط بهذا التلميذ",
-      "noParentsLinkedHelp": "يمكن ربط أولياء الأمور عند تعديل ملف التلميذ",
+      "noParentsLinkedHelp": "لا تزال معلومات أولياء الأمور بحاجة إلى استكمال.",
       "noResponsibilities": "لا توجد مسؤوليات خاصة مسجلة",
       "emergencyContact": "جهة اتصال للطوارئ",
       "financialResponsibility": "المسؤولية المالية",
@@ -4408,7 +4434,7 @@
       }
     },
     "card": {
-      "massarCode": "رمز مسار"
+      "massarCode": "رمز"
     }
   },
   "cycles": {
@@ -4423,11 +4449,16 @@
     "form": {
       "cycleInformation": "معلومات السلك",
       "name": "الاسم",
+      "namePlaceholder": "مثال: الابتدائي",
       "labels": "التسميات",
       "labelFr": "التسمية بالفرنسية",
+      "labelFrPlaceholder": "مثال: Primaire",
       "labelAr": "التسمية بالعربية",
+      "labelArPlaceholder": "مثال: الابتدائي",
       "labelEs": "التسمية بالإسبانية",
+      "labelEsPlaceholder": "مثال: Primaria",
       "sortOrder": "ترتيب العرض",
+      "sortOrderPlaceholder": "مثال: 1",
       "active": "نشط"
     },
     "dialogs": {
@@ -4505,6 +4536,7 @@
   "teachers": {
     "errors": {
       "hasAssignmentHistory": "لدى هذا المعلم تكليفات صفية في سنة دراسية. أزلها قبل حذف المعلم",
+      "hasRecordedHistory": "لدى هذا المعلم تقييمات أو امتحانات أو سجلات حضور أو حصص في جدول دراسي. عطّل المعلم للاحتفاظ بهذه السجلات.",
       "invitationEmailRequired": "البريد الإلكتروني مطلوب لإرسال رابط تفعيل حساب الأستاذ",
       "notFound": "الأستاذ غير موجود",
       "datedRosterUnreviewed": "تتطلب قوائم الأستاذ المؤرخة سجل إسنادات مُراجَعًا",
@@ -4521,6 +4553,8 @@
       "count": "الإجمالي: {{count}}"
     },
     "dialogs": {
+      "deleteWarning": "سيُحذف المعلم وحساب دخوله وتكليفاته التدريسية في جميع السنوات الدراسية نهائيًا.",
+      "bulkDeleteWarning": "سيُحذف المعلمون المحددون وحسابات دخولهم وتكليفاتهم التدريسية في جميع السنوات الدراسية نهائيًا.",
       "bulkDeleteItemName": "العنصر",
       "createButton": "إنشاء",
       "createTitle": "إنشاء",
@@ -5462,7 +5496,8 @@
       "endOutsideInterval": "تاريخ النهاية خارج فترة التسجيل",
       "noOpenPlacementEnd": "لا يوجد تسكين جارٍ لإنهائه",
       "endBeforePlacement": "يجب أن يلي تاريخ النهاية بداية التسكين الحالي",
-      "futureEnd": "لا يمكن أن ينتهي تسجيل السنة النشطة في المستقبل"
+      "futureEnd": "لا يمكن أن ينتهي تسجيل السنة النشطة في المستقبل",
+      "sectionFull": "المجموعة {{name}} مكتملة (الحد الأقصى {{capacity}} تلميذاً)."
     }
   },
   "calendar": {
@@ -6027,5 +6062,13 @@
     "behaviorTimeIsRequired": "وقت السلوك مطلوب",
     "schoolEmailRequired": "البريد الإلكتروني للمدرسة مطلوب",
     "schoolAddressRequired": "عنوان المدرسة مطلوب"
+  },
+  "academic": {
+    "accountantAssignmentOptional": "التعيين في سلك دراسي اختياري. يمكنك إضافته لاحقاً.",
+    "deleteWarning": "السجلات المرتبطة محمية. لا يمكن استرجاع السجلات المحذوفة.",
+    "classRequired": "يرجى اختيار قسم.",
+    "cycleNameRequired": "اسم السلك مطلوب.",
+    "subjectSearch": "البحث باسم المادة أو رمزها...",
+    "staffAssignmentOptional": "التعيين في الأقسام اختياري. يمكنك إضافته لاحقاً."
   }
 }

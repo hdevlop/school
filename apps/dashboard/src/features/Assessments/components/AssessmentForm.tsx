@@ -46,7 +46,6 @@ const AssessmentTeacherSelect = () => {
     type="select"
     formLabel={t('assessments.form.teacher')}
     placeholder={t('assessments.form.teacherPlaceholder')}
-    formDescription={teacherOptions.length ? undefined : t('assessments.form.teacherAssignmentHint')}
     icon={User}
     items={teacherOptions}
     required

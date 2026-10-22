@@ -100,6 +100,9 @@ const toStaffPayload = (data) => {
   }
 
   if (Array.isArray(payload.assignments)) {
+    if (data.role === 'accountant') {
+      payload.assignments = payload.assignments.filter((assignment) => assignment.cycleId);
+    }
     payload.assignments = payload.assignments
       .map((assignment) => Object.fromEntries(
         Object.entries(assignment).filter(([key, value]) => (
@@ -109,7 +112,7 @@ const toStaffPayload = (data) => {
         ))
       ))
       .filter((assignment) => Object.keys(assignment).length > 0);
-    if (payload.assignments.length === 0) delete payload.assignments;
+    if (payload.assignments.length === 0 && !(payload.id && (data.role === 'assistant' || data.role === 'accountant'))) delete payload.assignments;
   }
 
   return payload;
@@ -427,7 +430,8 @@ const AssignmentsStep = ({ form }) => {
       {role === 'assistant' && (
         <>
           <FormSectionHeader icon={Briefcase} title={t('staff.form.assignments')} />
-          <FormInput name="classIds" type="multiselect" formLabel={t('staff.form.class')} placeholder={t('staff.form.class')} items={classOptions} icon={Briefcase} required />
+          <FormInput name="classIds" type="multiselect" formLabel={t('staff.form.class')} placeholder={t('staff.form.class')} items={classOptions} icon={Briefcase} />
+          <p className="text-sm text-muted-foreground">{t('academic.staffAssignmentOptional')}</p>
         </>
       )}
 
@@ -456,7 +460,10 @@ const AssignmentsStep = ({ form }) => {
               </div>
             )}
             {role === 'accountant' && (
-              <FormInput name="assignments.0.cycleId" type="select" formLabel={t('staff.form.cycle')} placeholder={t('staff.form.cycle')} items={cycleOptions} icon={Briefcase} required />
+              <div className="space-y-2 md:col-span-2">
+                <FormInput name="assignments.0.cycleId" type="select" formLabel={t('staff.form.cycle')} placeholder={t('staff.form.cycle')} items={cycleOptions} icon={Briefcase} />
+                <p className="text-sm text-muted-foreground">{t('academic.accountantAssignmentOptional')}</p>
+              </div>
             )}
             {role === 'driver' ? null : (
               <>

@@ -173,8 +173,6 @@ export const PersonalInfoContent = ({ requireEmail = true }) => {
             title={t('teachers.form.personalInformation')}
          />
 
-         {requireEmail && <p className='mb-3 text-xs text-muted-foreground'>{t('teachers.form.emailHelp')}</p>}
-
          <div className='grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4'>
             <AvatarFormInput
                name='image'

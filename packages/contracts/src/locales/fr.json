@@ -632,6 +632,10 @@
     }
   },
   "common": {
+    "filters": "Filtres",
+    "deleteFailedCount": "{{count}} fiche(s) non supprimée(s)",
+    "deletedCount": "{{count}} fiche(s) supprimée(s)",
+    "deleteSelected": "Supprimer la sélection ({{count}})",
     "backToDashboard": "Retour au tableau de bord",
     "feedback": {
       "loadingLabel": "Chargement...",
@@ -1595,6 +1599,8 @@
       "totalExpenses": "Total des dépenses"
     },
     "finance": {
+      "collectionRateDueHint": "Montants payés sur les échéances déjà dues. Les échéances payées à l’avance sont exclues.",
+      "collectionRateDue": "Taux de recouvrement des échéances dues",
       "totalStudents": "Total Élèves",
       "totalTeachers": "Total Enseignants",
       "incomeMonth": "Revenus (mois)",
@@ -2052,6 +2058,8 @@
       "beforeHire": "La période de paie ne peut pas précéder le mois d’embauche du salarié."
     },
     "stats": {
+      "paidStaff": "Payés / Personnel",
+      "totalPayroll": "Total des salaires (payés + impayés)",
       "period": "Période",
       "payroll": "Paie",
       "pending": "En attente",
@@ -2819,8 +2827,8 @@
     "teachers": {
       "create": "Créer cet enseignant ?",
       "update": "Mettre à jour cet enseignant ?",
-      "delete": "Supprimer cet enseignant ? Cette action est irréversible.",
-      "bulkDelete": "Supprimer ces enseignants ? Cette action est irréversible.",
+      "delete": "Supprimer cet enseignant ? Cette action est irréversible. Cet enseignant, son compte de connexion et ses affectations pédagogiques de toutes les années scolaires seront supprimés définitivement.",
+      "bulkDelete": "Supprimer ces enseignants ? Cette action est irréversible. Les enseignants sélectionnés, leurs comptes de connexion et leurs affectations pédagogiques de toutes les années scolaires seront supprimés définitivement.",
       "deleteAll": "Supprimer tous les enseignants ? Cette action est irréversible.",
       "assignSubject": "Attribuer cette matière à l'enseignant ?",
       "unassignSubject": "Retirer cette matière à l'enseignant ?",
@@ -3319,7 +3327,9 @@
       "nameExists": "Une classe portant ce nom existe déjà",
       "invalidAcademicYear": "Format d'année scolaire invalide",
       "hasSections": "Supprimez les sections de cette classe avant de la supprimer",
-      "classRequired": "La classe est obligatoire"
+      "classRequired": "La classe est obligatoire",
+      "hasStaff": "Personnel affecté à cette classe : {{names}}. Retirez ces affectations avant de la supprimer.",
+      "inactiveCycle": "Veuillez sélectionner un cycle actif."
     },
     "subtitle": {
       "count": "Total : {{count}}"
@@ -3376,11 +3386,16 @@
     "form": {
       "cycleInformation": "Informations sur le cycle",
       "name": "Nom",
+      "namePlaceholder": "Ex. : Primaire",
       "labels": "Libellés",
       "labelFr": "Libellé français",
+      "labelFrPlaceholder": "Ex. : Primaire",
       "labelAr": "Libellé arabe",
+      "labelArPlaceholder": "Ex. : الابتدائي",
       "labelEs": "Libellé espagnol",
+      "labelEsPlaceholder": "Ex. : Primaria",
       "sortOrder": "Ordre de tri",
+      "sortOrderPlaceholder": "Ex. : 1",
       "active": "Actif"
     },
     "dialogs": {
@@ -3801,6 +3816,13 @@
     }
   },
   "parents": {
+    "family": {
+      "selectParent": "Choisir un parent",
+      "linkParent": "Lier un parent",
+      "unlink": "Dissocier",
+      "unlinkWarning": "Supprimer ce lien familial ? Les fiches du parent et de l’élève seront conservées.",
+      "immediateChanges": "Les liens familiaux sont enregistrés immédiatement, séparément de la fiche de l’élève."
+    },
     "subtitle": {
       "count": "Total : {{count}}"
     },
@@ -3845,6 +3867,8 @@
       "createTitle": "Créer un nouveau parent"
     },
     "filters": {
+      "missingDetails": "Informations parentales manquantes",
+      "withoutStudents": "Sans élèves",
       "filterByRelationship": "Filtrer par relation",
       "searchByEmail": "Rechercher par e-mail...",
       "searchByName": "Rechercher par nom..."
@@ -3883,6 +3907,9 @@
       "noParentsAdded": "Aucun parent ajouté pour le moment."
     },
     "profile": {
+      "selectStudent": "Sélectionner un élève",
+      "unlinkStudent": "Délier l’élève",
+      "linkStudent": "Lier un élève",
       "activeStudents": "Élèves actifs",
       "additionalInfo": "Informations supplémentaires",
       "addressInfo": "Adresse",
@@ -4039,6 +4066,7 @@
       "voidReason": "Motif de l'annulation de ce paiement"
     },
     "register": {
+      "amountToRecord": "Montant à enregistrer",
       "missing": "Manquant",
       "giveCustomer": "À rendre",
       "title": "Caisse",
@@ -4047,6 +4075,7 @@
       "selectedItems": "Sélectionnés : {{count}}"
     },
     "errors": {
+      "checkNumberExists": "Un chèque portant ce numéro est déjà enregistré pour cet élève.",
       "recordFailed": "Échec de l'enregistrement du paiement. Veuillez réessayer.",
       "studentMissing": "Les informations de l'élève sont manquantes",
       "insufficientCash": "Liquidités insuffisantes. Ajoutez {{amount}} pour couvrir les échéances sélectionnées.",
@@ -4188,7 +4217,8 @@
       "hasStudents": "Cette section a des élèves ; déplacez-les avant de la supprimer ou de la déplacer",
       "sectionRequired": "La section est obligatoire",
       "validationFailed": "La section n'a pas pu être identifiée",
-      "classOutsideSelectedYear": "La classe de la section doit appartenir à l'année scolaire sélectionnée"
+      "classOutsideSelectedYear": "La classe de la section doit appartenir à l'année scolaire sélectionnée",
+      "hasAssignments": "Enseignants ou personnel affectés : {{names}}. Réaffectez-les avant de supprimer ou déplacer cette section."
     },
     "subtitle": {
       "count": "Total : {{count}}"
@@ -4321,6 +4351,7 @@
       "viewTitle": "Détails"
     },
     "filters": {
+      "missingParentDetails": "Informations parentales manquantes",
       "filterByClass": "Filtrer par classe",
       "filterBySection": "Filtrer par section",
       "searchByName": "Rechercher par nom..."
@@ -4417,7 +4448,7 @@
       "noPreviousSchoolRecorded": "Aucune école précédente renseignée",
       "noMedicalConditionsRecorded": "Aucun problème médical renseigné",
       "noParentsLinked": "Aucun parent lié à cet élève",
-      "noParentsLinkedHelp": "Les parents peuvent être liés lors de la modification du profil de l’élève",
+      "noParentsLinkedHelp": "Les informations des parents restent à compléter.",
       "noResponsibilities": "Aucune responsabilité particulière renseignée",
       "emergencyContact": "Contact d’urgence",
       "financialResponsibility": "Responsabilité financière",
@@ -4541,7 +4572,7 @@
       }
     },
     "card": {
-      "massarCode": "Code Massar"
+      "massarCode": "Code"
     }
   },
   "subjects": {
@@ -4595,6 +4626,7 @@
   "teachers": {
     "errors": {
       "hasAssignmentHistory": "Cet enseignant a des affectations de classe dans une année scolaire. Retirez-les avant de le supprimer",
+      "hasRecordedHistory": "Cet enseignant a des évaluations, examens, présences ou cours dans un emploi du temps. Désactivez-le pour conserver ces données.",
       "invitationEmailRequired": "L’e-mail est requis pour envoyer le lien d’activation de l’enseignant",
       "notFound": "Enseignant introuvable",
       "datedRosterUnreviewed": "Les listes datées d'un enseignant exigent un historique d'affectations vérifié",
@@ -4611,6 +4643,8 @@
       "count": "Total : {{count}}"
     },
     "dialogs": {
+      "deleteWarning": "Cet enseignant, son compte de connexion et ses affectations pédagogiques de toutes les années scolaires seront supprimés définitivement.",
+      "bulkDeleteWarning": "Les enseignants sélectionnés, leurs comptes de connexion et leurs affectations pédagogiques de toutes les années scolaires seront supprimés définitivement.",
       "bulkDeleteItemName": "élément",
       "createButton": "Créer",
       "createTitle": "Créer",
@@ -5552,7 +5586,8 @@
       "endOutsideInterval": "La date de fin est en dehors de la période d'inscription",
       "noOpenPlacementEnd": "Aucune affectation en cours à terminer",
       "endBeforePlacement": "La date de fin doit suivre le début de l'affectation actuelle",
-      "futureEnd": "Une inscription de l'année active ne peut pas se terminer dans le futur"
+      "futureEnd": "Une inscription de l'année active ne peut pas se terminer dans le futur",
+      "sectionFull": "La section {{name}} est complète ({{capacity}} élèves maximum)."
     }
   },
   "calendar": {
@@ -6117,5 +6152,13 @@
     "behaviorTimeIsRequired": "L'heure du comportement est obligatoire",
     "schoolEmailRequired": "L’adresse e-mail de l’école est obligatoire",
     "schoolAddressRequired": "L’adresse de l’école est obligatoire"
+  },
+  "academic": {
+    "accountantAssignmentOptional": "L’affectation à un cycle est facultative. Vous pourrez l’ajouter plus tard.",
+    "deleteWarning": "Les données liées sont protégées. La suppression est définitive.",
+    "classRequired": "Veuillez sélectionner une classe.",
+    "cycleNameRequired": "Le nom du cycle est obligatoire.",
+    "subjectSearch": "Rechercher par nom ou code de matière...",
+    "staffAssignmentOptional": "L’affectation aux classes est facultative. Vous pourrez l’ajouter plus tard."
   }
 }

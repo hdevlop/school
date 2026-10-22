@@ -76,6 +76,7 @@ function harness(input: {
       },
     } as any,
     withEnglishMessages(new AcademicYearTransitionValidator()),
+    { ensureSectionCapacity: async () => {} } as any,
   );
   return { service, writes };
 }

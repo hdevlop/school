@@ -95,7 +95,6 @@ export default function RoutineEntryForm({
         <section className="space-y-2 rounded-xl border p-3">
           <div>
             <h3 className="text-sm font-semibold">{t('classRoutines.ui.content.title')}</h3>
-            <p className="text-xs text-muted-foreground">{t('classRoutines.ui.content.help')}</p>
           </div>
           {fields.map((field, index) => {
             const current = groups[index];

@@ -220,6 +220,9 @@ export class PaymentService {
     }
 
     await this.paymentValidator.validate(data);
+    if (data.paymentMethod === 'check') {
+      await this.paymentValidator.ensureCheckNumberUnique(data.studentId, data.checkNumber);
+    }
 
     let resolvedAllocations: Array<{ feeId: string; number: number; amount: number }> =
       (data.allocations as Array<{ feeId: string; number: number; amount: number }>) || [];
@@ -382,6 +385,10 @@ export class PaymentService {
       return result.payment;
     }
     this.paymentValidator.ensureMethodEditable(previous.paymentMethod, data.paymentMethod);
+    if (previous.paymentMethod === 'check' && data.checkNumber !== undefined
+      && data.checkNumber?.trim().toLowerCase() !== previous.checkNumber?.trim().toLowerCase()) {
+      await this.paymentValidator.ensureCheckNumberUnique(previous.studentId, data.checkNumber, id);
+    }
     const paymentData = pickProps(data, UPDATE_KEYS);
     if (
       data.paymentDate !== undefined

@@ -6,6 +6,7 @@ import { HeartHandshake, Phone, UserRound, UsersRound } from 'lucide-react';
 import { NAvatar, NBadge, NCard, NEmptyState } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { FamilyUnlinkButton } from '../FamilyLinkActions';
 import {
   GENDER_TRANSLATION_PREFIX,
   MARITAL_STATUS_TRANSLATION_PREFIX,
@@ -92,10 +93,10 @@ const ParentDetailsTab: React.FC<ParentDetailsTabProps> = ({ parent, linkedChild
         ) : (
           <ul className="divide-y divide-border/60">
             {linkedChildren.map((child) => (
-              <li key={child.id}>
+              <li key={child.id} className="flex items-center gap-2">
                 <Link
                   href={`/students/${child.id}`}
-                  className="flex min-w-0 items-center gap-3 rounded-md px-2 py-2.5 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="flex min-w-0 flex-1 items-center gap-3 rounded-md px-2 py-2.5 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <NAvatar
                     src={child.image}
@@ -118,6 +119,7 @@ const ParentDetailsTab: React.FC<ParentDetailsTabProps> = ({ parent, linkedChild
                     </div>
                   </div>
                 </Link>
+                <FamilyUnlinkButton parentId={parent.id} studentId={child.id} name={child.name} />
               </li>
             ))}
           </ul>

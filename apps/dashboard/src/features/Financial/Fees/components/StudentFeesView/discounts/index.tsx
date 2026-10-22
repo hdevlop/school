@@ -8,6 +8,7 @@ import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes'
 import { useTranslation } from 'najm-i18n/react'
 import { useSchoolFormat } from '@/hooks/useSchoolFormat'
 import EditFeeForm from '../../EditFeeForm'
+import { getFeeDiscountAmount } from '../../../utils/feeUtils'
 
 interface DiscountsTabProps {
   fees: any[]
@@ -21,17 +22,9 @@ export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
   const { updateFee, isUpdating } = useFees({ enabled: false })
   const { majorMoney } = useSchoolFormat()
 
-  const totalDiscount = fees.reduce((sum, fee) => {
-    const base = Number(fee.baseAmount) || 0
-    const net = Number(fee.netAmount) || 0
-    return sum + Math.max(0, base - net)
-  }, 0)
+  const totalDiscount = fees.reduce((sum, fee) => sum + getFeeDiscountAmount(fee), 0)
 
-  const feesWithDiscount = fees.filter(fee => {
-    const base = Number(fee.baseAmount) || 0
-    const net = Number(fee.netAmount) || 0
-    return base - net > 0
-  })
+  const feesWithDiscount = fees.filter(fee => getFeeDiscountAmount(fee) > 0)
 
   const handleEditDiscount = (fee: any) => {
     openDialog({
@@ -74,9 +67,9 @@ export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
 
       <div className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {fees.map((fee) => {
-          const base = Number(fee.baseAmount) || 0
+          const base = Number(fee.grossAmount) || 0
           const net = Number(fee.netAmount) || 0
-          const discount = Math.max(0, base - net)
+          const discount = getFeeDiscountAmount(fee)
           const hasDiscount = discount > 0
           const discountPct = base > 0 ? Math.round((discount / base) * 100) : 0
           const category = fee.feeType?.category || fee.feeTypeCategory || fee.type || fee.category || fee.schedule || 'fee'

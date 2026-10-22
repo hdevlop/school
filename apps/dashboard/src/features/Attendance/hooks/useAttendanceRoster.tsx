@@ -90,11 +90,11 @@ export const useAttendanceRoster = ({
   }, [existingAttendance, selectedDate, fkKey, kind, attendanceMode, allSections, studentContext?.sectionId, studentContext?.teacherAssignmentId]);
 
   const getStatus = useCallback((id: string): RosterMark =>
-    rosterMark(draft[id], existingByPerson.get(id)?.status), [draft, existingByPerson]);
+    rosterMark(draft[id], existingByPerson.get(id)?.status, kind === 'student' ? 'present' : 'unmarked'), [draft, existingByPerson, kind]);
 
   const changes = useMemo(() => kind === 'staff'
     ? changedStaffRosterMarks(roster, draft, detailDraft, existingByPerson)
-    : changedRosterMarks(roster, draft, existingByPerson), [kind, roster, draft, detailDraft, existingByPerson]);
+    : changedRosterMarks(roster, draft, existingByPerson, 'present'), [kind, roster, draft, detailDraft, existingByPerson]);
 
   const getDetails = useCallback((id: string) => detailDraft[id] ?? staffAttendanceDetails(existingByPerson.get(id)), [detailDraft, existingByPerson]);
   const setDetails = useCallback((id: string, details: StaffAttendanceDetails) => {

@@ -198,10 +198,6 @@ export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
             academicYear={viewingYear}
             effectiveDate={effectiveDate}
          />
-         <p className="text-sm text-muted-foreground">
-            {t('fees.classBulk.previewNote')}
-         </p>
-
          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <FormInput
                name='feeTypeId'

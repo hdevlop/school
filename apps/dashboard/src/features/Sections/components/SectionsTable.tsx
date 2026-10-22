@@ -3,6 +3,9 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
+import { useAcademicTableActions } from '@/features/Classes/hooks/useAcademicTableActions';
+import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
+import { deleteSectionApi } from '@/services/sectionApi';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Layers, Plus, SearchX } from 'lucide-react';
 import React, { useMemo } from 'react';
@@ -28,16 +31,16 @@ function SectionsTable() {
     sections,
     createSection,
     updateSection,
-    deleteSection,
     error,
     isSectionsLoading,
     isUpdating,
     isCreating,
-    isDeleting
   } = useSections();
   const filteredSections = useMemo(() => (sections || []).filter(scope.matches), [sections, scope.matches]);
 
-  const { openDialog, confirmDelete } = useDialog();
+  const { openDialog } = useDialog();
+  const tableActions = useAcademicTableActions('sections', deleteSectionApi);
+  const tableMode = useRememberedTableMode('sections', 'table');
 
   const handleAddClick = () => {
     openDialog({
@@ -77,19 +80,6 @@ function SectionsTable() {
     });
   };
 
-  const handleDelete = (section) => {
-    confirmDelete({
-      title: t('common.delete'),
-      warningText: t('common.deleteConfirm'),
-      cancelText: t('common.cancel'),
-      itemName: `Section ${section.name}`,
-      confirmText: t('sections.dialogs.deleteButton'),
-      loading: isDeleting,
-      onConfirm: async () => {
-        await deleteSection(section.id);
-      }
-    });
-  };
 
   const handleCellEdit = async (row, columnId, value) => {
     await updateSection({ ...row, [columnId]: value });
@@ -118,7 +108,8 @@ function SectionsTable() {
         onCreate={handleAddClick}
         onView={handleView}
         onEdit={handleEdit}
-        onDelete={handleDelete}
+        {...tableActions}
+        {...tableMode}
         onCellEdit={handleCellEdit}
         loading={isSectionsLoading}
         error={hasFailedToLoad(error, sections) ? error : null}
@@ -151,7 +142,6 @@ function SectionsTable() {
             description={t('emptyStates.filtered.description')}
           />
         )}
-        defaultMode='table'
         dynamicHeight={true}
       />
     </div>

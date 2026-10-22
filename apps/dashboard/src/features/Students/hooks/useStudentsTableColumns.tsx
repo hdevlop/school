@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import { NAvatar } from 'najm-kit';
-import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import type { ColumnDef } from '@tanstack/react-table';
 
 export const useStudentsTableColumns = () => {
   const { t } = useTranslation();
 
-  return useMemo(() => [
+  return useMemo<ColumnDef<any, any>[]>(() => [
     {
       accessorKey: "studentCode",
       header: t('students.table.studentCode'),
@@ -19,7 +19,7 @@ export const useStudentsTableColumns = () => {
     },
     {
       accessorKey: "name",
-      header: t('students.table.name'),
+      header: () => <span className="student-name-column">{t('students.table.name')}</span>,
       cell: ({ row }) => {
         const student = row.original;
         return (
@@ -43,12 +43,12 @@ export const useStudentsTableColumns = () => {
     },
     {
       accessorKey: 'arabicName',
-      header: t('students.form.arabicName'),
+      header: () => <span className="student-arabic-name-column">{t('students.form.arabicName')}</span>,
       cell: ({ getValue }) => <span lang="ar" dir="rtl">{getValue() || ''}</span>,
     },
     {
       accessorKey: 'email',
-      header: t('students.table.email'),
+      header: () => <span className="student-email-column">{t('students.table.email')}</span>,
       enableSorting: false,
       cell: ({ getValue }) => {
         const email = getValue();
@@ -67,7 +67,7 @@ export const useStudentsTableColumns = () => {
     {
       accessorKey: 'class',
       accessorFn: (row) => row.class?.name || '',
-      header: t('students.table.class'),
+      header: () => <span className="student-class-column">{t('students.table.class')}</span>,
       cell: ({ row }) => {
         const className = row.original.class?.name;
         return className || <span className="text-gray-400">{t('common.notAssigned')}</span>;
@@ -77,7 +77,7 @@ export const useStudentsTableColumns = () => {
     {
       accessorKey: 'section',
       accessorFn: (row) => row.section?.name || '',
-      header: t('students.table.section'),
+      header: () => <span className="student-section-column">{t('students.table.section')}</span>,
       cell: ({ row }) => {
         const sectionName = row.original.section?.name;
         return sectionName || <span className="text-gray-400">{t('common.notAssigned')}</span>;
@@ -86,24 +86,13 @@ export const useStudentsTableColumns = () => {
     },
     {
       accessorKey: "gender",
-      header: t('students.table.gender'),
+      header: () => <span className="student-gender-column">{t('students.table.gender')}</span>,
       enableSorting: true,
       cell: ({ getValue }) => {
         const gender = getValue();
         if (!gender) return <span className="text-gray-400">{t('common.notSpecified')}</span>;
         return gender === 'M' ? t('common.male') : gender === 'F' ? t('common.female') : gender;
       },
-    },
-    {
-      accessorKey: "status",
-      header: t('students.table.status'),
-      enableSorting: true,
-      enableColumnFilter: true,
-      cell: ({ getValue }) => {
-        const status = getValue();
-        return <NBadge status={status} />;
-      },
-      size: 120,
     },
   ], [t]);
 };

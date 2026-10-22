@@ -68,6 +68,7 @@ const AssignStudentFields = ({ students }) => {
         icon={CalendarDays} required />
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <FormLocationInput
+          classNames={{ status: "hidden" }}
           name="pickup"
           formLabel={t('transport.panel.pickupLocation')}
           placeholder={t('transport.panel.pickupPlaceholder')}
@@ -77,6 +78,7 @@ const AssignStudentFields = ({ students }) => {
           onProviderMetaChange={(meta) => form.setValue('pickupPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
         />
         <FormLocationInput
+          classNames={{ status: "hidden" }}
           name="dropoff"
           formLabel={t('transport.panel.dropoffLocation')}
           placeholder={t('transport.panel.dropoffPlaceholder')}

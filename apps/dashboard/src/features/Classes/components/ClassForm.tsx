@@ -19,9 +19,9 @@ const ClassForm = ({ classData = null}) => {
    const { cycles, isCyclesLoading } = useCycles();
    const cycleOptions = [
       { value: '__none__', label: t('common.notAssigned') },
-      ...(cycles || []).map(cycle => ({
+      ...(cycles || []).filter(cycle => cycle.active || cycle.id === classData?.cycleId).map(cycle => ({
          value: cycle.id,
-         label: cycle.labels?.[language] || cycle.name,
+         label: `${cycle.labels?.[language] || cycle.name}${cycle.active ? '' : ` (${t('status.inactive')})`}`,
       })),
    ];
 

@@ -193,6 +193,12 @@ export class PaymentValidator {
     return true;
   }
 
+  async ensureCheckNumberUnique(studentId: string, checkNumber?: string | null, excludeId?: string) {
+    if (!checkNumber?.trim()) return;
+    const duplicate = await this.paymentRepository.findDuplicateCheckUnderLock(studentId, checkNumber, excludeId);
+    if (duplicate) Err(409, this.pt('checkNumberExists'));
+  }
+
   async validateRefund(paymentId) {
     const payment = await this.checkExists(paymentId);
     if (payment.status !== 'completed') {

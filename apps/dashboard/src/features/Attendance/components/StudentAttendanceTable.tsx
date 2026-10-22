@@ -371,13 +371,12 @@ function StudentAttendanceTableForYear() {
           isSubmitting={isSubmitting}
           stats={roster.stats}
           onSubmit={roster.handleSubmit}
-          onMarkAllPresent={() => roster.markAllAs('present')}
           canSubmit={canSubmit && filteredStudents.length > 0 && !isStudentsLoading && !isAttendanceLoading && !attendanceError}
           submitTitle={submitTitle}
         />
       </RosterFilters>
 
-      <NTable
+      <NTable<any>
         responsiveSkeleton
         data={visibleStudents}
         isFilteredEmpty={filteredStudents.length > 0 && visibleStudents.length === 0}

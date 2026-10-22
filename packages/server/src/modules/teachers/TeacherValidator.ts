@@ -44,6 +44,11 @@ export class TeacherValidator {
     if (await this.teacherRepository.hasAnyAssignments(id)) Err(409, this.tt('hasAssignmentHistory'));
   }
 
+  async ensureDeletionAllowed(id: string, actorRole?: string) {
+    if (actorRole !== 'admin') return this.ensureNoAssignmentHistory(id);
+    if (await this.teacherRepository.hasRecordedHistory(id)) Err(409, this.tt('hasRecordedHistory'));
+  }
+
   async ensureUserIdUnique(id: string) {
     await this.userValidator.checkUserIdIsUnique(id);
   }

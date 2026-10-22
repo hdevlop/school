@@ -2,10 +2,10 @@ import 'reflect-metadata';
 import { describe, expect, it } from 'bun:test';
 import { StudentService } from '../../src/modules/students/StudentService';
 import { StudentValidator } from '../../src/modules/students/StudentValidator';
-import { createStudentDto, updateStudentDto } from '../../src/modules/students/StudentDto';
+import { createStudentDto, importStudentDto, updateStudentDto } from '../../src/modules/students/StudentDto';
 import { ParentService } from '../../src/modules/parents/ParentService';
 import { ParentValidator } from '../../src/modules/parents/ParentValidator';
-import { createParentDto } from '../../src/modules/parents/ParentDto';
+import { createParentDto, importParentDto, updateParentDto } from '../../src/modules/parents/ParentDto';
 import { withEnglishMessages } from '../support/englishMessages';
 
 function family() {
@@ -74,7 +74,7 @@ describe('student records and family logins', () => {
   it('registers siblings without student logins and links both to one parent phone account', async () => {
     const f = family();
     for (const studentCode of ['S1', 'S2']) {
-      await f.studentService.create(createStudentDto.parse({ ...student, studentCode, parents: [guardian] }), actor);
+      await f.studentService.createForImport(importStudentDto.parse({ ...student, studentCode, parents: [guardian] }), actor);
     }
     expect(f.students).toHaveLength(2);
     expect(f.students.every(row => row.userId === null)).toBe(true);
@@ -88,7 +88,7 @@ describe('student records and family logins', () => {
   it('preserves guardians without contacts, without merging people solely by name', async () => {
     const f = family();
     for (const studentCode of ['S1', 'S2']) {
-      await f.studentService.create(createStudentDto.parse({ ...student, studentCode, parents: [{ name: guardian.name, relationshipType: 'guardian' }] }), actor);
+      await f.studentService.createForImport(importStudentDto.parse({ ...student, studentCode, parents: [{ name: guardian.name, relationshipType: 'guardian' }] }), actor);
     }
     expect(f.parents).toHaveLength(2);
     expect(f.users).toEqual([]);
@@ -112,7 +112,7 @@ describe('student records and family logins', () => {
 
   it('provisions the same guardian record when their first phone is entered later', async () => {
     const f = family();
-    const record = await f.parentService.create(createParentDto.parse({ name: guardian.name, relationshipType: 'guardian' }));
+    const record = await f.parentService.createForImport(importParentDto.parse({ name: guardian.name, relationshipType: 'guardian' }));
     await f.parentService.update(record.id, { name: 'Fatima Updated', image: '/parent.png' });
     expect(f.users).toEqual([]);
     await f.parentService.update(record.id, { phone: guardian.phone });
@@ -123,10 +123,59 @@ describe('student records and family logins', () => {
 
   it('reuses a known guardian email but rejects identifiers that point to different parents', async () => {
     const f = family();
-    const first = await f.parentService.create(createParentDto.parse({ ...guardian, email: 'guardian@example.ma' }));
-    expect((await f.parentValidator.findReusable(createParentDto.parse({ name: guardian.name, relationshipType: 'guardian', email: 'GUARDIAN@example.ma' })))?.id).toBe(first.id);
+    const first = await f.parentService.createForImport(importParentDto.parse({ ...guardian, email: 'guardian@example.ma' }));
+    expect((await f.parentValidator.findReusable(importParentDto.parse({ name: guardian.name, relationshipType: 'guardian', email: 'GUARDIAN@example.ma' })))?.id).toBe(first.id);
     await f.parentService.create(createParentDto.parse({ name: 'Other Guardian', phone: '+212612345679', cin: 'AB123456', relationshipType: 'guardian' }));
-    await expect(f.parentValidator.findReusable(createParentDto.parse({ ...guardian, cin: 'AB123456' }))).rejects.toThrow();
+    await expect(f.parentValidator.findReusable(importParentDto.parse({ ...guardian, cin: 'AB123456' }))).rejects.toThrow();
     expect(f.parents).toHaveLength(2);
+  });
+});
+
+describe('manual parent requirements and file-import exception', () => {
+  it('allows incremental edits of imported records but refuses clearing contact values', () => {
+    expect(updateParentDto.safeParse({ name: 'Fatima Updated' }).success).toBe(true);
+    expect(updateParentDto.safeParse({ phone: guardian.phone }).success).toBe(true);
+    expect(updateParentDto.safeParse({ cin: 'AB123456' }).success).toBe(true);
+    for (const value of ['', null, '        ']) {
+      expect(updateParentDto.safeParse({ phone: value }).success).toBe(false);
+      expect(updateParentDto.safeParse({ cin: value }).success).toBe(false);
+    }
+  });
+  it('rejects incomplete manual parents at DTO and service boundaries before any writes', async () => {
+    for (const values of [{}, { phone: guardian.phone }, { cin: 'AB123456' }, { phone: '', cin: '' }, { phone: null, cin: null }]) {
+      const parent = { name: guardian.name, relationshipType: 'guardian', ...values };
+      expect(createParentDto.safeParse(parent).success).toBe(false);
+      expect(createStudentDto.safeParse({ ...student, parents: [parent], source: 'import' }).success).toBe(false);
+      const f = family();
+      await expect(f.parentService.create(parent as never)).rejects.toThrow();
+      await expect(f.studentService.create({ ...student, parents: [parent], source: 'import' } as never, actor)).rejects.toThrow();
+      expect([f.users, f.students, f.parents, f.links, f.enrollments]).toEqual([[], [], [], [], []]);
+    }
+  });
+
+  it('allows complete manual parent entry while the student phone remains optional', async () => {
+    const f = family();
+    await f.studentService.create(createStudentDto.parse({ ...student, parents: [{ ...guardian, cin: 'AB123456' }] }), actor);
+    expect(f.students[0].phone).toBeUndefined();
+    expect(f.parents[0]).toMatchObject({ phone: guardian.phone, cin: 'AB123456' });
+    expect(f.links).toHaveLength(1);
+  });
+
+  it('imports a student without parent information without creating a placeholder', async () => {
+    const f = family();
+    await f.studentService.createForImport(importStudentDto.parse(student), actor);
+    expect(f.students).toHaveLength(1);
+    expect([f.users, f.parents, f.links]).toEqual([[], [], []]);
+  });
+
+  it('rejects malformed values supplied through the import service', async () => {
+    for (const values of [{ phone: 'invalid' }, { cin: 'AB' }, { cin: '        ' }]) {
+      const parent = { name: guardian.name, relationshipType: 'guardian', ...values };
+      const input = { ...student, parents: [parent] };
+      expect(importStudentDto.safeParse(input).success).toBe(false);
+      const f = family();
+      await expect(f.studentService.createForImport(input as never, actor)).rejects.toThrow();
+      expect([f.users, f.students, f.parents]).toEqual([[], [], []]);
+    }
   });
 });

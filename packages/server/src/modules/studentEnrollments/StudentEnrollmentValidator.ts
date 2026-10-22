@@ -12,6 +12,12 @@ export class StudentEnrollmentValidator {
     if (recordYearId !== selectedYearId) Err(404, this.et('notFoundInYear'));
   }
 
+  ensureSectionCapacity(occupied: number, capacity: number | null, name: string, additionalStudents = 1) {
+    if (capacity !== null && occupied + additionalStudents > capacity) {
+      Err(409, this.et('sectionFull', { name, capacity }));
+    }
+  }
+
   ensureCorrectionAllowed(role: string) {
     if (role !== 'admin' && role !== 'principal') Err(403, this.et('correctionRequiresAdmin'));
   }

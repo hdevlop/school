@@ -11,6 +11,7 @@ export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
    const { majorMoney, displayDateOnly } = useSchoolFormat();
    // Get state from store
    const paymentAmount = usePaymentStore((state) => state.paymentDetails.amount);
+   const paymentMethod = usePaymentStore((state) => state.paymentDetails.paymentMethod);
    const totalAllocated = usePaymentStore((state) => state.getTotalAllocated());
    const selectedCount = usePaymentStore((state) => state.getSelectedCount());
    const selectedInstallments = usePaymentStore((state) => state.selectedInstallments);
@@ -22,6 +23,8 @@ export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
 
    const isExactAmount = change === 0 && cashReceived > 0;
    const isInsufficientCash = change < 0 && cashReceived > 0;
+   const isCash = paymentMethod === 'cash';
+   const amountToRecord = selectedCount > 0 ? debtSelected : cashReceived;
 
    return (
       <div className={`flex flex-col gap-3 ${compact ? '' : 'min-h-0 flex-1'}`}>
@@ -45,7 +48,7 @@ export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
                {/* Columns follow the register's own width: the dialog's left
                    column is too narrow for three amounts on a desktop screen. */}
                <div className="@container shrink-0 bg-linear-to-br from-green-900/30 to-emerald-900/30 border border-green-500/30 rounded-lg p-3">
-                  <div className="grid grid-cols-1 gap-2 @lg:grid-cols-3 @lg:gap-3">
+                  <div className={`grid grid-cols-1 gap-2 ${isCash ? '@lg:grid-cols-3' : '@lg:grid-cols-2'} @lg:gap-3`}>
 
                      <div className="flex items-center justify-between gap-2 text-center @lg:flex-col @lg:justify-start">
                         <Label className="text-gray-400 text-[10px] uppercase ">
@@ -58,14 +61,14 @@ export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
 
                      <div className="flex items-center justify-between gap-2 text-center @lg:flex-col @lg:justify-start">
                         <Label className="text-gray-400 text-[10px] uppercase ">
-                           {t('payments.register.cashReceived')}
+                           {isCash ? t('payments.register.cashReceived') : t('payments.register.amountToRecord')}
                         </Label>
                         <Label className="text-base @lg:text-xl font-bold text-blue-400 ">
-                           {majorMoney(cashReceived)}
+                           {majorMoney(isCash ? cashReceived : amountToRecord)}
                         </Label>
                      </div>
 
-                     <div className="flex items-center justify-between gap-2 text-center @lg:flex-col @lg:justify-start">
+                     {(isCash || isInsufficientCash) && <div className="flex items-center justify-between gap-2 text-center @lg:flex-col @lg:justify-start">
                         {/* Less cash than selected is money still owed, not change. */}
                         <Label className="text-gray-400 text-[10px] uppercase  ">
                            {change < 0 ? t('payments.register.missing') : `💸 ${t('payments.register.giveCustomer')}`}
@@ -76,7 +79,7 @@ export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
                            }`}>
                            {majorMoney(Math.abs(change))}
                         </Label>
-                     </div>
+                     </div>}
 
                   </div>
                </div>

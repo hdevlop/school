@@ -11,7 +11,7 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { createFeeSchemas } from '../config/feeSchemas'
 import { buildFeeStatusOptions, buildScheduleOptions } from '../config/feeOptions'
 import { useDialog } from '@/shared/useDialog'
-import { calculateFeeAmounts, getFeeDiscountPerPeriod, getFeeTypeDisplayName } from '@/features/Financial/Fees/utils/feeUtils'
+import { getFeeEditNetAmount, getFeeDiscountPerPeriod, getFeeTypeDisplayName, prepareFeeEdit } from '@/features/Financial/Fees/utils/feeUtils'
 import { usePrefix } from 'najm-kit';
 
 
@@ -33,7 +33,7 @@ const EditFeeForm = ({ fee, feeTypes = [] }) => {
    }
 
    const handleSubmit = async (feeData) => {
-      pop(feeData)
+      await pop(prepareFeeEdit(fee, feeData))
    }
 
    const isEditMode = !!fee?.id
@@ -65,7 +65,7 @@ const SimpleFeeFormContent = ({ fee, feeTypes, isEditMode }) => {
 
    const selectedFeeType = feeTypes.find(ft => ft.id === feeTypeId)
    const feeTypeAmount = selectedFeeType?.amount || 0
-   const paymentType = selectedFeeType?.paymentType || 'recurring'
+   const paymentType = fee?.paymentType || selectedFeeType?.paymentType || 'recurring'
 
    const isScheduleDisabled = paymentType === 'oneTime'
 
@@ -81,17 +81,11 @@ const SimpleFeeFormContent = ({ fee, feeTypes, isEditMode }) => {
             setValue(f('schedule'), 'oneTime')
             return
          }
-         const { netAmount } = calculateFeeAmounts(
-            paymentType,
-            baseAmount,
-            schedule,
-            discountAmount,
-            { academicYear: fee?.academicYear, effectiveDate: fee?.effectiveDate }
-         )
-
-         setValue(f('netAmount'), netAmount)
+         setValue(f('netAmount'), getFeeEditNetAmount(
+            { ...fee, paymentType }, { baseAmount, schedule, discountAmount },
+         ))
       }
-   }, [baseAmount, schedule, discountAmount, selectedFeeType, paymentType, f, feeTypeId, setValue, fee?.academicYear, fee?.effectiveDate])
+   }, [baseAmount, schedule, discountAmount, selectedFeeType, paymentType, f, feeTypeId, setValue, fee])
 
    const scheduleOptions = buildScheduleOptions(t)
 

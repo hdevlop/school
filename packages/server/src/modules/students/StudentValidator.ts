@@ -6,7 +6,7 @@ import { SectionValidator } from '../sections/SectionValidator';
 import { StudentEnrollmentRepository } from '../studentEnrollments/StudentEnrollmentRepository';
 import { isDateOnly } from '@sms/contracts/academic-years';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
-import { createStudentDto, type CreateStudentDto, type UpdateStudentDto } from './StudentDto';
+import { createStudentDto, importStudentDto, type ImportStudentDto, type UpdateStudentDto } from './StudentDto';
 
 type ExistingStudent = NonNullable<Awaited<ReturnType<StudentRepository['getById']>>>;
 
@@ -32,7 +32,7 @@ export class StudentValidator {
   }
 
   // FIX: SEC-001 — child writes retain their standalone route policies.
-  ensureNestedCreateAllowed(data: CreateStudentDto, actor?: { id: string; role: string }) {
+  ensureNestedCreateAllowed(data: ImportStudentDto, actor?: { id: string; role: string }) {
     if (!actor?.id) Err(403, this.st('createRequiresActor'));
     if (data.fees?.length && !['admin', 'principal', 'accounting'].includes(actor!.role)) {
       Err(403, this.st('nestedFeesRequireFinancial'));
@@ -42,13 +42,14 @@ export class StudentValidator {
     }
   }
 
-  parseNestedCreate(data: CreateStudentDto) {
+  parseNestedCreate(data: ImportStudentDto, source: 'manual' | 'import' = 'manual') {
     // File values are restored by Najm after route validation. Parse only the
     // nested payloads here so the multipart image remains a File.
-    return createStudentDto.pick({ parents: true, fees: true, transportAssignment: true }).parse(data);
+    const schema = source === 'import' ? importStudentDto : createStudentDto;
+    return schema.pick({ parents: true, fees: true, transportAssignment: true }).parse(data);
   }
 
-  ensureCreateAllowed(data: CreateStudentDto) {
+  ensureCreateAllowed(data: ImportStudentDto) {
     if (data.status && data.status !== 'active') {
       Err(422, this.st('createActiveFirst'));
     }
@@ -85,7 +86,7 @@ export class StudentValidator {
     }
   }
 
-  handleBulkCreateFailure(error: unknown, studentData: CreateStudentDto, index: number) {
+  handleBulkCreateFailure(error: unknown, studentData: ImportStudentDto, index: number) {
     if ((error as { status?: unknown } | null)?.status === 409) return;
     const identifier = studentData.studentCode || studentData.id || studentData.name || `at index ${index}`;
     const message = error instanceof Error ? error.message : String(error);

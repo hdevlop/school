@@ -126,7 +126,7 @@ const SchoolSetup: React.FC<{ canInstall: boolean }> = ({ canInstall }) => {
                 required
               />
             </div>
-            <FormLocationInput name="schoolLocation" formLabel={t('settings.school.schoolAddress')} required />
+            <FormLocationInput classNames={{ status: "hidden" }} name="schoolLocation" formLabel={t('settings.school.schoolAddress')} required />
             <div className="grid gap-3 sm:grid-cols-2">
               <FormInput
                 name="currentAcademicYear"

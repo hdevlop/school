@@ -1,10 +1,10 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, useTableStore, useResolvedToolbarLabels, type ContextMenuItem } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { GraduationCap, Plus, SearchX } from 'lucide-react';
+import { GraduationCap, Plus, Printer, SearchX } from 'lucide-react';
 import FullStudentForm from './FullStudentForm';
 import StudentProfile from './StudentProfile';
 import { useStudents } from '../hooks/useStudents';
@@ -19,11 +19,12 @@ import { useStudentsTableFilters } from '../hooks/useStudentsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useRouter } from 'next/navigation';
 import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
-import { createStudentApi } from '@/services/studentApi';
+import { importStudentApi, deleteStudentApi } from '@/services/studentApi';
+import { deleteSelection } from '@/shared/deleteSelection';
 import { buildStudentImport } from '../config/studentImport';
 import { announceInvitation } from '@/shared/invitationNotice';
 import { useAcademicYearOptions, useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
@@ -31,10 +32,41 @@ import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYe
 import { localDateInput } from 'najm-kit/format';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { usePermissions } from 'najm-auth/client/react';
+import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
+
+function StudentsPrintButton({ loading }: { loading: boolean }) {
+  const actions: ContextMenuItem[] = useTableStore.use.toolbarActions();
+  const labels = useResolvedToolbarLabels(useTableStore.use.toolbarLabels());
+  const printLabel = labels.print ?? 'Print';
+  const printAction = actions.find(action => action.label === printLabel);
+  if (loading) {
+    return (
+      <div aria-hidden="true" className="hidden h-10 w-10 items-center justify-center rounded-md border border-input md:inline-flex">
+        <span className="h-4 w-4 animate-pulse rounded-full bg-primary/5" />
+      </div>
+    );
+  }
+  if (!printAction) return null;
+
+  return (
+    <NButton
+      type="button"
+      variant="outline"
+      size="icon"
+      className="hidden h-10 w-10 border-primary/25 bg-primary/5 text-primary hover:border-primary/50 hover:bg-primary/10 hover:text-primary md:inline-flex"
+      aria-label={printAction.label}
+      title={printAction.label}
+      onClick={() => printAction.onSelect?.()}
+    >
+      <Printer aria-hidden="true" className="h-4 w-4 text-primary" />
+    </NButton>
+  );
+}
 
 function StudentsTable() {
 
   const { t } = useTranslation();
+  const tableMode = useRememberedTableMode('students');
   const router = useRouter();
   // A parent sees their children here and a student themselves, read-only.
   const { role, isFamily } = useViewerRole();
@@ -69,6 +101,7 @@ function StudentsTable() {
     isDeleting,
   } = useStudents();
   const { filters, filteredStudents } = useStudentsTableFilters(students);
+  const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
 
   const { openDialog, confirmDelete, pop } = useDialog();
 
@@ -175,12 +208,27 @@ function StudentsTable() {
   };
 
   const queryClient = useQueryClient();
+  const handleBulkDelete = (ids: string[]) => {
+    confirmDelete({
+      itemName: t('students.dialogs.bulkDeleteItemName', { count: ids.length }),
+      warningText: t('students.dialogs.deleteWarning'),
+      onConfirm: async () => {
+        const result = await deleteSelection(ids, id => withAcademicYear(viewingYear, () => deleteStudentApi(id)));
+        setRowSelection(Object.fromEntries(result.failed.map(({ id }) => [id, true])));
+        await Promise.all(['students', 'parents', 'fees'].map(key => queryClient.invalidateQueries({ queryKey: [key] })));
+        if (result.deleted.length) toast.success(t('common.deletedCount', { count: result.deleted.length }));
+        if (result.failed.length) toast.error(t('common.deleteFailedCount', { count: result.failed.length }), {
+          description: [...new Set(result.failed.map(item => item.message))].join(' · '),
+        });
+      },
+    });
+  };
   const toolbarLabels = useMemo(() => ({ importDescription: t('students.import.description') }), [t]);
 
   // Rows are checked first and a file with any mistake creates nobody; the
   // NTable dialog stays open and shows why. Students are then created one at
-  // a time, in the active year like the create form, each through the same
-  // validated route. A row the server refuses does not stop the others.
+  // a time in the active year, through the import route that permits missing
+  // guardian contacts. A row the server refuses does not stop the others.
   const handleImport = async (rows: Record<string, unknown>[]) => {
     const { students: payloads, problems } = buildStudentImport(rows, newStudentClasses ?? [], await refetchBusinessDate());
     if (problems.length) {
@@ -192,7 +240,7 @@ function StudentsTable() {
     for (const [index, payload] of payloads.entries()) {
       try {
         // The year header binds only to a request started inside the scope.
-        await withAcademicYear(activeYear, () => createStudentApi(payload));
+        await withAcademicYear(activeYear, () => importStudentApi(payload));
       } catch (cause) {
         failed.push(t('students.import.problem', { row: index + 2, reason: cause instanceof Error ? cause.message : '' }));
       }
@@ -209,7 +257,7 @@ function StudentsTable() {
     }
   };
 
-  const total = students?.length ?? 0;
+  const total = filteredStudents.length;
 
   return (
     <div className='flex flex-col gap-2 w-full h-full min-h-0'>
@@ -225,6 +273,9 @@ function StudentsTable() {
 
       <NTable
         className='min-h-0 flex-1'
+        classNames={{
+          tableHeader: '[&_th:has(.student-name-column)]:w-[18%] [&_th:has(.student-arabic-name-column)]:w-[14%] [&_th:has(.student-email-column)]:w-[18%] [&_th:has(.student-class-column)]:w-[7%] [&_th:has(.student-section-column)]:w-[8%] [&_th:has(.student-gender-column)]:w-[8%] [&_th:last-child]:w-12',
+        }}
         data={filteredStudents}
         getRowId={(student) => student.id}
         columns={columns}
@@ -235,8 +286,13 @@ function StudentsTable() {
         onRowClick={handleView}
         onEdit={canUpdate ? handleEdit : undefined}
         onDelete={canDelete ? handleDelete : undefined}
+        onBulkDelete={canDelete ? handleBulkDelete : undefined}
+        showDeleteSelection
+        rowSelection={rowSelection}
+        onRowSelectionChange={setRowSelection}
         dataActions={true}
         toolbarActionDisplay='settings'
+        headerSlot={<StudentsPrintButton loading={isStudentsLoading} />}
         showImportButton={canCreate}
         onDataChange={canCreate ? handleImport : undefined}
         toolbarLabels={toolbarLabels}
@@ -272,7 +328,7 @@ function StudentsTable() {
             description={t('emptyStates.filtered.description')}
           />
         )}
-        defaultMode='cards'
+        {...tableMode}
         dynamicHeight={true}
       />
     </div>

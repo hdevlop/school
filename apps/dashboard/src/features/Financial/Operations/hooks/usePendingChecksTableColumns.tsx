@@ -3,6 +3,7 @@ import { NAvatar, NBadge, NButton } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat, useSchoolToday } from '@/hooks/useSchoolFormat';
 import { CHECK_STATUS_COLOR, nextCheckStep } from '../config/checkStatus';
+import { checkStudentInitials } from '../config/checkStudentInitials';
 
 type Options = {
   busyId: string | null;
@@ -27,7 +28,7 @@ export const usePendingChecksTableColumns = ({ busyId, disabled = false, onAdvan
         const student = row.original.student;
         return (
           <div className="flex min-w-0 items-center gap-2">
-            <NAvatar src={student?.image} fallback={student?.name} size="sm" />
+            <NAvatar src={student?.image} fallback={checkStudentInitials(student?.name)} alt={student?.name} size="sm" className="shrink-0" />
             <div className="min-w-0">
               <p className="truncate font-medium">{student?.name ?? row.original.studentId}</p>
             </div>

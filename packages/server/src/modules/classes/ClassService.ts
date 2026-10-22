@@ -1,4 +1,5 @@
-import { Service } from '../../najm';
+import { Service, Transaction } from '../../najm';
+import { schoolCycleForLevel } from '@sms/contracts';
 import { ClassRepository } from './ClassRepository';
 import { ClassValidator } from './ClassValidator';
 import type { CreateClassDto, CreateClassesBulkDto, UpdateClassDto } from './ClassDto';
@@ -74,27 +75,35 @@ export class ClassService {
   // A new class takes the selected year; the repository stamps it.
   async create(data: CreateClassDto) {
     await this.classValidator.ensureNameUnique(data.name);
+    await this.classValidator.ensureCycleSelectable(data.cycleId);
     return await this.classRepository.create(data);
   }
 
   // A class keeps its year: only the selected year's classes can be edited.
   async update(id: string, data: UpdateClassDto) {
-    await this.classValidator.ensureInSelectedYear(id);
+    const current = await this.classValidator.ensureInSelectedYear(id);
+    await this.classValidator.ensureCycleSelectable(data.cycleId, current.cycleId);
     if (data.name) {
       await this.classValidator.ensureNameUnique(data.name, undefined, id);
     }
     return await this.classRepository.update(id, data);
   }
 
+  @Transaction()
   async delete(id: string) {
     await this.classValidator.ensureInSelectedYear(id);
+    await this.classRepository.lockForMutation(id);
     await this.classValidator.ensureHasNoSections(id);
+    await this.classValidator.ensureHasNoStaff(id);
     return await this.classRepository.delete(id);
   }
 
   // The selected year's classes only.
+  @Transaction()
   async deleteAll() {
-    return await this.classRepository.deleteAll();
+    const rows = await this.classRepository.getAll();
+    for (const row of [...rows].sort((a, b) => a.id.localeCompare(b.id))) await this.delete(row.id);
+    return { deletedCount: rows.length, deletedClasses: rows };
   }
 
   async clearForSeedReset() {
@@ -107,7 +116,10 @@ export class ClassService {
     for (const classData of classesData) {
       try {
         await this.classValidator.ensureNameUnique(classData.name, classData.academicYear);
-        const classEntity = await this.classRepository.createForSeed(classData);
+        const stage = schoolCycleForLevel(classData.level);
+        const cycle = !classData.cycleId && stage
+          ? await this.classRepository.findDefaultCycle([stage.name, ...Object.values(stage.labels)]) : null;
+        const classEntity = await this.classRepository.createForSeed({ ...classData, cycleId: classData.cycleId ?? cycle?.id });
         createdClasses.push(classEntity);
       } catch (error: any) {
         if (error?.status === 409) continue;

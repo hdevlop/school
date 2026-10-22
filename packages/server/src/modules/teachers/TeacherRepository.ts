@@ -1,5 +1,5 @@
 import { DB } from '../../database/db';
-import { teachers, users, teacherAssignments, sections, subjects, students, classes, staff, studentEnrollments, studentEnrollmentPlacements } from '../../database/schema';
+import { teachers, users, teacherAssignments, sections, subjects, students, classes, staff, studentEnrollments, studentEnrollmentPlacements, assessments, exams, attendance, routineEntries } from '../../database/schema';
 import { Repository } from '../../najm';
 import { Owned, type OwnedWhere } from '../../auth';
 import { count, eq, desc, sql, and, inArray, gt, isNull, lte, or } from 'drizzle-orm';
@@ -468,6 +468,23 @@ export class TeacherRepository {
     const [row] = await this.db.select({ id: teacherAssignments.id }).from(teacherAssignments)
       .where(id ? eq(teacherAssignments.teacherId, id) : undefined).limit(1);
     return !!row;
+  }
+
+  /** Shared identity deletion affects every year, including references outside the selected year. */
+  async hasRecordedHistory(id: string) {
+    const assignmentIds = this.db.select({ id: teacherAssignments.id }).from(teacherAssignments)
+      .where(eq(teacherAssignments.teacherId, id));
+    const references = await Promise.all([
+      this.db.select({ id: assessments.id }).from(assessments)
+        .where(inArray(assessments.teacherAssignmentId, assignmentIds)).limit(1),
+      this.db.select({ id: exams.id }).from(exams)
+        .where(inArray(exams.teacherAssignmentId, assignmentIds)).limit(1),
+      this.db.select({ id: routineEntries.id }).from(routineEntries)
+        .where(inArray(routineEntries.teacherAssignmentId, assignmentIds)).limit(1),
+      this.db.select({ id: attendance.id }).from(attendance)
+        .where(or(eq(attendance.teacherId, id), inArray(attendance.teacherAssignmentId, assignmentIds))).limit(1),
+    ]);
+    return references.some(rows => rows.length > 0);
   }
 
   // ========================================

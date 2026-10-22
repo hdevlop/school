@@ -4,6 +4,7 @@ import { NAvatar, NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat, useSchoolToday } from '@/hooks/useSchoolFormat';
 import { CHECK_STATUS_COLOR } from '../config/checkStatus';
+import { checkStudentInitials } from '../config/checkStudentInitials';
 
 /** One pending check at phone width; the row menu carries its actions. */
 export default function CheckCard({ data: payment }: { data: any }) {
@@ -17,7 +18,7 @@ export default function CheckCard({ data: payment }: { data: any }) {
       {/* `pe-8` keeps the badge clear of NTable's row-menu button in the corner. */}
       <div className="flex items-start justify-between gap-2 pe-8">
         <div className="flex min-w-0 items-center gap-2">
-          <NAvatar src={payment.student?.image} fallback={payment.student?.name} size="sm" />
+          <NAvatar src={payment.student?.image} fallback={checkStudentInitials(payment.student?.name)} alt={payment.student?.name} size="sm" className="shrink-0" />
           <div className="min-w-0">
             <p className="truncate font-medium">{payment.student?.name ?? payment.studentId}</p>
             <p className="truncate text-xs text-muted-foreground">{payment.student?.studentCode}</p>

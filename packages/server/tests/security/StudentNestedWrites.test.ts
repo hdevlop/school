@@ -3,6 +3,10 @@ import { describe, expect, it } from 'bun:test';
 import { StudentValidator } from '../../src/modules/students/StudentValidator';
 import { StudentService } from '../../src/modules/students/StudentService';
 import { createStudentDto } from '../../src/modules/students/StudentDto';
+import { importStudentDto } from '../../src/modules/students/StudentDto';
+import { StudentController } from '../../src/modules/students/StudentController';
+import { getValidationConfig } from 'najm-validation';
+import { getGuardMetadata } from 'najm-guard';
 import { createFeeDto, updateFeeDto } from '../../src/modules/financial/fees/FeeDto';
 import { FeeService } from '../../src/modules/financial/fees/FeeService';
 import { withEnglishMessages } from '../support/englishMessages';
@@ -44,6 +48,14 @@ function studentHarness() {
 }
 
 describe('SEC-001 nested student creation boundary', () => {
+  it('keeps import validation on a separate route with the normal create permission', () => {
+    const normal = getGuardMetadata(StudentController, 'create');
+    const importing = getGuardMetadata(StudentController, 'importStudent');
+    expect(normal.length).toBeGreaterThan(0);
+    expect(importing).toEqual(normal);
+    expect(getValidationConfig(StudentController.prototype, 'create')?.body).toBe(createStudentDto);
+    expect(getValidationConfig(StudentController.prototype, 'importStudent')?.body).toBe(importStudentDto);
+  });
   it('allows student-only secretary enrollment, preserving the full actor', async () => {
     const { service, effects, actors, invitations } = studentHarness();
     const actor = { id: 'secretary', role: 'secretary' };
@@ -62,6 +74,16 @@ describe('SEC-001 nested student creation boundary', () => {
     }
     const { service, effects } = studentHarness();
     await expect(service.create(input, undefined as never)).rejects.toThrow();
+    expect(effects).toEqual([]);
+  });
+  it('keeps actor and nested financial/transport authorization on the import path', async () => {
+    for (const child of [{ fees: [fee] }, { transportAssignment: transport }]) {
+      const { service, effects } = studentHarness();
+      await expect(service.createForImport({ ...input, ...child }, { id: 'secretary', role: 'secretary' })).rejects.toThrow();
+      expect(effects).toEqual([]);
+    }
+    const { service, effects } = studentHarness();
+    await expect(service.createForImport(input, undefined as never)).rejects.toThrow();
     expect(effects).toEqual([]);
   });
   it('allows financial roles to create fees and only admin to assign transport', async () => {

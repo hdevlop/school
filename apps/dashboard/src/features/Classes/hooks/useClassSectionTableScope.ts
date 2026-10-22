@@ -62,26 +62,26 @@ export function useClassSectionTableScope({ includeSection = true, placements }:
       name: 'classScope',
       type: 'combobox',
       showIcon: false,
-      placeholder: t('students.filters.filterByClass'),
+      placeholder: t('students.table.class'),
       value: classId,
       onChange: setClassId,
       options: [...(classes || [])]
         .sort((left, right) => compareClassNames(left.name, right.name))
         .map((item) => ({ value: item.id, label: item.name })),
-      className: 'w-full lg:w-48',
+      className: 'w-full sm:w-32 xl:w-32',
     },
     ...(includeSection ? [{
       name: 'sectionScope',
       type: 'select',
       showIcon: false,
-      placeholder: t('students.filters.filterBySection'),
+      placeholder: t('students.table.section'),
       value: sectionId,
       onChange: setSectionId,
       options: (sections || [])
         .filter((item) => item.classId === classId)
         .map((item) => ({ value: item.id, label: item.name })),
       disabled: !classId,
-      className: 'w-full lg:w-48',
+      className: 'w-full sm:w-28 xl:w-28',
     }] : []),
   ], [t, classes, sections, classId, sectionId, setClassId, setSectionId, includeSection]);
 

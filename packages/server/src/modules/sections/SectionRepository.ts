@@ -1,6 +1,6 @@
 import { Repository } from '../../najm';
 import { DB } from '../../database/db';
-import { sections, classes, students, teacherAssignments, teachers, staff, subjects, users, studentParents, parents, studentEnrollments, studentEnrollmentPlacements } from '../../database/schema';
+import { sections, classes, students, teacherAssignments, teachers, staff, subjects, users, studentParents, parents, studentEnrollments, studentEnrollmentPlacements, assistantAssignments } from '../../database/schema';
 import { sql, eq, count, countDistinct, and, desc, ne, type SQL, inArray } from 'drizzle-orm';
 import { Owned, type OwnedWhere } from '../../auth';
 import { Section } from './SectionGuards';
@@ -126,6 +126,25 @@ export class SectionRepository {
   async getInSelectedYear(id: string) {
     const [result] = await this.buildSectionQuery(eq(sections.id, id)).limit(1);
     return result;
+  }
+
+  async lockForMutation(id: string) {
+    await this.db.select({ id: sections.id }).from(sections)
+      .where(and(this.ownedWhere(), eq(sections.id, id), inArray(sections.classId, this.classesInSelectedYear())))
+      .for('update');
+  }
+
+  async getAssignedPeople(sectionId: string) {
+    const [teaching, assisting] = await Promise.all([
+      this.db.selectDistinct({ name: staff.name }).from(teacherAssignments)
+        .innerJoin(teachers, eq(teacherAssignments.teacherId, teachers.id))
+        .innerJoin(staff, eq(teachers.staffId, staff.id))
+        .where(eq(teacherAssignments.sectionId, sectionId)),
+      this.db.selectDistinct({ name: staff.name }).from(assistantAssignments)
+        .innerJoin(staff, eq(assistantAssignments.staffId, staff.id))
+        .where(eq(assistantAssignments.sectionId, sectionId)),
+    ]);
+    return [...teaching, ...assisting];
   }
 
   // A reference lookup in any year, for modules that check a section they

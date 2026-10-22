@@ -6,7 +6,7 @@ import { NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 
-const SubjectCard = ({ data }: any) => {
+const SubjectCard = ({ data, details = false }: any) => {
   const { t } = useTranslation();
   const subject = data;
 
@@ -29,6 +29,7 @@ const SubjectCard = ({ data }: any) => {
             iconColor="text-primary"
             label={t('subjects.form.code')}
             value={subject.code}
+            maxChars={details ? Infinity : 12}
             valueColor="text-primary font-semibold uppercase"
           />
 
@@ -38,7 +39,9 @@ const SubjectCard = ({ data }: any) => {
               iconColor="text-muted-foreground"
               label={t('subjects.form.description')}
               value={subject.description}
-              valueColor="text-muted-foreground"
+              maxChars={details ? Infinity : 12}
+              valueColor="text-muted-foreground min-w-0 whitespace-pre-wrap [overflow-wrap:anywhere]"
+              className={details ? 'flex-wrap items-start [&>svg]:shrink-0' : undefined}
             />
           )}
         </div>

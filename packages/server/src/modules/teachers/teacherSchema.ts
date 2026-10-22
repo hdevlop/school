@@ -21,10 +21,10 @@ export const teacherRef = createRef('teacher_id', () => teachers.id);
 
 export const teacherAssignments = pgTable('teacher_assignments', {
   id: idField(),
-  classId: classRef(),
+  classId: classRef('restrict'),
   subjectId: subjectRef(),
   teacherId: teacherRef(),
-  sectionId: sectionRef(),
+  sectionId: sectionRef('restrict'),
   ...timestamps,
 });
 

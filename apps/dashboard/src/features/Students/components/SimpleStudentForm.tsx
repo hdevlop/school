@@ -11,6 +11,7 @@ import { useTranslation } from 'najm-i18n/react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { PLACEMENT_FIELDS, createStudentSchemas } from '../config/studentSchemas'
 import { buildGenderOptions } from '../config/studentOptions'
+import { StudentParentsSection } from './StudentParentsSection'
 
 const sectionHeaderClassName = 'student-form-section-header'
 
@@ -60,14 +61,17 @@ const SimpleStudentForm = ({ student = null, classes = [] }) => {
   }
 
   return (
-    <NForm
-      id='student-form'
-      schema={studentProfileEditSchema}
-      defaultValues={getStudentDefaultValues(student)}
-      onSubmit={handleSubmit}
-    >
-      <StudentFormContent classes={classes} student={student} placementReadOnly />
-    </NForm>
+    <>
+      <NForm
+        id='student-form'
+        schema={studentProfileEditSchema}
+        defaultValues={getStudentDefaultValues(student)}
+        onSubmit={handleSubmit}
+      >
+        <StudentFormContent classes={classes} student={student} placementReadOnly />
+      </NForm>
+      {student?.id && <StudentParentsSection studentId={student.id} />}
+    </>
   )
 }
 
@@ -130,33 +134,35 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
           previewStyle={{ width: 180, height: 200 }}
         />
 
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <FormInput
-            name='studentCode'
-            type='text'
-            formLabel={t('students.form.studentCode')}
-            placeholder={t('students.form.studentCodePlaceholder')}
-            icon={Hash}
-            required={true}
-          />
+        <div className='grid min-w-0 grid-cols-1 md:grid-cols-2 gap-4'>
+          <div className='grid min-w-0 grid-cols-1 gap-4 md:col-span-2 md:grid-cols-3'>
+            <FormInput
+              name='studentCode'
+              type='text'
+              formLabel={t('students.form.studentCode')}
+              placeholder={t('students.form.studentCodePlaceholder')}
+              icon={Hash}
+              required={true}
+            />
 
-          <FormInput
-            name='name'
-            type='text'
-            formLabel={t('students.form.fullName')}
-            placeholder={t('students.form.fullNamePlaceholder')}
-            icon={User}
-            required={true}
-          />
+            <FormInput
+              name='name'
+              type='text'
+              formLabel={t('students.form.fullName')}
+              placeholder={t('students.form.fullNamePlaceholder')}
+              icon={User}
+              required={true}
+            />
 
-          <FormInput
-            name='arabicName'
-            type='text'
-            formLabel={t('students.form.arabicName')}
-            icon={User}
-            dir='rtl'
-            lang='ar'
-          />
+            <FormInput
+              name='arabicName'
+              type='text'
+              formLabel={t('students.form.arabicName')}
+              icon={User}
+              dir='rtl'
+              lang='ar'
+            />
+          </div>
 
           <FormInput
             name='gender'
@@ -191,9 +197,8 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
             icon={Phone}
           />
 
-          <p className='text-xs text-muted-foreground md:col-span-2'>{t('students.form.loginHelp')}</p>
-
           <FormLocationInput
+            classNames={{ status: "hidden" }}
             name={fieldName('addressLocation')}
             formLabel={t('students.form.address')}
             placeholder={t('students.form.addressPlaceholder')}
@@ -247,10 +252,6 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
           disabled={placementReadOnly || !selectedClassId || sectionOptions.length === 0}
           required={!placementReadOnly}
         />
-        {placementReadOnly && (
-          <p className='text-xs text-muted-foreground md:col-span-2'>{t('students.form.placementReadOnly')}</p>
-        )}
-
         <FormInput
           name='enrollmentDate'
           type='date'
@@ -272,7 +273,6 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
             name='transportEnabled'
             type='switch'
             label={t('transport.form.usesTransport')}
-            helper={t('transport.form.optionalDescription')}
             icon={Bus}
             iconPosition='label'
             bordered

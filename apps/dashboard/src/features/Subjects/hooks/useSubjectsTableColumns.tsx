@@ -27,6 +27,8 @@ export const useSubjectsTableColumns = () => {
     },
     {
       accessorKey: "name",
+      filterFn: (row, _columnId, value) => [row.original.name, row.original.code]
+        .some(field => String(field ?? '').toLocaleLowerCase().includes(String(value ?? '').trim().toLocaleLowerCase())),
       header: t('subjects.table.name'),
       enableSorting: true,
       cell: ({ getValue }) => (

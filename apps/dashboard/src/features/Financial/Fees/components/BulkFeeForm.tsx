@@ -128,7 +128,6 @@ const FeeItem = ({
                       type="date"
                       icon={CalendarDays}
                       formLabel={t('fees.form.effectiveDate')}
-                      formDescription={t('fees.form.effectiveDateDescription')}
                       placeholder={studentEnrollmentDate ? displayDateOnly(studentEnrollmentDate) : t('fees.form.effectiveDatePlaceholder')}
                       min={minBillingDate}
                       max={maxBillingDate}

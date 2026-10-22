@@ -276,6 +276,39 @@ export class StudentEnrollmentRepository {
     return row ?? null;
   }
 
+  /** Serializes admissions and capacity changes for one section until commit. */
+  async lockSectionCapacity(sectionId: string) {
+    const [row] = await this.db.select({
+      id: sections.id, name: sections.name, maxStudents: sections.maxStudents, academicYear: classes.academicYear,
+    }).from(sections).innerJoin(classes, eq(sections.classId, classes.id))
+      // FK checks hold KEY SHARE after inserting a student. NO KEY UPDATE
+      // serializes seat reservations without deadlocking those FK checks.
+      .where(eq(sections.id, sectionId)).for('no key update', { of: sections });
+    return row;
+  }
+
+  /** Peak simultaneous occupancy within an exclusive placement interval. */
+  async sectionPeakOccupancy(sectionId: string, yearId: string, from: string, until: string, excludeEnrollmentId = '') {
+    const rows = await this.db.execute(sql`
+      WITH intervals AS (
+        SELECT greatest(p.valid_from, e.enrolled_on, ${from}::date) AS starts,
+          least(coalesce(p.valid_to, ${until}::date), coalesce(e.left_on, ${until}::date), ${until}::date) AS ends
+        FROM student_enrollment_placements p
+        JOIN student_enrollments e ON e.id = p.enrollment_id
+        WHERE p.section_id = ${sectionId} AND e.academic_year_id = ${yearId}
+          AND e.id <> ${excludeEnrollmentId}
+      ), events AS (
+        SELECT starts AS day, 1 AS delta FROM intervals WHERE starts < ends
+        UNION ALL
+        SELECT ends AS day, -1 AS delta FROM intervals WHERE starts < ends
+      ), occupancy AS (
+        SELECT sum(sum(delta)) OVER (ORDER BY day) AS occupied FROM events GROUP BY day
+      )
+      SELECT coalesce(max(occupied), 0)::integer AS peak FROM occupancy
+    `);
+    return Number(rows[0]?.peak ?? 0);
+  }
+
   async create(data: typeof studentEnrollments.$inferInsert) {
     const [row] = await this.db.insert(studentEnrollments).values(data).returning();
     return row;

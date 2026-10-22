@@ -26,7 +26,7 @@ export const createSubjectSchema = (t: T) => {
 
   return z.object({
     id: optionalId,
-    code: z.string().min(2, t('validationMessages.subjectCodeMustBeAtLeast2Characters')).max(10, t('validationMessages.subjectCodeTooLong')),
+    code: z.string().trim().toUpperCase().min(2, t('validationMessages.subjectCodeMustBeAtLeast2Characters')).max(10, t('validationMessages.subjectCodeTooLong')),
     name: z.string().min(2, t('validationMessages.subjectNameMustBeAtLeast2Characters')).max(100, t('validationMessages.subjectNameTooLong')),
     description: z.string().max(500, t('validationMessages.descriptionTooLong')).optional(),
     gradeLevel: optionalNumberField(z.number({ error: t('validationMessages.mustBeAValidNumber') })

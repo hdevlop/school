@@ -4,6 +4,9 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { CalendarRange, Plus, SearchX } from 'lucide-react';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
+import { useAcademicTableActions } from '@/features/Classes/hooks/useAcademicTableActions';
+import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
+import { deleteCycleApi } from '@/services/cycleApi';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -23,8 +26,10 @@ function CyclesTable() {
   const { t } = useTranslation();
   const columns = useCyclesTableColumns();
   const rawFilters = useCyclesTableFilters();
-  const { cycles, createCycle, updateCycle, deleteCycle, error, isCyclesLoading } = useCycles();
-  const { openDialog, confirmDelete } = useDialog();
+  const { cycles, createCycle, updateCycle, error, isCyclesLoading } = useCycles();
+  const { openDialog } = useDialog();
+  const tableActions = useAcademicTableActions('cycles', deleteCycleApi);
+  const tableMode = useRememberedTableMode('cycles', 'table');
 
   const orderedCycles = sortCycles(cycles || []);
 
@@ -64,18 +69,6 @@ function CyclesTable() {
     });
   };
 
-  const handleDelete = (cycle) => {
-    confirmDelete({
-      title: t('common.delete'),
-      warningText: t('common.deleteConfirm'),
-      cancelText: t('common.cancel'),
-      itemName: cycle.name,
-      confirmText: t('cycles.dialogs.deleteButton'),
-      onConfirm: async () => {
-        await deleteCycle(cycle.id);
-      },
-    });
-  };
 
   const total = orderedCycles.length;
 
@@ -99,7 +92,8 @@ function CyclesTable() {
         onCreate={handleAddClick}
         onView={handleView}
         onEdit={handleEdit}
-        onDelete={handleDelete}
+        {...tableActions}
+        {...tableMode}
         loading={isCyclesLoading}
         error={hasFailedToLoad(error, orderedCycles) ? error : null}
         renderError={(currentError) => (
@@ -131,7 +125,6 @@ function CyclesTable() {
             description={t('emptyStates.filtered.description')}
           />
         )}
-        defaultMode="table"
       />
     </div>
   );

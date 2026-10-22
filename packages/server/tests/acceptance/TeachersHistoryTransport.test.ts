@@ -11,7 +11,7 @@ process.env.DB_URL = rawUrl;
 
 const { server } = await import('../../src/index');
 const { db } = await import('../../src/database/db');
-const { staff, teachers } = await import('../../src/database/schema');
+const { staff, teachers, teacherAssignments, assessments } = await import('../../src/database/schema');
 const { eq } = await import('drizzle-orm');
 const base = 'http://school.local/api';
 const port = 5530;
@@ -86,10 +86,15 @@ describe('authenticated teacher year selection over REST and MCP', () => {
     expect((await request('/teachers/history-teacher/classes', '2025-2026')).body.data).toHaveLength(1);
   });
 
-  it('protects assignment history when deleting a teacher', async () => {
+  it('protects recorded academic history when deleting a teacher', async () => {
+    // Verify the fixture's recorded dependency before attempting global identity deletion.
+    const recorded = await db.select({ id: assessments.id }).from(assessments)
+      .innerJoin(teacherAssignments, eq(assessments.teacherAssignmentId, teacherAssignments.id))
+      .where(eq(teacherAssignments.teacherId, 'history-teacher'));
+    expect(recorded.length).toBeGreaterThan(0);
     const one = await request('/teachers/history-teacher', '2026-2027', 'DELETE');
     expect(one.status).toBe(409);
-    expect(one.body.message).toContain('class assignments');
+    expect(one.body.message).toContain('Deactivate');
     expect((await request('/teachers/history-teacher/classes', '2024-2025')).body.data).toHaveLength(1);
     expect((await request('/teachers', '2026-2027', 'DELETE')).status).toBe(409);
   });

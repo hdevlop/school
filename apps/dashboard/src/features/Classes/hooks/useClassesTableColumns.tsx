@@ -1,8 +1,11 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'najm-i18n/react';
+import { academicLevelLabel, compareAcademicLevels } from '@sms/contracts';
+import { useCycles } from '@/features/Cycles/hooks/useCycles';
 
 export const useClassesTableColumns = () => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+  const { cycles } = useCycles();
 
   return useMemo(() => [
     {
@@ -37,12 +40,23 @@ export const useClassesTableColumns = () => {
     },
     {
       accessorKey: "level",
+      sortingFn: (left, right, id) => compareAcademicLevels(String(left.getValue(id) ?? ''), String(right.getValue(id) ?? ''), language),
+      sortDescFirst: false,
       header: t('classes.table.level'),
       enableSorting: true,
       cell: ({ getValue }) => {
         const level = getValue();
-        return level || <span className="text-gray-400">{t('common.notSpecified')}</span>;
+        return level ? academicLevelLabel(level, language) : <span className="text-gray-400">{t('common.notSpecified')}</span>;
       },
+    },
+    {
+      id: 'cycle',
+      header: t('classes.form.cycle'),
+      accessorFn: row => {
+        const cycle = cycles?.find(cycle => cycle.id === row.cycleId);
+        return cycle?.labels?.[language] || cycle?.name || t('common.notAssigned');
+      },
+      enableSorting: true,
     },
     {
       accessorKey: "description",
@@ -58,5 +72,5 @@ export const useClassesTableColumns = () => {
         );
       },
     },
-  ], [t]);
+  ], [t, language, cycles]);
 };

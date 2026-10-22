@@ -1,5 +1,5 @@
 import { Repository } from '../../../najm';
-import { eq, desc, and, sql, count, isNotNull } from 'drizzle-orm';
+import { eq, ne, desc, and, sql, count, isNotNull } from 'drizzle-orm';
 import { fees, feeTypes, feeInstallments, paymentAllocations, payments, students, users } from '../../../database/schema';
 import { DB } from '../../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
@@ -166,6 +166,22 @@ export class PaymentRepository {
     return await this.buildPaymentQuery()
       .where(eq(payments.studentId, studentId))
       .orderBy(desc(payments.paymentDate));
+  }
+
+  /** Receipt identity spans years and statuses. Hold this lock through the write. */
+  async findDuplicateCheckUnderLock(studentId: string, checkNumber: string, excludeId?: string) {
+    const normalized = checkNumber.trim().toLowerCase();
+    const key = JSON.stringify(['student-check', studentId, normalized]);
+    // A unique index would fail on existing duplicates. Serializing School's
+    // writers blocks new duplicates without deleting or rewriting receipt history.
+    await this.db.execute(sql`select pg_advisory_xact_lock(hashtextextended(${key}, 0))`);
+    const [duplicate] = await this.db.select({ id: payments.id }).from(payments).where(and(
+      eq(payments.studentId, studentId),
+      eq(payments.paymentMethod, 'check'),
+      sql`lower(btrim(${payments.checkNumber})) = ${normalized}`,
+      excludeId ? ne(payments.id, excludeId) : undefined,
+    )).limit(1);
+    return duplicate ?? null;
   }
 
   async getByIdempotencyKey(key: string) {

@@ -2,9 +2,10 @@ import { useMemo } from 'react';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { createSectionSchema } from '../config/sectionSchemas';
+import { academicLevelLabel, compareAcademicLevels } from '@sms/contracts';
 
 export const useSectionsTableColumns = () => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
 
   return useMemo(() => {
     const schema = createSectionSchema(t);
@@ -55,12 +56,14 @@ export const useSectionsTableColumns = () => {
     },
     {
       accessorKey: 'class.level',
+      sortingFn: (left, right, id) => compareAcademicLevels(String(left.getValue(id) ?? ''), String(right.getValue(id) ?? ''), language),
+      sortDescFirst: false,
       header: t('sections.table.level'),
       enableSorting: true,
       cell: ({ row }) => {
         const level = row.original.class?.level;
         return level ? (
-          <div className="font-medium text-sm">{level}</div>
+          <div className="font-medium text-sm">{academicLevelLabel(level, language)}</div>
         ) : (
           <span className="text-gray-400">{t('common.notAssigned')}</span>
         );
@@ -125,5 +128,5 @@ export const useSectionsTableColumns = () => {
       size: 120,
     },
     ];
-  }, [t]);
+  }, [t, language]);
 };

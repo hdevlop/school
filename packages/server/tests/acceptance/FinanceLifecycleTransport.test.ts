@@ -65,7 +65,7 @@ async function login(email: string, password: string) {
   return token as string;
 }
 
-async function newFee(amount = 100, recurring = false) {
+async function newFee(amount = 100, recurring = false, extra: { effectiveDate?: string; discountAmount?: number; discountReason?: string } = {}) {
   const typeId = `finance-type-${crypto.randomUUID()}`;
   typeIds.push(typeId);
   await db.insert(feeTypes).values({ id: typeId, name: `Scolarite ${typeId}`, category: 'tuition',
@@ -73,7 +73,7 @@ async function newFee(amount = 100, recurring = false) {
   // Inspect the registry in beforeAll, then exercise the actual MCP write.
   const result = await client.callTool({ name: 'fees_create_fee', arguments: {
     studentId, feeTypeId: typeId, schedule: recurring ? 'monthly' : 'oneTime',
-    academicYear: year, effectiveDate: '2026-09-01', ...(recurring ? { discountAmount: 10 } : {}),
+    academicYear: year, effectiveDate: '2026-09-01', ...(recurring ? { discountAmount: 10 } : {}), ...extra,
   } }) as { content: Array<{ text: string }>; isError?: boolean };
   expect(result.isError, JSON.stringify(result.content)).not.toBe(true);
   const fee = JSON.parse(result.content[0].text) as { id: string; netAmount: string; discountAmount: string };
@@ -190,6 +190,46 @@ describe('real PostgreSQL finance lifecycle over authenticated HTTP and MCP', ()
       .reduce((sum, row) => sum + Math.round(Number(row.amount) * 100), 0)).toBe(90000);
   });
 
+  it('returns the saved October discount and billing date and preserves them on a notes-only edit after payment', async () => {
+    const { fee, installments } = await newFee(1100, true, { effectiveDate: '2026-10-01', discountAmount: 100, discountReason: 'Sibling discount' });
+    expect(installments).toHaveLength(9);
+    expect(Number(fee.netAmount)).toBe(9000);
+    for (const path of [`/fees/student/${studentId}`, `/fees/student/${studentId}/all-years`]) {
+      const result = await request(path);
+      expect(result.status).toBe(200);
+      const displayed = result.body.data.fees.find((item: any) => item.id === fee.id);
+      expect(displayed).toMatchObject({ baseAmount: 1100, grossAmount: 9900, netAmount: 9000,
+        discount: 900, discountAmount: 900, effectiveDate: '2026-10-01', discountReason: 'Sibling discount', paymentType: 'recurring' });
+    }
+    expect((await record(fee.id, 1000)).status).toBe(200);
+    expect((await request(`/fees/${fee.id}`, 'PUT', { notes: 'Notes only' })).status).toBe(200);
+    expect(await storedFee(fee.id)).toMatchObject({ grossAmount: '9900.00', netAmount: '9000.00', discountAmount: '900.00', paidAmount: '1000.00' });
+    expect(await db.select().from(feeInstallments).where(eq(feeInstallments.feeId, fee.id))).toHaveLength(9);
+  });
+
+  it('serializes duplicate check numbers across different fees, preserves replay and refuses renaming to a duplicate', async () => {
+    const first = await newFee(), second = await newFee(), third = await newFee();
+    const checkNumber = `duplicate-${suffix}`;
+    const details = { paymentMethod: 'check', checkNumber, checkDueDate: '2026-10-15' };
+    const keys = [crypto.randomUUID(), crypto.randomUUID()];
+    const race = await Promise.all([
+      record(first.fee.id, 100, { ...details, idempotencyKey: keys[0] }),
+      record(second.fee.id, 100, { ...details, checkNumber: ` ${checkNumber.toUpperCase()} `, idempotencyKey: keys[1] }),
+    ]);
+    expect(race.map(result => result.status).sort()).toEqual([200, 409]);
+    const winner = race.findIndex(result => result.status === 200);
+    const replay = await record(winner === 0 ? first.fee.id : second.fee.id, 100,
+      { ...details, ...(winner === 1 ? { checkNumber: ` ${checkNumber.toUpperCase()} ` } : {}), idempotencyKey: keys[winner] });
+    expect(replay.status).toBe(200);
+    expect(replay.body.data.id).toBe(race[winner].body.data.id);
+    const other = await record(third.fee.id, 100, { ...details, checkNumber: `other-${suffix}` });
+    expect(other.status).toBe(200);
+    const rename = await request(`/payments/${other.body.data.id}`, 'PUT', { checkNumber });
+    expect(rename.status).toBe(409);
+    expect(String(rename.body.message)).not.toContain('payments.errors.');
+    expect((await request(`/payments/${race[winner].body.data.id}`, 'PUT', { notes: 'Same check metadata' })).status).toBe(200);
+  });
+
   it('records partial cash, replays idempotently, refuses changed payload and refunds without deleting history', async () => {
     const { fee } = await newFee();
     const idempotencyKey = crypto.randomUUID();
@@ -300,7 +340,8 @@ describe('real PostgreSQL finance lifecycle over authenticated HTTP and MCP', ()
 describe('finance review regression cases', () => {
   it.each(['pending', 'deposited', 'completed'])('replaces a %s cheque with cash through the edit endpoint', async (status) => {
     const { fee } = await newFee();
-    const cheque = await record(fee.id, 100, { paymentMethod: 'check', checkNumber: 'CHEQUE-CASH', checkDueDate: '2026-10-20' });
+    const checkNumber = `CHEQUE-CASH-${status}-${suffix}`;
+    const cheque = await record(fee.id, 100, { paymentMethod: 'check', checkNumber, checkDueDate: '2026-10-20' });
     expect(cheque.status, JSON.stringify(cheque.body)).toBe(200);
     const original = cheque.body.data;
     if (status !== 'pending') {
@@ -323,7 +364,7 @@ describe('finance review regression cases', () => {
       notes: 'Cheque returned to parent', processedBy: actorId });
     expect((await db.select().from(payments).where(eq(payments.id, original.id)))[0])
       .toMatchObject({ paymentMethod: 'check', status: 'voided', receiptNumber: original.receiptNumber,
-        checkNumber: 'CHEQUE-CASH', voidedBy: actorId });
+        checkNumber, voidedBy: actorId });
     const oldAllocations = await db.select().from(paymentAllocations).where(eq(paymentAllocations.paymentId, original.id));
     const newAllocations = await db.select().from(paymentAllocations).where(eq(paymentAllocations.paymentId, cash.id));
     expect(newAllocations.map(({ installmentId, amount }) => ({ installmentId, amount })))

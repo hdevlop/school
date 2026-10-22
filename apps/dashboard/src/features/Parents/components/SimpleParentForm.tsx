@@ -9,7 +9,7 @@ import { useDialog } from '@/shared/useDialog'
 import { useTranslation } from 'najm-i18n/react'
 import { createParentSchemas } from '../config/parentSchemas'
 import { usePrefix } from 'najm-kit';
-import { useWatch } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
 import {
    buildGenderOptions,
    buildMaritalStatusOptionsFor,
@@ -48,6 +48,7 @@ export const getMotherDefaultValues = (parent = null) =>
 export const ParentFormContent = () => {
    const { t } = useTranslation()
    const prefix = usePrefix();
+   const { setValue } = useFormContext();
    const field = (name: string) => (prefix ? `${prefix}.${name}` : name);
    const relationshipType = useWatch({ name: field('relationshipType') });
    const maritalStatus = useWatch({ name: field('maritalStatus') });
@@ -89,6 +90,11 @@ export const ParentFormContent = () => {
                   type='select'
                   formLabel={t('parents.form.relationshipType')}
                   items={relationshipOptions}
+                  onChange={(value) => {
+                     if (value === 'father' || value === 'mother') {
+                        setValue(field('gender'), value === 'father' ? 'M' : 'F', { shouldDirty: true, shouldValidate: true });
+                     }
+                  }}
                   icon={Users}
                   required={true}
                />
@@ -111,6 +117,7 @@ export const ParentFormContent = () => {
 
                <FormInput
                   name='cin'
+                  required
                   type='text'
                   formLabel={t('parents.form.cin')}
                   placeholder={t('parents.form.cinPlaceholder')}
@@ -160,6 +167,7 @@ export const ParentFormContent = () => {
 
             <FormInput
                name='phone'
+               required
                type='phone'
                formLabel={t('parents.form.phone')}
                placeholder={t('parents.form.phonePlaceholder')}
@@ -175,8 +183,6 @@ export const ParentFormContent = () => {
             icon={MapPin}
 
          />
-
-         <p className='text-xs text-muted-foreground'>{t('parents.form.loginHelp')}</p>
 
          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <FormInput

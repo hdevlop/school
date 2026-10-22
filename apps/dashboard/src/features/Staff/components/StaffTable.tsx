@@ -21,6 +21,7 @@ import ManageRolesDialog from './ManageRolesDialog';
 import { formatAssignments } from '../utils/staffAssignments';
 import { getStaffAvatar } from '../utils/staffAvatar';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
 
 const calculateStaffPay = (row) => {
   if (row?.compensationMode === 'hourly') {
@@ -67,6 +68,7 @@ const StaffTable = () => {
   } = useStaff();
   const { activeStaffRoles } = useStaffRoles({ activeOnly: true });
   const { openDialog, confirmDelete } = useDialog();
+  const tableMode = useRememberedTableMode('staff');
   const rows = useMemo(() => Array.isArray(staff) ? staff : [], [staff]);
 
   const totalPayroll = rows.reduce((sum, row) => sum + calculateStaffPay(row), 0);
@@ -124,7 +126,7 @@ const StaffTable = () => {
   const handleView = (staffMember) => {
     openDialog({
       title: t('staff.dialogs.viewTitle'),
-      children: <StaffCard data={staffMember} />,
+      children: <StaffCard data={staffMember} details />,
       showButtons: false,
     });
   };
@@ -432,7 +434,7 @@ const StaffTable = () => {
             description={t('emptyStates.filtered.description')}
           />
         )}
-        defaultMode='cards'
+        {...tableMode}
         showColumnVisibility={true}
         loadingText={t('staff.loading')}
         noDataText={t('staff.noData')}

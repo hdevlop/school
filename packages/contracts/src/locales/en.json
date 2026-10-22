@@ -818,6 +818,8 @@
       "totalExpenses": "Total Expenses"
     },
     "finance": {
+      "collectionRateDueHint": "Paid toward installments due to date. Prepaid installments are excluded.",
+      "collectionRateDue": "Collection rate on due fees",
       "totalStudents": "Total Students",
       "totalTeachers": "Total Teachers",
       "incomeMonth": "Income (month)",
@@ -887,6 +889,10 @@
     }
   },
   "common": {
+    "filters": "Filters",
+    "deleteFailedCount": "{{count}} record(s) could not be deleted",
+    "deletedCount": "{{count}} record(s) deleted",
+    "deleteSelected": "Delete selected ({{count}})",
     "backToDashboard": "Back to dashboard",
     "feedback": {
       "loadingLabel": "Loading...",
@@ -2084,6 +2090,7 @@
       "status": "Status"
     },
     "filters": {
+      "missingParentDetails": "Missing parent details",
       "searchByName": "Search by name...",
       "searchByStudentCode": "Search by student code...",
       "searchByEmail": "Search by email...",
@@ -2096,7 +2103,7 @@
       "personalInfo": "Personal Information",
       "academicInfo": "Academic Information",
       "medicalInfo": "Medical Information",
-      "massarCode": "Massar code"
+      "massarCode": "Code"
     },
     "status": {
       "graduated": "Graduated",
@@ -2196,7 +2203,7 @@
       "noPreviousSchoolRecorded": "No previous school recorded",
       "noMedicalConditionsRecorded": "No medical conditions recorded",
       "noParentsLinked": "No parents linked to this student",
-      "noParentsLinkedHelp": "Parents can be linked when editing the student profile",
+      "noParentsLinkedHelp": "Parent information still needs to be completed.",
       "noResponsibilities": "No special responsibilities recorded",
       "emergencyContact": "Emergency Contact",
       "financialResponsibility": "Financial Responsibility",
@@ -2323,6 +2330,13 @@
     }
   },
   "parents": {
+    "family": {
+      "selectParent": "Select a parent",
+      "linkParent": "Link parent",
+      "unlink": "Unlink",
+      "unlinkWarning": "Remove this family link? The parent and student records will be kept.",
+      "immediateChanges": "Family links are saved immediately, separately from the student profile."
+    },
     "success": {
       "retrieved": "Parent retrieved successfully",
       "allRetrieved": "All parents retrieved successfully",
@@ -2436,12 +2450,17 @@
       "occupation": "Occupation"
     },
     "filters": {
+      "missingDetails": "Missing parent details",
+      "withoutStudents": "Without students",
       "searchByName": "Search by name...",
       "searchByEmail": "Search by email...",
       "searchByPhone": "Search by phone...",
       "filterByRelationship": "Filter by relationship..."
     },
     "profile": {
+      "selectStudent": "Select a student",
+      "unlinkStudent": "Unlink student",
+      "linkStudent": "Link student",
       "quickStats": "Quick Stats",
       "financialResponsibility": "Financial Responsibility",
       "emergencyContact": "Emergency Contact",
@@ -2866,6 +2885,7 @@
       "cinExists": "A teacher with this CIN already exists",
       "emailExists": "A teacher with this email already exists",
       "hasAssignmentHistory": "This teacher has class assignments in a school year. Remove those assignments before deleting the teacher",
+      "hasRecordedHistory": "This teacher has assessments, exams, attendance or timetable records. Deactivate the teacher instead to keep these records.",
       "datedRosterUnreviewed": "Dated teacher rosters require reviewed assignment history",
       "dateOutsideYear": "Date is outside the academic year reporting interval",
       "assignmentNotFound": "Assignment not found",
@@ -2974,6 +2994,8 @@
       "editTitle": "Edit Teacher",
       "updateButton": "Update Teacher",
       "deleteButton": "Delete Teacher",
+      "deleteWarning": "The teacher, their login account and teaching assignments in all school years will be permanently deleted.",
+      "bulkDeleteWarning": "The selected teachers, their login accounts and teaching assignments in all school years will be permanently deleted.",
       "bulkDeleteItemName": "{{count}} teacher(s)"
     },
     "table": {
@@ -3221,6 +3243,7 @@
       "receiptGenerated": "Payment receipt generated successfully"
     },
     "errors": {
+      "checkNumberExists": "A check with this number is already recorded for this student.",
       "recordFailed": "Failed to record payment. Please try again.",
       "studentMissing": "Student information is missing",
       "insufficientCash": "Insufficient cash. Add {{amount}} to cover the selected installments.",
@@ -3349,6 +3372,7 @@
       "voidReason": "Reason for voiding this payment"
     },
     "register": {
+      "amountToRecord": "Amount to record",
       "missing": "Missing",
       "giveCustomer": "Give customer",
       "title": "Cashier register",
@@ -3609,7 +3633,8 @@
       "hasStudents": "This section has students; move them before deleting or moving it",
       "sectionRequired": "Section is required",
       "validationFailed": "The section could not be identified",
-      "classOutsideSelectedYear": "The section's class must belong to the selected school year"
+      "classOutsideSelectedYear": "The section's class must belong to the selected school year",
+      "hasAssignments": "Assigned teachers or staff: {{names}}. Reassign them before deleting or moving this section."
     },
     "validation": {
       "nameRequired": "Section name is required",
@@ -4232,7 +4257,9 @@
       "nameExists": "A class with this name already exists",
       "invalidAcademicYear": "Invalid academic year format",
       "hasSections": "Remove this class's sections before deleting it",
-      "classRequired": "Class is required"
+      "classRequired": "Class is required",
+      "hasStaff": "This class is assigned to: {{names}}. Remove their assignments before deleting it.",
+      "inactiveCycle": "Please select an active cycle."
     },
     "validation": {
       "nameRequired": "Class name is required",
@@ -4286,11 +4313,16 @@
     "form": {
       "cycleInformation": "Cycle Information",
       "name": "Name",
+      "namePlaceholder": "e.g., Primary School",
       "labels": "Labels",
       "labelFr": "French Label",
+      "labelFrPlaceholder": "e.g., Primaire",
       "labelAr": "Arabic Label",
+      "labelArPlaceholder": "e.g., الابتدائي",
       "labelEs": "Spanish Label",
+      "labelEsPlaceholder": "e.g., Primaria",
       "sortOrder": "Sort Order",
+      "sortOrderPlaceholder": "e.g., 1",
       "active": "Active"
     },
     "dialogs": {
@@ -5059,6 +5091,8 @@
       "beforeHire": "Payroll period cannot be before the staff member’s hire month."
     },
     "stats": {
+      "paidStaff": "Paid / Staff",
+      "totalPayroll": "Payroll total (paid + unpaid)",
       "period": "Period",
       "payroll": "Payroll",
       "pending": "Pending",
@@ -5421,8 +5455,8 @@
     "teachers": {
       "create": "Create this teacher?",
       "update": "Update this teacher?",
-      "delete": "Delete this teacher? This action cannot be undone.",
-      "bulkDelete": "Delete these teachers? This action cannot be undone.",
+      "delete": "Delete this teacher? This action cannot be undone. The teacher, their login account and teaching assignments in all school years will be permanently deleted.",
+      "bulkDelete": "Delete these teachers? This action cannot be undone. The selected teachers, their login accounts and teaching assignments in all school years will be permanently deleted.",
       "deleteAll": "Delete all teachers? This action cannot be undone.",
       "assignSubject": "Assign this subject to the teacher?",
       "unassignSubject": "Unassign this subject from the teacher?",
@@ -6161,7 +6195,8 @@
       "endOutsideInterval": "End date is outside the enrollment interval",
       "noOpenPlacementEnd": "No open placement to end",
       "endBeforePlacement": "End date must follow the current placement start",
-      "futureEnd": "Active-year enrollment cannot end in the future"
+      "futureEnd": "Active-year enrollment cannot end in the future",
+      "sectionFull": "Section {{name}} is full (maximum {{capacity}} students)."
     }
   },
   "calendar": {
@@ -6726,5 +6761,13 @@
     "behaviorTimeIsRequired": "Behavior time is required",
     "schoolEmailRequired": "School email is required",
     "schoolAddressRequired": "School address is required"
+  },
+  "academic": {
+    "accountantAssignmentOptional": "Cycle assignment is optional. You can assign a cycle later.",
+    "deleteWarning": "Linked records are protected. Deleted records cannot be recovered.",
+    "classRequired": "Please select a class.",
+    "cycleNameRequired": "Cycle name is required.",
+    "subjectSearch": "Search by subject name or code...",
+    "staffAssignmentOptional": "Class assignments are optional. You can assign classes later."
   }
 }
