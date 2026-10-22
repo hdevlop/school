@@ -283,27 +283,23 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
     );
   }
 
-  const paidPercent = feeData.netAmount > 0 ? Math.round((feeData.totalPaid / feeData.netAmount) * 100) : 0;
   const feeStats = [
     {
       icon: CircleDollarSign,
       label: t('common.total'),
       value: majorMoney(feeData.netAmount),
-      subtext: t('students.profile.feeDetails.assignedCount', { count: feeData.fees.length }),
       iconClassName: 'bg-blue-50 text-blue-600 group-hover:bg-blue-100',
     },
     {
       icon: CheckCircle2,
       label: t('students.profile.feeDetails.paid'),
       value: majorMoney(feeData.totalPaid),
-      subtext: t('students.profile.feeDetails.collectedPercent', { count: paidPercent }),
       iconClassName: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-100',
     },
     {
       icon: AlertTriangle,
       label: t('students.profile.due'),
       value: majorMoney(feeData.totalDue),
-      subtext: t('students.profile.feeDetails.overdueInstallmentCount', { count: feeData.overdueInstallments.length }),
       iconClassName: feeData.totalDue > 0
         ? 'bg-rose-50 text-rose-600 group-hover:bg-rose-100'
         : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200',
@@ -312,7 +308,6 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
       icon: CalendarClock,
       label: t('students.profile.nextDue'),
       value: feeData.nextDue ? displayDateOnly(feeData.nextDue.dueDate) : t('common.none'),
-      subtext: t('students.profile.feeDetails.oldestUnpaid'),
       iconClassName: 'bg-amber-50 text-amber-600 group-hover:bg-amber-100',
     },
   ];
@@ -326,7 +321,6 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
             icon={stat.icon}
             label={stat.label}
             value={stat.value}
-            subtext={stat.subtext}
             classNames={{ icon: stat.iconClassName }}
           />
         ))}

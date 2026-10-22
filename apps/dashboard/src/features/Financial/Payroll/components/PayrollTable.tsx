@@ -233,7 +233,7 @@ const PayrollTable = () => {
       accessorKey: 'paymentAmount',
       header: t('payroll.table.amount'),
       enableSorting: true,
-      cell: ({ getValue }) => <span className="font-semibold text-slate-800">{majorMoney(getValue() as number)}</span>,
+      cell: ({ getValue }) => <span className="font-semibold tabular-nums text-foreground">{majorMoney(getValue() as number)}</span>,
     },
     {
       accessorKey: 'paymentStatus',

@@ -9,6 +9,7 @@ import { useDialogStore } from "najm-kit";
 import { useDialog } from '@/shared/useDialog';
 import { useFees } from "@/features/Financial/Fees/hooks/useFees";
 import MultiFeesPayment from "@/features/Financial/Payment/components/MultiFeesPayment";
+import { openPaymentDialog } from '@/features/Financial/Payment/utils/openPaymentDialog';
 import { PaymentRecordedPrompt } from "@/features/Financial/Payment/components/ReceiptPrint/PaymentRecordedPrompt";
 import { CreditCard, Receipt, History, FileText, Tag, Plus } from "lucide-react";
 import { PaymentHistory } from "./paymentHistory";
@@ -329,7 +330,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
 
     try {
       const compactPayment = Boolean(scopedTarget?.installment);
-      const paymentData = await openDialog({
+      const recordedPayment = await openPaymentDialog(openDialog, {
         // Names the dialog for screen readers; the payment header shows the same words.
         title: t('payments.dialogs.createButton'),
         children: (
@@ -343,18 +344,14 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
         width: compactPayment ? 'xl' : 'full',
         height: compactPayment ? 'auto' : 'full',
         className: 'p-0 bg-transparent border-none shadow-none [&>[data-slot=dialog-header]]:sr-only',
-      });
+      }, createPayment);
 
-      if (paymentData) {
-        const response = await createPayment(paymentData);
-        const payment = response?.data;
-        if (payment?.id) {
-          openDialog({
-            title: t('payments.dialogs.recordedTitle'),
-            children: <PaymentRecordedPrompt payment={payment} student={visibleStudentFees.student} />,
-            showButtons: false,
-          });
-        }
+      if (recordedPayment?.id) {
+        openDialog({
+          title: t('payments.dialogs.recordedTitle'),
+          children: <PaymentRecordedPrompt payment={recordedPayment} student={visibleStudentFees.student} />,
+          showButtons: false,
+        });
       }
     } finally {
       resetPayment();

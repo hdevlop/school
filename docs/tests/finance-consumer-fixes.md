@@ -66,8 +66,9 @@ and an October 22 billing date. The discount was persisted; its display was wron
   remain supported. Existing duplicate receipts are preserved; no unique index
   or database rewrite was applied. Direct external database writers are outside
   this service-level guard.
-- The Collection Rate label and explanatory text identify installments due to
-  date and exclude prepaid installments. The calculation is unchanged.
+- The Collection Rate label identifies installments due to date. The calculation
+  excludes prepaid installments and is unchanged. Summary card descriptions were
+  removed at the owner's request, including the student profile's fee cards.
 - Student finance cards allow names and status badges to wrap, with space for
   the row menu.
 
@@ -86,3 +87,32 @@ Verification of this follow-up:
   The existing Najm Chatbot RAG-import deprecation notice remains.
 - i18n scan and lint passed; lint retains the existing ParentsTable warning.
 - Visual browser acceptance has not been repeated.
+
+## Rejected payment dialog and dark-theme follow-up
+
+The payment dialog previously returned its form data and closed before the
+caller attempted the payment mutation. A failed mutation therefore surfaced from
+the click handler and the caller's cleanup discarded the entered payment.
+
+- The mutation now runs in the dialog's awaited primary submit handler. Failure
+  keeps the dialog and form mounted; only success or cancellation lets the caller
+  clear payment state. The receipt prompt follows a successful recorded payment.
+- The form catches the rejected submit promise. The existing CRUD error toast
+  remains the sole failure notification, and the form retains its retry key.
+  A submit guard prevents overlapping submissions from the same form.
+- The read-only Net Amount field has explicit foreground/background pairs for
+  light and dark themes. Its text selectors target the inner number input,
+  which sets its own foreground independently of the styled wrapper.
+- The Payroll table amount uses the theme foreground, matching its mobile card,
+  instead of a fixed dark slate color that disappears on dark backgrounds.
+
+Verification: the real Najm dialog store regression covers a rejected AuthError,
+retained dialog identity, corrected retry, loading, success and cancellation.
+Both new tests pass; the finance suite passes 156 tests. Lint and root typecheck
+pass; lint retains the existing ParentsTable hook warning. The isolated production
+build (`.next-payment-dialog-fix`) passes with the existing Najm Chatbot RAG-import
+deprecation notice. The contrast follow-up reran the rejected-payment tests,
+all 156 finance tests and lint. Compiled production CSS includes both inner-input
+foreground selectors, including the dark-theme rule. No live financial records
+were changed. Browser visual acceptance has not been repeated: this session has
+no available browser surface.

@@ -166,7 +166,7 @@ const SimpleFeeFormContent = ({ fee, feeTypes, isEditMode }) => {
                icon={Wallet}
                formLabel={t('fees.form.netAmount') || 'Net Amount'}
                readOnly={true}
-               className="border-green-700 bg-green-100"
+               className="border-green-700 bg-green-100 text-green-950 [&_input]:text-green-950 dark:bg-green-950/40 dark:text-green-100 dark:[&_input]:text-green-100"
             />
          </div>
 

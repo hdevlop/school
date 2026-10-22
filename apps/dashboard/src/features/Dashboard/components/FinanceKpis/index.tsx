@@ -22,15 +22,13 @@ type KpiCardProps = {
   title: string;
   value: string | number;
   icon: React.ComponentType<{ className?: string }>;
-  subtext?: string;
 };
 
-const KpiCard: React.FC<KpiCardProps> = ({ title, value, icon, subtext }) => (
+const KpiCard: React.FC<KpiCardProps> = ({ title, value, icon }) => (
   <NStatCard
     icon={icon}
     label={title}
     value={value}
-    subtext={subtext}
     classNames={{
       label: 'max-sm:whitespace-normal',
       value: 'max-sm:wrap-anywhere max-sm:leading-snug',
@@ -100,7 +98,6 @@ const FinanceKpis: React.FC = () => {
       />
       <KpiCard
         title={t('dashboard.finance.collectionRateDue')}
-        subtext={t('dashboard.finance.collectionRateDueHint')}
         value={percentFromHundred(collectionRateYTD)}
         icon={Target}
       />

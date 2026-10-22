@@ -24,6 +24,7 @@ export const PaymentForm = ({ studentId }) => {
     const selectedCount = usePaymentStore((state) => state.getSelectedCount());
     const totalAllocated = usePaymentStore((state) => state.getTotalAllocated());
     const idempotencyKey = useRef(crypto.randomUUID());
+    const submitting = useRef(false);
 
     const localDate = () => {
         const now = new Date();
@@ -42,6 +43,7 @@ export const PaymentForm = ({ studentId }) => {
     };
 
     const handleSubmit = async (formData) => {
+        if (submitting.current) return;
         const cashReceived = typeof formData.amount === 'string'
             ? parseFloat(formData.amount)
             : formData.amount;
@@ -72,8 +74,9 @@ export const PaymentForm = ({ studentId }) => {
             return;
         }
 
-        // The caller records the payment once this dialog closes; useCreate
-        // reports the outcome, so a success toast here would precede the save.
+        // The dialog awaits its mutation before closing. A rejected save keeps
+        // these form values and the same retry key; CRUD already shows the error.
+        submitting.current = true;
         try {
             await pop({
                 ...formData,
@@ -84,7 +87,9 @@ export const PaymentForm = ({ studentId }) => {
                 idempotencyKey: idempotencyKey.current,
             });
         } catch {
-            toast.error(t('payments.errors.recordFailed'));
+            // Handled here so NForm's submit promise cannot reject unobserved.
+        } finally {
+            submitting.current = false;
         }
     };
 
