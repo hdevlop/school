@@ -1,6 +1,8 @@
 'use client';
 
-import { NAvatar, NButton, NCard, NIcon } from 'najm-kit';
+
+import { PermissionButton } from '@/components/PermissionButton';
+import { NAvatar, NCard, NIcon } from 'najm-kit';
 
 import React from 'react';
 import {
@@ -436,10 +438,10 @@ export default function ParentsTab({
       </div>
 
       <div className="sticky bottom-0 z-10 flex justify-end border-t border-slate-200 bg-white/95 px-1 py-3 backdrop-blur">
-        <NButton type="button" size="sm" onClick={onParentsSave} disabled={isParentSaving}>
+        <PermissionButton permission="update:parents" type="button" size="sm" onClick={onParentsSave} disabled={isParentSaving}>
           <Save size={14} className="mr-2" />
           {isParentSaving ? t('students.profile.savingParents') : t('students.profile.saveParents')}
-        </NButton>
+        </PermissionButton>
       </div>
     </div>
   );

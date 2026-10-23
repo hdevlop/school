@@ -5,6 +5,8 @@ const production = process.env.NODE_ENV === 'production';
 const help = `School seed commands:
   bun seed                 Choose a command in a terminal
   bun seed admin           Create or reset the administrator
+  bun seed defaults        Seed default settings, classes, sections, subjects and fee types; no demo people
+  bun seed defaults --year=2026-2027 --levels=maternelle,primaire  Without a prompt
   bun seed demo            Choose a year and add demo data
   bun seed demo --year=2025-2026  Add demo data for one year without a prompt
   bun seed demo --year=2025-2026 --resume-from=announcements  Resume after Payroll
@@ -12,7 +14,8 @@ const help = `School seed commands:
   bun seed history --years=4  Seed a longer history
   bun seed academic        Add the default classes, sections A-C, subjects and fee types for a year
   bun seed academic --year=2026-2027 --levels=maternelle,primaire,college  Without a prompt
-  bun seed reset-demo      Delete school data; classes, sections, subjects and fee types stay
+  bun seed reset-demo      Delete school data; cycles, classes, sections, subjects and fee types stay
+  bun seed reset-all       Delete school data including cycles, classes, sections, subjects and fee types
   bun run seed:admin       Create or reset the administrator
 ${production ? '' : '  bun seed demo-ui         Open the development demo generator\n'}`;
 
@@ -32,10 +35,12 @@ if (!command) {
     message: 'Choose a School seed command',
     options: [
       { value: 'admin', label: 'Create or reset administrator' },
+      { value: 'defaults', label: 'Seed default data', hint: 'settings and academic structure; keeps existing data; no demo people' },
       { value: 'demo', label: 'Add demo data' },
       { value: 'history', label: 'Seed 3 years of demo history', hint: 'empty school, students promoted each year' },
       { value: 'academic', label: 'Add classes, sections, subjects and fee types', hint: 'default Moroccan levels; no people' },
-      { value: 'reset-demo', label: 'Delete school data', hint: 'destructive; keeps classes, sections, subjects and fee types' },
+      { value: 'reset-demo', label: 'Delete school data (keep academics)', hint: 'keeps cycles, classes, sections, subjects and fee types' },
+      { value: 'reset-all', label: 'Delete school data including academics', hint: 'also deletes cycles, classes, sections, subjects and fee types in every year' },
       ...(!production ? [{ value: 'demo-ui', label: 'Open development demo generator' }] : []),
     ],
   });
@@ -101,6 +106,7 @@ switch (command) {
     console.log(`Demo academic year: ${getConfiguredSeedAcademicYear()}`);
     await import('./scripts/demo/seed-demo');
     break;
+  case 'defaults':
   case 'academic': {
     if (!hasFlag('--year')) {
       if (!interactive()) {
@@ -122,7 +128,8 @@ switch (command) {
       }
       process.argv.push(`--levels=${levels.join(',')}`);
     }
-    await import('./scripts/school/seed-academic');
+    const { seedAcademic } = await import('./scripts/school/seed-academic');
+    await seedAcademic({ includeSettings: command === 'defaults' });
     break;
   }
   case 'history': {
@@ -130,19 +137,24 @@ switch (command) {
     await runHistorySeedCommand(process.argv.slice(3));
     break;
   }
-  case 'reset-demo': {
+  case 'reset-demo':
+  case 'reset-all': {
     if (!process.stdin.isTTY || !process.stdout.isTTY) {
       throw new Error('Demo reset requires an interactive terminal.');
     }
+    const includeAcademic = command === 'reset-all';
     const confirmed = await confirm({
-      message: 'Delete all school data except classes, sections, subjects and fee types? This cannot be undone.',
+      message: includeAcademic
+        ? 'Delete all school data in every year, including cycles, classes, sections, subjects and fee types? This cannot be undone.'
+        : 'Delete all school data except cycles, classes, sections, subjects and fee types? This cannot be undone.',
       initialValue: false,
     });
     if (isCancel(confirmed) || !confirmed) {
       cancel('Seed cancelled; no data was changed.');
       process.exit(0);
     }
-    await import('./scripts/demo/reset-demo');
+    const { resetDemo } = await import('./scripts/demo/reset-demo');
+    await resetDemo({ includeAcademic });
     break;
   }
   case 'demo-ui':

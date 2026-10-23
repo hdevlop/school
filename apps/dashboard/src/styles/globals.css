@@ -185,10 +185,6 @@ body {
   --os-handle-bg-active: rgba(212, 212, 216, 0.72);
 }
 
-.student-profile-dialog > button {
-  display: none;
-}
-
 /* Person avatars share a quiet primary backdrop without recoloring the image. */
 [data-slot="avatar"] {
   background-color: color-mix(in oklab, var(--primary) 10%, transparent);

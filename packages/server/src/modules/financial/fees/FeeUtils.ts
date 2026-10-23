@@ -1,6 +1,7 @@
 import { feeInstallments, fees, paymentAllocations, payments, students } from '../../../database/schema';
 import { jsonAggSubquery } from '../../../shared';
 import { asc, eq, sql } from 'drizzle-orm';
+import { getBusinessDateOnly } from '../../../shared/businessDate';
 
 export const getTotalFeesCount = () => {
    return sql`COUNT(${fees.id})::int`;
@@ -106,12 +107,30 @@ export const getTotalUnpaidAmount = () => {
   `;
 };
 
+// Lateness and payment progress are independent: a partially paid installment
+// stays overdue until its completed allocations cover the amount due.
+export const getInstallmentIsOverdue = () => {
+   const today = getBusinessDateOnly();
+   return sql<boolean>`(
+      ${feeInstallments.dueDate} < ${today}::date
+      AND ${feeInstallments.status} NOT IN ('paid', 'cancelled')
+      AND ${feeInstallments.amount}::numeric > COALESCE((
+         SELECT SUM(${paymentAllocations.amount}::numeric)
+         FROM ${paymentAllocations}
+         INNER JOIN ${payments} ON ${paymentAllocations.paymentId} = ${payments.id}
+         WHERE ${paymentAllocations.installmentId} = ${feeInstallments.id}
+         AND ${payments.status} = 'completed'
+         AND COALESCE(${payments.settledDate}, ${payments.paymentDate}) <= ${today}::date
+      ), 0)
+   )`;
+};
+
 export const getOverdueInstallments = () => {
    return sql`(
     SELECT COUNT(*)::int 
     FROM ${feeInstallments} 
     WHERE ${feeInstallments.feeId} = ${fees.id} 
-    AND ${feeInstallments.status} = 'overdue'
+    AND ${getInstallmentIsOverdue()}
   )`;
 };
 
@@ -157,6 +176,7 @@ export function getFeeRelations() {
          dueDate: feeInstallments.dueDate,
          amount: feeInstallments.amount,
          paidAmount: feeInstallments.paidAmount,
+         isOverdue: getInstallmentIsOverdue(),
          completedAmount: sql`COALESCE((
             SELECT SUM(${paymentAllocations.amount}::numeric)
             FROM ${paymentAllocations}

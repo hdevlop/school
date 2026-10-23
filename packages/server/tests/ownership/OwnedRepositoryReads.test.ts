@@ -57,6 +57,17 @@ function filterValues(args: unknown[]): string[] {
 // Without joins Drizzle leaves the subquery's column unqualified.
 const OWNED_ID_SUBQUERY = /"(\w+)"\."id" in \(select (?:"\1"\.)?"id" from "\1"/;
 
+it.each([
+  ['class sections', () => inYear(new ClassRepository()), 'getSectionRosterCounts'],
+  ['sections', () => inYear(new SectionRepository()), 'getRosterCounts'],
+] as const)('keeps %s roster counts inside ownership, the selected year and requested ids', async (_name, create, method) => {
+  const { sql, params } = await lastStatement(create, method, [['id-1']], 'teacher');
+  expect(sql).toMatch(OWNED_ID_SUBQUERY);
+  expect(sql).toContain('"classes"."academic_year" = $');
+  expect(params).toEqual(expect.arrayContaining(['user-1', '2025-2026', 'id-1']));
+  expect(sql).toContain('p.valid_to is null and e.left_on is null');
+});
+
 // Every read that returns owned rows to a route or MCP tool. Apart from the
 // unfiltered getAll lists, each either lost ownership to a second .where() or
 // never applied it.

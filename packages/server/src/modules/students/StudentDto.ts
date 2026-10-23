@@ -69,6 +69,8 @@ export const createStudentDto = studentSchema.omit({ id: true }).extend({
 });
 
 export const createStudentsBulkDto = z.array(createStudentDto);
+export const studentAdmissionDto = createStudentDto.pick({ studentCode: true, classId: true, sectionId: true, yearEnrolledOn: true });
+export type StudentAdmissionDto = z.infer<typeof studentAdmissionDto>;
 export const importStudentDto = createStudentDto.extend({
   parents: z.array(z.union([z.string().min(1), importParentDto])).optional(),
 });

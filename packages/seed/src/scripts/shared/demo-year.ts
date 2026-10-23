@@ -20,9 +20,6 @@ export async function prepareDemoYear(
     await settings.create({ ...schoolSeedData.settingsData, currentAcademicYear: installYear });
   }
   const registered = await years.list('admin');
-  if (installed && registered.activeAcademicYearId) {
-    await years.verifyCalendar(registered.activeAcademicYearId, 'Verified synthetic calendar from the demo school settings', 'school-seed');
-  }
   let selected = registered.years.find((year) => year?.label === academicYear);
   if (!selected) {
     selected = await years.create({
@@ -35,13 +32,18 @@ export async function prepareDemoYear(
     await repository.setStatus(selected!.id, 'open', 'school-seed');
   } else {
     if (selected.status === 'draft') throw new Error('The selected year is a draft; open it before adding demo people');
-    if (selected.provenance !== 'verified' && !installed) {
-      throw new Error('Verify the selected academic year calendar before adding demo data');
-    }
     const calendar = defaultSchoolYearCalendar(academicYear);
     if (Object.entries(calendar).some(([key, value]) => selected![key as keyof typeof selected] !== value)) {
       throw new Error('Demo data requires a September-June calendar with the standard reporting interval');
     }
+    if (selected.provenance !== 'verified') {
+      await years.verifyCalendar(selected.id,
+        'All five calendar dates match the synthetic September-June calendar explicitly selected by the demo seed CLI',
+        'school-seed');
+    }
+  }
+  if (installed && registered.activeAcademicYearId && registered.activeAcademicYearId !== selected!.id) {
+    await years.verifyCalendar(registered.activeAcademicYearId, 'Verified synthetic calendar from the demo school settings', 'school-seed');
   }
   return selected!.id;
 }

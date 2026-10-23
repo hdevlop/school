@@ -1,8 +1,10 @@
 'use client';
 
+
+import { PermissionButton } from '@/components/PermissionButton';
 import Link from 'next/link';
 import { BriefcaseBusiness, CheckCircle2, Clock, HandCoins, Timer, Undo2 } from 'lucide-react';
-import { Badge, NAvatar, NButton } from 'najm-kit';
+import { Badge, NAvatar } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
@@ -113,7 +115,7 @@ export default function PayrollCard({ data: row, isPaying, onPay, onUnpay }: Pro
           <span className="font-semibold tabular-nums text-foreground">{majorMoney(row.paymentAmount)}</span>
           <PayrollStatusBadge status={row.paymentStatus} />
         </div>
-        <NButton
+        <PermissionButton permission="update:payroll"
           size="sm"
           variant={isPaid ? 'outline' : 'default'}
           disabled={isPaying || (!isPaid && !row.canPay)}
@@ -127,7 +129,7 @@ export default function PayrollCard({ data: row, isPaying, onPay, onUnpay }: Pro
         >
           {isPaid ? <Undo2 className="h-4 w-4" /> : <HandCoins className="h-4 w-4" />}
           {isPaid ? t('payroll.actions.unpay') : t('payroll.actions.pay')}
-        </NButton>
+        </PermissionButton>
       </div>
     </div>
   );

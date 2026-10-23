@@ -1658,3 +1658,10 @@ Behaviour changes to confirm in role acceptance:
 - The tokens' `.writeBy(...)` columns are not read by najm-auth; update and delete on owned resources are limited through the scoped `getById` lookup.
 
 Drizzle generation proposed `roles_name_unique` from unrelated auth schema drift during this work. The academic-year migration SQL and snapshots omit that index so this deployment cannot unexpectedly fail on or alter role data. A later generation may propose it again; reconcile that separately in the auth workstream.
+
+## First-use enrollment follow-up, 2026-10-22
+
+Same-day placement correction, early admission validation and section counts
+are covered by [the first-use verification note](first-use-2026-10-22.md).
+Authenticated fixture acceptance passes; browser acceptance and deployment are
+separate. The note records the existing ownership SQL-baseline mismatch.

@@ -238,7 +238,7 @@ export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
             />
             <div className="flex flex-col gap-1">
                <Label className="text-sm font-medium text-muted-foreground">
-                  {t('fees.form.netAmount') || 'Net Amount'}
+                  {t(paymentType === 'recurring' ? 'fees.form.netAmountForYear' : 'fees.form.netAmount')}
                </Label>
                <div className="h-10 flex items-center rounded-md border border-green-700 bg-green-100 px-3 text-sm font-semibold">
                   {majorMoney(netAmount)}

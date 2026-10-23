@@ -44,4 +44,8 @@ export class CycleService {
     await this.cycleValidator.ensureNotInUse(id);
     return this.cycleRepository.delete(id);
   }
+
+  async clearForSeedReset() {
+    await this.cycleRepository.clearForSeedReset();
+  }
 }

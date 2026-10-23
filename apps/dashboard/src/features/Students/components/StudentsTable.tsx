@@ -1,12 +1,12 @@
 "use client"
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, useTableStore, useResolvedToolbarLabels, type ContextMenuItem } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { GraduationCap, Plus, Printer, SearchX } from 'lucide-react';
 import FullStudentForm from './FullStudentForm';
-import StudentProfile from './StudentProfile';
 import { useStudents } from '../hooks/useStudents';
 import { useTranslation } from 'najm-i18n/react';
 import StudentCard from './StudentCard';
@@ -72,8 +72,6 @@ function StudentsTable() {
   const { role, isFamily } = useViewerRole();
   const { can } = usePermissions();
   const canCreate = !isFamily && can('create:students');
-  const canUpdate = !isFamily && can('update:students');
-  const canDelete = !isFamily && can('delete:students');
   const title = role === 'parent' ? t('navigation.myChildren')
     : role === 'student' ? t('navigation.myProfile') : t('navigation.students');
   const { classes, refetch: refetchClasses } = useClasses();
@@ -103,7 +101,7 @@ function StudentsTable() {
   const { filters, filteredStudents } = useStudentsTableFilters(students);
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
 
-  const { openDialog, confirmDelete, pop } = useDialog();
+  const { openDialog, confirmDelete } = useDialog();
 
   // Parents created in the same form are invited too, one notice each.
   const createAndInviteStudent = async (data) => {
@@ -155,24 +153,7 @@ function StudentsTable() {
   };
 
   const handleView = (student) => {
-    openDialog({
-      children: (
-        <StudentProfile
-          studentId={student.id}
-          onClose={() => pop()}
-          onOpenFeeRecord={async (feeId?: string) => {
-            await pop();
-            const query = feeId ? `?feeId=${encodeURIComponent(feeId)}` : '';
-            router.push(`/students/${student.id}/fees${query}`);
-          }}
-        />
-      ),
-      width: 'full',
-      height: 'full',
-      showButtons: false,
-      padding: 'none',
-      className: 'student-profile-dialog',
-    });
+    router.push(`/students/${student.id}`);
   };
 
   const handleEdit = (student) => {
@@ -272,6 +253,7 @@ function StudentsTable() {
       </NPageHeader>
 
       <NTable
+        permissionResource="students"
         className='min-h-0 flex-1'
         classNames={{
           tableHeader: '[&_th:has(.student-name-column)]:w-[18%] [&_th:has(.student-arabic-name-column)]:w-[14%] [&_th:has(.student-email-column)]:w-[18%] [&_th:has(.student-class-column)]:w-[7%] [&_th:has(.student-section-column)]:w-[8%] [&_th:has(.student-gender-column)]:w-[8%] [&_th:last-child]:w-12',
@@ -281,12 +263,12 @@ function StudentsTable() {
         columns={columns}
         filters={filters}
         isFilteredEmpty={filteredStudents.length === 0 && !!students?.length}
-        onCreate={canCreate ? handleAddClick : undefined}
+        onCreate={isFamily ? undefined : handleAddClick}
         onView={handleView}
         onRowClick={handleView}
-        onEdit={canUpdate ? handleEdit : undefined}
-        onDelete={canDelete ? handleDelete : undefined}
-        onBulkDelete={canDelete ? handleBulkDelete : undefined}
+        onEdit={isFamily ? undefined : handleEdit}
+        onDelete={isFamily ? undefined : handleDelete}
+        onBulkDelete={isFamily ? undefined : handleBulkDelete}
         showDeleteSelection
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
@@ -313,10 +295,10 @@ function StudentsTable() {
             title={t('emptyStates.students.title')}
             description={t('emptyStates.students.description')}
             action={canCreate ? (
-              <NButton size="sm" onClick={handleAddClick}>
+              <PermissionButton permission="create:students" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('students.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             ) : undefined}
           />
         )}

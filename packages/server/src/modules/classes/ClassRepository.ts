@@ -8,6 +8,7 @@ import { jsonAgg } from '../../shared';
 import { Class } from './ClassGuards';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { sectionRosterCount } from '../studentEnrollments/sectionRosterCount';
 
 export const classSelect = {
   id: classes.id,
@@ -148,6 +149,14 @@ export class ClassRepository {
   async getAll() {
     return await this.buildClassQuery()
       .orderBy(classes.createdAt, classes.name);
+  }
+
+  async getSectionRosterCounts(classIds: string[]) {
+    if (!classIds.length) return [];
+    return this.db.select({ id: sections.id, maxStudents: sections.maxStudents,
+      studentCount: sectionRosterCount(sections.id, classes.academicYear) })
+      .from(classes).innerJoin(sections, eq(sections.classId, classes.id))
+      .where(this.readCondition(inArray(classes.id, classIds)));
   }
 
   async getInSelectedYear(id: string) {

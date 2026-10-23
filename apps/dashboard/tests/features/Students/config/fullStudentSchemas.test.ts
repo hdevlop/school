@@ -85,8 +85,9 @@ describe('fullStudentSchema composition', () => {
     expect(result.error?.issues[0]?.path).toEqual(['fees', 0, 'feeTypeId']);
   });
 
-  it('needs at least one fee, but no guardians at all', () => {
-    expect(fullStudentSchema.safeParse({ ...enrolment, fees: [] }).success).toBe(false);
+  it('allows enrollment before fee types or guardians have been set up', () => {
+    expect(fullStudentSchema.safeParse({ ...enrolment, fees: [] }).success).toBe(true);
+    expect(feesSchema.safeParse({ fees: [] }).success).toBe(true);
     expect(fullStudentSchema.safeParse({ ...enrolment, parents: [] }).success).toBe(true);
   });
 

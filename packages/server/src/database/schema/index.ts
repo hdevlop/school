@@ -207,12 +207,8 @@ export {
 } from '../../modules/financial/rollover/rolloverSchema';
 export { schoolLanding } from '../../modules/landing/LandingSchema';
 export { visitRequests, visitRequestStatusEnum } from '../../modules/visitRequests/VisitRequestSchema';
-// NOTE: aiSettings + chatSessions are chatbot-only tables and live in
-// najm-chatbot/pg (NOT in najm-rag/pg). As of najm-chatbot 2.0.3 that module
-// prints its "import RAG tables from najm-rag/pg" deprecation on every import,
-// even though the RAG tables below already come from najm-rag/pg. The notice
-// is a false positive; NAJM_NO_DEPRECATION_WARNINGS=1 silences it, but also
-// every other Najm deprecation, so it is deliberately not set.
+// Chatbot settings and sessions belong to najm-chatbot; RAG tables come
+// from najm-rag below.
 export {
   aiSettingsTable as aiSettings,
   chatSessionsTable as chatSessions,

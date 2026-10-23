@@ -4,6 +4,7 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import type { ComponentProps, ComponentType, ReactNode } from 'react'
 import { NButton, NEmptyState, WizardForm } from 'najm-kit'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { useDialog } from '@/shared/useDialog'
 import type { StepConfig } from 'najm-kit'
 import { GraduationCap, Loader2 } from 'lucide-react'
@@ -18,6 +19,8 @@ import { StudentTransportFormContent } from '@/features/Transport/components/Stu
 import { normalizeLocationValue } from 'najm-kit/location'
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole'
 import { useSetViewingYear, useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear'
+import { validateStudentAdmissionApi } from '@/services/studentApi'
+import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope'
 
 type StudentWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLabel'> & {
   submitLabel?: ReactNode
@@ -52,8 +55,25 @@ const FullStudentForm = ({
   }), [feesSchema, studentWithTransportSchema])
   const [transportSelected, setTransportSelected] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submissionError, setSubmissionError] = useState<string | null>(null)
   const submissionPromiseRef = useRef<Promise<unknown> | null>(null)
   const initialStudentValues = useMemo(() => getStudentDefaultValues(null, businessDate), [businessDate])
+  const admissionStepSchema = useMemo(() => studentWithTransportSchema.superRefine(async (data, context) => {
+    if (!studentWithTransportSchema.safeParse(data).success) return
+    try {
+      const schoolClass = classes.find((candidate: any) => candidate.id === data.classId)
+      const response = await withAcademicYear(activeYear, () => validateStudentAdmissionApi({
+        studentCode: data.studentCode, classId: data.classId, sectionId: data.sectionId,
+        yearEnrolledOn: firstYearEnrolledOn(data.enrollmentDate, schoolClass?.academicYear),
+      }))
+      const result = response?.data ?? response
+      for (const issue of result.issues) {
+        context.addIssue({ code: 'custom', path: [issue.field], message: issue.message })
+      }
+    } catch (error) {
+      context.addIssue({ code: 'custom', path: ['studentCode'], message: error instanceof Error ? error.message : t('students.form.saveFailed') })
+    }
+  }), [activeYear, classes, studentWithTransportSchema, t])
 
   const defaultFees = useMemo(() => {
     if (!canCreateFees || !feeTypes?.length) return []
@@ -71,7 +91,7 @@ const FullStudentForm = ({
     {
       id: 'student',
       title: studentStepTitle,
-      schema: studentWithTransportSchema,
+      schema: admissionStepSchema,
       fields: Object.keys(studentWithTransportSchema.shape),
       render: () => (
         <StudentFormContent
@@ -96,12 +116,25 @@ const FullStudentForm = ({
       schema: studentFeesSchema,
       fields: ['fees', 'enrollmentDate'],
       render: () => (
+        <div className="flex flex-col gap-3">
+          <p className="text-sm text-muted-foreground">{t('students.form.feesOptional')}</p>
+          {feeTypes.length === 0 && (
+            <p className="rounded-lg border bg-muted/30 p-3 text-sm">
+              {t('students.form.noFeeTypesHint')}{' '}
+              {can('create:feeTypes') && (
+                <Link href="/fee-types" target="_blank" rel="noopener noreferrer" className="font-medium text-primary underline underline-offset-4">
+                  {t('students.form.manageFeeTypes')}
+                </Link>
+              )}
+            </p>
+          )}
         <BulkFeeFormContent
           feeTypes={feeTypes}
           academicYear={activeYear}
           showInstallmentPreview={false}
           showEffectiveDateField={false}
         />
+        </div>
       ),
     }] : []),
     ...(canAssignTransport && transportSelected ? [{
@@ -119,7 +152,7 @@ const FullStudentForm = ({
         <StudentTransportFormContent feeTypes={feeTypes} />
       ),
     }] : []),
-  ], [activeYear, canCreateFees, canAssignTransport, classes, feeTypes, studentFeesSchema, feesStepTitle, parentsSchema, parentsStepTitle, studentWithTransportSchema, studentStepTitle, transportSchema, transportSelected, transportStepTitle])
+  ], [activeYear, admissionStepSchema, can, canCreateFees, canAssignTransport, classes, feeTypes, studentFeesSchema, feesStepTitle, parentsSchema, parentsStepTitle, studentWithTransportSchema, studentStepTitle, transportSchema, transportSelected, transportStepTitle, t])
 
   const defaultValues = useMemo(() => ({
     ...initialStudentValues,
@@ -180,6 +213,7 @@ const FullStudentForm = ({
     }
 
     setIsSubmitting(true)
+    setSubmissionError(null)
     const submission = Promise.resolve().then(() => onSubmitStudent(payload))
     submissionPromiseRef.current = submission
 
@@ -189,9 +223,13 @@ const FullStudentForm = ({
     } catch (error) {
       submissionPromiseRef.current = null
       setIsSubmitting(false)
+      if ([400, 409, 422].includes((error as { status?: number }).status ?? 0)) {
+        setSubmissionError(error instanceof Error ? error.message : t('students.form.saveFailed'))
+        return
+      }
       throw error
     }
-  }, [canCreateFees, canAssignTransport, classes, feeTypes, onSubmitStudent, pop])
+  }, [canCreateFees, canAssignTransport, classes, feeTypes, onSubmitStudent, pop, t])
 
   if (classes.length === 0) {
     return (
@@ -215,6 +253,7 @@ const FullStudentForm = ({
 
   return (
     <div className='h-full min-h-0' aria-busy={isSubmitting}>
+      {submissionError && <p role="alert" className="mb-3 rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">{submissionError}</p>}
       <StudentWizardForm
         steps={steps}
         schema={formSchema}

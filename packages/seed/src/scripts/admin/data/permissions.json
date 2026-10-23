@@ -216,12 +216,6 @@
     "action": "delete"
   },
   {
-    "name": "manage:attendance",
-    "description": "Permission to manage student attendance",
-    "resource": "attendance",
-    "action": "manage"
-  },
-  {
     "name": "view:reports",
     "description": "Permission to view system reports",
     "resource": "reports",
@@ -636,12 +630,6 @@
     "action": "delete"
   },
   {
-    "name": "resolve:discipline",
-    "description": "Permission to resolve and reopen discipline incidents",
-    "resource": "discipline",
-    "action": "resolve"
-  },
-  {
     "name": "admin:system",
     "description": "Full system administration access",
     "resource": "system",
@@ -696,10 +684,10 @@
     "action": "read"
   },
   {
-    "name": "manage:staff-attendance",
-    "description": "Permission to record and correct staff attendance",
+    "name": "update:staff-attendance",
+    "description": "Permission to record and correct the staff attendance roster",
     "resource": "staff-attendance",
-    "action": "manage"
+    "action": "update"
   },
   {
     "name": "create:payroll",
@@ -732,10 +720,10 @@
     "action": "read"
   },
   {
-    "name": "manage:financial-operations",
-    "description": "Permission to commit a year-end rollover",
+    "name": "update:financial-operations",
+    "description": "Permission to update financial operations, including year-end rollover",
     "resource": "financial-operations",
-    "action": "manage"
+    "action": "update"
   },
   {
     "name": "create:cycles",
@@ -786,10 +774,22 @@
     "action": "delete"
   },
   {
-    "name": "manage:class-routines",
-    "description": "Permission to build and publish class timetables",
+    "name": "create:class-routines",
+    "description": "Permission to create class-routines",
     "resource": "class-routines",
-    "action": "manage"
+    "action": "create"
+  },
+  {
+    "name": "update:class-routines",
+    "description": "Permission to update class-routines",
+    "resource": "class-routines",
+    "action": "update"
+  },
+  {
+    "name": "delete:class-routines",
+    "description": "Permission to delete class-routines",
+    "resource": "class-routines",
+    "action": "delete"
   },
   {
     "name": "reset:users",
@@ -798,9 +798,27 @@
     "action": "reset"
   },
   {
-    "name": "manage:participants",
-    "description": "Permission to manage event participants and their attendance",
+    "name": "read:participants",
+    "description": "Permission to read participants",
     "resource": "participants",
-    "action": "manage"
+    "action": "read"
+  },
+  {
+    "name": "create:participants",
+    "description": "Permission to create participants",
+    "resource": "participants",
+    "action": "create"
+  },
+  {
+    "name": "update:participants",
+    "description": "Permission to update participants",
+    "resource": "participants",
+    "action": "update"
+  },
+  {
+    "name": "delete:participants",
+    "description": "Permission to delete participants",
+    "resource": "participants",
+    "action": "delete"
   }
 ]

@@ -1,7 +1,5 @@
-export interface StudentProfileTabsProps {
-  studentId?: string;
-  onClose?: () => void;
-  onOpenFeeRecord?: (feeId?: string) => void;
+export interface StudentProfileProps {
+  studentId: string;
 }
 
 export interface Parent {

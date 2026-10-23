@@ -31,10 +31,11 @@ describe('transfer form', () => {
   const schema = buildTransferSchema(english, year, '2025-09-01');
   const move = { classId: 'c2', sectionId: 's2', reason: 'Section change' };
 
-  it('starts after the current placement and inside the year', () => {
+  it('allows same-day corrections and later moves inside the year', () => {
     expect(schema.safeParse({ ...move, validFrom: '2025-09-02' }).success).toBe(true);
     expect(schema.safeParse({ ...move, validFrom: '2026-08-31' }).success).toBe(true);
-    expect(schema.safeParse({ ...move, validFrom: '2025-09-01' }).success).toBe(false);
+    expect(schema.safeParse({ ...move, validFrom: '2025-09-01' }).success).toBe(true);
+    expect(schema.safeParse({ ...move, validFrom: '2025-08-31' }).success).toBe(false);
     expect(schema.safeParse({ ...move, validFrom: '2026-09-01' }).success).toBe(false);
   });
 

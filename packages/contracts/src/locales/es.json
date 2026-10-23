@@ -1,4 +1,95 @@
 {
+  "roleAccess": {
+    "assigned": "asignados",
+    "noPermissions": "No hay permisos coincidentes.",
+    "title": "Roles y permisos",
+    "loaded": "Permisos del rol cargados",
+    "saved": "Permisos del rol guardados",
+    "failed": "No se pudieron guardar los permisos.",
+    "module": "Módulo",
+    "sidebar": "Menú",
+    "sidebarHelp": "La visibilidad solo cambia el menú. Active primero el permiso Ver. Se mantienen las reglas de acceso del rol y de los registros.",
+    "search": "Buscar módulos o permisos…",
+    "searchRoles": "Buscar roles…",
+    "noRoles": "No hay roles coincidentes.",
+    "selectModule": "Seleccionar permisos estándar",
+    "specialPermissions": "Permisos especiales",
+    "unavailable": "No hay permiso para esta acción",
+    "noSidebar": "Sin entrada en el menú",
+    "scopeTitle": "Acceso a registros",
+    "adminLocked": "El rol de administrador está protegido y conserva el acceso completo.",
+    "wildcardHint": "Un permiso global concede varios accesos. Elimínelo de Permisos especiales antes de restringirlos.",
+    "locked": "Rol protegido",
+    "reload": "Descartar y recargar",
+    "review": "Revisar cambios",
+    "allow": "Permitir",
+    "remove": "Quitar permiso",
+    "show": "Mostrar en el menú",
+    "hide": "Ocultar del menú",
+    "sessionsHint": "Se invalidarán los permisos de las sesiones existentes de este rol. Los usuarios recibirán el nuevo acceso al renovar su sesión.",
+    "apply": "Aplicar cambios",
+    "unsaved": "{{count}} cambios sin guardar",
+    "noChanges": "No hay cambios sin guardar",
+    "discard": "Descartar",
+    "save": "Guardar cambios",
+    "unsavedTitle": "Cambios sin guardar",
+    "unsavedHint": "Cambiar de rol descartará estos cambios. ¿Descartar y continuar?",
+    "scope": {
+      "schoolWide": "Registros de todo el centro, limitados por los permisos siguientes.",
+      "teacher": "Solo registros asignados. Los permisos no amplían el alcance del docente.",
+      "parent": "Solo hijos vinculados. Los permisos no amplían el alcance del familiar.",
+      "student": "Solo registros propios. Los permisos no amplían el alcance del alumno.",
+      "unconfigured": "Este rol personalizado no tiene un alcance de registros configurado. Los permisos por sí solos no dan acceso a los registros protegidos."
+    },
+    "categories": {
+      "people": "Personas",
+      "academic": "Académico",
+      "attendance": "Asistencia",
+      "conduct": "Conducta",
+      "financial": "Finanzas",
+      "transport": "Transporte",
+      "access": "Control de acceso",
+      "general": "General"
+    },
+    "actions": {
+      "read": "Ver",
+      "create": "Añadir",
+      "update": "Editar",
+      "delete": "Eliminar",
+      "publish": "Publicar",
+      "rollover": "Cambio de año",
+      "view": "Ver informes",
+      "resolve": "Resolver",
+      "reset": "Restablecer acceso",
+      "admin": "Administración del sistema",
+      "*": "Acceso completo"
+    },
+    "resources": {
+      "attendance": "Asistencia de alumnos",
+      "staff-attendance": "Asistencia del personal",
+      "refuel": "Combustible",
+      "visit-requests": "Solicitudes de visita",
+      "payments": "Pagos",
+      "allocations": "Asignaciones de pagos",
+      "installments": "Cuotas",
+      "drivers": "Conductores",
+      "vehicle-assignments": "Asignaciones de vehículos",
+      "student-routes": "Rutas de alumnos",
+      "refuels": "Combustible",
+      "maintenance": "Mantenimiento",
+      "reports": "Informes",
+      "participants": "Participantes",
+      "system": "Sistema",
+      "*": "Todos los módulos",
+      "general": "General"
+    },
+    "errors": {
+      "notFound": "Rol no encontrado.",
+      "adminLocked": "El rol de administrador no se puede cambiar aquí.",
+      "conflict": "Este rol cambió desde que lo abrió. Recargue antes de guardar.",
+      "invalidPermissions": "Hay permisos no válidos. Recargue el catálogo."
+    }
+  },
   "academicYearMigration": {
     "title": "Revisión de datos escolares",
     "description": "Revisa los registros cuyo año o asignación histórica necesita pruebas antes de activar el historial de toda la escuela.",
@@ -1152,6 +1243,7 @@
     "bounced": "Rechazado",
     "voided": "Anulado",
     "upcoming": "Próximo",
+    "due": "Por pagar",
     "active": "Activo",
     "inactive": "Inactivo",
     "pending": "Pendiente",
@@ -1514,10 +1606,11 @@
     },
     "stats": {
       "paidStaff": "Pagados / Personal",
-      "totalPayroll": "Total de nóminas (pagadas + pendientes)",
+      "totalPayroll": "Total de nóminas registradas",
+      "recordedHint": "Los totales incluyen solo las nóminas registradas. Las filas «Sin definir» muestran un salario estimado y se excluyen hasta crear una nómina.",
       "period": "Periodo",
       "payroll": "Nómina",
-      "pending": "Pendiente",
+      "pending": "Nóminas pendientes",
       "hourlyMonthly": "Por horas / Mensual"
     },
     "table": {
@@ -1782,7 +1875,8 @@
       "unknownFeeType": "Tipo de cuota desconocido",
       "academicYear": "Año académico",
       "addFee": "Añadir cuota",
-      "noFeesAdded": "Aún no se han añadido cuotas."
+      "noFeesAdded": "Aún no se han añadido cuotas.",
+      "netAmountForYear": "Total del período facturado (tras descuento)"
     },
     "status": {
       "paying": "Pagando",
@@ -1801,7 +1895,7 @@
       "filterByStatus": "Filtrar por estado",
       "searchByStudent": "Buscar estudiante...",
       "allSections": "Todas las secciones",
-      "allSchedules": "Todas las frecuencias de pago"
+      "allSchedules": "Frecuencia"
     },
     "dialogs": {
       "createButton": "Crear",
@@ -2960,6 +3054,7 @@
       "amountRequired": "El importe es obligatorio",
       "amountPositive": "El importe debe ser mayor que 0",
       "amountTooLarge": "Este importe es demasiado alto",
+      "rejectionReasonMinLength": "Introduce un motivo de rechazo de al menos 10 caracteres",
       "checkNumberRequired": "Introduce el número del cheque"
     }
   },
@@ -3631,7 +3726,8 @@
       "roomNumberPlaceholder": "Ej.: 101",
       "sectionInformation": "Información de la sección",
       "sectionName": "Nombre de la sección",
-      "sectionNamePlaceholder": "Ingrese el nombre de la sección"
+      "sectionNamePlaceholder": "Ingrese el nombre de la sección",
+      "full": "Completo"
     },
     "table": {
       "capacity": "Capacidad",
@@ -3641,7 +3737,8 @@
       "level": "Nivel",
       "roomNumber": "Número de aula",
       "sectionName": "Nombre de la sección",
-      "status": "Estado"
+      "status": "Estado",
+      "studentCount": "Alumnos"
     },
     "success": {
       "allDeleted": "Todos los registros de Sección fueron eliminados correctamente",
@@ -4151,7 +4248,8 @@
         "withdrawn": "Retirado",
         "graduated": "Graduado",
         "transferred": "Trasladado a otro centro"
-      }
+      },
+      "sameDayHint": "Un cambio en la fecha de inicio de la asignación actual la corrige. Los cambios posteriores conservan la asignación anterior en el historial."
     },
     "success": {
       "retrieved": "Estudiante obtenido correctamente",
@@ -4246,7 +4344,11 @@
       "noClassesAdminHint": "Pide a un administrador que añada una clase y una sección antes de matricular alumnos.",
       "manageClasses": "Gestionar clases",
       "classesLoadFailed": "No se pudieron cargar las clases. Inténtalo de nuevo.",
-      "noSectionsHint": "Esta clase no tiene secciones. Añade una en Académico → Secciones, o pide ayuda a un administrador, antes de matricular un alumno."
+      "noSectionsHint": "Esta clase no tiene secciones. Añade una en Académico → Secciones, o pide ayuda a un administrador, antes de matricular un alumno.",
+      "feesOptional": "Las cuotas son opcionales al inscribirse. Puede añadirlas después desde la pestaña Cuotas del alumno.",
+      "noFeeTypesHint": "No hay tipos de cuota configurados. Termine la inscripción sin cuotas o cree uno en Finanzas → Tipos de cuota.",
+      "manageFeeTypes": "Abrir tipos de cuota (pestaña nueva)",
+      "saveFailed": "No se pudo validar o guardar al alumno. Sus datos se conservan; vuelva a intentarlo."
     },
     "status": {
       "active": "Activo",
@@ -4267,6 +4369,7 @@
     },
     "profile": {
       "detailsTitle": "Detalles del estudiante",
+      "backToStudents": "Volver a estudiantes",
       "detailsSubtitle": "Perfil y expediente académico",
       "closeDetails": "Cerrar detalles del estudiante",
       "unknown": "Desconocido",
@@ -5474,7 +5577,7 @@
       "ended": "La matrícula ha finalizado",
       "transferOutsideInterval": "La fecha de traslado está fuera del periodo de matrícula",
       "noOpenPlacementTransfer": "No hay una ubicación abierta que trasladar",
-      "transferBeforePlacement": "El traslado debe ocurrir después del inicio de la ubicación actual",
+      "transferBeforePlacement": "La fecha del traslado no puede ser anterior al inicio de la asignación actual",
       "alreadyInPlacement": "El alumno ya está en esa ubicación",
       "futureTransfer": "Un traslado del año activo no puede empezar en el futuro",
       "alreadyEnded": "La matrícula ya ha finalizado",
@@ -5809,6 +5912,8 @@
     }
   },
   "validationMessages": {
+    "duplicatePermissionIds": "Permisos duplicados",
+    "duplicateSidebarEntries": "Entradas de menú duplicadas",
     "pointsRange": "Los puntos deben estar entre 0 y 100.",
     "arrivalTimeInvalid": "Introduzca una hora de llegada válida (HH:MM).",
     "locale": "es",
@@ -5996,6 +6101,7 @@
     "studentIdIsRequired": "El identificador del alumno es obligatorio",
     "studentHasMultipleDecisions": "El alumno tiene varias decisiones",
     "studentIsRequired": "El alumno es obligatorio",
+    "subjectIsRequired": "Seleccione una asignatura",
     "subjectCodeMustBeAtLeast2Characters": "El código de la asignatura debe tener al menos 2 caracteres",
     "subjectCodeTooLong": "El código de la asignatura es demasiado largo",
     "subjectNameMustBeAtLeast2Characters": "El nombre de la asignatura debe tener al menos 2 caracteres",
@@ -6040,7 +6146,7 @@
     "required": "Obligatorio",
     "enterARealDate": "Introduzca una fecha real",
     "theDateMustFallInsideThisSchoolYear": "La fecha debe estar dentro de este curso escolar",
-    "theDateMustFollowTheCurrentPlacementAndFallInside": "La fecha debe ser posterior a la asignación actual y estar dentro de este curso escolar",
+    "theDateMustFollowTheCurrentPlacementAndFallInside": "La fecha debe coincidir con el inicio de la asignación actual o ser posterior y estar dentro de este curso escolar",
     "theDateMustFollowTheCurrentPlacement": "La fecha debe ser posterior a la asignación actual",
     "incidentDateIsRequired": "La fecha del incidente es obligatoria",
     "incidentTimeIsRequired": "La hora del incidente es obligatoria",

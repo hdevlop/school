@@ -33,7 +33,10 @@ export const createFullStudentSchemas = (t: (key: string) => string) => {
   const { student } = createStudentSchemas(t);
   const { parents } = createParentSchemas(t);
   const { assignment, transport } = createTransportSchemas(t);
-  const { fees } = createFeeSchemas(t);
+  const { bulkFeeItem } = createFeeSchemas(t);
+  // Enrollment does not require billing setup. Keep each supplied charge
+  // validated, while allowing fees to be assigned after the student exists.
+  const fees = z.object({ fees: z.array(bulkFeeItem) });
 
   const fullStudent = z.object({
     ...student.shape,
@@ -44,7 +47,7 @@ export const createFullStudentSchemas = (t: (key: string) => string) => {
   });
 
   // SEC-001: enrollment staff without financial access submit no charges.
-  // Reuse the item schema; chaining min(0) would retain the list's min(1).
+  // Keep the shared item validation, but disallow charges for these viewers.
   const studentWithoutFees = fullStudent.extend({
     fees: z.array(fullStudent.shape.fees.element).max(0),
   });

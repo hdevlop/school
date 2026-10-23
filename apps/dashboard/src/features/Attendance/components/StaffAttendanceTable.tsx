@@ -1,5 +1,6 @@
 'use client';
 
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
@@ -25,6 +26,8 @@ import StaffAttendanceDetails from './StaffAttendanceDetails';
 
 function StaffAttendanceTable() {
   const { t } = useTranslation();
+  const { can } = useViewerRole();
+  const canEdit = can('update:staff-attendance');
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('');
   const [role, setRole] = useState('');
@@ -46,10 +49,10 @@ function StaffAttendanceTable() {
   const { getDetails, getStatus, setDetails } = roster;
   const renderDetails = useCallback((person: any) => (
     <StaffAttendanceDetails name={person.name} details={getDetails(person.id)}
-      disabled={getStatus(person.id) === 'unmarked'}
+      disabled={!canEdit || getStatus(person.id) === 'unmarked'}
       onChange={(details) => setDetails(person.id, details)} />
-  ), [getDetails, getStatus, setDetails]);
-  const columns = useStaffRosterColumns({ getStatus: roster.getStatus, setStatus: roster.setStatus, renderDetails });
+  ), [canEdit, getDetails, getStatus, setDetails]);
+  const columns = useStaffRosterColumns({ readOnly: !canEdit, getStatus: roster.getStatus, setStatus: roster.setStatus, renderDetails });
 
   // The staff register is the same nine-column table as the student one and was
   // squeezed the same way below the card breakpoint.
@@ -57,13 +60,14 @@ function StaffAttendanceTable() {
     (props: any) => (
       <RosterCard
         {...props}
+        readOnly={!canEdit}
         getStatus={roster.getStatus}
         setStatus={roster.setStatus}
         detail={t(`staff.roles.${props.data?.role}`)}
         avatarSrc={props.data?.image || getStaffAvatar(props.data?.role, props.data?.gender)}
       >{renderDetails(props.data)}</RosterCard>
     ),
-    [t, roster.getStatus, roster.setStatus, renderDetails],
+    [t, canEdit, roster.getStatus, roster.setStatus, renderDetails],
   );
   const rawFilters = useStaffRosterFilters(
     { value: roster.selectedDate, onChange: roster.goToDate },
@@ -115,7 +119,7 @@ function StaffAttendanceTable() {
           stats={roster.stats}
           onSubmit={roster.handleSubmit}
           onMarkAllPresent={() => roster.markAllAs('present')}
-          canSubmit={total > 0 && !isStaffLoading && !isAttendanceLoading && !isStaffRolesLoading && !attendanceError}
+          canSubmit={canEdit && total > 0 && !isStaffLoading && !isAttendanceLoading && !isStaffRolesLoading && !attendanceError}
         />
       </RosterFilters>
 

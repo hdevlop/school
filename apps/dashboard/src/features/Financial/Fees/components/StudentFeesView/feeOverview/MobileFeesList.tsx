@@ -1,5 +1,9 @@
 "use client"
 
+
+import { PermissionButton } from '@/components/PermissionButton';
+import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
+
 import { useMemo, useState } from 'react';
 import { cn, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, NBadge, NButton, Progress } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
@@ -16,7 +20,8 @@ type MenuItem = {
   icon?: React.ComponentType<{ className?: string }>;
   danger?: boolean;
   separatorBefore?: boolean;
-  onSelect: () => void;
+  disabled?: boolean;
+  onSelect?: () => void;
 };
 
 interface Props {
@@ -27,7 +32,7 @@ interface Props {
 }
 
 const feeBalance = (fee: any) => Number(fee?.balance) || 0;
-const overdueCount = (fee: any) => fee.installments?.filter((item: any) => item.status === 'overdue').length || 0;
+const overdueCount = (fee: any) => fee.installments?.filter((item: any) => item.isOverdue).length || 0;
 
 /**
  * The fees at phone width: one compact row per fee that opens onto its
@@ -106,6 +111,7 @@ function FeeRow({ fee, open, onToggle, menu, onPayInstallment }: {
   const { majorMoney, displayDateOnly } = useSchoolFormat();
   const { openDialog } = useDialog();
 
+  const { businessDate } = useBusinessDate();
   const installments = fee.installments ?? [];
   const paidCount = installments.filter((item: any) => item.status === 'paid').length;
   const overdue = overdueCount(fee);
@@ -173,10 +179,10 @@ function FeeRow({ fee, open, onToggle, menu, onPayInstallment }: {
             </NButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            {menu.map(({ label, icon: Icon, danger, separatorBefore, onSelect }) => (
+            {menu.map(({ label, icon: Icon, danger, separatorBefore, disabled, onSelect }) => (
               <div key={label}>
                 {separatorBefore && <DropdownMenuSeparator />}
-                <DropdownMenuItem onSelect={onSelect} className={cn(danger && 'text-destructive focus:text-destructive')}>
+                <DropdownMenuItem disabled={disabled} onSelect={onSelect} className={cn(danger && 'text-destructive focus:text-destructive')}>
                   {Icon && <Icon className="h-4 w-4" />}
                   {label}
                 </DropdownMenuItem>
@@ -190,13 +196,13 @@ function FeeRow({ fee, open, onToggle, menu, onPayInstallment }: {
         <ul className="divide-y border-t">
           {installments.map((installment: any) => {
             const payable = isInstallmentPayable(installment);
-            const status = displayInstallmentStatus(installment.status);
+            const status = displayInstallmentStatus(installment.status, installment.dueDate, businessDate);
             return (
               <li
                 key={installment.id}
                 className={cn(
                   'flex items-center gap-2 px-3 py-2',
-                  installment.status === 'overdue' && 'border-s-4 border-s-red-500 bg-red-50/50',
+                  installment.isOverdue && 'border-s-4 border-s-red-500 bg-red-50/50',
                   installment.status === 'paid' && 'text-muted-foreground',
                 )}
               >
@@ -222,7 +228,7 @@ function FeeRow({ fee, open, onToggle, menu, onPayInstallment }: {
                   />
                 </button>
                 {payable && (
-                  <NButton
+                  <PermissionButton permission="create:payments"
                     type="button"
                     size="sm"
                     className="h-8 shrink-0 gap-1 px-2.5 text-xs"
@@ -231,7 +237,7 @@ function FeeRow({ fee, open, onToggle, menu, onPayInstallment }: {
                   >
                     <CreditCard className="h-3.5 w-3.5" />
                     {t('fees.studentView.pay')}
-                  </NButton>
+                  </PermissionButton>
                 )}
               </li>
             );

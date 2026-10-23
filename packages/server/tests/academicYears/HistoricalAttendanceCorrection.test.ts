@@ -39,7 +39,7 @@ describe('historical attendance correction', () => {
     await service.mark({ type: 'student', studentId: 's1', sectionId: 'sec1',
       date: '2020-09-10', status: 'present' }, { id: 'u1', role: 'principal' });
     await service.mark({ type: 'staff', staffId: 'staff1',
-      date: '2020-09-10', status: 'present' }, { id: 'u1', role: 'principal', permissions: ['manage:staff-attendance'] });
+      date: '2020-09-10', status: 'present' }, { id: 'u1', role: 'principal', permissions: ['update:staff-attendance'] });
     await service.upsertStaffRoster({ items: [{ staffId: 'staff1',
       date: '2020-09-10', status: 'present', notes: null }] }, { id: 'u1', role: 'admin' });
 

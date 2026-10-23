@@ -1,4 +1,5 @@
 import { matchPermission } from 'najm-auth/client';
+import { isSidebarPermission } from '@sms/contracts/access-control';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { PAGE_ACCESS, type PageAccess, type PageViewer } from '@/shared/pageAccess';
 import { BRANDING_SETTINGS_NAV_ID, THEME_SETTINGS_NAV_ID, createNavigationItems, type GatedNavItem } from '@/shared/schoolNavigation';
@@ -59,6 +60,7 @@ export type HomeCard = {
 /** Any action on any resource in this feature is enough to show its card. */
 export function hasFeaturePermission(permissions: readonly string[], resources: readonly string[]): boolean {
   return permissions.some((grant) => {
+    if (isSidebarPermission(grant)) return false;
     if (grant === '*:*') return true;
     const separator = grant.indexOf(':');
     if (separator < 1 || separator === grant.length - 1) return false;

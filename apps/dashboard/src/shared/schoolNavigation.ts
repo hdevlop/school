@@ -2,6 +2,7 @@ import { ImageIcon, Palette } from 'lucide-react';
 import { filterNavItems, type GatedNavItem as KitGatedNavItem, type NavItem } from 'najm-kit';
 import { FEATURE_ICONS } from './featureIcons';
 import { PAGE_ACCESS, type PageAccess, type PageViewer } from './pageAccess';
+import { sidebarEntryVisible } from '@sms/contracts/access-control';
 
 export const THEME_SETTINGS_NAV_ID = 'settings:theme';
 export const BRANDING_SETTINGS_NAV_ID = 'settings:branding';
@@ -141,5 +142,6 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
 };
 
 export const createSidebarItems = (t: (key: string) => string, viewer: PageViewer): NavItem[] =>
-  filterNavItems(createNavigationItems(t, viewer), (item) => !item.access || PAGE_ACCESS[item.access](viewer), ['access']);
+  filterNavItems(createNavigationItems(t, viewer), (item) =>
+    (!item.access || PAGE_ACCESS[item.access](viewer)) && sidebarEntryVisible(viewer.can, item.id), ['access']);
 

@@ -1,4 +1,95 @@
 {
+  "roleAccess": {
+    "assigned": "attribuées",
+    "noPermissions": "Aucune permission correspondante.",
+    "title": "Rôles et permissions",
+    "loaded": "Permissions du rôle chargées",
+    "saved": "Permissions du rôle enregistrées",
+    "failed": "Impossible d’enregistrer les permissions.",
+    "module": "Module",
+    "sidebar": "Menu",
+    "sidebarHelp": "La visibilité modifie uniquement le menu. Activez d’abord la permission Voir. Les règles d’accès au rôle et aux données restent applicables.",
+    "search": "Rechercher un module ou une permission…",
+    "searchRoles": "Rechercher un rôle…",
+    "noRoles": "Aucun rôle correspondant.",
+    "selectModule": "Sélectionner les permissions standard",
+    "specialPermissions": "Permissions spéciales",
+    "unavailable": "Aucune permission pour cette action",
+    "noSidebar": "Aucune entrée au menu",
+    "scopeTitle": "Accès aux données",
+    "adminLocked": "Le rôle administrateur est protégé et conserve un accès complet.",
+    "wildcardHint": "Une permission globale accorde plusieurs accès. Retirez-la dans les permissions spéciales avant de restreindre ces accès.",
+    "locked": "Rôle protégé",
+    "reload": "Abandonner et recharger",
+    "review": "Vérifier les modifications",
+    "allow": "Autoriser",
+    "remove": "Retirer la permission",
+    "show": "Afficher au menu",
+    "hide": "Masquer du menu",
+    "sessionsHint": "Les autorisations des sessions existantes seront invalidées. Les utilisateurs recevront les nouveaux accès au renouvellement de leur session.",
+    "apply": "Appliquer",
+    "unsaved": "{{count}} modifications non enregistrées",
+    "noChanges": "Aucune modification en attente",
+    "discard": "Abandonner",
+    "save": "Enregistrer",
+    "unsavedTitle": "Permissions non enregistrées",
+    "unsavedHint": "Changer de rôle abandonnera ces modifications. Abandonner et continuer ?",
+    "scope": {
+      "schoolWide": "Données de toute l’école, limitées par les permissions ci-dessous.",
+      "teacher": "Données affectées uniquement. Les permissions n’élargissent pas le périmètre de l’enseignant.",
+      "parent": "Enfants liés uniquement. Les permissions n’élargissent pas le périmètre du parent.",
+      "student": "Données personnelles uniquement. Les permissions n’élargissent pas le périmètre de l’élève.",
+      "unconfigured": "Ce rôle personnalisé n’a pas de périmètre de données configuré. Les permissions seules ne donnent pas accès aux données protégées de l’école."
+    },
+    "categories": {
+      "people": "Personnes",
+      "academic": "Scolarité",
+      "attendance": "Présences",
+      "conduct": "Conduite",
+      "financial": "Finances",
+      "transport": "Transport",
+      "access": "Contrôle d’accès",
+      "general": "Général"
+    },
+    "actions": {
+      "read": "Voir",
+      "create": "Ajouter",
+      "update": "Modifier",
+      "delete": "Supprimer",
+      "publish": "Publier",
+      "rollover": "Reconduction",
+      "view": "Voir les rapports",
+      "resolve": "Résoudre",
+      "reset": "Réinitialiser l’accès",
+      "admin": "Administration système",
+      "*": "Accès complet"
+    },
+    "resources": {
+      "attendance": "Présence des élèves",
+      "staff-attendance": "Présence du personnel",
+      "refuel": "Carburant",
+      "visit-requests": "Demandes de visite",
+      "payments": "Paiements",
+      "allocations": "Affectations des paiements",
+      "installments": "Échéances",
+      "drivers": "Chauffeurs",
+      "vehicle-assignments": "Affectations des véhicules",
+      "student-routes": "Trajets des élèves",
+      "refuels": "Carburant",
+      "maintenance": "Entretien",
+      "reports": "Rapports",
+      "participants": "Participants",
+      "system": "Système",
+      "*": "Tous les modules",
+      "general": "Général"
+    },
+    "errors": {
+      "notFound": "Rôle introuvable.",
+      "adminLocked": "Le rôle administrateur ne peut pas être modifié ici.",
+      "conflict": "Ce rôle a été modifié depuis son ouverture. Rechargez avant d’enregistrer.",
+      "invalidPermissions": "Certaines permissions sont invalides. Rechargez le catalogue."
+    }
+  },
   "academicYearMigration": {
     "title": "Révision des données scolaires",
     "description": "Vérifiez les dossiers dont l'année ou l'affectation historique nécessite des preuves avant d'activer l'historique général.",
@@ -1689,6 +1780,7 @@
     "bounced": "Rejeté",
     "voided": "Annulé",
     "upcoming": "À venir",
+    "due": "À payer",
     "active": "Actif",
     "inactive": "Inactif",
     "pending": "En attente",
@@ -2059,10 +2151,11 @@
     },
     "stats": {
       "paidStaff": "Payés / Personnel",
-      "totalPayroll": "Total des salaires (payés + impayés)",
+      "totalPayroll": "Total des bulletins enregistrés",
+      "recordedHint": "Les totaux incluent uniquement les bulletins enregistrés. Les lignes « Non défini » affichent un salaire estimé et sont exclues tant qu’un bulletin n’est pas créé.",
       "period": "Période",
       "payroll": "Paie",
-      "pending": "En attente",
+      "pending": "Bulletins en attente",
       "hourlyMonthly": "Horaire / Mensuel"
     },
     "table": {
@@ -2433,6 +2526,7 @@
       "tooLong": "Ce texte est trop long",
       "dateInvalid": "Saisissez une date valide",
       "amountTooLarge": "Ce montant est trop élevé",
+      "rejectionReasonMinLength": "Saisissez un motif de rejet d’au moins 10 caractères",
       "checkNumberRequired": "Saisissez le numéro du chèque"
     },
     "actions": {
@@ -2516,7 +2610,8 @@
       "unknownFeeType": "Type de frais inconnu",
       "academicYear": "Année scolaire",
       "addFee": "Ajouter des frais",
-      "noFeesAdded": "Aucun frais ajouté pour le moment."
+      "noFeesAdded": "Aucun frais ajouté pour le moment.",
+      "netAmountForYear": "Total de la période facturée (après remise)"
     },
     "status": {
       "paying": "En cours",
@@ -2535,7 +2630,7 @@
       "filterByStatus": "Filtrer par statut",
       "searchByStudent": "Rechercher un élève...",
       "allSections": "Toutes les sections",
-      "allSchedules": "Toutes les périodicités"
+      "allSchedules": "Fréquence"
     },
     "dialogs": {
       "createButton": "Créer",
@@ -4243,7 +4338,8 @@
       "roomNumberPlaceholder": "Ex. : 101",
       "sectionInformation": "Informations sur la section",
       "sectionName": "Nom de la section",
-      "sectionNamePlaceholder": "Entrez le nom de la section"
+      "sectionNamePlaceholder": "Entrez le nom de la section",
+      "full": "Complet"
     },
     "table": {
       "capacity": "Capacité",
@@ -4253,7 +4349,8 @@
       "level": "Niveau",
       "roomNumber": "Numéro de salle",
       "sectionName": "Nom de la section",
-      "status": "Statut"
+      "status": "Statut",
+      "studentCount": "Élèves"
     },
     "success": {
       "allDeleted": "Tous les enregistrements Section ont été supprimés avec succès",
@@ -4303,7 +4400,8 @@
         "withdrawn": "Retiré",
         "graduated": "Diplômé",
         "transferred": "Transféré vers un autre établissement"
-      }
+      },
+      "sameDayHint": "Un changement à la date de début de l’affectation actuelle corrige cette affectation. Un changement ultérieur conserve l’affectation précédente dans l’historique."
     },
     "success": {
       "retrieved": "Élève récupéré avec succès",
@@ -4398,7 +4496,11 @@
       "noClassesAdminHint": "Demandez à un administrateur de créer une classe et une section avant d’inscrire des élèves.",
       "manageClasses": "Gérer les classes",
       "classesLoadFailed": "Impossible de charger les classes. Veuillez réessayer.",
-      "noSectionsHint": "Cette classe n’a pas de section. Ajoutez-en une dans Scolarité → Sections, ou demandez à un administrateur, avant d’inscrire un élève."
+      "noSectionsHint": "Cette classe n’a pas de section. Ajoutez-en une dans Scolarité → Sections, ou demandez à un administrateur, avant d’inscrire un élève.",
+      "feesOptional": "Les frais sont facultatifs à l’inscription. Vous pourrez les ajouter ensuite dans l’onglet Frais de l’élève.",
+      "noFeeTypesHint": "Aucun type de frais n’est configuré. Terminez l’inscription sans frais ou créez-en un dans Finances → Types de frais.",
+      "manageFeeTypes": "Ouvrir les types de frais (nouvel onglet)",
+      "saveFailed": "Impossible de vérifier ou d’enregistrer l’élève. Vos saisies sont conservées ; veuillez réessayer."
     },
     "status": {
       "active": "Actif",
@@ -4419,6 +4521,7 @@
     },
     "profile": {
       "detailsTitle": "Détails de l’élève",
+      "backToStudents": "Retour aux élèves",
       "detailsSubtitle": "Profil et dossier scolaire",
       "closeDetails": "Fermer les détails de l’élève",
       "unknown": "Inconnu",
@@ -5578,7 +5681,7 @@
       "ended": "L'inscription est terminée",
       "transferOutsideInterval": "La date de transfert est en dehors de la période d'inscription",
       "noOpenPlacementTransfer": "Aucune affectation en cours à transférer",
-      "transferBeforePlacement": "Le transfert doit avoir lieu après le début de l'affectation actuelle",
+      "transferBeforePlacement": "La date du transfert ne peut pas précéder le début de l’affectation actuelle",
       "alreadyInPlacement": "L'élève est déjà dans cette affectation",
       "futureTransfer": "Un transfert de l'année active ne peut pas commencer dans le futur",
       "alreadyEnded": "L'inscription est déjà terminée",
@@ -5913,6 +6016,8 @@
     }
   },
   "validationMessages": {
+    "duplicatePermissionIds": "Permissions en double",
+    "duplicateSidebarEntries": "Entrées de menu en double",
     "pointsRange": "Les points doivent être compris entre 0 et 100.",
     "arrivalTimeInvalid": "Saisissez une heure d’arrivée valide (HH:MM).",
     "locale": "fr",
@@ -6100,6 +6205,7 @@
     "studentIdIsRequired": "L'identifiant de l'élève est obligatoire",
     "studentHasMultipleDecisions": "L'élève a plusieurs décisions",
     "studentIsRequired": "L'élève est obligatoire",
+    "subjectIsRequired": "Sélectionnez une matière",
     "subjectCodeMustBeAtLeast2Characters": "Le code de la matière doit contenir au moins 2 caractères",
     "subjectCodeTooLong": "Le code de la matière est trop long",
     "subjectNameMustBeAtLeast2Characters": "Le nom de la matière doit contenir au moins 2 caractères",
@@ -6144,7 +6250,7 @@
     "required": "Obligatoire",
     "enterARealDate": "Saisissez une date réelle",
     "theDateMustFallInsideThisSchoolYear": "La date doit être comprise dans cette année scolaire",
-    "theDateMustFollowTheCurrentPlacementAndFallInside": "La date doit suivre l'affectation actuelle et être comprise dans cette année scolaire",
+    "theDateMustFollowTheCurrentPlacementAndFallInside": "La date doit être égale ou postérieure au début de l’affectation actuelle et comprise dans cette année scolaire",
     "theDateMustFollowTheCurrentPlacement": "La date doit suivre l'affectation actuelle",
     "incidentDateIsRequired": "La date de l'incident est obligatoire",
     "incidentTimeIsRequired": "L'heure de l'incident est obligatoire",

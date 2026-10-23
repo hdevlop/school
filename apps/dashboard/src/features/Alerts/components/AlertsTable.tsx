@@ -82,6 +82,7 @@ export default function AlertsTable() {
       </NPageHeader>
 
       <NTable
+        permissionResource="alerts"
         responsiveSkeleton
         className="min-h-0 flex-1"
         data={filteredRows}

@@ -33,10 +33,17 @@ import {
   BehaviorRewardService,
   ClassRoutineService,
   RolloverService,
+  SectionService,
+  ClassService,
+  CycleService,
+  SubjectService,
+  FeeTypeService,
 } from '@sms/server/modules/seed';
-import { runSeedTask } from '../shared/run-seed';
+import type { Server } from '@sms/server/najm';
 
-runSeedTask('demo reset', async (server) => {
+type ResetOptions = { includeAcademic?: boolean };
+
+export async function clearDemoData(server: Server, { includeAcademic = false }: ResetOptions = {}) {
   const allocationService = await server.container.resolve(AllocationService);
   const paymentService = await server.container.resolve(PaymentService);
   const installmentService = await server.container.resolve(InstallmentService);
@@ -70,9 +77,9 @@ runSeedTask('demo reset', async (server) => {
   const classRoutineService = await server.container.resolve(ClassRoutineService);
   const rolloverService = await server.container.resolve(RolloverService);
 
-  // Classes, sections, subjects and fee types are the frame every school starts
-  // from; everything that points at them is cleared first, so they stay.
-  console.log('⚠️  WARNING: This will delete all school data except classes, sections, subjects and fee types!\n');
+  console.log(includeAcademic
+    ? '⚠️  WARNING: This will delete all school data including cycles, classes, sections, subjects and fee types in every year!\n'
+    : '⚠️  WARNING: This will delete all school data except cycles, classes, sections, subjects and fee types!\n');
   console.log('🧹 Clearing all school data...');
 
   await classRoutineService.clearForSeedReset();
@@ -162,10 +169,34 @@ runSeedTask('demo reset', async (server) => {
   await parentService.clearForSeedReset();
   console.log('✅ Parents cleared');
 
+  // Clear references from every year before removing the academic structure.
+  if (includeAcademic) {
+    const sectionService = await server.container.resolve(SectionService);
+    const classService = await server.container.resolve(ClassService);
+    const cycleService = await server.container.resolve(CycleService);
+    const subjectService = await server.container.resolve(SubjectService);
+    const feeTypeService = await server.container.resolve(FeeTypeService);
+    await sectionService.clearForSeedReset();
+    await classService.clearForSeedReset();
+    await cycleService.clearForSeedReset();
+    await subjectService.clearForSeedReset();
+    await feeTypeService.deleteAll();
+    console.log('✅ Cycles, classes, sections, subjects and fee types cleared');
+  }
+
   await settingsService.deleteAll();
   await academicYearRepository.clearForSeedReset();
   console.log('Academic-year registry cleared');
   console.log('✅ Settings cleared');
 
-  console.log('\n✨ School data cleared. Classes, sections, subjects and fee types were kept.');
-});
+  console.log(includeAcademic
+    ? '\n✨ School data and academic structure cleared in every year.'
+    : '\n✨ School data cleared. Cycles, classes, sections, subjects and fee types were kept.');
+}
+
+export async function resetDemo(options: ResetOptions = {}) {
+  const { runSeedTask } = await import('../shared/run-seed');
+  await runSeedTask('demo reset', (server) => clearDemoData(server, options));
+}
+
+if (import.meta.main) await resetDemo();

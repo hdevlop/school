@@ -12,7 +12,7 @@ import RoutineCell from './RoutineCell';
 const deviceToday = (): RoutineDay => ROUTINE_DAYS[(new Date().getDay() + 6) % 7];
 
 /** Phones: one day of a section's timetable at a time, periods top to bottom. */
-export default function RoutineDayList({ days, periods, entries, duties = [], defaultRoom, editable, onCellClick, onDutyClick }: RoutineGridProps) {
+export default function RoutineDayList({ days, periods, entries, duties = [], defaultRoom, editable, canCreate = editable, canUpdate = editable, canDelete = editable, onCellClick, onDutyClick }: RoutineGridProps) {
   const { t } = useTranslation();
   const [pickedDay, setPickedDay] = useState<RoutineDay | null>(null);
   const today = deviceToday();
@@ -62,7 +62,7 @@ export default function RoutineDayList({ days, periods, entries, duties = [], de
                     <NBadge color="primary" look="dash" icon={UserRound} className="max-w-full whitespace-normal normal-case tracking-normal">
                       {duty.staffName}
                     </NBadge>
-                  ) : editable && onDutyClick ? (
+                  ) : (duty ? canUpdate || canDelete : canCreate) && onDutyClick ? (
                     <span className="flex items-center gap-1 text-xs text-muted-foreground"><Plus className="size-3.5" aria-hidden="true" />{t('classRoutines.ui.actions.addSupervisor')}</span>
                   ) : null}
                 </span>
@@ -70,7 +70,7 @@ export default function RoutineDayList({ days, periods, entries, duties = [], de
               return (
                 <li key={period.id} className="flex min-h-14 items-stretch gap-2 rounded-xl border border-dashed bg-[repeating-linear-gradient(45deg,transparent,transparent_5px,rgba(148,163,184,0.10)_5px,rgba(148,163,184,0.10)_10px)] px-2 py-1">
                   {time}
-                  {editable && onDutyClick ? (
+                  {(duty ? canUpdate || canDelete : canCreate) && onDutyClick ? (
                     <button type="button" onClick={() => onDutyClick(shownDay, period, duty)} className="flex min-w-0 flex-1 cursor-pointer rounded-md text-start focus-visible:outline-2 focus-visible:outline-primary" aria-label={`${dayLabel} ${label}: ${duty?.staffName || t('classRoutines.ui.actions.addSupervisor')}`}>
                       {content}
                     </button>
@@ -82,18 +82,18 @@ export default function RoutineDayList({ days, periods, entries, duties = [], de
             const entry = entryMap.get(`${shownDay}:${period.id}`);
             const lesson = entry ? (
               <div className="overflow-hidden rounded-xl">
-                <RoutineCell subjectId={entry.subjectId} subjectName={entry.subjectName} roomNumber={entry.roomNumber} defaultRoom={defaultRoom} contentGroups={entry.contentGroups} />
+                <RoutineCell subjectId={entry.subjectId} subjectName={entry.subjectName} teacherName={entry.teacherName} roomNumber={entry.roomNumber} defaultRoom={defaultRoom} contentGroups={entry.contentGroups} />
               </div>
             ) : (
               <span className="flex min-h-12 items-center justify-center gap-1.5 rounded-md border border-dashed text-xs text-muted-foreground">
-                {editable && onCellClick ? <><Plus className="size-4" aria-hidden="true" />{t('classRoutines.ui.actions.addLesson')}</> : '—'}
+                {(entry ? canUpdate || canDelete : canCreate) && onCellClick ? <><Plus className="size-4" aria-hidden="true" />{t('classRoutines.ui.actions.addLesson')}</> : '—'}
               </span>
             );
             return (
               <li key={period.id} className="flex min-w-0 items-stretch gap-2">
                 {time}
                 <div className="min-w-0 flex-1">
-                  {editable && onCellClick ? (
+                  {(entry ? canUpdate || canDelete : canCreate) && onCellClick ? (
                     <button type="button" onClick={() => onCellClick(shownDay, period, entry)} className="block w-full cursor-pointer rounded-xl text-start focus-visible:outline-2 focus-visible:outline-primary" aria-label={`${dayLabel} ${routinePeriodLabel(period.name, t)}: ${entry?.subjectName || t('classRoutines.ui.actions.addLesson')}`}>
                       {lesson}
                     </button>

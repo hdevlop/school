@@ -7,6 +7,26 @@ import { createExpenseSchemas } from '@/features/Financial/Expenses/config/expen
 const echo = (key: string) => key;
 const { expense: expenseSchema, payment: expensePaymentSchema } = createExpenseSchemas(echo);
 
+describe('expense rejection', () => {
+  const schema = createExpenseSchemas(echo).rejection;
+
+  it('refuses missing, blank, short and overly long reasons before saving', () => {
+    for (const rejectionReason of ['', '   ', 'Too short', ' '.repeat(20) + 'short', 'a'.repeat(1001)]) {
+      expect(schema.safeParse({ rejectionReason }).success).toBe(false);
+    }
+    expect(schema.safeParse({}).success).toBe(false);
+    expect(schema.safeParse({ rejectionReason: 'short' }).error?.issues[0]?.message)
+      .toBe('expenses.validation.rejectionReasonMinLength');
+  });
+
+  it('trims the reason and accepts the API length boundaries', () => {
+    expect(schema.parse({ rejectionReason: '  Duplicate supplier invoice  ' }))
+      .toEqual({ rejectionReason: 'Duplicate supplier invoice' });
+    expect(schema.safeParse({ rejectionReason: 'a'.repeat(10) }).success).toBe(true);
+    expect(schema.safeParse({ rejectionReason: 'a'.repeat(1000) }).success).toBe(true);
+  });
+});
+
 const expense = {
   category: 'utilities',
   title: 'Water bill, March',

@@ -37,8 +37,8 @@ export class StudentEnrollmentController {
   @Post('/:id/transfer')
   @isAdministrator()
   @Validate({ params: enrollmentIdParam, body: transferEnrollmentDto })
-  transfer(@Params('id') id: string, @Body() body: TransferEnrollmentDto, @User() user: { id: string }) {
-    return this.enrollments.transfer(id, body, user.id);
+  transfer(@Params('id') id: string, @Body() body: TransferEnrollmentDto, @User() user: { id: string; role: string }) {
+    return this.enrollments.transfer(id, body, user.id, user.role);
   }
 
   @Post('/:id/end')

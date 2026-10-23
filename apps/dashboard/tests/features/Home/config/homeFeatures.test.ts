@@ -10,6 +10,11 @@ const viewer = (role: string, permissions: string[]): PageViewer => ({
 });
 
 describe('feature permissions', () => {
+  it('does not turn cosmetic sidebar grants into Home feature access', () => {
+    expect(hasFeaturePermission(['sidebar:fees', 'sidebar:configured'], ['fees'])).toBe(false);
+    const permissions = ['sidebar:fees', 'sidebar:configured'];
+    expect(createHomeCards(t, viewer('accounting', permissions), permissions).some((card) => card.id === '/fees')).toBe(false);
+  });
   it.each(['read', 'create', 'update', 'delete', 'manage'])('shows a feature with only its %s grant', (action) => {
     expect(hasFeaturePermission([`${action}:students`], ['students'])).toBe(true);
   });

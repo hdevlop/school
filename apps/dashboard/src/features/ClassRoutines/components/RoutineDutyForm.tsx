@@ -13,6 +13,7 @@ export default function RoutineDutyForm({
   period,
   duty,
   onDelete,
+  readOnly = false,
 }: RoutineDutyFormProps) {
   const { pop } = useDialog();
   const { t } = useTranslation();
@@ -36,6 +37,7 @@ export default function RoutineDutyForm({
       onSubmit={(data) => pop(data)}
     >
       <div className="space-y-4">
+        <fieldset disabled={readOnly} className="contents">
         <FormInput
           name="staffId"
           type="select"
@@ -46,6 +48,7 @@ export default function RoutineDutyForm({
           required
         />
         <FormInput name="notes" type="textarea" formLabel={t('classRoutines.ui.fields.dutyNotes')} icon={ClipboardList} />
+        </fieldset>
         {onDelete ? (
           <button type="button" className="text-sm font-medium text-destructive" onClick={async () => { await onDelete(); pop(); }}>
             {t('classRoutines.ui.actions.removeSupervision')}

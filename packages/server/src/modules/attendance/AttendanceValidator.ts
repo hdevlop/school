@@ -139,10 +139,10 @@ export class AttendanceValidator {
   }
 
   // Marking staff through the general attendance route asks for what the
-  // staff roster route asks for: manage:staff-attendance, school-wide.
+  // staff roster route asks for: update:staff-attendance, school-wide.
   ensureStaffAttendanceAuthorized(user: { role?: string; permissions?: string[] }) {
     const allowed = SCHOOL_WIDE_ROLES.includes(user.role ?? '')
-      && matchPermission(user.permissions ?? [], 'manage:staff-attendance');
+      && matchPermission(user.permissions ?? [], 'update:staff-attendance');
     if (!allowed) Err(403, this.at('staffRequiresAdmin'));
   }
 

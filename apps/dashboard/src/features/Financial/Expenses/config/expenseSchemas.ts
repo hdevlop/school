@@ -61,7 +61,13 @@ export const createExpenseSchemas = (t: T) => {
     path: ['checkNumber'],
   });
 
-  return { expense, payment };
+  const rejection = z.object({
+    rejectionReason: z.string().trim()
+      .min(10, t('expenses.validation.rejectionReasonMinLength'))
+      .max(1000, tooLong),
+  });
+
+  return { expense, payment, rejection };
 };
 
 export type ExpenseFormValues = z.input<ReturnType<typeof createExpenseSchemas>['expense']>;

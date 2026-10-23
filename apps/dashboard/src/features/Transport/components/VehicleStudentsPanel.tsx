@@ -1,8 +1,10 @@
 'use client'
 
+
+import { PermissionButton } from '@/components/PermissionButton';
 import { useEffect, useMemo } from 'react'
 import { UserPlus, UserMinus, Bus, Users, MapPin, CalendarDays } from 'lucide-react'
-import { Badge, NButton, NForm, NSkeleton } from 'najm-kit';
+import { Badge, NForm, NSkeleton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useStudentRoutes } from '../hooks/useStudentRoutes'
 import { useStudents } from '@/features/Students/hooks/useStudents'
@@ -242,7 +244,7 @@ export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => 
                   </p>
                 )}
               </div>
-              <NButton
+              <PermissionButton permission="update:student-routes"
                 variant="ghost"
                 size="sm"
                 className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive shrink-0"
@@ -250,14 +252,14 @@ export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => 
                 title={t('transport.panel.unassign')}
               >
                 <UserMinus className="w-3.5 h-3.5" />
-              </NButton>
+              </PermissionButton>
             </div>
           ))}
         </div>
       )}
 
       {/* Assign button */}
-      <NButton
+      <PermissionButton permission="create:student-routes"
         variant="outline"
         size="sm"
         className="w-full"
@@ -266,7 +268,7 @@ export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => 
       >
         <UserPlus className="w-4 h-4 me-2" />
         {t('transport.panel.assignStudent')}
-      </NButton>
+      </PermissionButton>
     </div>
   )
 }

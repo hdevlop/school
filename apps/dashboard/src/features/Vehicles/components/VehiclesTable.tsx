@@ -1,7 +1,8 @@
 "use client"
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Bus, CalendarX, Eye, Pencil, Plus, SearchX, Trash2, UserRound } from 'lucide-react';
@@ -24,8 +25,7 @@ import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 function VehiclesTable() {
 
   const { t } = useTranslation();
-  const { can } = useViewerRole();
-  const canUpdate = can('update:vehicles');
+  const { isSchoolWide } = useViewerRole();
   const { academicYear } = useAcademicYearScope();
   const columns = useVehiclesTableColumns();
   const rawFilters = useVehiclesTableFilters();
@@ -143,10 +143,10 @@ function VehiclesTable() {
   // reaches the driver in card view, where there is no driver cell to click.
   const rowMenu = (vehicle) => [
     { label: t('common.view'), icon: Eye, onSelect: () => handleView(vehicle) },
-    { label: t('common.edit'), icon: Pencil, onSelect: () => handleEdit(vehicle) },
-    ...(canUpdate ? [{ label: t('drivers.form.assignDriver'), icon: UserRound, onSelect: () => handleAssignDriver(vehicle) }] : []),
-    ...(canUpdate && vehicle.activeAssignment ? [{ label: t('vehicles.actions.endDriverAssignment'), icon: CalendarX, onSelect: () => handleEndAssignment(vehicle) }] : []),
-    { label: t('common.delete'), icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(vehicle) },
+    { label: t('common.edit'), permission: 'update:vehicles', icon: Pencil, onSelect: () => handleEdit(vehicle) },
+    { label: t('drivers.form.assignDriver'), permission: 'update:vehicles', disabled: !isSchoolWide, icon: UserRound, onSelect: () => handleAssignDriver(vehicle) },
+    ...(vehicle.activeAssignment ? [{ label: t('vehicles.actions.endDriverAssignment'), permission: 'update:vehicles', disabled: !isSchoolWide, icon: CalendarX, onSelect: () => handleEndAssignment(vehicle) }] : []),
+    { label: t('common.delete'), permission: 'delete:vehicles', icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(vehicle) },
   ];
 
   const total = vehicles?.length ?? 0;
@@ -164,6 +164,7 @@ function VehiclesTable() {
       </NPageHeader>
 
       <NTable
+        permissionResource="vehicles"
         data={vehicles}
         columns={columns}
         onCellClick={handleCellClick}
@@ -189,10 +190,10 @@ function VehiclesTable() {
             title={t('emptyStates.vehicles.title')}
             description={t('emptyStates.vehicles.description')}
             action={(
-              <NButton size="sm" onClick={handleAddClick}>
+              <PermissionButton permission="create:vehicles" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('vehicles.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             )}
           />
         )}

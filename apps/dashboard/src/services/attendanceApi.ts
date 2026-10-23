@@ -15,7 +15,7 @@ export const getTeacherAttendanceApi = async () => {
 };
 
 export const getStaffAttendanceApi = async () => {
-  const res = await api.get('/attendance', { params: { type: 'staff' } });
+  const res = await api.get('/attendance/staff/records');
   return res.data;
 };
 
@@ -25,6 +25,10 @@ export const getTodayAttendanceApi = async (type?: string) => {
 };
 
 export const getAttendanceByDateApi = async (date: string, type?: string) => {
+  if (type === 'staff') {
+    const res = await api.get('/attendance/staff/records', { params: { date } });
+    return res.data;
+  }
   const res = await api.get(`/attendance/date/${date}`, { params: { type } });
   return res.data;
 };

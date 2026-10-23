@@ -1,6 +1,6 @@
 import { Service, Transaction, Events, EventService, Inject, TransactionService } from '../../najm';
 import { StudentEnrollmentService } from '../studentEnrollments/StudentEnrollmentService';
-import type {CreateStudentDto, CreateStudentsBulkDto, ImportStudentDto, UpdateStudentDto,} from './StudentDto';
+import type {CreateStudentDto, CreateStudentsBulkDto, ImportStudentDto, UpdateStudentDto, StudentAdmissionDto} from './StudentDto';
 import { StudentRouteService } from '../transport/studentRoutes/StudentRouteService';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { Year } from '../academicYears/requestYear';
@@ -85,6 +85,23 @@ export class StudentService {
   @Transaction()
   async create(data: CreateStudentDto, actor: { id: string; role: string }) {
     return this.createStudent(data, actor);
+  }
+
+  /** Advisory first-step validation; create repeats these checks under its own lock. */
+  @Transaction()
+  async validateAdmission(data: StudentAdmissionDto) {
+    const issues: { field: 'studentCode' | 'sectionId'; message: string }[] = [];
+    const check = async (field: 'studentCode' | 'sectionId', run: () => Promise<unknown>) => {
+      try { await run(); }
+      catch (error) {
+        const status = (error as { status?: number }).status;
+        if (status !== 400 && status !== 409 && status !== 422) throw error;
+        issues.push({ field, message: (error as Error).message });
+      }
+    };
+    await check('studentCode', () => this.studentValidator.ensureCodeUnique(data.studentCode));
+    await check('sectionId', () => this.studentEnrollments.resolveNewStudentPlacement(data.classId, data.sectionId, data.yearEnrolledOn));
+    return { issues };
   }
 
   @Transaction()

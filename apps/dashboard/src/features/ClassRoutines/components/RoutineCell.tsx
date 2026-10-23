@@ -1,6 +1,6 @@
 'use client';
 
-import { DoorOpen } from 'lucide-react';
+import { DoorOpen, UserRound } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { describeRoutineContent, type RoutineContentGroup } from '@sms/contracts/routines';
 
@@ -18,12 +18,14 @@ export const colorFor = (subjectId: string) => accents[[...subjectId].reduce((to
 export default function RoutineCell({
   subjectId,
   subjectName,
+  teacherName,
   roomNumber,
   defaultRoom,
   contentGroups = [],
 }: {
   subjectId: string;
   subjectName: string;
+  teacherName?: string;
   roomNumber?: string | null;
   defaultRoom?: string | null;
   contentGroups?: RoutineContentGroup[];
@@ -53,9 +55,10 @@ export default function RoutineCell({
       ) : (
         <span dir="auto" className="flex min-h-16 flex-1 items-center justify-center px-2 text-center text-base font-bold leading-tight">{subjectName}</span>
       )}
-      {roomNumber || defaultRoom ? (
-        <div className="flex items-center justify-end border-t border-current/15 px-1.5 py-1 text-xs opacity-75">
-          <span className="flex items-center gap-1"><DoorOpen className="h-3 w-3" />{roomNumber || defaultRoom}</span>
+      {teacherName || roomNumber || defaultRoom ? (
+        <div className="flex flex-wrap items-center justify-between gap-1 border-t border-current/15 px-1.5 py-1 text-xs opacity-75">
+          {teacherName && <span className="flex min-w-0 items-center gap-1"><UserRound className="h-3 w-3 shrink-0" aria-hidden="true" /><span className="break-words" dir="auto">{teacherName}</span></span>}
+          {(roomNumber || defaultRoom) && <span className="flex items-center gap-1"><DoorOpen className="h-3 w-3" aria-hidden="true" />{roomNumber || defaultRoom}</span>}
         </div>
       ) : null}
     </div>

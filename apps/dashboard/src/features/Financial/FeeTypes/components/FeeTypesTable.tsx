@@ -1,7 +1,8 @@
 "use client"
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NEmptyState, NButton, NErrorState, NForbiddenState } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
@@ -103,6 +104,7 @@ function FeeTypesTable() {
       </NPageHeader>
 
       <NTable
+        permissionResource="feeTypes"
         responsiveSkeleton
         data={feeTypes}
         columns={columns}
@@ -127,10 +129,10 @@ function FeeTypesTable() {
             title={t('emptyStates.feeTypes.title')}
             description={t('emptyStates.feeTypes.description')}
             action={(
-              <NButton size="sm" onClick={handleAddClick}>
+              <PermissionButton permission="create:feeTypes" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('feeTypes.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             )}
           />
         )}

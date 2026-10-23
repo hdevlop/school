@@ -1,5 +1,7 @@
 "use client";
 
+import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
+
 import { NBadge } from 'najm-kit';
 import { CalendarClock } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
@@ -13,6 +15,7 @@ import { UPCOMING_STATUS_COLOR, displayInstallmentStatus } from '../config/insta
 const InstallmentDetails = ({ installment }: { installment: any }) => {
   const { t } = useTranslation();
   const { displayDateOnly, majorMoney } = useSchoolFormat();
+  const { businessDate } = useBusinessDate();
 
   const amount = Number(installment.amount || 0);
   const paid = Number(installment.paidAmount ?? installment.completedAmount ?? 0);
@@ -38,7 +41,7 @@ const InstallmentDetails = ({ installment }: { installment: any }) => {
     <div className="flex flex-col gap-4">
       <NBadge
         className="self-start"
-        status={displayInstallmentStatus(installment.status)}
+        status={displayInstallmentStatus(installment.status, installment.dueDate, businessDate)}
         statusMap={UPCOMING_STATUS_COLOR}
         icon={installment.status === 'pending' ? CalendarClock : undefined}
         showIcon

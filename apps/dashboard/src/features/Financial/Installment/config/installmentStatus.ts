@@ -1,4 +1,15 @@
-// An installment is `pending` until its due date passes, so it reads as
-// upcoming: it can be paid ahead, and nobody is waiting on it.
-export const UPCOMING_STATUS_COLOR = { upcoming: 'info' } as const;
-export const displayInstallmentStatus = (status: string) => (status === 'pending' ? 'upcoming' : status);
+export const UPCOMING_STATUS_COLOR = { upcoming: 'info', due: 'warning' } as const;
+
+// Due dates are calendar dates. Compare them with the school's business date,
+// without converting through the browser's time zone or the payment date.
+export const isInstallmentDue = (
+  installment: { status: string; dueDate: string },
+  businessDate: string,
+) => installment.status !== 'paid' && installment.status !== 'cancelled'
+  && (installment.status !== 'pending' || installment.dueDate.slice(0, 10) <= businessDate);
+
+export const displayInstallmentStatus = (status: string, dueDate: string, businessDate: string) => (
+  status === 'pending'
+    ? isInstallmentDue({ status, dueDate }, businessDate) ? 'due' : 'upcoming'
+    : status
+);

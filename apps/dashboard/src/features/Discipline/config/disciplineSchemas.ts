@@ -18,7 +18,7 @@ export const createDisciplineSchemas = (t: T) => {
   );
   const requiredId = z.preprocess(
     (value) => value ?? '',
-    z.string().min(1, t('validationMessages.idIsRequired')),
+    z.string().trim().min(1, t('validationMessages.studentIsRequired')),
   );
 
   /**

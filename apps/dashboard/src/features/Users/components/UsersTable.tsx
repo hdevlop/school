@@ -1,7 +1,8 @@
 "use client"
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Eye, KeyRound, Pencil, Trash2, UserCog, Plus, SearchX } from 'lucide-react';
@@ -105,15 +106,15 @@ function UsersTable() {
   // card button and right-click alike.
   const rowMenu = (user) => [
     { label: t('common.view'), icon: Eye, onSelect: () => handleView(user) },
-    { label: t('common.edit'), icon: Pencil, onSelect: () => handleEdit(user) },
+    { label: t('common.edit'), permission: 'update:users', icon: Pencil, onSelect: () => handleEdit(user) },
     {
-      label: t('users.accessReset.action'),
+      label: t('users.accessReset.action'), permission: 'reset:users',
       icon: KeyRound,
       separatorBefore: true,
       onSelect: () => handleResetAccess(user),
     },
     {
-      label: t('common.delete'),
+      label: t('common.delete'), permission: 'delete:users',
       icon: Trash2,
       danger: true,
       separatorBefore: true,
@@ -136,6 +137,7 @@ function UsersTable() {
       </NPageHeader>
 
       <NTable
+        permissionResource="users"
         data={users}
         columns={columns}
         filters={rawFilters}
@@ -160,10 +162,10 @@ function UsersTable() {
             title={t('emptyStates.users.title')}
             description={t('emptyStates.users.description')}
             action={(
-              <NButton size="sm" onClick={handleAddClick}>
+              <PermissionButton permission="create:users" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('users.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             )}
           />
         )}

@@ -18,7 +18,15 @@ export class ClassService {
   // The selected year's classes. A class belongs to the year it was
   // registered for, so its students, parents and counts come from that year.
   async getAll() {
-    return this.classRepository.getAll();
+    return this.withSectionRosterCounts(await this.classRepository.getAll());
+  }
+
+  private async withSectionRosterCounts(rows: Awaited<ReturnType<ClassRepository['getAll']>>) {
+    const counts = new Map((await this.classRepository.getSectionRosterCounts(rows.map(row => row.id)))
+      .map(row => [row.id, row]));
+    return rows.map(row => ({ ...row, sections: (Array.isArray(row.sections) ? row.sections : [])
+      .filter((section: { id?: string }) => Boolean(section?.id))
+      .map((section: { id: string; name: string }) => ({ ...section, ...counts.get(section.id) })) }));
   }
 
   async getCount() {
@@ -26,7 +34,7 @@ export class ClassService {
   }
 
   async getById(id: string) {
-    return this.classValidator.ensureInSelectedYear(id);
+    return (await this.withSectionRosterCounts([await this.classValidator.ensureInSelectedYear(id)]))[0];
   }
 
   async getSections(classId: string) {

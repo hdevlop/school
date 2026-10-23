@@ -19,7 +19,7 @@ export default function RoutineGrid(props: RoutineGridProps) {
   );
 }
 
-function RoutineWeekTable({ days, periods, entries, duties = [], defaultRoom, editable, onCellClick, onDutyClick }: RoutineGridProps) {
+function RoutineWeekTable({ days, periods, entries, duties = [], defaultRoom, editable, canCreate = editable, canUpdate = editable, canDelete = editable, onCellClick, onDutyClick }: RoutineGridProps) {
   const { t } = useTranslation();
   const entryMap = new Map(entries.map((entry) => [`${entry.dayOfWeek}:${entry.periodId}`, entry]));
   const dutyMap = new Map(duties.map((duty) => [`${duty.dayOfWeek}:${duty.periodId}`, duty]));
@@ -57,7 +57,7 @@ function RoutineWeekTable({ days, periods, entries, duties = [], defaultRoom, ed
                   ) : <span className="text-xs font-medium">{routinePeriodLabel(period.name, t)}</span>;
                   return (
                     <td key={period.id} className="h-24 border-e border-slate-300 bg-[repeating-linear-gradient(45deg,transparent,transparent_5px,rgba(148,163,184,0.10)_5px,rgba(148,163,184,0.10)_10px)] text-center text-slate-600 last:border-e-0 dark:border-border dark:text-muted-foreground">
-                      {editable && onDutyClick ? (
+                      {(duty ? canUpdate || canDelete : canCreate) && onDutyClick ? (
                         <button type="button" onClick={() => onDutyClick(day, period, duty)} className="flex h-full min-h-24 w-full cursor-pointer items-center justify-center p-1.5 hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-primary" aria-label={`${routineDayLabel(day, t)} ${routinePeriodLabel(period.name, t)}: ${duty?.staffName || t('classRoutines.ui.actions.addSupervisor')}`}>
                           {content}
                         </button>
@@ -66,7 +66,7 @@ function RoutineWeekTable({ days, periods, entries, duties = [], defaultRoom, ed
                   );
                 }
                 const lesson = entry ? (
-                  <RoutineCell subjectId={entry.subjectId} subjectName={entry.subjectName} roomNumber={entry.roomNumber} defaultRoom={defaultRoom} contentGroups={entry.contentGroups} />
+                  <RoutineCell subjectId={entry.subjectId} subjectName={entry.subjectName} teacherName={entry.teacherName} roomNumber={entry.roomNumber} defaultRoom={defaultRoom} contentGroups={entry.contentGroups} />
                 ) : <span className="text-muted-foreground">—</span>;
                 const lessonLabel = entry
                   ? entry.contentGroups?.length
@@ -75,7 +75,7 @@ function RoutineWeekTable({ days, periods, entries, duties = [], defaultRoom, ed
                   : t('classRoutines.ui.actions.addLesson');
                 return (
                   <td key={period.id} className="h-24 border-e border-slate-300 p-0.5 last:border-e-0 dark:border-border">
-                    {editable && onCellClick ? (
+                    {(entry ? canUpdate || canDelete : canCreate) && onCellClick ? (
                       <button type="button" onClick={() => onCellClick(day, period, entry)} className="group block h-full min-h-24 w-full cursor-pointer text-start hover:ring-2 hover:ring-inset hover:ring-primary/40 focus-visible:outline-2 focus-visible:outline-primary" aria-label={`${routineDayLabel(day, t)} ${routinePeriodLabel(period.name, t)}: ${lessonLabel}`}>
                         {entry ? lesson : <span className="flex min-h-24 items-center justify-center gap-1.5 text-xs text-muted-foreground"><Plus className="hidden h-4 w-4 group-hover:block group-focus-visible:block" />—</span>}
                       </button>

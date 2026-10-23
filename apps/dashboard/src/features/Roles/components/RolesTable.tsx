@@ -1,164 +1,90 @@
-"use client"
+'use client';
 
-import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { useState } from 'react';
+import { Button, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, cn, surfaceBorderClasses } from 'najm-kit';
+import { Loader2, LockKeyhole, Pencil, Plus, Shield, Trash2 } from 'lucide-react';
+import { useTranslation } from 'najm-i18n/react';
+import type { AccessRole } from '@sms/contracts/access-control';
 import { useDialog } from '@/shared/useDialog';
-import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Shield, Plus, SearchX } from 'lucide-react';
-import React from 'react';
+import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { isAuthorizationError } from '@/services/apiError';
+import { useRoles } from '../hooks/useRoles';
 import RoleForm from './RoleForm';
 import RolePermissionsDialog from './RolePermissionsDialog';
-import { useRoles } from '../hooks/useRoles';
-import { useTranslation } from 'najm-i18n/react';
-import RoleCard from './RoleCard';
-import { useRolesTableColumns } from '../hooks/useRolesTableColumns';
-import { useRolesTableFilters } from '../hooks/useRolesTableFilters';
-import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
-function RolesTable() {
-
+export default function RolesTable() {
   const { t } = useTranslation();
-  const rawFilters = useRolesTableFilters();
-  const tf = (key, fallback) => {
-    const value = t(key);
-    return value === key ? fallback : value;
-  };
-
   const { openDialog, confirmDelete } = useDialog();
+  const { roles, createRole, updateRole, deleteRole, error, isRolesLoading, isCreating, isUpdating, isDeleting } = useRoles();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [dirty, setDirty] = useState(false);
+  const allRoles: AccessRole[] = roles ?? [];
+  const selected = allRoles.find((role) => role.id === selectedId) ?? allRoles[0];
+  const locked = selected?.name.toLowerCase() === 'admin';
 
-  const handleManagePermissions = (role) => {
+  const selectRole = (role: AccessRole) => {
+    if (selected?.id === role.id) return;
+    const change = () => { setDirty(false); setSelectedId(role.id); };
+    if (!dirty) return change();
     openDialog({
-      title: `${tf('permissions.manage.title', 'Manage Permissions')} - ${role.name}`,
-      children: <RolePermissionsDialog role={role} />,
-      width: 'lg',
-      showButtons: false,
+      title: t('roleAccess.unsavedTitle'),
+      children: <p className="text-sm text-muted-foreground">{t('roleAccess.unsavedHint')}</p>,
+      primaryButton: { text: t('roleAccess.discard'), onClick: change },
     });
   };
-
-  const columns = useRolesTableColumns(handleManagePermissions);
-
-  const {
-    roles,
-    createRole,
-    updateRole,
-    deleteRole,
-    error,
-    isRolesLoading,
-    isUpdating,
-    isCreating,
-    isDeleting
-  } = useRoles();
-
-  const handleAddClick = () => {
+  const add = () => openDialog({
+    title: t('roles.dialogs.createTitle'), children: <RoleForm />,
+    primaryButton: {
+      form: 'role-form', text: t('roles.dialogs.createButton'), loading: isCreating,
+      onClick: async (data) => { await createRole(data); },
+    },
+  });
+  const edit = () => {
+    if (!selected || locked) return;
     openDialog({
-      title: t('roles.dialogs.createTitle'),
-      children: <RoleForm />,
+      title: `${t('roles.dialogs.editTitle')} - ${selected.name}`, children: <RoleForm role={selected} />,
       primaryButton: {
-        form: 'role-form',
-        text: t('roles.dialogs.createButton'),
-        loading: isCreating,
-        onClick: async (roleData) => {
-          await createRole(roleData);
-        }
-      }
+        form: 'role-form', text: t('roles.dialogs.updateButton'), loading: isUpdating,
+        onClick: async (data) => { await updateRole(data); },
+      },
     });
   };
-
-  const handleView = (role) => {
-    openDialog({
-      title: t('roles.dialogs.viewTitle'),
-      children: <RoleForm role={role} />,
-      showButtons: false,
-    });
-  };
-
-  const handleEdit = (role) => {
-    openDialog({
-      title: `${t('roles.dialogs.editTitle')} - ${role.name}`,
-      children: <RoleForm role={role} />,
-      primaryButton: {
-        form: 'role-form',
-        text: t('roles.dialogs.updateButton'),
-        loading: isUpdating,
-        onClick: async (roleData) => {
-          await updateRole(roleData);
-        }
-      }
-    });
-  };
-
-  const handleDelete = (role) => {
+  const remove = () => {
+    if (!selected || locked || dirty) return;
     confirmDelete({
-      title: t('common.delete'),
-      warningText: t('common.deleteConfirm'),
-      cancelText: t('common.cancel'),
-      itemName: role.name,
-      confirmText: t('roles.dialogs.deleteButton'),
-      loading: isDeleting,
-      onConfirm: async () => {
-        await deleteRole(role.id);
-      }
+      title: t('common.delete'), warningText: t('common.deleteConfirm'), itemName: selected.name,
+      confirmText: t('roles.dialogs.deleteButton'), loading: isDeleting,
+      onConfirm: async () => { await deleteRole(selected.id); setSelectedId(null); },
     });
   };
-
-  const total = roles?.length ?? 0;
 
   return (
-    <div className='flex flex-col gap-2 w-full h-full'>
-      <NPageHeader
-        icon={Shield}
-        title={t('navigation.roles')}
-        subtitle={isCountUnknown(error, roles, isRolesLoading) ? undefined : t('roles.subtitle.count', { count: total })}
-      >
-        <NPageHeaderActions>
-          <PageHeaderGlobalActions />
-        </NPageHeaderActions>
+    <div className="flex h-full min-h-0 flex-col gap-2">
+      <NPageHeader icon={Shield} title={t('roleAccess.title')}>
+        <NPageHeaderActions><PageHeaderGlobalActions /></NPageHeaderActions>
       </NPageHeader>
-
-      <NTable
-        data={roles}
-        columns={columns}
-        filters={rawFilters}
-        onCreate={handleAddClick}
-        onView={handleView}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        loading={isRolesLoading}
-        error={hasFailedToLoad(error, roles) ? error : null}
-        renderError={(currentError) => (
-          isAuthorizationError(currentError)
-            ? <NForbiddenState surface="panel" />
-            : <NErrorState surface="panel" />
-        )}
-        renderCard={RoleCard}
-        addButtonText={t('roles.dialogs.createButton')}
-        renderEmpty={() => (
-          <NEmptyState
-            surface="panel"
-            icon={FEATURE_ICONS.roles}
-            title={t('emptyStates.roles.title')}
-            description={t('emptyStates.roles.description')}
-            action={(
-              <NButton size="sm" onClick={handleAddClick}>
-                <Plus className="h-4 w-4" />
-                {t('roles.dialogs.createButton')}
-              </NButton>
-            )}
-          />
-        )}
-        renderFilteredEmpty={() => (
-          <NEmptyState
-            surface="panel"
-            icon={SearchX}
-            title={t('emptyStates.filtered.title')}
-            description={t('emptyStates.filtered.description')}
-          />
-        )}
-        defaultMode='table'
-      />
+      {error ? (isAuthorizationError(error) ? <NForbiddenState surface="panel" /> : <NErrorState surface="panel" />)
+        : isRolesLoading ? <div className="flex justify-center p-12"><Loader2 className="size-6 animate-spin" aria-label={t('common.loading')} /></div>
+        : !allRoles.length ? <NEmptyState surface="panel" icon={Shield} title={t('emptyStates.roles.title')} action={<Button onClick={add}><Plus className="size-4" />{t('roles.dialogs.createButton')}</Button>} />
+        : <div className={cn('grid min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-lg bg-background lg:grid-cols-[210px_minmax(0,1fr)] lg:grid-rows-1', surfaceBorderClasses())}>
+          <aside className="flex min-h-0 flex-col border-solid border-border border-b-[length:var(--border-width)] bg-muted/20 lg:border-b-0 lg:border-e-[length:var(--border-width)]">
+            <nav aria-label={t('navigation.roles')} className="flex max-h-40 flex-wrap gap-1 overflow-y-auto px-2 pt-3 pb-2 lg:max-h-none lg:flex-1 lg:flex-col lg:flex-nowrap">
+              {allRoles.map((role) => <button key={role.id} type="button" onClick={() => selectRole(role)} aria-pressed={selected.id === role.id}
+                className={`flex min-h-10 cursor-pointer items-center justify-between gap-2 rounded-md px-3 py-2 text-start text-sm capitalize transition-colors lg:w-full ${selected.id === role.id ? 'bg-primary/10 font-medium text-primary' : 'hover:bg-accent'}`}>
+                <span className="break-words">{role.name}</span>{role.name.toLowerCase() === 'admin' && <LockKeyhole className="size-3.5 shrink-0" aria-label={t('roleAccess.locked')} />}
+              </button>)}
+            </nav>
+            <div className="shrink-0 p-3">
+              <Button variant="outline" className="w-full" onClick={add}><Plus className="size-4" />{t('roles.dialogs.createButton')}</Button>
+            </div>
+          </aside>
+          <div className="min-h-0 min-w-0 overflow-y-auto p-3 sm:p-5">
+            <RolePermissionsDialog key={selected.id} role={selected} onDirtyChange={setDirty} actions={<>
+              <Button size="icon" variant="outline" className="size-10" disabled={locked || isUpdating || dirty} onClick={edit} aria-label={t('roles.dialogs.editTitle')} title={t('roles.dialogs.editTitle')}><Pencil className="size-4" /></Button>
+              <Button size="icon" variant="outline" className="size-10" disabled={locked || isDeleting || dirty} onClick={remove} aria-label={t('common.delete')} title={t('common.delete')}><Trash2 className="size-4" /></Button>
+            </>} />
+          </div>
+        </div>}
     </div>
   );
 }
-
-export default RolesTable;

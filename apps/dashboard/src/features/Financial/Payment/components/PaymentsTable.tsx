@@ -1,5 +1,7 @@
 "use client"
 
+
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NButton, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
 import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
@@ -138,13 +140,13 @@ function PaymentsTable({studentId}) {
           {payment.paymentMethod === 'check' && ['pending', 'deposited', 'completed'].includes(payment.status) && (
             <div className="flex flex-wrap gap-2">
               {payment.status === 'pending' && (
-                <NButton size="sm" onClick={() => updateCheck('deposited')}>{t('payments.dialogs.depositCheck')}</NButton>
+                <PermissionButton permission="update:payments" size="sm" onClick={() => updateCheck('deposited')}>{t('payments.dialogs.depositCheck')}</PermissionButton>
               )}
               {payment.status === 'deposited' && (
-                <NButton size="sm" onClick={() => updateCheck('completed')}>{t('payments.dialogs.completeCheck')}</NButton>
+                <PermissionButton permission="update:payments" size="sm" onClick={() => updateCheck('completed')}>{t('payments.dialogs.completeCheck')}</PermissionButton>
               )}
-              <NButton variant="outline" size="sm" onClick={() => updateCheck('bounced')}>{t('payments.dialogs.bounceCheck')}</NButton>
-              <NButton variant="destructive" size="sm" onClick={voidPayment}>{t('payments.dialogs.voidPayment')}</NButton>
+              <PermissionButton permission="update:payments" variant="outline" size="sm" onClick={() => updateCheck('bounced')}>{t('payments.dialogs.bounceCheck')}</PermissionButton>
+              <PermissionButton permission="update:payments" variant="destructive" size="sm" onClick={voidPayment}>{t('payments.dialogs.voidPayment')}</PermissionButton>
             </div>
           )}
         </div>
@@ -181,6 +183,8 @@ function PaymentsTable({studentId}) {
 
   return (
     <NTable
+        permissionResource="payments"
+      deletePermission="update:payments"
       data={data || []}
       columns={columns}
       filters={rawFilters}

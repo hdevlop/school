@@ -1,7 +1,8 @@
 "use client"
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { KeyRound, Plus, SearchX } from 'lucide-react';
@@ -106,6 +107,7 @@ function PermissionsTable() {
       </NPageHeader>
 
       <NTable
+        permissionResource="permissions"
         data={permissions}
         columns={columns}
         filters={rawFilters}
@@ -129,10 +131,10 @@ function PermissionsTable() {
             title={t('emptyStates.permissions.title')}
             description={t('emptyStates.permissions.description')}
             action={(
-              <NButton size="sm" onClick={handleAddClick}>
+              <PermissionButton permission="create:permissions" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('permissions.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             )}
           />
         )}

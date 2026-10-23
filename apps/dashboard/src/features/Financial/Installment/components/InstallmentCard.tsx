@@ -1,5 +1,7 @@
 "use client";
 
+import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
+import { displayInstallmentStatus } from '../config/installmentStatus';
 import React from 'react';
 import { Calendar, CalendarClock, DollarSign, CheckCircle, AlertCircle } from 'lucide-react';
 import { NBadge, NSectionInfo } from 'najm-kit';
@@ -11,6 +13,7 @@ const InstallmentCard = ({ data }: any) => {
   const { t } = useTranslation();
   const { displayDateOnly, majorMoney } = useSchoolFormat();
   const installment = data;
+  const { businessDate } = useBusinessDate();
 
   const statusConfig = {
     paid: {
@@ -29,8 +32,15 @@ const InstallmentCard = ({ data }: any) => {
       iconColor: 'text-red-600',
       label: t('fees.installmentStatus.overdue')
     },
-    // Not yet due, so it reads as upcoming rather than awaiting something.
-    pending: {
+    due: {
+      bg: 'bg-amber-100',
+      text: 'text-amber-700',
+      border: 'border-amber-200',
+      icon: CalendarClock,
+      iconColor: 'text-amber-600',
+      label: t('status.due')
+    },
+    upcoming: {
       bg: 'bg-sky-100',
       text: 'text-sky-700',
       border: 'border-sky-200',
@@ -40,7 +50,8 @@ const InstallmentCard = ({ data }: any) => {
     }
   };
 
-  const config = statusConfig[installment.status as keyof typeof statusConfig] || statusConfig.pending;
+  const status = displayInstallmentStatus(installment.status, installment.dueDate, businessDate);
+  const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.upcoming;
   const StatusIcon = config.icon;
 
   return (

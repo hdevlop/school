@@ -1,6 +1,8 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
+import { protectMenuItems } from '@/shared/actionPermissions';
 import { useMediaQuery, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
@@ -27,6 +29,7 @@ const getFeeBalance = (fee: any) => {
 export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayInstallment, fullWidth = false }) => {
 
   const { t } = useTranslation();
+  const viewer = useViewerRole();
   const { openDialog, confirmDelete } = useDialog();
   const { feeTypes } = useFeeTypes();
   // Below lg the fees are a list that opens onto each fee's installments
@@ -84,6 +87,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
     if (onPayFee && getFeeBalance(fee) > 0) {
       items.push({
         label: t('fees.studentView.pay'),
+        permission: 'create:payments',
         icon: CreditCard,
         onSelect: () => onPayFee(fee),
       });
@@ -91,20 +95,22 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
 
     items.push({
       label: t('common.edit'),
+      permission: 'update:fees',
       icon: Pencil,
       onSelect: () => handleEdit(fee),
     });
 
     items.push({
       label: t('common.delete'),
+      permission: 'delete:fees',
       icon: Trash2,
       danger: true,
       separatorBefore: items.length > 0,
       onSelect: () => handleDelete(fee),
     });
 
-    return items;
-  }, [t, handleDelete, handleEdit, onPayFee]);
+    return protectMenuItems(viewer, items);
+  }, [t, handleDelete, handleEdit, onPayFee, viewer]);
 
   if (isStacked && fees.length > 0) {
     return (
@@ -120,6 +126,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-hidden max-lg:flex-none max-lg:overflow-visible">
       <NTable
+        permissionResource="fees"
         data={fees}
         columns={[]}
         onEdit={handleEdit}

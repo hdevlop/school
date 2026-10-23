@@ -1,4 +1,5 @@
 'use client';
+import { PermissionButton } from '@/components/PermissionButton';
 import { useState } from 'react';
 import Link from 'next/link';
 import { LandingImage } from '@/features/Landing/components/LandingImage';
@@ -67,7 +68,7 @@ function ContentEditor({ initial, cycles }: { initial: LandingContent; cycles: L
       {tab === 'publish' && <><label className="flex gap-3"><input type="checkbox" checked={content.published} onChange={event=>set('published',event.target.checked)} />{t('publicPage.published')}</label><Link href="/" target="_blank" className="text-primary underline">{t('publicPage.view')}</Link></>}
     </div>
     {mutation.isError && <p role="alert" className="text-destructive">{t('publicPage.failed')}</p>}{mutation.isSuccess && <p role="status">{t('publicPage.saved')}</p>}
-    {tab!=='photos' && <NButton disabled={mutation.isPending} onClick={()=>mutation.mutate(content)}>{t('publicPage.save')}</NButton>}
+    {tab!=='photos' && <PermissionButton permission="update:settings" disabled={mutation.isPending} onClick={()=>mutation.mutate(content)}>{t('publicPage.save')}</PermissionButton>}
   </div>;
 }
 export function PublicPageEditor() {

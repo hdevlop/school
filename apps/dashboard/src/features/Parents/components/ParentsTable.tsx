@@ -1,7 +1,8 @@
 "use client"
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { HeartHandshake, Plus, SearchX } from 'lucide-react';
@@ -40,8 +41,6 @@ function ParentsTable() {
   // A teacher reads parents; only roles that may change them get the actions.
   const { can } = usePermissions();
   const canCreate = can('create:parents');
-  const canUpdate = can('update:parents');
-  const canDelete = can('delete:parents');
   // Opening a parent keeps an explicitly viewed year.
   const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
   const queryClient = useQueryClient();
@@ -157,16 +156,17 @@ function ParentsTable() {
       </NPageHeader>
 
       <NTable
+        permissionResource="parents"
         data={filteredParents}
         isFilteredEmpty={filteredParents.length === 0 && !!parents?.length}
         getRowId={(parent) => parent.id}
         columns={columns}
         filters={rawFilters}
-        onCreate={canCreate ? handleAddClick : undefined}
+        onCreate={handleAddClick}
         onView={handleView}
-        onEdit={canUpdate ? handleEdit : undefined}
-        onDelete={canDelete ? handleDelete : undefined}
-        onBulkDelete={canDelete ? handleBulkDelete : undefined}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onBulkDelete={handleBulkDelete}
         showDeleteSelection
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
@@ -188,10 +188,10 @@ function ParentsTable() {
             title={t(hasSelection ? 'emptyStates.filtered.title' : 'emptyStates.parents.title')}
             description={t(hasSelection ? 'emptyStates.filtered.description' : 'emptyStates.parents.description')}
             action={hasSelection || !canCreate ? undefined : (
-              <NButton size="sm" onClick={handleAddClick}>
+              <PermissionButton permission="create:parents" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('parents.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             )}
           />
         )}

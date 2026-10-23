@@ -1,10 +1,11 @@
 'use client';
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { Eye, Pencil, ShieldAlert, Trash2, Plus, SearchX } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
@@ -28,7 +29,7 @@ export default function DisciplineTable() {
   // Parents and students read their own or their children's records only.
   const { role, isFamily, isSchoolWide, can } = useViewerRole();
   // Reopening and deleting are never a teacher's, whatever they are granted (as on the server).
-  const canResolve = can('resolve:discipline');
+  const canResolve = can('update:discipline');
   const canDelete = isSchoolWide && can('delete:discipline');
   const columns = useDisciplineTableColumns();
   const scope = useClassSectionTableScope();
@@ -122,6 +123,7 @@ export default function DisciplineTable() {
         <NPageHeaderActions><PageHeaderGlobalActions /></NPageHeaderActions>
       </NPageHeader>
       <NTable
+        permissionResource="discipline"
         responsiveSkeleton
         className="min-h-0 flex-1"
         data={filteredIncidents}
@@ -140,8 +142,8 @@ export default function DisciplineTable() {
         menu={{
           row: (incident: DisciplineIncident) => [
             { label: t('common.view'), icon: Eye, onSelect: () => handleView(incident) },
-            ...(canEdit(incident) ? [{ label: t('common.edit'), icon: Pencil, onSelect: () => handleEdit(incident) }] : []),
-            ...(canDelete ? [{ label: t('common.delete'), icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(incident) }] : []),
+            ...(canEdit(incident) ? [{ label: t('common.edit'), permission: 'update:discipline', icon: Pencil, onSelect: () => handleEdit(incident) }] : []),
+            ...(canDelete ? [{ label: t('common.delete'), permission: 'delete:discipline', icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(incident) }] : []),
           ],
         }}
         renderCard={DisciplineCard as any}
@@ -153,10 +155,10 @@ export default function DisciplineTable() {
             title={scope.hasSelection ? t('emptyStates.filtered.title') : t('emptyStates.discipline.title')}
             description={scope.hasSelection ? t('emptyStates.filtered.description') : isFamily ? t('emptyStates.familyDescription') : t('emptyStates.discipline.description')}
             action={scope.hasSelection || isFamily ? undefined : (
-              <NButton size="sm" onClick={handleCreate}>
+              <PermissionButton permission="create:discipline" size="sm" onClick={handleCreate}>
                 <Plus className="h-4 w-4" />
                 {t('discipline.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             )}
           />
         )}

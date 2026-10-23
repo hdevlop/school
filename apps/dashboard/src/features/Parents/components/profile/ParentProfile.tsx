@@ -643,10 +643,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                       {majorMoney(dashboard.outstandingFees)}
                     </p>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      {dashboard.nextFee?.child?.name ?? text('familyAccount')}
-                      {dashboard.nextFee?.name ?? dashboard.nextFee?.feeType?.name
-                        ? ` · ${dashboard.nextFee?.name ?? dashboard.nextFee?.feeType?.name}`
-                        : ''}
+                      {children.length > 1 ? text('familyAccount') : children[0]?.name ?? text('familyAccount')}
                     </p>
                   </div>
 
@@ -677,8 +674,8 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                       type="button"
                       className="w-full gap-2"
                       onClick={() =>
-                        dashboard.nextFee?.child?.id
-                          ? router.push(`/students/${dashboard.nextFee.child.id}/fees`)
+                        children.length === 1
+                          ? router.push(`/students/${children[0].id}/fees`)
                           : router.push('/fees')
                       }
                     >

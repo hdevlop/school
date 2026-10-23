@@ -29,11 +29,10 @@ const FeeCard = ({ data }: { data: any }) => {
     },
   };
 
-  const style = statusStyles[fee.status] || statusStyles.pending;
-
   const installmentsCount = fee.installments?.length || 0;
   const paymentsCount = fee.payments?.length || 0;
-  const overdueCount = fee.installments?.filter((s) => s.status === 'overdue').length || 0;
+  const overdueCount = fee.installments?.filter((s) => s.isOverdue).length || 0;
+  const style = statusStyles[overdueCount > 0 ? 'overdue' : fee.status] || statusStyles.pending;
 
   const discountAmount = Number(fee.baseAmount ?? 0) - Number(fee.netAmount ?? 0);
   const hasDiscount = discountAmount > 0;

@@ -200,7 +200,13 @@ describe('route security over the history fixture', () => {
     expect(await valid.json()).toMatchObject({ data: { received: true } });
     const [created] = await db.select().from(visitRequests).where(eq(visitRequests.parentName, input.parentName));
     expect(created).toBeDefined();
-    const delivered = await db.select().from(notifications).where(eq(notifications.sourceKey, `visit-request:${created.id}`));
+    // EventService.emit dispatches async subscribers without awaiting them.
+    // Assert eventual delivery instead of racing the notification insert.
+    let delivered = await db.select().from(notifications).where(eq(notifications.sourceKey, `visit-request:${created.id}`));
+    for (let attempt = 0; delivered.length === 0 && attempt < 50; attempt++) {
+      await Bun.sleep(20);
+      delivered = await db.select().from(notifications).where(eq(notifications.sourceKey, `visit-request:${created.id}`));
+    }
     expect(delivered.length).toBeGreaterThan(0);
     expect(delivered.some(row => row.recipientUserId === notifier.id)).toBe(true);
     expect(new Set(delivered.map(row => row.recipientUserId)).size).toBe(delivered.length);

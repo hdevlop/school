@@ -6,6 +6,7 @@ import { isAdmin, CanSchoolWide } from '../../auth';
 import {
   attendanceDateFilterDto,
   typeQueryParam,
+  staffAttendanceReadQueryDto,
   attendanceDateParam,
   attendanceIdParam,
   createAttendanceDto,
@@ -16,6 +17,7 @@ import {
   teacherIdParam,
   type AttendanceDateFilterDto,
   type AttendanceTypeQueryDto,
+  type StaffAttendanceReadQueryDto,
   type SeedAttendanceDto,
   updateAttendanceDto,
   updateAttendanceStatusDto,
@@ -31,6 +33,18 @@ import {
 @Controller('/attendance')
 export class AttendanceController {
   constructor(private attendanceService: AttendanceService) { }
+
+  // Staff readers do not need student-attendance access. Fix the type here
+  // so query parameters cannot widen this permission to student records.
+  @Get('/staff/records')
+  @CanSchoolWide('read:staff-attendance')
+  @Validate({ query: staffAttendanceReadQueryDto })
+  @ResMsg('attendance.success.retrieved')
+  async listStaffRecords(@Query() query: StaffAttendanceReadQueryDto) {
+    return query?.date
+      ? this.attendanceService.getByDate(query.date, 'staff')
+      : this.attendanceService.getAll({ type: 'staff' });
+  }
 
   @Get()
   @CanList()
@@ -154,7 +168,7 @@ export class AttendanceController {
   }
 
   @Post('/staff/bulk')
-  @CanSchoolWide('manage:staff-attendance')
+  @CanSchoolWide('update:staff-attendance')
   @Validate({ body: upsertStaffAttendanceRosterDto })
   @ResMsg('attendance.success.marked')
   async upsertStaffRoster(

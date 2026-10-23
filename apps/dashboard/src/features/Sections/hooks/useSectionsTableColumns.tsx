@@ -97,6 +97,12 @@ export const useSectionsTableColumns = () => {
       },
     },
     {
+      accessorKey: 'studentCount',
+      header: t('sections.table.studentCount'),
+      enableSorting: true,
+      cell: ({ getValue }) => <span className="font-medium tabular-nums">{getValue() ?? 0}</span>,
+    },
+    {
       accessorKey: "maxStudents",
       header: t('sections.table.capacity'),
       enableSorting: true,

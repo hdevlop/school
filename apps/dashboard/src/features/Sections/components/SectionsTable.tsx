@@ -1,7 +1,8 @@
 "use client"
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useAcademicTableActions } from '@/features/Classes/hooks/useAcademicTableActions';
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
@@ -39,7 +40,8 @@ function SectionsTable() {
   const filteredSections = useMemo(() => (sections || []).filter(scope.matches), [sections, scope.matches]);
 
   const { openDialog } = useDialog();
-  const tableActions = useAcademicTableActions('sections', deleteSectionApi);
+  const tableActions = useAcademicTableActions('sections', deleteSectionApi, (section) =>
+    [section.class?.name, section.name, section.class?.academicYear].filter(Boolean).join(' · '));
   const tableMode = useRememberedTableMode('sections', 'table');
 
   const handleAddClick = () => {
@@ -100,6 +102,7 @@ function SectionsTable() {
       </NPageHeader>
 
       <NTable
+        permissionResource="sections"
         responsiveSkeleton
         className='min-h-0 flex-1'
         data={filteredSections}
@@ -127,10 +130,10 @@ function SectionsTable() {
             title={t(scope.hasSelection ? 'emptyStates.filtered.title' : 'emptyStates.sections.title')}
             description={t(scope.hasSelection ? 'emptyStates.filtered.description' : 'emptyStates.sections.description')}
             action={scope.hasSelection ? undefined : (
-              <NButton size="sm" onClick={handleAddClick}>
+              <PermissionButton permission="create:sections" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('sections.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             )}
           />
         )}

@@ -5,12 +5,13 @@ import { usePathname, useRouter } from 'next/navigation';
 import { LogOut, Settings } from 'lucide-react';
 import { YearScopedChatbot } from '@/features/Chat/components/YearScopedChatbot';
 import { SignOutButton, useAuth, usePermissions, useRedirectOnSessionExpired } from 'najm-auth/client/react';
-import { cn, isNavItemActiveOrNested, NSidebar, NSidebarProvider, useCardViewport, useNSidebar, type NavItem } from 'najm-kit';
+import { cn, isNavItemActiveOrNested, NSidebar, NSidebarProvider, useCardViewport, useMediaQuery, useNSidebar, type NavItem } from 'najm-kit';
 import { NSidebarNextLink } from 'najm-kit/next';
 import { clearNajmUiPreferences } from 'najm-kit/server';
 import { NThemeImage } from 'najm-theme/react';
 import { useTranslation } from 'najm-i18n/react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { sidebarEntryVisible } from '@sms/contracts/access-control';
 import { PAGE_ACCESS } from '@/shared/pageAccess';
 import { BRANDING_SETTINGS_NAV_ID, THEME_SETTINGS_NAV_ID, createSidebarItems } from '@/shared/schoolNavigation';
 import { schoolApp } from '@/najm.config';
@@ -50,10 +51,10 @@ function SidebarFooterContent({ collapsed, onOpenSettings }: Readonly<{ collapse
 
   return (
     <div className="flex flex-col gap-1">
-      <button type="button" onClick={() => (canManageSettings ? onOpenSettings() : router.push('/preferences'))} className={itemClassName}>
+      {sidebarEntryVisible(can, 'settings:preferences') && <button type="button" aria-label={t('navigation.settings')} title={collapsed ? t('navigation.settings') : undefined} onClick={() => (canManageSettings ? onOpenSettings() : router.push('/preferences'))} className={itemClassName}>
           <Settings className="h-4 w-4 shrink-0" />
           {isExpanded && <span>{t('navigation.settings')}</span>}
-      </button>
+      </button>}
       <SignOutButton
         onSuccess={async () => {
           // The UI preference cookies outrank the signed-in user's stored
@@ -66,7 +67,7 @@ function SidebarFooterContent({ collapsed, onOpenSettings }: Readonly<{ collapse
           window.location.replace('/login');
         }}
       >
-        <button type="button" className={itemClassName}>
+        <button type="button" aria-label={t('navigation.logout')} title={collapsed ? t('navigation.logout') : undefined} className={itemClassName}>
           <LogOut className="h-4 w-4 shrink-0" />
           {isExpanded && <span>{t('navigation.logout')}</span>}
         </button>
@@ -83,7 +84,7 @@ function SidebarFooterContent({ collapsed, onOpenSettings }: Readonly<{ collapse
  */
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
   return (
-    <NSidebarProvider mobileBreakpoint="lg">
+    <NSidebarProvider mobileBreakpoint="md">
       <DashboardShellContent>{children}</DashboardShellContent>
     </NSidebarProvider>
   );
@@ -92,6 +93,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 function DashboardShellContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const sidebar = useNSidebar();
+  const compactSidebar = useMediaQuery('(max-width: 1279px)');
   const isMobile = useCardViewport();
   const isHome = pathname === '/home';
   const { user } = useAuth();
@@ -112,6 +114,10 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
     <NavigationActionsProvider value={{ openThemeSettings: (sheet) => { sidebar?.closeMobile(); setActiveThemeSheet(sheet); } }}>
     <div className="flex h-dvh w-full overflow-hidden bg-background font-sans">
       <NSidebar
+        // Phones use the drawer; tablets and small laptops retain the icon rail.
+        collapsed={compactSidebar || sidebar?.collapsed}
+        onCollapsedChange={sidebar?.setCollapsed}
+        showCollapseButton={!compactSidebar}
         hamburgerLabel={t('navigation.openSidebar')}
         closeLabel={t('navigation.closeSidebar')}
         collapseLabel={t('navigation.collapseSidebar')}
@@ -135,9 +141,12 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
           // drawer carries it under the logo instead.
           return isMobile ? <>{mark}<ViewingYearSelector placement="sidebar" /></> : mark;
         }}
-        // The drawer's header stacks the logo and the year at phone width.
-        // Only the drawer renders below lg, so this never reaches the rail.
-        classNames={{ sidebarHeader: 'h-24 min-h-24 border-b-0 max-sm:h-auto max-sm:flex-col max-sm:items-stretch max-sm:gap-2 max-sm:pt-1 max-sm:pb-3' }}
+        // The expanded phone drawer stacks the logo and year; the compact
+        // rail renders only its logo in the same header slot.
+        classNames={{
+          sidebarHeader: 'h-24 min-h-24 border-b-0 max-sm:h-auto max-sm:flex-col max-sm:items-stretch max-sm:gap-2 max-sm:pt-1 max-sm:pb-3',
+          sidebarItem: '[[data-slot=popover-content]_&]:[--sidebar-foreground:var(--popover-foreground)]',
+        }}
         navItems={navItems}
         activePath={sidebarActivePath(pathname, navItems, isMobile)}
         isActive={isNavItemActiveOrNested}
@@ -154,7 +163,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
             onOpenSettings={() => { sidebar?.closeMobile(); setSettingsOpen(true); }}
           />
         )}
-        mobileBreakpoint="lg"
+        mobileBreakpoint="md"
         closeOnNavigate
       />
 

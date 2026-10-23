@@ -16,6 +16,7 @@ import {
   studentEnrollments,
   academicYearMigrationIssues,
   academicYearTransitionRuns,
+  cycles,
 } from '../../src/database/schema';
 import { ClassRoutineRepository } from '../../src/modules/classRoutines/ClassRoutineRepository';
 import { RolloverRepository } from '../../src/modules/financial/rollover/RolloverRepository';
@@ -26,9 +27,20 @@ import { SeedService } from '../../src/modules/seed/SeedService';
 import { FeeTypeService } from '../../src/modules/financial/feeTypes/FeeTypeService';
 import { TeacherRepository } from '../../src/modules/teachers/TeacherRepository';
 import { StaffAssignmentRepository } from '../../src/modules/staff/StaffAssignmentRepository';
+import { CycleRepository } from '../../src/modules/cycles/CycleRepository';
 import { drizzle } from 'drizzle-orm/pg-proxy';
 
 describe('seed reset foreign-key order', () => {
+  it('clears all cycles without needing a selected year after their dependents are gone', async () => {
+    const deleted: unknown[] = [];
+    const repository = new CycleRepository();
+    repository.db = { delete: async (table: unknown) => { deleted.push(table); } } as unknown as typeof repository.db;
+
+    await repository.clearForSeedReset();
+
+    expect(deleted).toEqual([cycles]);
+  });
+
   it('clears teachers and their linked accounts without a selected academic year', async () => {
     const queries: { sql: string; params: unknown[] }[] = [];
     const repository = new TeacherRepository();

@@ -5,6 +5,8 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useFormState, type Control } from 'react-hook-form';
 import { AlertCircle, BookOpen, Building2, Check, Circle, RotateCcw, Save, Settings as SettingsIcon } from 'lucide-react';
 import { NButton, NConfirmDialog, NForm, NSheet, NSkeleton as Skeleton, Tabs, TabsContent, TabsList, TabsTrigger, useNForm } from 'najm-kit';
+import { PermissionButton } from '@/components/PermissionButton';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useTranslation } from 'najm-i18n/react';
 import { normalizeLocationValue } from 'najm-kit/location';
 import { schoolI18n } from '@sms/contracts/locales';
@@ -119,9 +121,9 @@ function SettingsFooter({ control, ready, saveFailed, onDiscard }: {
         >
           <RotateCcw className="h-4 w-4" aria-hidden />
         </NButton>
-        <NButton type="submit" form={SETTINGS_FORM_ID} disabled={!ready || !isDirty || isSubmitting} loading={isSubmitting} loadingText={t('common.saving')}>
+        <PermissionButton permission="update:settings" type="submit" form={SETTINGS_FORM_ID} disabled={!ready || !isDirty || isSubmitting} loading={isSubmitting} loadingText={t('common.saving')}>
           <Save className="h-4 w-4" aria-hidden />{t('settings.saveSettings')}
-        </NButton>
+        </PermissionButton>
       </div>
     </div>
   );
@@ -158,6 +160,7 @@ export function SchoolSettingsSheet({ open, onOpenChange, onLeave }: {
   onLeave?: () => void;
 }) {
   const { t } = useTranslation();
+  const { can } = useViewerRole();
   const settingsSchema = useMemo(() => createSettingsSchemas(t).settings, [t]);
   const admin = useAdminSettings(open);
   const { isSettingsLoading, isError, refetch, updateSettings, isUpdating } = admin;
@@ -211,6 +214,7 @@ export function SchoolSettingsSheet({ open, onOpenChange, onLeave }: {
   };
 
   const handleSubmit = async (data: SettingsFormDefaults) => {
+    if (!can('update:settings')) return;
     setSaveFailed(false);
     const { schoolLocation, ...fields } = data;
     try {

@@ -65,4 +65,9 @@ export class CycleRepository {
     const [row] = await this.db.delete(cycles).where(eq(cycles.id, id)).returning();
     return row;
   }
+
+  // Trusted all-years reset, after classes and staff assignments are cleared.
+  async clearForSeedReset() {
+    await this.db.delete(cycles);
+  }
 }

@@ -122,14 +122,14 @@ export class StudentEnrollmentValidator {
   }
 
   ensureTransferDate(date: string, enrolledOn: string, yearEnd: string) {
-    if (date <= enrolledOn || date > yearEnd) Err(422, this.et('transferOutsideInterval'));
+    if (date < enrolledOn || date > yearEnd) Err(422, this.et('transferOutsideInterval'));
   }
 
   ensureTransferPlacement<T extends { validFrom: string; classId: string; sectionId: string }>(
     placement: T | null | undefined, data: { validFrom: string; classId: string; sectionId: string },
   ): T {
     if (!placement) Err(409, this.et('noOpenPlacementTransfer'));
-    if (data.validFrom <= placement.validFrom) Err(422, this.et('transferBeforePlacement'));
+    if (data.validFrom < placement.validFrom) Err(422, this.et('transferBeforePlacement'));
     if (placement.classId === data.classId && placement.sectionId === data.sectionId) Err(409, this.et('alreadyInPlacement'));
     return placement;
   }

@@ -1,4 +1,95 @@
 {
+  "roleAccess": {
+    "assigned": "assigned",
+    "noPermissions": "No matching permissions.",
+    "title": "Roles & permissions",
+    "loaded": "Role permissions loaded",
+    "saved": "Role permissions saved",
+    "failed": "Could not save role permissions.",
+    "module": "Module",
+    "sidebar": "Sidebar",
+    "sidebarHelp": "Sidebar visibility only changes the menu. Enable the page's View permission first. Existing role and record access rules still apply.",
+    "search": "Search modules or permissions…",
+    "searchRoles": "Search roles…",
+    "noRoles": "No matching roles.",
+    "selectModule": "Select standard permissions",
+    "specialPermissions": "Special permissions",
+    "unavailable": "No permission for this action",
+    "noSidebar": "No sidebar entry",
+    "scopeTitle": "Record access",
+    "adminLocked": "The administrator role is protected and keeps full access.",
+    "wildcardHint": "A wildcard grants multiple permissions. Remove it under Special permissions before restricting the access it grants.",
+    "locked": "Protected role",
+    "reload": "Discard draft and reload",
+    "review": "Review changes",
+    "allow": "Allow",
+    "remove": "Remove permission",
+    "show": "Show in sidebar",
+    "hide": "Hide from sidebar",
+    "sessionsHint": "Existing permission claims for this role will expire. Users receive the updated access when their session refreshes.",
+    "apply": "Apply changes",
+    "unsaved": "{{count}} unsaved changes",
+    "noChanges": "No unsaved changes",
+    "discard": "Discard",
+    "save": "Save changes",
+    "unsavedTitle": "Unsaved permission changes",
+    "unsavedHint": "Switching roles will discard this draft. Discard the changes and continue?",
+    "scope": {
+      "schoolWide": "School-wide records, limited by the permissions selected below.",
+      "teacher": "Assigned records only. Permissions do not expand teacher ownership.",
+      "parent": "Linked children only. Permissions do not expand parent ownership.",
+      "student": "Own records only. Permissions do not expand student ownership.",
+      "unconfigured": "This custom role has no record scope configured. Permissions alone do not grant access to owned school records."
+    },
+    "categories": {
+      "people": "People",
+      "academic": "Academic",
+      "attendance": "Attendance",
+      "conduct": "Conduct",
+      "financial": "Financial",
+      "transport": "Transport",
+      "access": "Access control",
+      "general": "General"
+    },
+    "actions": {
+      "read": "View",
+      "create": "Add",
+      "update": "Edit",
+      "delete": "Delete",
+      "publish": "Publish",
+      "rollover": "Rollover",
+      "view": "View reports",
+      "resolve": "Resolve",
+      "reset": "Reset access",
+      "admin": "System administration",
+      "*": "Full access"
+    },
+    "resources": {
+      "attendance": "Student attendance",
+      "staff-attendance": "Staff attendance",
+      "refuel": "Fuel",
+      "visit-requests": "Visit requests",
+      "payments": "Payments",
+      "allocations": "Payment allocations",
+      "installments": "Installments",
+      "drivers": "Drivers",
+      "vehicle-assignments": "Vehicle assignments",
+      "student-routes": "Student routes",
+      "refuels": "Fuel",
+      "maintenance": "Maintenance",
+      "reports": "Reports",
+      "participants": "Participants",
+      "system": "System",
+      "*": "All modules",
+      "general": "General"
+    },
+    "errors": {
+      "notFound": "Role not found.",
+      "adminLocked": "The administrator role cannot be changed here.",
+      "conflict": "This role changed since you opened it. Reload before saving.",
+      "invalidPermissions": "One or more permissions are invalid. Reload the permission catalog."
+    }
+  },
   "academicYearMigration": {
     "title": "Academic year data review",
     "description": "Review records whose historical year or placement needs evidence before switching school-wide history on.",
@@ -1052,6 +1143,7 @@
     "bounced": "Bounced",
     "voided": "Voided",
     "upcoming": "Upcoming",
+    "due": "Due",
     "active": "Active",
     "inactive": "Inactive",
     "pending": "Pending",
@@ -1691,7 +1783,8 @@
       "studentsInClass": "Students in class",
       "unknownFeeType": "Unknown fee type",
       "addFee": "Add fee",
-      "noFeesAdded": "No fees added yet."
+      "noFeesAdded": "No fees added yet.",
+      "netAmountForYear": "Total for billing period (after discount)"
     },
     "dialogs": {
       "createTitle": "Create New Fee",
@@ -1740,7 +1833,7 @@
       "searchByStudentCode": "Search by student code...",
       "filterByFeeType": "Filter by fee type...",
       "allSections": "All sections",
-      "allSchedules": "All payment frequencies",
+      "allSchedules": "Frequency",
       "filterByStatus": "Filter by status...",
       "filterBySchedule": "Filter by schedule...",
       "filterByAcademicYear": "Filter by academic year...",
@@ -1902,7 +1995,8 @@
         "withdrawn": "Withdrawn",
         "graduated": "Graduated",
         "transferred": "Transferred to another school"
-      }
+      },
+      "sameDayHint": "A move on the current placement’s start date corrects that placement. Later moves preserve the previous placement in history."
     },
     "success": {
       "retrieved": "Student retrieved successfully",
@@ -2063,7 +2157,11 @@
       "noClassesAdminHint": "Ask a school administrator to add a class and section before enrolling students.",
       "manageClasses": "Manage classes",
       "classesLoadFailed": "Could not load classes. Please try again.",
-      "noSectionsHint": "This class has no sections. Add one in Academic → Sections, or ask an administrator, before enrolling a student."
+      "noSectionsHint": "This class has no sections. Add one in Academic → Sections, or ask an administrator, before enrolling a student.",
+      "feesOptional": "Fees are optional at enrollment. You can add them later from the student’s Fees tab.",
+      "noFeeTypesHint": "No fee types are set up. Finish enrollment without fees, or create one under Financial → Fee Types.",
+      "manageFeeTypes": "Open Fee Types (new tab)",
+      "saveFailed": "Could not validate or save the student. Your entries are kept; please try again."
     },
     "dialogs": {
       "deleteWarning": "This permanently deletes the student and their academic records, unpaid fees and transport assignments across all school years. Linked parents are kept. This cannot be undone. Students with payment or credit history cannot be deleted.",
@@ -2176,6 +2274,7 @@
       "grades": "Grades",
       "fees": "Fees",
       "detailsTitle": "Student Details",
+      "backToStudents": "Back to students",
       "detailsSubtitle": "Profile & Academic Records",
       "closeDetails": "Close student details",
       "unknown": "Unknown",
@@ -3654,7 +3753,8 @@
       "roomNumberPlaceholder": "e.g., 101",
       "maxStudents": "Maximum Students",
       "maxStudentsPlaceholder": "Enter capacity",
-      "status": "Status"
+      "status": "Status",
+      "full": "Full"
     },
     "dialogs": {
       "createTitle": "Create New Section",
@@ -3674,7 +3774,8 @@
       "capacity": "Capacity",
       "status": "Status",
       "description": "Description",
-      "level": "Level"
+      "level": "Level",
+      "studentCount": "Students"
     },
     "filters": {
       "searchByName": "Search by section name..."
@@ -4541,6 +4642,7 @@
       "tooLong": "This text is too long",
       "dateInvalid": "Enter a valid date",
       "amountTooLarge": "This amount is too large",
+      "rejectionReasonMinLength": "Enter a rejection reason of at least 10 characters",
       "checkNumberRequired": "Enter the check number"
     },
     "actions": {
@@ -5092,10 +5194,11 @@
     },
     "stats": {
       "paidStaff": "Paid / Staff",
-      "totalPayroll": "Payroll total (paid + unpaid)",
+      "totalPayroll": "Recorded payslip total",
+      "recordedHint": "Totals include recorded payslips only. Not set rows show estimated pay and are excluded until a payslip is created.",
       "period": "Period",
       "payroll": "Payroll",
-      "pending": "Pending",
+      "pending": "Pending payslips",
       "hourlyMonthly": "Hourly / Monthly"
     },
     "table": {
@@ -6187,7 +6290,7 @@
       "ended": "Enrollment has ended",
       "transferOutsideInterval": "Transfer date is outside the enrollment interval",
       "noOpenPlacementTransfer": "No open placement to transfer",
-      "transferBeforePlacement": "Transfer must occur after the current placement starts",
+      "transferBeforePlacement": "Transfer date cannot be before the current placement starts",
       "alreadyInPlacement": "Student is already in that placement",
       "futureTransfer": "Active-year transfer cannot start in the future",
       "alreadyEnded": "Enrollment has already ended",
@@ -6522,6 +6625,8 @@
     }
   },
   "validationMessages": {
+    "duplicatePermissionIds": "Duplicate permission IDs",
+    "duplicateSidebarEntries": "Duplicate sidebar entries",
     "pointsRange": "Points must be between 0 and 100.",
     "arrivalTimeInvalid": "Enter a valid arrival time (HH:MM).",
     "locale": "en",
@@ -6709,6 +6814,7 @@
     "studentIdIsRequired": "Student ID is required",
     "studentHasMultipleDecisions": "Student has multiple decisions",
     "studentIsRequired": "Student is required",
+    "subjectIsRequired": "Select a subject",
     "subjectCodeMustBeAtLeast2Characters": "Subject code must be at least 2 characters",
     "subjectCodeTooLong": "Subject code too long",
     "subjectNameMustBeAtLeast2Characters": "Subject name must be at least 2 characters",
@@ -6753,7 +6859,7 @@
     "required": "Required",
     "enterARealDate": "Enter a real date",
     "theDateMustFallInsideThisSchoolYear": "The date must fall inside this school year",
-    "theDateMustFollowTheCurrentPlacementAndFallInside": "The date must follow the current placement and fall inside this school year",
+    "theDateMustFollowTheCurrentPlacementAndFallInside": "The date must be on or after the current placement starts and fall inside this school year",
     "theDateMustFollowTheCurrentPlacement": "The date must follow the current placement",
     "incidentDateIsRequired": "Incident date is required",
     "incidentTimeIsRequired": "Incident time is required",

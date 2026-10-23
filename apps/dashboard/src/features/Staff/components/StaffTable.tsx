@@ -52,7 +52,7 @@ const StaffTable = () => {
   // as `@isAdmin()` on StaffRoleController decides.
   const canManageZones = canCreate || canUpdate || canDelete;
   const canManageJobTitles = role?.toLowerCase() === 'admin';
-  const { canReset, resetItems } = useResetLogin();
+  const { resetItems } = useResetLogin();
   const { majorMoney } = useSchoolFormat();
   const {
     staff,
@@ -147,9 +147,9 @@ const StaffTable = () => {
   // supplied, so they are restated when the access reset joins them.
   const rowMenu = (staffMember) => [
     { label: t('common.view'), icon: Eye, onSelect: () => handleView(staffMember) },
-    ...(canUpdate ? [{ label: t('common.edit'), icon: Pencil, onSelect: () => handleEdit(staffMember) }] : []),
+    { label: t('common.edit'), permission: 'update:staff', icon: Pencil, onSelect: () => handleEdit(staffMember) },
     ...resetItems(staffMember.userId),
-    ...(canDelete ? [{ label: t('common.delete'), icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(staffMember) }] : []),
+    { label: t('common.delete'), permission: 'delete:staff', icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(staffMember) },
   ];
 
   const handleBulkDelete = (ids) => {
@@ -393,15 +393,16 @@ const StaffTable = () => {
       )}
 
       <NTable
+        permissionResource="staff"
         data={rows}
         columns={columns}
         filters={filters}
-        onCreate={canCreate ? handleAdd : undefined}
+        onCreate={handleAdd}
         onView={handleView}
-        onEdit={canUpdate ? handleEdit : undefined}
-        onDelete={canDelete ? handleDelete : undefined}
-        onBulkDelete={canDelete ? handleBulkDelete : undefined}
-        menu={canReset ? { row: rowMenu } : undefined}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onBulkDelete={handleBulkDelete}
+        menu={{ row: rowMenu }}
         loading={isStaffLoading}
         error={hasFailedToLoad(isError ? error : null, rows) ? isError ? error : null : null}
         renderError={(currentError) => (

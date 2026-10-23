@@ -6,6 +6,8 @@ import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from '../../store/paymentStore';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
+import { displayInstallmentStatus, isInstallmentDue } from '@/features/Financial/Installment/config/installmentStatus';
 
 const toAmount = (value: unknown) => Number(value ?? 0) || 0;
 
@@ -32,19 +34,19 @@ const AllocatedAmountCell = ({ row }: any) => {
    );
 };
 
-const StatusBadge = ({ status, reservedAmount = 0, availableAmount = 0 }) => {
+const StatusBadge = ({ status, dueDate, businessDate, reservedAmount = 0, availableAmount = 0 }) => {
    const { t } = useTranslation();
    const isReserved = status !== 'paid' && toAmount(reservedAmount) > 0 && toAmount(availableAmount) <= 0;
-   // An installment is `pending` until its due date passes, so here it reads
-   // as upcoming: it can be paid ahead, and is not a payment awaiting clearance.
    const configs: Record<string, any> = {
       paid: { label: t('fees.status.paid'), className: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
       reserved: { icon: LockKeyhole, label: t('installments.status.reserved'), className: 'bg-slate-100 text-slate-700 border-slate-300' },
       overdue: { icon: AlertTriangle, label: t('fees.status.overdue'), className: 'bg-red-50 text-red-700 border-red-200' },
       partiallyPaid: { icon: Clock, label: t('fees.status.partiallyPaid'), className: 'bg-amber-50 text-amber-700 border-amber-200' },
       pending: { icon: CalendarClock, label: t('installments.status.upcoming'), className: 'bg-sky-50 text-sky-700 border-sky-200' },
+      due: { icon: CalendarClock, label: t('status.due'), className: 'bg-amber-50 text-amber-700 border-amber-200' },
    };
-   const config = isReserved ? configs.reserved : configs[status] || configs.pending;
+   const shownStatus = displayInstallmentStatus(status, dueDate, businessDate);
+   const config = isReserved ? configs.reserved : configs[shownStatus] || configs.pending;
    const Icon = config.icon;
 
    return (
@@ -64,6 +66,7 @@ const FeeInstallmentsTable = ({
 }: any) => {
    const { t } = useTranslation();
    const { majorMoney, displayDateOnly } = useSchoolFormat();
+   const { businessDate } = useBusinessDate();
    const rows = useMemo(() => (
       fee.installments
          .filter((inst: any) => inst.status !== 'cancelled' && (stats.fullyPaid || inst.status !== 'paid'))
@@ -83,13 +86,14 @@ const FeeInstallmentsTable = ({
    const [showUpcoming, setShowUpcoming] = useState(false);
    const { visibleRows, hiddenCount } = useMemo(() => {
       const hidden = new Set(rows.filter((inst: any) => inst.status === 'pending'
+         && !isInstallmentDue(inst, businessDate)
          && !selectedInstallments[inst.id]
          && toAmount(inst.reservedAmount) <= 0));
       return {
          visibleRows: showUpcoming ? rows : rows.filter((inst: any) => !hidden.has(inst)),
          hiddenCount: hidden.size,
       };
-   }, [rows, selectedInstallments, showUpcoming]);
+   }, [rows, selectedInstallments, showUpcoming, businessDate]);
    // Select-all acts on the rows on screen, never on hidden ones.
    const visibleFee = useMemo(() => ({ ...fee, installments: visibleRows }), [fee, visibleRows]);
 
@@ -193,13 +197,15 @@ const FeeInstallmentsTable = ({
             <div className="flex justify-center">
                <StatusBadge
                   status={row.original.status}
+                  dueDate={row.original.dueDate}
+                  businessDate={businessDate}
                   reservedAmount={row.original.reservedAmount}
                   availableAmount={getInstallmentAvailableAmount(row.original)}
                />
             </div>
          ),
       },
-   ], [allPayableSelected, visibleFee, payableRows.length, selectedInstallments, somePayableSelected, toggleAllFeeInstallments, toggleInstallment, t, majorMoney, displayDateOnly]);
+   ], [allPayableSelected, visibleFee, payableRows.length, selectedInstallments, somePayableSelected, toggleAllFeeInstallments, toggleInstallment, t, majorMoney, displayDateOnly, businessDate]);
 
    const nothingDue = visibleRows.length === 0 && hiddenCount > 0;
 
@@ -259,6 +265,7 @@ const FeeInstallmentsTable = ({
 export const InstallmentList = ({ studentFees }) => {
    const { t } = useTranslation();
    const { majorMoney } = useSchoolFormat();
+   const { businessDate } = useBusinessDate();
 
    const selectedInstallments = usePaymentStore((state) => state.selectedInstallments);
    const toggleInstallment = usePaymentStore((state) => state.toggleInstallment);
@@ -282,7 +289,7 @@ export const InstallmentList = ({ studentFees }) => {
       const overdue = fee.installments.filter(inst => inst.status === 'overdue').length;
       const fullyPaid = total > 0 && paid === total;
       // What is owed now: the rows shown before "Pay ahead".
-      const due = fee.installments.filter((inst) => inst.status !== 'pending' && isInstallmentPayable(inst));
+      const due = fee.installments.filter((inst) => isInstallmentDue(inst, businessDate) && isInstallmentPayable(inst));
       const dueAmount = due.reduce((sum, inst) => sum + getInstallmentAvailableAmount(inst), 0);
       const dueSelected = due.filter((inst) => selectedInstallments[inst.id]).length;
 

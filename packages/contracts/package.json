@@ -11,6 +11,10 @@
       "types": "./src/index.ts",
       "default": "./src/index.ts"
     },
+    "./access-control": {
+      "types": "./src/accessControl.ts",
+      "default": "./src/accessControl.ts"
+    },
     "./lookup": {
       "types": "./src/lookup.ts",
       "default": "./src/lookup.ts"

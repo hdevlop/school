@@ -1,7 +1,8 @@
 "use client"
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
@@ -22,8 +23,6 @@ function AnnouncementsTable() {
   const { can } = useViewerRole();
   // Everyone else reads the announcements addressed to them.
   const canCreate = can('create:announcements');
-  const canUpdate = can('update:announcements');
-  const canDelete = can('delete:announcements');
   const columns = useAnnouncementsTableColumns();
   const { classes } = useClasses();
   const [classFilter, setClassFilter] = useState('');
@@ -117,15 +116,16 @@ function AnnouncementsTable() {
       </NPageHeader>
 
       <NTable
+        permissionResource="announcements"
         responsiveSkeleton
         className='min-h-0 flex-1'
         data={filteredAnnouncements}
         columns={columns}
         filters={rawFilters}
-        onCreate={canCreate ? handleAddClick : undefined}
+        onCreate={handleAddClick}
         onView={handleView}
-        onEdit={canUpdate ? handleEdit : undefined}
-        onDelete={canDelete ? handleDelete : undefined}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
         loading={isAnnouncementsLoading}
         error={hasFailedToLoad(error, announcements) ? error : null}
         renderError={(currentError) => (
@@ -144,10 +144,10 @@ function AnnouncementsTable() {
               ? t('emptyStates.announcements.description')
               : t('emptyStates.announcements.readerDescription')}
             action={!classFilter && canCreate ? (
-              <NButton size="sm" onClick={handleAddClick}>
+              <PermissionButton permission="create:announcements" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('announcements.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             ) : undefined}
           />
         )}

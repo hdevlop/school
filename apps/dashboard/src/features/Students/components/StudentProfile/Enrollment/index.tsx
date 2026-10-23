@@ -25,7 +25,7 @@ const serverMessage = (error: any) => error?.response?.data?.message || error?.m
  * section from a date, or end the enrollment. Its actions target the viewed
  * year, or the active one with history off. Administrators and principals only.
  */
-export default function EnrollmentTab({ studentId }: { studentId?: string }) {
+export default function EnrollmentPanel({ studentId, showHistory = true }: { studentId?: string; showHistory?: boolean }) {
   const { t } = useTranslation();
   const { displayDate, displayDateTime } = useSchoolFormat();
   const { openDialog } = useDialog();
@@ -127,12 +127,12 @@ export default function EnrollmentTab({ studentId }: { studentId?: string }) {
   return (
     <div className="flex flex-col gap-4 py-3">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
+        {showHistory && <div>
           <h2 className="text-lg font-semibold text-slate-900">{t('students.enrollment.title')}</h2>
           <p className="text-sm text-muted-foreground">{t('students.enrollment.help')}</p>
-        </div>
+        </div>}
         <div className="flex flex-wrap gap-2">
-          {canEnroll && (
+          {showHistory && canEnroll && (
             <NButton type="button" size="sm" className="gap-2" onClick={openEnroll}>
               <UserPlus className="h-4 w-4" />
               {t('students.enrollment.enrollIn', { year: targetYear!.label })}
@@ -153,7 +153,7 @@ export default function EnrollmentTab({ studentId }: { studentId?: string }) {
         </div>
       </div>
 
-      {enrollments.length === 0 ? (
+      {showHistory && (enrollments.length === 0 ? (
         <NEmptyState surface="panel" icon={CalendarRange} title={t('students.enrollment.empty')} />
       ) : (
         enrollments.map((enrollment) => (
@@ -186,7 +186,7 @@ export default function EnrollmentTab({ studentId }: { studentId?: string }) {
             </ul>
           </section>
         ))
-      )}
+      ))}
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { ComboboxInput, SelectInput, TextInput, NButton, Popover, PopoverContent, PopoverTrigger } from 'najm-kit';
 import { Filter, Plus } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
+import { PermissionButton } from '@/components/PermissionButton';
 
 export type FeeTableFilter = {
   name: string;
@@ -58,9 +59,9 @@ export function FeesMobileToolbar({ filters, onCreate, loading }: {
             : <SelectInput key={filter.name} value={filter.value} onChange={filter.onChange} items={filter.options ?? []} placeholder={filter.placeholder} aria-label={filter.placeholder} showIcon={false} className="w-full" />)}
         </PopoverContent>
       </Popover>
-      <NButton variant="outline" size="icon" className="size-10 text-primary" onClick={onCreate} aria-label={t('fees.dialogs.createButton')} disabled={loading}>
+      <PermissionButton permission="create:fees" variant="outline" size="icon" className="size-10 text-primary" onClick={onCreate} aria-label={t('fees.dialogs.createButton')} disabled={loading}>
         <Plus className="size-5" />
-      </NButton>
+      </PermissionButton>
     </div>
   );
 }

@@ -1,5 +1,7 @@
 'use client';
-import { NPageHeader, NButton, NForm, FormInput } from 'najm-kit';
+
+import { PermissionButton } from '@/components/PermissionButton';
+import { NPageHeader, NForm, FormInput } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
@@ -39,10 +41,11 @@ export function VisitRequestsTable() {
     { accessorKey: 'parentName', header: t('visitRequests.form.name') }, { accessorKey: 'phone', header: t('visitRequests.form.phone') },
     { accessorKey: 'email', header: t('visitRequests.form.email') }, { accessorKey: 'status', header: t('visitRequests.status'), cell: ({ row }: { row: { original: VisitRequestRow } }) => t(`status.${row.original.status}`) },
     { accessorKey: 'message', header: t('visitRequests.form.message') },
-    ...(can('update:visit-requests') ? [{ id: 'edit', header: '', cell: ({ row }: { row: { original: VisitRequestRow } }) => <NButton variant="outline" onClick={() => edit(row.original)}>{t('visitRequests.save')}</NButton> }] : []),
+    ...(can('update:visit-requests') ? [{ id: 'edit', header: '', cell: ({ row }: { row: { original: VisitRequestRow } }) => <PermissionButton permission="update:visit-requests" variant="outline" onClick={() => edit(row.original)}>{t('visitRequests.save')}</PermissionButton> }] : []),
   ];
   return <div className="flex h-full min-h-0 flex-col gap-4"><NPageHeader icon={FEATURE_ICONS.visitRequests} title={t('visitRequests.title')} subtitle={isCountUnknown(error, rows, isLoading) ? undefined : String(rows.length)} />
     <label className="flex items-center gap-3 text-sm">{t('visitRequests.status')}<select className="rounded-lg border border-border bg-background px-3 py-2" value={status} onChange={event=>setStatus(event.target.value)}><option value="">{t('common.all')}</option>{VISIT_REQUEST_STATUS_VALUES.map(value=><option key={value} value={value}>{t(`status.${value}`)}</option>)}</select></label>
-    <NTable data={status ? rows.filter(row=>row.status===status) : rows} columns={columns} loading={isLoading} onEdit={can('update:visit-requests') ? edit : undefined} renderCard={VisitRequestCard} error={failed ? error : null} renderError={() => <p role="alert">{t('visitRequests.loadFailed')}</p>} renderEmpty={() => <p>{t('visitRequests.empty')}</p>} className="min-h-0 flex-1" />
+    <NTable
+        permissionResource="visit-requests" data={status ? rows.filter(row=>row.status===status) : rows} columns={columns} loading={isLoading} onEdit={edit} renderCard={VisitRequestCard} error={failed ? error : null} renderError={() => <p role="alert">{t('visitRequests.loadFailed')}</p>} renderEmpty={() => <p>{t('visitRequests.empty')}</p>} className="min-h-0 flex-1" />
   </div>;
 }

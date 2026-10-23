@@ -19,7 +19,7 @@ export class RolloverController {
   }
 
   @Post('/commit')
-  @CanSchoolWide('manage:financial-operations')
+  @CanSchoolWide('update:financial-operations')
   @Validate(commitRolloverDto)
   @McpTool({ description: 'Commit academic-year rollover from a prior preview', confirm: { level: 'danger', message: 'confirm.rollover.commit' } })
   @ResMsg('rollover.committed')

@@ -7,6 +7,7 @@ import type { RosterStatus, RosterMark } from '../hooks/useAttendanceRoster';
 import RosterMarks from './RosterMarks';
 
 interface RosterCardProps {
+  readOnly?: boolean;
   data: any;
   getStatus: (id: string) => RosterMark;
   setStatus: (id: string, status: RosterStatus) => void;
@@ -29,6 +30,7 @@ interface RosterCardProps {
 export default function RosterCard({
   data,
   getStatus,
+  readOnly = false,
   setStatus,
   detail,
   avatarSrc,
@@ -55,6 +57,7 @@ export default function RosterCard({
 
       <RosterMarks
         current={getStatus(data.id)}
+        disabled={readOnly}
         onSelect={(status) => setStatus(data.id, status)}
       />
       {children}

@@ -11,7 +11,7 @@ import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 
 /** Selected deletion uses the same guarded endpoint as a single deletion. */
-export function useAcademicTableActions(resource: string, remove: (id: string) => Promise<unknown>) {
+export function useAcademicTableActions(resource: string, remove: (id: string) => Promise<unknown>, itemLabel?: (row: any) => string) {
   const { t } = useTranslation();
   const { confirmDelete } = useDialog();
   const queryClient = useQueryClient();
@@ -20,6 +20,7 @@ export function useAcademicTableActions(resource: string, remove: (id: string) =
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
 
   const confirm = (ids: string[], itemName: string) => {
+    if (!can(`delete:${resource}`)) return;
     // Keep the year in which the confirmation was opened, even if it changes.
     const year = academicYear;
     void confirmDelete({
@@ -44,7 +45,7 @@ export function useAcademicTableActions(resource: string, remove: (id: string) =
     getRowId: (row: { id: string }) => row.id,
     rowSelection,
     onRowSelectionChange: setRowSelection,
-    onDelete: can(`delete:${resource}`) ? (row: { id: string; name: string }) => confirm([row.id], row.name) : undefined,
-    onBulkDelete: can(`delete:${resource}`) ? (ids: string[]) => confirm(ids, t('common.deleteSelected', { count: ids.length })) : undefined,
+    onDelete: (row: { id: string; name: string }) => confirm([row.id], itemLabel ? itemLabel(row) : row.name),
+    onBulkDelete: (ids: string[]) => confirm(ids, t('common.deleteSelected', { count: ids.length })),
   };
 }

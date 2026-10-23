@@ -8,7 +8,10 @@ export const canUpdateEvent        = composeGuards(Can('update:events'));
 export const canCreateEvent        = composeGuards(Can('create:events'));
 export const canDeleteEvent        = composeGuards(Can('delete:events'));
 export const canAccessAllEvents    = composeGuards(Can('read:events'));
-export const canManageParticipants = composeGuards(Can('manage:participants'));
+export const canReadParticipants = composeGuards(Can('read:participants'));
+export const canCreateParticipants = composeGuards(Can('create:participants'));
+export const canUpdateParticipants = composeGuards(Can('update:participants'));
+export const canDeleteParticipants = composeGuards(Can('delete:participants'));
 
 // The stored audience; an event saved without one is public, as the column defaults.
 const audience = sql`coalesce(${events.visibility}, 'public')`;

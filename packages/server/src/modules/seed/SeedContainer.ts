@@ -21,6 +21,10 @@ export { ClassService } from '../classes/ClassService';
 export { ClassRepository } from '../classes/ClassRepository';
 export { ClassValidator } from '../classes/ClassValidator';
 
+export { CycleService } from '../cycles/CycleService';
+export { CycleRepository } from '../cycles/CycleRepository';
+export { CycleValidator } from '../cycles/CycleValidator';
+
 export { SectionService } from '../sections/SectionService';
 export { SectionRepository } from '../sections/SectionRepository';
 export { SectionValidator } from '../sections/SectionValidator';
@@ -180,6 +184,10 @@ import { ClassService } from '../classes/ClassService';
 import { ClassRepository } from '../classes/ClassRepository';
 import { ClassValidator } from '../classes/ClassValidator';
 
+import { CycleService } from '../cycles/CycleService';
+import { CycleRepository } from '../cycles/CycleRepository';
+import { CycleValidator } from '../cycles/CycleValidator';
+
 import { SectionService } from '../sections/SectionService';
 import { SectionRepository } from '../sections/SectionRepository';
 import { SectionValidator } from '../sections/SectionValidator';
@@ -330,6 +338,9 @@ export function configureSeedContainer(seedContainer: Container) {
 
   registerSeedDeps(seedContainer, ClassValidator, [ClassRepository, SettingsRepository]);
   registerSeedDeps(seedContainer, ClassService, [ClassRepository, ClassValidator, SettingsRepository]);
+
+  registerSeedDeps(seedContainer, CycleValidator, [CycleRepository]);
+  registerSeedDeps(seedContainer, CycleService, [CycleRepository, CycleValidator]);
 
   registerSeedDeps(seedContainer, SectionValidator, [SectionRepository, ClassRepository, SettingsRepository]);
   registerSeedDeps(seedContainer, SectionService, [SectionRepository, SectionValidator, StudentEnrollmentService]);

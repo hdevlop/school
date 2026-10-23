@@ -1,5 +1,7 @@
 "use client";
 
+
+import { PermissionButton } from '@/components/PermissionButton';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, CalendarDays, CreditCard, LayoutDashboard, Pencil, UserRound } from 'lucide-react';
@@ -114,9 +116,9 @@ const TeacherView: React.FC<TeacherViewProps> = ({ teacherId }) => {
             <ArrowLeft className="size-4 rtl:rotate-180" />
             <span className="max-sm:hidden">{t('dashboard.teacher.backToTeachers')}</span>
           </NButton>
-          <NButton type="button" variant="outline" size="sm" onClick={handleEdit} disabled={!teacher} aria-label={t('common.edit')}>
+          <PermissionButton permission="update:teachers" type="button" variant="outline" size="sm" onClick={handleEdit} disabled={!teacher} aria-label={t('common.edit')}>
             <Pencil className="size-4" />
-          </NButton>
+          </PermissionButton>
           <TeacherOverviewDate teacherId={teacherId} />
         </NPageHeaderActions>
       </NPageHeader>

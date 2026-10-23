@@ -44,11 +44,6 @@ const StaffCard = ({ data, details = false }) => {
           <NBadge className="inline-flex w-fit items-center rounded-full bg-primary/10 font-medium text-primary ring-1 ring-inset ring-primary/20">
             {resolveRoleLabel(staff, language, t)}
           </NBadge>
-          {staff?.status && (
-            <NBadge status={staff.status} className="w-fit">
-              {t(`staff.status.${staff.status}`)}
-            </NBadge>
-          )}
         </div>
 
         <div className="space-y-2">

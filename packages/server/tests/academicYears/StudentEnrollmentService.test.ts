@@ -4,6 +4,7 @@ import { StudentEnrollmentService } from '../../src/modules/studentEnrollments/S
 import { StudentEnrollmentValidator } from '../../src/modules/studentEnrollments/StudentEnrollmentValidator';
 import { StudentEnrollmentRepository } from '../../src/modules/studentEnrollments/StudentEnrollmentRepository';
 import { withEnglishMessages } from '../support/englishMessages';
+import { getBusinessDateOnly } from '../../src/shared/businessDate';
 
 const oldYear = {
   id: 'year-old', label: '2025-2026', reportingStartsOn: '2025-09-01',
@@ -14,7 +15,7 @@ function build(activeYearId = 'year-current', legacyProjection = false, yearStat
   const writes: string[] = [];
   const enrollment = {
     id: 'enrollment-1', studentId: 'student-1', academicYearId: oldYear.id,
-    enrolledOn: '2025-09-01', leftOn: null,
+    enrolledOn: '2025-09-01', leftOn: null, status: 'active',
   };
   const current = {
     id: 'placement-1', enrollmentId: enrollment.id,
@@ -36,6 +37,12 @@ function build(activeYearId = 'year-current', legacyProjection = false, yearStat
     addPlacement: async (data: object) => { writes.push('add-placement'); return { id: 'new-placement', ...data }; },
     getById: async () => enrollment,
     getOpenPlacement: async () => current,
+    listPlacements: async () => [current],
+    correct: async (_id: string, data: any) => {
+      writes.push('correct-placement'); Object.assign(current, data.placement); return enrollment;
+    },
+    hasInvalidDatedRecords: async () => false,
+    auditCorrection: async () => { writes.push('audit-correction'); },
     closePlacement: async () => { writes.push('close-placement'); return current; },
     endEnrollment: async () => { writes.push('end-enrollment'); return enrollment; },
     updateCurrentStudent: async () => { writes.push('update-current-student'); },
@@ -47,10 +54,42 @@ function build(activeYearId = 'year-current', legacyProjection = false, yearStat
   const settings = { getAdminSettings: async () => ({ activeAcademicYearId: activeYearId }) };
   const migrationIssues = { recordUnknownEnrollmentDate: async () => { writes.push('preserve-legacy-placement'); } };
   const service = new StudentEnrollmentService(repository as any, years as any, settings as any, migrationIssues as any, withEnglishMessages(new StudentEnrollmentValidator()));
-  return { service, writes };
+  return { service, writes, repository, current };
 }
 
 describe('dated enrollment writes', () => {
+  it('keeps future active-year moves refused while allowing today', () => {
+    const validator = withEnglishMessages(new StudentEnrollmentValidator());
+    const today = getBusinessDateOnly();
+    const next = new Date(`${today}T12:00:00Z`);
+    next.setUTCDate(next.getUTCDate() + 1);
+    expect(() => validator.ensureActiveTransferDate(today, true)).not.toThrow();
+    expect(() => validator.ensureActiveTransferDate(next.toISOString().slice(0, 10), true)).toThrow('future');
+  });
+  it('corrects and audits a same-day move without creating an empty placement interval', async () => {
+    const { service, writes } = build(oldYear.id);
+    Object.defineProperty(service, 'year', { value: oldYear });
+    const moved = await service.transfer('enrollment-1', {
+      classId: 'class-other', sectionId: 'section-other', validFrom: '2025-09-01', reason: 'Correct initial class',
+    }, 'admin-1', 'admin');
+    expect(moved.sectionId).toBe('section-other');
+    expect(moved.validFrom).toBe('2025-09-01');
+    expect(moved.validTo).toBeNull();
+    expect(writes).toEqual(['correct-placement', 'audit-correction', 'update-current-student']);
+  });
+
+  it('keeps same-day corrections subject to dated-record and role protections', async () => {
+    const fixture = build();
+    Object.defineProperty(fixture.service, 'year', { value: oldYear });
+    fixture.repository.hasInvalidDatedRecords = async () => true;
+    const move = { classId: 'class-other', sectionId: 'section-other', validFrom: '2025-09-01', reason: 'Wrong class' };
+    await expect(fixture.service.transfer('enrollment-1', move, 'admin-1', 'admin')).rejects.toThrow();
+    expect(fixture.writes).not.toContain('audit-correction');
+    const denied = build();
+    await expect(denied.service.transfer('enrollment-1', move, 'teacher-1', 'teacher')).rejects.toThrow();
+    expect(denied.writes).toEqual([]);
+  });
+
   it('permits trusted demo placement in the selected historical year while ordinary create remains active-only', async () => {
     const { service, writes } = build();
     Object.defineProperty(service, 'year', { value: oldYear });

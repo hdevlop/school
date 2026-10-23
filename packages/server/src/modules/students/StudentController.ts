@@ -5,6 +5,8 @@ import { Student, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } fr
 import { isAdmin, isAdministrator } from '../../auth';
 import {
   createStudentDto,
+  studentAdmissionDto,
+  type StudentAdmissionDto,
   createStudentsBulkDto,
   importStudentDto,
   deleteBulkStudentDto,
@@ -84,6 +86,13 @@ export class StudentController {
   @ResMsg('students.success.created')
   async create(@Body() body: CreateStudentDto, @User() user: { id: string; role: string }) {
     return this.studentService.create(body, user);
+  }
+
+  @Post('/validate-admission')
+  @CanCreate()
+  @Validate(studentAdmissionDto)
+  async validateAdmission(@Body() body: StudentAdmissionDto) {
+    return this.studentService.validateAdmission(body);
   }
 
   // File imports may omit guardian contacts; ordinary REST/MCP creation stays strict.

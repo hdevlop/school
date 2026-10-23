@@ -15,11 +15,17 @@ export class SectionService {
   // The selected year's sections. A section belongs to its class's year, so
   // its students and parents come from that year's placements.
   async getAll() {
-    return this.sectionRepository.getAll();
+    return this.withRosterCounts(await this.sectionRepository.getAll());
+  }
+
+  private async withRosterCounts(rows: Awaited<ReturnType<SectionRepository['getAll']>>) {
+    const counts = new Map((await this.sectionRepository.getRosterCounts(rows.map(row => row.id)))
+      .map(row => [row.id, row.studentCount]));
+    return rows.map(row => ({ ...row, studentCount: counts.get(row.id) ?? 0 }));
   }
 
   async getById(id: string) {
-    return this.sectionValidator.ensureInSelectedYear(id);
+    return (await this.withRosterCounts([await this.sectionValidator.ensureInSelectedYear(id)]))[0];
   }
 
   async getStudents(sectionId: string) {

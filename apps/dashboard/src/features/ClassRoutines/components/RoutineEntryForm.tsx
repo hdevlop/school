@@ -18,6 +18,7 @@ export default function RoutineEntryForm({
   defaultRoom,
   onSubmit,
   onDelete,
+  readOnly = false,
   busy = false,
 }: RoutineEntryFormProps) {
   const { t } = useTranslation();
@@ -72,6 +73,7 @@ export default function RoutineEntryForm({
       onSubmit={onSubmit}
     >
       <div className="space-y-4">
+        <fieldset disabled={readOnly} className="contents">
         <div className="rounded-xl border border-primary/15 bg-primary/5 px-4 py-3">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">{routineDayLabel(day, t)}</p>
           <p className="mt-1 text-sm font-medium text-foreground">
@@ -137,6 +139,7 @@ export default function RoutineEntryForm({
           </div>
         ) : null}
 
+        </fieldset>
         {entry && onDelete ? (
           <div className="border-t pt-3">
             <NButton type="button" variant="destructive" onClick={onDelete} disabled={busy}>

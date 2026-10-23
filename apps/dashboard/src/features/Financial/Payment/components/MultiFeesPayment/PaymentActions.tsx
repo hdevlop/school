@@ -1,4 +1,5 @@
-import { NButton, NSkeleton } from 'najm-kit';
+import { NSkeleton } from 'najm-kit';
+import { PermissionButton } from '@/components/PermissionButton';
 import React from 'react';
 import { usePaymentStore } from '../../store/paymentStore';
 import { useDialogStore } from 'najm-kit';
@@ -19,7 +20,7 @@ export const PaymentActions = () => {
 
   return (
     <div className="flex w-full shrink-0 flex-col">
-      <NButton
+      <PermissionButton permission="create:payments"
         type="submit"
         form="payment-details-form"
         disabled={selectedCount === 0 || !paymentAmount || isLoading}
@@ -33,7 +34,7 @@ export const PaymentActions = () => {
         ) : (
           t('payments.dialogs.createButton')
         )}
-      </NButton>
+      </PermissionButton>
     </div>
   );
 };

@@ -105,6 +105,7 @@ export const staffIdParam = z.object({ staffId: z.string().min(1) });
 export const teacherIdParam = z.object({ teacherId: z.string().min(1) });
 export const typeQueryParam = z.object({ type: attendanceTypeEnum.optional() });
 export const attendanceDateFilterDto = attendanceDateParam.merge(typeQueryParam);
+export const staffAttendanceReadQueryDto = z.object({ date: dateField.optional() });
 type AttendanceStatus = z.infer<typeof attendanceStatusEnum>;
 
 export type StudentAttendanceDto = {
@@ -135,3 +136,4 @@ export type UpsertStaffAttendanceRosterDto = z.infer<typeof upsertStaffAttendanc
 export type SeedAttendanceDto = z.input<typeof seedAttendanceDto>;
 export type AttendanceTypeQueryDto = z.infer<typeof typeQueryParam>;
 export type AttendanceDateFilterDto = z.infer<typeof attendanceDateFilterDto>;
+export type StaffAttendanceReadQueryDto = z.infer<typeof staffAttendanceReadQueryDto>;

@@ -17,6 +17,7 @@ export interface TimelineItem {
 export interface RoutineDutyFormProps {
   period: RoutinePeriod;
   duty?: RoutineDuty;
+  readOnly?: boolean;
   onDelete?: () => Promise<void>;
 }
 
@@ -27,6 +28,7 @@ export interface RoutineEntryFormProps {
   entry?: RoutineEntry | null;
   defaultRoom?: string | null;
   onSubmit: (data: RoutineEntryFormValues) => Promise<void>;
+  readOnly?: boolean;
   onDelete?: () => Promise<void>;
   busy?: boolean;
 }
@@ -45,6 +47,9 @@ export interface RoutineGridProps {
   duties?: RoutineDuty[];
   defaultRoom?: string | null;
   editable?: boolean;
+  canCreate?: boolean;
+  canUpdate?: boolean;
+  canDelete?: boolean;
   onCellClick?: (day: RoutineDay, period: RoutinePeriod, entry?: RoutineEntry) => void;
   onDutyClick?: (day: RoutineDay, period: RoutinePeriod, duty?: RoutineDuty) => void;
 }

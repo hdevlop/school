@@ -1,9 +1,10 @@
 "use client"
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useResetLogin } from '@/features/Users/hooks/useResetLogin';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Eye, Pencil, Trash2, Users, Plus, SearchX } from 'lucide-react';
@@ -35,8 +36,6 @@ function TeachersTable() {
   const { viewingYear } = useViewingAcademicYear();
   const { can, role } = useViewerRole();
   const canCreate = can('create:teachers');
-  const canUpdate = can('update:teachers');
-  const canDelete = can('delete:teachers');
   const { canReset, resetItems, openReset } = useResetLogin();
   const router = useRouter();
   const columns = useTeachersTableColumns();
@@ -130,9 +129,9 @@ function TeachersTable() {
   // supplied, so they are restated when the access reset joins them.
   const rowMenu = (teacher) => [
     { label: t('common.view'), icon: Eye, onSelect: () => handleView(teacher) },
-    ...(canUpdate ? [{ label: t('common.edit'), icon: Pencil, onSelect: () => handleEdit(teacher) }] : []),
+    { label: t('common.edit'), permission: 'update:teachers', icon: Pencil, onSelect: () => handleEdit(teacher) },
     ...resetItems(teacher.userId),
-    ...(canDelete ? [{ label: t('common.delete'), icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(teacher) }] : []),
+    { label: t('common.delete'), permission: 'delete:teachers', icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(teacher) },
   ];
 
   const handleBulkDelete = (ids: string[]) => {
@@ -169,18 +168,19 @@ function TeachersTable() {
       </NPageHeader>
 
       <NTable
+        permissionResource="teachers"
         data={teachers}
         getRowId={(teacher) => teacher.id}
         columns={columns}
         filters={rawFilters}
-        onCreate={canCreate ? handleAddClick : undefined}
+        onCreate={handleAddClick}
         onView={handleView}
-        onEdit={canUpdate ? handleEdit : undefined}
-        onDelete={canDelete ? handleDelete : undefined}
-        onBulkDelete={canDelete ? handleBulkDelete : undefined}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onBulkDelete={handleBulkDelete}
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
-        menu={canReset ? { row: rowMenu } : undefined}
+        menu={{ row: rowMenu }}
         loading={isTeachersLoading}
         error={hasFailedToLoad(error, teachers) ? error : null}
         renderError={(currentError) => (
@@ -198,10 +198,10 @@ function TeachersTable() {
             title={t('emptyStates.teachers.title')}
             description={t('emptyStates.teachers.description')}
             action={canCreate ? (
-              <NButton size="sm" onClick={handleAddClick}>
+              <PermissionButton permission="create:teachers" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('teachers.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             ) : undefined}
           />
         )}

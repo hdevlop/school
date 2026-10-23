@@ -18,7 +18,7 @@ import {
 import { buildEnrollmentEndStatusOptions } from '@/features/Students/config/enrollmentOptions';
 
 type Year = { label: string; reportingStartsOn: string; reportingEndsOn: string };
-type SchoolClass = { id: string; name: string; sections?: { id: string; name: string }[] };
+type SchoolClass = { id: string; name: string; sections?: { id: string; name: string; studentCount?: number; maxStudents?: number | null }[] };
 
 // The classes of the year the operation targets, which need not be the one
 // the tab views: the request sends that year, under a key naming it.
@@ -40,8 +40,8 @@ function PlacementFields({ year }: { year: Year }) {
   const classOptions = classes.map((schoolClass) => ({ value: schoolClass.id, label: schoolClass.name }));
   const sectionOptions = useMemo(
     () => (classes.find((schoolClass) => schoolClass.id === classId)?.sections ?? [])
-      .map((section) => ({ value: section.id, label: section.name })),
-    [classes, classId],
+      .map((section) => ({ value: section.id, label: section.studentCount == null ? section.name : `${section.name} (${section.studentCount}/${section.maxStudents ?? '—'})${section.maxStudents != null && section.studentCount >= section.maxStudents ? ` · ${t('sections.form.full')}` : ''}` })),
+    [classes, classId, t],
   );
 
   // A section belongs to its class: choosing another class clears it.
@@ -130,6 +130,7 @@ export function TransferForm({ year, current }: { year: Year; current: Enrollmen
           formLabel={t('students.enrollment.validFrom')}
           required
         />
+        <p className="text-sm text-muted-foreground">{t('students.enrollment.sameDayHint')}</p>
         <FormInput
           name="reason"
           type="textarea"

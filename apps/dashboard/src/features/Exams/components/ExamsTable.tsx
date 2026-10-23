@@ -1,7 +1,8 @@
 "use client"
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { FileText, Plus, SearchX } from 'lucide-react';
@@ -108,6 +109,7 @@ function ExamsTable() {
       </NPageHeader>
 
       <NTable
+        permissionResource="exams"
         responsiveSkeleton
         className='min-h-0 flex-1'
         data={filteredExams}
@@ -133,10 +135,10 @@ function ExamsTable() {
             title={scope.hasSelection ? t('emptyStates.filtered.title') : t('emptyStates.exams.title')}
             description={scope.hasSelection ? t('emptyStates.filtered.description') : isFamily ? t('emptyStates.familyDescription') : t('emptyStates.exams.description')}
             action={scope.hasSelection || isFamily ? undefined : (
-              <NButton size="sm" onClick={handleAddClick}>
+              <PermissionButton permission="create:exams" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('exams.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             )}
           />
         )}

@@ -1,7 +1,8 @@
 "use client"
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NEmptyState, NButton, NErrorState, NForbiddenState } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
@@ -9,6 +10,7 @@ import { Receipt, Plus, SearchX, Eye, Pencil, Trash2, Check, X, Banknote } from 
 import { toast } from 'sonner';
 import { handleApprovalApi, recordPaymentApi } from '@/services/expenseApi';
 import ExpensePaymentForm from './ExpensePaymentForm';
+import ExpenseRejectionForm from './ExpenseRejectionForm';
 import React from 'react';
 import ExpenseForm from './ExpenseForm';
 import { useExpenses } from '../hooks/useExpenses';
@@ -119,9 +121,27 @@ function ExpensesTable() {
     runWorkflow(() => handleApprovalApi(expense.id, { action: 'approve' }), 'expenses.success.approved');
 
   const handleReject = (expense) => {
-    const rejectionReason = window.prompt(t('expenses.actions.rejectReason'))?.trim();
-    if (!rejectionReason) return;
-    return runWorkflow(() => handleApprovalApi(expense.id, { action: 'reject', rejectionReason }), 'expenses.success.rejected');
+    if (!academicYear) return;
+    const targetYear = academicYear;
+    return openDialog({
+      title: `${t('expenses.actions.reject')} - ${expense.title}`,
+      children: <ExpenseRejectionForm />,
+      primaryButton: {
+        form: 'expense-rejection-form',
+        text: t('expenses.actions.reject'),
+        onClick: async ({ rejectionReason }: { rejectionReason: string }) => {
+          try {
+            await withAcademicYear(targetYear, () => handleApprovalApi(expense.id, { action: 'reject', rejectionReason }));
+          } catch (error: any) {
+            toast.error(error?.response?.data?.message ?? error?.message ?? t('common.feedback.errorTitle'));
+            // Rejecting the handler keeps the form and its reason open for retry.
+            throw error;
+          }
+          toast.success(t('expenses.success.rejected'));
+          await refetch();
+        },
+      },
+    });
   };
 
   const handleRecordPayment = async (expense) => {
@@ -141,15 +161,15 @@ function ExpensesTable() {
     { label: t('common.view'), icon: Eye, onSelect: () => handleView(expense) },
   ] : [
     { label: t('common.view'), icon: Eye, onSelect: () => handleView(expense) },
-    { label: t('common.edit'), icon: Pencil, onSelect: () => handleEdit(expense) },
+    { label: t('common.edit'), permission: 'update:expenses', icon: Pencil, onSelect: () => handleEdit(expense) },
     ...(expense.status === 'pending' ? [
-      { label: t('expenses.actions.approve'), icon: Check, separatorBefore: true, onSelect: () => handleApprove(expense) },
-      { label: t('expenses.actions.reject'), icon: X, onSelect: () => handleReject(expense) },
+      { label: t('expenses.actions.approve'), permission: 'update:expenses', icon: Check, separatorBefore: true, onSelect: () => handleApprove(expense) },
+      { label: t('expenses.actions.reject'), permission: 'update:expenses', icon: X, onSelect: () => handleReject(expense) },
     ] : []),
     ...(expense.status === 'approved' ? [
-      { label: t('expenses.actions.recordPayment'), icon: Banknote, separatorBefore: true, onSelect: () => handleRecordPayment(expense) },
+      { label: t('expenses.actions.recordPayment'), permission: 'update:expenses', icon: Banknote, separatorBefore: true, onSelect: () => handleRecordPayment(expense) },
     ] : []),
-    { label: t('common.delete'), icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(expense) },
+    { label: t('common.delete'), permission: 'delete:expenses', icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(expense) },
   ];
 
   const total = expenses?.length ?? 0;
@@ -167,6 +187,7 @@ function ExpensesTable() {
       </NPageHeader>
 
       <NTable
+        permissionResource="expenses"
         responsiveSkeleton
         data={expenses}
         columns={columns}
@@ -192,10 +213,10 @@ function ExpensesTable() {
             title={t('emptyStates.expenses.title')}
             description={t('emptyStates.expenses.description')}
             action={(
-              <NButton size="sm" onClick={handleAddClick}>
+              <PermissionButton permission="create:expenses" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('expenses.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             )}
           />
         )}

@@ -47,6 +47,13 @@ const SectionCard = ({ data }: any) => {
           <NSectionInfo
             icon={Users}
             iconColor="text-muted-foreground"
+            label={t('sections.table.studentCount')}
+            value={section.studentCount ?? 0}
+            valueColor="text-foreground font-medium"
+          />
+          <NSectionInfo
+            icon={Users}
+            iconColor="text-muted-foreground"
             label={t('sections.form.maxStudents')}
             value={section.maxStudents || 30}
             valueColor="text-foreground font-medium"

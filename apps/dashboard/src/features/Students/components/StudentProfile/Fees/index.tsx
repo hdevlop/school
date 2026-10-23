@@ -29,7 +29,7 @@ const getRemaining = (installment: any) =>
   Math.max(toNumber(installment?.amount) - toNumber(installment?.paidAmount), 0);
 
 const isOverdueInstallment = (installment: any) =>
-  installment?.status === 'overdue' && getRemaining(installment) > 0;
+  Boolean(installment?.isOverdue);
 
 const statusConfig: Record<string, { labelKey: string; className: string; icon: any }> = {
   paid: {

@@ -1,8 +1,9 @@
 "use client"
 
 import { useLayoutEffect } from 'react';
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, useTableStore } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, useTableStore } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useAcademicTableActions } from '@/features/Classes/hooks/useAcademicTableActions';
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
@@ -103,6 +104,7 @@ function ClassesTable() {
       </NPageHeader>
 
       <NTable
+        permissionResource="classes"
         classNameColumns={['name']}
         responsiveSkeleton
         data={classes}
@@ -131,10 +133,10 @@ function ClassesTable() {
             title={t('emptyStates.classes.title')}
             description={t('emptyStates.classes.description')}
             action={(
-              <NButton size="sm" onClick={handleAddClick}>
+              <PermissionButton permission="create:classes" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('classes.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             )}
           />
         )}

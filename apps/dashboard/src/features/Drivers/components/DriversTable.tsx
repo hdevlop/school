@@ -1,7 +1,8 @@
 "use client"
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Car, Plus, SearchX } from 'lucide-react';
@@ -121,6 +122,7 @@ function DriversTable() {
       </NPageHeader>
 
       <NTable
+        permissionResource="drivers"
         data={drivers}
         columns={columns}
         filters={rawFilters}
@@ -146,10 +148,10 @@ function DriversTable() {
             title={t('emptyStates.drivers.title')}
             description={t('emptyStates.drivers.description')}
             action={(
-              <NButton size="sm" onClick={handleAddClick}>
+              <PermissionButton permission="create:drivers" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('drivers.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             )}
           />
         )}

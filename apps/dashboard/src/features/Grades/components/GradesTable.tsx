@@ -24,6 +24,7 @@ import { useGradesTableFilters } from '../hooks/useGradesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useTranslation } from 'najm-i18n/react';
 import { EMPTY_GRADE_DRAFT, gradeDraftKey, useGradeDraftStore } from '../store/gradeDraftStore';
 
@@ -64,6 +65,7 @@ const resolveGradeStatus = (marksObtained, fallback = 'pending') => {
 
 function GradesTableForYear() {
   const { t } = useTranslation();
+  const { can } = useViewerRole();
   const { user } = useAuth();
   const role = (user as any)?.role;
   // A school-wide role grades for the teacher it picks; a teacher for themselves.
@@ -310,6 +312,7 @@ function GradesTableForYear() {
   }, [baseRoster]);
 
   const canEdit = (row) =>
+    can(row.gradeId ? 'update:grades' : 'create:grades') &&
     !isSubmittingBatch &&
     !!sourceId &&
     (!!row.assessmentId || !!row.examId) &&
@@ -338,7 +341,7 @@ function GradesTableForYear() {
   };
 
   const hasChanges = Object.keys(draft).length > 0;
-  const canSubmit = !!sourceId;
+  const canSubmit = !!sourceId && (can('create:grades') || can('update:grades'));
 
   const handleSubmit = async () => {
     if (!canSubmit) {

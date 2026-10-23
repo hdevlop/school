@@ -18,6 +18,7 @@ import { useStudentsOnDate } from '@/features/Students/hooks/useStudents';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useTranslation } from 'najm-i18n/react';
 import * as sectionApi from '@/services/sectionApi';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -39,6 +40,8 @@ const getStudentSectionId = (student: any) => student?.sectionId ?? student?.sec
 
 function StudentAttendanceTableForYear() {
   const { t } = useTranslation();
+  const { can } = useViewerRole();
+  const canEdit = can('create:attendance');
   const { sections, isSectionsLoading } = useSections();
   const { classes, isClassesLoading } = useClasses();
   const { attendance, submitRoster, isSubmittingRoster, isAttendanceLoading, error: attendanceError } = useStudentAttendance();
@@ -202,7 +205,7 @@ function StudentAttendanceTableForYear() {
     resetDraft();
   }, [selectedSectionId, selectedAssignmentId, resetDraft]);
 
-  const columns = useStudentRosterColumns({ getStatus: roster.getStatus, setStatus: roster.setStatus });
+  const columns = useStudentRosterColumns({ getStatus: roster.getStatus, setStatus: roster.setStatus, readOnly: !canEdit });
 
   // Below `NTable`'s card breakpoint the nine-column register is unusable — it
   // compresses rather than scrolls — so the same roster row is handed a card
@@ -213,6 +216,7 @@ function StudentAttendanceTableForYear() {
     (props: any) => (
       <RosterCard
         {...props}
+        readOnly={!canEdit}
         getStatus={roster.getStatus}
         setStatus={roster.setStatus}
         detail={[
@@ -221,7 +225,7 @@ function StudentAttendanceTableForYear() {
         ].filter(Boolean).join(' | ')}
       />
     ),
-    [roster.getStatus, roster.setStatus],
+    [roster.getStatus, roster.setStatus, canEdit],
   );
   const visibleStudents = useMemo(
     () => filterRoster(filteredStudents, { search, status }, roster.getStatus),
@@ -333,7 +337,7 @@ function StudentAttendanceTableForYear() {
     ],
   );
   const isSubmitting = isSubmittingRoster || (!isDailyMode && isAssignmentsLoading);
-  const canSubmit = isAllClasses || (!!selectedSectionId && (isDailyMode || !!selectedAssignmentId));
+  const canSubmit = canEdit && (isAllClasses || (!!selectedSectionId && (isDailyMode || !!selectedAssignmentId)));
   const submitTitle = isAllClasses
     ? t('attendance.roster.submit')
     : !selectedSectionId

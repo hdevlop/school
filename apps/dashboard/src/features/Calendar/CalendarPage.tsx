@@ -1,5 +1,6 @@
 'use client';
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { NButton, NPageHeader, NPageHeaderActions, NTabs, NLoadingState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 
@@ -111,7 +112,9 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
   const weekdays = Array.from({ length: 7 }, (_, index) => new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' }).format(new Date(Date.UTC(2024, 0, 1 + index))));
   // Everyone reads the calendar; those who manage events add, change or delete on it.
   const { can } = useViewerRole();
-  const canManage = can('create:events') && can('update:events') && can('delete:events');
+  const canManage = ['events', 'announcements'].some((resource) =>
+    ['create', 'update', 'delete'].some((action) => can(`${action}:${resource}`)));
+  const canItemAction = (action: string, item: CalendarItem) => can(`${action}:${item.source === 'event' ? 'events' : 'announcements'}`);
   const [currentDate, setCurrentDate] = useState(openingDay);
   const [selectedDate, setSelectedDate] = useState<Date | null>(openingDay);
   const [viewMode, setViewMode] = useState<ViewMode>('month');
@@ -223,6 +226,7 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
   };
 
   const openEventDialog = (event = null) => {
+    if (!can(event ? 'update:events' : 'create:events')) return;
     const isEdit = Boolean(event?.id);
     openDialog({
       title: isEdit ? `${t('events.dialogs.editTitle')} - ${event.title}` : t('events.dialogs.createTitle'),
@@ -243,6 +247,7 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
   };
 
   const openAnnouncementDialog = (announcement = null) => {
+    if (!can(announcement ? 'update:announcements' : 'create:announcements')) return;
     const isEdit = Boolean(announcement?.id);
     openDialog({
       title: isEdit ? `${t('announcements.dialogs.editTitle')} - ${announcement.title}` : t('announcements.dialogs.createTitle'),
@@ -268,6 +273,7 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
   };
 
   const handleEditItem = (item: CalendarItem) => {
+    if (!canItemAction('update', item)) return;
     if (item.source === 'event') {
       openEventDialog(item.raw);
       return;
@@ -276,6 +282,7 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
   };
 
   const handleDeleteItem = (item: CalendarItem) => {
+    if (!canItemAction('delete', item)) return;
     confirmDelete({
       title: t('common.delete'),
       warningText: t('common.deleteConfirm'),
@@ -371,7 +378,7 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
             />
             {canManage && (
               <>
-                <NButton
+                <PermissionButton permission="create:events"
                   size="sm"
                   onClick={() => openEventDialog()}
                   aria-label={t('calendar.addEvent')}
@@ -380,8 +387,8 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
                 >
                   <Plus className="size-3.5" aria-hidden />
                   <span className="max-sm:hidden">{t('calendar.addEvent')}</span>
-                </NButton>
-                <NButton
+                </PermissionButton>
+                <PermissionButton permission="create:announcements"
                   size="sm"
                   variant="tertiary"
                   onClick={() => openAnnouncementDialog()}
@@ -391,7 +398,7 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
                 >
                   <Bell className="size-3.5" aria-hidden />
                   <span className="max-sm:hidden">{t('calendar.addAnnouncement')}</span>
-                </NButton>
+                </PermissionButton>
               </>
             )}
           </div>
@@ -487,8 +494,8 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
                               <Icon className={cn('size-3 shrink-0', style.text)} />
                               <button
                                 type="button"
-                                onClick={canManage ? () => handleEditItem(item) : undefined}
-                                className={cn('min-w-0 flex-1 truncate text-left font-medium', canManage && 'cursor-pointer', style.text)}
+                                onClick={canItemAction('update', item) ? () => handleEditItem(item) : undefined}
+                                className={cn('min-w-0 flex-1 truncate text-left font-medium', canItemAction('update', item) && 'cursor-pointer', style.text)}
                                 title={item.title}
                               >
                                 {item.title}
@@ -502,6 +509,7 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
                                 <button
                                   type="button"
                                   onClick={() => handleDeleteItem(item)}
+                                  disabled={!canItemAction('delete', item)}
                                   className="hidden shrink-0 cursor-pointer text-muted-foreground transition-colors hover:text-destructive group-hover/item:block"
                                   aria-label={`${t('common.delete')} ${item.title}`}
                                 >
@@ -551,12 +559,12 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
                     </div>
                     {canManage && (
                       <>
-                        <NButton size="icon" variant="ghost" className="size-8 shrink-0" onClick={() => handleEditItem(item)} aria-label={`${t('common.edit')} ${item.title}`}>
+                        <PermissionButton permission={`update:${item.source === 'event' ? 'events' : 'announcements'}`} size="icon" variant="ghost" className="size-8 shrink-0" onClick={() => handleEditItem(item)} aria-label={`${t('common.edit')} ${item.title}`}>
                           <Pencil className="size-4" aria-hidden />
-                        </NButton>
-                        <NButton size="icon" variant="ghost" className="size-8 shrink-0 hover:text-destructive" onClick={() => handleDeleteItem(item)} aria-label={`${t('common.delete')} ${item.title}`}>
+                        </PermissionButton>
+                        <PermissionButton permission={`delete:${item.source === 'event' ? 'events' : 'announcements'}`} size="icon" variant="ghost" className="size-8 shrink-0 hover:text-destructive" onClick={() => handleDeleteItem(item)} aria-label={`${t('common.delete')} ${item.title}`}>
                           <Trash2 className="size-4" aria-hidden />
-                        </NButton>
+                        </PermissionButton>
                       </>
                     )}
                   </div>

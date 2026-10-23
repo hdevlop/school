@@ -28,6 +28,8 @@ export const useStudentEnrollments = (studentId?: string, enabled = true) => {
   const refresh = () => Promise.all([
     queryClient.invalidateQueries({ queryKey: historyKey }),
     queryClient.invalidateQueries({ queryKey: ['students'] }),
+    queryClient.invalidateQueries({ queryKey: ['classes'] }),
+    queryClient.invalidateQueries({ queryKey: ['sections'] }),
     queryClient.invalidateQueries({ queryKey: ['parents'] }),
     queryClient.invalidateQueries({ queryKey: ['fees'] }),
     queryClient.invalidateQueries({ queryKey: ['dashboard'] }),

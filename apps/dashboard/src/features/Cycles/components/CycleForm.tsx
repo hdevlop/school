@@ -55,7 +55,7 @@ const CycleForm = ({ cycle = null }) => {
       id="cycle-form"
       schema={createCycleSchema(t)}
       defaultValues={defaultValues}
-      onSubmit={(data) => pop(cleanCyclePayload(data))}
+      onSubmit={(data) => { void pop(cleanCyclePayload(data)); }}
     >
       <div className="flex flex-col gap-4">
         <FormSectionHeader icon={CalendarRange} title={t('cycles.form.cycleInformation')} />

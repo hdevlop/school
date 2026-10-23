@@ -24,8 +24,7 @@ type TeacherWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLab
 
 const TeacherWizardForm = WizardForm as ComponentType<TeacherWizardFormProps>
 
-// Reserve two lines for field feedback so validation does not move controls.
-const teacherFieldGrid = 'grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4 [&_[data-slot=form-item]]:grid [&_[data-slot=form-item]]:content-start [&_[data-slot=form-item]]:grid-rows-[auto_auto_minmax(2.5rem,auto)]'
+const teacherFieldGrid = 'grid grid-cols-1 items-start gap-4 md:grid-cols-2'
 
 // ============================================
 // Default Values Helper Functions
@@ -173,7 +172,7 @@ export const PersonalInfoContent = ({ requireEmail = true }) => {
             title={t('teachers.form.personalInformation')}
          />
 
-         <div className='grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4'>
+         <div className='grid grid-cols-1 items-start gap-4 md:grid-cols-[auto_minmax(0,1fr)]'>
             <AvatarFormInput
                name='image'
                formLabel={t('teachers.form.image')}

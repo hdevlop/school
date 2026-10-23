@@ -1,14 +1,17 @@
 'use client';
 
+
+import { PermissionButton } from '@/components/PermissionButton';
 import { useCallback, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { RowSelectionState } from '@tanstack/react-table';
-import { NButton, NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions } from 'najm-kit';
+import { NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { toast } from 'sonner';
 import { Ban, CheckCircle2, Landmark, RotateCw, SearchX, Undo2 } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
@@ -31,6 +34,7 @@ const list = (value: any) => {
  */
 export default function FinancialOperationsPage() {
   const { t } = useTranslation();
+  const { can } = useViewerRole();
   const { majorMoney } = useSchoolFormat();
   const { openDialog } = useDialog();
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -141,9 +145,9 @@ export default function FinancialOperationsPage() {
   const rowMenu = (payment: any) => {
     const step = nextCheckStep(payment.status);
     return [
-      ...(step ? [{ label: t(step.labelKey), icon: step.status === 'deposited' ? Landmark : CheckCircle2, onSelect: () => advance(payment) }] : []),
-      { label: t('financialOperations.bounce'), icon: Undo2, separatorBefore: Boolean(step), onSelect: () => askReason(payment, 'bounce') },
-      { label: t('financialOperations.void'), icon: Ban, danger: true, onSelect: () => askReason(payment, 'void') },
+      ...(step ? [{ label: t(step.labelKey), permission: 'update:payments', icon: step.status === 'deposited' ? Landmark : CheckCircle2, onSelect: () => advance(payment) }] : []),
+      { label: t('financialOperations.bounce'), permission: 'update:payments', icon: Undo2, separatorBefore: Boolean(step), onSelect: () => askReason(payment, 'bounce') },
+      { label: t('financialOperations.void'), permission: 'update:payments', icon: Ban, danger: true, onSelect: () => askReason(payment, 'void') },
     ];
   };
 
@@ -156,7 +160,7 @@ export default function FinancialOperationsPage() {
       >
         <NPageHeaderActions>
           {/* Icon only at phone width, where the label left no room for the title. */}
-          <NButton
+          {can('update:financial-operations') && <PermissionButton permission="update:financial-operations"
             variant="outline"
             onClick={openRollover}
             aria-label={t('financialOperations.rolloverButton')}
@@ -164,12 +168,13 @@ export default function FinancialOperationsPage() {
           >
             <RotateCw className="h-4 w-4 sm:me-2" aria-hidden />
             <span className="max-sm:hidden">{t('financialOperations.rolloverButton')}</span>
-          </NButton>
+          </PermissionButton>}
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
       </NPageHeader>
 
       <NTable
+        permissionResource="payments"
         responsiveSkeleton
         className="min-h-0 flex-1"
         data={rows}
@@ -178,14 +183,14 @@ export default function FinancialOperationsPage() {
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
         headerSlot={
-          <NButton
+          <PermissionButton permission="update:payments"
             disabled={selectedChecks.length === 0 || isBulkBusy || busyId !== null}
             onClick={advanceSelected}
             className="gap-2"
           >
             <Landmark className="h-4 w-4" />
             {t(bulkLabelKey)} ({selectedChecks.length})
-          </NButton>
+          </PermissionButton>
         }
         filters={filters}
         loading={isLoading}

@@ -1,8 +1,9 @@
 'use client';
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { CalendarRange, Plus, SearchX } from 'lucide-react';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useAcademicTableActions } from '@/features/Classes/hooks/useAcademicTableActions';
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
@@ -85,6 +86,7 @@ function CyclesTable() {
       </NPageHeader>
 
       <NTable
+        permissionResource="cycles"
         responsiveSkeleton
         data={orderedCycles}
         columns={columns}
@@ -110,10 +112,10 @@ function CyclesTable() {
             title={t('emptyStates.cycles.title')}
             description={t('emptyStates.cycles.description')}
             action={(
-              <NButton size="sm" onClick={handleAddClick}>
+              <PermissionButton permission="create:cycles" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('cycles.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             )}
           />
         )}

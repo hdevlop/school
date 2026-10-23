@@ -25,12 +25,12 @@ export const buildEnrollSchema = (t: T, year: YearDates) => z.object({
   ),
 });
 
-/** A transfer starts after the current placement began and inside the year. */
+/** A same-date move corrects the current placement; later moves add history. */
 export const buildTransferSchema = (t: T, year: YearDates, currentFrom: string) => z.object({
   classId: requiredId(t),
   sectionId: requiredId(t),
   validFrom: dateOnly(t).refine(
-    (date) => date > currentFrom && date <= year.reportingEndsOn,
+    (date) => date >= currentFrom && date >= year.reportingStartsOn && date <= year.reportingEndsOn,
     t('validationMessages.theDateMustFollowTheCurrentPlacementAndFallInside'),
   ),
   reason: z.string().trim().min(1, t('validationMessages.required')).max(500),

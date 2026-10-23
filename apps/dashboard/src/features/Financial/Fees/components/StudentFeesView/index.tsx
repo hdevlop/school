@@ -1,5 +1,7 @@
 "use client"
 
+
+import { PermissionButton } from '@/components/PermissionButton';
 import { NButton, NErrorState, NForbiddenState, NSkeleton, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
 
 import { useTranslation } from "najm-i18n/react";
@@ -85,9 +87,9 @@ const SelectStudentFeeTypes = ({ feeTypes, onAdd }: {
         <NButton variant="outline" disabled={isSaving} onClick={close}>
           {t('common.cancel')}
         </NButton>
-        <NButton disabled={selectedIds.length === 0 || isSaving} loading={isSaving} onClick={handleAdd}>
+        <PermissionButton permission="create:fees" disabled={selectedIds.length === 0 || isSaving} loading={isSaving} onClick={handleAdd}>
           {t('fees.studentView.addFees')}
-        </NButton>
+        </PermissionButton>
       </div>
     </div>
   );
@@ -204,7 +206,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
   // installment a pending check already covers is not asked for again.
   const remainingAmount = visibleFees.reduce((sum: number, fee: any) => sum + getFeeBalance(fee), 0);
   const overdueAmount = visibleFees.reduce((sum: number, fee: any) => sum + (fee.installments || [])
-    .filter((installment: any) => installment.status === 'overdue')
+    .filter((installment: any) => installment.isOverdue)
     .reduce((total: number, installment: any) => total + getInstallmentAvailableAmount(installment), 0), 0);
   // New fees are charged to the viewed year, so a type is addable once per that year.
   const feeYear = viewingYear;
@@ -471,7 +473,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
           {(activeTab === "overview" || hideHeader) && (
             <div className="flex items-center gap-2 pb-1 pr-1">
               {activeTab === "overview" && (
-                <NButton
+                <PermissionButton permission="create:fees"
                   onClick={handleAddFee}
                   size="sm"
                   variant="outline"
@@ -480,7 +482,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
                 >
                   <Plus className="h-4 w-4" />
                   {t('fees.studentView.addFees')}
-                </NButton>
+                </PermissionButton>
               )}
 
               {hideHeader && (
@@ -493,7 +495,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
                       </span>
                     </div>
                   )}
-                  <NButton
+                  <PermissionButton permission="create:payments"
                     onClick={() => handlePayClick()}
                     disabled={!hasPayableBalance}
                     title={!hasPayableBalance ? t('fees.studentView.nothingToPay') : undefined}
@@ -502,7 +504,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
                   >
                     <CreditCard className="mr-2 h-4 w-4" />
                     {t('fees.studentView.pay')}
-                  </NButton>
+                  </PermissionButton>
                 </>
               )}
             </div>
@@ -526,7 +528,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
 
       {/* The phone's Pay button sits under the content, within thumb reach. */}
       {!hideHeader && (
-        <NButton
+        <PermissionButton permission="create:payments"
           onClick={() => handlePayClick()}
           disabled={!hasPayableBalance}
           size="lg"
@@ -534,7 +536,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
         >
           <CreditCard className="h-4 w-4" />
           {hasPayableBalance ? t('fees.studentView.pay') : t('fees.studentView.nothingToPay')}
-        </NButton>
+        </PermissionButton>
       )}
     </div>
   );

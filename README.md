@@ -115,9 +115,19 @@ not run it just to inspect credentials. Production rejects missing, template,
 or local-default admin passwords. Admin passwords must be at least 8 characters,
 at most 72 bytes, and contain uppercase and lowercase letters plus a number.
 `bun seed` opens the seed command menu in both development and production
-terminals. Choose `admin`, `demo`, or `reset-demo`; the reset option asks for
-confirmation before deleting school data. Use `bun run gen:demo:ui` for the
+terminals. Choose **Delete school data (keep academics)** to keep cycles, classes,
+sections, subjects and fee types, or **Delete school data including academics**
+to remove them too, across every academic year. Both reset choices ask for
+confirmation before deleting school data. They also work as `bun seed reset-demo`
+and `bun seed reset-all`. Use `bun run gen:demo:ui` for the
 previous demo generator shortcut.
+
+Choose **Seed default data** to initialize school settings and add the default
+classes, sections A-C, subjects and fee types. It asks for the academic year and
+school levels, preserves existing settings and records, and adds no demo people.
+On a fresh school, the selected year becomes the initial active year; an existing
+school keeps its active year. The initial calendar still requires review.
+For a non-interactive run, use `bun seed defaults --year=2026-2027 --levels=primaire`.
 
 `bun seed demo` asks which academic year to fill. You can also specify it directly:
 
@@ -130,7 +140,11 @@ Each run adds separate demo people and year-specific classes, sections, fees,
 and dated records. Earlier years are preserved; existing Settings and the active
 year stay unchanged. On a fresh database the active year starts at the current
 teaching year, even when seeding an older year. Current and past years are supported.
-Existing years must have a verified September-June calendar and be open or closed.
+Existing years must be open or closed and match the standard September-June
+calendar, September-August reporting interval and July 14 payment closeout.
+The demo seed verifies matching assumed calendars automatically, including those
+created by **Seed default data**, without changing their dates or the active year.
+Draft years and calendars with different dates are refused.
 Repeat runs add more demo people; they do not replace a year's previous demo.
 Use `bun run seed:demo --year=2025-2026` for the direct script;
 `seed:full` still resets all demo data and should not be used to add another year.

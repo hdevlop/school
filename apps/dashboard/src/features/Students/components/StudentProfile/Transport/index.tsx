@@ -1,7 +1,9 @@
 'use client'
 
+
+import { PermissionButton } from '@/components/PermissionButton';
 import { Bus, CalendarDays, History, MapPin, Pencil, RefreshCw, UserRound, UserRoundMinus } from 'lucide-react'
-import { Badge, NButton, NSkeleton } from 'najm-kit'
+import { Badge, NSkeleton } from 'najm-kit'
 import { useDialog } from '@/shared/useDialog'
 import { toast } from 'sonner'
 import { useStudentRoutes } from '@/features/Transport/hooks/useStudentRoutes'
@@ -106,7 +108,7 @@ export default function TransportTab({ studentId, student, isLoading: isStudentL
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-blue-600 shadow-sm"><Bus className="h-7 w-7" /></div>
           <h3 className="mt-5 text-lg font-semibold text-slate-900">{t('transport.profile.noAssignment')}</h3>
           <p className="mt-2 max-w-md text-sm text-slate-600">{t('transport.profile.noAssignmentDescription')}</p>
-          <NButton className="mt-5 gap-2" onClick={() => void openAssignment('assign')}><Bus className="h-4 w-4" />{t('transport.profile.assign')}</NButton>
+          <PermissionButton permission="create:student-routes" className="mt-5 gap-2" onClick={() => void openAssignment('assign')}><Bus className="h-4 w-4" />{t('transport.profile.assign')}</PermissionButton>
         </div>
         <TransportHistory routes={history} />
       </div>
@@ -158,9 +160,9 @@ export default function TransportTab({ studentId, student, isLoading: isStudentL
         </div>
 
         <div className="flex flex-wrap gap-2 border-t border-slate-200 bg-slate-50 px-5 py-4">
-          <NButton variant="outline" size="sm" className="gap-2" onClick={() => void openAssignment('edit')}><Pencil className="h-4 w-4" />{t('transport.profile.editPickup')}</NButton>
-          <NButton variant="outline" size="sm" className="gap-2" onClick={() => void openAssignment('reassign')}><RefreshCw className="h-4 w-4" />{t('transport.profile.changeBus')}</NButton>
-          <NButton variant="outline" size="sm" className="gap-2 border-red-200 text-red-700 hover:bg-red-50" onClick={confirmUnassign}><UserRoundMinus className="h-4 w-4" />{t('transport.profile.unassign')}</NButton>
+          <PermissionButton permission="update:student-routes" variant="outline" size="sm" className="gap-2" onClick={() => void openAssignment('edit')}><Pencil className="h-4 w-4" />{t('transport.profile.editPickup')}</PermissionButton>
+          <PermissionButton permission="update:student-routes" variant="outline" size="sm" className="gap-2" onClick={() => void openAssignment('reassign')}><RefreshCw className="h-4 w-4" />{t('transport.profile.changeBus')}</PermissionButton>
+          <PermissionButton permission="update:student-routes" variant="outline" size="sm" className="gap-2 border-red-200 text-red-700 hover:bg-red-50" onClick={confirmUnassign}><UserRoundMinus className="h-4 w-4" />{t('transport.profile.unassign')}</PermissionButton>
         </div>
       </div>
 

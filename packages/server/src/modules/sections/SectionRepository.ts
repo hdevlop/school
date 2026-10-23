@@ -6,6 +6,7 @@ import { Owned, type OwnedWhere } from '../../auth';
 import { Section } from './SectionGuards';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { sectionRosterCount } from '../studentEnrollments/sectionRosterCount';
 
 export const sectionSelect = {
   id: sections.id,
@@ -121,6 +122,13 @@ export class SectionRepository {
   async getAll() {
     return await this.buildSectionQuery()
       .orderBy(classes.createdAt, classes.name, sections.name);
+  }
+
+  async getRosterCounts(sectionIds: string[]) {
+    if (!sectionIds.length) return [];
+    return this.db.select({ id: sections.id, studentCount: sectionRosterCount(sections.id, classes.academicYear) })
+      .from(sections).innerJoin(classes, eq(sections.classId, classes.id))
+      .where(this.readCondition(inArray(sections.id, sectionIds)));
   }
 
   async getInSelectedYear(id: string) {

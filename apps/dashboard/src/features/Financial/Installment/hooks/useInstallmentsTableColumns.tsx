@@ -1,3 +1,5 @@
+import { PermissionButton } from '@/components/PermissionButton';
+import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
 import { useMemo } from 'react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { NBadge, NButton } from 'najm-kit';
@@ -9,6 +11,7 @@ import { UPCOMING_STATUS_COLOR, displayInstallmentStatus as displayStatus } from
 export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (installment: any) => void; onPay?: (installment: any) => void } = {}) => {
   const { t } = useTranslation();
   const { displayDateOnly, majorMoney } = useSchoolFormat();
+  const { businessDate } = useBusinessDate();
   return useMemo(() => [
     {
       accessorKey: "number",
@@ -92,7 +95,7 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
         return (
           <div className="flex flex-col items-start gap-1">
             <NBadge
-              status={displayStatus(status)}
+              status={displayStatus(status, row.original.dueDate, businessDate)}
               statusMap={UPCOMING_STATUS_COLOR}
               icon={status === 'pending' ? CalendarClock : undefined}
               showIcon
@@ -134,7 +137,7 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
               {t('common.view')}
             </NButton>
             <span className="inline-flex" title={payTitle}>
-              <NButton
+              <PermissionButton permission="create:payments"
                 type="button"
                 size="sm"
                 className="h-8 gap-1.5 px-2.5 text-xs"
@@ -146,11 +149,11 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
               >
                 <CreditCard className="h-3.5 w-3.5" />
                 {t('fees.studentView.pay')}
-              </NButton>
+              </PermissionButton>
             </span>
           </div>
         );
       },
     }
-  ], [onPay, onView, t, displayDateOnly, majorMoney]);
+  ], [onPay, onView, t, displayDateOnly, majorMoney, businessDate]);
 };

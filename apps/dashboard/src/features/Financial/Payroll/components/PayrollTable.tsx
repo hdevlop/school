@@ -1,9 +1,11 @@
 "use client";
 
+
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Banknote, CalendarDays, Clock, HandCoins, ReceiptText, Undo2, Wallet, SearchX } from 'lucide-react';
-import { NButton, NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import type { RowSelectionState } from '@tanstack/react-table';
@@ -140,7 +142,7 @@ const PayrollTable = () => {
   }, [eligibleStaff, payslipByStaff, payslips, effectivePeriod, locale]);
 
   const totalPayroll = summary?.totalNet
-    ?? tableRows.reduce((sum, row) => sum + row.paymentAmount, 0);
+    ?? tableRows.filter((row) => row.payslipId).reduce((sum, row) => sum + row.paymentAmount, 0);
   const pendingCount = summary?.pendingCount
     ?? tableRows.filter((row) => row.paymentStatus === 'pending').length;
   const paidCount = summary?.paidCount
@@ -248,7 +250,7 @@ const PayrollTable = () => {
       cell: ({ row }) => {
         const isPaid = row.original.paymentStatus === 'paid';
         return (
-          <NButton
+          <PermissionButton permission="update:payroll"
             size="sm"
             variant={isPaid ? 'outline' : 'default'}
             disabled={isPaying || (!isPaid && !row.original.canPay)}
@@ -257,7 +259,7 @@ const PayrollTable = () => {
           >
             {isPaid ? <Undo2 className="h-4 w-4" /> : <HandCoins className="h-4 w-4" />}
             {isPaid ? t('payroll.actions.unpay') : t('payroll.actions.pay')}
-          </NButton>
+          </PermissionButton>
         );
       },
     },
@@ -352,6 +354,7 @@ const PayrollTable = () => {
       )}
 
       <NTable
+        permissionResource="payroll"
         classNames={{
           content: '[&_table]:min-w-[900px]',
           header: 'max-md:flex-nowrap max-md:gap-2 max-md:[&>[data-ntable-mobile-toolbar]]:w-auto max-md:[&>[data-ntable-mobile-toolbar]]:flex-1',
@@ -369,7 +372,7 @@ const PayrollTable = () => {
             const payTargets = Object.values(rowSelection).some(Boolean) ? selectedUnpaidStaffIds : allUnpaidIds;
             const payLabel = `${t('payroll.actions.pay')} (${payTargets.length})`;
             return (
-              <NButton
+              <PermissionButton permission="update:payroll"
                 disabled={payTargets.length === 0 || isPaying}
                 onClick={() => handlePaySelected(payTargets)}
                 aria-label={payLabel}
@@ -378,7 +381,7 @@ const PayrollTable = () => {
               >
                 <HandCoins className="h-4 w-4" aria-hidden="true" />
                 <span className="hidden lg:inline">{payLabel}</span>
-              </NButton>
+              </PermissionButton>
             );
           })()
         }

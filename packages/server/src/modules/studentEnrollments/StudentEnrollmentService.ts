@@ -217,7 +217,7 @@ export class StudentEnrollmentService {
   }
 
   @Transaction()
-  async transfer(id: string, data: TransferEnrollmentDto, actorId: string) {
+  async transfer(id: string, data: TransferEnrollmentDto, actorId: string, actorRole?: string) {
     const enrollment = this.validator.ensureEnrollmentExists(await this.enrollments.getById(id, true));
     this.validator.ensureTransferable(enrollment.leftOn);
     const year = await this.ensurePlacement(enrollment!.academicYearId, data.classId, data.sectionId);
@@ -225,6 +225,19 @@ export class StudentEnrollmentService {
     const current = this.validator.ensureTransferPlacement(await this.enrollments.getOpenPlacement(id), data);
     const settings = await this.settings.getAdminSettings();
     this.validator.ensureActiveTransferDate(data.validFrom, settings?.activeAcademicYearId === year.id);
+    // Two date-only placements cannot both start on the same day. Correct
+    // the open placement through the existing audited, record-safe path.
+    if (data.validFrom === current.validFrom) {
+      const placements = await this.enrollments.listPlacements(id);
+      const status = enrollment.status as CorrectEnrollmentDto['status'];
+      const corrected = await this.correct(id, {
+        enrolledOn: enrollment.enrolledOn, leftOn: enrollment.leftOn, status,
+        expected: { enrolledOn: enrollment.enrolledOn, leftOn: enrollment.leftOn, status, placements },
+        placement: { ...current, classId: data.classId, sectionId: data.sectionId },
+        reason: data.reason,
+      }, { id: actorId, role: actorRole ?? '' });
+      return corrected.placements.find((placement) => placement.id === current.id)!;
+    }
     await this.ensureSectionCapacity(data.sectionId, data.validFrom, null, { yearId: year.id, excludeEnrollmentId: id });
     await this.enrollments.closePlacement(current!.id, data.validFrom);
     const placement = await this.enrollments.addPlacement({

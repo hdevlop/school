@@ -69,11 +69,11 @@ describe('routes that were admin-only ask for a permission', () => {
     });
     expect(byPermission(RolloverController)).toEqual({
       'read:financial-operations': ['getRun', 'preview'],
-      'manage:financial-operations': ['commit'],
+      'update:financial-operations': ['commit'],
     });
     expect(byPermission(FinancialAuditController)).toEqual({ 'read:financial-operations': ['getById', 'list'] });
     for (const route of ['getAll', 'getByPeriod']) expect(guards(PayrollController, route)).toEqual(schoolWide('read:payroll'));
-    expect(guards(AttendanceController, 'upsertStaffRoster')).toEqual(schoolWide('manage:staff-attendance'));
+    expect(guards(AttendanceController, 'upsertStaffRoster')).toEqual(schoolWide('update:staff-attendance'));
   });
 
   it('gives finance routes the finance permissions instead of the finance roles', () => {
@@ -103,7 +103,7 @@ describe('routes that were admin-only ask for a permission', () => {
       'delete:cycles': ['delete'],
     });
     expect(guards(SettingsController, 'update')).toEqual(can('update:settings'));
-    expect(guards(ClassRoutineController, 'publish')).toEqual(can('manage:class-routines'));
+    expect(guards(ClassRoutineController, 'publish')).toEqual(can('update:class-routines'));
     expect(guards(StudentRouteController, 'assign')).toEqual(schoolWide('create:student-routes'));
     expect(guards(AccessResetController)).toEqual(can('reset:users'));
   });
@@ -156,13 +156,15 @@ describe('seeded permissions', () => {
     expect(principal.has('reset:users')).toBe(true);
   });
 
-  it('let the accountant create and edit people, never delete them, and run all finance', () => {
+  it('lets accounting manage students, parents and teachers, read staff, and run finance', () => {
     const accounting = new Set(grants.accounting);
-    for (const people of ['students', 'parents', 'teachers', 'staff']) {
+    for (const people of ['students', 'parents', 'teachers']) {
       expect(accounting.has(`create:${people}`) && accounting.has(`update:${people}`), people).toBe(true);
       expect(accounting.has(`delete:${people}`), people).toBe(false);
     }
-    for (const permission of ['delete:fees', 'delete:payments', 'delete:payroll', 'manage:financial-operations', 'manage:staff-attendance', 'delete:student-routes']) {
+    expect(accounting.has('read:staff')).toBe(true);
+    for (const action of ['create', 'update', 'delete']) expect(accounting.has(`${action}:staff`)).toBe(false);
+    for (const permission of ['delete:fees', 'delete:payments', 'delete:payroll', 'update:financial-operations', 'update:staff-attendance', 'delete:student-routes']) {
       expect(accounting.has(permission), permission).toBe(true);
     }
   });
@@ -234,10 +236,10 @@ describe('staff logins', () => {
 describe('staff attendance', () => {
   const validator = withEnglishMessages(new AttendanceValidator(...(Array(8).fill({}) as [any])));
 
-  it('is marked by a school-wide role holding manage:staff-attendance', () => {
-    expect(() => validator.ensureStaffAttendanceAuthorized({ role: 'accounting', permissions: ['manage:staff-attendance'] })).not.toThrow();
+  it('is marked by a school-wide role holding update:staff-attendance', () => {
+    expect(() => validator.ensureStaffAttendanceAuthorized({ role: 'accounting', permissions: ['update:staff-attendance'] })).not.toThrow();
     expect(() => validator.ensureStaffAttendanceAuthorized({ role: 'admin', permissions: ['*:*'] })).not.toThrow();
     expect(() => validator.ensureStaffAttendanceAuthorized({ role: 'supervisor', permissions: ['manage:attendance'] })).toThrow();
-    expect(() => validator.ensureStaffAttendanceAuthorized({ role: 'teacher', permissions: ['manage:staff-attendance'] })).toThrow();
+    expect(() => validator.ensureStaffAttendanceAuthorized({ role: 'teacher', permissions: ['update:staff-attendance'] })).toThrow();
   });
 });

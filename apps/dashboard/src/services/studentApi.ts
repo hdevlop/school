@@ -1,5 +1,10 @@
 import { api, formApi } from './http';
 
+export const validateStudentAdmissionApi = async (data: { studentCode: string; classId: string; sectionId: string; yearEnrolledOn: string }) => {
+  const res = await api.post('/students/validate-admission', data);
+  return res.data;
+};
+
 export const getStudentsApi = async () => {
   const res = await api.get('/students');
   return res.data;

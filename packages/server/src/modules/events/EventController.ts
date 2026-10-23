@@ -8,7 +8,10 @@ import {
   canCreateEvent,
   canUpdateEvent,
   canDeleteEvent,
-  canManageParticipants,
+  canReadParticipants,
+  canCreateParticipants,
+  canUpdateParticipants,
+  canDeleteParticipants,
 } from './EventGuards';
 import {
   createEventDto,
@@ -245,7 +248,7 @@ export class EventController {
   }
 
   @Get('/:id/participants')
-  @canManageParticipants()
+  @canReadParticipants()
   @Validate({ params: eventIdParam })
   @ResMsg('events.success.participantsRetrieved')
   async getParticipants(@Params('id') id: string) {
@@ -253,7 +256,7 @@ export class EventController {
   }
 
   @Get('/:id/participants/:type')
-  @canManageParticipants()
+  @canReadParticipants()
   @Validate({ params: eventParticipantsByTypeParam })
   @ResMsg('events.success.participantsRetrieved')
   async getParticipantsByType(@Params('id') id: string, @Params('type') type: string) {
@@ -261,7 +264,7 @@ export class EventController {
   }
 
   @Get('/participant/:participantId')
-  @canManageParticipants()
+  @canReadParticipants()
   @Validate({ params: eventParticipantLookupParam })
   @ResMsg('events.success.retrieved')
   async getEventsByParticipant(@Params('participantId') participantId: string) {
@@ -269,7 +272,7 @@ export class EventController {
   }
 
   @Get('/:id/participants/count')
-  @canManageParticipants()
+  @canReadParticipants()
   @Validate({ params: eventIdParam })
   @ResMsg('events.success.retrieved')
   async getParticipantCount(@Params('id') id: string) {
@@ -278,7 +281,7 @@ export class EventController {
   }
 
   @Post('/participants')
-  @canManageParticipants()
+  @canCreateParticipants()
   @Validate(createEventParticipantDto)
   @ResMsg('events.success.participantAdded')
   async addParticipant(@Body() body: CreateEventParticipantDto) {
@@ -286,7 +289,7 @@ export class EventController {
   }
 
   @Put('/participants/:id')
-  @canManageParticipants()
+  @canUpdateParticipants()
   @Validate({ params: eventParticipantIdParam, body: updateEventParticipantDto })
   @ResMsg('events.success.participantUpdated')
   async updateParticipant(@Params('id') id: string, @Body() body: UpdateEventParticipantDto) {
@@ -294,7 +297,7 @@ export class EventController {
   }
 
   @Delete('/participants/:id')
-  @canManageParticipants()
+  @canDeleteParticipants()
   @Validate({ params: eventParticipantIdParam })
   @ResMsg('events.success.participantRemoved')
   async removeParticipant(@Params('id') id: string) {
@@ -302,7 +305,7 @@ export class EventController {
   }
 
   @Post('/participants/:id/attendance')
-  @canManageParticipants()
+  @canUpdateParticipants()
   @Validate({ params: eventParticipantIdParam, body: markAttendanceDto })
   @ResMsg('events.success.attendanceMarked')
   async markAttendance(@Params('id') id: string, @Body() body: MarkAttendanceDto) {

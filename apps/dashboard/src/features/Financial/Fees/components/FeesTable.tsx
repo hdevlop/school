@@ -1,9 +1,10 @@
 "use client"
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useCallback, useMemo, useState } from 'react';
 import type { Schedule } from '@sms/contracts';
-import { NPageHeader, NPageHeaderActions, NEmptyState, NButton, NErrorState, NForbiddenState, NStatCard, NStatCardSkeleton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState, NStatCard, NStatCardSkeleton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Banknote, CircleDollarSign, CreditCard, HandCoins, Landmark, Plus, ReceiptText, SearchX, Wallet } from 'lucide-react';
@@ -166,11 +167,11 @@ function FeesTableForYear() {
       name: 'schedule',
       type: 'select',
       showIcon: false,
-      placeholder: t('fees.form.schedule'),
-      value: scheduleFilter ?? '__all__',
+      placeholder: t('fees.filters.allSchedules'),
+      value: scheduleFilter ?? '',
       onChange: (value: string) => setScheduleFilter(value === '__all__' ? undefined : value as Schedule),
       options: [
-        { value: '__all__', label: t('fees.filters.allSchedules') },
+        { value: '__all__', label: t('common.all') },
         ...buildScheduleOptions(t),
       ],
       className: 'w-full lg:w-44',
@@ -337,6 +338,7 @@ function FeesTableForYear() {
       )}
 
       <NTable
+        permissionResource="fees"
         data={filteredFees}
         isFilteredEmpty={isFilteredEmpty}
         columns={columns}
@@ -358,7 +360,7 @@ function FeesTableForYear() {
         )}
         renderCard={FeeCard}
         classNames={{
-          header: '[&_[data-ntable-mobile-toolbar]]:hidden',
+          header: '[&_[data-ntable-mobile-toolbar]]:hidden max-md:[&_[data-school-create-action]]:hidden',
           cards: 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5',
         }}
         addButtonText={t('fees.dialogs.createButton')}
@@ -368,10 +370,10 @@ function FeesTableForYear() {
             icon={FEATURE_ICONS.fees}
             title={noDataText}
             action={(
-              <NButton size="sm" onClick={handleAddClick}>
+              <PermissionButton permission="create:fees" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('fees.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             )}
           />
         )}

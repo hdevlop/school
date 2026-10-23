@@ -18,6 +18,16 @@ const incident = {
 };
 
 describe('disciplineSchema', () => {
+  it('asks for a student rather than an internal ID', () => {
+    for (const studentId of ['', undefined, null, '   ']) {
+      const result = disciplineSchema.safeParse({ ...incident, studentId });
+      expect(result.success).toBe(false);
+      if (!result.success) expect(result.error.issues).toContainEqual(expect.objectContaining({
+        path: ['studentId'], message: 'Student is required',
+      }));
+    }
+  });
+
   it('defaults an unset severity to medium', () => {
     expect(disciplineSchema.parse(incident).severity).toBe('medium');
   });

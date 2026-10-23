@@ -164,7 +164,7 @@ const SimpleFeeFormContent = ({ fee, feeTypes, isEditMode }) => {
                name='netAmount'
                type='number'
                icon={Wallet}
-               formLabel={t('fees.form.netAmount') || 'Net Amount'}
+               formLabel={t(paymentType === 'recurring' ? 'fees.form.netAmountForYear' : 'fees.form.netAmount')}
                readOnly={true}
                className="border-green-700 bg-green-100 text-green-950 [&_input]:text-green-950 dark:bg-green-950/40 dark:text-green-100 dark:[&_input]:text-green-100"
             />

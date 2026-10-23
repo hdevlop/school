@@ -1,3 +1,4 @@
+import { PermissionButton } from '@/components/PermissionButton';
 import { Label } from 'najm-kit';
 import { NAvatar, NButton, useNSidebar } from 'najm-kit';
 import { CreditCard, Menu } from 'lucide-react';
@@ -71,7 +72,7 @@ export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) 
          )}
 
          <div className="ms-auto flex shrink-0 items-center gap-1 max-lg:hidden">
-            <NButton
+            <PermissionButton permission="create:payments"
                onClick={onPayClick}
                disabled={payDisabled}
                title={payDisabled ? t('fees.studentView.nothingToPay') : undefined}
@@ -80,7 +81,7 @@ export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) 
             >
                <CreditCard className="mr-2 h-4 w-4" />
                {t('fees.studentView.pay')}
-            </NButton>
+            </PermissionButton>
          </div>
       </div>
    );

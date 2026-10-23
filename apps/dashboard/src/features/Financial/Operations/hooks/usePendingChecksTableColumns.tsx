@@ -1,5 +1,6 @@
+import { PermissionButton } from '@/components/PermissionButton';
 import { useMemo } from 'react';
-import { NAvatar, NBadge, NButton } from 'najm-kit';
+import { NAvatar, NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat, useSchoolToday } from '@/hooks/useSchoolFormat';
 import { CHECK_STATUS_COLOR, nextCheckStep } from '../config/checkStatus';
@@ -93,7 +94,7 @@ export const usePendingChecksTableColumns = ({ busyId, disabled = false, onAdvan
         const step = nextCheckStep(row.original.status);
         if (!step) return null;
         return (
-          <NButton
+          <PermissionButton permission="update:payments"
             size="sm"
             disabled={disabled || busyId === row.original.id}
             onClick={(event) => {
@@ -102,7 +103,7 @@ export const usePendingChecksTableColumns = ({ busyId, disabled = false, onAdvan
             }}
           >
             {t(step.labelKey)}
-          </NButton>
+          </PermissionButton>
         );
       },
     },

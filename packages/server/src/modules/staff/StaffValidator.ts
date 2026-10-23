@@ -4,6 +4,7 @@ import { Err, I18n, Service } from '../../najm';
 import { StaffRepository } from './StaffRepository';
 import { StaffRoleRepository } from './roles/StaffRoleRepository';
 import { isDateOnly } from '@sms/contracts/academic-years';
+import { isSidebarPermission } from '@sms/contracts/access-control';
 import { getBusinessDateOnly } from '../../shared/businessDate';
 
 /** The signed-in user behind a staff request. In-process callers pass none. */
@@ -36,7 +37,7 @@ export class StaffValidator {
   async ensureCanManageLogin(actor: StaffActor | undefined, roleId: string | null | undefined) {
     if (!actor || !roleId) return;
     const granted = await this.permissionService.getPermissionsByRole(roleId);
-    if (granted.some(({ name }) => !matchPermission(actor.permissions, name))) {
+    if (granted.some(({ name }) => !isSidebarPermission(name) && !matchPermission(actor.permissions, name))) {
       Err(403, this.t('loginBeyondActor'));
     }
   }

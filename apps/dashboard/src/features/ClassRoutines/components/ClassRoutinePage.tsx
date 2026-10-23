@@ -31,7 +31,9 @@ import { routinePeriodLabel } from '../utils/labels';
 function ClassRoutinePageForYear() {
   const { t } = useTranslation();
   const { can } = useViewerRole();
-  const canEdit = can('manage:class-routines');
+  const canCreate = can('create:class-routines');
+  const canEdit = can('update:class-routines');
+  const canDelete = can('delete:class-routines');
   const { openDialog } = useDialog();
   const { classes, isClassesLoading } = useClasses();
   const { academicYear, isAcademicYearLoading } = useActiveAcademicYear();
@@ -117,7 +119,7 @@ function ClassRoutinePageForYear() {
   };
 
   const createRoutine = async () => {
-    if (!sectionId || !selectedClass) return;
+    if (!canCreate || !sectionId || !selectedClass) return;
     const selectedSection = classSections.find((item) => item.id === sectionId);
     const response: any = await mutations.createSchedule.mutateAsync({
       sectionId,
@@ -128,12 +130,12 @@ function ClassRoutinePageForYear() {
   };
 
   const openEntry = (day: RoutineDay, period: RoutinePeriod, entry?: RoutineEntry) => {
-    if (!routine) return;
+    if (!routine || !(entry ? canEdit || canDelete : canCreate)) return;
     setSelectedLesson({ scheduleId: routine.id, day, period, entry, defaultRoom: routine.roomNumber });
   };
 
   const saveLesson = async (data: RoutineEntryFormValues) => {
-    if (!selectedLesson) return;
+    if (!selectedLesson || !(selectedLesson.entry ? canEdit : canCreate)) return;
     const { scheduleId: selectedScheduleId, day, period, entry } = selectedLesson;
     const next = { ...data, dayOfWeek: day, periodId: period.id, scheduleId: selectedScheduleId };
     try {
@@ -146,7 +148,7 @@ function ClassRoutinePageForYear() {
   };
 
   const deleteLesson = async () => {
-    if (!selectedLesson?.entry) return;
+    if (!canDelete || !selectedLesson?.entry) return;
     const { scheduleId: selectedScheduleId, entry } = selectedLesson;
     try {
       await mutations.deleteEntry.mutateAsync({ scheduleId: selectedScheduleId, id: entry.id, expectedVersion: entry.version });
@@ -159,7 +161,7 @@ function ClassRoutinePageForYear() {
   const lessonBusy = mutations.createEntry.isPending || mutations.updateEntry.isPending || mutations.deleteEntry.isPending;
 
   const openDuty = (day: RoutineDay, period: RoutinePeriod, duty?: RoutineDuty) => {
-    if (!routine) return;
+    if (!routine || !(duty ? canEdit || canDelete : canCreate)) return;
     openDialog({
       title: duty
         ? t('classRoutines.ui.dialogs.editSupervision')
@@ -168,12 +170,13 @@ function ClassRoutinePageForYear() {
         <RoutineDutyForm
           period={period}
           duty={duty}
-          onDelete={duty ? async () => {
+          readOnly={Boolean(duty && !canEdit)}
+          onDelete={duty && canDelete ? async () => {
             await mutations.deleteDuty.mutateAsync({ scheduleId: routine.id, id: duty.id });
           } : undefined}
         />
       ),
-      primaryButton: {
+      primaryButton: (duty ? canEdit : canCreate) ? {
         form: 'routine-duty-form',
         text: duty ? t('classRoutines.ui.actions.updateSupervision') : t('classRoutines.ui.actions.assignSupervisor'),
         onClick: async (data) => {
@@ -186,7 +189,7 @@ function ClassRoutinePageForYear() {
             ...data,
           });
         },
-      },
+      } : undefined,
       secondaryButton: { text: t('common.cancel') },
     });
   };
@@ -264,7 +267,9 @@ function ClassRoutinePageForYear() {
           entries={routine.entries}
           duties={routine.duties}
           defaultRoom={routine.roomNumber}
-          editable={canEdit}
+          canCreate={canCreate}
+          canUpdate={canEdit}
+          canDelete={canDelete}
           onCellClick={openEntry}
           onDutyClick={openDuty}
         />
@@ -277,7 +282,7 @@ function ClassRoutinePageForYear() {
               </div>
               <h2 className="mt-4 text-lg font-semibold">{t('classRoutines.ui.empty.title')}</h2>
               <p className="mt-1 max-w-md text-sm text-muted-foreground">{t('classRoutines.ui.empty.description')}</p>
-              {canEdit && sectionId ? (
+              {canCreate && sectionId ? (
                 <NButton className="mt-5" onClick={createRoutine} disabled={mutations.createSchedule.isPending}>
                   <Plus className="h-4 w-4" /> {t('classRoutines.ui.actions.createRoutine')}
                 </NButton>
@@ -296,9 +301,9 @@ function ClassRoutinePageForYear() {
         footer={selectedLesson ? (
           <div className="flex w-full justify-end gap-2">
             <NButton type="button" variant="outline" onClick={() => setSelectedLesson(null)} disabled={lessonBusy}>{t('common.cancel')}</NButton>
-            <NButton type="submit" form="routine-entry-form" disabled={lessonBusy}>
+            {(selectedLesson.entry ? canEdit : canCreate) && <NButton type="submit" form="routine-entry-form" disabled={lessonBusy}>
               {selectedLesson.entry ? t('classRoutines.ui.actions.updateLesson') : t('classRoutines.ui.actions.addLesson')}
-            </NButton>
+            </NButton>}
           </div>
         ) : null}
       >
@@ -311,7 +316,8 @@ function ClassRoutinePageForYear() {
             entry={selectedLesson.entry}
             defaultRoom={selectedLesson.defaultRoom}
             onSubmit={saveLesson}
-            onDelete={selectedLesson.entry ? deleteLesson : undefined}
+            readOnly={Boolean(selectedLesson.entry && !canEdit)}
+            onDelete={selectedLesson.entry && canDelete ? deleteLesson : undefined}
             busy={lessonBusy}
           />
         ) : null}

@@ -102,9 +102,9 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
     const selectedClass = classes.find(cls => cls.id === selectedClassId);
     return selectedClass?.sections?.map(section => ({
       value: section.id,
-      label: section.name
+      label: section.studentCount == null ? section.name : `${section.name} (${section.studentCount}/${section.maxStudents ?? '—'})${section.maxStudents != null && section.studentCount >= section.maxStudents ? ` · ${t('sections.form.full')}` : ''}`,
     })) ?? [];
-  }, [classes, selectedClassId]);
+  }, [classes, selectedClassId, t]);
 
   useEffect(() => {
     if (!selectedSectionId || sectionOptions.some(section => section.value === selectedSectionId)) {

@@ -11,12 +11,13 @@ const ROSTER_KEEP_COLUMNS = new Set(['select', 'studentCode', 'name', 'email', '
 
 
 interface RosterColumnsOptions {
+  readOnly?: boolean;
   getStatus: (id: string) => RosterMark;
   setStatus: (id: string, status: RosterStatus) => void;
   renderDetails?: (person: any) => React.ReactNode;
 }
 
-const statusCell = ({ getStatus, setStatus }: RosterColumnsOptions, label: string) => ({
+const statusCell = ({ getStatus, setStatus, readOnly }: RosterColumnsOptions, label: string) => ({
   id: 'status',
   accessorFn: (row: any) => getStatus(row.id),
   header: () => <div className="flex w-full justify-center text-center">{label}</div>,
@@ -25,12 +26,13 @@ const statusCell = ({ getStatus, setStatus }: RosterColumnsOptions, label: strin
   cell: ({ row }: any) => (
     <RosterMarks
       current={getStatus(row.original.id)}
+      disabled={readOnly}
       onSelect={(status) => setStatus(row.original.id, status)}
     />
   ),
 });
 
-export const useStudentRosterColumns = ({ getStatus, setStatus }: RosterColumnsOptions) => {
+export const useStudentRosterColumns = ({ getStatus, setStatus, readOnly }: RosterColumnsOptions) => {
   const { t } = useTranslation();
   const studentColumns = useStudentsTableColumns();
 
@@ -38,15 +40,15 @@ export const useStudentRosterColumns = ({ getStatus, setStatus }: RosterColumnsO
     const base = studentColumns.filter((col: any) =>
       ROSTER_KEEP_COLUMNS.has(col.id ?? col.accessorKey)
     );
-    return [...base, statusCell({ getStatus, setStatus }, t('common.status'))];
-  }, [t, studentColumns, getStatus, setStatus]);
+    return [...base, statusCell({ getStatus, setStatus, readOnly }, t('common.status'))];
+  }, [t, studentColumns, getStatus, setStatus, readOnly]);
 };
 
 export const useTeacherRosterColumns = ({ getStatus, setStatus }: RosterColumnsOptions) => {
   return useStaffRosterColumns({ getStatus, setStatus });
 };
 
-export const useStaffRosterColumns = ({ getStatus, setStatus, renderDetails }: RosterColumnsOptions) => {
+export const useStaffRosterColumns = ({ getStatus, setStatus, renderDetails, readOnly }: RosterColumnsOptions) => {
   const { t } = useTranslation();
 
   return useMemo(() => [
@@ -99,12 +101,12 @@ export const useStaffRosterColumns = ({ getStatus, setStatus, renderDetails }: R
         return t(key) === key ? value : t(key);
       },
     },
-    statusCell({ getStatus, setStatus }, t('common.status')),
+    statusCell({ getStatus, setStatus, readOnly }, t('common.status')),
     ...(renderDetails ? [{
       id: 'attendanceDetails', header: t('attendance.roster.details'), enableSorting: false,
       cell: ({ row }: any) => renderDetails(row.original),
     }] : []),
-  ], [t, getStatus, setStatus, renderDetails]);
+  ], [t, getStatus, setStatus, renderDetails, readOnly]);
 };
 
 export const useStudentAttendanceTableColumns = () => {

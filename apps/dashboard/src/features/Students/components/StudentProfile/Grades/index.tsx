@@ -25,7 +25,8 @@ const gradePercentage = (marks: number | null | undefined, total: number | null 
 export default function GradesTab({ studentId }: { studentId?: string }) {
   const { t } = useTranslation();
   // Parents and students read the report; staff correct marks in place.
-  const canEdit = !useViewerRole().isFamily;
+  const { isFamily, can } = useViewerRole();
+  const canEdit = !isFamily && can('update:grades');
   const { data: reportResponse, isLoading } = useStudentReport(studentId || null);
   const { updateGrade } = useGrades({ enabled: false });
   const queryClient = useQueryClient();
@@ -79,7 +80,7 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
   }, []);
 
   const handleSaveAll = useCallback(async () => {
-    if (!changedGrades.length || isSaving) return;
+    if (!canEdit || !changedGrades.length || isSaving) return;
 
     setIsSaving(true);
     try {
@@ -102,7 +103,7 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
     } finally {
       setIsSaving(false);
     }
-  }, [changedGrades, isSaving, queryClient, studentId, t, updateGrade]);
+  }, [canEdit, changedGrades, isSaving, queryClient, studentId, t, updateGrade]);
 
   const columns = useMemo(() => [
     {

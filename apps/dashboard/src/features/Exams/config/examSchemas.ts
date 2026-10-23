@@ -24,9 +24,9 @@ export const createExamSchema = (t: T) => {
     (value) => (value === '' ? undefined : value),
     z.string().min(1, t('validationMessages.idCannotBeEmpty')).nullish().optional(),
   );
-  const requiredId = z.preprocess(
+  const requiredId = (message: string) => z.preprocess(
     (value) => value ?? '',
-    z.string().min(1, t('validationMessages.idIsRequired')),
+    z.string().trim().min(1, message),
   );
   const dateField = z.string().regex(
     /^(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/,
@@ -47,9 +47,9 @@ export const createExamSchema = (t: T) => {
   return z.object({
     classId: optionalId,
     sectionId: optionalId,
-    sectionIds: z.array(requiredId).min(1, t('validationMessages.selectAtLeastOneSection')),
-    subjectId: requiredId,
-    teacherId: requiredId,
+    sectionIds: z.array(requiredId(t('validationMessages.selectAtLeastOneSection'))).min(1, t('validationMessages.selectAtLeastOneSection')),
+    subjectId: requiredId(t('validationMessages.subjectIsRequired')),
+    teacherId: requiredId(t('exams.errors.teacherRequired')),
     examId: optionalId,
     teacherAssignmentId: optionalId,
     title: z.string().min(3, t('validationMessages.titleMustBeAtLeast3Characters')).max(200, t('validationMessages.titleTooLong')),

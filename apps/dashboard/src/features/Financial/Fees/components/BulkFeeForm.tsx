@@ -166,7 +166,7 @@ const FeeItem = ({
                 name="netAmount"
                 type="number"
                 icon={Wallet}
-                formLabel={t('fees.form.netAmount')}
+                formLabel={t(paymentType === 'recurring' ? 'fees.form.netAmountForYear' : 'fees.form.netAmount')}
                 readOnly={true}
                 className="border-green-700 bg-green-100"
              />

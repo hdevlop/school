@@ -20,6 +20,21 @@ const valid = {
 };
 
 describe('examSchema', () => {
+  it('asks for the missing subject and teacher rather than internal IDs', () => {
+    for (const missing of ['', undefined, null, '   ']) {
+      const result = examSchema.safeParse({ ...valid, subjectId: missing, teacherId: missing });
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.issues).toContainEqual(expect.objectContaining({
+          path: ['subjectId'], message: 'Select a subject',
+        }));
+        expect(result.error.issues).toContainEqual(expect.objectContaining({
+          path: ['teacherId'], message: 'A teacher is required',
+        }));
+      }
+    }
+  });
+
   it('defaults a new exam to a scheduled midterm', () => {
     const parsed = examSchema.parse(valid);
 

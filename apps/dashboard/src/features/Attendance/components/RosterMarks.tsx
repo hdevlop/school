@@ -35,6 +35,7 @@ interface RosterMarksProps {
   current: RosterMark;
   onSelect: (status: RosterStatus) => void;
   className?: string;
+  disabled?: boolean;
 }
 
 /**
@@ -44,7 +45,7 @@ interface RosterMarksProps {
  * with the same control — same labels, same pressed state, same handler — and
  * neither can drift from the other.
  */
-export default function RosterMarks({ current, onSelect, className }: RosterMarksProps) {
+export default function RosterMarks({ current, onSelect, className, disabled = false }: RosterMarksProps) {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col items-center gap-1">
@@ -63,6 +64,7 @@ export default function RosterMarks({ current, onSelect, className }: RosterMark
             title={t(meta.labelKey)}
             aria-label={t(meta.labelKey)}
             aria-pressed={active}
+            disabled={disabled}
             onClick={(event) => {
               // Cards sit inside a clickable row; marking must not also count
               // as opening the record.

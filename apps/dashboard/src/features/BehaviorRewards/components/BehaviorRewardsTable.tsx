@@ -1,11 +1,12 @@
 'use client';
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useMemo } from 'react';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import { Award, Plus, SearchX } from 'lucide-react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
@@ -104,6 +105,7 @@ const BehaviorRewardsTable = () => {
       </NPageHeader>
 
       <NTable
+        permissionResource="behavior-rewards"
         responsiveSkeleton
         className="min-h-0 flex-1"
         data={tableData}
@@ -129,10 +131,10 @@ const BehaviorRewardsTable = () => {
             title={t('emptyStates.behaviorRewards.title')}
             description={isFamily ? t('emptyStates.familyDescription') : t('emptyStates.behaviorRewards.description')}
             action={isFamily ? undefined : (
-              <NButton size="sm" onClick={handleCreate}>
+              <PermissionButton permission="create:behavior-rewards" size="sm" onClick={handleCreate}>
                 <Plus className="h-4 w-4" />
                 {t('behaviorRewards.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             )}
           />
         )}

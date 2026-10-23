@@ -1,7 +1,8 @@
 "use client"
 
+import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useAcademicTableActions } from '@/features/Classes/hooks/useAcademicTableActions';
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
@@ -92,6 +93,7 @@ function SubjectsTable() {
       </NPageHeader>
 
       <NTable
+        permissionResource="subjects"
         responsiveSkeleton
         data={subjects}
         columns={columns}
@@ -117,10 +119,10 @@ function SubjectsTable() {
             title={t('emptyStates.subjects.title')}
             description={t('emptyStates.subjects.description')}
             action={(
-              <NButton size="sm" onClick={handleAddClick}>
+              <PermissionButton permission="create:subjects" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('subjects.dialogs.createButton')}
-              </NButton>
+              </PermissionButton>
             )}
           />
         )}

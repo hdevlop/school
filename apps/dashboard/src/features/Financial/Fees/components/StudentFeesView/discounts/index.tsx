@@ -1,6 +1,8 @@
 "use client"
 
-import { Badge, NButton } from 'najm-kit'
+
+import { PermissionButton } from '@/components/PermissionButton';
+import { Badge } from 'najm-kit'
 import { useDialog } from '@/shared/useDialog'
 import { DollarSign, Pencil, Plus, Tag } from 'lucide-react'
 import { useFees } from '@/features/Financial/Fees/hooks/useFees'
@@ -125,7 +127,7 @@ export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
                 </div>
               </div>
 
-              <NButton
+              <PermissionButton permission="update:fees"
                 variant="outline"
                 size="sm"
                 className="absolute right-4 top-4 h-8 px-3 text-xs"
@@ -143,7 +145,7 @@ export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
                     {t('fees.studentView.discounts')}
                   </>
                 )}
-              </NButton>
+              </PermissionButton>
             </div>
           )
         })}

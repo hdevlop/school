@@ -12,7 +12,7 @@ if (!['localhost', '127.0.0.1', '[::1]'].includes(target.hostname) || target.pat
 }
 process.env.DB_URL = url;
 const { db } = await import('../../src/database/db');
-const { auditLogs, students } = await import('../../src/database/schema');
+const { auditLogs, students, sections, attendance } = await import('../../src/database/schema');
 const { server } = await import('../../src/index');
 const base = 'http://school.local/api';
 const id = 'history-enrollment-02-2025';
@@ -53,6 +53,105 @@ afterAll(async () => {
 });
 
 describe('enrollment history over authenticated REST', () => {
+  it('checks duplicate codes and full sections before enrollment without creating a student', async () => {
+    const [student] = await db.select().from(students).where(eq(students.id, 'history-student-10'));
+    const [section] = await db.select().from(sections).where(eq(sections.id, student.sectionId));
+    const before = await db.select({ id: students.id }).from(students);
+    try {
+      await db.update(sections).set({ maxStudents: 1 }).where(eq(sections.id, section.id));
+      const result = await request('/students/validate-admission', '2026-2027', 'POST', {
+        studentCode: student.studentCode, classId: student.classId, sectionId: student.sectionId, yearEnrolledOn: '2026-09-01',
+      });
+      expect(result.status).toBe(200);
+      expect((result.body.data ?? result.body).issues.map((issue: any) => issue.field)).toEqual(['studentCode', 'sectionId']);
+      expect(await db.select({ id: students.id }).from(students)).toEqual(before);
+      expect((await request('/students/validate-admission', '2026-2027', 'POST', {
+        studentCode: student.studentCode, classId: student.classId, sectionId: student.sectionId, yearEnrolledOn: '2026-09-01',
+      }, 'invalid')).status).toBe(401);
+    } finally {
+      await db.update(sections).set({ maxStudents: section.maxStudents }).where(eq(sections.id, section.id));
+    }
+  });
+
+  it('corrects a same-day placement through transfer, audits it, and updates section counts', async () => {
+    const note = `${reason} same-day`;
+    const read = async () => { const { body } = await request(`/student-enrollments/${id}`); return body.data ?? body; };
+    const readSections = async () => { const { body } = await request('/sections'); return (body.data ?? body) as any[]; };
+    const original = await read();
+    const expected = state(original);
+    const placement = expected.placements[0];
+    const before = await readSections();
+    let changed = false;
+    try {
+      const moved = await request(`/student-enrollments/${id}/transfer`, '2025-2026', 'POST', {
+        classId: placement.classId, sectionId: 'history-section-2025-b', validFrom: placement.validFrom, reason: note,
+      });
+      changed = moved.status === 200;
+      expect(moved.status).toBe(200);
+      const after = await read();
+      expect(after.placements).toHaveLength(expected.placements.length);
+      expect(after.placements[0].id).toBe(placement.id);
+      expect(after.placements[0].validFrom).toBe(placement.validFrom);
+      const sectionRows = await readSections();
+      for (const [sectionId, delta] of [[placement.sectionId, -1], ['history-section-2025-b', 1]] as const) {
+        expect(sectionRows.find(row => row.id === sectionId).studentCount)
+          .toBe(before.find(row => row.id === sectionId).studentCount + delta);
+      }
+      const classResponse = (await request('/classes')).body;
+      const classes = classResponse.data ?? classResponse;
+      const nested = classes.find((row: any) => row.id === placement.classId).sections;
+      expect(nested.find((row: any) => row.id === 'history-section-2025-b').studentCount)
+        .toBe(sectionRows.find(row => row.id === 'history-section-2025-b').studentCount);
+      const audits = await db.select().from(auditLogs).where(and(eq(auditLogs.resourceId, id), sql`${auditLogs.metadata}->>'reason' = ${note}`));
+      expect(audits).toHaveLength(1);
+      expect(audits[0].userRole).toBe('admin');
+    } finally {
+      if (changed) {
+        const restored = await request(`/student-enrollments/${id}`, '2025-2026', 'PUT', {
+          enrolledOn: original.enrolledOn, leftOn: original.leftOn, status: original.status,
+          placement, expected: state(await read()), reason: note,
+        }, principal);
+        expect(restored.status).toBe(200);
+      }
+      await db.delete(auditLogs).where(and(eq(auditLogs.resourceId, id), sql`${auditLogs.metadata}->>'reason' = ${note}`));
+    }
+  });
+
+  it('rolls back a same-day transfer when it would strand dated records', async () => {
+    const enrollmentId = id;
+    const originalResponse = (await request(`/student-enrollments/${enrollmentId}`)).body;
+    const original = originalResponse.data ?? originalResponse;
+    const expected = state(original);
+    const current = original.placements[0];
+    const attendanceId = `same-day-${crypto.randomUUID()}`;
+    const note = `${reason} dated-conflict`;
+    let changed = false;
+    try {
+      await db.insert(attendance).values({ id: attendanceId, studentId: original.studentId,
+        sectionId: current.sectionId, academicYearId: original.academicYearId, date: current.validFrom, status: 'present' });
+      const result = await request(`/student-enrollments/${enrollmentId}/transfer`, '2025-2026', 'POST', {
+        classId: current.classId, sectionId: 'history-section-2025-b', validFrom: current.validFrom, reason: note,
+      });
+      changed = result.status === 200;
+      expect(result.status).toBe(409);
+      const after = (await request(`/student-enrollments/${enrollmentId}`)).body;
+      expect(state(after.data ?? after)).toEqual(expected);
+      expect(await db.select().from(auditLogs).where(and(eq(auditLogs.resourceId, id),
+        sql`${auditLogs.metadata}->>'reason' = ${note}`))).toHaveLength(0);
+    } finally {
+      if (changed) {
+        const after = (await request(`/student-enrollments/${enrollmentId}`)).body;
+        const restored = await request(`/student-enrollments/${enrollmentId}`, '2025-2026', 'PUT', {
+          enrolledOn: original.enrolledOn, leftOn: original.leftOn, status: original.status,
+          placement: current, expected: state(after.data ?? after), reason: note,
+        });
+        expect(restored.status).toBe(200);
+      }
+      await db.delete(attendance).where(eq(attendance.id, attendanceId));
+      await db.delete(auditLogs).where(and(eq(auditLogs.resourceId, id), sql`${auditLogs.metadata}->>'reason' = ${note}`));
+    }
+  });
+
   it('projects corrections only for the active year and restores the original placement', async () => {
     const activeId = 'history-enrollment-10-2026';
     const read = async () => {
