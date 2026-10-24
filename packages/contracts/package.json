@@ -38,6 +38,10 @@
     "./fixtures": {
       "types": "./src/fixtures/index.ts",
       "default": "./src/fixtures/index.ts"
+    },
+    "./offline": {
+      "types": "./src/offline/index.ts",
+      "default": "./src/offline/index.ts"
     }
   },
   "scripts": {

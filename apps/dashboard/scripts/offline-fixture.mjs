@@ -43,7 +43,7 @@ const server = Bun.serve({ hostname: '127.0.0.1', port: Number(process.env.OFFLI
   }
   if (path === '/api/health/status') return Response.json({ status: 'ok' });
   if (path === '/students/slow') { await new Promise(resolve => setTimeout(resolve, 12000)); return new Response('Slow online document'); }
-  if (path.startsWith('/offline-shell/') && !path.includes('..')) {
+  if ((path.startsWith('/offline-shell/') || manifest.assets.includes(path)) && !path.includes('..')) {
     if (path === manifest.assets.at(-1)) {
       if (assetDelayMs) await new Promise(resolve => setTimeout(resolve, assetDelayMs));
       if (missingAsset) {

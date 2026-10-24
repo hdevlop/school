@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { BOOTSTRAP_KEY, isShellPath, readBootstrap, routeForPath } from '../../src/offline/bootstrap';
+import { BOOTSTRAP_KEY, isShellPath, readBootstrap, routeForPath, withPreferenceChoices, type ShellBootstrap } from '../../src/offline/bootstrap';
 import { SHELL_PATHS } from '../../src/offline/routes';
 import { hasGradeDrafts, pruneActiveShellCaches, pruneUnpinnedCaches } from '../../src/offline/updates';
 
@@ -107,4 +107,14 @@ describe('public offline shell boundaries', () => {
     expect(read({ ...base, role: 7 })).toBeNull();
     expect(readBootstrap({ getItem: () => '{' })).toBeNull();
   });
+});
+
+test('a preference chosen in the shell overrides an older stored record, keeping its other values', () => {
+  const stored = { version: 1, accountId: 'account', expiresAt: 1, routes: [], ui: { app: { appName: 'MyScolAI' },
+    preferences: { language: 'fr', theme: 'light', timeZone: 'Africa/Casablanca' }, appearance: { designConfig: {} }, branding: {} } } as unknown as ShellBootstrap;
+  const chosen = withPreferenceChoices(stored, { language: 'ar' });
+  expect(chosen.ui.preferences).toEqual({ language: 'ar', theme: 'light', timeZone: 'Africa/Casablanca' });
+  expect(stored.ui.preferences.language).toBe('fr');
+  expect(withPreferenceChoices(stored, {})).toBe(stored);
+  expect(withPreferenceChoices(null, { language: 'ar' })).toBeNull();
 });

@@ -1,6 +1,11 @@
-import { connectNajmPwaClient } from 'najm-next/pwa/client';
+import { connectNajmPwaClient, rememberNajmOfflineLanguage } from 'najm-next/pwa/client';
 import { CACHE_ID } from './bootstrap';
 import { isActiveShellReady } from './readiness';
+
+/** The worker's offline page (pages outside the shell) leads with the language the app last displayed. */
+export function rememberOfflineLanguage(language: string): Promise<boolean> {
+  return rememberNajmOfflineLanguage({ cacheId: CACHE_ID, language }).catch(() => false);
+}
 
 export function hasGradeDrafts(storage: Pick<Storage, 'getItem'>): boolean {
   try {

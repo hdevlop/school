@@ -14,6 +14,7 @@ export {
 export * from '../shared';
 
 export { auditLogs } from './coreSchema';
+export { offlineSnapshots } from '../../modules/offline/OfflineSchema';
 
 export {
   najmThemeAppearance,

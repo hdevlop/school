@@ -5,18 +5,17 @@ import { useAuth } from 'najm-auth/client/react';
 import { useTranslation } from 'najm-i18n/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { auth } from '@/najm.auth';
-import { connectShellUpdates } from './updates';
+import { connectShellUpdates, rememberOfflineLanguage } from './updates';
 import { connectPreparationLogout } from './preparationLifecycle';
 import { registerSchoolShell, prepareSchoolShell } from './registration';
 import { cacheShellBranding } from './branding';
-import type { NavItem } from 'najm-kit';
 import type { SchoolUiSnapshot } from '@/najm.server';
-import { createSidebarItems } from '@/shared/schoolNavigation';
-import { BOOTSTRAP_KEY, SHELL_PREPARATION_DURATION_MS, isShellPath, type ShellRoute } from './bootstrap';
+import { isShellPath } from './bootstrap';
+import { isKnownOffline } from './runtime';
 
 export function OfflinePreparation({ snapshot }: { snapshot: SchoolUiSnapshot }) {
-  const { user, isLoading } = useAuth();
-  const { t } = useTranslation();
+  const { user } = useAuth();
+  const { t, language } = useTranslation();
   const [updateReady, setUpdateReady] = useState(false);
   const [blocked, setBlocked] = useState(false);
   const [updating, setUpdating] = useState(false);
@@ -25,39 +24,16 @@ export function OfflinePreparation({ snapshot }: { snapshot: SchoolUiSnapshot })
   useEffect(() => {
     try { return connectPreparationLogout(auth.client, localStorage); } catch { return; }
   }, []);
-  useEffect(() => {
-    if (isLoading) return;
-    const prepareDisplay = () => { try {
-      // A missing user can be a transient refresh failure. Explicit logout
-      // clears this UI-only stopgap via the auth event above.
-      const currentUser = auth.client.getState().user;
-      if (!currentUser || currentUser.id !== user?.id) return;
-      const routes: ShellRoute[] = [];
-      const visit = (items: NavItem[]) => items.forEach(item => {
-        if (item.href && isShellPath(item.href)) routes.push({ href: item.href, label: String(item.label) });
-        if (item.children) visit(item.children);
-      });
-      visit(createSidebarItems(t, { role: currentUser.role, can: permission => auth.client.can(permission) }));
-      if (routes.length) routes.unshift({ href: '/home', label: t('mobileHome.title') });
-      // Explicit projection: session, tokens and School settings never enter storage.
-      // The role only selects the sidebar layout the shell draws for these routes.
-      localStorage.setItem(BOOTSTRAP_KEY, JSON.stringify({ version: 1, accountId: currentUser.id, role: currentUser.role ?? undefined,
-        expiresAt: Date.now() + SHELL_PREPARATION_DURATION_MS, routes, academicYear: snapshot.settings.activeAcademicYear ?? undefined,
-        ui: { app: snapshot.app, preferences: snapshot.preferences, appearance: snapshot.appearance, branding: snapshot.branding },
-      }));
-    } catch { /* Storage denial leaves offline preparation unavailable. */ } };
-    prepareDisplay();
-    // Explicit successful-auth renewal, not incidental permission-hook identity.
-    // This remains display metadata; Phase 1 must request a fresh server grant.
-    auth.client.on('tokenRefresh', prepareDisplay);
-    return () => auth.client.off('tokenRefresh', prepareDisplay);
-  }, [user, isLoading, t, snapshot]);
   const signedIn = !!user;
   useEffect(() => {
     if (process.env.NODE_ENV !== 'production' || !signedIn || typeof caches === 'undefined') return;
     // Silent and optional: without a stored logo the shell shows the app name.
     void cacheShellBranding(snapshot.branding).catch(() => undefined);
   }, [signedIn, snapshot.branding]);
+  useEffect(() => {
+    // Signed in or not: the offline page also answers sign-in and public pages.
+    if (process.env.NODE_ENV === 'production') void rememberOfflineLanguage(language);
+  }, [language]);
   useEffect(() => {
     if (process.env.NODE_ENV !== 'production' || !('serviceWorker' in navigator)) return;
     let cancelled = false;
@@ -79,7 +55,7 @@ export function OfflinePreparation({ snapshot }: { snapshot: SchoolUiSnapshot })
     }).catch(() => { /* No active worker/storage yet; preparation stays silent. */ });
     const navigate = (event: MouseEvent) => {
       const anchor = (event.target as Element).closest('a');
-      if (navigator.onLine || !anchor || event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || anchor.target || anchor.download) return;
+      if ((navigator.onLine && !isKnownOffline()) || !anchor || event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || anchor.target || anchor.download) return;
       const url = new URL(anchor.href);
       if (url.origin === location.origin && isShellPath(url.pathname)) {
         event.preventDefault(); event.stopImmediatePropagation(); location.assign(url.href);

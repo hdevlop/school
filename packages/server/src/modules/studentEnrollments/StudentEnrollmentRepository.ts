@@ -12,6 +12,35 @@ import { auditLogs } from '../../database/schema/coreSchema';
 import type { CorrectEnrollmentDto } from './StudentEnrollmentDto';
 import { usersTable as users } from '../../auth';
 
+// Shared by the single-student and batched reads, so both return one shape.
+const historyFields = {
+  id: studentEnrollments.id,
+  studentId: studentEnrollments.studentId,
+  status: studentEnrollments.status,
+  enrolledOn: studentEnrollments.enrolledOn,
+  leftOn: studentEnrollments.leftOn,
+  academicYear: {
+    id: academicYears.id,
+    label: academicYears.label,
+    status: academicYears.status,
+    reportingStartsOn: academicYears.reportingStartsOn,
+    reportingEndsOn: academicYears.reportingEndsOn,
+  },
+};
+const namedPlacementFields = {
+  id: studentEnrollmentPlacements.id,
+  classId: studentEnrollmentPlacements.classId,
+  className: classes.name,
+  sectionId: studentEnrollmentPlacements.sectionId,
+  sectionName: sections.name,
+  validFrom: studentEnrollmentPlacements.validFrom,
+  validTo: studentEnrollmentPlacements.validTo,
+  reason: studentEnrollmentPlacements.reason,
+  actorId: studentEnrollmentPlacements.actorId,
+  actorName: users.name,
+  updatedAt: studentEnrollmentPlacements.updatedAt,
+};
+
 @Repository()
 export class StudentEnrollmentRepository {
   @Year() private readonly year!: ResolvedAcademicYear;
@@ -34,44 +63,40 @@ export class StudentEnrollmentRepository {
   // A student's yearly enrollments for the administrator's history, newest
   // year first, each naming its registered year.
   async listHistoryByStudent(studentId: string) {
-    return this.db.select({
-      id: studentEnrollments.id,
-      studentId: studentEnrollments.studentId,
-      status: studentEnrollments.status,
-      enrolledOn: studentEnrollments.enrolledOn,
-      leftOn: studentEnrollments.leftOn,
-      academicYear: {
-        id: academicYears.id,
-        label: academicYears.label,
-        status: academicYears.status,
-        reportingStartsOn: academicYears.reportingStartsOn,
-        reportingEndsOn: academicYears.reportingEndsOn,
-      },
-    }).from(studentEnrollments)
+    return this.db.select(historyFields).from(studentEnrollments)
       .innerJoin(academicYears, eq(studentEnrollments.academicYearId, academicYears.id))
       .where(eq(studentEnrollments.studentId, studentId))
       .orderBy(desc(academicYears.reportingStartsOn));
   }
 
+  /** listHistoryByStudent for many students in one query, each student's rows in the same order. */
+  async listHistoryByStudents(studentIds: string[]) {
+    if (!studentIds.length) return [];
+    return this.db.select(historyFields).from(studentEnrollments)
+      .innerJoin(academicYears, eq(studentEnrollments.academicYearId, academicYears.id))
+      .where(inArray(studentEnrollments.studentId, studentIds))
+      .orderBy(desc(academicYears.reportingStartsOn));
+  }
+
   // One enrollment's dated placements, newest first, with class and section names.
   async listNamedPlacements(enrollmentId: string) {
-    return this.db.select({
-      id: studentEnrollmentPlacements.id,
-      classId: studentEnrollmentPlacements.classId,
-      className: classes.name,
-      sectionId: studentEnrollmentPlacements.sectionId,
-      sectionName: sections.name,
-      validFrom: studentEnrollmentPlacements.validFrom,
-      validTo: studentEnrollmentPlacements.validTo,
-      reason: studentEnrollmentPlacements.reason,
-      actorId: studentEnrollmentPlacements.actorId,
-      actorName: users.name,
-      updatedAt: studentEnrollmentPlacements.updatedAt,
-    }).from(studentEnrollmentPlacements)
+    return this.db.select(namedPlacementFields).from(studentEnrollmentPlacements)
       .innerJoin(classes, eq(studentEnrollmentPlacements.classId, classes.id))
       .innerJoin(sections, eq(studentEnrollmentPlacements.sectionId, sections.id))
       .leftJoin(users, eq(studentEnrollmentPlacements.actorId, users.id))
       .where(eq(studentEnrollmentPlacements.enrollmentId, enrollmentId))
+      .orderBy(desc(studentEnrollmentPlacements.validFrom));
+  }
+
+  /** listNamedPlacements for many enrollments in one query, each row naming its enrollment. */
+  async listNamedPlacementsByEnrollments(enrollmentIds: string[]) {
+    if (!enrollmentIds.length) return [];
+    return this.db.select({ enrollmentId: studentEnrollmentPlacements.enrollmentId, ...namedPlacementFields })
+      .from(studentEnrollmentPlacements)
+      .innerJoin(classes, eq(studentEnrollmentPlacements.classId, classes.id))
+      .innerJoin(sections, eq(studentEnrollmentPlacements.sectionId, sections.id))
+      .leftJoin(users, eq(studentEnrollmentPlacements.actorId, users.id))
+      .where(inArray(studentEnrollmentPlacements.enrollmentId, enrollmentIds))
       .orderBy(desc(studentEnrollmentPlacements.validFrom));
   }
 

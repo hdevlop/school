@@ -540,6 +540,13 @@
       "when": 1792714059787,
       "tag": "0076_accounting_staff_read_only",
       "breakpoints": true
+    },
+    {
+      "idx": 77,
+      "version": "7",
+      "when": 1792847146681,
+      "tag": "0077_offline_read_snapshots",
+      "breakpoints": true
     }
   ]
 }

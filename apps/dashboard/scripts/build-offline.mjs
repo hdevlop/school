@@ -12,6 +12,10 @@ await mkdir(output, { recursive: true });
 const assetOptions = { publicPath: '/offline-shell/', naming: { asset: '[name]-[hash].[ext]' }, loader: { '.png': 'file', '.svg': 'file', '.jpg': 'file', '.gif': 'file', '.woff2': 'file', '.ttf': 'file' } };
 const built = await Bun.build({ entrypoints: [resolve(appRoot, 'src/offline/entry.tsx')], target: 'browser', ...assetOptions,
   plugins: [{ name: 'school-public-navigation', setup(build) {
+    const cachedAccount = resolve(appRoot, 'src/offline/cachedAccount.tsx');
+    build.onResolve({ filter: /^najm-auth\/client\/react$/ }, args => args.importer === cachedAccount ? undefined : ({ path: cachedAccount }));
+    const kit = resolve(appRoot, 'src/offline/kit.tsx');
+    build.onResolve({ filter: /^najm-kit$/ }, args => args.importer === kit ? undefined : ({ path: kit }));
     for (const name of ['navigation', 'link', 'image']) build.onResolve({ filter: new RegExp(`^next/${name}$`) }, () => ({ path: resolve(appRoot, `src/offline/${name}.tsx`) }));
     build.onResolve({ filter: /^next(?:\/|$)/ }, args => { throw new Error(`Unsupported offline framework import: ${args.path} from ${args.importer}`); });
     build.onResolve({ filter: /^@\/najm\.auth$/ }, () => ({ path: resolve(appRoot, 'src/offline/auth.ts') }));
@@ -85,7 +89,9 @@ for (const asset of [...built.outputs, ...styled.outputs]) {
 const finalStylePath = `/offline-shell/fonts-${hash(fontCss)}.css`;
 await writeFile(resolve(appRoot, 'public' + scriptPath), javascript);
 await writeFile(resolve(appRoot, 'public' + finalStylePath), fontCss);
-const assets = [...new Set([scriptPath, ...extraAssets, finalStylePath, ...fontPaths, ...flagPaths])];
+const fallbackImages = ['student_male', 'student_female', 'parent_male', 'parent_female'].map(name => `/images/${name}.png`);
+for (const path of fallbackImages) await readFile(resolve(appRoot, 'public' + path));
+const assets = [...new Set([scriptPath, ...extraAssets, finalStylePath, ...fontPaths, ...flagPaths, ...fallbackImages])];
 // Include HTML policy/structure in build identity as well as every asset byte.
 const policy = "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'";
 const head = `<meta http-equiv="Content-Security-Policy" content="${policy}"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MyScolAI</title>${[...stylePaths, finalStylePath].map(path => `<link rel="stylesheet" href="${path}">`).join('')}<script type="module" src="${scriptPath}"></script>`;

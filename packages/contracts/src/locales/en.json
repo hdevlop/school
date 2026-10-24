@@ -6876,6 +6876,11 @@
     "subjectSearch": "Search by subject name or code...",
     "staffAssignmentOptional": "Class assignments are optional. You can assign classes later."
   },
+  "offlinePage": {
+    "title": "MyScolAI is offline",
+    "description": "Reconnect to the internet, then try loading this page again.",
+    "retry": "Try again"
+  },
   "offlineShell": {
     "prepare": "Connect and sign in to prepare this device for offline use.",
     "signIn": "Sign in",
@@ -6886,5 +6891,20 @@
     "retry": "Try online",
     "noData": "School data is not available offline yet. Reconnect to load your records.",
     "unavailable": "This page is not available offline."
+  },
+  "offlineRead": {
+    "unavailable": "This part of the profile has not been downloaded.",
+    "summaryUnavailable": "Attendance, grades and financial summaries are unavailable in this downloaded view.",
+    "errors": {
+      "notPermitted": "This account cannot download data for offline use.",
+      "accountChanged": "This account's access changed. Sign in again to download data for offline use.",
+      "settingsRequired": "The school settings must name the current academic year before data can be downloaded for offline use.",
+      "authorizationChanged": "This account's access changed since the download started. Try again.",
+      "studentLimit": "Offline download supports at most 2000 students per academic year.",
+      "pageLimit": "One downloaded record is too large for offline use.",
+      "snapshotExpired": "This download has expired. Start it again.",
+      "scopeMismatch": "This download belongs to another device, account or academic year.",
+      "pageNotFound": "This download has no such page."
+    }
   }
 }

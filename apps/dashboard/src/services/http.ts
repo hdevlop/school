@@ -2,7 +2,7 @@ import { auth } from '@/najm.auth';
 import { AuthError } from 'najm-auth/client';
 import { captureRequestHeaders, languageHeader } from '@/lib/requestHeaders';
 import { toFormData, hasFiles } from './formDataHelper';
-import { assertRecordTransport } from '@/offline/transport';
+import { captureOfflineRead, dispatchOfflineRead, invalidateOfflineReads, onlineMutationComplete } from '@/offline/runtime';
 
 function buildURL(path: string, params?: Record<string, any>): string {
   if (!params) return path;
@@ -51,45 +51,56 @@ async function ensureAccessToken(url: string) {
 
 export const api = {
   async get(url: string, opts?: { params?: Record<string, any> }): Promise<{ data: any }> {
-    assertRecordTransport();
     const path = buildURL(url, opts?.params);
     const headers = headersFor(path);
-    await ensureAccessToken(path);
-    const result = await auth.api.get(path, headers ? { headers } : undefined);
-    return wrap(result);
+    const context = captureOfflineRead(headers);
+    return dispatchOfflineRead(path, context, async () => {
+      await ensureAccessToken(path);
+      const result = await auth.api.get(path, headers ? { headers } : undefined);
+      return wrap(result);
+    });
   },
 
   async post(url: string, data?: any): Promise<{ data: any }> {
     const headers = headersFor(url);
+    await invalidateOfflineReads(url).catch(() => undefined);
     await ensureAccessToken(url);
     const result = await auth.api.post(url, { body: data, headers });
+    onlineMutationComplete(url);
     return wrap(result);
   },
 
   async put(url: string, data?: any): Promise<{ data: any }> {
     const headers = headersFor(url);
+    await invalidateOfflineReads(url).catch(() => undefined);
     await ensureAccessToken(url);
     const result = await auth.api.put(url, { body: data, headers });
+    onlineMutationComplete(url);
     return wrap(result);
   },
 
   async patch(url: string, data?: any): Promise<{ data: any }> {
     const headers = headersFor(url);
+    await invalidateOfflineReads(url).catch(() => undefined);
     await ensureAccessToken(url);
     const result = await auth.api.patch(url, { body: data, headers });
+    onlineMutationComplete(url);
     return wrap(result);
   },
 
   async delete(url: string, opts?: { data?: any }): Promise<{ data: any }> {
     const headers = headersFor(url);
+    await invalidateOfflineReads(url).catch(() => undefined);
     await ensureAccessToken(url);
     const result = await auth.api.delete(url, { body: opts?.data, headers });
+    onlineMutationComplete(url);
     return wrap(result);
   },
 };
 
 async function fetchWithAuth(method: string, url: string, body?: any) {
   const scoped = headersFor(url);
+  await invalidateOfflineReads(url).catch(() => undefined);
   await ensureAccessToken(url);
   const token = auth.client.getAccessToken();
   const headers: Record<string, string> = { Accept: 'application/json', ...scoped };
@@ -116,6 +127,7 @@ async function fetchWithAuth(method: string, url: string, body?: any) {
       const errBody = await retry.json().catch(() => ({}));
       throw new AuthError(retry.status, errBody.message || retry.statusText, errBody);
     }
+    onlineMutationComplete(url);
     return { data: await retry.json() };
   }
 
@@ -123,6 +135,7 @@ async function fetchWithAuth(method: string, url: string, body?: any) {
     const errBody = await res.json().catch(() => ({}));
     throw new AuthError(res.status, errBody.message || res.statusText, errBody);
   }
+  onlineMutationComplete(url);
   return { data: await res.json() };
 }
 

@@ -7,6 +7,7 @@ import { mkdtemp, mkdir, open } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { recordedOfflineLanguage } from './offline-language.mjs';
 import { waitForOfflineCondition } from './wait-offline-condition.mjs';
 
 const appRoot = fileURLToPath(new URL('..', import.meta.url));
@@ -122,6 +123,8 @@ try {
   const probe = await context.newPage();
   await probe.goto(origin + 'students');
   assert.equal(new URL(probe.url()).pathname, '/login', 'A signed-out protected page must keep its sign-in redirect');
+  // Signed in or not, the online app records the language it displays for the offline page.
+  await waitForOfflineCondition(probe, recordedOfflineLanguage, await probe.evaluate(() => document.documentElement.lang));
   await probe.close();
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -142,10 +145,12 @@ try {
   for (const path of ['login', 'welcome', 'forgot-password', 'academic-year-migration', 'some/unlisted/page']) {
     assert.equal((await page.goto(origin + path)).status(), 503, path);
     await page.getByRole('heading', { name: 'MyScolAI is offline', exact: true }).waitFor();
+    // Stacked, led by the shell's English: the language the app displayed last.
+    assert.deepEqual(await page.locator('main > section').evaluateAll(sections => sections.map(section => section.lang)), ['en', 'fr', 'ar'], path);
   }
   assert.deepEqual(errors, []);
   await page.screenshot({ path: resolve(artifacts, 'offline-real-registration.png') });
-  console.log('PASS actual Next login: explicit update consent, silent preparation, exhausted-budget peer still pins and activates updates, offline capture handler survives the limit, stopped-server /home launch/reload, real sign-in redirect kept, branded page for unlisted documents. Synthetic display metadata only.');
+  console.log('PASS actual Next login: explicit update consent, silent preparation, exhausted-budget peer still pins and activates updates, offline capture handler survives the limit, stopped-server /home launch/reload, real sign-in redirect kept, the displayed language recorded, branded page for unlisted documents led by the last displayed language. Synthetic display metadata only.');
 } finally {
   await context?.close(); fixture?.kill(); server?.kill(); await log.close();
 }

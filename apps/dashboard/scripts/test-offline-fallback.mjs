@@ -7,6 +7,7 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium, firefox, webkit } from 'playwright';
 import { createOfflineProfile } from './offline-profile.mjs';
+import { recordedOfflineLanguage } from './offline-language.mjs';
 import { waitForOfflineCondition } from './wait-offline-condition.mjs';
 
 const appRoot = fileURLToPath(new URL('..', import.meta.url));
@@ -62,29 +63,36 @@ for (const name of (process.env.OFFLINE_BROWSERS ?? 'chromium').split(',')) {
     child.kill();
     await exited;
     await assert.rejects(fetch(origin + 'api/health/status'), 'The server must actually be stopped');
-    const branded = async path => {
+    // French, Arabic and English stacked, led by the language the app last
+    // displayed: French until one is recorded, then the shell's English.
+    const ORDER = { fr: ['fr:ltr', 'ar:rtl', 'en:ltr'], en: ['en:ltr', 'fr:ltr', 'ar:rtl'] };
+    const branded = async (path, lead = 'fr') => {
       const response = await page.goto(origin + path.slice(1));
       assert.equal(response.status(), 503, path);
       await page.getByRole('heading', { name: 'MyScolAI is offline', exact: true }).waitFor();
+      assert.deepEqual(await page.locator('main > section').evaluateAll(sections => sections.map(section => section.lang + ':' + section.dir)), ORDER[lead], path);
+      assert.equal(await page.locator('html').getAttribute('lang'), lead, path);
       assert.equal(await page.locator('meta[name="school-shell-version"]').count(), 0, path + ' must not get the shell');
     };
     for (const path of UNLISTED) await branded(path);
     await page.reload();
-    await page.getByRole('heading', { name: 'MyScolAI is offline', exact: true }).waitFor();
+    await page.getByRole('heading', { name: 'MyScolAI est hors ligne', exact: true }).waitFor();
     for (const path of ['/home', '/students/fixture-id']) {
       await page.goto(origin + path.slice(1));
       await page.getByText('School data is not available offline yet.', { exact: false }).waitFor();
     }
+    // The shell records the language it displays (its prepared record's English).
+    await waitForOfflineCondition(page, recordedOfflineLanguage, 'en');
     // One failed browser navigation per page: in a worker-controlled Chromium
     // context, closing a page after two browser error pages never settles.
     const excluded = await context.newPage();
     try { await assert.rejects(excluded.goto(origin + 'api/health/status', { timeout: 8000 })); } finally { await excluded.close(); }
     // An evicted shell changes nothing for unlisted pages; listed ones get the branded page too.
     await page.evaluate(async ({ version, document }) => (await caches.open('najm-pwa:myscolai-shell:' + version)).delete(document), manifest);
-    await branded('/welcome');
-    await branded('/home');
+    await branded('/welcome', 'en');
+    await branded('/home', 'en');
     assert.deepEqual(errors, []);
-    console.log(`${name}: PASS ${UNLISTED.length} unlisted documents show the branded offline page with the server stopped (and on reload), listed routes keep the shell, /api stays a browser error, an evicted shell falls back to the branded page, online 200/404/auth redirect/download unchanged`);
+    console.log(`${name}: PASS ${UNLISTED.length} unlisted documents show the branded offline page with the server stopped (and on reload), listed routes keep the shell, /api stays a browser error, an evicted shell falls back to the branded page, French/Arabic/English stacked and led by the language the app last displayed, online 200/404/auth redirect/download unchanged`);
   } catch (error) {
     failed = true;
     console.error(`${name}: FAIL`, error.stack);

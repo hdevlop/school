@@ -9,10 +9,13 @@ import { languageHeader } from '@/lib/requestHeaders';
 import type { SchoolUiSnapshot } from '@/najm.server';
 import { ZodLanguage } from './zodLanguage';
 import { OfflinePreparation } from '@/offline/OfflinePreparation';
+import { OfflineRuntime } from '@/offline/OfflineRuntime';
+import { defineNajmTanStackQuery } from 'najm-next/query/tanstack';
 
 // Below lg every table is one card list that reveals rows as the page scrolls.
 // Module scope keeps the object stable, so no table re-renders for it.
 const TABLE_DEFAULTS = { mobileList: true };
+const READ_QUERY = defineNajmTanStackQuery({ queries: { networkMode: 'offlineFirst' } });
 
 export function AppProviders({  children,snapshot}: Readonly<{ children: ReactNode; snapshot: SchoolUiSnapshot }>) {
   // Auth operations bypass services/http, so they name the page language here;
@@ -22,6 +25,7 @@ export function AppProviders({  children,snapshot}: Readonly<{ children: ReactNo
   return (
     <NajmAppProvider
       authClient={auth.client}
+      query={READ_QUERY}
       snapshot={snapshot}
       i18n={schoolI18n}
       formDevTools={false}
@@ -29,6 +33,7 @@ export function AppProviders({  children,snapshot}: Readonly<{ children: ReactNo
     >
       <ZodLanguage />
       <OfflinePreparation snapshot={snapshot} />
+      <OfflineRuntime snapshot={snapshot} />
       {children}
     </NajmAppProvider>
   );

@@ -13,7 +13,12 @@
     "start": "next start -p 3102",
     "lint": "eslint src tests",
     "typecheck": "next typegen && tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json",
-    "https": "next dev --experimental-https -p 3102"
+    "https": "next dev --experimental-https -p 3102",
+    "test:offline:reads": "node scripts/test-offline-reads.mjs",
+    "test:offline:lifecycle": "node scripts/test-offline-lifecycle.mjs",
+    "test:offline:renewal": "node scripts/test-offline-renewal.mjs",
+    "test:offline:navigation": "node scripts/test-offline-navigation.mjs",
+    "test:offline:errors": "node scripts/test-offline-errors.mjs"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.71",
@@ -67,10 +72,10 @@
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.8.0",
-    "najm-auth": "6.9.0",
+    "najm-auth": "6.10.0",
     "najm-chatbot": "3.7.1",
     "najm-kit": "3.7.0",
-    "najm-next": "0.14.0",
+    "najm-next": "0.15.1",
     "najm-theme": "0.3.1",
     "next": "16.3.6",
     "react": "^19.2.5",
@@ -88,7 +93,9 @@
     "sqlite-vec": "^0.1.9",
     "timestring": "^7.0.0",
     "zod": "^4.4.3",
-    "zustand": "^5.0.12"
+    "zustand": "^5.0.12",
+    "fast-idb": "0.3.1",
+    "najm-database": "2.3.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.2",

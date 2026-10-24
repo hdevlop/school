@@ -4,7 +4,8 @@
     "permissions": [
       "*:*",
       "read:visit-requests",
-      "update:visit-requests"
+      "update:visit-requests",
+      "read:offline"
     ]
   },
   {
@@ -136,7 +137,8 @@
       "read:participants",
       "create:participants",
       "update:participants",
-      "delete:participants"
+      "delete:participants",
+      "read:offline"
     ]
   },
   {
@@ -200,7 +202,8 @@
       "create:student-routes",
       "read:student-routes",
       "update:student-routes",
-      "delete:student-routes"
+      "delete:student-routes",
+      "read:offline"
     ]
   },
   {
@@ -230,7 +233,8 @@
       "read:announcements",
       "read:events",
       "read:assessments",
-      "read:exams"
+      "read:exams",
+      "read:offline"
     ]
   },
   {
@@ -250,7 +254,8 @@
       "read:behavior-rewards",
       "read:discipline",
       "read:sections",
-      "read:events"
+      "read:events",
+      "read:offline"
     ]
   },
   {
@@ -270,7 +275,8 @@
       "read:behavior-rewards",
       "read:discipline",
       "read:sections",
-      "read:events"
+      "read:events",
+      "read:offline"
     ]
   },
   {
@@ -296,7 +302,8 @@
       "read:alerts",
       "read:announcements",
       "read:visit-requests",
-      "update:visit-requests"
+      "update:visit-requests",
+      "read:offline"
     ]
   },
   {
@@ -329,13 +336,15 @@
       "read:announcements",
       "update:announcements",
       "read:visit-requests",
-      "update:visit-requests"
+      "update:visit-requests",
+      "read:offline"
     ]
   },
   {
     "roleName": "driver",
     "permissions": [
-      "read:students"
+      "read:students",
+      "read:offline"
     ]
   },
   {
@@ -343,7 +352,8 @@
     "permissions": [
       "read:students",
       "read:classes",
-      "read:teachers"
+      "read:teachers",
+      "read:offline"
     ]
   }
 ]

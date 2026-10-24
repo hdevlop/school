@@ -33,6 +33,21 @@ test('preparation stores the current sidebar logos and drops a replaced one', as
   expect([...entries.keys()].sort()).toEqual([logo('collapsed.png'), logo('expanded.png')]);
 });
 
+test('stored factory and uploaded logos are not downloaded again; a new one replaces its old copy', async () => {
+  const factory = `${origin}/api/branding/factory/sidebarLogoExpanded.0bf36a53c9c66ad4.png`;
+  const upload = `${origin}/api/branding/assets/5b0c2f9e-3a41-4c7e-9a3e-1f2d3c4b5a69.png`;
+  const replaced = `${origin}/api/branding/assets/0a6e1c2b-7d88-4f0e-b1c5-9e8d7c6b5a43.png`;
+  const { entries, storage } = cacheStorage({ [factory]: png('factory'), [upload]: png('upload'), [replaced]: png('replaced') });
+  const { requested, request } = recordingFetch(() => png());
+  const slots = { sidebarLogoExpanded: new URL(factory).pathname, sidebarLogoCollapsed: new URL(upload).pathname };
+  await cacheShellBranding({ slots }, origin, storage, request);
+  expect(requested).toEqual([]);
+  const next = `${origin}/api/branding/assets/9c1d2e3f-4a5b-4c6d-8e7f-0a1b2c3d4e5f.png`;
+  await cacheShellBranding({ slots: { ...slots, sidebarLogoCollapsed: new URL(next).pathname } }, origin, storage, request);
+  expect(requested).toEqual([next]);
+  expect([...entries.keys()].sort()).toEqual([factory, next].sort());
+});
+
 test('a failed or non-image logo keeps the previous copy, and other origins are never fetched', async () => {
   const { entries, storage } = cacheStorage({ [logo('old.png')]: png('old') });
   const { requested, request } = recordingFetch(() => new Response('<html>', { headers: { 'content-type': 'text/html' } }));

@@ -6163,6 +6163,11 @@
     "subjectSearch": "Buscar por nombre o código de asignatura...",
     "staffAssignmentOptional": "La asignación de clases es opcional. Puede añadirla más tarde."
   },
+  "offlinePage": {
+    "title": "MyScolAI está sin conexión",
+    "description": "Vuelve a conectarte a internet y luego intenta cargar esta página de nuevo.",
+    "retry": "Reintentar"
+  },
   "offlineShell": {
     "prepare": "Conéctate e inicia sesión para preparar este dispositivo para su uso sin conexión.",
     "signIn": "Iniciar sesión",
@@ -6173,5 +6178,20 @@
     "retry": "Reintentar en línea",
     "noData": "Los datos escolares aún no están disponibles sin conexión. Conéctate para cargarlos.",
     "unavailable": "Esta página no está disponible sin conexión."
+  },
+  "offlineRead": {
+    "unavailable": "Esta parte del perfil no se ha descargado.",
+    "summaryUnavailable": "Los resúmenes de asistencia, notas y finanzas no están disponibles en esta vista descargada.",
+    "errors": {
+      "notPermitted": "Esta cuenta no puede descargar datos para usarlos sin conexión.",
+      "accountChanged": "Los accesos de esta cuenta han cambiado. Vuelve a iniciar sesión para descargar los datos sin conexión.",
+      "settingsRequired": "La configuración de la escuela debe indicar el curso escolar actual antes de descargar datos para usarlos sin conexión.",
+      "authorizationChanged": "Los accesos de esta cuenta han cambiado desde que empezó la descarga. Inténtalo de nuevo.",
+      "studentLimit": "La descarga sin conexión admite como máximo 2000 alumnos por curso escolar.",
+      "pageLimit": "Un registro descargado es demasiado grande para usarlo sin conexión.",
+      "snapshotExpired": "Esta descarga ha caducado. Vuelve a iniciarla.",
+      "scopeMismatch": "Esta descarga pertenece a otro dispositivo, cuenta o curso escolar.",
+      "pageNotFound": "Esta descarga no tiene esa página."
+    }
   }
 }

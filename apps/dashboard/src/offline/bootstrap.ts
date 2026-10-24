@@ -29,6 +29,13 @@ export function readBootstrap(storage: Pick<Storage, 'getItem'>, now = Date.now(
   } catch { return null; }
 }
 
+export type ShellPreferences = ShellBootstrap['ui']['preferences'];
+/** Preferences chosen in an open shell override a record read before or after the choice. */
+export function withPreferenceChoices<T extends ShellBootstrap | null>(bootstrap: T, choices: Partial<ShellPreferences>): T {
+  if (!bootstrap || !Object.keys(choices).length) return bootstrap;
+  return { ...bootstrap, ui: { ...bootstrap.ui, preferences: { ...bootstrap.ui.preferences, ...choices } } };
+}
+
 export function routeForPath(routes: ShellRoute[], path: string): ShellRoute | undefined {
   if (!isShellPath(path)) return undefined;
   return routes.find(route => path === route.href)

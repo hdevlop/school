@@ -82,7 +82,7 @@ const policy = {
     //   najm-chatbot/react: React, AI SDK and najm-auth client imports only.
     // najm-kit/server is not listed as forbidden at all: despite its name it
     // is pure constants and cookie/fetch helpers with no Node or server import.
-    allowedExternal: ["najm-chatbot/react"],
+    allowedExternal: ["najm-chatbot/react", "najm-database/sync/client", "najm-database/sync/contracts"],
     // The by-key enum registry names every tuple; importing it from a
     // component would keep all of them alive in the client bundle.
     forbiddenSpecifiers: ["@sms/contracts/lookup"],

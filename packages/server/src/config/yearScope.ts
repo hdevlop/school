@@ -1,4 +1,5 @@
 import { ChatController } from 'najm-chatbot';
+import { OfflineController } from '../modules/offline/OfflineController';
 import { AlertController } from '../modules/alerts/AlertController';
 import { AnnouncementController } from '../modules/announcements/AnnouncementController';
 import { BehaviorRewardController } from '../modules/behaviorRewards/BehaviorRewardController';
@@ -42,6 +43,7 @@ import { VehicleAssignmentController } from '../modules/transport/vehicleAssignm
  * announcements through another module's service belongs here too.
  */
 export const yearScopedModules = {
+  'offline-reads': OfflineController,
   'payment-allocations': AllocationController,
   'student-credits': CreditController,
   expenses: ExpenseController,

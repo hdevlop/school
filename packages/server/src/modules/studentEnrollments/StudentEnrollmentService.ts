@@ -34,6 +34,21 @@ export class StudentEnrollmentService {
     })));
   }
 
+  /** listByStudent for students the caller already read through ownership: two queries in all. */
+  async listByStudents(studentIds: string[]) {
+    const annualRecords = await this.enrollments.listHistoryByStudents(studentIds);
+    const placementRows = await this.enrollments.listNamedPlacementsByEnrollments(annualRecords.map(record => record.id));
+    type Placement = Omit<(typeof placementRows)[number], 'enrollmentId'>;
+    const placements = new Map<string, Placement[]>();
+    for (const { enrollmentId, ...placement } of placementRows) {
+      const list = placements.get(enrollmentId);
+      if (list) list.push(placement); else placements.set(enrollmentId, [placement]);
+    }
+    const histories = new Map<string, ((typeof annualRecords)[number] & { placements: Placement[] })[]>(studentIds.map(id => [id, []]));
+    for (const record of annualRecords) histories.get(record.studentId)?.push({ ...record, placements: placements.get(record.id) ?? [] });
+    return histories;
+  }
+
   async getById(id: string) {
     const enrollment = this.validator.ensureEnrollmentExists(await this.enrollments.getById(id));
     const placements = await this.enrollments.listPlacements(id);

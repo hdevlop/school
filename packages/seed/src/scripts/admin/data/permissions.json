@@ -820,5 +820,11 @@
     "description": "Permission to delete participants",
     "resource": "participants",
     "action": "delete"
+  },
+  {
+    "name": "read:offline",
+    "description": "Read previously downloaded authorized data offline",
+    "resource": "offline",
+    "action": "read"
   }
 ]

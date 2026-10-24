@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { NajmAppProvider } from 'najm-next/app/client';
 import { defineNajmTanStackQuery } from 'najm-next/query/tanstack';
@@ -7,24 +7,37 @@ import { NSidebar, NSidebarProvider, type LinkComponentType } from 'najm-kit';
 import { NThemeImage } from 'najm-theme/react';
 import { useTranslation } from 'najm-i18n/react';
 import { schoolI18n } from '@sms/contracts/locales';
-import { BOOTSTRAP_KEY, readBootstrap, routeForPath, type ShellBootstrap } from './bootstrap';
+import { BOOTSTRAP_KEY, readBootstrap, routeForPath, withPreferenceChoices, type ShellBootstrap, type ShellPreferences } from './bootstrap';
 import { auth } from './auth';
 import { schoolApp } from '@/najm.config';
 import { usePathname } from './navigation';
-import { connectShellUpdates } from './updates';
+import { connectShellUpdates, rememberOfflineLanguage } from './updates';
 import StudentProfile from '@/features/Students/components/StudentProfile';
+import { StudentReadView } from './StudentReadView';
 import { useYearSelectionStore } from '@/features/AcademicYears/store/yearSelectionStore';
-import { installUnavailableTransport } from './transport';
+import { canUseLegacyDisplay, readCachedPresentation, cachedExpiryDelay, pointerValue, type CachedPresentation } from './access';
+import { connectOfflineRuntime, installShellTransport, observeOffline, renewOffline } from './runtime';
+import { CachedAccountContext } from './cachedAccount';
+import { useQueryClient } from '@tanstack/react-query';
+import StudentsTable from '@/features/Students/components/StudentsTable';
+import { RenderedActiveAcademicYearProvider } from '@/features/Settings/context/RenderedActiveAcademicYear';
+import { AcademicYearSelectionOwner } from '@/features/AcademicYears/components/AcademicYearSelectionOwner';
 import { createShellNavItems, navLabel } from './shellNavigation';
 import { withCachedBranding } from './branding';
 
-installUnavailableTransport();
+installShellTransport();
 const query = defineNajmTanStackQuery({ queries: { networkMode: 'always', retry: false } });
 const tableDefaults = { mobileList: true };
 
 const LocalLink: LinkComponentType = props => <a {...props} />;
 
-function App({ bootstrap }: { bootstrap: ShellBootstrap }) {
+function App({ bootstrap, privateAccess }: { bootstrap: ShellBootstrap; privateAccess: boolean }) {
+  const client = useQueryClient();
+  const source = useRef(bootstrap);
+  useEffect(() => { source.current = bootstrap; }, [bootstrap]);
+  // A layout effect, so the runtime connects before any query in this commit
+  // subscribes (a passive effect): the shell refuses reads made without it.
+  useLayoutEffect(() => connectOfflineRuntime(client, () => source.current, true), [client]);
   const path = usePathname();
   const [updateReady, setUpdateReady] = useState(false);
   const [updateAction, setUpdateAction] = useState<(() => Promise<void>) | null>(null);
@@ -37,7 +50,10 @@ function App({ bootstrap }: { bootstrap: ShellBootstrap }) {
   useEffect(() => {
     document.documentElement.lang = language;
     document.documentElement.dir = schoolI18n.direction(language);
-  }, [language]);
+    void rememberOfflineLanguage(language);
+    // Downloads only when this language's copy is missing or stale.
+    if (privateAccess) void renewOffline();
+  }, [language, privateAccess]);
   useEffect(() => {
     const navigate = (event: MouseEvent) => {
       const anchor = (event.target as Element).closest('a');
@@ -52,9 +68,11 @@ function App({ bootstrap }: { bootstrap: ShellBootstrap }) {
     return () => document.removeEventListener('click', navigate);
   }, [bootstrap.routes]);
   useEffect(() => {
-    const store = useYearSelectionStore.getState();
-    store.initialize({ accountId: bootstrap.accountId, canChooseYear: false, entryLabel: null });
-    store.setActiveLabel(bootstrap.academicYear);
+    if (!privateAccess) {
+      const store = useYearSelectionStore.getState();
+      store.initialize({ accountId: bootstrap.accountId, canChooseYear: false, entryLabel: undefined });
+      store.setActiveLabel(bootstrap.academicYear);
+    }
     let cancelled = false;
     let dispose: (() => void) | undefined;
     const version = document.querySelector('meta[name="school-shell-version"]')?.getAttribute('content');
@@ -79,7 +97,7 @@ function App({ bootstrap }: { bootstrap: ShellBootstrap }) {
     };
     void check(); const timer = setInterval(() => { void check(); }, 30_000);
     return () => { cancelled = true; dispose?.(); clearInterval(timer); };
-  }, [bootstrap.accountId, bootstrap.academicYear]);
+  }, [bootstrap.accountId, bootstrap.academicYear, bootstrap.role, privateAccess]);
   const route = routeForPath(bootstrap.routes, path);
   const navItems = useMemo(() => createShellNavItems(t, bootstrap.role, bootstrap.routes), [t, bootstrap.role, bootstrap.routes]);
   const appName = bootstrap.ui.app?.appName ?? 'MyScolAI';
@@ -101,15 +119,24 @@ function App({ bootstrap }: { bootstrap: ShellBootstrap }) {
       {reachable && <p>{t('offlineShell.onlineAvailable')}</p>}
       {updateReady && <button type="button" disabled={updating} onClick={() => { void updateAction?.(); }}>{t('offlineShell.update')}</button>}
       {blocked && <p>{t('offlineShell.updateBlocked')}</p>}
-      <section className="mt-6 rounded-lg border bg-card p-6"><p>{t(route ? 'offlineShell.noData' : 'offlineShell.unavailable')}</p></section>
-      {bootstrap.academicYear && route?.href === '/students' && /^\/students\/[^/]+$/.test(path) && <StudentProfile studentId={decodeURIComponent(path.split('/')[2])} />}
+      {(!privateAccess || route?.href !== '/students') && <section className="mt-6 rounded-lg border bg-card p-6"><p>{t(route ? 'offlineShell.noData' : 'offlineShell.unavailable')}</p></section>}
+      {privateAccess && path === '/students' && <StudentsTable />}
+      {bootstrap.academicYear && route?.href === '/students' && /^\/students\/[^/]+$/.test(path) && (privateAccess
+        ? <StudentReadView studentId={decodeURIComponent(path.split('/')[2])} />
+        : <StudentProfile studentId={decodeURIComponent(path.split('/')[2])} />)}
     </main>
   </div></NSidebarProvider>;
 }
 
 function Boot() {
-  const load = () => { try { return readBootstrap(localStorage); } catch { return null; } };
+  const hasReadAccount = () => { try { return !!JSON.parse(pointerValue() ?? 'null')?.accountId; } catch { return true; } };
+  const load = () => { try { return hasReadAccount() ? null : readBootstrap(localStorage); } catch { return null; } };
   const [bootstrap, setBootstrap] = useState(load);
+  const [presentation, setPresentation] = useState<CachedPresentation | null>(null);
+  // Preferences chosen in this document win over a re-read or renewal that
+  // captured older values before the choice was stored.
+  const chosen = useRef<Partial<ShellPreferences>>({});
+  const withChoices = <T extends ShellBootstrap | null>(value: T) => withPreferenceChoices(value, chosen.current);
   const prepared = !!bootstrap;
   useEffect(() => {
     if (prepared || !('serviceWorker' in navigator)) return;
@@ -129,11 +156,30 @@ function Boot() {
     }
   }, [bootstrap, language]);
   useEffect(() => {
-    const check = () => { try { setBootstrap(readBootstrap(localStorage)); } catch { setBootstrap(null); } };
-    const timer = setInterval(check, 30_000);
-    addEventListener('storage', check);
-    document.addEventListener('visibilitychange', check);
-    return () => { clearInterval(timer); removeEventListener('storage', check); document.removeEventListener('visibilitychange', check); };
+    let stopped = false;
+    let expiry: ReturnType<typeof setTimeout> | undefined;
+    const check = async () => {
+      const next = await readCachedPresentation();
+      const legacyAllowed = !next && await canUseLegacyDisplay();
+      if (stopped) return;
+      setPresentation(previous => JSON.stringify(previous) === JSON.stringify(next) ? previous : next);
+      setBootstrap(previous => {
+        const value = withChoices(next?.bootstrap ?? (legacyAllowed ? readBootstrap(localStorage) : null));
+        return JSON.stringify(previous) === JSON.stringify(value) ? previous : value;
+      });
+      clearTimeout(expiry);
+      if (next) {
+        const delay = await cachedExpiryDelay();
+        if (!stopped) expiry = setTimeout(() => { void check(); }, Math.max(1, delay));
+      }
+    };
+    const tick = () => { void check(); };
+    const timer = setInterval(tick, 30_000);
+    const unsubscribe = observeOffline(tick);
+    addEventListener('storage', tick);
+    document.addEventListener('visibilitychange', tick);
+    void check();
+    return () => { stopped = true; clearInterval(timer); clearTimeout(expiry); unsubscribe(); removeEventListener('storage', tick); document.removeEventListener('visibilitychange', tick); };
   }, []);
   // Stored sidebar logos replace API image paths the worker cannot serve. Read
   // them before mounting the provider, which takes its branding once.
@@ -153,15 +199,31 @@ function Boot() {
   }
   if (bootstrap.ui.branding && !branding) return null;
   const persist = (field: 'language' | 'theme' | 'timeZone', value: string) => {
-    const current = readBootstrap(localStorage);
-    if (current) {
-      document.cookie = `${schoolApp.preferences.cookieNames[field]}=${encodeURIComponent(value)}; Path=/; Max-Age=31536000; SameSite=Lax${location.protocol === 'https:' ? '; Secure' : ''}`;
-      localStorage.setItem(BOOTSTRAP_KEY, JSON.stringify({ ...current, ui: { ...current.ui, preferences: { ...current.ui.preferences, [field]: value } } }));
+    document.cookie = `${schoolApp.preferences.cookieNames[field]}=${encodeURIComponent(value)}; Path=/; Max-Age=31536000; SameSite=Lax${location.protocol === 'https:' ? '; Secure' : ''}`;
+    chosen.current = { ...chosen.current, [field]: value };
+    // Renewal reads the shell's bootstrap, so it now enrolls the chosen value too.
+    setBootstrap(previous => withChoices(previous));
+    if (!presentation) {
+      // A display-only shell keeps the choice in its prepared record for the next launch.
+      try {
+        const current = readBootstrap(localStorage);
+        if (current) localStorage.setItem(BOOTSTRAP_KEY, JSON.stringify(withChoices(current)));
+      } catch { /* Storage denial keeps the choice for this document only. */ }
+      return;
     }
+    void import('./access').then(async ({ selectedReplica }) => {
+      const active = await selectedReplica();
+      if (!active) return;
+      await active.storage.replica.database.transaction(['metadata'], async tx => {
+        const current = await tx.get('metadata', 'presentation') as CachedPresentation | undefined;
+        if (!current || current.grant.accountId !== presentation.grant.accountId) return;
+        await tx.put('metadata', { ...current, bootstrap: withChoices(current.bootstrap) }, 'presentation');
+      });
+    }).catch(() => undefined);
   };
-  return <NajmAppProvider authClient={auth.client} query={query} snapshot={{ ...bootstrap.ui, ...(branding ? { branding } : {}), session: null }} i18n={schoolI18n} tableDefaults={tableDefaults} location={false} formDevTools={false} uiRuntime={{
+  return <CachedAccountContext.Provider value={presentation?.grant ?? null}><NajmAppProvider authClient={auth.client} query={query} snapshot={{ ...bootstrap.ui, ...(branding ? { branding } : {}), session: null }} i18n={schoolI18n} tableDefaults={tableDefaults} location={false} formDevTools={false} uiRuntime={{
     onLanguageChange: value => persist('language', value), onThemeChange: value => persist('theme', value), onTimeZoneChange: value => persist('timeZone', value),
-  }}><App bootstrap={bootstrap} /></NajmAppProvider>;
+  }}><RenderedActiveAcademicYearProvider value={bootstrap.academicYear}>{presentation && <AcademicYearSelectionOwner />}<App bootstrap={bootstrap} privateAccess={!!presentation} /></RenderedActiveAcademicYearProvider></NajmAppProvider></CachedAccountContext.Provider>;
 }
 
 createRoot(document.getElementById('root')!).render(<Boot />);

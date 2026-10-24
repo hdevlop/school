@@ -6267,6 +6267,11 @@
     "subjectSearch": "Rechercher par nom ou code de matière...",
     "staffAssignmentOptional": "L’affectation aux classes est facultative. Vous pourrez l’ajouter plus tard."
   },
+  "offlinePage": {
+    "title": "MyScolAI est hors ligne",
+    "description": "Reconnectez-vous à Internet, puis réessayez de charger cette page.",
+    "retry": "Réessayer"
+  },
   "offlineShell": {
     "prepare": "Connectez-vous pour préparer cet appareil à une utilisation hors connexion.",
     "signIn": "Se connecter",
@@ -6277,5 +6282,20 @@
     "retry": "Réessayer en ligne",
     "noData": "Les données scolaires ne sont pas encore disponibles hors connexion. Reconnectez-vous pour les charger.",
     "unavailable": "Cette page n’est pas disponible hors connexion."
+  },
+  "offlineRead": {
+    "unavailable": "Cette partie du profil n’a pas été téléchargée.",
+    "summaryUnavailable": "Les résumés de présence, de notes et de finances ne sont pas disponibles dans cette vue téléchargée.",
+    "errors": {
+      "notPermitted": "Ce compte ne peut pas télécharger de données pour une utilisation hors connexion.",
+      "accountChanged": "Les accès de ce compte ont changé. Reconnectez-vous pour télécharger les données hors connexion.",
+      "settingsRequired": "Les paramètres de l’école doivent indiquer l’année scolaire en cours avant de télécharger des données hors connexion.",
+      "authorizationChanged": "Les accès de ce compte ont changé depuis le début du téléchargement. Réessayez.",
+      "studentLimit": "Le téléchargement hors connexion prend en charge au maximum 2000 élèves par année scolaire.",
+      "pageLimit": "Un enregistrement téléchargé est trop volumineux pour une utilisation hors connexion.",
+      "snapshotExpired": "Ce téléchargement a expiré. Relancez-le.",
+      "scopeMismatch": "Ce téléchargement appartient à un autre appareil, compte ou année scolaire.",
+      "pageNotFound": "Cette page n’existe pas dans ce téléchargement."
+    }
   }
 }

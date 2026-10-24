@@ -82,7 +82,9 @@ export const {
 // Group guards (HTTP layer)
 // ============================================================================
 
-export const isAdministrator = createGroupGuard(['PRINCIPAL', 'ADMIN']);
+const ADMINISTRATOR_ROLE_KEYS = ['PRINCIPAL', 'ADMIN'] as const;
+export const isAdministrator = createGroupGuard([...ADMINISTRATOR_ROLE_KEYS]);
+export const isAdministratorRole = (role?: string | null) => hasRole(role, ...ADMINISTRATOR_ROLE_KEYS);
 export const isFinancial = createGroupGuard(['ACCOUNTING', 'PRINCIPAL', 'ADMIN']);
 export const isStaff = createGroupGuard([
   'ADMIN', 'PRINCIPAL', 'ACCOUNTING', 'TEACHER',

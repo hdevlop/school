@@ -8,6 +8,7 @@ import { resolve } from 'node:path';
 import { chromium } from 'playwright';
 import { waitForOfflineCondition } from './wait-offline-condition.mjs';
 import { fileURLToPath } from 'node:url';
+import { readPreparedDisplay } from './offline-prepared-display.mjs';
 
 const appRoot = fileURLToPath(new URL('..', import.meta.url));
 const root = resolve(appRoot, '../..');
@@ -68,11 +69,9 @@ try {
   });
   // A transient foreground preparation failure must recover without Retry UI.
   await page.goto(origin + 'home');
-  await page.waitForFunction(() => !!JSON.parse(localStorage.getItem('school.offline-shell.v1') ?? 'null')?.accountId, null, { timeout: 30000 }).catch(async error => {
-    console.log('Preparation failure:', { path: new URL(page.url()).pathname, loginNavigations,
-      worker: await page.evaluate(() => navigator.serviceWorker.controller?.state), cookieNames: (await context.cookies()).map(cookie => cookie.name) });
-    throw error;
-  });
+  const preparationDeadline = Date.now() + 30_000;
+  while (!(await page.evaluate(readPreparedDisplay))?.accountId && Date.now() < preparationDeadline) await new Promise(done => setTimeout(done, 100));
+  assert((await page.evaluate(readPreparedDisplay))?.accountId, 'Preparation metadata is required');
   await waitForOfflineCondition(page, async () => {
     const worker = navigator.serviceWorker.controller;
     if (!worker || worker.state !== 'activated') return false;
@@ -89,12 +88,11 @@ try {
   assert.equal(loginNavigations, 0, 'Already signed-in launch must never visit /login');
   assert.deepEqual(await page.evaluate(() => window.__preparationNotices), []);
   // Signed-in preparation also stores the role (sidebar layout) and the API-served sidebar logos.
-  const logoUrls = await page.evaluate(() => {
-    const stored = JSON.parse(localStorage.getItem('school.offline-shell.v1'));
+  const logoUrls = await page.evaluate(stored => {
     if (typeof stored.role !== 'string') throw new Error('Prepared display metadata has no role');
     const slots = stored.ui.branding?.slots ?? {};
     return ['sidebarLogoExpanded', 'sidebarLogoCollapsed'].map(slot => slots[slot]).filter(Boolean).map(path => new URL(path, location.href).href);
-  });
+  }, await page.evaluate(readPreparedDisplay));
   assert(logoUrls.length, 'The school resolves no sidebar logo to store');
   await waitForOfflineCondition(page, async urls => {
     const cache = await caches.open('school-offline-branding');
