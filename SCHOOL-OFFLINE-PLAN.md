@@ -2,14 +2,15 @@
 
 Prepared: 2026-10-23 (Africa/Casablanca)
 
-Status: **PHASE 0 IN PROGRESS.** Phase 1 data downloads have not started. See [verification and remaining gates](docs/tests/offline-read.md) for dated commands, browser evidence and local setup.
+Status: **PHASE 1 STUDENTS READ PROOF PASSES LOCALLY.** Chromium, Firefox and WebKit pass private reads, production renewal events, the edit/access lifecycle and the already-open Next Students transition on real connection failure. Physical-device, ordered database rollout and deployment gates remain open; deadline fallback stays disabled. All feature files are unchanged. The endpoint ledger, shared adapters and rollout instructions are in [Phase 1 Students reads](docs/tests/offline-students.md). See [verification and remaining gates](docs/tests/offline-read.md) for dated evidence and local setup.
 
 | Area | Current implementation | Remaining boundary |
 | --- | --- | --- |
-| Preparation | Global, silent registration/retry; existing sessions prepare without `/login`; display metadata renews on successful token refresh | Real server-issued private-read grant and account adapter |
-| Public shell | Independent provider, the online sidebar's groups/icons/current-language labels, stored school sidebar logo, StudentProfile no-data proof, complete emitted styles/assets, fixed document CSP, worker pinned to its build's shell | Full route coverage, selected-year restoration and target-device acceptance |
+| Preparation | Silent restored-session preparation, server-issued eight-hour grant, replica access-row CAS and cached-account display adapter | Existing-school ordered migration/deployment and broader role acceptance |
+| Public shell | Independent provider, shared sidebar/branding/styles/assets, fixed document CSP, restored selected year and the bounded real Students views | Broader route/role coverage and target-device acceptance |
+| Navigation | Real online Students row callback reaches an unvisited offline detail through Next's native failed-RSC document fallback in all three engines; Back/Forward/reload pass | Slow/stalled network behavior and broader feature transitions require separate acceptance |
 | Updates | Explicit consent or natural activation after clients close; conservative open-editor protection; legacy-worker migration passes in Chromium, Firefox and WebKit; branded page for unlisted documents; three failed downloads per version per day | Shared authoritative form-dirty integration and recovery acceptance |
-| Reads | Unavailable transport in the neutral entry | Phase 1 authorized snapshots and dispatcher |
+| Reads | Phase 1 Students/shared exact projections, immutable bounded snapshots and shared GET dispatcher | Broader modules, devices and release acceptance; deadlines remain disabled |
 
 Implementation changes remain local working-tree changes until separately committed and published. No deployment is established by this plan.
 
@@ -72,12 +73,12 @@ The School table below records the pre-Phase-0 design baseline at `c17a0fe`, not
 
 ### 3.2 Package capabilities and pins
 
-School currently pins the versions in the second column. `najm-database@2.3.2` is a future Phase 1 adoption, not the installed version; its Desktop source does not describe School's current `2.2.1` runtime. Recheck published exports before adoption. Registry availability is not proof of School integration or browser acceptance.
+School currently pins the versions in the second column. Phase 1 adopted the published `najm-database@2.3.3` and matching `fast-idb@0.3.1`; the Desktop reference versions match. Registry availability alone is not proof of integration or browser acceptance; current evidence is recorded separately.
 
 | Package | Current School pin | Available reference/release | Relevant capability |
 | --- | --- | --- | --- |
-| `najm-database` | `2.2.1` | `2.3.2` | `./sync/contracts`, `./sync/client`, `./sync/server`, `./sync/pg` |
-| `fast-idb` | No direct School dependency found | `0.3.0` | `./db`; required exact optional peer for the database browser entry |
+| `najm-database` | `2.3.3` | `2.3.3` | `./sync/contracts`, `./sync/client`, `./sync/server`, `./sync/pg` |
+| `fast-idb` | `0.3.1` | `0.3.1` | `./db`; required exact optional peer for the database browser entry |
 | `najm-next` | `0.14.0` (unlisted-page fallback and install budget adopted) | `0.14.0` | PWA navigation fallback/staged updates; client provider UI runtime; query configuration |
 | `najm-kit` | `3.7.0` (adopted in Phase 0) | `3.7.0` | Provider UI runtime usable outside a Next router |
 | `najm-auth` | `6.9.0` | `6.9.0` | `./client/offline`, including `automatic-read` enrollment |
@@ -99,7 +100,7 @@ The package describes its sync APIs as experimental. School owns authenticated e
 
 - Read `AGENTS.md`, `apps/dashboard/AGENTS.md`, the Najm skill, and relevant installed Next guides before implementation.
 - Local Najm and fast-idb sources are read-only references from this workspace. Consume published versions through exact pins and matching overrides; no links, copied package source or local tarballs.
-- Phase 0 uses an explicitly temporary localStorage **display-only preparation record**, not an authorization store. Before Phase 1 private reads, adopt `najm-database@2.3.2` and `fast-idb@0.3.0`, initialize the replica access row, and connect Najm's compare-and-swap access helper. Set `maxOfflineDurationMs: 8 * 60 * 60 * 1000` explicitly. Migrate permitted UI metadata only after a fresh online server grant and successful atomic access-row commit, then remove the temporary preparation record. Never turn the browser-issued expiry into server authorization or carry over a fabricated session. No school records may be exposed before that migration/access acceptance passes.
+- Phase 0 uses an explicitly temporary localStorage **display-only preparation record**, not an authorization store. Phase 1 adopted `najm-database@2.3.3` and `fast-idb@0.3.1`, initialized the replica access row, and connected Najm's compare-and-swap access helper with `maxOfflineDurationMs: 8 * 60 * 60 * 1000` explicitly. Permitted UI metadata migrates only after a fresh online server grant and successful atomic access-row commit, then the temporary preparation record is removed. The browser-issued expiry never becomes server authorization, and the cached session remains null. Accounts outside the Students slice retain display-only preparation, without private records.
 - Preserve one UI provider, one query client, one auth definition and one selected-year owner per mounted application. No parallel preference or entity-state store.
 - Preserve the one-line `next.config.ts` export. If a real Next configuration divergence becomes necessary, use the documented `defineNajmNextConfig` boundary and explain it; do not silently add keys.
 - Browser code may import School contracts, never School server modules or database drivers.
@@ -208,7 +209,7 @@ The navigation fallback deadline is 10 seconds, matching the package default. Th
 
 Every online and shell window participates in update coordination. A waiting update needs explicit activation or natural activation after old clients close; slow/unresponsive workers are never classified as legacy from a timeout. No forced reload occurs. Consent protects persisted drafts, active mutations and native input/change edits. Until a public shared form-dirty registry is available, visible business forms/dialogs conservatively block activation until closed; native login fields remain protected by edit tracking. Unknown inline edits remain protected until reset/unmount. A successful save cannot be inferred from a submit event. A future authoritative dirty/commit bridge belongs in shared Najm controls, not separate implementations in every feature.
 
-Retain all builds pinned by live tabs plus two unused generations. Cleanup must preserve suspended tabs, installation staging and the active build, and never delete IndexedDB. Web Lock lifecycle and browser evidence live in the acceptance report. Before Phase 1 permits online reads from a retained shell, add a server protocol/schema compatibility handshake. The neutral entry currently blocks shared `api.get`, including after reconnect; this does not globally block other transports.
+Retain all builds pinned by live tabs plus two unused generations. Cleanup must preserve suspended tabs, installation staging and the active build, and never delete IndexedDB. Web Lock lifecycle and browser evidence live in the acceptance report. Phase 1's retained shell permits registered online reads only after a fresh server protocol/schema/access handshake. Unregistered shared `api.get` calls remain unavailable there, including after reconnect; this does not globally block other transports.
 
 Data-dependent routes in this phase may show a clear in-app data-unavailable state from a shared route boundary. That boundary can defer mounting a view whose data prerequisites are not implemented, while keeping the actual route, parameter handling and shared navigation usable. This proves shell navigation, not the data-dependent view's complete behavior. Separately exercise representative existing view/provider dependencies in the isolated proof so a generic placeholder shell cannot conceal an incompatible Next/auth dependency. Do not fake school records or counts, show a successful setup form because a server read failed, or leave an infinite spinner. Synthetic data, if needed for a test fixture, belongs only in the isolated harness and is not proof of production data availability.
 
@@ -240,7 +241,7 @@ Run against a served **production build**, after one complete online preparation
 - [ ] No browser error document, generic full-page reconnect fallback, missing JS/CSS/font, infinite auth redirect or server-dependent navigation failure.
 - [ ] Logout/account switching locks cached account presentation; first-time offline visitors are not treated as signed in.
 - [ ] Interrupted download, cache eviction and a missing asset do not report readiness.
-- [ ] Deployment blocker: every named dashboard fallback path shows its in-app offline state, and every other document (including public, migration, auth and arbitrary unlisted paths) shows the branded fallback after real connection failure. School's worker sets `navigationFallback.otherDocuments: 'offlineDocument'` (`najm-next@0.14.0`), and `test:offline:browser` passes it in three engines. The real Next production server passes it too (`test:offline:registration`). Still to do: confirm it in the deployed image.
+- [ ] Deployment blocker: every named dashboard fallback path shows its in-app offline state, and every other document (including public, migration, auth and arbitrary unlisted paths) shows the branded fallback after real connection failure, in French, Arabic and English stacked and led by the language the app last displayed (`najm-next@0.15.1`). School's worker sets `navigationFallback.otherDocuments: 'offlineDocument'` (`najm-next@0.14.0`), and `test:offline:browser` passes it in three engines. The real Next production server passes it too (`test:offline:registration`). Still to do: confirm it in the deployed image.
 - [ ] Update with a second tab and an existing draft preserves the draft and avoids mixed-build assets.
 
 Record blockers and module exceptions. **Phase 1 development requires the supported-slice production-browser startup/navigation gate and private-access prerequisites.** Physical-device durability, all-role coverage and deployment proof remain release gates. Name the supported subset; do not label Phase 0 or release acceptance complete while those gates are open.
@@ -361,16 +362,17 @@ The phase does not create an outbox for existing POST/PUT/PATCH/DELETE requests,
 
 ### 7.8 Exit gate
 
-- [ ] Phase-0 cold startup remains passing with the real replica attached.
-- [ ] List/detail payloads match existing online endpoint shapes and semantics.
-- [ ] A downloaded detail opens offline even if that detail page was not visited online.
-- [ ] Existing Students feature/API/server module files remain unchanged, or a necessary exception is explicitly resolved before the proof is claimed.
-- [ ] Restricted ownership, account switching, two years and late network responses do not leak data.
-- [ ] Interrupted downloads, quota failures and missing coverage retain correct state.
-- [ ] Reconnect updates changed/deleted records; a successful online edit is not visually reverted by a stale local read.
-- [ ] Refresh/reopen offline reads local records without token-refresh blocking or paused-query spinners.
-- [ ] Each route's cache-display deadline has measured response evidence; a slow successful request remains in flight and replaces its interim cached result. Late denials, account/year changes and newer responses cannot expose stale private results. Timeout alone never selects known-outage mode.
-- [ ] Successful token refresh and the 15-minute online schedule renew grants through fresh server authorization; the 14:00 interruption example, failed renewals and known revocation preserve the eight-hour bound correctly.
+- [x] Supported-slice cold startup remains passing with the real replica attached (Chromium, Firefox and WebKit). WebKit uses a loopback HTTPS fixture, preserving production Secure cookies/CSP. No physical-device/release completion is claimed.
+- [x] List/detail payloads match existing online endpoint shapes and semantics (real fixture HTTP, two years).
+- [x] A downloaded detail opens offline even if that detail page was not visited online (Chromium, Firefox and WebKit).
+- [x] An already-open online Next Students row action reaches that unvisited offline detail after real server shutdown while `navigator.onLine=true`. The actual `router.push` first fails RSC, then Next's native document fallback reaches the worker. Back/Forward/reload pass in all three engines; no feature edit or private router API is needed.
+- [x] Existing Students feature/API/server module files remain unchanged. The owner declined all feature-file exceptions; the bounded view uses documented public adapters/composition.
+- [x] Restricted ownership, account switching, two years and late network responses do not leak data (real fixture HTTP/browser and replica race tests).
+- [x] Interrupted downloads, injected quota failures and missing coverage retain correct state. Real-device exhaustion/recovery remains a release check.
+- [x] Reconnect updates changed/deleted records; an actual Students-form edit survives offline reload without reverting (Chromium/Firefox/WebKit fixture).
+- [x] Refresh/reopen offline reads local records without token-refresh blocking or paused-query spinners (Chromium/Firefox/WebKit); server revocation also survives a fresh browser process with the server stopped.
+- [ ] If enabling deadline fallback: each route's cache-display deadline has measured response evidence; a slow successful request remains in flight and replaces its interim cached result. Late denials, account/year changes and newer responses cannot expose stale private results. Timeout alone never selects known-outage mode. **No route enables deadline fallback in this initial proof; this is an enablement gate.**
+- [x] Successful token refresh and the 15-minute online schedule renew grants through fresh server authorization (actual Chromium/Firefox/WebKit production runtime). Controlled-clock tests with the published access helper cover nine hours online, the 14:00 interruption example, the maximum interval, sleeping-tab resume, failed/late renewals, expiry and known refusal. Real device suspension remains a release check.
 
 ## 8. Phase 2: expand reads across all roles and modules
 
@@ -400,7 +402,7 @@ Exit: the coverage ledger accounts for every existing route/action family as sup
 
 Paths below are proposed unless identified as existing. Create only files needed by the phase; do not scaffold every future-write file during read work.
 
-Current Phase 0 source map: `offline/bootstrap.ts` (temporary display record), `OfflinePreparation.tsx` (silent online preparation and explicit update action), `registration.ts` (installation-aware registration and shared finite retry budget), `readiness.ts` (controlling-worker identity/asset proof), `preparationLifecycle.ts` (explicit logout versus failed refresh), `entry.tsx` (independent AppProvider and StudentProfile proof), `routes.ts` (single allowlist), `navigation.tsx`/`link.tsx`/`image.tsx` (public build-only adapters), `auth.ts` (anonymous hook context), `transport.ts` (no-record gate), and `updates.ts` (coordination/pins/retention). `contracts/offline`, `access.ts`, `OfflineRuntime.tsx` and a database replica do **not** exist yet; rows naming them below are future migration targets, not implemented deliverables. The browser graph policy and both repository provider contracts now include the neutral entry explicitly.
+Current source map: the Phase 0 registration/readiness/navigation/update modules remain. Phase 1 adds `contracts/offline`, `access.ts`, `replica.ts`, `localApi.ts`, `runtime.ts`, `queryPrivacy.ts`, `OfflineRuntime.tsx`, and the server `offline` module. `cachedAccount.tsx`, `kit.tsx`, `readCoverage.tsx` and `StudentReadView.tsx` are explicit public build/composition adapters; the old unavailable-only `transport.ts` is retired. Both provider contracts and the browser boundary policy include the neutral entry. See the Phase 1 ledger for implemented versus future coverage.
 
 ### 9.1 Phase 0 first
 
