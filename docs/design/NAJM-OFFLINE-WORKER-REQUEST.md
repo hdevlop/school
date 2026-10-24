@@ -6,7 +6,7 @@ School consumer: published `najm-next@0.13.0`. This file is the handoff for the 
 
 - `test-offline-install.mjs` now asserts that five browser update checks download a broken version exactly three times, and that a fresh app opening doesn't refill the worker's limit.
 - `test-offline-fallback.mjs` (part of `test:offline:browser`) is the School version of the acceptance below.
-- The real Next registration test now also checks the sign-in redirect and branded unlisted pages. It hasn't run on the 0.14.0 build yet, because local PostgreSQL stopped answering connections.
+- The real Next registration test now also checks the sign-in redirect and branded unlisted pages, and passes on the 0.14.0 build.
 
 Pre-release candidate acceptance: `.cache/offline-najm-candidate/run.mjs` (ignored; log `run.log`) ran School's real shell and these exact worker options on the locally built candidate. It passed in Chromium, Firefox and WebKit:
 - With the origin process stopped and connectivity on, `/`, `/welcome`, `/login`, `/register`, `/forgot-password`, `/reset-password`, `/change-password`, `/public-page`, `/academic-year-migration` and an arbitrary path load the branded offline page, including on reload.
