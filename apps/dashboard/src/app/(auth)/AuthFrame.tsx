@@ -11,7 +11,7 @@ import { ReliableThemeImage } from './ReliableThemeImage';
  * The one frame every auth screen renders into — sign in, sign up, password
  * recovery, password reset, and first-login credential setup.
  *
- * Two images build the whole layout and nothing else paints a surface:
+ * Responsive background artwork and a hero build the whole layout:
  *
  * - `auth-background.png` is the page itself, edge to edge. It carries a wide
  *   pale field on its leading side and the curve that divides it from the pink,
@@ -23,10 +23,8 @@ import { ReliableThemeImage } from './ReliableThemeImage';
  *   branding slot rather than by path, so a school replacing its hero replaces
  *   the illustration alone and never the ground under the form.
  *
- * Below `lg` the background is dropped rather than cropped, falling back to
- * `bg-background`. `object-cover` on a tall narrow box keeps the middle of a
- * wide image, which is exactly the curve, and would leave the form sitting on
- * the pink half.
+ * Below `lg`, `auth-background-mobile.png` supplies portrait artwork with a
+ * pale center for the form. The picture selects just one background to load.
  */
 export function AuthFrame({ children }: { readonly children: ReactNode }) {
   const { t } = useTranslation();
@@ -37,13 +35,15 @@ export function AuthFrame({ children }: { readonly children: ReactNode }) {
           page, and the pale field has to follow it. Dimmed rather than tinted
           in dark mode — this is light-key artwork, and at full strength it
           would put dark-theme foreground text on a white ground. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        aria-hidden
-        src="/images/auth-background.png"
-        alt=""
-        className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover rtl:-scale-x-100 lg:block dark:opacity-[0.12]"
-      />
+      <picture>
+        <source media="(min-width: 64rem)" srcSet="/images/auth-background.png" />
+        <img
+          aria-hidden
+          src="/images/auth-background-mobile.png"
+          alt=""
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover rtl:-scale-x-100 dark:opacity-[0.12]"
+        />
+      </picture>
 
       {/* `text-foreground` is not inherited from the document: nothing above
           this point sets a themed text colour, so bare text inside the frame
