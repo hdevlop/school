@@ -2,6 +2,7 @@ import { auth } from '@/najm.auth';
 import { AuthError } from 'najm-auth/client';
 import { captureRequestHeaders, languageHeader } from '@/lib/requestHeaders';
 import { toFormData, hasFiles } from './formDataHelper';
+import { assertRecordTransport } from '@/offline/transport';
 
 function buildURL(path: string, params?: Record<string, any>): string {
   if (!params) return path;
@@ -50,6 +51,7 @@ async function ensureAccessToken(url: string) {
 
 export const api = {
   async get(url: string, opts?: { params?: Record<string, any> }): Promise<{ data: any }> {
+    assertRecordTransport();
     const path = buildURL(url, opts?.params);
     const headers = headersFor(path);
     await ensureAccessToken(path);

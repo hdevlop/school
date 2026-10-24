@@ -6875,5 +6875,16 @@
     "cycleNameRequired": "Cycle name is required.",
     "subjectSearch": "Search by subject name or code...",
     "staffAssignmentOptional": "Class assignments are optional. You can assign classes later."
+  },
+  "offlineShell": {
+    "prepare": "Connect and sign in to prepare this device for offline use.",
+    "signIn": "Sign in",
+    "update": "Update application",
+    "updateBlocked": "Save or discard open changes and close forms in all tabs before updating.",
+    "onlineAvailable": "The server is reachable. Try online to load your records.",
+    "title": "MyScolAI",
+    "retry": "Try online",
+    "noData": "School data is not available offline yet. Reconnect to load your records.",
+    "unavailable": "This page is not available offline."
   }
 }

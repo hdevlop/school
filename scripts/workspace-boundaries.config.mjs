@@ -63,6 +63,7 @@ const policy = {
   },
 
   browser: {
+    entryFiles: ['apps/dashboard/src/offline/entry.tsx'],
     entryRoles: ["app"],
     forbiddenRoles: ["server", "seed"],
     forbiddenExternal: [

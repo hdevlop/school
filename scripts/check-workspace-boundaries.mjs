@@ -381,7 +381,9 @@ export function checkWorkspace({ root, policy }) {
   const forbiddenExternal = browser.forbiddenExternal ?? [];
   const forbiddenSpecifiers = browser.forbiddenSpecifiers ?? [];
   const auditedExternal = browser.allowedExternal ?? [];
-  const entries = [...files.values()].filter((info) => info.owner && browserRoles.has(info.owner.role) && info.directive === "use client");
+  const explicitBrowserEntries = new Set(browser.entryFiles ?? []);
+  const entries = [...files.values()].filter((info) => info.owner && browserRoles.has(info.owner.role)
+    && (info.directive === "use client" || explicitBrowserEntries.has(display(info.file))));
   const reported = new Set();
   const browserExternals = new Set();
   const report = (rule, chain, message) => {
@@ -490,4 +492,3 @@ if (isMain) {
   }
   console.log(output);
 }
-

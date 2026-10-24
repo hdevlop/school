@@ -53,6 +53,9 @@ next-env.d.ts
 # cache
 .cache/
 
+# Generated public offline shell and build manifest
+apps/dashboard/public/offline-shell/
+
 # IDE
 .idea/
 

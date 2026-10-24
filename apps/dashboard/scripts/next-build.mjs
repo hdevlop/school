@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, rmSync } from "node:fs";
+import { existsSync, readFileSync, rmSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -34,6 +34,12 @@ if (!nextCli) {
 if (existsSync(nextCache)) {
   rmSync(nextCache, { recursive: true, force: true });
 }
+
+const shellBuild = spawnSync('bun', ['./scripts/build-offline.mjs'], { cwd: appRoot, env, stdio: 'inherit', shell: process.platform === 'win32' });
+if (shellBuild.status !== 0) process.exit(shellBuild.status ?? 1);
+// Pin the public shell version in this online bundle. Fetching the latest
+// manifest later must not relabel an already-open tab as the newer build.
+env.NEXT_PUBLIC_SCHOOL_SHELL_VERSION = JSON.parse(readFileSync(resolve(appRoot, 'public/offline-shell/manifest.json'), 'utf8')).version;
 
 const result = spawnSync(process.execPath, ["--require", preload, nextCli, "build", "--webpack"], {
   cwd: appRoot,

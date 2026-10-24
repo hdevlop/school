@@ -114,6 +114,11 @@ function check(changes = {}) {
 
 const clientFile = (...lines) => ["'use client';", ...lines, ""].join("\n");
 
+it('checks the explicit offline browser entry even without a client directive', () => {
+  const result = check({ [app('src/offline/entry.tsx')]: `import { server } from '${SERVER.name}';\nexport const value = server;\n` });
+  expect(result.violations.some(violation => violation.chain?.some(path => path.includes('offline/entry.tsx')))).toBe(true);
+});
+
 function expectViolation(result, rule, ...fragments) {
   const match = result.violations.find((violation) => {
     const text = [violation.message, violation.file, ...(violation.chain ?? [])].join("\n");

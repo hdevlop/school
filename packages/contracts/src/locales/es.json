@@ -6162,5 +6162,16 @@
     "cycleNameRequired": "El nombre del ciclo es obligatorio.",
     "subjectSearch": "Buscar por nombre o código de asignatura...",
     "staffAssignmentOptional": "La asignación de clases es opcional. Puede añadirla más tarde."
+  },
+  "offlineShell": {
+    "prepare": "Conéctate e inicia sesión para preparar este dispositivo para su uso sin conexión.",
+    "signIn": "Iniciar sesión",
+    "update": "Actualizar aplicación",
+    "updateBlocked": "Guarda o descarta los cambios y cierra los formularios en todas las pestañas antes de actualizar.",
+    "onlineAvailable": "El servidor está disponible. Reintenta en línea para cargar tus datos.",
+    "title": "MyScolAI",
+    "retry": "Reintentar en línea",
+    "noData": "Los datos escolares aún no están disponibles sin conexión. Conéctate para cargarlos.",
+    "unavailable": "Esta página no está disponible sin conexión."
   }
 }

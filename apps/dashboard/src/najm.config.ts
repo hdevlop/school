@@ -18,6 +18,7 @@ export const schoolApp = defineNajmApp({
       '/reset-password',
       '/change-password',
       '/manifest.webmanifest',
+      '/offline-shell/:path*',
     ],
     protectedRoutes: ['/:path*'],
     loginRoute: '/login',

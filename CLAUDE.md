@@ -78,7 +78,10 @@ states that drift — so do not add one without changing the plan first.
   `NajmAppProvider` from `najm-next/app/client`, owning language, theme, design, time
   zone, branding, formatting, and `NTable` defaults. Never add
   `NajmDesignProvider`, `next-themes`, a second `I18nProvider`, or a local
-  theme wrapper.
+  theme wrapper. The independently booted offline entry mounts its own single
+  `NajmAppProvider` with the public `uiRuntime` adapter; it never nests another
+  provider inside the online tree. Its Phase 0 session is null and its record
+  transport is unavailable until the offline-access integration is implemented.
 - **One preference source.** `apps/dashboard/src/najm.server.ts` passes School's
   policy to `createNajmNextServerApp`, which resolves cookie → signed-in user →
   School settings → typed fallback. Najm Kit owns reusable currency and time-zone
