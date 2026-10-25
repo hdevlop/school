@@ -6295,7 +6295,8 @@
       "pageLimit": "Un enregistrement téléchargé est trop volumineux pour une utilisation hors connexion.",
       "snapshotExpired": "Ce téléchargement a expiré. Relancez-le.",
       "scopeMismatch": "Ce téléchargement appartient à un autre appareil, compte ou année scolaire.",
-      "pageNotFound": "Cette page n’existe pas dans ce téléchargement."
+      "pageNotFound": "Cette page n’existe pas dans ce téléchargement.",
+      "disabled": "L’utilisation hors ligne est désactivée pour cette école."
     }
   }
 }

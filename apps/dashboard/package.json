@@ -18,7 +18,8 @@
     "test:offline:lifecycle": "node scripts/test-offline-lifecycle.mjs",
     "test:offline:renewal": "node scripts/test-offline-renewal.mjs",
     "test:offline:navigation": "node scripts/test-offline-navigation.mjs",
-    "test:offline:errors": "node scripts/test-offline-errors.mjs"
+    "test:offline:errors": "node scripts/test-offline-errors.mjs",
+    "test:offline:switch": "node scripts/test-offline-switch.mjs"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.71",

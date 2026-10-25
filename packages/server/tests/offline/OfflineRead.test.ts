@@ -2,7 +2,8 @@ import 'reflect-metadata';
 import { describe, expect, test } from 'bun:test';
 import { getGuardMetadata } from 'najm-guard';
 import { canonicalJson, type ReplicaRecord } from 'najm-database/sync/contracts';
-import { splitReadPages } from '../../src/modules/offline/OfflineService';
+import { OFFLINE_SWITCH, offlineEnabled } from '@sms/contracts/offline';
+import { OfflineService, splitReadPages } from '../../src/modules/offline/OfflineService';
 import { OfflineController } from '../../src/modules/offline/OfflineController';
 import { installationDto, snapshotDto, pageQuery } from '../../src/modules/offline/OfflineDto';
 
@@ -50,5 +51,23 @@ describe('read download boundary', () => {
       if (index < pages.length - 1) expect(page.length === 500 || size([...page, pages[index + 1][0]]) > 1_048_576).toBe(true);
     });
     expect(pages.some(page => page.length < 500)).toBe(true);
+  });
+  test('turned off, grants and downloads are refused before any account lookup', async () => {
+    expect([undefined, '', 'on', 'true'].map(offlineEnabled)).toEqual([true, true, true, true]);
+    expect(['off', ' OFF '].map(offlineEnabled)).toEqual([false, false]);
+    const lookups: string[] = [];
+    const service = { refusal: (key: string) => key, repository: { actor: async (id: string) => { lookups.push(id); return null; } } };
+    const actor = (OfflineService.prototype as unknown as { actor(this: typeof service, id: string): Promise<unknown> }).actor;
+    const previous = process.env[OFFLINE_SWITCH];
+    try {
+      process.env[OFFLINE_SWITCH] = 'off';
+      await expect(actor.call(service, 'account')).rejects.toMatchObject({ status: 403, message: 'disabled' });
+      expect(lookups).toEqual([]);
+      delete process.env[OFFLINE_SWITCH];
+      await expect(actor.call(service, 'account')).rejects.toMatchObject({ status: 403, message: 'notPermitted' });
+      expect(lookups).toEqual(['account']);
+    } finally {
+      if (previous === undefined) delete process.env[OFFLINE_SWITCH]; else process.env[OFFLINE_SWITCH] = previous;
+    }
   });
 });

@@ -1,7 +1,7 @@
 import { canonicalJson, sha256, sameContext, type ReplicaRecord, type SyncContext } from 'najm-database/sync/contracts';
 import type { SnapshotManifest } from 'najm-database/sync/client';
 import { PermissionGuard } from 'najm-auth';
-import { OFFLINE_DURATION_MS, OFFLINE_PROTOCOL, OFFLINE_SCHEMA, OFFLINE_SHARED_YEAR,
+import { OFFLINE_DURATION_MS, OFFLINE_PROTOCOL, OFFLINE_SCHEMA, OFFLINE_SHARED_YEAR, OFFLINE_SWITCH, offlineEnabled,
   type OfflineGrant, type OfflineInstallation, type ReadProjection } from '@sms/contracts/offline';
 import { Err, I18n, Inject, Service, Transaction, t } from '../../najm';
 import { ScopeContext, isAdministratorRole } from '../../auth';
@@ -50,6 +50,8 @@ export class OfflineService {
     private classes: ClassService, private permission: PermissionGuard) {}
 
   private async actor(id: string) {
+    // Turned off, every grant and download is refused: clients lock what they hold.
+    if (!offlineEnabled(process.env[OFFLINE_SWITCH])) Err(403, this.refusal('disabled'));
     const actor = await this.repository.actor(id);
     if (!actor || actor.status !== 'active') Err(403, this.refusal('notPermitted'));
     const requestActor = this.scope.getUser();

@@ -12,6 +12,10 @@ export function createOfflineBrowserErrorAudit(engine, origin) {
   const stopping = page => closing.has(page.context()) || Date.now() - (navigated.get(page) ?? -Infinity) < 5000;
   const prefix = 'Fetch API cannot load ';
   const suffix = ' due to access control checks.';
+  // Contexts a test has taken offline. That, a close or a navigation cancels
+  // pending fetches, often without a `requestfailed` event; WebKit still reports each natively.
+  const offline = new WeakSet();
+  const interrupted = page => stopping(page) || offline.has(page.context());
   const observe = page => {
     page.on('request', request => { if (request.isNavigationRequest() && request.frame() === page.mainFrame()) navigated.set(page, Date.now()); });
     page.on('framenavigated', frame => { if (frame === page.mainFrame()) navigated.set(page, Date.now()); });
@@ -19,12 +23,16 @@ export function createOfflineBrowserErrorAudit(engine, origin) {
       const line = error.stack?.split('\n')[0] ?? '';
       if (engine === 'webkit' && error.name === 'Fetch API cannot load https' && line.startsWith(prefix + origin) && line.endsWith(suffix)) {
         const url = line.slice(prefix.length, -suffix.length);
-        diagnostics.push({ kind: 'fetch', url, message: line });
+        diagnostics.push({ kind: 'fetch', url, message: line, interrupted: interrupted(page) });
         console.error('Native WebKit fetch diagnostic:', line);
       } else if (engine === 'webkit' && !error.stack && error.name === 'Cannot load https'
         && error.message.startsWith('/' + new URL(origin).host + '/images/student_') && error.message.endsWith('.')) {
         const url = 'https:/' + error.message.slice(0, -1);
         diagnostics.push({ kind: 'fetch', url, message: 'Cannot load ' + url });
+      } else if (engine === 'webkit' && !error.stack && error.name === 'Cannot load https'
+        && error.message === '/' + new URL(origin).host + '/sw.js due to access control checks.' && interrupted(page)) {
+        // The online app's worker update check (registration.update()), cut off.
+        diagnostics.push({ kind: 'worker-update', message: error.name + ': ' + error.message });
       } else if (engine === 'webkit' && !error.stack && error.name === 'FetchEvent.respondWith received an error'
         && error.message === 'TypeError: Load failed') {
         diagnostics.push({ kind: 'worker-resource', message: error.name + ': ' + error.message });
@@ -36,8 +44,8 @@ export function createOfflineBrowserErrorAudit(engine, origin) {
     });
   };
   return { get errors() {
-    // A matching real failed request is required; an arbitrary exception is not excused.
-    const unmatched = diagnostics.filter(item => item.kind === 'fetch' && !failed.has(item.url));
+    // A matching failed request, or one the test cut off, is required; an arbitrary exception is not excused.
+    const unmatched = diagnostics.filter(item => item.kind === 'fetch' && !failed.has(item.url) && !item.interrupted);
     if (diagnostics.filter(item => item.kind === 'worker-resource').length > failedResources.length)
       unmatched.push({ message: 'Unmatched worker resource failures' });
     return [...errors, ...unmatched.map(item => ({ kind: 'unmatched-fetch-diagnostic', message: item.message }))];
@@ -56,6 +64,11 @@ export function createOfflineBrowserErrorAudit(engine, origin) {
       });
     });
     context.on('page', observe);
+    const setOffline = context.setOffline.bind(context);
+    context.setOffline = async value => {
+      if (value) offline.add(context); else offline.delete(context);
+      return setOffline(value);
+    };
     context.on('requestfailed', request => {
       failed.add(request.url());
       const url = new URL(request.url());

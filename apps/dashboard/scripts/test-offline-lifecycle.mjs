@@ -138,6 +138,8 @@ for (const engineName of (process.env.OFFLINE_BROWSERS ?? 'chromium').split(',')
     await page.getByText(remoteName, { exact: true }).waitFor({ state: 'hidden' });
     assert.equal(await page.getByText(remoteName, { exact: true }).count(), 0, 'Another tab logout must hide mounted private results');
     assert.equal((await context.request.post(origin + 'api/auth/login', { data: { email: userId + '@history.example.test', password } })).status(), 200);
+    // Preparation ends with the shell manifest: going offline before it would cut that request.
+    const shellPrepared = online.waitForEvent('requestfinished', { predicate: request => new URL(request.url()).pathname === '/offline-shell/manifest.json', timeout: 60_000 });
     await online.goto(origin + 'home');
     const deadline = Date.now() + 60_000;
     do {
@@ -146,6 +148,7 @@ for (const engineName of (process.env.OFFLINE_BROWSERS ?? 'chromium').split(',')
       if (Date.now() >= deadline) throw new Error('Restricted account was not prepared');
       await new Promise(done => setTimeout(done, 100));
     } while (true);
+    await shellPrepared;
     await context.setOffline(true); await page.goto(origin + 'students');
     await page.getByText(remoteName, { exact: true }).first().waitFor();
     const restricted = await page.evaluate(inspectReadReplica);

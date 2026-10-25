@@ -6191,7 +6191,8 @@
       "pageLimit": "Un registro descargado es demasiado grande para usarlo sin conexión.",
       "snapshotExpired": "Esta descarga ha caducado. Vuelve a iniciarla.",
       "scopeMismatch": "Esta descarga pertenece a otro dispositivo, cuenta o curso escolar.",
-      "pageNotFound": "Esta descarga no tiene esa página."
+      "pageNotFound": "Esta descarga no tiene esa página.",
+      "disabled": "El uso sin conexión está desactivado para esta escuela."
     }
   }
 }

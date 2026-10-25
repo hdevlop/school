@@ -6904,7 +6904,8 @@
       "pageLimit": "One downloaded record is too large for offline use.",
       "snapshotExpired": "This download has expired. Start it again.",
       "scopeMismatch": "This download belongs to another device, account or academic year.",
-      "pageNotFound": "This download has no such page."
+      "pageNotFound": "This download has no such page.",
+      "disabled": "Offline use is turned off for this school."
     }
   }
 }

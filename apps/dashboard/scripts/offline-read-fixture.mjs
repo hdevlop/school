@@ -27,8 +27,9 @@ export async function removeFixtureStudents(sql, ids) {
   });
 }
 
-/** Starts only an isolated production server against the explicitly marked local fixture. */
-export async function startOfflineReadFixture(label, { secure = false } = {}) {
+/** Starts only an isolated production server against the explicitly marked local fixture.
+ * A restart passes the previous `port`, so the browser keeps the same origin and worker. */
+export async function startOfflineReadFixture(label, { secure = false, port: reused, env = {} } = {}) {
   process.loadEnvFile(resolve(appRoot, '.env.local'));
   const target = new URL(process.env.SCHOOL_HISTORY_TEST_DB_URL ?? 'http://invalid');
   assert(['localhost', '127.0.0.1'].includes(target.hostname) && target.pathname === '/school_history_test');
@@ -42,7 +43,7 @@ export async function startOfflineReadFixture(label, { secure = false } = {}) {
     const [schema] = await sql`select to_regclass('offline_read_snapshots')::text as name`;
     assert(schema.name, 'Run test:offline:transport to install migration 0077 in this fixture');
     const socket = createServer();
-    await new Promise(done => socket.listen(0, '127.0.0.1', done));
+    await new Promise(done => socket.listen(reused ?? 0, '127.0.0.1', done));
     const port = socket.address().port;
     await new Promise(done => socket.close(done));
     const origin = `${secure ? 'https' : 'http'}://127.0.0.1:${port}/`;
@@ -56,7 +57,7 @@ export async function startOfflineReadFixture(label, { secure = false } = {}) {
         NAJM_NEXT_DIST_DIR: process.env.NAJM_NEXT_DIST_DIR || '.next', FRONTEND_URL: origin.slice(0, -1),
         ...(tls ? { OFFLINE_FIXTURE_PORT: String(port), OFFLINE_FIXTURE_KEY: tls.key,
           OFFLINE_FIXTURE_CERTIFICATE: tls.certificate, NODE_EXTRA_CA_CERTS: tls.certificate } : {}),
-        NAJM_AUTH_INTERNAL_URL: origin + 'api/auth/session/recover' },
+        NAJM_AUTH_INTERNAL_URL: origin + 'api/auth/session/recover', ...env },
       stdio: ['ignore', log.fd, log.fd], windowsHide: true,
     });
     const probe = () => probeFixture(origin, tls?.ca);
@@ -69,7 +70,7 @@ export async function startOfflineReadFixture(label, { secure = false } = {}) {
       if (server.exitCode !== null || server.signalCode !== null) return;
       const stopped = once(server, 'exit'); server.kill(); await stopped;
     };
-    return { origin, sql, stop, probe, browserOptions: secure ? { ignoreHTTPSErrors: true } : {}, async close() {
+    return { origin, port, sql, stop, probe, browserOptions: secure ? { ignoreHTTPSErrors: true } : {}, async close() {
       await stop();
       await log.close(); await sql.end();
     } };

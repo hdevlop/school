@@ -152,3 +152,19 @@ test('a session the server refuses locks retained copies; one it could not reach
     await until(async () => await status() === 'locked');
   } finally { server = null; }
 });
+
+test('the sign-in redirect can wait for a refused session to be locked, once for every listener', async () => {
+  server = { up: true, snapshots: 0 };
+  try {
+    await connected(bootstrap);
+    const status = async () => (await (await selectedReplica())!.storage.access.refresh()).status;
+    await until(async () => await status() === 'available');
+    await runtime.lockRefusedSession({ reason: 'unavailable' });
+    expect(await status()).toBe('available');
+    const first = runtime.lockRefusedSession({ reason: 'refused', status: 403 });
+    expect(runtime.lockRefusedSession({ reason: 'refused', status: 403 })).toBe(first);
+    await first;
+    // Settled means committed: nothing is left to finish after the page leaves.
+    expect(await status()).toBe('locked');
+  } finally { server = null; }
+});

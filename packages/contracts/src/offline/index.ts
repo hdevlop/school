@@ -5,6 +5,9 @@ export const OFFLINE_DURATION_MS = 8 * 60 * 60 * 1000;
 export const OFFLINE_RENEWAL_MS = 15 * 60 * 1000;
 export const OFFLINE_SHARED_YEAR = 'shared';
 export const OFFLINE_HASH = 'school-read-v1';
+/** An installation turns offline use off with `SCHOOL_OFFLINE=off`, read at request time. */
+export const OFFLINE_SWITCH = 'SCHOOL_OFFLINE';
+export function offlineEnabled(value: string | undefined) { return value?.trim().toLowerCase() !== 'off'; }
 export type OfflineInstallation = { installationId: string; installationEpoch: string };
 export type OfflineGrant = OfflineInstallation & {
   protocol: 1;

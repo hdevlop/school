@@ -123,7 +123,8 @@
     "test:offline:lifecycle": "bun run --cwd apps/dashboard test:offline:lifecycle",
     "test:offline:renewal": "bun run --cwd apps/dashboard test:offline:renewal",
     "test:offline:navigation": "bun run --cwd apps/dashboard test:offline:navigation",
-    "test:offline:errors": "bun run --cwd apps/dashboard test:offline:errors"
+    "test:offline:errors": "bun run --cwd apps/dashboard test:offline:errors",
+    "test:offline:switch": "bun run --cwd apps/dashboard test:offline:switch"
   },
   "devDependencies": {
     "@sms/server": "workspace:*",

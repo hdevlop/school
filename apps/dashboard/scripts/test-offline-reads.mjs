@@ -86,8 +86,10 @@ for (const engineName of (process.env.OFFLINE_BROWSERS ?? 'chromium').split(',')
     const student = list.value.body.data.find(row => row.id === 'history-student-02') ?? list.value.body.data[0];
     const detail = prepared.records.find(record => record.scope === 'year:2025-2026' && record.value?.path === '/students/' + student.id);
     assert(detail, 'Unvisited detail must be in the downloaded snapshot');
+    // Firefox can leave this document uncontrolled by the active worker; the
+    // stopped-server reload below must then receive the shell from it.
     await waitForOfflineCondition(page, async () => {
-      const worker = navigator.serviceWorker.controller;
+      const worker = (await navigator.serviceWorker.getRegistration())?.active;
       if (!worker || worker.state !== 'activated') return false;
       const manifest = await (await fetch('/offline-shell/manifest.json', { cache: 'no-store' })).json();
       const status = await new Promise(resolve => {

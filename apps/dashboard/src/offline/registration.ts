@@ -17,6 +17,12 @@ export async function registerSchoolShell(container: Pick<ServiceWorkerContainer
         const registration = await container.register('/sw.js', { scope: '/', updateViaCache: 'none' });
         if (timedOut) throw new Error('Offline application preparation timed out.');
         signal?.throwIfAborted();
+        // register() returns an existing registration for the same script without
+        // checking it, and WebKit can skip its own navigation check: check on each
+        // opening, so a changed worker (an update, SCHOOL_OFFLINE=off) installs now.
+        if (!registration.installing && !registration.waiting) await registration.update().catch(() => undefined);
+        if (timedOut) throw new Error('Offline application preparation timed out.');
+        signal?.throwIfAborted();
         const worker = registration.installing;
         if (worker) await new Promise<void>((resolve, reject) => {
           // A live install may still be downloading on a slow link. Keep one

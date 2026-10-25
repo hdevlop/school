@@ -104,6 +104,19 @@ export async function lockOffline() {
   publish();
 }
 
+let refusedLock: Promise<void> | null = null;
+/**
+ * The server refused the session: retained copies stop answering. A lost
+ * connection or rate limit keeps them readable. One lock serves every listener;
+ * the sign-in redirect waits for it (`useSignInOnSessionExpired`), since leaving
+ * the page can abort its IndexedDB write.
+ */
+export function lockRefusedSession({ reason }: SessionExpiredEvent): Promise<void> {
+  if (reason !== 'refused') return Promise.resolve();
+  refusedLock ??= lockOffline().catch(() => undefined).finally(() => { refusedLock = null; });
+  return refusedLock;
+}
+
 /**
  * Before sending a write that can change downloaded data, including a save
  * whose response is lost, retained copies become unusable until a replacement
@@ -283,11 +296,7 @@ export function connectOfflineRuntime(client: QueryClient, source: () => ShellBo
     void hideAccountData(client); publish();
     void selectAccount(null).then(publish).catch(() => undefined);
   };
-  // The server refused the session, so retained copies stop answering before
-  // the page leaves for sign-in. A lost connection keeps them readable.
-  const sessionExpired = ({ reason }: SessionExpiredEvent) => {
-    if (reason === 'refused') void lockOffline().catch(() => undefined);
-  };
+  const sessionExpired = (event: SessionExpiredEvent) => { void lockRefusedSession(event); };
   const refresh = () => renewOffline().then(checkAccess);
   const reconnect = () => renewOffline(true).then(checkAccess);
   const crossTab = (event: StorageEvent) => {
