@@ -6883,6 +6883,8 @@
   },
   "offlineShell": {
     "prepare": "Connect and sign in to prepare this device for offline use.",
+    "unpreparedTitle": "This device is not ready to work offline",
+    "unpreparedReasons": "Offline access starts once you sign in on this browser while connected. It ends after 8 hours without a connection, when you sign out, or when your access changes.",
     "signIn": "Sign in",
     "update": "Update application",
     "updateBlocked": "Save or discard open changes and close forms in all tabs before updating.",

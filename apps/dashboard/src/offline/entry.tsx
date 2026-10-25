@@ -13,6 +13,7 @@ import { schoolApp } from '@/najm.config';
 import { configureShellParams, SHELL_NAVIGATION_EVENT, usePathname } from 'najm-offline/shell/navigation';
 import { CachedAccountContext } from 'najm-offline/shell/auth';
 import { withCachedBranding } from 'najm-offline/pwa';
+import { UnpreparedDevice } from './UnpreparedDevice';
 import { connectShellUpdates, rememberOfflineLanguage } from './updates';
 import StudentProfile from '@/features/Students/components/StudentProfile';
 import { StudentReadView } from './StudentReadView';
@@ -200,7 +201,7 @@ function Boot() {
   }, [brandingSource]);
   if (!bootstrap) {
     const messages = schoolI18n.translations[language as keyof typeof schoolI18n.translations] ?? schoolI18n.translations.en;
-    return <main><h1>MyScolAI</h1><p>{messages.offlineShell.prepare}</p><a href="/login">{messages.offlineShell.signIn}</a></main>;
+    return <UnpreparedDevice messages={messages.offlineShell} />;
   }
   if (bootstrap.ui.branding && !branding) return null;
   const persist = (field: 'language' | 'theme' | 'timeZone', value: string) => {

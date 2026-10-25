@@ -6170,6 +6170,8 @@
   },
   "offlineShell": {
     "prepare": "Conéctate e inicia sesión para preparar este dispositivo para su uso sin conexión.",
+    "unpreparedTitle": "Este dispositivo no está listo para trabajar sin conexión",
+    "unpreparedReasons": "El acceso sin conexión empieza al iniciar sesión en este navegador con conexión. Termina tras 8 horas sin conexión, al cerrar sesión o si cambian tus permisos.",
     "signIn": "Iniciar sesión",
     "update": "Actualizar aplicación",
     "updateBlocked": "Guarda o descarta los cambios y cierra los formularios en todas las pestañas antes de actualizar.",
