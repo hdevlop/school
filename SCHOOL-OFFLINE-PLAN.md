@@ -2,7 +2,7 @@
 
 Prepared: 2026-10-23 (Africa/Casablanca)
 
-Status: **PHASE 1 STUDENTS READ PROOF PASSES LOCALLY.** Chromium, Firefox and WebKit pass private reads, production renewal events, the edit/access lifecycle and the already-open Next Students transition on real connection failure. Physical-device, ordered database rollout and deployment gates remain open; deadline fallback stays disabled. All feature files are unchanged. The endpoint ledger, shared adapters and rollout instructions are in [Phase 1 Students reads](docs/tests/offline-students.md). See [verification and remaining gates](docs/tests/offline-read.md) for dated evidence and local setup.
+Status: **PHASES 0 AND 1 COMPLETE AND DEPLOYED TO THE DEMO** (`a8eed9e`, 2026-10-24; migration 0077 applied by the deploy). Chromium, Firefox and WebKit pass private reads, production renewal events, the edit/access lifecycle and the already-open Next Students transition on real connection failure. An installation turns offline use off with `SCHOOL_OFFLINE=off` (section 10.4). Phases 2 to 4 are deferred; physical Android/iOS checks remain before customer installations; deadline fallback stays disabled. All feature files are unchanged. The endpoint ledger, shared adapters and rollout instructions are in [Phase 1 Students reads](docs/tests/offline-students.md). See [verification and remaining gates](docs/tests/offline-read.md) for dated evidence and local setup.
 
 | Area | Current implementation | Remaining boundary |
 | --- | --- | --- |
@@ -12,7 +12,7 @@ Status: **PHASE 1 STUDENTS READ PROOF PASSES LOCALLY.** Chromium, Firefox and We
 | Updates | Explicit consent or natural activation after clients close; conservative open-editor protection; legacy-worker migration passes in Chromium, Firefox and WebKit; branded page for unlisted documents; three failed downloads per version per day | Shared authoritative form-dirty integration and recovery acceptance |
 | Reads | Phase 1 Students/shared exact projections, immutable bounded snapshots and shared GET dispatcher | Broader modules, devices and release acceptance; deadlines remain disabled |
 
-Implementation changes remain local working-tree changes until separately committed and published. No deployment is established by this plan.
+Phases 0 and 1 are committed and run on the demo. Each customer installation is a separate promotion with its own evidence (section 10.4).
 
 This is the implementation handoff for the owner's current request. The first deliverable is an application that opens, refreshes, and navigates without Wi-Fi. The next deliverable supplies downloaded data through the existing service API contracts. Offline changes are a later deliverable.
 
@@ -519,7 +519,7 @@ Keep initial UI interactive during preparation. Bound page size/concurrency, pau
 
 ### 10.4 Rollout and rollback
 
-- Introduce separate app-owned shell/read capabilities, with per-route readiness and a controlled pilot cohort. Name/configure them during implementation; do not imply a flag already exists.
+- Introduce separate app-owned shell/read capabilities, with per-route readiness and a controlled pilot cohort. Implemented so far: one per-installation switch, `SCHOOL_OFFLINE=off`, which refuses grants and downloads and serves a worker without the shell that takes over on the next online visit, keeping downloaded data locked. Runbook and rehearsal (`test:offline:switch`): [Phase 1 Students reads](docs/tests/offline-students.md#off-switch-and-recovery).
 - For each release, record exact package versions, commit, migrations, artifact/build identity and route coverage.
 - Keep worker update activation staged. A rollback build must preserve the old shell assets needed by open clients and must not delete IndexedDB data automatically.
 - Emergency recovery runbook: publish a known-good compatible `/sw.js` and retained assets at the same scope; bring the device online, save/export pending work, close all School tabs and installed windows, then reopen to allow browser update/natural activation. Verify the active worker/build through its protocol. A broken UI must not make recovery depend solely on its Update button. If that fails, use an explicitly reviewed support procedure that unregisters only the affected worker after preserving work, without clearing cookies/localStorage/IndexedDB. Test the broken-worker scenario before production; no forced activation or destructive site reset is authorized by this plan.

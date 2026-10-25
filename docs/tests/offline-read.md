@@ -287,6 +287,22 @@ In Chromium, `registration.update()` called from the branded page fails with "Se
 | WebKit lifecycle audit | The shell no longer downloads a stored factory or uploaded sidebar logo again on every signed-in page. The audit once caught that request when `setOffline` cut it off as an unmatched fetch diagnostic |
 | Offline units / typecheck / lint / i18n / boundaries | PASS: 74 offline unit tests (a refused session locks; unavailable or rate-limited does not; stored immutable logos are not downloaded again), lint with the existing ParentsTable warning only |
 
+## Off switch and production hardening (2026-10-25)
+
+Phases 0 and 1 run on the demo from `a8eed9e`. Before customer installations:
+
+- **Off switch.** `SCHOOL_OFFLINE=off` refuses offline grants and downloads (403 `offlineRead.errors.disabled`) and makes `/sw.js` serve a worker without the shell that takes over immediately, drops the shell caches and keeps downloaded data, locked. Runbook: [Off switch and recovery](offline-students.md#off-switch-and-recovery).
+- **Worker update check.** `register()` returns an existing registration for the same script without checking it, and WebKit did not check on navigation either: with the switch off, WebKit kept the shell worker indefinitely. Each online opening now calls `registration.update()` when nothing is installing or waiting. Normal shell updates and the switch reach Safari on the next online opening.
+- **Refused-session redirect.** The dashboard's sign-in redirect waits (at most three seconds) for a refused session's lock to commit; najm-auth's hook navigated at once, and in one Firefox lifecycle run the page left before the IndexedDB write committed, keeping the copies readable.
+- **Test harness.** Firefox can leave a document uncontrolled by an active worker that reports the shell ready. The captured diagnostic showed exactly that for the intermittent reads timeout. The reads and switch tests no longer require the current document to be controlled; their stopped-server navigation proves the worker serves the shell. The browser audit excuses WebKit's native diagnostics of requests cut off by `setOffline` or a navigation, and the lifecycle test waits for the second tab's preparation before going offline.
+
+| Check | Result / evidence |
+| --- | --- |
+| `test:offline:switch` (new), three engines | PASS: prepared and readable with the server stopped; off: replacement worker on the next online visit with no update notice, shell caches dropped, data kept and locked, stacked offline page led by the displayed language; on: shell worker installed behind it, activated from its update notice, fresh grant and downloads, stopped-server Students list |
+| All offline browser suites, three engines (switch, errors, reads, lifecycle, renewal, navigation, browser, registration, session) | PASS on the final build. Earlier runs on this change: Firefox reads three of three after the control fix; WebKit lifecycle four of four after the audit fix; Firefox lifecycle five of five after the redirect fix |
+| Units | `test:offline` 77 pass (switch refusal before any account lookup; the update check on an existing registration; the redirect's lock settles committed, once for every listener); `bun run test` 0 fail |
+| typecheck / lint / i18n / server i18n / boundaries | PASS; lint with the existing ParentsTable warning only |
+
 ## Earlier results, before the silent-preparation correction
 
 The records below are historical. Their visible preparation notices and timeout-based automatic legacy activation are superseded by the correction above.
