@@ -51,6 +51,7 @@
   "dependencies": {
     "@faker-js/faker": "^10.6.0",
     "najm-i18n": "2.2.0",
+    "najm-offline": "0.1.0",
     "nanoid": "^5.0.0"
   }
 }

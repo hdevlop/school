@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { usePathname, useRouter, useSearchParams } from '../../../src/offline/navigation';
+import { usePathname, useRouter, useSearchParams } from 'najm-offline/shell/navigation';
 
 function NavigationProof() {
   const [tick, setTick] = useState(0);

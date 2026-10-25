@@ -5,7 +5,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import { LogOut, Settings } from 'lucide-react';
 import { YearScopedChatbot } from '@/features/Chat/components/YearScopedChatbot';
 import { SignOutButton, useAuth, usePermissions } from 'najm-auth/client/react';
-import { useSignInOnSessionExpired } from '@/offline/sessionRedirect';
+import { useSignInOnSessionExpired } from 'najm-offline/react';
+import { lockRefusedSession } from '@/offline/runtime';
 import { cn, isNavItemActiveOrNested, NSidebar, NSidebarProvider, useCardViewport, useMediaQuery, useNSidebar, type NavItem } from 'najm-kit';
 import { NSidebarNextLink } from 'najm-kit/next';
 import { clearNajmUiPreferences } from 'najm-kit/server';
@@ -100,7 +101,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const { t } = useTranslation();
   const role = (user as any)?.role ?? 'teacher';
-  useSignInOnSessionExpired(schoolApp.auth.loginRoute);
+  useSignInOnSessionExpired(schoolApp.auth.loginRoute, lockRefusedSession);
 
   const { can } = usePermissions();
   const navItems: NavItem[] = [

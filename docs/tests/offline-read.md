@@ -303,6 +303,22 @@ Phases 0 and 1 run on the demo from `a8eed9e`. Before customer installations:
 | Units | `test:offline` 77 pass (switch refusal before any account lookup; the update check on an existing registration; the redirect's lock settles committed, once for every listener); `bun run test` 0 fail |
 | typecheck / lint / i18n / server i18n / boundaries | PASS; lint with the existing ParentsTable warning only |
 
+## Moved to najm-offline 0.1.0 (2026-10-25)
+
+School's offline runtime, replica, dispatcher, renewal, worker registration and staged updates, shell adapters, server protocol, snapshot table, worker route, shell build and browser error audit now come from Najm's `najm-offline` package. School configures it with `namespace: 'school'`, so storage keys, IndexedDB names, locks and the `offline_read_snapshots` table are unchanged; installed devices keep their downloaded data. `db:generate` reports no schema change. The generic unit tests moved with the code (81 in `packages/najm-offline/test`). School keeps 26 offline units for its routes, configuration, server wiring and catalog keys, plus a check that every refusal najm-offline names is in all four catalogs.
+
+The production shell built from the package has the same 14 assets and 2 stylesheets as before; two consecutive builds produced the same version, `ec2ed03915dbe7519e3a`.
+
+| Check | Result |
+| --- | --- |
+| `test:offline` | PASS, 26 (School), plus 81 in najm-offline |
+| `bun run test` | PASS, except the Najm pin check while School installs the unpublished 0.1.0 from a local tarball |
+| typecheck, lint, i18n, `db:check`, workspace boundaries | PASS (lint: the existing ParentsTable warning) |
+| Browser: shell, startup, fallback, errors, reads, lifecycle, renewal, navigation, switch | PASS in Chromium, Firefox and WebKit (`OFFLINE_BROWSERS=chromium,firefox,webkit`) |
+| Browser: registration, session, install | PASS |
+
+The first browser run failed in every suite on `ReferenceError: __name is not defined`. The package's error audit passed its in-page script as a bundled function carrying bundler helpers. It now passes source text, and a unit test checks that. Logs are `.cache/najm-offline-all-*.log`.
+
 ## Earlier results, before the silent-preparation correction
 
 The records below are historical. Their visible preparation notices and timeout-based automatic legacy activation are superseded by the correction above.

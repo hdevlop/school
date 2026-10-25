@@ -7,25 +7,30 @@ import { NSidebar, NSidebarProvider, type LinkComponentType } from 'najm-kit';
 import { NThemeImage } from 'najm-theme/react';
 import { useTranslation } from 'najm-i18n/react';
 import { schoolI18n } from '@sms/contracts/locales';
-import { BOOTSTRAP_KEY, readBootstrap, routeForPath, withPreferenceChoices, type ShellBootstrap, type ShellPreferences } from './bootstrap';
+import { BOOTSTRAP_KEY, SHELL_BRANDING, readBootstrap, routeForPath, withPreferenceChoices, type ShellBootstrap, type ShellPreferences } from './bootstrap';
 import { auth } from './auth';
 import { schoolApp } from '@/najm.config';
-import { usePathname } from './navigation';
+import { configureShellParams, SHELL_NAVIGATION_EVENT, usePathname } from 'najm-offline/shell/navigation';
+import { CachedAccountContext } from 'najm-offline/shell/auth';
+import { withCachedBranding } from 'najm-offline/pwa';
 import { connectShellUpdates, rememberOfflineLanguage } from './updates';
 import StudentProfile from '@/features/Students/components/StudentProfile';
 import { StudentReadView } from './StudentReadView';
 import { useYearSelectionStore } from '@/features/AcademicYears/store/yearSelectionStore';
-import { canUseLegacyDisplay, readCachedPresentation, cachedExpiryDelay, pointerValue, type CachedPresentation } from './access';
+import { canUseLegacyDisplay, readCachedPresentation, cachedExpiryDelay, pointerValue, updatePresentation, type CachedPresentation } from './access';
 import { connectOfflineRuntime, installShellTransport, observeOffline, renewOffline } from './runtime';
-import { CachedAccountContext } from './cachedAccount';
 import { useQueryClient } from '@tanstack/react-query';
 import StudentsTable from '@/features/Students/components/StudentsTable';
 import { RenderedActiveAcademicYearProvider } from '@/features/Settings/context/RenderedActiveAcademicYear';
 import { AcademicYearSelectionOwner } from '@/features/AcademicYears/components/AcademicYearSelectionOwner';
 import { createShellNavItems, navLabel } from './shellNavigation';
-import { withCachedBranding } from './branding';
 
 installShellTransport();
+// The shell has no route tree: profile pages read their id from the path.
+configureShellParams(path => {
+  const match = /^\/(?:students|parents|teachers)\/([^/]+)/.exec(path);
+  return match ? { id: decodeURIComponent(match[1]) } : {};
+});
 const query = defineNajmTanStackQuery({ queries: { networkMode: 'always', retry: false } });
 const tableDefaults = { mobileList: true };
 
@@ -62,7 +67,7 @@ function App({ bootstrap, privateAccess }: { bootstrap: ShellBootstrap; privateA
       if (url.origin !== location.origin || !routeForPath(bootstrap.routes, url.pathname)) return;
       event.preventDefault();
       history.pushState(null, '', url.pathname + url.search + url.hash);
-      dispatchEvent(new Event('school-offline-navigation'));
+      dispatchEvent(new Event(SHELL_NAVIGATION_EVENT));
     };
     document.addEventListener('click', navigate);
     return () => document.removeEventListener('click', navigate);
@@ -132,7 +137,7 @@ function Boot() {
   const hasReadAccount = () => { try { return !!JSON.parse(pointerValue() ?? 'null')?.accountId; } catch { return true; } };
   const load = () => { try { return hasReadAccount() ? null : readBootstrap(localStorage); } catch { return null; } };
   const [bootstrap, setBootstrap] = useState(load);
-  const [presentation, setPresentation] = useState<CachedPresentation | null>(null);
+  const [presentation, setPresentation] = useState<CachedPresentation<ShellBootstrap> | null>(null);
   // Preferences chosen in this document win over a re-read or renewal that
   // captured older values before the choice was stored.
   const chosen = useRef<Partial<ShellPreferences>>({});
@@ -190,7 +195,7 @@ function Boot() {
     if (!value) return;
     let cancelled = false;
     const fallback = new Promise<typeof value>(resolve => setTimeout(() => resolve(value), 2000));
-    void Promise.race([withCachedBranding(value).catch(() => value), fallback]).then(resolved => { if (!cancelled) setBranding(resolved); });
+    void Promise.race([withCachedBranding(SHELL_BRANDING, value).catch(() => value), fallback]).then(resolved => { if (!cancelled) setBranding(resolved); });
     return () => { cancelled = true; };
   }, [brandingSource]);
   if (!bootstrap) {
@@ -211,15 +216,7 @@ function Boot() {
       } catch { /* Storage denial keeps the choice for this document only. */ }
       return;
     }
-    void import('./access').then(async ({ selectedReplica }) => {
-      const active = await selectedReplica();
-      if (!active) return;
-      await active.storage.replica.database.transaction(['metadata'], async tx => {
-        const current = await tx.get('metadata', 'presentation') as CachedPresentation | undefined;
-        if (!current || current.grant.accountId !== presentation.grant.accountId) return;
-        await tx.put('metadata', { ...current, bootstrap: withChoices(current.bootstrap) }, 'presentation');
-      });
-    }).catch(() => undefined);
+    void updatePresentation(presentation.grant.accountId, withChoices).catch(() => undefined);
   };
   return <CachedAccountContext.Provider value={presentation?.grant ?? null}><NajmAppProvider authClient={auth.client} query={query} snapshot={{ ...bootstrap.ui, ...(branding ? { branding } : {}), session: null }} i18n={schoolI18n} tableDefaults={tableDefaults} location={false} formDevTools={false} uiRuntime={{
     onLanguageChange: value => persist('language', value), onThemeChange: value => persist('theme', value), onTimeZoneChange: value => persist('timeZone', value),

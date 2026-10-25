@@ -10,7 +10,7 @@ const navigationProof = await Bun.build({ entrypoints: [resolve(appRoot, 'tests/
   target: 'browser', minify: true, define: { 'process.env.NODE_ENV': '"production"' } });
 if (!navigationProof.success) throw new AggregateError(navigationProof.logs, 'Navigation fixture build failed');
 const navigationScript = await navigationProof.outputs[0].text();
-const preparationProof = await Bun.build({ entrypoints: [resolve(appRoot, 'src/offline/registration.ts')], target: 'browser', minify: true });
+const preparationProof = await Bun.build({ entrypoints: [resolve(appRoot, 'tests/offline/fixtures/preparation.ts')], target: 'browser', minify: true });
 if (!preparationProof.success) throw new AggregateError(preparationProof.logs, 'Preparation fixture build failed');
 const preparationScript = await preparationProof.outputs[0].text();
 const manifest = await Bun.file(resolve(appRoot, 'public/offline-shell/manifest.json')).json();

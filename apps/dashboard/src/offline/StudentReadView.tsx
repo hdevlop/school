@@ -4,7 +4,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { NLoadingState } from 'najm-kit';
 import StudentProfile from '@/features/Students/components/StudentProfile';
 import { useStudentProfile } from '@/features/Students/hooks/useStudentProfile';
-import { ReadCoverageContext } from './readCoverage';
+import { ReadCoverageContext } from 'najm-offline/shell/kit';
 
 /** Shares the real hook's existing query observers; it never supplies substitute feature data. */
 export function StudentReadView({ studentId }: { studentId: string }) {

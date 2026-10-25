@@ -1,3 +1,5 @@
+import { createShellPaths } from 'najm-offline/client';
+
 // One public document allowlist shared by the worker and local dispatcher.
 export const SHELL_PATHS = [
   '/home', '/dashboard', '/students', '/students/*', '/parents', '/parents/*', '/teachers', '/teachers/*',
@@ -7,7 +9,4 @@ export const SHELL_PATHS = [
   '/subjects', '/vehicles', '/roles', '/permissions', '/users', '/notifications',
   '/reports', '/aging', '/settings', '/preferences', '/transport', '/drivers', '/visit-requests', '/attendance/teachers',
 ] as const;
-export function isShellPath(path: string): boolean {
-  if (!path.startsWith('/') || path.startsWith('//') || /[?#\\]/.test(path)) return false;
-  return SHELL_PATHS.some(pattern => pattern.endsWith('/*') ? path.startsWith(pattern.slice(0, -1)) : path === pattern);
-}
+export const isShellPath = createShellPaths(SHELL_PATHS);

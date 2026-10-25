@@ -41,7 +41,7 @@ Inside a package, imports are relative. A tsconfig alias is package-local
 | Server components, route handlers, `najm.server.ts` | Contracts and `@sms/server` exports |
 | `@sms/server`, including workers | Contracts; never the app or seed |
 | `@sms/seed` | Server and contracts exports |
-| `@sms/contracts` | No workspace package; only `najm-i18n/define`, `@faker-js/faker`, `nanoid` |
+| `@sms/contracts` | No workspace package; only `najm-i18n/define`, `najm-offline` (its dependency-free protocol entry), `@faker-js/faker`, `nanoid` |
 
 Every cross-package import names the package and one of its declared
 `exports`, and the importing package declares the dependency. Relative paths,

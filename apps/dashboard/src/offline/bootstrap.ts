@@ -1,43 +1,23 @@
 import type { NajmClientAppSnapshot } from 'najm-next/app/client';
+import { readShellBootstrap, routeForPath as findRoute, shellBootstrapKey, type ShellBootstrap as Bootstrap, type ShellRoute } from 'najm-offline/client';
+import { OFFLINE_NAMESPACE } from '@sms/contracts/offline';
 import { isShellPath } from './routes';
 export { isShellPath } from './routes';
+export { SHELL_PREPARATION_DURATION_MS, withPreferenceChoices, type ShellRoute } from 'najm-offline/client';
 
-export const BOOTSTRAP_KEY = 'school.offline-shell.v1';
+export const BOOTSTRAP_KEY = shellBootstrapKey(OFFLINE_NAMESPACE);
 export const CACHE_ID = 'myscolai-shell';
-export const SHELL_PREPARATION_DURATION_MS = 8 * 60 * 60 * 1000;
-export type ShellRoute = { href: string; label: string };
-export type ShellBootstrap = {
-  version: 1;
-  accountId: string;
-  role?: string;
-  expiresAt: number;
-  routes: ShellRoute[];
-  ui: Omit<NajmClientAppSnapshot, 'session'>;
-  academicYear?: string;
-};
+// Sidebar logos are served by the API, which the worker never caches. School
+// keeps its own copy for the offline shell; Najm's shell caches are untouched.
+// Factory logos are named by a hash of their bytes and uploads by a fresh id,
+// so a URL there never serves other bytes: a replaced logo is a new URL.
+export const SHELL_BRANDING = { cacheName: 'school-offline-branding', slots: ['sidebarLogoExpanded', 'sidebarLogoCollapsed'],
+  immutable: /^\/api\/branding\/(?:factory|assets)\// };
+export type ShellBootstrap = Bootstrap<Omit<NajmClientAppSnapshot, 'session'>>;
 
 // This is display metadata, never an authenticated session or record access grant.
 export function readBootstrap(storage: Pick<Storage, 'getItem'>, now = Date.now()): ShellBootstrap | null {
-  try {
-    const value = JSON.parse(storage.getItem(BOOTSTRAP_KEY) ?? 'null') as ShellBootstrap | null;
-    if (!value || value.version !== 1 || typeof value.accountId !== 'string' || !value.accountId
-      || (value.role !== undefined && typeof value.role !== 'string')
-      || !Number.isFinite(value.expiresAt) || value.expiresAt <= now || value.expiresAt > now + SHELL_PREPARATION_DURATION_MS
-      || !value.ui?.preferences || !Array.isArray(value.routes)
-      || !value.routes.every(route => isShellPath(route.href) && typeof route.label === 'string')) return null;
-    return value;
-  } catch { return null; }
+  return readShellBootstrap<ShellBootstrap>(storage, { key: BOOTSTRAP_KEY, isShellPath }, now);
 }
-
 export type ShellPreferences = ShellBootstrap['ui']['preferences'];
-/** Preferences chosen in an open shell override a record read before or after the choice. */
-export function withPreferenceChoices<T extends ShellBootstrap | null>(bootstrap: T, choices: Partial<ShellPreferences>): T {
-  if (!bootstrap || !Object.keys(choices).length) return bootstrap;
-  return { ...bootstrap, ui: { ...bootstrap.ui, preferences: { ...bootstrap.ui.preferences, ...choices } } };
-}
-
-export function routeForPath(routes: ShellRoute[], path: string): ShellRoute | undefined {
-  if (!isShellPath(path)) return undefined;
-  return routes.find(route => path === route.href)
-    ?? routes.filter(route => path.startsWith(route.href + '/')).sort((a, b) => b.href.length - a.href.length)[0];
-}
+export function routeForPath(routes: ShellRoute[], path: string): ShellRoute | undefined { return findRoute(routes, path, isShellPath); }

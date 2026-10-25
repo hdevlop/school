@@ -57,7 +57,8 @@ const policy = {
   contracts: {
     // Audited portable dependencies. The i18n entry is the definition helper
     // only, never the server plugin; faker and nanoid serve ./fixtures.
-    allowedExternal: ["najm-i18n/define", "@faker-js/faker", "nanoid"],
+    // najm-offline's root entry is its dependency-free protocol contracts.
+    allowedExternal: ["najm-i18n/define", "najm-offline", "@faker-js/faker", "nanoid"],
     // Contract tests run under Bun; the runner is not a package dependency.
     allowedInTests: ["bun:test"],
   },
@@ -74,6 +75,11 @@ const policy = {
       "najm-next/app/server",
       "najm-next/config",
       "najm-next/location/server",
+      "najm-offline/build",
+      "najm-offline/pg",
+      "najm-offline/server",
+      "najm-offline/testing",
+      "najm-offline/worker",
       "najm-theme/server",
       "najm-theme/pg",
     ],

@@ -2,7 +2,9 @@ import 'reflect-metadata';
 import { describe, expect, test } from 'bun:test';
 import { getGuardMetadata } from 'najm-guard';
 import { canonicalJson, type ReplicaRecord } from 'najm-database/sync/contracts';
+import { OFFLINE_REFUSALS } from 'najm-offline/server';
 import { OFFLINE_SWITCH, offlineEnabled } from '@sms/contracts/offline';
+import { translations } from '@sms/contracts/locales';
 import { OfflineService, splitReadPages } from '../../src/modules/offline/OfflineService';
 import { OfflineController } from '../../src/modules/offline/OfflineController';
 import { installationDto, snapshotDto, pageQuery } from '../../src/modules/offline/OfflineDto';
@@ -56,8 +58,10 @@ describe('read download boundary', () => {
     expect([undefined, '', 'on', 'true'].map(offlineEnabled)).toEqual([true, true, true, true]);
     expect(['off', ' OFF '].map(offlineEnabled)).toEqual([false, false]);
     const lookups: string[] = [];
-    const service = { refusal: (key: string) => key, repository: { actor: async (id: string) => { lookups.push(id); return null; } } };
-    const actor = (OfflineService.prototype as unknown as { actor(this: typeof service, id: string): Promise<unknown> }).actor;
+    const prototype = OfflineService.prototype as unknown as { actor(id: string): Promise<unknown>; refuse(status: number, reason: string): never };
+    const service = { refusal: (key: string) => key, refuse: prototype.refuse, scope: { getUser: () => null },
+      repository: { actor: async (id: string) => { lookups.push(id); return null; } } };
+    const actor = prototype.actor;
     const previous = process.env[OFFLINE_SWITCH];
     try {
       process.env[OFFLINE_SWITCH] = 'off';
@@ -68,6 +72,13 @@ describe('read download boundary', () => {
       expect(lookups).toEqual(['account']);
     } finally {
       if (previous === undefined) delete process.env[OFFLINE_SWITCH]; else process.env[OFFLINE_SWITCH] = previous;
+    }
+  });
+  test('every refusal najm-offline names, and School’s own, is in every catalog', () => {
+    for (const reason of [...OFFLINE_REFUSALS, 'studentLimit']) {
+      for (const [language, catalog] of Object.entries(translations)) {
+        expect(typeof (catalog as { offlineRead: { errors: Record<string, unknown> } }).offlineRead.errors[reason], `${language} ${reason}`).toBe('string');
+      }
     }
   });
 });

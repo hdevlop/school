@@ -1,9 +1,9 @@
-import { and, eq, inArray, lt, sql } from 'drizzle-orm';
+import { eq, inArray, sql } from 'drizzle-orm';
+import { createPostgresSnapshotStore } from 'najm-offline/pg';
 import { Repository } from '../../najm';
 import type { DB } from '../../database/db';
 import { users, roles, permissions, rolePermissions, parents, studentParents } from '../../database/schema';
 import { parentSelect } from '../parents/ParentRepository';
-import { offlineSnapshots } from './OfflineSchema';
 
 @Repository()
 export class OfflineRepository {
@@ -51,23 +51,9 @@ export class OfflineRepository {
     for (const { studentId, ...parent } of rows) byStudent.get(studentId)?.push(parent);
     return byStudent;
   }
-  async create(accountId: string, context: typeof offlineSnapshots.$inferInsert.context) {
-    const [row] = await this.db.insert(offlineSnapshots).values({ accountId, context, pages: [],
-      expiresAt: new Date(Date.now() + 5 * 60_000).toISOString() }).returning();
-    return row;
-  }
   async readPermissionNames() {
     return (await this.db.select({ name: permissions.name }).from(permissions)).map(row => row.name).filter(name => name.startsWith('read:'));
   }
-  async save(id: bigint, pages: typeof offlineSnapshots.$inferInsert.pages) {
-    await this.db.update(offlineSnapshots).set({ pages }).where(eq(offlineSnapshots.id, id));
-  }
-  async find(id: string, accountId: string) {
-    const [row] = await this.db.select().from(offlineSnapshots)
-      .where(and(eq(offlineSnapshots.id, BigInt(id)), eq(offlineSnapshots.accountId, accountId)));
-    return row;
-  }
-  async cleanup() {
-    await this.db.delete(offlineSnapshots).where(lt(offlineSnapshots.expiresAt, new Date().toISOString()));
-  }
+  /** Downloads, written and read through the current transaction. */
+  readonly snapshots = createPostgresSnapshotStore(() => this.db);
 }
