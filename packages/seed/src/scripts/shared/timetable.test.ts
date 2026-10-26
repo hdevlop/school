@@ -70,8 +70,8 @@ it('teaches Monday to Thursday all day, Friday and Saturday mornings only', () =
 });
 
 it('fits a full collège week in those mornings and afternoons', () => {
-  const sections = ['CE6-A', '1AC-A', '2AC-A', '3AC-A'];
-  const subjects = ['MATH', 'FR', 'AR', 'ENG', 'PHY', 'SVT', 'PE', 'HIST', 'GEO', 'INFO'];
+  const sections = ['1AC-A', '2AC-A', '3AC-A'];
+  const subjects = ['MATH', 'FR', 'AR', 'ENG', 'PHY', 'SVT', 'EI', 'HG', 'PE', 'INFO', 'ART'];
   const units = subjects.flatMap((subjectId) => sections.map((sectionId) => ({
     classId: sectionId, sectionId, subjectId, lessons: weeklyLessons('Collège', subjectId),
   })));

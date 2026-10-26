@@ -118,6 +118,11 @@ describe('fee year scope on the marked PostgreSQL fixture', () => {
           { id: 'asof-full', status: 'completed' as const, paymentMethod: 'check' as const, amount: '100', paymentDate: day(-1), installmentId: 'asof-paid' },
           { id: 'asof-credit-card', status: 'completed' as const, paymentMethod: 'creditCard' as const, amount: '20', paymentDate: day(0), installmentId: 'asof-today' },
           { id: 'asof-debit-card', status: 'completed' as const, paymentMethod: 'debitCard' as const, amount: '30', paymentDate: day(0), installmentId: 'asof-today' },
+          { id: 'asof-online', status: 'completed' as const, paymentMethod: 'online' as const, amount: '15', paymentDate: day(0), installmentId: 'asof-today' },
+          { id: 'asof-mobile', status: 'completed' as const, paymentMethod: 'mobilePayment' as const, amount: '25', paymentDate: day(0), installmentId: 'asof-today' },
+          { id: 'asof-future-online', status: 'completed' as const, paymentMethod: 'online' as const, amount: '45', paymentDate: day(1), installmentId: 'asof-today' },
+          { id: 'asof-pending-mobile', status: 'pending' as const, paymentMethod: 'mobilePayment' as const, amount: '10', paymentDate: day(-1), installmentId: 'asof-today' },
+          { id: 'asof-voided-mobile', status: 'voided' as const, paymentMethod: 'mobilePayment' as const, amount: '12', paymentDate: day(-1), installmentId: 'asof-today' },
           { id: 'asof-future-card', status: 'completed' as const, paymentMethod: 'creditCard' as const, amount: '40', paymentDate: day(1), installmentId: 'asof-today' },
           { id: 'asof-voided-card', status: 'voided' as const, paymentMethod: 'debitCard' as const, amount: '10', paymentDate: day(-1), installmentId: 'asof-today' },
           { id: 'asof-dated-future', status: 'completed' as const, paymentMethod: 'cash' as const, amount: '50', paymentDate: day(1), installmentId: 'asof-past' },
@@ -136,14 +141,19 @@ describe('fee year scope on the marked PostgreSQL fixture', () => {
         })));
 
         const after = await read();
-        expect(Number(after.collectedToDate) - Number(before?.collectedToDate ?? 0)).toBe(320);
+        expect(Number(after.collectedToDate) - Number(before?.collectedToDate ?? 0)).toBe(360);
         expect(Number(after.collectedCashToDate) - Number(before?.collectedCashToDate ?? 0)).toBe(100);
         expect(Number(after.collectedCheckToDate) - Number(before?.collectedCheckToDate ?? 0)).toBe(100);
         expect(Number(after.collectedBankTransferToDate) - Number(before?.collectedBankTransferToDate ?? 0)).toBe(70);
         expect(Number(after.collectedTpeToDate) - Number(before?.collectedTpeToDate ?? 0)).toBe(50);
+        expect(Number(after.collectedOnlineToDate) - Number(before?.collectedOnlineToDate ?? 0)).toBe(15);
+        expect(Number(after.collectedMobilePaymentToDate) - Number(before?.collectedMobilePaymentToDate ?? 0)).toBe(25);
+        const methodFields = ['collectedCashToDate', 'collectedCheckToDate', 'collectedBankTransferToDate',
+          'collectedTpeToDate', 'collectedOnlineToDate', 'collectedMobilePaymentToDate'] as const;
+        expect(methodFields.reduce((total, field) => total + Number(after[field]) - Number(before?.[field] ?? 0), 0)).toBe(360);
         expect(Number(after.overdueAmount) - Number(before?.overdueAmount ?? 0)).toBe(300);
         // The existing annual balance still includes the future-dated completed receipts.
-        expect(Number(after.totalPaid) - Number(before?.totalPaid ?? 0)).toBe(450);
+        expect(Number(after.totalPaid) - Number(before?.totalPaid ?? 0)).toBe(535);
         throw rollback;
       });
     } catch (error) {

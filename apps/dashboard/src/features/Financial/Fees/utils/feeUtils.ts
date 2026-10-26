@@ -28,7 +28,8 @@ export interface FeeType {
    amount: number | string;
    paymentType: string;
    category?: string;
-   labels?: Record<string, string>;
+   labels?: Record<string, string> | null;
+   image?: string | null;
 }
 
 const SEEDED_FEE_TYPE_IDS = new Set(['FT00', 'FT01', 'FT02', 'FT03', 'FT04', 'FT05', 'FT06', 'FT07', 'FT8'])
@@ -40,7 +41,7 @@ export const getFeeTypeDisplayName = (
 ): string => {
    if (!feeType) return ''
 
-   const localizedLabel = feeType.labels?.[language]
+   const localizedLabel = feeType.labels?.[language]?.trim()
    if (localizedLabel) return localizedLabel
 
    if (SEEDED_FEE_TYPE_IDS.has(feeType.id) && feeType.category) {
@@ -57,13 +58,14 @@ export const getStudentFeesDisplayData = <T extends { fees?: Array<{
    name: string;
    feeTypeId: string;
    type?: string;
+   labels?: Record<string, string> | null;
 }> }>(data: T | null | undefined, translate: (key: string) => string, language: string): T | null | undefined => {
    if (!data?.fees) return data
    return {
       ...data,
       fees: data.fees.map(fee => ({
          ...fee,
-         name: getFeeTypeDisplayName({ id: fee.feeTypeId, name: fee.name, category: fee.type }, translate, language),
+         name: getFeeTypeDisplayName({ id: fee.feeTypeId, name: fee.name, category: fee.type, labels: fee.labels }, translate, language),
       })),
    }
 }

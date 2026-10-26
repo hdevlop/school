@@ -1,7 +1,7 @@
 'use client'
 
 import { NForm } from 'najm-kit'
-import { FormInput } from 'najm-kit';
+import { AvatarFormInput, FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React, { useMemo } from 'react'
@@ -20,6 +20,7 @@ const FeeTypeForm = ({ feeType = null }) => {
    const defaultValues = {
       ...(feeType?.id && { id: feeType.id }),
       name: feeType?.name || '',
+      image: feeType?.image ?? null,
       description: feeType?.description || '',
       category: feeType?.category || 'tuition', 
       amount: feeType?.amount || '',
@@ -49,44 +50,56 @@ const FeeTypeForm = ({ feeType = null }) => {
                   title={t('feeTypes.form.feeTypeInformation')}
                />
 
-               <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                  <FormInput
-                     name='name'
-                     type='text'
-                     icon={FileText}
-                     formLabel={t('feeTypes.form.name')}
-                     placeholder={t('feeTypes.form.namePlaceholder')}
-                     required={true}
+               <div className='grid grid-cols-1 items-start gap-4 md:grid-cols-[auto_minmax(0,1fr)]'>
+                  <AvatarFormInput
+                     name='image'
+                     formLabel={t('feeTypes.form.image')}
+                     title={t('feeTypes.form.image')}
+                     radius='xl'
+                     allowClear
+                     previewStyle={{ width: 160, height: 160 }}
+                     imageClassName='object-contain'
                   />
 
-                  <FormInput
-                     name='category'
-                     type='select'
-                     icon={Layers}
-                     formLabel={t('feeTypes.form.category')}
-                     placeholder={t('feeTypes.form.categoryPlaceholder')}
-                     items={categoryOptions}
-                     required={true}
-                  />
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                     <FormInput
+                        name='name'
+                        type='text'
+                        icon={FileText}
+                        formLabel={t('feeTypes.form.name')}
+                        placeholder={t('feeTypes.form.namePlaceholder')}
+                        required={true}
+                     />
 
-                  <FormInput
-                     name='amount'
-                     type='number'
-                     icon={DollarSign}
-                     formLabel={t('feeTypes.form.amount')}
-                     placeholder={t('feeTypes.form.amountPlaceholder')}
-                     required={true}
-                  />
+                     <FormInput
+                        name='category'
+                        type='select'
+                        icon={Layers}
+                        formLabel={t('feeTypes.form.category')}
+                        placeholder={t('feeTypes.form.categoryPlaceholder')}
+                        items={categoryOptions}
+                        required={true}
+                     />
 
-                  <FormInput
-                     name='paymentType'
-                     type='select'
-                     icon={CreditCard}
-                     formLabel={t('feeTypes.form.paymentType')}
-                     placeholder={t('feeTypes.form.paymentTypePlaceholder')}
-                     items={paymentTypeOptions}
-                     required={true}
-                  />
+                     <FormInput
+                        name='amount'
+                        type='number'
+                        icon={DollarSign}
+                        formLabel={t('feeTypes.form.amount')}
+                        placeholder={t('feeTypes.form.amountPlaceholder')}
+                        required={true}
+                     />
+
+                     <FormInput
+                        name='paymentType'
+                        type='select'
+                        icon={CreditCard}
+                        formLabel={t('feeTypes.form.paymentType')}
+                        placeholder={t('feeTypes.form.paymentTypePlaceholder')}
+                        items={paymentTypeOptions}
+                        required={true}
+                     />
+                  </div>
                </div>
 
                <FormSectionHeader

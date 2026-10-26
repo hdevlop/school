@@ -49,6 +49,7 @@ export function usePrintReceipt() {
             notes: payment.notes ?? undefined,
             items: payment.receiptItems.map((item) => ({
               feeType: item.feeType,
+              feeTypeLabels: item.feeTypeLabels,
               academicYear: item.academicYear,
               schedule: item.schedule,
               dueDates: item.dueDates,

@@ -266,6 +266,8 @@ runSeedTask(`demo seed for ${seedAcademicYear}`, async (server) => {
 
       await seedPhase('Fee types', () => feeTypeService.seedDemoFeeTypes(schoolSeedData.feeTypesData));
       console.log('✅ Fee types seeded');
+      const feeTypeIds = await feeTypeService.resolveSeedFeeTypeIds(schoolSeedData.feeTypesData);
+      for (const fee of uniqueFeesData) fee.feeTypeId = feeTypeIds.get(fee.feeTypeId) ?? fee.feeTypeId;
 
       await seedPhase('Parents', () => parentService.createBulk(parentsData));
       console.log('✅ Parents seeded');

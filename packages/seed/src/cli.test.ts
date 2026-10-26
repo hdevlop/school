@@ -35,23 +35,26 @@ async function runMenu(command: string, confirmed: boolean, interactive = true) 
 }
 
 describe('seed menu', () => {
-  it('offers default data with settings and the chosen year and levels', async () => {
+  it('offers default data with settings and the chosen levels, without asking for a year', async () => {
     const result = await runMenu('defaults', true);
     expect(result.code).toBe(0);
     const { events } = JSON.parse(result.stdout);
     expect(events[0].menu).toContainEqual(expect.objectContaining({
       value: 'defaults', label: 'Seed default data',
     }));
+    expect(events).toHaveLength(2);
     expect(events.at(-1)).toEqual({
-      academic: { includeSettings: true }, args: ['--year=2026-2027', '--levels=primaire'],
+      academic: { includeSettings: true }, args: ['--levels=primaire'],
     });
   });
 
-  it('keeps the existing academic-only command free of settings changes', async () => {
+  it('keeps the existing academic-only command free of settings changes and asks for its year', async () => {
     const result = await runMenu('academic', true);
     expect(result.code).toBe(0);
     const { events } = JSON.parse(result.stdout);
-    expect(events.at(-1).academic).toEqual({ includeSettings: false });
+    expect(events.at(-1)).toEqual({
+      academic: { includeSettings: false }, args: ['--year=2026-2027', '--levels=primaire'],
+    });
   });
 
   it('offers academic deletion directly in the menu and passes the confirmed choice', async () => {

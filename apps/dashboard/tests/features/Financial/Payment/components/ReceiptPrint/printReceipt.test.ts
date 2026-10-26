@@ -78,6 +78,15 @@ it('prints a French receipt by default, without Arabic receipt labels', () => {
   expect(html).not.toContain('وصل أداء');
 });
 
+it('uses the receipt language for translated fee names, escapes them and falls back when absent', () => {
+  const item = { feeType: 'Saved name', feeTypeLabels: { fr: 'Restaurant <CM1>', ar: 'رسوم المطعم المدرسي' }, academicYear: '2026-2027', amount: 100, remainingAmount: 0 };
+  expect(buildReceiptHtml({ ...input, items: [item] })).toContain('Restaurant &lt;CM1&gt;');
+  const arabic = buildReceiptHtml({ ...input, language: 'ar', items: [item] });
+  expect(arabic).toContain('رسوم المطعم المدرسي');
+  expect(arabic).not.toContain('Restaurant');
+  expect(buildReceiptHtml({ ...input, language: 'ar', items: [{ ...item, feeTypeLabels: null }] })).toContain('Saved name');
+});
+
 it('prints an Arabic receipt in RTL, with localized dates and amounts and no French receipt labels', () => {
   const html = buildReceiptHtml({ ...input, language: 'ar', feeYear: '2025-2026', yearAllocatedAmount: 50 });
   expect(html).toContain('<html lang="ar" dir="rtl">');

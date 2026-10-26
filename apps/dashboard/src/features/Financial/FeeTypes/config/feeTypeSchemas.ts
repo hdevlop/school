@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { FEE_TYPE_STATUS_VALUES, PAYMENT_TYPE_VALUES } from '@sms/contracts';
+import { PAYMENT_TYPE_VALUES } from '@sms/contracts';
 
 type T = (key: string) => string;
 
@@ -22,11 +22,11 @@ const numberField = (schema: z.ZodNumber): any =>
 export const createFeeTypeSchema = (t: T) => z.object({
   id: z.preprocess((value) => (value === '' ? undefined : value), z.string().min(1).nullish().optional()),
   name: z.string().min(2, t('feeTypes.validation.nameMinLength')).max(100, t('feeTypes.validation.tooLong')),
+  image: z.union([z.string(), z.instanceof(File), z.null()]).optional(),
   description: z.string().max(500, t('feeTypes.validation.tooLong')).optional().nullable(),
   category: z.string(),
   amount: numberField(z.number({ error: t('feeTypes.validation.amountRequired') }).positive(t('feeTypes.validation.amountPositive')).max(1_000_00, t('feeTypes.validation.amountTooLarge'))),
   paymentType: z.enum(PAYMENT_TYPE_VALUES).default('recurring'),
-  status: z.enum(FEE_TYPE_STATUS_VALUES).default('active').optional(),
 });
 
 export type FeeTypeFormValues = z.input<ReturnType<typeof createFeeTypeSchema>>;

@@ -81,8 +81,8 @@ function StudentsTable() {
   const viewsOtherYear = !!viewingYear && !!activeYear && viewingYear !== activeYear;
   const { classes: activeYearClasses, refetch: refetchActiveYearClasses } = useClasses({ academicYear: activeYear, enabled: viewsOtherYear });
   const newStudentClasses = viewsOtherYear ? activeYearClasses : classes;
-  // Fee types only fill the new-student form.
-  const { feeTypes } = useFeeTypes({ enabled: canCreate });
+  // Fee types fill the new-student form and match the fees of an imported file.
+  const { feeTypes, refetch: refetchFeeTypes } = useFeeTypes({ enabled: canCreate });
   const { businessDate, isBusinessDateLoading, refetchBusinessDate } = useBusinessDate();
   const { data: registeredYears } = useAcademicYearOptions();
   const activeYearCalendar = registeredYears?.years.find((year) => year.label === activeYear);
@@ -211,7 +211,8 @@ function StudentsTable() {
   // a time in the active year, through the import route that permits missing
   // guardian contacts. A row the server refuses does not stop the others.
   const handleImport = async (rows: Record<string, unknown>[]) => {
-    const { students: payloads, problems } = buildStudentImport(rows, newStudentClasses ?? [], await refetchBusinessDate());
+    const importFeeTypes = feeTypes ?? (await refetchFeeTypes()).data ?? [];
+    const { students: payloads, problems } = buildStudentImport(rows, newStudentClasses ?? [], await refetchBusinessDate(), importFeeTypes);
     if (problems.length) {
       throw new Error(problems.slice(0, 5).map(({ row, reason, value }) =>
         t('students.import.problem', { row, reason: t(`students.import.reasons.${reason}`, { value: value ?? '' }) })).join(' · '));

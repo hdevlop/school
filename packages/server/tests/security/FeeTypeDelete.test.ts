@@ -11,7 +11,9 @@ function service(inUse: boolean) {
     delete: async (id: string) => { deleted.push(id); return { id }; },
   };
   const validator = withEnglishMessages(new FeeTypeValidator(repository as any));
-  return { service: new FeeTypeService(repository as any, validator), deleted };
+  return { service: new FeeTypeService(repository as any, validator, {
+    delete: async () => true,
+  } as any), deleted };
 }
 
 describe('deleting a fee type', () => {

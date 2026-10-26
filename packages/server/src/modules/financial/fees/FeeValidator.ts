@@ -163,8 +163,10 @@ export class FeeValidator {
     await this.studentValidator.checkExists(studentId);
   }
 
-  async validateFeeTypeExists(feeTypeId) {
-    return await this.feeTypeValidator.checkExists(feeTypeId);
+  async validateFeeTypeExists(feeTypeId, forAssignment = false) {
+    const feeType = await this.feeTypeValidator.checkExists(feeTypeId);
+    if (forAssignment && feeType.status !== 'active') Err(400, this.t('feeTypeInactive'));
+    return feeType;
   }
 
   async validate(data, excludeId = null, defaultAcademicYear?: string) {
@@ -187,7 +189,7 @@ export class FeeValidator {
     }
 
     if (feeTypeId && !isUpdate) {
-      await this.validateFeeTypeExists(feeTypeId);
+      await this.validateFeeTypeExists(feeTypeId, true);
     }
 
     const targetStudentId = studentId || existingFee?.studentId;

@@ -146,6 +146,7 @@ function FeeRow({ fee, open, onToggle, menu, onPayInstallment }: {
           <span className="flex w-full items-center gap-2">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center text-xl">
               <FeeCategoryIcon
+                image={fee.image ?? fee.feeType?.image}
                 category={fee.type ?? fee.feeTypeCategory ?? fee.category ?? fee.feeType?.category}
                 fallback={fee.icon}
               />

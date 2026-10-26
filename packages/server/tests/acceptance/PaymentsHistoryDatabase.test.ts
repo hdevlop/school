@@ -30,8 +30,9 @@ describe('payment receipt and fee-year portions on the marked PostgreSQL fixture
         const topUpId = 'receipt-monthly-topup';
         const checkId = 'receipt-monthly-pending';
         const studentId = 'history-student-08';
+        const labels = { fr: 'Frais de scolarité', ar: 'الرسوم الدراسية' };
         await tx.insert(feeTypes).values({ id: typeId, name: 'Tuition', category: 'tuition',
-          amount: '960', paymentType: 'recurring', status: 'active' });
+          labels, amount: '960', paymentType: 'recurring', status: 'active' });
         await tx.insert(fees).values({ id: feeId, studentId, feeTypeId: typeId, schedule: 'monthly',
           academicYear: '2026-2027', baseAmount: '960', grossAmount: '9600', netAmount: '9600' });
         await tx.insert(feeInstallments).values(Array.from({ length: 10 }, (_, i) => ({
@@ -51,7 +52,7 @@ describe('payment receipt and fee-year portions on the marked PostgreSQL fixture
         ]);
         // Pending checks and the eight future months must not change this receipt's balance.
         expect(await repo.getReceiptItems(receiptId)).toEqual([{
-          feeId, feeType: 'Tuition', academicYear: '2026-2027', schedule: 'monthly',
+          feeId, feeType: 'Tuition', feeTypeLabels: labels, academicYear: '2026-2027', schedule: 'monthly',
           dueDates: ['2026-09-01', '2026-10-01'], amount: '1500.00', remainingAmount: '420.00',
         }]);
         await tx.insert(payments).values({ id: topUpId, studentId, amount: '420',

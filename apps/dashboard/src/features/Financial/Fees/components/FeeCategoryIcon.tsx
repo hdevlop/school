@@ -1,5 +1,7 @@
+'use client';
+
 import Image from 'next/image';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 
 const categoryImages: Record<string, string> = {
   tuition: 'tuition',
@@ -10,27 +12,35 @@ const categoryImages: Record<string, string> = {
   technology: 'technology',
   fieldtrip: 'field-trip-excursion',
   cafeteria: 'cafeteria',
+  childcare: 'childcare',
   meal: 'cafeteria',
   transport: 'transportation',
   transportation: 'transportation',
 };
 
 interface FeeCategoryIconProps {
+  image?: string | null;
   category?: string | null;
   fallback?: ReactNode;
   size?: number;
 }
 
-export default function FeeCategoryIcon({ category, fallback = '$', size = 40 }: FeeCategoryIconProps) {
-  const image = categoryImages[category?.toLowerCase().replace(/[\s_-]/g, '') ?? ''];
+export default function FeeCategoryIcon({ image, category, fallback = '$', size = 40 }: FeeCategoryIconProps) {
+  const [failedImage, setFailedImage] = useState<string | null>(null);
+  const categoryImage = categoryImages[category?.toLowerCase().replace(/[\s_-]/g, '') ?? ''];
+  const customImage = image && image !== failedImage ? image : null;
+  const src = customImage || (categoryImage ? `/images/fee-types/${categoryImage}.png` : null);
 
-  if (!image) {
+  if (!src) {
     return <span aria-hidden="true">{fallback}</span>;
   }
 
+  // Custom images use the session-protected route directly in the browser.
   return (
     <Image
-      src={`/images/fee-types/${image}.png`}
+      src={src}
+      unoptimized={Boolean(customImage)}
+      onError={customImage ? () => setFailedImage(customImage) : undefined}
       alt=""
       width={size}
       height={size}

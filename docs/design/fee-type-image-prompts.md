@@ -2,6 +2,12 @@
 
 Generated with the built-in image_gen tool, one call per icon, with `transparent_background: true`. Files: `apps/dashboard/public/images/fee-types/`.
 
+## childcare.png
+
+Shared by evening childcare and Friday childcare. Existing tuition, registration, transport and cafeteria images are reused for the matching fee types.
+
+Use case: stylized-concept. Asset type: one square transparent PNG childcare fee category icon for an existing school dashboard, used at 32–48px. Subject: a friendly simplified adult and school-age child side by side above two gently cupped protective hands, with a small round clock as a supporting shape to communicate supervised after-school care. Style: crisp flat multicolor 2D vector-style illustration matching an educational icon set: thick clean dark navy outlines, rounded shapes, sky blue and turquoise clothing, warm golden yellow and coral accents, subtle minimal highlights, a bold simple silhouette. Composition: one centered coherent icon filling about 75% of the square canvas with generous even transparent padding, recognizable on light and dark surfaces. Background: genuine transparent alpha, no tile, no circle background. Constraints: one icon only, no grid, no photorealism, no 3D, no scenery, no cast shadow, no lettering, no words, no numbers or numerals even on clock, no logos or watermark. Suitable for both evening childcare and Friday childcare; do not depict a baby, transport or a restaurant.
+
 ## field-trip.png
 
 Use case: stylized-concept. Asset type: individual flat multicolor fee category icon for a school dashboard. Subject: a golden yellow school bus with sky blue windows, dark charcoal wheels and small coral red accents. Style: original crisp flat 2D vector-style illustration inspired by modern Flaticon educational icon collections, rendered as a square PNG; solid color shapes, consistent medium charcoal outlines, gently rounded corners, minimal shading, very simple bold silhouette legible at 32-48 px. Balanced cheerful blue, turquoise, yellow, coral and green, natural subject colors, no dominant purple and no brand/theme color dependence. Composition: one centered coherent icon, subject fills about 75% of square canvas, even transparent padding. Background: genuine transparent alpha, no colored tile or circle. Constraints: one icon only, no grid, no 3D, no photorealism, no gradients, no glow, no cast shadow, no scenery, no text, no letters, no numbers, no logos, no watermark. Make the object recognizable on both light and dark dashboard surfaces.

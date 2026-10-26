@@ -12,6 +12,7 @@ export const FEE_CARD_CATEGORY_ORDER = [
   'tuition',
   'transport',
   'cafeteria',
+  'childcare',
   'registration',
   'books',
   'uniform',

@@ -1,39 +1,75 @@
 [
   {
     "id": "FT00",
-    "name": "Tuition Fee",
+    "name": "Frais de scolarité",
     "description": "Monthly tuition fee for academic year",
     "category": "tuition",
     "amount": 1100,
     "paymentType": "recurring",
-    "status": "active"
+    "status": "active",
+    "labels": {
+      "fr": "Frais de scolarité",
+      "ar": "الرسوم الدراسية",
+      "en": "Tuition Fee",
+      "es": "Cuota de escolaridad"
+    },
+    "aliases": [
+      "Tuition Fee"
+    ]
   },
   {
     "id": "FT01",
-    "name": "Registration Fee",
+    "name": "Frais Inscription",
     "description": "One-time registration fee for new students",
     "category": "registration",
-    "amount": 1000,
+    "amount": 1100,
     "paymentType": "oneTime",
-    "status": "active"
+    "status": "active",
+    "labels": {
+      "fr": "Frais Inscription",
+      "ar": "رسوم التسجيل",
+      "en": "Registration Fee",
+      "es": "Cuota de inscripción"
+    },
+    "aliases": [
+      "Registration Fee"
+    ]
   },
   {
     "id": "FT02",
-    "name": "Transport Fee",
-    "description": "Monthly school bus transportation fee",
+    "name": "Frais de transport 2 voyage",
+    "description": "Monthly school transportation fee for two daily trips",
     "category": "transport",
     "amount": 400,
     "paymentType": "recurring",
-    "status": "active"
+    "status": "active",
+    "labels": {
+      "fr": "Frais de transport 2 voyage",
+      "ar": "رسوم النقل — رحلتان",
+      "en": "Transport Fee — Two Trips",
+      "es": "Cuota de transporte — dos trayectos"
+    },
+    "aliases": [
+      "Transport Fee"
+    ]
   },
   {
     "id": "FT03",
-    "name": "Cafeteria Fee",
+    "name": "Frais Restaurant",
     "description": "Monthly school cafeteria and meal service fee",
     "category": "cafeteria",
     "amount": 400,
     "paymentType": "recurring",
-    "status": "active"
+    "status": "active",
+    "labels": {
+      "fr": "Frais Restaurant",
+      "ar": "رسوم المطعم المدرسي",
+      "en": "School Meal Fee",
+      "es": "Cuota de comedor escolar"
+    },
+    "aliases": [
+      "Cafeteria Fee"
+    ]
   },
   {
     "id": "FT04",
@@ -78,6 +114,51 @@
     "category": "fieldtrip",
     "amount": 200,
     "paymentType": "oneTime",
+    "status": "active"
+  },
+  {
+    "id": "FT09",
+    "name": "Frais de transport 1 voyage",
+    "labels": {
+      "fr": "Frais de transport 1 voyage",
+      "ar": "رسوم النقل — رحلة واحدة",
+      "en": "Transport Fee — One Trip",
+      "es": "Cuota de transporte — un trayecto"
+    },
+    "description": "Monthly school transportation fee for one daily trip",
+    "category": "transport",
+    "amount": 300,
+    "paymentType": "recurring",
+    "status": "active"
+  },
+  {
+    "id": "FT10",
+    "name": "Frais garde entre 17h30-18h00",
+    "labels": {
+      "fr": "Frais garde entre 17h30-18h00",
+      "ar": "رسوم الحضانة من 17:30 إلى 18:00",
+      "en": "Childcare Fee — 17:30–18:00",
+      "es": "Cuota de cuidado — 17:30–18:00"
+    },
+    "description": "Monthly supervised childcare from 17:30 to 18:00",
+    "category": "childcare",
+    "amount": 200,
+    "paymentType": "recurring",
+    "status": "active"
+  },
+  {
+    "id": "FT11",
+    "name": "Garde Vendredi",
+    "labels": {
+      "fr": "Garde Vendredi",
+      "ar": "رسوم حضانة يوم الجمعة",
+      "en": "Friday Childcare Fee",
+      "es": "Cuota de cuidado de los viernes"
+    },
+    "description": "Monthly Friday childcare fee",
+    "category": "childcare",
+    "amount": 100,
+    "paymentType": "recurring",
     "status": "active"
   }
 ]

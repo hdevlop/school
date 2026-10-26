@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { pgEnum, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
+import { jsonb, pgEnum, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
 
 import { createRef, idField, moneyField, timestamps } from '../../../database/shared';
 import { getEnumValues } from '../../../shared/enums';
@@ -12,6 +12,8 @@ export const paymentTypeEnum = pgEnum('paymentType', getEnumValues('paymentType'
 export const feeTypes = pgTable('fee_types', {
   id: idField(),
   name: text('name').notNull(),
+  labels: jsonb('labels').$type<Record<string, string>>(),
+  image: text('image'),
   description: text('description'),
   category: text('category').notNull(),
   amount: moneyField('amount').notNull(),

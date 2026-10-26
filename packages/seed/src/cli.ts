@@ -5,8 +5,9 @@ const production = process.env.NODE_ENV === 'production';
 const help = `School seed commands:
   bun seed                 Choose a command in a terminal
   bun seed admin           Create or reset the administrator
-  bun seed defaults        Seed default settings, classes, sections, subjects and fee types; no demo people
-  bun seed defaults --year=2026-2027 --levels=maternelle,primaire  Without a prompt
+  bun seed defaults        Seed default settings, subjects and fee types, and the same classes and sections in every year; no demo people
+  bun seed defaults --levels=maternelle,primaire  Without a prompt
+  bun seed defaults --year=2027-2028  Put the classes in that one year only
   bun seed demo            Choose a year and add demo data
   bun seed demo --year=2025-2026  Add demo data for one year without a prompt
   bun seed demo --year=2025-2026 --resume-from=announcements  Resume after Payroll
@@ -35,7 +36,7 @@ if (!command) {
     message: 'Choose a School seed command',
     options: [
       { value: 'admin', label: 'Create or reset administrator' },
-      { value: 'defaults', label: 'Seed default data', hint: 'settings and academic structure; keeps existing data; no demo people' },
+      { value: 'defaults', label: 'Seed default data', hint: 'settings, subjects, fee types, and the same classes in every year; keeps existing data; no demo people' },
       { value: 'demo', label: 'Add demo data' },
       { value: 'history', label: 'Seed 3 years of demo history', hint: 'empty school, students promoted each year' },
       { value: 'academic', label: 'Add classes, sections, subjects and fee types', hint: 'default Moroccan levels; no people' },
@@ -108,7 +109,8 @@ switch (command) {
     break;
   case 'defaults':
   case 'academic': {
-    if (!hasFlag('--year')) {
+    // Default data belongs to every year; only adding classes to a chosen year asks for one.
+    if (command === 'academic' && !hasFlag('--year')) {
       if (!interactive()) {
         throw new Error('Academic seed requires --year=YYYY-YYYY without an interactive terminal.');
       }

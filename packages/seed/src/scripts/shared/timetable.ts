@@ -1,10 +1,11 @@
-// A private school's weekly timetable, shared by the generator (how many
-// teachers a school needs) and the seed (which lesson goes in which slot).
+// An illustrative private-school timetable, shared by the demo generator and
+// seed. These lesson counts are not a regulatory hours/coefficient schedule.
 
 /** Weekly lessons of each subject (by code) per section, by class level. */
 const WEEKLY_LESSONS: Record<string, Record<string, number>> = {
-  Primaire: { AR: 7, FR: 6, MATH: 5, ENG: 2, PE: 2, SVT: 1, PHY: 1, HIST: 1, GEO: 1, INFO: 1 },
-  Collège: { MATH: 5, FR: 5, AR: 5, ENG: 3, PHY: 3, SVT: 2, PE: 2, HIST: 1, GEO: 1, INFO: 1 },
+  Maternelle: { PRELANG: 4, PREMATH: 4, PREDECO: 4, PREMOT: 4, PREART: 4, PREVIE: 4 },
+  Primaire: { AR: 7, FR: 6, MATH: 5, EI: 2, SCI: 2, HG: 2, ART: 1, PE: 2 },
+  Collège: { MATH: 5, FR: 4, AR: 4, ENG: 2, PHY: 2, SVT: 2, EI: 2, HG: 3, PE: 2, INFO: 1, ART: 1 },
 };
 const FALLBACK_LEVEL = 'Collège';
 

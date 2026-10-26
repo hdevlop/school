@@ -6,7 +6,7 @@ import { NPageHeader, NPageHeaderActions, NEmptyState, NErrorState, NForbiddenSt
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Tag, Plus, SearchX } from 'lucide-react';
+import { Tag, Plus, SearchX, Eye, Pencil, Trash2, Power, PowerOff } from 'lucide-react';
 import React from 'react';
 import FeeTypeForm from './FeeTypeForm';
 import { useFeeTypes } from '../hooks/useFeeTypes';
@@ -16,6 +16,10 @@ import { useFeeTypesTableColumns } from '../hooks/useFeeTypesTableColumns';
 import { useFeeTypesTableFilters } from '../hooks/useFeeTypesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { getFeeTypeDisplayName } from '@/features/Financial/Fees/utils/feeUtils';
+
+const getFeeTypeRowClassName = (feeType) => feeType.status !== 'active'
+  ? 'bg-muted/60 text-muted-foreground opacity-80 hover:bg-muted/80'
+  : undefined;
 
 function FeeTypesTable() {
 
@@ -33,7 +37,7 @@ function FeeTypesTable() {
     isUpdating,
     isCreating,
     isDeleting
-  } = useFeeTypes();
+  } = useFeeTypes({ activeOnly: false });
 
   const { openDialog, confirmDelete } = useDialog();
 
@@ -91,6 +95,23 @@ function FeeTypesTable() {
 
   const total = feeTypes?.length ?? 0;
 
+  const rowMenu = (feeType) => [
+    { label: t('common.view'), icon: Eye, onSelect: () => handleView(feeType) },
+    { label: t('common.edit'), permission: 'update:feeTypes', icon: Pencil, onSelect: () => handleEdit(feeType) },
+    {
+      label: t(feeType.status === 'active' ? 'feeTypes.actions.disable' : 'feeTypes.actions.enable'),
+      permission: 'update:feeTypes',
+      icon: feeType.status === 'active' ? PowerOff : Power,
+      disabled: isUpdating,
+      separatorBefore: true,
+      onSelect: () => {
+        updateFeeType({ id: feeType.id, status: feeType.status === 'active' ? 'inactive' : 'active' })
+          .catch(() => undefined);
+      },
+    },
+    { label: t('common.delete'), permission: 'delete:feeTypes', icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(feeType) },
+  ];
+
   return (
     <div className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
@@ -113,6 +134,8 @@ function FeeTypesTable() {
         onView={handleView}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        menu={{ row: rowMenu }}
+        menuButton
         loading={isFeeTypesLoading}
         error={hasFailedToLoad(error, feeTypes) ? error : null}
         renderError={(currentError) => (
@@ -121,6 +144,7 @@ function FeeTypesTable() {
             : <NErrorState surface="panel" />
         )}
         renderCard={FeeTypeCard}
+        getRowClassName={getFeeTypeRowClassName}
         addButtonText={t('feeTypes.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState

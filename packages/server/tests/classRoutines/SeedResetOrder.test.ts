@@ -25,6 +25,8 @@ import { AcademicYearTransitionRepository } from '../../src/modules/academicYear
 import { AcademicYearMigrationIssueRepository } from '../../src/modules/academicYearMigrationIssues/AcademicYearMigrationIssueRepository';
 import { SeedService } from '../../src/modules/seed/SeedService';
 import { FeeTypeService } from '../../src/modules/financial/feeTypes/FeeTypeService';
+import { feeTypeData } from '@sms/contracts/fixtures';
+import legacyServerFeeTypes from '../../src/modules/seed-data/school/feeTypes.json';
 import { TeacherRepository } from '../../src/modules/teachers/TeacherRepository';
 import { StaffAssignmentRepository } from '../../src/modules/staff/StaffAssignmentRepository';
 import { CycleRepository } from '../../src/modules/cycles/CycleRepository';
@@ -167,6 +169,83 @@ describe('seed reset foreign-key order', () => {
 });
 
 describe('default fee type seed', () => {
+  const requestedIds = new Set(['FT00', 'FT01', 'FT02', 'FT03', 'FT09', 'FT10', 'FT11']);
+  const requestedTypes = feeTypeData.filter(type => requestedIds.has(type.id));
+
+  function seedHarness(initial: Array<{ id: string; name: string; [key: string]: unknown }> = []) {
+    const records = structuredClone(initial);
+    const created: Record<string, unknown>[] = [];
+    const normalize = (name: string) => name.trim().toLowerCase();
+    const service = new FeeTypeService({
+      create: async (data: any) => { records.push(data); created.push(data); return data; },
+      getAll: async () => records,
+    } as any, {
+      isExists: async (id: string) => records.some(record => record.id === id),
+      isNameExists: async (name: string) => records.some(record => normalize(record.name) === normalize(name)),
+      validate: async () => true,
+    } as any, {} as any);
+    return { service, records, created };
+  }
+
+  it('keeps both seed entry points aligned with the seven requested defaults', () => {
+    expect(legacyServerFeeTypes).toEqual(feeTypeData);
+    expect(requestedTypes).toHaveLength(7);
+    expect(requestedTypes.map(type => [type.name, type.amount, type.paymentType])).toEqual([
+      ['Frais de scolarité', 1100, 'recurring'],
+      ['Frais Inscription', 1100, 'oneTime'],
+      ['Frais de transport 2 voyage', 400, 'recurring'],
+      ['Frais Restaurant', 400, 'recurring'],
+      ['Frais de transport 1 voyage', 300, 'recurring'],
+      ['Frais garde entre 17h30-18h00', 200, 'recurring'],
+      ['Garde Vendredi', 100, 'recurring'],
+    ]);
+    for (const type of requestedTypes) {
+      expect(Object.keys(type.labels ?? {}).sort()).toEqual(['ar', 'en', 'es', 'fr']);
+      expect(type.labels?.fr).toBe(type.name);
+    }
+  });
+
+  it('adds each missing default once and keeps alias metadata out of stored records', async () => {
+    const { service, created, records } = seedHarness();
+    expect(await service.seedDemoFeeTypes(feeTypeData as any)).toHaveLength(12);
+    expect(await service.seedDemoFeeTypes(feeTypeData as any)).toEqual([]);
+    expect(created).toHaveLength(12);
+    expect(new Set(records.map(record => record.id)).size).toBe(12);
+    expect(created.some(record => 'aliases' in record)).toBe(false);
+  });
+
+  it('reuses the seven live French names with different ids without changing their prices', async () => {
+    const existing = requestedTypes.map((type, index) => ({ ...type, id: `live-${index}`, amount: 1234, status: 'inactive' }));
+    const { service, created, records } = seedHarness(existing);
+    expect(await service.seedDemoFeeTypes(requestedTypes as any)).toEqual([]);
+    expect(created).toEqual([]);
+    expect(records).toEqual(existing);
+    const ids = await service.resolveSeedFeeTypeIds(requestedTypes as any);
+    expect([...ids.values()]).toEqual(existing.map(record => record.id));
+  });
+
+  it('recognizes stable ids, legacy English names and translations without merging distinct services', async () => {
+    const existing = [
+      { id: 'FT00', name: 'School-specific tuition' },
+      { id: 'legacy-registration', name: 'Registration Fee' },
+      { id: 'legacy-transport', name: ' transport fee ' },
+      { id: 'legacy-cafeteria', name: 'Cafeteria Fee' },
+      { id: 'spanish-one-trip', name: 'Cuota de transporte — un trayecto' },
+      { id: 'arabic-childcare', name: 'رسوم الحضانة من 17:30 إلى 18:00' },
+      { id: 'french-friday', name: 'Garde Vendredi' },
+    ];
+    const { service, created, records } = seedHarness(existing);
+    expect(await service.seedDemoFeeTypes(requestedTypes as any)).toEqual([]);
+    expect(created).toEqual([]);
+    expect(records).toEqual(existing);
+    const ids = await service.resolveSeedFeeTypeIds(requestedTypes as any);
+    expect(ids.get('FT09')).toBe('spanish-one-trip');
+    expect(ids.get('FT10')).toBe('arabic-childcare');
+    const missingOneTrip = seedHarness(existing.filter(record => record.id !== 'spanish-one-trip'));
+    await expect(missingOneTrip.service.resolveSeedFeeTypeIds(requestedTypes as any)).rejects.toThrow('was not created');
+    expect((await missingOneTrip.service.seedDemoFeeTypes(requestedTypes as any)).map(record => record.id)).toEqual(['FT09']);
+  });
+
   it('keeps a fee type the school already has, by id or by name', async () => {
     const created: string[] = [];
     const service = {

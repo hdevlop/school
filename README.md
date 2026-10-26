@@ -123,11 +123,22 @@ and `bun seed reset-all`. Use `bun run gen:demo:ui` for the
 previous demo generator shortcut.
 
 Choose **Seed default data** to initialize school settings and add the default
-classes, sections A-C, subjects and fee types. It asks for the academic year and
-school levels, preserves existing settings and records, and adds no demo people.
-On a fresh school, the selected year becomes the initial active year; an existing
-school keeps its active year. The initial calendar still requires review.
-For a non-interactive run, use `bun seed defaults --year=2026-2027 --levels=primaire`.
+classes, sections A-C, subjects and fee types. It asks only for the school
+levels, preserves existing settings and records, and adds no demo people.
+Subjects and fee types belong to the whole school. Every registered academic
+year gets the same default classes and sections; the school then changes each
+year's on its own. On a fresh school the current teaching year becomes the
+initial active year. The initial calendar still requires review.
+For a non-interactive run, use `bun seed defaults --levels=primaire`; add
+`--year=2027-2028` to put the classes in that one year only. A year added later
+starts without classes: run the seed again, or use **Add classes, sections,
+subjects and fee types** for that year.
+
+Subject defaults follow the selected cycles, with preschool learning areas,
+primary science and combined HG. AMZ is excluded. Reseeding preserves custom
+subjects and historical references, and corrects only untouched former default
+labels. See [subject seeding](docs/operations/subject-seeding.md) for the profiles
+and existing-school behavior.
 
 `bun seed demo` asks which academic year to fill. You can also specify it directly:
 

@@ -14,6 +14,7 @@ import { createFullStudentSchemas } from '../config/fullStudentSchemas'
 import { firstYearEnrolledOn } from '../config/newStudentEnrollment'
 import { BulkFeeFormContent } from '@/features/Financial/Fees/components/BulkFeeForm'
 import { FeeFactory } from '@/features/Financial/Fees/utils/feeUtils'
+import { getDefaultStudentFeeTypes } from '@/features/Financial/FeeTypes/config/feeTypeOptions'
 import { useTranslation } from 'najm-i18n/react'
 import { StudentTransportFormContent } from '@/features/Transport/components/StudentTransportFormContent'
 import { normalizeLocationValue } from 'najm-kit/location'
@@ -77,9 +78,7 @@ const FullStudentForm = ({
 
   const defaultFees = useMemo(() => {
     if (!canCreateFees || !feeTypes?.length) return []
-    const tuition = feeTypes.filter((ft: any) => ft.category === 'tuition' && ft.paymentType === 'recurring' && ft.status === 'active')
-    const candidates = tuition.length > 0 ? tuition : feeTypes.filter((ft: any) => ft.paymentType === 'recurring' && ft.status === 'active')
-    return candidates.map((ft: any) => FeeFactory.createFromFeeType(ft))
+    return getDefaultStudentFeeTypes(feeTypes).map((ft: any) => FeeFactory.createFromFeeType(ft))
   }, [canCreateFees, feeTypes])
 
   const studentStepTitle = t('students.form.studentInformation')

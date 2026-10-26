@@ -6,7 +6,7 @@ import { InstallmentValidator } from '../../src/modules/financial/installments/I
 import { withEnglishMessages } from './englishMessages';
 
 export const events = { emit() {} };
-export function feeHarness(paymentType = 'recurring') {
+export function feeHarness(paymentType = 'recurring', feeTypeStatus = 'active') {
   let fee: any;
   let installments: any[] = [];
   const audit: any[] = [], writes: any[] = [];
@@ -24,7 +24,7 @@ export function feeHarness(paymentType = 'recurring') {
   };
   const validator = withEnglishMessages(new FeeValidator(repo,
     { checkExists: async () => ({ id: 'audit-student' }) } as any,
-    { checkExists: async () => ({ amount: 100, paymentType }) } as any));
+    { checkExists: async () => ({ amount: 100, paymentType, status: feeTypeStatus }) } as any));
   const instRepo: any = {
     lockFeeSchedules: async () => {},
     deleteByFeeId: async () => { installments = []; },
@@ -46,6 +46,7 @@ export function feeHarness(paymentType = 'recurring') {
     { resolve: async () => ({ status: 'active' }), requireLabel: async () => ({ status: 'active' }) } as any);
   Object.assign(service, { events, year: { label: '2026-2027' } });
   return { service, repo, validator, instService, instRepo, audit, writes,
+    get feeTypeStatus() { return feeTypeStatus; }, set feeTypeStatus(value: string) { feeTypeStatus = value; },
     get fee() { return fee; }, set fee(value: any) { fee = value; },
     get installments() { return installments; } };
 }

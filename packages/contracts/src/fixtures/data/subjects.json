@@ -10,7 +10,7 @@
     "code": "FR",
     "name": "Français",
     "description": "Langue française, littérature, grammaire et expression écrite"
-  }, 
+  },
   {
     "id": "SB02",
     "code": "AR",
@@ -20,13 +20,13 @@
   {
     "id": "SB03",
     "code": "PHY",
-    "name": "Physique",
+    "name": "Physique-chimie",
     "description": "Physique et chimie, mécanique, électricité et thermodynamique"
   },
   {
     "id": "SB04",
     "code": "SVT",
-    "name": "Sciences de la Vie et de la Terre",
+    "name": "Sciences de la vie et de la Terre",
     "description": "Biologie, géologie, écologie et sciences naturelles"
   },
   {
@@ -44,19 +44,79 @@
   {
     "id": "SB07",
     "code": "ENG",
-    "name": "English",
-    "description": "English language and literature"
+    "name": "Anglais",
+    "description": "Langue anglaise, compréhension et expression orale et écrite"
   },
   {
     "id": "SB08",
     "code": "PE",
-    "name": "Éducation Physique",
-    "description": "Sport et éducation physique"
+    "name": "Éducation physique et sportive",
+    "description": "Activités physiques et sportives, motricité et coopération"
   },
   {
     "id": "SB09",
     "code": "INFO",
     "name": "Informatique",
     "description": "Initiation à l'informatique et programmation"
+  },
+  {
+    "id": "SB10",
+    "code": "EI",
+    "name": "Éducation islamique",
+    "description": "Coran, croyance, pratiques religieuses, éthique et valeurs de l'islam"
+  },
+  {
+    "id": "SB11",
+    "code": "SCI",
+    "name": "Activité scientifique",
+    "description": "Éveil scientifique au primaire : observation, expérimentation, vivant, matière et environnement"
+  },
+  {
+    "id": "SB12",
+    "code": "ART",
+    "name": "Éducation artistique",
+    "description": "Arts plastiques, musique, théâtre et expression artistique"
+  },
+  {
+    "id": "SB13",
+    "code": "HG",
+    "name": "Histoire-géographie et éducation à la citoyenneté",
+    "description": "Histoire, géographie et éducation à la citoyenneté : le Maroc, le monde et la vie en société"
+  },
+  {
+    "id": "SB14",
+    "code": "PRELANG",
+    "name": "Langage et communication",
+    "description": "Préscolaire : expression orale, écoute et découverte du langage écrit"
+  },
+  {
+    "id": "SB15",
+    "code": "PREMATH",
+    "name": "Activités mathématiques",
+    "description": "Préscolaire : construction de la pensée, nombres, formes et repérage"
+  },
+  {
+    "id": "SB16",
+    "code": "PREDECO",
+    "name": "Découverte de soi et de l'environnement",
+    "description": "Préscolaire : découverte de soi, de l'environnement et de la technologie"
+  },
+  {
+    "id": "SB17",
+    "code": "PREMOT",
+    "name": "Développement sensoriel et moteur",
+    "description": "Préscolaire : motricité, coordination et découverte sensorielle"
+  },
+  {
+    "id": "SB18",
+    "code": "PREART",
+    "name": "Activités artistiques et esthétiques",
+    "description": "Préscolaire : création, dessin, musique et expression artistique"
+  },
+  {
+    "id": "SB19",
+    "code": "PREVIE",
+    "name": "Valeurs et règles de vie commune",
+    "description": "Préscolaire : valeurs religieuses et citoyennes, autonomie et vie en groupe"
   }
 ]

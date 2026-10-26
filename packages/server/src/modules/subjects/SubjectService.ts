@@ -2,6 +2,7 @@ import { Service } from '../../najm';
 import { SubjectRepository } from './SubjectRepository';
 import { SubjectValidator } from './SubjectValidator';
 import type { CreateSubjectDto, CreateSubjectsBulkDto, UpdateSubjectDto } from './SubjectDto';
+import { legacySchoolSubjectDefaults, schoolSubjectsData } from '@sms/contracts/subjects';
 
 @Service()
 export class SubjectService {
@@ -60,12 +61,22 @@ export class SubjectService {
   async seedDemoSubjects(subjectsData: CreateSubjectsBulkDto) {
     const createdSubjects = [];
     for (const subjectData of subjectsData) {
-      try {
-        const subjectEntity = await this.create(subjectData);
-        createdSubjects.push(subjectEntity);
-      } catch {
+      const code = subjectData.code.trim().toUpperCase();
+      const existing = await this.subjectRepository.getByCode(code);
+      if (existing) {
+        const previous = legacySchoolSubjectDefaults[code];
+        const current = schoolSubjectsData.find(subject => subject.code === code);
+        // Rename only an untouched former default to its current catalogue label.
+        // Keep its ID, custom records and all historical assignments intact.
+        if (previous && current
+          && existing.name === previous.name && existing.description === previous.description
+          && subjectData.name === current.name && subjectData.description === current.description) {
+          await this.update(existing.id, { name: current.name, description: current.description });
+        }
         continue;
       }
+      // Unexpected validation or database errors must reach the seed runner.
+      createdSubjects.push(await this.create(subjectData));
     }
     return createdSubjects;
   }

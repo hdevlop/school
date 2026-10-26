@@ -158,8 +158,84 @@ describe('student import', () => {
     ]);
   });
 
+  describe('JSON parents and fees', () => {
+    const feeTypes = [
+      { id: 'ft-tuition', name: 'Frais de scolarité', paymentType: 'recurring' },
+      { id: 'ft-registration', name: 'Frais Inscription', paymentType: 'oneTime' },
+      { id: 'ft-bus', name: 'Frais de transport 2 voyage', paymentType: 'recurring' },
+    ];
+    const enrolled = { ...exported, enrollmentDate: '2025-09-01' };
+
+    it('imports every listed parent instead of the guardian columns', () => {
+      const result = buildStudentImport([{
+        ...enrolled, guardianName: 'Ignored Column',
+        parents: [
+          { name: 'Ahmed Alaoui', phone: '+212612345678', relationshipType: 'father', financialResponsibility: true },
+          { name: 'Fatima Alaoui', phone: '+212698765432', relationshipType: 'mother' },
+        ],
+      }], classes, '2026-01-12', feeTypes);
+      expect(result.problems).toEqual([]);
+      expect(result.students[0].parents).toHaveLength(2);
+      expect(result.students[0].parents?.[0]).toMatchObject({ name: 'Ahmed Alaoui', relationshipType: 'father', financialResponsibility: true });
+      expect(result.students[0].parents?.[1]).toMatchObject({ name: 'Fatima Alaoui', phone: '+212698765432', relationshipType: 'mother' });
+    });
+
+    it('names the parent whose details are invalid', () => {
+      const result = buildStudentImport([{
+        ...enrolled, parents: [{ name: 'Ahmed Alaoui' }, { name: 'Fatima Alaoui', phone: 'invalid' }],
+      }], classes, '2026-01-12', feeTypes);
+      expect(result.students).toEqual([]);
+      expect(result.problems).toEqual([{ row: 2, reason: 'invalidGuardian', value: 'parents[2]: phone' }]);
+    });
+
+    it('matches fee types by name or id and keeps the monthly price and start month', () => {
+      const result = buildStudentImport([{
+        ...enrolled,
+        fees: [
+          { feeType: 'frais inscription', baseAmount: 1100, academicYear: '2025-2026' },
+          { feeType: 'Frais de scolarité', schedule: 'monthly', baseAmount: '1100', effectiveDate: '2025-09-01' },
+          { feeTypeId: 'ft-bus', schedule: 'oneTime', baseAmount: 400, effectiveDate: '2025-10-01', notes: 'Transport 10/2025' },
+        ],
+      }], classes, '2026-01-12', feeTypes);
+      expect(result.problems).toEqual([]);
+      expect(result.students[0].fees).toEqual([
+        { feeTypeId: 'ft-registration', schedule: 'oneTime', baseAmount: 1100 },
+        { feeTypeId: 'ft-tuition', schedule: 'monthly', baseAmount: 1100, effectiveDate: '2025-09-01' },
+        { feeTypeId: 'ft-bus', schedule: 'oneTime', baseAmount: 400, effectiveDate: '2025-10-01', notes: 'Transport 10/2025' },
+      ]);
+    });
+
+    it('refuses fees the server would refuse, before any student is created', () => {
+      const result = buildStudentImport([{
+        ...enrolled, enrollmentDate: '2025-10-15',
+        fees: [
+          { feeType: 'Cantine' },
+          { feeType: 'Frais de scolarité', schedule: 'weekly', baseAmount: -5 },
+          { feeType: 'Frais de scolarité', academicYear: '2026-2027' },
+          { feeType: 'Frais de scolarité', effectiveDate: '2025-09-01' },
+          'not a fee',
+        ],
+      }], classes, '2026-01-12', feeTypes);
+      expect(result.students).toEqual([]);
+      expect(result.problems).toEqual([
+        { row: 2, reason: 'unknownFeeType', value: 'Cantine' },
+        { row: 2, reason: 'invalidFee', value: 'fees[2].schedule' },
+        { row: 2, reason: 'invalidFee', value: 'fees[2].baseAmount' },
+        { row: 2, reason: 'feeYearMismatch', value: '2026-2027' },
+        { row: 2, reason: 'feeBeforeEnrollment', value: '2025-09-01' },
+        { row: 2, reason: 'invalidFee', value: 'fees[5]' },
+      ]);
+    });
+
+    it('keeps spreadsheet rows unchanged when they carry no parents or fees', () => {
+      const result = buildStudentImport([exported], classes, '2026-01-12', feeTypes);
+      expect(result.students[0]).not.toHaveProperty('fees');
+      expect(result.students[0]).not.toHaveProperty('parents');
+    });
+  });
+
   it('has every reason in all four catalogs', () => {
-    const reasons: StudentImportReason[] = ['missingName', 'invalidArabicName', 'invalidGender', 'invalidStatus', 'unknownClass', 'unknownSection', 'invalidDate', 'duplicateCode', 'invalidGuardian'];
+    const reasons: StudentImportReason[] = ['missingName', 'invalidArabicName', 'invalidGender', 'invalidStatus', 'unknownClass', 'unknownSection', 'invalidDate', 'duplicateCode', 'invalidGuardian', 'unknownFeeType', 'invalidFee', 'feeYearMismatch', 'feeBeforeEnrollment'];
     for (const catalog of [en, fr, es, ar] as any[]) {
       for (const reason of reasons) expect(typeof catalog.students.import.reasons[reason]).toBe('string');
     }

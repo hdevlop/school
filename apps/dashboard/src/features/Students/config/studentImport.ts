@@ -1,6 +1,6 @@
-import { findClassByName, GENDER_VALUES, STUDENT_STATUS_VALUES, type Gender, type StudentStatus } from '@sms/contracts';
+import { findClassByName, GENDER_VALUES, SCHEDULE_VALUES, STUDENT_STATUS_VALUES, type Gender, type Schedule, type StudentStatus } from '@sms/contracts';
 import { isDateOnly } from '@sms/contracts/academic-years';
-import { firstYearEnrolledOn } from './newStudentEnrollment';
+import { academicYearStartDate, firstYearEnrolledOn } from './newStudentEnrollment';
 import { createParentSchemas, type ParentImportValues } from '@/features/Parents/config/parentSchemas';
 
 // The import reports which guardian fields failed, never their messages, so the
@@ -13,11 +13,16 @@ const parentSchema = createParentSchemas((key) => key).importParent;
  * Class names accept official codes and familiar app names, matched against
  * classes a new student may join, never by id. Sections also accept
  * equivalent numeric/letter names (1 = A, 2 = B, through 26 = Z).
+ *
+ * A JSON row may also carry `parents` (a list replacing the guardian columns)
+ * and `fees` (the student's fee assignments, each naming its fee type by
+ * `feeType` name or `feeTypeId`). Spreadsheets keep the flat guardian columns.
  */
 export const STUDENT_IMPORT_COLUMNS = [
   'studentCode', 'name', 'email', 'phone', 'class', 'section', 'gender', 'status',
   'address', 'dateOfBirth', 'enrollmentDate', 'arabicName',
   'guardianName', 'guardianPhone', 'guardianPhone2', 'guardianEmail', 'guardianCin', 'guardianRelationship',
+  'parents', 'fees',
 ] as const;
 
 export type StudentImportReason =
@@ -29,7 +34,11 @@ export type StudentImportReason =
   | 'unknownSection'
   | 'invalidDate'
   | 'invalidGuardian'
-  | 'duplicateCode';
+  | 'duplicateCode'
+  | 'unknownFeeType'
+  | 'invalidFee'
+  | 'feeYearMismatch'
+  | 'feeBeforeEnrollment';
 
 /** `row` is the spreadsheet line: the header is line 1, the first record line 2. */
 export interface StudentImportProblem {
@@ -53,6 +62,21 @@ export interface StudentImportPayload {
   enrollmentDate: string;
   yearEnrolledOn: string;
   parents?: ParentImportValues[];
+  fees?: StudentImportFee[];
+}
+
+/**
+ * A fee assignment as the student import route takes it, without the student
+ * and without the year: the server bills the year the student joins.
+ */
+export interface StudentImportFee {
+  feeTypeId: string;
+  schedule: Schedule;
+  baseAmount?: number;
+  effectiveDate?: string;
+  discountAmount?: number;
+  discountReason?: string;
+  notes?: string;
 }
 
 interface ImportClass {
@@ -60,6 +84,12 @@ interface ImportClass {
   name: string;
   academicYear?: string | null;
   sections?: { id: string; name: string }[] | null;
+}
+
+interface ImportFeeType {
+  id: string;
+  name: string;
+  paymentType?: string | null;
 }
 
 /** Spreadsheet cells arrive as strings, numbers or ISO date-times. */
@@ -73,6 +103,16 @@ const sectionAlias = (name: string): string | undefined => {
 };
 /** An Excel date cell is read as `2025-09-01T00:00:00.000Z`; only the day counts. */
 const dayOf = (text: string) => (/^\d{4}-\d{2}-\d{2}T/.test(text) ? text.slice(0, 10) : text);
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+const hasValue = (value: unknown) => value !== undefined && value !== null && value !== '';
+/** A JSON number or a spreadsheet's numeric text; blank means not given. */
+const amountOf = (value: unknown): number | undefined | null => {
+  const text = cellText(value);
+  if (!text) return undefined;
+  const amount = Number(text);
+  return Number.isFinite(amount) && Math.round(amount * 100) === amount * 100 ? amount : null;
+};
 
 /**
  * Checks every row before any is sent, so a file with a mistake creates
@@ -83,6 +123,7 @@ export function buildStudentImport(
   rows: Record<string, unknown>[],
   classes: ImportClass[],
   admissionDate: string,
+  feeTypes: ImportFeeType[] = [],
 ): { students: StudentImportPayload[]; problems: StudentImportProblem[] } {
   const students: StudentImportPayload[] = [];
   const problems: StudentImportProblem[] = [];
@@ -127,21 +168,103 @@ export function buildStudentImport(
     const dateOfBirth = date('dateOfBirth');
     const enrollmentDate = date('enrollmentDate') ?? admissionDate;
 
-    let guardian: ParentImportValues | undefined;
+    const parents: ParentImportValues[] = [];
+    const addGuardian = (values: Record<string, unknown>, label?: string) => {
+      const parsed = parentSchema.safeParse(values);
+      if (parsed.success) parents.push(parsed.data);
+      else {
+        const paths = [...new Set(parsed.error.issues.map(issue => issue.path.join('.')))].join(', ');
+        problem('invalidGuardian', label ? `${label}: ${paths}` : paths);
+      }
+    };
     const guardianName = field('guardianName');
     const guardianPhone = field('guardianPhone') || field('guardianPhone2');
     const guardianEmail = field('guardianEmail');
     const guardianCin = field('guardianCin');
-    if (guardianName || guardianPhone || guardianEmail || guardianCin) {
-      const parsed = parentSchema.safeParse({
+    if (hasValue(record.parents)) {
+      // A JSON list of guardians replaces the guardian columns.
+      if (!Array.isArray(record.parents) || !record.parents.every(isRecord)) problem('invalidGuardian', 'parents');
+      else record.parents.forEach((entry, position) => {
+        const text = (key: string) => cellText(entry[key]);
+        const phone = text('phone') || text('phone2');
+        addGuardian({
+          name: text('name'),
+          ...(phone && { phone }),
+          ...(text('email') && { email: text('email') }),
+          ...(text('cin') && { cin: text('cin') }),
+          relationshipType: (text('relationshipType') || text('relationship')).toLowerCase() || 'guardian',
+          ...(typeof entry.isEmergencyContact === 'boolean' && { isEmergencyContact: entry.isEmergencyContact }),
+          ...(typeof entry.financialResponsibility === 'boolean' && { financialResponsibility: entry.financialResponsibility }),
+        }, `parents[${position + 1}]`);
+      });
+    } else if (guardianName || guardianPhone || guardianEmail || guardianCin) {
+      addGuardian({
         name: guardianName,
         ...(guardianPhone && { phone: guardianPhone }),
         ...(guardianEmail && { email: guardianEmail }),
         ...(guardianCin && { cin: guardianCin }),
         relationshipType: field('guardianRelationship').toLowerCase() || 'guardian',
       });
-      if (parsed.success) guardian = parsed.data;
-      else problem('invalidGuardian', [...new Set(parsed.error.issues.map(issue => issue.path.join('.')))].join(', '));
+    }
+
+    const fees: StudentImportFee[] = [];
+    if (hasValue(record.fees)) {
+      if (!Array.isArray(record.fees)) problem('invalidFee', 'fees');
+      else record.fees.forEach((entry, position) => {
+        const at = `fees[${position + 1}]`;
+        if (!isRecord(entry)) {
+          problem('invalidFee', at);
+          return;
+        }
+        const before = rowProblems.length;
+        const text = (key: string) => cellText(entry[key]);
+        // Fee types are matched by id, else by name as the fee types page shows it.
+        const typeId = text('feeTypeId');
+        const typeName = text('feeType') || text('feeTypeName');
+        const feeType = (typeId ? feeTypes.find(candidate => candidate.id === typeId) : undefined)
+          ?? (typeName ? feeTypes.find(candidate => sameName(candidate.name.trim(), typeName)) : undefined);
+        if (!feeType) {
+          problem('unknownFeeType', typeName || typeId);
+          return;
+        }
+
+        const scheduleText = text('schedule');
+        const schedule = scheduleText
+          ? SCHEDULE_VALUES.find(value => sameName(value, scheduleText))
+          : feeType.paymentType === 'oneTime' ? 'oneTime' : 'monthly';
+        if (!schedule) problem('invalidFee', `${at}.schedule`);
+        const baseAmount = amountOf(entry.baseAmount);
+        if (baseAmount === null || (baseAmount !== undefined && baseAmount <= 0)) problem('invalidFee', `${at}.baseAmount`);
+        const discountAmount = amountOf(entry.discountAmount);
+        if (discountAmount === null || (discountAmount !== undefined && discountAmount < 0)) problem('invalidFee', `${at}.discountAmount`);
+        const discountReason = text('discountReason');
+        if (discountReason.length > 500) problem('invalidFee', `${at}.discountReason`);
+        const notes = text('notes');
+        if (notes.length > 1000) problem('invalidFee', `${at}.notes`);
+
+        // The server bills the year the student joins, from their enrollment
+        // (never before the year's first day), and refuses anything else.
+        const year = text('academicYear');
+        if (year && studentClass?.academicYear && year !== studentClass.academicYear) problem('feeYearMismatch', year);
+        const effectiveDate = dayOf(text('effectiveDate'));
+        if (effectiveDate && !isDateOnly(effectiveDate)) problem('invalidDate', text('effectiveDate'));
+        else if (effectiveDate && studentClass && isDateOnly(enrollmentDate)) {
+          const yearStart = academicYearStartDate(studentClass.academicYear, enrollmentDate);
+          const firstBillable = enrollmentDate > yearStart ? enrollmentDate : yearStart;
+          if (effectiveDate < firstBillable) problem('feeBeforeEnrollment', effectiveDate);
+        }
+
+        if (rowProblems.length > before || !schedule) return;
+        fees.push({
+          feeTypeId: feeType.id,
+          schedule,
+          ...(baseAmount != null && { baseAmount }),
+          ...(effectiveDate && { effectiveDate }),
+          ...(discountAmount != null && { discountAmount }),
+          ...(discountReason && { discountReason }),
+          ...(notes && { notes }),
+        });
+      });
     }
 
     if (rowProblems.length || !gender || !studentClass || !section) {
@@ -165,7 +288,8 @@ export function buildStudentImport(
       sectionId: section.id,
       enrollmentDate,
       yearEnrolledOn: firstYearEnrolledOn(enrollmentDate, studentClass.academicYear),
-      ...(guardian && { parents: [guardian] }),
+      ...(parents.length > 0 && { parents }),
+      ...(fees.length > 0 && { fees }),
     });
   });
 

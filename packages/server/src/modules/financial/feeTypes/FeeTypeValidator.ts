@@ -74,6 +74,12 @@ export class FeeTypeValidator {
 
   // ========== FIELD VALIDATION ==========
 
+  validateImage(image: unknown) {
+    if (image instanceof Blob && !image.type.startsWith('image/')) {
+      Err(400, this.t('invalidImage'));
+    }
+  }
+
   async validateAmount(amount) {
     if (amount <= 0) {
       Err(400, this.t('invalidAmount'));
@@ -112,6 +118,7 @@ export class FeeTypeValidator {
     }
 
     const { id, name, amount, status, paymentType } = data;
+    this.validateImage(data.image);
 
     if (!isUpdate) {
       if (id) await this.checkIdIsUnique(id);

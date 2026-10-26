@@ -72,6 +72,7 @@ const FeeTypeSelectionContent = ({ feeTypes, tempSelected, onToggle }) => {
               <div className="space-y-2">
                 <div className="flex items-center gap-3 pe-8">
                   <FeeCategoryIcon
+                    image={feeType.image}
                     category={feeType.category}
                     size={32}
                     fallback={<DollarSign className="h-5 w-5 text-muted-foreground shrink-0" />}

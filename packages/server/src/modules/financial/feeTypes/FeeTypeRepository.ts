@@ -6,6 +6,8 @@ import { DB } from '../../../database/db';
 const feeTypeSelect = {
   id: feeTypes.id,
   name: feeTypes.name,
+  labels: feeTypes.labels,
+  image: feeTypes.image,
   description: feeTypes.description,
   category: feeTypes.category,
   amount: feeTypes.amount,

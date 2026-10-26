@@ -5,6 +5,7 @@ import { createSchoolMoneyFormatter } from '@/hooks/schoolMoneyFormat';
 
 export interface ReceiptItem {
   feeType: string;
+  feeTypeLabels?: Record<string, string> | null;
   academicYear: string;
   amount: number;
   remainingAmount: number;
@@ -99,7 +100,7 @@ export function buildReceiptHtml(data: ReceiptData) {
       <colgroup><col class="fee-column" /><col /><col /></colgroup>
       <thead><tr><th scope="col">${escapeHtml(text.feeType)}</th><th scope="col" class="money">${escapeHtml(text.paid)}</th><th scope="col" class="money">${escapeHtml(text.remaining)}</th></tr></thead>
       <tbody>${items.map((item) => `<tr>
-        <td><span class="fee-name" dir="auto">${escapeHtml(item.feeType)}</span>${periods(item)}${item.academicYear && item.academicYear !== receiptYear ? ` <bdi class="fee-year" dir="ltr">${escapeHtml(item.academicYear)}</bdi>` : ''}</td>
+        <td><span class="fee-name" dir="auto">${escapeHtml(item.feeTypeLabels?.[language]?.trim() || item.feeType)}</span>${periods(item)}${item.academicYear && item.academicYear !== receiptYear ? ` <bdi class="fee-year" dir="ltr">${escapeHtml(item.academicYear)}</bdi>` : ''}</td>
         <td class="money"><bdi>${escapeHtml(money(item.amount))}</bdi></td>
         <td class="money"><bdi>${escapeHtml(money(item.remainingAmount))}</bdi></td>
       </tr>`).join('')}</tbody>

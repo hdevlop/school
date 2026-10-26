@@ -7,7 +7,7 @@ import type { Schedule } from '@sms/contracts';
 import { NPageHeader, NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState, NStatCard, NStatCardSkeleton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Banknote, CircleDollarSign, CreditCard, HandCoins, Landmark, Plus, ReceiptText, SearchX, Wallet } from 'lucide-react';
+import { Banknote, CircleDollarSign, CreditCard, Globe, HandCoins, Landmark, Plus, ReceiptText, SearchX, Smartphone, Wallet } from 'lucide-react';
 import FeeForm from './FeeForm';
 import EditFeeForm from './EditFeeForm';
 import { useFees } from '../hooks/useFees';
@@ -45,7 +45,7 @@ function FeesTableForYear() {
   const router = useRouter();
   const { openDialog, confirmDelete } = useDialog();
 
-  const { feeTypes } = useFeeTypes();
+  const { feeTypes, allFeeTypes } = useFeeTypes();
   const { classes, isClassesLoading, error: classesError } = useClasses();
   const { sections, isSectionsLoading, error: sectionsError } = useSections();
   const { isAcademicYearLoading } = useActiveAcademicYear();
@@ -109,9 +109,11 @@ function FeesTableForYear() {
     totals.check += toMinorUnits(row.collectedCheckToDate, 2) ?? 0;
     totals.bankTransfer += toMinorUnits(row.collectedBankTransferToDate, 2) ?? 0;
     totals.tpe += toMinorUnits(row.collectedTpeToDate, 2) ?? 0;
+    totals.online += toMinorUnits(row.collectedOnlineToDate, 2) ?? 0;
+    totals.mobilePayment += toMinorUnits(row.collectedMobilePaymentToDate, 2) ?? 0;
     totals.overdue += toMinorUnits(row.overdueAmount, 2) ?? 0;
     return totals;
-  }, { collected: 0, cash: 0, check: 0, bankTransfer: 0, tpe: 0, overdue: 0 }), [filteredFees]);
+  }, { collected: 0, cash: 0, check: 0, bankTransfer: 0, tpe: 0, online: 0, mobilePayment: 0, overdue: 0 }), [filteredFees]);
 
   const classOptions = useMemo(
     () => [
@@ -229,7 +231,7 @@ function FeesTableForYear() {
   const handleEdit = (fee) => {
     openDialog({
       title: `${t('fees.dialogs.editTitle')} - ${fee.student?.name}`,
-      children: <EditFeeForm fee={fee} feeTypes={feeTypes} />,
+      children: <EditFeeForm fee={fee} feeTypes={allFeeTypes} />,
       width: 'xl',
       primaryButton: {
         form: 'simple-fee-form',
@@ -281,11 +283,11 @@ function FeesTableForYear() {
       </NPageHeader>
 
       {isLoading ? (
-        <div className="grid shrink-0 grid-cols-2 gap-3 xl:grid-cols-6">
-          {Array.from({ length: 6 }, (_, index) => <NStatCardSkeleton key={index} />)}
+        <div className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-4 2xl:grid-cols-8">
+          {Array.from({ length: 8 }, (_, index) => <NStatCardSkeleton key={index} />)}
         </div>
       ) : failedToLoad ? null : (
-        <div className="grid shrink-0 grid-cols-2 gap-3 xl:grid-cols-6">
+        <div className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-4 2xl:grid-cols-8">
           <NStatCard
             icon={HandCoins}
             label={t('fees.stats.collected')}
@@ -321,6 +323,20 @@ function FeesTableForYear() {
             icon={CreditCard}
             label={t('fees.stats.tpe')}
             value={majorMoney(stats.tpe / 100)}
+            className="min-w-0"
+            classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
+          />
+          <NStatCard
+            icon={Globe}
+            label={t('payments.methods.online')}
+            value={majorMoney(stats.online / 100)}
+            className="min-w-0"
+            classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
+          />
+          <NStatCard
+            icon={Smartphone}
+            label={t('payments.methods.mobilePayment')}
+            value={majorMoney(stats.mobilePayment / 100)}
             className="min-w-0"
             classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
           />

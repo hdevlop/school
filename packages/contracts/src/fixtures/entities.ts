@@ -1,8 +1,9 @@
 import * as fake from './fakers';
 import { nanoid } from 'nanoid';
-import { findClassByName, toAppClassName } from '../classNames';
+import { findClassByName } from '../classNames';
+import { schoolSubjectsForClass } from '../subjects';
 import { feeTypeData, vehiclesData, sectionsData, DISCOUNT_CATALOG, SCHEDULES, classesData, subjectsData } from './staticData';
-import { chance, getNumberOfChildren, getSubjectByName, getSubjectsNames, pickRandom, randomClass, randomSubject } from './fakers';
+import { chance, getNumberOfChildren, pickRandom, randomClass, randomSubject } from './fakers';
 
 //=========================================================================//
 // ACADEMIC ENTITIES
@@ -315,29 +316,15 @@ export function generateTeacher(options = null) {
    };
 }
 
-// School level per class. Teachers are shared by (level + subject) so one
-// "Maths" teacher covers every class in their level, instead of a separate
-// teacher per class — which previously produced ~one teacher per class×subject
-// (~60) and an unrealistically large payroll.
-const CLASS_LEVEL: Record<string, string> = {
-   PS: 'primary', MS: 'primary', GS: 'primary', CP: 'primary', CE1: 'primary',
-   CE2: 'primary', CM1: 'primary', CM2: 'primary', CE6: 'primary',
-   '1AC': 'college', '2AC': 'college', '3AC': 'college',
-   TC: 'lycee', '1BAC': 'lycee', '2BAC': 'lycee',
-};
-const getClassLevel = (className: string) => CLASS_LEVEL[toAppClassName(className)] ?? 'primary';
-
 export function createAssignments(policy) {
    const assignmentsByTeacher = new Map();
-   const allSubjectNames = getSubjectsNames();
 
    for (const a of policy.ASSIGNMENTS) {
       const classEntity = getClassByName(a.CLASS_NAME);
       const sections = getSectionsByClass(classEntity.id);
-      const level = getClassLevel(a.CLASS_NAME);
+      const level = classEntity.level;
 
-      for (const subjectName of allSubjectNames) {
-         const subject = getSubjectByName(subjectName);
+      for (const subject of schoolSubjectsForClass(classEntity)) {
          // One teacher per subject per level — shared across all classes in it.
          const key = `${level}-${subject.id}`;
 
@@ -577,15 +564,16 @@ export function generateFamilyUnit() {
 //=========================================================================//
 // FINANCIAL ENTITIES
 //=========================================================================//
-export const TUITION_FEE_TYPE = feeTypeData.find(f => f.name.includes('Tuition'));
-export const TRANSPORT_FEE_TYPE = feeTypeData.find(f => f.name.includes('Transport'));
-export const CAFETERIA_FEE_TYPE = feeTypeData.find(f => f.name.includes('Cafeteria'));
-export const REGISTRATION_FEE_TYPE = feeTypeData.find(f => f.name.includes('Registration'));
-export const UNIFORM_FEE_TYPE = feeTypeData.find(f => f.name.includes('Uniform'));
-export const BOOKS_FEE_TYPE = feeTypeData.find(f => f.name.includes('Books'));
-export const SPORTS_FEE_TYPE = feeTypeData.find(f => f.name.includes('Sports'));
-export const TECHNOLOGY_FEE_TYPE = feeTypeData.find(f => f.name.includes('Technology'));
-export const FIELD_TRIP_FEE_TYPE = feeTypeData.find(f => f.name.includes('Field'));
+// Stable ids keep demo generation independent of the catalog's display language.
+export const TUITION_FEE_TYPE = feeTypeData.find(f => f.id === 'FT00');
+export const TRANSPORT_FEE_TYPE = feeTypeData.find(f => f.id === 'FT02');
+export const CAFETERIA_FEE_TYPE = feeTypeData.find(f => f.id === 'FT03');
+export const REGISTRATION_FEE_TYPE = feeTypeData.find(f => f.id === 'FT01');
+export const UNIFORM_FEE_TYPE = feeTypeData.find(f => f.id === 'FT06');
+export const BOOKS_FEE_TYPE = feeTypeData.find(f => f.id === 'FT04');
+export const SPORTS_FEE_TYPE = feeTypeData.find(f => f.id === 'FT05');
+export const TECHNOLOGY_FEE_TYPE = feeTypeData.find(f => f.id === 'FT07');
+export const FIELD_TRIP_FEE_TYPE = feeTypeData.find(f => f.id === 'FT8');
 
 export const INITIAL_FEE_TYPES = [
    TUITION_FEE_TYPE,

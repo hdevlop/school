@@ -119,7 +119,7 @@ export class FeeService {
     await this.feeValidator.validate(data, null, academicYear);
 
     const [feeType, student, settings] = await Promise.all([
-      this.feeValidator.validateFeeTypeExists(data.feeTypeId),
+      this.feeValidator.validateFeeTypeExists(data.feeTypeId, true),
       this.studentRepository.getById(data.studentId),
       this.settingsRepository.getAdminSettings(),
     ]);

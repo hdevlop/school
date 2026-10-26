@@ -11,10 +11,7 @@ export const normalizedSettingsData = {
   attendanceMode: 'daily' as 'daily' | 'per_class',
 };
 
-export const normalizedSubjectsData = subjectsData.map((subject) => ({
-  ...subject,
-  gradeLevel: 1,
-}));
+export const normalizedSubjectsData = subjectsData;
 
 export const normalizedSectionsData = sectionsData.map((section) => ({
   ...section,

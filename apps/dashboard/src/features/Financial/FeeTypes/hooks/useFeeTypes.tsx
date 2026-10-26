@@ -1,9 +1,11 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as feeTypeApi from '@/services/feeTypeApi';
+import { useMemo } from 'react';
+import { getAvailableFeeTypes } from '../config/feeTypeOptions';
 
 export const useFeeTypes = (options?) => {
-  const { feeTypeId, enabled = true } = options || {};
+  const { feeTypeId, enabled = true, activeOnly = true } = options || {};
 
   const crud = useEntityCRUD('feeTypes', {
     getAll: feeTypeApi.getFeeTypesApi,
@@ -13,7 +15,9 @@ export const useFeeTypes = (options?) => {
     delete: feeTypeApi.deleteFeeTypeApi,
   });
 
-  const { data: feeTypes, isLoading: isFeeTypesLoading, isError, error, refetch } = crud.useGetAll(enabled);
+  const { data: allFeeTypes, isLoading: isFeeTypesLoading, isError, error, refetch } = crud.useGetAll(enabled);
+  const feeTypes = useMemo(() => activeOnly && allFeeTypes
+    ? getAvailableFeeTypes(allFeeTypes) : allFeeTypes, [activeOnly, allFeeTypes]);
   const { data: feeType, isLoading: isFeeTypeLoading } = crud.useGetById(feeTypeId, !!feeTypeId);
 
   const { mutateAsync: createFeeType, isLoading: isCreating } = crud.useCreate();
@@ -23,6 +27,7 @@ export const useFeeTypes = (options?) => {
   return {
     // Data
     feeTypes,
+    allFeeTypes,
     feeType,
 
     // Status

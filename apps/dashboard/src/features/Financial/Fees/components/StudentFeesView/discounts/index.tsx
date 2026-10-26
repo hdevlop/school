@@ -20,7 +20,7 @@ interface DiscountsTabProps {
 export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
   const { t } = useTranslation()
   const { openDialog } = useDialog()
-  const { feeTypes } = useFeeTypes()
+  const { feeTypes } = useFeeTypes({ activeOnly: false })
   const { updateFee, isUpdating } = useFees({ enabled: false })
   const { majorMoney } = useSchoolFormat()
 

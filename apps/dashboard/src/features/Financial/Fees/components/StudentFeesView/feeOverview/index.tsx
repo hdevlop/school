@@ -31,7 +31,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
   const { t } = useTranslation();
   const viewer = useViewerRole();
   const { openDialog, confirmDelete } = useDialog();
-  const { feeTypes } = useFeeTypes();
+  const { feeTypes } = useFeeTypes({ activeOnly: false });
   // Below lg the fees are a list that opens onto each fee's installments
   // (MobileFeesList), and the overview scrolls as a whole.
   const isStacked = useMediaQuery('(max-width: 1023px)');

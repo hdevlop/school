@@ -547,6 +547,20 @@
       "when": 1792847146681,
       "tag": "0077_offline_read_snapshots",
       "breakpoints": true
+    },
+    {
+      "idx": 78,
+      "version": "7",
+      "when": 1792971819793,
+      "tag": "0078_purple_toad",
+      "breakpoints": true
+    },
+    {
+      "idx": 79,
+      "version": "7",
+      "when": 1792974513232,
+      "tag": "0079_charming_inertia",
+      "breakpoints": true
     }
   ]
 }

@@ -217,6 +217,7 @@ export const FEE_CATEGORY_VALUES = [
   'registration',
   'transport',
   'cafeteria',
+  'childcare',
   'books',
   'sports',
   'uniform',

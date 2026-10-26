@@ -52,7 +52,7 @@ import classesData from '../seed-data/school/classes.json';
 import feeTypesData from '../seed-data/school/feeTypes.json';
 import sectionsData from '../seed-data/school/sections.json';
 import settingsData from '../seed-data/school/settings.json';
-import subjectsData from '../seed-data/school/subjects.json';
+import { schoolSubjectsData as subjectsData } from '@sms/contracts/subjects';
 
 const schoolSettingsData = {
   ...settingsData,
@@ -153,9 +153,10 @@ export class SeedService {
 
     // keep only fees for the selected students
     const selectedStudentIds = new Set(selectedStudents.map((s: any) => s.id));
+    const feeTypeIds = await this.feeTypeService.resolveSeedFeeTypeIds(feeTypesData as any);
     const selectedFees = normalizedFees.filter((f: any) =>
       selectedStudentIds.has(f.studentId)
-    );
+    ).map(fee => ({ ...fee, feeTypeId: feeTypeIds.get(fee.feeTypeId) ?? fee.feeTypeId }));
 
     const selectedTeachers = (teachersData as any[]).slice(0, teacherLimit);
 

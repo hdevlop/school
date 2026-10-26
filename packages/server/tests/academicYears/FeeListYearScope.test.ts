@@ -3,7 +3,7 @@ import { drizzle } from 'drizzle-orm/pg-proxy';
 import { FeeService } from '../../src/modules/financial/fees/FeeService';
 import { FeeRepository } from '../../src/modules/financial/fees/FeeRepository';
 import { listFeesQueryDto } from '../../src/modules/financial/fees/FeeDto';
-import { SCHEDULE_VALUES } from '@sms/contracts';
+import { PAYMENT_METHOD_VALUES, SCHEDULE_VALUES } from '@sms/contracts';
 
 const oldYear = { id: 'year-old', label: '2025-2026' } as any;
 
@@ -52,6 +52,26 @@ describe('explicit all-year outstanding fees', () => {
 });
 
 describe('normal fee list year scope', () => {
+  it('includes every supported payment method in the collected breakdown', async () => {
+    const statements: Array<{ sql: string; params: unknown[] }> = [];
+    const repo = new FeeRepository();
+    (repo as any).year = oldYear;
+    repo.db = drizzle(async (sql, params) => {
+      statements.push({ sql, params });
+      return { rows: [] };
+    }) as any;
+
+    await repo.getAll();
+    const query = statements[0];
+    // Every method needs its own collection bucket (the two card methods
+    // share TPE), using completed receipts through the same cutoff date.
+    for (const method of PAYMENT_METHOD_VALUES) {
+      expect(query.params).toContain(method);
+    }
+    expect(query.sql).toContain('as "collectedOnlineToDate"');
+    expect(query.sql).toContain('as "collectedMobilePaymentToDate"');
+  });
+
   it('accepts each payment schedule, with omission restoring the unfiltered list', () => {
     expect(listFeesQueryDto.parse({})).toEqual({});
     for (const schedule of SCHEDULE_VALUES) {

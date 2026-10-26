@@ -35,6 +35,10 @@
       "types": "./src/teacherDashboard.ts",
       "default": "./src/teacherDashboard.ts"
     },
+    "./subjects": {
+      "types": "./src/subjects.ts",
+      "default": "./src/subjects.ts"
+    },
     "./fixtures": {
       "types": "./src/fixtures/index.ts",
       "default": "./src/fixtures/index.ts"

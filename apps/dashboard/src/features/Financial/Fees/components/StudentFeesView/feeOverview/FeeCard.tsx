@@ -46,6 +46,7 @@ const FeeCard = ({ data }: { data: any }) => {
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center text-2xl">
           <FeeCategoryIcon
+            image={fee.image ?? fee.feeType?.image}
             category={fee.type ?? fee.feeTypeCategory ?? fee.category ?? fee.feeType?.category}
             fallback={fee.icon}
           />

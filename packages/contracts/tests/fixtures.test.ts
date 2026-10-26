@@ -4,6 +4,7 @@ import classesJson from '../src/fixtures/data/classes.json';
 import feeTypesJson from '../src/fixtures/data/feeTypes.json';
 import sectionsJson from '../src/fixtures/data/sections.json';
 import subjectsJson from '../src/fixtures/data/subjects.json';
+import { createAssignments } from '../src/fixtures/entities';
 import {
   classesData,
   feeTypeData,
@@ -48,6 +49,28 @@ describe('fixtures', () => {
     expect(student.name).toMatch(/\S+ \S+/);
     const section = sectionsData.find((entry) => entry.id === student.sectionId);
     expect(section?.classId).toBe(student.classId);
+  });
+
+  it('keeps generated teacher subjects appropriate to preschool, early primary and collège', () => {
+    const teachers = createAssignments({ ASSIGNMENTS: [
+      { CLASS_NAME: 'GS' }, { CLASS_NAME: 'CP' }, { CLASS_NAME: 'CE6' }, { CLASS_NAME: '1AC' },
+    ] });
+    const codesFor = (className: string) => {
+      const schoolClass = classesData.find(schoolClass => schoolClass.name === className)!;
+      return teachers.flatMap(teacher => teacher.assignments
+        .filter(assignment => assignment.classId === schoolClass.id)
+        .flatMap(assignment => assignment.subjectIds))
+        .map(subjectId => subjectsData.find(subject => subject.id === subjectId)!.code);
+    };
+    expect(codesFor('GS')).toHaveLength(6);
+    expect(codesFor('GS').every(code => code.startsWith('PRE'))).toBe(true);
+    expect(codesFor('CP')).toContain('SCI');
+    expect(codesFor('CP')).not.toContain('HG');
+    expect(codesFor('CP')).not.toContain('PHY');
+    expect(codesFor('CE6')).toContain('HG');
+    expect(codesFor('CE6')).not.toContain('PHY');
+    expect(codesFor('1AC')).toContain('PHY');
+    expect(codesFor('1AC')).not.toContain('SCI');
   });
 
   it('uses the requested school year for every generated fee and never enrolls students in the future', () => {

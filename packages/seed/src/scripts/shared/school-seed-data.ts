@@ -21,11 +21,6 @@ export const normalizedSettingsData = {
   attendanceMode: 'daily' as 'daily' | 'per_class',
 };
 
-export const normalizedSubjectsData = subjectsData.map((subject) => ({
-  ...subject,
-  gradeLevel: 1,
-}));
-
 export const normalizedSectionsData = sectionsData.map((section) => ({
   ...section,
   id: seedAcademicId(section.id),
@@ -39,5 +34,5 @@ export const schoolSeedData = {
   feeTypesData,
   settingsData: normalizedSettingsData,
   sectionsData: normalizedSectionsData,
-  subjectsData: normalizedSubjectsData,
+  subjectsData,
 };

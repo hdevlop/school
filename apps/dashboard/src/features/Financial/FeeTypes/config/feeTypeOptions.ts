@@ -3,6 +3,13 @@ import type { FeeCategory, PaymentType } from '@sms/contracts';
 
 type Translate = (key: string, ...args: any[]) => string;
 
+/** Disabled and archived templates remain in history, but cannot be assigned. */
+export const getAvailableFeeTypes = <T extends { status?: string | null }>(types: readonly T[]): T[] =>
+  types.filter(type => type.status === 'active');
+
+export const getDefaultStudentFeeTypes = <T extends { status?: string | null; category?: string; paymentType?: string }>(types: readonly T[]): T[] =>
+  getAvailableFeeTypes(types).filter(type => type.category === 'tuition' && type.paymentType === 'recurring');
+
 type EnumOption<Value extends string = string> = {
   readonly value: Value;
   readonly label: string;

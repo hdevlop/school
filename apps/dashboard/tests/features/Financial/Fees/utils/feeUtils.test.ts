@@ -49,6 +49,18 @@ describe('fee display translations', () => {
     expect(getStudentFeesDisplayData(data, () => 'Scolarité', 'fr')?.fees[0].name).toBe('Advanced tuition');
   });
 
+  it('switches custom student fee names across all four languages without changing the cache', () => {
+    const labels = { en: 'Transport Fee — One Trip', fr: 'Frais de transport 1 voyage', ar: 'رسوم النقل — رحلة واحدة', es: 'Cuota de transporte — un trayecto' };
+    const data = { fees: [{ feeTypeId: 'custom-transport', name: labels.fr, type: 'transport', labels, netAmount: 300 }] };
+    const original = structuredClone(data);
+    for (const language of ['en', 'fr', 'ar', 'es'] as const) {
+      expect(getStudentFeesDisplayData(data, key => key, language)?.fees[0].name).toBe(labels[language]);
+    }
+    expect(data).toEqual(original);
+    expect(getStudentFeesDisplayData(data, key => key, 'de')?.fees[0].name).toBe(labels.fr);
+    expect(getFeeTypeDisplayName({ id: 'custom', name: 'Saved name', labels: { fr: '  ' } }, key => key, 'fr')).toBe('Saved name');
+  });
+
   it('prefers an explicit localized label and falls back to the saved name for missing translations', () => {
     expect(getFeeTypeDisplayName({ ...seededFeeTypes[0], labels: { fr: 'Frais de scolarité' } }, () => 'Scolarité', 'fr')).toBe('Frais de scolarité');
     expect(getFeeTypeDisplayName(seededFeeTypes[0], key => key, 'fr')).toBe('Tuition Fee');

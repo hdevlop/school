@@ -13,15 +13,17 @@ const FeeTypeCard = ({ data }: any) => {
   const { t, language } = useTranslation();
   const { majorMoney } = useSchoolFormat();
   const feeType = data;
+  const isDisabled = feeType.status !== 'active';
 
   const categoryKey = `feeTypes.category.${feeType.category}`;
   const categoryLabel = t(categoryKey);
 
   return (
-    <div className="flex items-start gap-4 p-4">
+    <div className="flex h-full items-start gap-4 p-4">
       <div className="shrink-0">
-        <div className="w-12 h-12 flex items-center justify-center">
+        <div className={`w-12 h-12 flex items-center justify-center ${isDisabled ? 'grayscale opacity-60' : ''}`}>
           <FeeCategoryIcon
+            image={feeType.image}
             category={feeType.category}
             size={48}
             fallback={<DollarSign className="w-6 h-6 text-muted-foreground" />}
@@ -30,17 +32,17 @@ const FeeTypeCard = ({ data }: any) => {
       </div>
 
       <div className="flex-1 flex flex-col gap-2">
-        <Label className="text-md font-bold">
+        <Label className={`text-md font-bold ${isDisabled ? 'text-muted-foreground' : ''}`}>
           {getFeeTypeDisplayName(feeType, t, language)}
         </Label>
 
         <div className="space-y-2">
           <NSectionInfo
             icon={Tag}
-            iconColor="text-primary"
+            iconColor={isDisabled ? 'text-muted-foreground' : 'text-primary'}
             label={t('feeTypes.table.category')}
             value={categoryLabel === categoryKey ? feeType.category : categoryLabel}
-            valueColor="text-primary"
+            valueColor={isDisabled ? 'text-muted-foreground' : 'text-primary'}
             maxChars={32}
           />
 
@@ -49,7 +51,7 @@ const FeeTypeCard = ({ data }: any) => {
             iconColor="text-muted-foreground"
             label={t('feeTypes.table.amount')}
             value={majorMoney(feeType.amount)}
-            valueColor="text-green-600 font-bold"
+            valueColor={isDisabled ? 'text-muted-foreground font-bold' : 'text-green-600 font-bold'}
           />
         </div>
       </div>

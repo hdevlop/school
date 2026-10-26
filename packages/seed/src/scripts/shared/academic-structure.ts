@@ -1,5 +1,5 @@
 import { classesData, feeTypeData, sectionsData } from '@sms/contracts/fixtures';
-import { normalizedSubjectsData } from './school-seed-data';
+import { schoolSubjectsForLevels } from '@sms/contracts/subjects';
 
 /** The Moroccan cycles the default classes belong to, in school order. */
 export const ACADEMIC_LEVELS = [...new Set(classesData.map((schoolClass) => schoolClass.level))];
@@ -34,7 +34,7 @@ export function academicStructure(academicYear: string, levels: readonly string[
   const classes = classesData.filter((schoolClass) => levels.includes(schoolClass.level));
   const classNames = new Map(classes.map((schoolClass) => [schoolClass.id, schoolClass.name]));
   return {
-    subjects: normalizedSubjectsData,
+    subjects: schoolSubjectsForLevels(levels),
     classes: classes.map(({ name, description, level }) => ({ name, description, level, academicYear })),
     sections: sectionsData
       .filter((section) => classNames.has(section.classId))

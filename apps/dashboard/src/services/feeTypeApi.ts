@@ -1,4 +1,4 @@
-import { api } from './http';
+import { api, formApi } from './http';
 
 export const getFeeTypesApi = async () => {
   const res = await api.get('/fee-types');
@@ -11,12 +11,12 @@ export const getFeeTypeByIdApi = async (id) => {
 };
 
 export const createFeeTypeApi = async (data) => {
-  const res = await api.post('/fee-types', data);
+  const res = await formApi.post('/fee-types', data);
   return res.data;
 };
 
 export const updateFeeTypeApi = async (data) => {
-  const res = await api.put(`/fee-types/${data.id}`, data);
+  const res = await formApi.put(`/fee-types/${data.id}`, data);
   return res.data;
 };
 

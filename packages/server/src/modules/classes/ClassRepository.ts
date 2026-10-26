@@ -1,6 +1,6 @@
 import { DB } from '../../database/db';
 import { classes, sections, students, teacherAssignments, teachers, staff, parents, studentParents, users, subjects, studentEnrollments, studentEnrollmentPlacements, assistantAssignments, cycles } from '../../database/schema';
-import { eq, ne, count, countDistinct, and, desc, inArray, sql, type SQL } from 'drizzle-orm';
+import { eq, ne, count, countDistinct, and, desc, inArray, isNull, sql, type SQL } from 'drizzle-orm';
 import { Repository } from '../../najm';
 import { classNameAliases } from '@sms/contracts';
 import { Owned, type OwnedWhere } from '../../auth';
@@ -392,6 +392,12 @@ export class ClassRepository {
       .values(data)
       .returning();
     return newClass;
+  }
+
+  // Seed only: links a class of any year that has no cycle yet.
+  async setSeedCycle(id: string, cycleId: string) {
+    await this.db.update(classes).set({ cycleId })
+      .where(and(eq(classes.id, id), isNull(classes.cycleId)));
   }
 
   async update(id, data) {

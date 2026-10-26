@@ -2742,7 +2742,8 @@
       "installmentAlreadyPaid": "Cette échéance est déjà payée",
       "studentNotEnrolledInAcademicYear": "L'élève n'était pas inscrit pour cette année scolaire",
       "effectiveDateOutsideEnrollmentPeriod": "La date de début de facturation doit être comprise dans la période d'inscription de l'élève pour cette année scolaire, à partir de sa date d'inscription",
-      "invalidEffectiveDate": "Date de début de facturation invalide"
+      "invalidEffectiveDate": "Date de début de facturation invalide",
+      "feeTypeInactive": "Ce type de frais est désactivé et ne peut pas être attribué aux élèves"
     },
     "studentView": {
       "pay": "Payer",
@@ -3124,6 +3125,10 @@
     }
   },
   "announcements": {
+    "actions": {
+      "publish": "Publier",
+      "unpublish": "Dépublier"
+    },
     "errors": {
       "authorOnly": "Seuls le personnel ou l'auteur de l'annonce peuvent la modifier",
       "classesNotInYear": "Les classes de l'annonce doivent appartenir à l'année scolaire sélectionnée",
@@ -3729,6 +3734,7 @@
       "tuition": "Scolarité",
       "uniform": "Uniforme",
       "cafeteria": "Cantine",
+      "childcare": "Garderie",
       "sports": "Sports",
       "technology": "Technologie",
       "fieldtrip": "Sortie scolaire",
@@ -3760,7 +3766,8 @@
       "name": "Nom",
       "namePlaceholder": "Entrez le nom",
       "paymentType": "Type de paiement",
-      "paymentTypePlaceholder": "Sélectionnez le type de paiement"
+      "paymentTypePlaceholder": "Sélectionnez le type de paiement",
+      "image": "Téléverser une image du type de frais"
     },
     "table": {
       "amount": "Montant",
@@ -3785,7 +3792,8 @@
       "inUse": "Des frais d'élèves utilisent ce type de frais ; il ne peut pas être supprimé",
       "notFound": "Type de frais introuvable",
       "invalidAmount": "Le montant doit être supérieur à 0",
-      "amountTooLarge": "Le montant ne peut pas dépasser 1 000 000"
+      "amountTooLarge": "Le montant ne peut pas dépasser 1 000 000",
+      "invalidImage": "Veuillez téléverser un fichier image"
     },
     "validation": {
       "nameMinLength": "Le nom doit contenir au moins 2 caractères",
@@ -3793,6 +3801,10 @@
       "amountRequired": "Le montant est obligatoire",
       "amountPositive": "Le montant doit être supérieur à 0",
       "amountTooLarge": "Ce montant est trop élevé"
+    },
+    "actions": {
+      "enable": "Activer",
+      "disable": "Désactiver"
     }
   },
   "grades": {
@@ -4658,7 +4670,7 @@
       "notSent": "L'élève a été créé, mais l'e-mail d'invitation n'a pas pu être envoyé. Renvoyez-le avec « Réinitialiser l'accès » sur la page Utilisateurs."
     },
     "import": {
-      "description": "Chaque ligne crée un élève dans l’année scolaire active. La classe et la section sont reconnues par leur nom, et un fichier exporté se réimporte tel quel.",
+      "description": "Chaque ligne crée un élève dans l’année scolaire active. La classe et la section sont reconnues par leur nom, et un fichier exporté se réimporte tel quel. Un fichier JSON peut aussi donner les parents et les frais de chaque élève ; les types de frais sont reconnus par leur nom.",
       "problem": "Ligne {{row}} : {{reason}}",
       "created": "{{count}} élève(s) importé(s)",
       "failed": "{{count}} ligne(s) n’ont pas pu être importée(s)",
@@ -4671,7 +4683,11 @@
         "invalidDate": "« {{value}} » n’est pas une date AAAA-MM-JJ",
         "duplicateCode": "le code élève « {{value}} » apparaît deux fois dans le fichier",
         "invalidGuardian": "les informations du responsable sont invalides : {{value}}",
-        "invalidArabicName": "Le nom en arabe doit contenir au maximum 100 caractères"
+        "invalidArabicName": "Le nom en arabe doit contenir au maximum 100 caractères",
+        "unknownFeeType": "aucun type de frais nommé « {{value}} »",
+        "invalidFee": "le frais {{value}} est invalide",
+        "feeYearMismatch": "le frais concerne {{value}}, pas l’année d’inscription de l’élève",
+        "feeBeforeEnrollment": "le frais commence le {{value}}, avant l’inscription de l’élève"
       }
     },
     "card": {

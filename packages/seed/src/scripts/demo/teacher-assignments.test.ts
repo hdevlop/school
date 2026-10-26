@@ -1,5 +1,6 @@
 import { expect, it } from 'bun:test';
 import { subjectsData } from '@sms/contracts/fixtures';
+import { schoolSubjectsForClass } from '@sms/contracts/subjects';
 import { MAX_TEACHER_CLASSES, MAX_TEACHER_LESSONS, placeLessons, weeklyLessons } from '../shared/timetable';
 
 function generateScenario(args: readonly string[]) {
@@ -11,24 +12,24 @@ function generateScenario(args: readonly string[]) {
     const { students } = await studentsPack();
     const { teachers } = await teachersPack();
     console.log(JSON.stringify({
-      teachers, classes: schoolSeedData.classesData,
+      teachers, classes: schoolSeedData.classesData, sections: schoolSeedData.sectionsData,
       sectionIds: [...new Set(students.map((student) => student.sectionId))],
     }));
   `, '--', 'teacher-assignment-probe', '--year=2025-2026', ...args]);
 }
 
 it.each([
-  { label: 'one occupied class', args: ['--students=12', '--classes=CP'], count: 10 },
+  { label: 'one occupied class', args: ['--students=12', '--classes=CP'], count: 7 },
   { label: 'multiple sections per class', args: ['--students=500'], count: undefined },
   { label: 'all school levels', args: ['--students=900', '--classes=ALL'], count: undefined },
   { label: 'an explicit larger staff', args: ['--students=100', '--classes=CP', '--teachers=12'], count: 12 },
-  { label: 'one teacher per assignment', args: ['--students=100', '--classes=CP', '--teachers=30'], count: 30 },
+  { label: 'one teacher per assignment', args: ['--students=100', '--classes=CP', '--teachers=21'], count: 21 },
   { label: 'no students', args: ['--students=0'], count: 0 },
 ])('keeps teacher assignments valid for $label', ({ args, count }) => {
   const result = generateScenario(args);
   expect(result.stderr.toString()).toBe('');
   expect(result.exitCode).toBe(0);
-  const { teachers, classes, sectionIds } = JSON.parse(result.stdout.toString());
+  const { teachers, classes, sections, sectionIds } = JSON.parse(result.stdout.toString());
   if (count !== undefined) expect(teachers).toHaveLength(count);
   const planned = teachers.flatMap((teacher: any) => {
     const subjectIds = new Set(teacher.assignments.flatMap((assignment: any) => assignment.subjectIds));
@@ -51,7 +52,11 @@ it.each([
     return lessons;
   });
   const actual = planned.map((lesson: any) => `${lesson.sectionId}:${lesson.subjectId}`);
-  const expected = sectionIds.flatMap((sectionId: string) => subjectsData.map((subject) => `${sectionId}:${subject.id}`));
+  const expected = sectionIds.flatMap((sectionId: string) => {
+    const section = sections.find((section: any) => section.id === sectionId);
+    const schoolClass = classes.find((schoolClass: any) => schoolClass.id === section.classId);
+    return schoolSubjectsForClass(schoolClass).map(subject => `${sectionId}:${subject.id}`);
+  });
   expect(actual).toHaveLength(expected.length);
   expect(new Set(actual)).toEqual(new Set(expected));
   expect(placeLessons(planned).unplaced).toBe(0);
@@ -59,7 +64,7 @@ it.each([
 
 it.each([
   { label: 'too few teachers', args: ['--teachers=1'] },
-  { label: 'too many teachers', args: ['--classes=CP', '--teachers=31'] },
+  { label: 'too many teachers', args: ['--classes=CP', '--teachers=22'] },
 ])('rejects $label before generating seed data', ({ args }) => {
   const result = generateScenario(['--students=100', ...args]);
   expect(result.exitCode).not.toBe(0);

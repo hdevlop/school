@@ -11,6 +11,7 @@ import {
    subjectsData,
    vehiclesData,
 } from '@sms/contracts/fixtures';
+import { schoolSubjectsForClass } from '@sms/contracts/subjects';
 import settingsData from '../school/data/settings.json';
 import { schoolSeedData, seedAcademicId, seedAcademicYear } from '../shared/school-seed-data';
 import { getDemoReferenceDate } from '../shared/academic-year';
@@ -268,7 +269,7 @@ export async function teachersPack() {
       const classEntity = getClassByName(CLASS_NAME);
       return getSectionsByClass(classEntity.id)
          .filter((_, index) => (SECTION_COUNTS[index] ?? 0) > 0)
-         .flatMap((section) => subjectsData.map((subject) => ({
+         .flatMap((section) => schoolSubjectsForClass(classEntity).map((subject) => ({
             level: classEntity.level,
             classId: classEntity.id,
             sectionId: section.id,

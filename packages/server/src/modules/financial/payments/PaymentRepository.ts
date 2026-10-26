@@ -136,6 +136,7 @@ export class PaymentRepository {
     return this.db.select({
       feeId: fees.id,
       feeType: feeTypes.name,
+      feeTypeLabels: feeTypes.labels,
       academicYear: fees.academicYear,
       schedule: fees.schedule,
       dueDates: sql<string[]>`json_agg(${feeInstallments.dueDate} order by ${feeInstallments.dueDate}, ${feeInstallments.number})`,
@@ -148,7 +149,7 @@ export class PaymentRepository {
       .innerJoin(feeTypes, eq(fees.feeTypeId, feeTypes.id))
       .innerJoin(feeInstallments, and(eq(targets.installmentId, feeInstallments.id), eq(feeInstallments.feeId, fees.id)))
       .leftJoin(settled, eq(settled.installmentId, feeInstallments.id))
-      .groupBy(fees.id, feeTypes.name)
+      .groupBy(fees.id, feeTypes.name, feeTypes.labels)
       .orderBy(fees.academicYear, feeTypes.name, fees.id);
   }
 

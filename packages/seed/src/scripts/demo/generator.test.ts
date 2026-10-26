@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import settingsData from '../school/data/settings.json';
 import { feeTypeData, subjectsData } from '@sms/contracts/fixtures';
+import { schoolSubjectsForClass } from '@sms/contracts/subjects';
 import {
   DEFAULT_DEMO_COUNTS,
   assessmentsPack,
@@ -13,7 +14,7 @@ import {
   teachersPack,
   transportPack,
 } from './generator';
-import { seedAcademicYear } from '../shared/school-seed-data';
+import { schoolSeedData, seedAcademicYear } from '../shared/school-seed-data';
 import { MAX_TEACHER_CLASSES, MAX_TEACHER_LESSONS } from '../shared/timetable';
 
 it('generates 100 students by default', async () => {
@@ -51,13 +52,18 @@ it('sizes the default school so tuition carries its payroll and running costs', 
 
   expect(payroll).toBeLessThan(monthlyTuition * 0.7);
   expect(payroll + monthlyRunningCosts).toBeLessThan(monthlyTuition * 0.85);
-  // Every section with students is taught every subject, by exactly one teacher.
+  // Every section with students is taught its class's subjects, by one teacher each.
   const sectionIds = new Set(students.map((student: any) => student.sectionId));
   const taught = teachers.flatMap((teacher) => teacher.assignments.flatMap((assignment: any) =>
     assignment.sectionIds.flatMap((sectionId: string) =>
       assignment.subjectIds.map((subjectId: string) => `${sectionId}:${subjectId}`))));
   expect(new Set(taught).size).toBe(taught.length);
-  expect(taught).toHaveLength(sectionIds.size * subjectsData.length);
+  const expected = [...sectionIds].flatMap(sectionId => {
+    const section = schoolSeedData.sectionsData.find(section => section.id === sectionId)!;
+    const schoolClass = schoolSeedData.classesData.find(schoolClass => schoolClass.id === section.classId)!;
+    return schoolSubjectsForClass(schoolClass).map(subject => `${sectionId}:${subject.id}`);
+  });
+  expect(new Set(taught)).toEqual(new Set(expected));
   for (const key of taught) expect(sectionIds.has(key.split(':')[0])).toBe(true);
 });
 

@@ -1462,7 +1462,8 @@
       "alreadyArchived": "Fee type is already archived",
       "alreadyActive": "Fee type is already active",
       "invalidStatus": "Invalid fee type status",
-      "invalidPaymentType": "Invalid payment type"
+      "invalidPaymentType": "Invalid payment type",
+      "invalidImage": "Please upload an image file"
     },
     "form": {
       "feeTypeInformation": "Fee Type Information",
@@ -1484,7 +1485,8 @@
       "status": "Status",
       "statusPlaceholder": "Select status",
       "dueDate": "Due Date",
-      "dueDatePlaceholder": "Select due date"
+      "dueDatePlaceholder": "Select due date",
+      "image": "Upload fee type image"
     },
     "dialogs": {
       "createTitle": "Create New Fee Type",
@@ -1533,6 +1535,7 @@
       "registration": "Registration",
       "transport": "Transportation",
       "cafeteria": "Cafeteria",
+      "childcare": "Childcare",
       "books": "Books & Materials",
       "sports": "Sports",
       "uniform": "Uniform",
@@ -1554,6 +1557,10 @@
       "semester": "Semester",
       "annually": "Annually",
       "oneTime": "One Time"
+    },
+    "actions": {
+      "enable": "Enable",
+      "disable": "Disable"
     }
   },
   "fees": {
@@ -1688,7 +1695,8 @@
       "installmentNumberExists": "An installment with this number already exists for this fee",
       "studentNotEnrolledInAcademicYear": "The student was not enrolled in this school year",
       "effectiveDateOutsideEnrollmentPeriod": "The billing start date must fall within the student's enrollment period for this school year, on or after their enrollment date",
-      "invalidEffectiveDate": "Invalid billing start date"
+      "invalidEffectiveDate": "Invalid billing start date",
+      "feeTypeInactive": "This fee type is disabled and cannot be assigned to students"
     },
     "validation": {
       "studentRequired": "Student is required",
@@ -2411,7 +2419,7 @@
       "notSent": "The student was created, but the invitation email could not be sent. Send it again with \"Reset access\" on the Users page."
     },
     "import": {
-      "description": "Each row creates a student in the active school year. Class and section are matched by name, and an exported file imports back as is.",
+      "description": "Each row creates a student in the active school year. Class and section are matched by name, and an exported file imports back as is. A JSON file may also list each student's parents and fees; fee types are matched by name.",
       "problem": "Row {{row}}: {{reason}}",
       "created": "{{count}} student(s) imported",
       "failed": "{{count}} row(s) could not be imported",
@@ -2424,7 +2432,11 @@
         "invalidDate": "\"{{value}}\" is not a YYYY-MM-DD date",
         "duplicateCode": "student code \"{{value}}\" appears twice in the file",
         "invalidGuardian": "guardian details are invalid: {{value}}",
-        "invalidArabicName": "Arabic name must be 100 characters or fewer"
+        "invalidArabicName": "Arabic name must be 100 characters or fewer",
+        "unknownFeeType": "no fee type named \"{{value}}\"",
+        "invalidFee": "the fee {{value}} is invalid",
+        "feeYearMismatch": "the fee is for {{value}}, not the year the student joins",
+        "feeBeforeEnrollment": "the fee starts on {{value}}, before the student's enrollment"
       }
     }
   },

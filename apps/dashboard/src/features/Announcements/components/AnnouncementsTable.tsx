@@ -6,7 +6,7 @@ import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptySt
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
-import { Megaphone, Plus, SearchX } from 'lucide-react';
+import { Eye, EyeOff, Megaphone, Pencil, Plus, SearchX, Trash2 } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import AnnouncementForm from './AnnouncementForm';
 import AnnouncementCard from './AnnouncementCard';
@@ -36,11 +36,15 @@ function AnnouncementsTable() {
     createAnnouncement,
     updateAnnouncement,
     deleteAnnouncement,
+    publishAnnouncement,
+    unpublishAnnouncement,
     error,
     isAnnouncementsLoading,
     isUpdating,
     isCreating,
     isDeleting,
+    isPublishing,
+    isUnpublishing,
   } = useAnnouncements();
   const filteredAnnouncements = useMemo(() => (announcements || []).filter((item) =>
     !classFilter || (item.classIds?.length
@@ -103,6 +107,24 @@ function AnnouncementsTable() {
 
   const total = announcements?.length ?? 0;
 
+  const rowMenu = (announcement) => [
+    { label: t('common.view'), icon: Eye, onSelect: () => handleView(announcement) },
+    { label: t('common.edit'), permission: 'update:announcements', icon: Pencil, onSelect: () => handleEdit(announcement) },
+    {
+      label: announcement.isPublished ? t('announcements.actions.unpublish') : t('announcements.actions.publish'),
+      permission: 'update:announcements',
+      icon: announcement.isPublished ? EyeOff : Megaphone,
+      disabled: isPublishing || isUnpublishing,
+      separatorBefore: true,
+      onSelect: () => {
+        const changePublication = announcement.isPublished ? unpublishAnnouncement : publishAnnouncement;
+        // The shared mutation shows errors and leaves the stored status unchanged.
+        changePublication(announcement.id).catch(() => undefined);
+      },
+    },
+    { label: t('common.delete'), permission: 'delete:announcements', icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(announcement) },
+  ];
+
   return (
     <div className='flex flex-col gap-2 w-full h-full min-h-0'>
       <NPageHeader
@@ -126,6 +148,8 @@ function AnnouncementsTable() {
         onView={handleView}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        menu={{ row: rowMenu }}
+        menuButton
         loading={isAnnouncementsLoading}
         error={hasFailedToLoad(error, announcements) ? error : null}
         renderError={(currentError) => (

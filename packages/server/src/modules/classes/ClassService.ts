@@ -123,11 +123,16 @@ export class ClassService {
     const createdClasses = [];
     for (const classData of classesData) {
       try {
-        await this.classValidator.ensureNameUnique(classData.name, classData.academicYear);
         const stage = schoolCycleForLevel(classData.level);
         const cycle = !classData.cycleId && stage
           ? await this.classRepository.findDefaultCycle([stage.name, ...Object.values(stage.labels)]) : null;
-        const classEntity = await this.classRepository.createForSeed({ ...classData, cycleId: classData.cycleId ?? cycle?.id });
+        const cycleId = classData.cycleId ?? cycle?.id;
+        // A class an earlier run made before its cycle existed joins it now;
+        // one that already has a cycle keeps it.
+        const existing = await this.classRepository.getByName(classData.name, classData.academicYear);
+        if (existing && !existing.cycleId && cycleId) await this.classRepository.setSeedCycle(existing.id, cycleId);
+        await this.classValidator.ensureNameUnique(classData.name, classData.academicYear);
+        const classEntity = await this.classRepository.createForSeed({ ...classData, cycleId });
         createdClasses.push(classEntity);
       } catch (error: any) {
         if (error?.status === 409) continue;
