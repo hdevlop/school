@@ -7,7 +7,7 @@ import type { Schedule } from '@sms/contracts';
 import { NPageHeader, NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState, NStatCard, NStatCardSkeleton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Banknote, CircleDollarSign, CreditCard, Globe, HandCoins, Landmark, Plus, ReceiptText, SearchX, Smartphone, Wallet } from 'lucide-react';
+import { Banknote, CircleDollarSign, CreditCard, HandCoins, Landmark, Plus, ReceiptText, SearchX, Wallet } from 'lucide-react';
 import FeeForm from './FeeForm';
 import EditFeeForm from './EditFeeForm';
 import { useFees } from '../hooks/useFees';
@@ -21,7 +21,12 @@ import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { createBulkFeesApi } from '@/services/feeApi';
+import { createBulkFeesApi, getFeesApi, importStudentFeesApi, previewFeeImportDatesApi } from '@/services/feeApi';
+import { getFeeTypesApi } from '@/services/feeTypeApi';
+import { useQueryClient } from '@tanstack/react-query';
+import { buildFeeImport, isFeeReport } from '../config/feeImport';
+import { FeesPrintButton } from './FeesPrintButton';
+import { FeeImportDatesPreview } from './FeeImportDatesPreview';
 import { withFeeYear } from '../utils/feeUtils';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { useFeesTableColumns } from '../hooks/useFeesTableColumns';
@@ -29,8 +34,11 @@ import { buildScheduleOptions } from '../config/feeOptions';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
 import { useViewingAcademicYear, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import { toMinorUnits, useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
+import { canPerformAction } from '@/shared/actionPermissions';
 
 function CreateFeeForm({ feeTypes }) {
   // The full student picker is needed only after opening the create dialog.
@@ -43,6 +51,10 @@ function FeesTableForYear() {
   const { t } = useTranslation();
   const { majorMoney } = useSchoolFormat();
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const viewer = useViewerRole();
+  const canImport = ['create:fees', 'update:fees', 'create:payments', 'update:payments'].every(permission => canPerformAction(viewer, permission));
+  const [importProgress, setImportProgress] = useState<{ processed: number; total: number } | null>(null);
   const { openDialog, confirmDelete } = useDialog();
 
   const { feeTypes, allFeeTypes } = useFeeTypes();
@@ -65,6 +77,12 @@ function FeesTableForYear() {
   const [searchText, setSearchText] = useState('');
   const [statusFilter, setStatusFilter] = useState('__all__');
   const [scheduleFilter, setScheduleFilter] = useState<Schedule>();
+
+  // Summary cards always cover the viewed year, independently of table filters.
+  const { data: summaryFees, isLoading: isSummaryLoading, error: summaryError } = useYearScopedList({
+    resource: 'fees',
+    fetch: () => getFeesApi(),
+  });
 
   const {
     fees,
@@ -102,18 +120,16 @@ function FeesTableForYear() {
     });
   }, [fees, selectedClassId, selectedSectionId, searchText, statusFilter, isAllClasses]);
 
-  const stats = useMemo(() => filteredFees.reduce((totals, row) => {
+  const stats = useMemo(() => summaryFees.reduce((totals, row) => {
     // Fee amounts have two decimal places; sum in minor units to keep totals exact.
     totals.collected += toMinorUnits(row.collectedToDate, 2) ?? 0;
     totals.cash += toMinorUnits(row.collectedCashToDate, 2) ?? 0;
     totals.check += toMinorUnits(row.collectedCheckToDate, 2) ?? 0;
     totals.bankTransfer += toMinorUnits(row.collectedBankTransferToDate, 2) ?? 0;
     totals.tpe += toMinorUnits(row.collectedTpeToDate, 2) ?? 0;
-    totals.online += toMinorUnits(row.collectedOnlineToDate, 2) ?? 0;
-    totals.mobilePayment += toMinorUnits(row.collectedMobilePaymentToDate, 2) ?? 0;
     totals.overdue += toMinorUnits(row.overdueAmount, 2) ?? 0;
     return totals;
-  }, { collected: 0, cash: 0, check: 0, bankTransfer: 0, tpe: 0, online: 0, mobilePayment: 0, overdue: 0 }), [filteredFees]);
+  }, { collected: 0, cash: 0, check: 0, bankTransfer: 0, tpe: 0, overdue: 0 }), [summaryFees]);
 
   const classOptions = useMemo(
     () => [
@@ -228,6 +244,84 @@ function FeesTableForYear() {
     router.push(`/students/${fee.student.id}/fees`);
   };
 
+  const toolbarLabels = useMemo(() => ({
+    import: t('fees.import.title'),
+    importDescription: t('fees.import.description'),
+    importConfirm: t('fees.import.confirm'),
+    ...(importProgress ? {
+      importConfirm: t('fees.import.progress', importProgress),
+    } : {}),
+  }), [t, importProgress]);
+
+  const handleImport = async (rows: Record<string, unknown>[]) => {
+    if (isFeeReport(rows)) throw new Error(t('fees.import.reportFile'));
+    if (!viewingYear) throw new Error(t('common.loading'));
+    const year = viewingYear;
+    setImportProgress({ processed: 0, total: rows.length });
+    try {
+      const [roster, catalog] = await Promise.all([
+        withAcademicYear(year, () => getFeesApi()),
+        getFeeTypesApi(),
+      ]);
+      if (!Array.isArray(roster?.data) || !Array.isArray(catalog?.data)) {
+        throw new Error(t('fees.import.catalogUnavailable'));
+      }
+      const { students: imports, problems } = buildFeeImport(
+        rows, roster.data.map(row => row.student), catalog.data.filter(type => type.status === 'active'), year, t,
+      );
+      if (problems.length) {
+        throw new Error(problems.slice(0, 5).map(problem => t('fees.import.problem', problem)).join('\n'));
+      }
+      const datedStudents = imports.flatMap(student => student.enrollmentDate
+        ? [{ studentId: student.studentId, enrollmentDate: student.enrollmentDate }] : []);
+      if (datedStudents.length) {
+        const { data: changes } = await withAcademicYear(year, () => previewFeeImportDatesApi(datedStudents));
+        if (changes.length) {
+          if (!['admin', 'principal'].includes(viewer.role ?? '') || !canPerformAction(viewer, 'update:students')) {
+            throw new Error(t('fees.import.datesRequireAdmin'));
+          }
+          let confirmed = false;
+          await openDialog({
+            title: t('fees.import.datesTitle'),
+            description: t('fees.import.datesDescription', { count: changes.length }),
+            width: 'xl',
+            children: <FeeImportDatesPreview changes={changes} />,
+            primaryButton: { text: t('fees.import.datesApply'), onClick: () => { confirmed = true; } },
+          });
+          if (!confirmed) throw new Error(t('fees.import.datesCancelled'));
+          for (const change of changes) {
+            const student = imports.find(student => student.studentId === change.studentId);
+            if (student) student.dateCorrection = change.correction;
+          }
+        }
+      }
+      let created = 0, receipts = 0, reused = 0;
+      const failed: string[] = [];
+      setImportProgress({ processed: 0, total: imports.length });
+      for (const [index, student] of imports.entries()) {
+        try {
+          const result = await withAcademicYear(year, () => importStudentFeesApi(student));
+          created += result.data.createdFees;
+          receipts += result.data.createdPayments;
+          reused += result.data.reusedFees + result.data.reusedPayments;
+        } catch (cause) {
+          failed.push(t('fees.import.problem', {
+            row: student.row, message: cause instanceof Error ? cause.message : t('fees.import.failed', { count: 1 }),
+          }));
+        }
+        setImportProgress({ processed: index + 1, total: imports.length });
+      }
+      await Promise.all(['fees', 'installments', 'payments', 'students', 'student-enrollments'].map(resource => queryClient.invalidateQueries({ queryKey: [resource] })));
+      if (failed.length) {
+        toast.error(t('fees.import.failed', { count: failed.length }));
+        throw new Error(failed.slice(0, 5).join('\n'));
+      }
+      toast.success(t('fees.import.imported', { fees: created, payments: receipts, reused }));
+    } finally {
+      setImportProgress(null);
+    }
+  };
+
   const handleEdit = (fee) => {
     openDialog({
       title: `${t('fees.dialogs.editTitle')} - ${fee.student?.name}`,
@@ -282,12 +376,16 @@ function FeesTableForYear() {
         </NPageHeaderActions>
       </NPageHeader>
 
-      {isLoading ? (
-        <div className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-4 2xl:grid-cols-8">
-          {Array.from({ length: 8 }, (_, index) => <NStatCardSkeleton key={index} />)}
+      {isSummaryLoading ? (
+        <div className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-3 2xl:grid-cols-6">
+          {Array.from({ length: 6 }, (_, index) => <NStatCardSkeleton key={index} />)}
         </div>
-      ) : failedToLoad ? null : (
-        <div className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-4 2xl:grid-cols-8">
+      ) : hasFailedToLoad(summaryError, summaryFees) ? (
+        isAuthorizationError(summaryError)
+          ? <NForbiddenState surface="panel" />
+          : <NErrorState surface="panel" />
+      ) : (
+        <div className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-3 2xl:grid-cols-6">
           <NStatCard
             icon={HandCoins}
             label={t('fees.stats.collected')}
@@ -327,20 +425,6 @@ function FeesTableForYear() {
             classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
           />
           <NStatCard
-            icon={Globe}
-            label={t('payments.methods.online')}
-            value={majorMoney(stats.online / 100)}
-            className="min-w-0"
-            classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
-          />
-          <NStatCard
-            icon={Smartphone}
-            label={t('payments.methods.mobilePayment')}
-            value={majorMoney(stats.mobilePayment / 100)}
-            className="min-w-0"
-            classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
-          />
-          <NStatCard
             icon={Wallet}
             label={t('fees.stats.overdueAmount')}
             value={majorMoney(stats.overdue / 100)}
@@ -358,6 +442,12 @@ function FeesTableForYear() {
         data={filteredFees}
         isFilteredEmpty={isFilteredEmpty}
         columns={columns}
+        dataActions
+        toolbarActionDisplay="settings"
+        headerSlot={<FeesPrintButton loading={isLoading} />}
+        onDataChange={handleImport}
+        showImportButton={canImport}
+        toolbarLabels={toolbarLabels}
         filters={filters}
         renderToolbar={() => (
           <FeesMobileToolbar filters={filters} onCreate={handleAddClick} loading={isLoading} />

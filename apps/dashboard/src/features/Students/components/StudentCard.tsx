@@ -35,7 +35,7 @@ const StudentCard = ({ data }) => {
             {student.name}
           </Label>
           {arabicName && (
-            <p lang="ar" dir="rtl" className="text-sm text-muted-foreground break-words">
+            <p lang="ar" dir="rtl" className="text-left text-sm text-foreground break-words">
               {arabicName}
             </p>
           )}

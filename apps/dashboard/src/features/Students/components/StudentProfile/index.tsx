@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { NajmScroll, NButton, NEmptyState, NErrorState, NForbiddenState, NLoadingState, NPageHeader, NPageHeaderActions, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
-import { AlertTriangle, ArrowLeft, Bus, CalendarCheck, DollarSign, GraduationCap, User } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Bus, CalendarCheck, DollarSign, GraduationCap, Pencil, User } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { StudentProfileProps } from './types';
@@ -19,6 +19,12 @@ import TransportTab from './Transport';
 import EnrollmentActions from './Enrollment';
 import { isAuthorizationError, isNotFoundError } from '@/services/apiError';
 import { useAlerts } from '@/features/Alerts/hooks/useAlerts';
+import { useDialog } from '@/shared/useDialog';
+import { useStudents } from '@/features/Students/hooks/useStudents';
+import { useClasses } from '@/features/Classes/hooks/useClasses';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
+import SimpleStudentForm from '../SimpleStudentForm';
 
 export { default as LeftSidebar } from './LeftSidebar';
 export { default as OverviewTab } from './Overview';
@@ -33,11 +39,34 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
   const role = (user as { role?: string } | null)?.role;
   const canManageEnrollment = role === 'admin' || role === 'principal';
   // The fees and transport tabs read finance and transport routes.
-  const { isSchoolWide, can } = useViewerRole();
+  const { isSchoolWide, isFamily, can } = useViewerRole();
+  const canEdit = !isFamily && can('update:students');
+  const { openDialog } = useDialog();
+  const { updateStudent, isUpdating } = useStudents({ enabled: false });
+  const { classes } = useClasses({ enabled: canEdit });
+  const { viewingYear } = useViewingAcademicYear();
   const canReadFees = isSchoolWide && can('read:fees');
   const canReadTransport = isSchoolWide && can('read:student-routes');
   const { alerts } = useAlerts({ studentId, enabled: Boolean(studentId) && can('read:alerts') });
   const hasActiveAlerts = (alerts ?? []).some((alert) => alert.status === 'active');
+
+  const handleEdit = () => {
+    if (!student || !canEdit) return;
+    openDialog({
+      title: `${t('students.dialogs.editTitle')} - ${student.name}`,
+      children: <SimpleStudentForm student={student} classes={classes} />,
+      width: '4xl',
+      height: 'full',
+      primaryButton: {
+        form: 'student-form',
+        text: t('students.dialogs.updateButton'),
+        loading: isUpdating,
+        onClick: async (data) => {
+          await withAcademicYear(viewingYear, () => updateStudent(data));
+        },
+      },
+    });
+  };
 
   const sharedTabProps = {
     studentId,
@@ -54,7 +83,6 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
           <LeftSidebar student={student} isLoading={isStudentLoading} />
         </div>
         <div className="flex min-w-0 flex-col gap-3">
-          {canManageEnrollment && <EnrollmentActions studentId={studentId} showHistory={false} />}
           <OverviewTab {...sharedTabProps} />
         </div>
       </div>
@@ -90,6 +118,17 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
         subtitle={t('students.profile.detailsSubtitle')}
       >
         <NPageHeaderActions>
+          {student && !isStudentLoading && (
+            <>
+              {canManageEnrollment && <EnrollmentActions studentId={studentId} showHistory={false} />}
+              {canEdit && (
+                <NButton type="button" variant="outline" size="sm" className="gap-2" onClick={handleEdit}>
+                  <Pencil className="size-4" aria-hidden="true" />
+                  {t('common.edit')}
+                </NButton>
+              )}
+            </>
+          )}
           <NButton
             type="button"
             variant="outline"
@@ -122,7 +161,7 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
           onValueChange={setActiveTab}
           className="flex min-h-0 min-w-0 flex-1 flex-col gap-3"
         >
-          <TabsList variant="underline" className="shrink-0 flex-wrap justify-start">
+          <TabsList variant="underline" className="w-fit max-w-full shrink-0 self-start flex-wrap justify-start">
             {tabItems.map(({ value, icon: Icon, label }) => (
               <TabsTrigger
                 key={value}

@@ -4,7 +4,9 @@ import { AcademicYearValidator } from '../academicYears/AcademicYearValidator';
 import { SettingsRepository } from '../settings/SettingsRepository';
 import { AcademicYearMigrationIssueRepository } from '../academicYearMigrationIssues/AcademicYearMigrationIssueRepository';
 import { StudentEnrollmentRepository } from './StudentEnrollmentRepository';
-import type { CorrectEnrollmentDto, CreateEnrollmentDto, EndEnrollmentDto, TransferEnrollmentDto } from './StudentEnrollmentDto';
+import type { CorrectEnrollmentDto, CreateEnrollmentDto, EndEnrollmentDto, TransferEnrollmentDto, ImportDateCorrectionDto } from './StudentEnrollmentDto';
+import { importedEnrollmentDates } from './importEnrollmentDates';
+import type { FinancialImportDatePreview } from '@sms/contracts';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
@@ -53,6 +55,47 @@ export class StudentEnrollmentService {
     const enrollment = this.validator.ensureEnrollmentExists(await this.enrollments.getById(id));
     const placements = await this.enrollments.listPlacements(id);
     return { ...enrollment!, placements };
+  }
+
+  /** The caller supplies students already read through its owned, selected-year roster. */
+  async previewImportDates(sources: Array<{ studentId: string; studentCode: string; name: string; enrollmentDate: string; sourceDate: string }>) {
+    const histories = await this.listByStudents(sources.map(student => student.studentId));
+    const changes: FinancialImportDatePreview[] = [];
+    for (const source of sources) {
+      const enrollment = histories.get(source.studentId)?.find(row => row.academicYear.id === this.year.id);
+      if (!enrollment) continue;
+      const expected = { enrolledOn: enrollment.enrolledOn, leftOn: enrollment.leftOn,
+        status: enrollment.status as CorrectEnrollmentDto['status'], placements: enrollment.placements };
+      const dates = importedEnrollmentDates(source.sourceDate, source.enrollmentDate, expected, this.year.instructionStartsOn);
+      if (!dates.changed) continue;
+      this.validator.ensureImportDatesEditable(expected, dates.yearEnrolledOn);
+      changes.push({ studentId: source.studentId, studentCode: source.studentCode, name: source.name,
+        admissionDate: dates.admissionDate, yearEnrolledOn: dates.yearEnrolledOn,
+        correction: { enrollmentId: enrollment.id, expectedAdmissionDate: source.enrollmentDate, expected } });
+    }
+    return changes;
+  }
+
+  @Transaction()
+  async correctDatesFromImport(studentId: string, sourceDate: string, correction: ImportDateCorrectionDto,
+    actor: { id: string; role: string }) {
+    this.validator.ensureCorrectionAllowed(actor.role);
+    const enrollment = this.validator.ensureEnrollmentExists(await this.enrollments.getById(correction.enrollmentId, true));
+    if (enrollment.studentId !== studentId) this.validator.ensureEnrollmentExists(null);
+    await this.enrollments.lockAdmissionDate(studentId);
+    const student = this.validator.ensureStudentExists(await this.enrollments.getStudent(studentId));
+    this.validator.ensureImportAdmissionUnchanged(student.enrollmentDate, correction.expectedAdmissionDate);
+    const dates = importedEnrollmentDates(sourceDate, student.enrollmentDate, correction.expected, this.year.instructionStartsOn);
+    this.validator.ensureImportDatesEditable(correction.expected, dates.yearEnrolledOn);
+    if (dates.admissionDate !== student.enrollmentDate) {
+      await this.enrollments.correctAdmissionDate(studentId, dates.admissionDate, actor, student.enrollmentDate);
+    }
+    return this.correct(correction.enrollmentId, {
+      enrolledOn: dates.yearEnrolledOn, leftOn: correction.expected.leftOn, status: correction.expected.status,
+      expected: correction.expected,
+      placement: { ...correction.expected.placements[0], validFrom: dates.yearEnrolledOn },
+      reason: 'Enrollment dates restored from imported student file',
+    }, actor, studentId);
   }
 
   async createInSelectedYear(data: CreateEnrollmentDto, actorId: string) {

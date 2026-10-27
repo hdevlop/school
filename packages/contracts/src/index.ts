@@ -13,3 +13,4 @@ export * from './payroll';
 export * from './receipts';
 export * from './schoolDefaults';
 export * from './academicStructure';
+export type { StudentFinancialImport, FinancialImportDateCorrection, FinancialImportDatePreview } from './financialImport';

@@ -113,10 +113,12 @@ export default function EnrollmentPanel({ studentId, showHistory = true }: { stu
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-3 py-3">
+      <div className={showHistory ? 'flex flex-col gap-3 py-3' : 'flex items-center gap-2'}>
         <NSkeleton className="h-6 w-48" />
-        <NSkeleton className="h-24 w-full" />
-        <NSkeleton className="h-24 w-full" />
+        {showHistory && <>
+          <NSkeleton className="h-24 w-full" />
+          <NSkeleton className="h-24 w-full" />
+        </>}
       </div>
     );
   }
@@ -125,7 +127,7 @@ export default function EnrollmentPanel({ studentId, showHistory = true }: { stu
   }
 
   return (
-    <div className="flex flex-col gap-4 py-3">
+    <div className={showHistory ? 'flex flex-col gap-4 py-3' : 'flex flex-wrap items-center gap-2'}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         {showHistory && <div>
           <h2 className="text-lg font-semibold text-slate-900">{t('students.enrollment.title')}</h2>

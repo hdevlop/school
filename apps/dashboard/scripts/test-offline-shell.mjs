@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import { resolve } from 'node:path';
 import { createOfflineProfile } from './offline-profile.mjs';
+import { waitForOfflineCondition } from './wait-offline-condition.mjs';
 
 const appRoot = fileURLToPath(new URL('..', import.meta.url));
 process.chdir(appRoot);
@@ -94,7 +95,7 @@ try {
         if (!await proof.evaluate(() => document.documentElement.dataset.searchSame === 'true' && document.documentElement.dataset.routerSame === 'true')) throw new Error('Path change recreated unchanged query/router objects');
         await proof.close();
         await page.goto(server.url + 'students/slow');
-        await page.getByText('The server is reachable.', { exact: false }).waitFor();
+        await page.getByRole('link', { name: 'Try online' }).waitFor();
         const other = await context.newPage();
         await other.goto(server.url + 'classes');
         await other.getByRole('heading', { name: 'Classes', exact: true }).waitFor();
@@ -117,30 +118,26 @@ try {
             worker.addEventListener('statechange', () => { if (worker.state === 'installed') resolve(); });
           });
         });
-        await page.getByRole('button', { name: 'Update application' }).waitFor({ timeout: 25000 });
-        await page.getByRole('button', { name: 'Update application' }).click();
-        await page.getByText('Save or discard open changes', { exact: false }).waitFor();
-        if (await page.getByRole('textbox', { name: 'Unsaved proof' }).inputValue() !== 'keep this draft') throw new Error('Draft lost during blocked update');
-        await page.evaluate(() => document.getElementById('dirty-proof').reset());
-        await page.getByRole('button', { name: 'Update application' }).click();
-        await page.getByText('Save or discard open changes', { exact: false }).waitFor();
-        if (await page.getByRole('textbox', { name: 'Inline edit' }).inputValue() !== 'keep inline draft') throw new Error('Inline edit lost or ignored during update');
-        // Unmounted editors must no longer block, while searches stay populated.
-        await page.evaluate(() => document.getElementById('inline-proof').remove());
-        // A custom editor may not emit input/change. Its open form remains
-        // protected even after a native reset, until it is closed.
-        await page.getByRole('button', { name: 'Update application' }).click();
-        await page.getByText('Save or discard open changes', { exact: false }).waitFor();
-        await page.evaluate(() => document.getElementById('dirty-proof').remove());
+        const staged = async () => {
+          const registration = await navigator.serviceWorker.getRegistration();
+          return registration?.waiting?.scriptURL.endsWith('/sw-next.js')
+            && navigator.serviceWorker.controller?.scriptURL.endsWith('/sw.js');
+        };
+        await waitForOfflineCondition(page, staged);
+        if (await page.getByRole('button', { name: 'Update application' }).count()) throw new Error('Staged update must stay silent');
+        if (await page.getByRole('textbox', { name: 'Unsaved proof' }).inputValue() !== 'keep this draft') throw new Error('Draft lost during staged update');
+        if (await page.getByRole('textbox', { name: 'Inline edit' }).inputValue() !== 'keep inline draft') throw new Error('Inline draft lost during staged update');
+        if (await page.getByRole('textbox', { name: 'Table search' }).inputValue() !== 'search only') throw new Error('Search state lost during staged update');
         await page.evaluate(() => sessionStorage.setItem('school-grade-drafts', JSON.stringify({ state: { drafts: { fixture: { student: { marksObtained: 12 } } } } })));
-        await page.getByRole('button', { name: 'Update application' }).click();
-        await page.getByText('Save or discard open changes', { exact: false }).waitFor();
-        await page.waitForFunction(() => [...document.querySelectorAll('button')].some(button => button.textContent === 'Update application' && !button.disabled));
-        await page.evaluate(() => sessionStorage.removeItem('school-grade-drafts'));
-        await page.getByRole('button', { name: 'Update application' }).click();
-        await page.getByRole('button', { name: 'Update application' }).waitFor({ state: 'hidden' });
-        if (await page.getByRole('textbox', { name: 'Table search' }).inputValue() !== 'search only') throw new Error('Search state lost during activation');
         await other.close();
+        // A remaining controlled tab keeps the update waiting, with its work intact.
+        if (!await page.evaluate(staged)) throw new Error('Update activated before all old tabs closed');
+        if (!await page.evaluate(() => sessionStorage.getItem('school-grade-drafts'))) throw new Error('Stored draft lost during staging');
+        await page.evaluate(() => {
+          sessionStorage.removeItem('school-grade-drafts');
+          document.getElementById('dirty-proof').remove();
+          document.getElementById('inline-proof').remove();
+        });
         await context.setOffline(true);
       }
       // Classes sits in the Academic group, collapsed as it is online.
@@ -160,6 +157,11 @@ try {
       await reopened.getByRole('heading', { name: 'Classes', exact: true }).waitFor();
       console.log(`${name}: restarted at ${new URL(reopened.url()).pathname}`);
       if (!process.env.OFFLINE_ORIGIN) {
+        await waitForOfflineCondition(reopened, async () => {
+          const registration = await navigator.serviceWorker.getRegistration();
+          return registration?.active?.state === 'activated' && !registration.waiting
+            && registration.active.scriptURL.endsWith('/sw-next.js');
+        });
         await reopened.evaluate(() => {
           const bootstrap = JSON.parse(localStorage.getItem('school.offline-shell.v1'));
           bootstrap.ui.preferences.language = 'ar';
@@ -176,7 +178,7 @@ try {
       });
       await reopened.getByRole('link', { name: 'Sign in' }).waitFor();
       if (errors.length) throw new Error(errors.join('\n'));
-      console.log(`${name}: PASS StudentProfile mount/router, sidebar icons/groups/stored logo, offline refresh/restart, cleared bootstrap${process.env.OFFLINE_ORIGIN ? '' : ', RTL, slow-online fallback, stable navigation objects, search/inline/detached editor update consent'}`);
+      console.log(`${name}: PASS StudentProfile mount/router, sidebar icons/groups/stored logo, offline refresh/restart, cleared bootstrap${process.env.OFFLINE_ORIGIN ? '' : ', RTL, slow-online fallback, stable navigation objects, silent staging, preserved drafts and natural activation'}`);
       await context.close();
     } finally { await context.close(); }
   }

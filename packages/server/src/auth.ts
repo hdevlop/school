@@ -117,7 +117,8 @@ export const isSchoolWide = createGroupGuard([...SCHOOL_WIDE_ROLE_KEYS]);
  * parent or student who is later granted it from reaching every row.
  */
 const Permission = createGuard<string>(PermissionGuard);
-export const CanSchoolWide = (permission: string) => composeGuards(isSchoolWide(), Permission(permission))();
+export const CanSchoolWide = (permission: string, ...additionalPermissions: string[]) =>
+  composeGuards(isSchoolWide(), ...[permission, ...additionalPermissions].map(name => Permission(name)))();
 
 /**
  * najm-auth's `own` with School's school-wide roles. Rules are join chains

@@ -1,5 +1,5 @@
 import { api } from './http';
-import type { Schedule } from '@sms/contracts';
+import type { Schedule, StudentFinancialImport, FinancialImportDatePreview } from '@sms/contracts';
 
 // One row per student for fees charged to the request's school year.
 export type FeeListFilters = { schedule?: Schedule; classId?: string; sectionId?: string };
@@ -47,6 +47,18 @@ export const getInstallmentsByFeeApi = async (feeId) => {
 
 export const createFeeApi = async (data) => {
   const res = await api.post('/fees', data);
+  return res.data;
+};
+
+export const importStudentFeesApi = async (data: StudentFinancialImport): Promise<{ data: {
+  createdFees: number; createdPayments: number; reusedFees: number; reusedPayments: number;
+} }> => {
+  const res = await api.post(data.dateCorrection ? '/fees/import/with-dates' : '/fees/import', data);
+  return res.data;
+};
+
+export const previewFeeImportDatesApi = async (students: Array<{ studentId: string; enrollmentDate: string }>): Promise<{ data: FinancialImportDatePreview[] }> => {
+  const res = await api.post('/fees/import/preview-dates', { students });
   return res.data;
 };
 

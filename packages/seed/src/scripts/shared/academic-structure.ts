@@ -21,9 +21,9 @@ export function parseAcademicLevels(args = process.argv.slice(2)): string[] {
 }
 
 /**
- * The default classes, their A/B/C sections and the subjects, without the
- * demo's ids and room numbers: ids are generated, and rooms are the school's
- * own. Sections name their class, which is matched by name in the year, so a
+ * The default classes, their A/B/C sections and the subjects, with generated
+ * ids and sequential room numbers starting at 1 for the selected sections.
+ * Sections name their class, which is matched by name in the year, so a
  * class the school already has keeps its id and gains only missing sections.
  *
  * Fee types belong to the school, not to a year or a cycle, so every level
@@ -38,7 +38,9 @@ export function academicStructure(academicYear: string, levels: readonly string[
     classes: classes.map(({ name, description, level }) => ({ name, description, level, academicYear })),
     sections: sectionsData
       .filter((section) => classNames.has(section.classId))
-      .map(({ classId, name, maxStudents }) => ({ className: classNames.get(classId)!, name, maxStudents })),
+      .map(({ classId, name, maxStudents }, index) => ({
+        className: classNames.get(classId)!, name, maxStudents, roomNumber: index + 1,
+      })),
     feeTypes: feeTypeData,
   };
 }

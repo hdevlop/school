@@ -6,7 +6,7 @@
     "dev": "next dev --turbo -p 3102",
     "build": "node ./scripts/next-build.mjs",
     "build:offline": "bun scripts/build-offline.mjs",
-    "test:offline:browser": "bun run build:offline && node scripts/test-offline-shell.mjs && node scripts/test-offline-startup.mjs && node scripts/test-offline-fallback.mjs",
+    "test:offline:browser": "bun run build:offline && node scripts/test-offline-shell.mjs && node scripts/test-offline-startup.mjs && node scripts/test-offline-fallback.mjs && node scripts/test-offline-recovery.mjs",
     "test:offline:registration": "node scripts/test-offline-registration.mjs",
     "test:offline:session": "node scripts/test-offline-session.mjs",
     "test:offline:install": "bun run build:offline && node scripts/test-offline-install.mjs",
@@ -19,7 +19,8 @@
     "test:offline:renewal": "node scripts/test-offline-renewal.mjs",
     "test:offline:navigation": "node scripts/test-offline-navigation.mjs",
     "test:offline:errors": "node scripts/test-offline-errors.mjs",
-    "test:offline:switch": "node scripts/test-offline-switch.mjs"
+    "test:offline:switch": "node scripts/test-offline-switch.mjs",
+    "test:offline:recovery": "bun run build:offline && node scripts/test-offline-recovery.mjs"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.71",
@@ -75,7 +76,7 @@
     "lucide-react": "^1.8.0",
     "najm-auth": "6.10.0",
     "najm-chatbot": "3.7.1",
-    "najm-kit": "3.7.0",
+    "najm-kit": "3.7.1",
     "najm-next": "0.15.1",
     "najm-offline": "0.1.0",
     "najm-theme": "0.3.1",

@@ -61,7 +61,6 @@ function InstallmentsTable({ fee, feeName = '', className = '', onPayInstallment
       showViewToggle={false}
       showPagination
       defaultPagination={{ pageIndex: 0, pageSize: 10 }}
-      pageSizeOptions={[10, 20, 30, 40, 50]}
       showColumnVisibility={false}
       showCheckbox
       dynamicHeight={dynamicHeight}

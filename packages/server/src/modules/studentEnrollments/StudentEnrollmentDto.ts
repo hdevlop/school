@@ -40,6 +40,13 @@ export const correctEnrollmentDto = enrollmentState.extend({
   expected: enrollmentState.extend({ placements: z.array(placementState).min(1) }),
   reason: z.string().trim().min(1).max(500),
 });
+/** A financial import may backdate admission/initial placement only after explicit review. */
+export const importDateCorrectionDto = z.object({
+  enrollmentId: id,
+  expectedAdmissionDate: dateOnly,
+  expected: enrollmentState.extend({ placements: z.array(placementState).min(1) }),
+});
+export type ImportDateCorrectionDto = z.infer<typeof importDateCorrectionDto>;
 export type CorrectEnrollmentDto = z.infer<typeof correctEnrollmentDto>;
 export type CreateEnrollmentDto = z.infer<typeof createEnrollmentDto>;
 export type TransferEnrollmentDto = z.infer<typeof transferEnrollmentDto>;

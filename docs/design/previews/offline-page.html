@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#d64e57">
+  <title>MyScolAI · You're offline</title>
+  <style>
+    :root { color-scheme: light; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #233449; background: #fcf8f7; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; min-height: 100svh; display: grid; place-items: center; padding: 40px 20px; background: radial-gradient(ellipse at 50% 0%, #fbe9e7 0, transparent 64%), #fcf8f7; }
+    main { width: min(100%, 480px); text-align: center; }
+    .brand { margin-bottom: 30px; display: flex; align-items: center; justify-content: center; gap: 13px; text-align: left; }
+    .brand img { width: 76px; height: 76px; object-fit: contain; }
+    .brand-name { font-family: Georgia, "Times New Roman", serif; font-size: 25px; font-weight: 700; letter-spacing: -.8px; }
+    .brand-caption { display: block; margin-top: 5px; color: #75808c; font-size: 12px; letter-spacing: .2px; }
+    .card { padding: 42px 38px 32px; border: 1px solid #f0e2df; border-radius: 24px; background: #fff; box-shadow: 0 16px 60px -28px #773d3e35, 0 2px 8px #773d3e04; }
+    .illustration { position: relative; display: grid; place-items: center; width: 104px; height: 104px; margin: 0 auto 26px; border: 1px solid #f8dcd9; border-radius: 50%; background: #fff5f3; color: #d64e57; }
+    .illustration::before { content: ""; position: absolute; inset: 9px; border: 1px dashed #f0c5c2; border-radius: 50%; }
+    .illustration svg { position: relative; width: 42px; height: 42px; }
+    .eyebrow { margin: 0 0 12px; color: #b34c53; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+    h1 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 38px; font-weight: 700; letter-spacing: -1.5px; line-height: 1.2; }
+    .description { max-width: 310px; margin: 17px auto 28px; color: #72808b; font-size: 14px; line-height: 1.8; }
+    .retry { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 49px; border: 1px solid #ca4650; border-radius: 11px; background: #d64e57; color: #fff; box-shadow: 0 4px 8px #d64e571f; text-decoration: none; font-size: 14px; font-weight: 600; transition: background .15s; }
+    .retry:hover { background: #bf404a; }
+    .retry:focus-visible { outline: 3px solid #e8a3a7; outline-offset: 4px; }
+    .retry svg { width: 16px; height: 16px; }
+    .hint { display: flex; align-items: center; justify-content: center; gap: 7px; margin: 22px 0 0; color: #8b949c; font-size: 11px; line-height: 1.5; }
+    .hint svg { width: 13px; height: 13px; flex: none; }
+    footer { margin-top: 25px; color: #9b9494; font-size: 11px; line-height: 1.7; }
+    @media (max-width: 400px) { body { padding: 28px 16px; } .brand { margin-bottom: 24px; } .card { padding: 32px 24px 26px; border-radius: 20px; } h1 { font-size: 34px; } }
+    @media (prefers-reduced-motion: reduce) { .retry { transition: none; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="brand">
+      <img src="../../../packages/server/src/theme/auth-logo.png" alt="School logo" width="76" height="76">
+      <div><span class="brand-name">MyScolAI</span><span class="brand-caption">School management</span></div>
+    </header>
+    <section class="card" aria-labelledby="offline-title">
+      <div class="illustration" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m2 2 20 20M8.5 16.5a5 5 0 0 1 6.4-.4M5 12.5a10 10 0 0 1 2.4-1.8M2 8.5a16 16 0 0 1 2.7-1.8M10 6a16 16 0 0 1 12 2.5M14.5 10.3a10 10 0 0 1 4.5 2.2"/><circle cx="12" cy="20" r=".9" fill="currentColor" stroke="none"/></svg>
+      </div>
+      <p class="eyebrow">Connection interrupted</p>
+      <h1 id="offline-title">You're offline</h1>
+      <p class="description">We can’t reach your school right now. Check your connection, then try again.</p>
+      <a class="retry" href="" aria-label="Try loading this page again"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6.1 7a7 7 0 0 1 11.6-1L20 9M4 15l2.3 3A7 7 0 0 0 17.9 17"/></svg>Try again</a>
+      <p class="hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M10 18h4"/></svg>Check your Wi-Fi or mobile data.</p>
+    </section>
+    <footer>This page needs an internet connection.</footer>
+  </main>
+</body>
+</html>

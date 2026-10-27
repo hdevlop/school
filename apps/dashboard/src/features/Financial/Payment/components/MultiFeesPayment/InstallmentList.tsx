@@ -220,7 +220,6 @@ const FeeInstallmentsTable = ({
                defaultMode="table"
                showPagination={visibleRows.length > 10}
                defaultPagination={{ pageIndex: 0, pageSize: 10 }}
-               pageSizeOptions={[10, 20, 30, 40, 50]}
                showAddButton={false}
                showViewToggle={false}
                showColumnVisibility={false}

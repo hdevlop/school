@@ -140,22 +140,23 @@ for (const engineName of (process.env.OFFLINE_BROWSERS ?? 'chromium').split(',')
     await waitForOfflineCondition(page, recordedOfflineLanguage, displayed);
     await fixture.stop();
     await page.goto(origin + 'students');
-    // The worker without the shell still leads with the language the app last displayed.
-    const sections = await page.locator('main > section').evaluateAll(all => all.map(section => section.lang));
-    assert.deepEqual([...sections].sort(), ['ar', 'en', 'fr']);
-    assert.equal(sections[0], displayed);
+    // The worker without the shell uses the same single English fallback.
+    assert.equal(await page.locator('html').getAttribute('lang'), 'en');
+    assert.equal(await page.getByRole('heading').count(), 1);
     assert.equal(await page.locator('meta[name="school-shell-version"]').count(), 0, 'The shell must not answer while turned off');
     assert.equal(await page.getByText(student.name, { exact: true }).count(), 0);
     console.log(`${engineName}: off: worker replaced on the next online visit, shell caches dropped, data kept but locked, offline page instead of the shell`);
 
-    // 3. On again: the staged worker installs behind the open tab and its update notice
-    // activates it (closing every tab also does: test-offline-startup.mjs); access and downloads return.
+    // 3. On again: the staged worker installs silently behind the open tab.
+    // Closing all controlled tabs activates it naturally; access and downloads return.
     await restart({});
     await page.goto(origin + 'home');
     // It installs in the background behind the worker that controls this tab.
     await waitForOfflineCondition(page, async () => (await navigator.serviceWorker.getRegistration())?.waiting?.state === 'installed', null, { timeout: 60_000 });
-    await page.locator('[data-school-offline-action="update"]').click();
-    await page.locator('[data-school-offline-status]').waitFor({ state: 'detached' });
+    assert.equal(await page.locator('[data-school-offline-status]').count(), 0, 'Staged updates must stay silent');
+    await page.close();
+    page = await context.newPage();
+    await page.goto(origin + 'home');
     await waitForOfflineCondition(page, shellWorker, null, { timeout: 45_000 }).catch(async error => {
       console.log('Worker diagnostic:', await page.evaluate(async () => {
         const registration = await navigator.serviceWorker.getRegistration();
@@ -173,7 +174,7 @@ for (const engineName of (process.env.OFFLINE_BROWSERS ?? 'chromium').split(',')
     await page.goto(origin + 'students');
     await page.getByText(student.name, { exact: true }).first().waitFor();
     assert.deepEqual(audit.errors, []);
-    console.log(`${engineName}: PASS turned off: replacement worker without the shell on the next online visit, no update consent, shell caches dropped, downloaded data kept and locked, stacked offline page; turned on: staged shell installed behind it, activated from its update notice, fresh grant and downloads, stopped-server Students list`);
+    console.log(`${engineName}: PASS turned off: replacement worker without the shell on the next online visit, no update consent, shell caches dropped, downloaded data kept and locked, English offline page; turned on: staged shell installed silently, naturally activated after closing the app tab, fresh grant and downloads, stopped-server Students list`);
   } finally {
     try { await context?.close(); } finally { await fixture.close(); }
   }

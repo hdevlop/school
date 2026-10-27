@@ -158,6 +158,7 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
               name='arabicName'
               type='text'
               formLabel={t('students.form.arabicName')}
+              placeholder='اسم التلميذ الكامل'
               icon={User}
               dir='rtl'
               lang='ar'

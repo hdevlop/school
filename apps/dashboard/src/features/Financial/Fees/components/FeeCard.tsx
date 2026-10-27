@@ -5,6 +5,8 @@ import { NAvatar } from 'najm-kit';
 import { Label } from 'najm-kit';
 import { Progress } from 'najm-kit';
 import { NBadge } from 'najm-kit';
+import { SimpleTooltip } from 'najm-kit';
+import { FileX2 } from 'lucide-react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
 
@@ -80,9 +82,18 @@ const FeeCard = ({ data }: any) => {
           </div>
         </div>
       </> : (
-        <p className="flex min-h-20 items-center justify-center px-2 text-center text-sm text-muted-foreground">
-          {t('fees.studentView.noFees')}
-        </p>
+        <div className="flex min-h-20 flex-col items-center justify-center gap-2">
+          <span className="text-xs font-medium text-muted-foreground">{t('fees.studentView.noFeesLabel')}</span>
+          <SimpleTooltip content={t('fees.studentView.noFees')}>
+            <span
+              role="img"
+              aria-label={t('fees.studentView.noFees')}
+              className="inline-flex size-12 items-center justify-center rounded-xl border border-dashed border-border bg-muted/50 text-muted-foreground/60"
+            >
+              <FileX2 className="size-6" strokeWidth={1.5} aria-hidden="true" />
+            </span>
+          </SimpleTooltip>
+        </div>
       )}
     </div>
   );

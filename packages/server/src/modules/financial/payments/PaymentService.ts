@@ -206,7 +206,7 @@ export class PaymentService {
   }
 
   @Transaction()
-  private async recordTransaction(data: CreatePaymentDto, processedBy?: string) {
+  private async recordTransaction(data: CreatePaymentDto, processedBy?: string, imported = false, settledOn?: string) {
     const idempotencyHash = data.idempotencyKey ? computeIdempotencyHash(data as any) : null;
     if (data.idempotencyKey) {
       const existing = await this.paymentValidator.findByIdempotencyKey(
@@ -220,7 +220,7 @@ export class PaymentService {
     }
 
     await this.paymentValidator.validate(data);
-    if (data.paymentMethod === 'check') {
+    if (data.paymentMethod === 'check' && !imported) {
       await this.paymentValidator.ensureCheckNumberUnique(data.studentId, data.checkNumber);
     }
 
@@ -237,7 +237,7 @@ export class PaymentService {
 
     await this.paymentValidator.validateAllocationStudents(data.studentId, resolvedAllocations);
 
-    return this.createRecordedPayment(data, resolvedAllocations, processedBy, idempotencyHash);
+    return this.createRecordedPayment(data, resolvedAllocations, processedBy, idempotencyHash, imported ? settledOn : undefined);
   }
 
   private async createRecordedPayment(
@@ -245,10 +245,13 @@ export class PaymentService {
     resolvedAllocations: Array<{ feeId: string; number: number; amount: number }>,
     processedBy?: string,
     idempotencyHash: string | null = null,
+    settledOn?: string,
   ) {
     const isCheck = data.paymentMethod === 'check';
-    const initialStatus = isCheck ? 'pending' : 'completed';
-    const settledDate = isCheck ? null : data.paymentDate;
+    // Only an imported cheque the source already cashed starts settled; any other cheque waits for the bank.
+    const cashedOn = isCheck ? settledOn ?? null : null;
+    const initialStatus = isCheck && !cashedOn ? 'pending' : 'completed';
+    const settledDate = isCheck ? cashedOn : data.paymentDate;
 
     const payment = await this.paymentRepository.create({
       studentId: data.studentId,
@@ -261,7 +264,7 @@ export class PaymentService {
       settledDate,
       statusChangedAt: new Date().toISOString(),
       transactionRef: data.transactionRef ?? null,
-      receiptNumber: generateReceiptNumber(),
+      receiptNumber: data.receiptNumber?.trim() || generateReceiptNumber(),
       status: initialStatus,
       processedBy: processedBy,
       idempotencyKey: data.idempotencyKey ?? null,
@@ -305,7 +308,7 @@ export class PaymentService {
     await this.auditService.record({
       entityType: 'payment',
       entityId: payment.id,
-      action: isCheck ? 'payment.checkRecorded' : 'payment.completed',
+      action: isCheck && !cashedOn ? 'payment.checkRecorded' : 'payment.completed',
       actorId: processedBy,
       before: null,
       after: payment,
@@ -313,6 +316,13 @@ export class PaymentService {
     });
     await this.recalculateImpactedStudents([data.studentId]);
     return { payment, allocations, replayed: false };
+  }
+
+  /** Legacy cheque numbers may repeat; the guarded importer identifies payments by receipt. */
+  async recordImported(data: CreatePaymentDto, processedBy: string, settledDate?: string) {
+    const result = await this.recordTransaction(data, processedBy, true, settledDate);
+    this.events.emit('payment.recorded', result);
+    return result.payment;
   }
 
   async record(data: CreatePaymentDto, processedBy?: string) {

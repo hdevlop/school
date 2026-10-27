@@ -2,7 +2,10 @@ import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, 
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { FeeService } from './FeeService';
 import { buildFeeRecalculationResponse } from './buildFeeRecalculationResponse';
-import { CanSchoolWide } from '../../../auth';
+import { CanSchoolWide, isAdministrator } from '../../../auth';
+import { FeeImportService } from './FeeImportService';
+import { importStudentFeesDto, importStudentFeesWithDatesDto, previewFeeImportDatesDto,
+  type ImportStudentFeesDto, type ImportStudentFeesWithDatesDto, type PreviewFeeImportDatesDto } from './FeeImportDto';
 import {
   createFeeDto,
   createFeesBulkDto,
@@ -28,6 +31,7 @@ import {
 export class FeeController {
   constructor(
     private feeService: FeeService,
+    private feeImportService: FeeImportService,
   ) { }
 
   @Get()
@@ -117,6 +121,31 @@ export class FeeController {
   @ResMsg('fees.success.bulkCreated')
   async createBulk(@Body() body: CreateFeesBulkDto, @User() user: { id: string; role?: string }) {
     return this.feeService.createBulk(body.fees, user.id, user.role);
+  }
+
+  @Post('/import')
+  @CanSchoolWide('create:fees', 'update:fees', 'create:payments', 'update:payments')
+  @Validate(importStudentFeesDto)
+  @ResMsg('fees.success.bulkCreated')
+  async importStudentFees(@Body() body: ImportStudentFeesDto, @User() user: { id: string; role?: string }) {
+    return this.feeImportService.importStudent(body, user);
+  }
+
+  @Post('/import/preview-dates')
+  @CanSchoolWide('create:fees', 'update:fees', 'create:payments')
+  @Validate(previewFeeImportDatesDto)
+  @ResMsg('fees.success.retrieved')
+  async previewImportDates(@Body() body: PreviewFeeImportDatesDto) {
+    return this.feeImportService.previewDates(body.students);
+  }
+
+  @Post('/import/with-dates')
+  @isAdministrator()
+  @CanSchoolWide('create:fees', 'update:fees', 'create:payments', 'update:payments', 'update:students')
+  @Validate(importStudentFeesWithDatesDto)
+  @ResMsg('fees.success.bulkCreated')
+  async importStudentFeesWithDates(@Body() body: ImportStudentFeesWithDatesDto, @User() user: { id: string; role?: string }) {
+    return this.feeImportService.importStudent(body, user);
   }
 
   @Post('/bulk-class')

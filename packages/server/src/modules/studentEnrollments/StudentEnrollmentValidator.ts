@@ -22,6 +22,18 @@ export class StudentEnrollmentValidator {
     if (role !== 'admin' && role !== 'principal') Err(403, this.et('correctionRequiresAdmin'));
   }
 
+  ensureImportAdmissionUnchanged(actual: string, expected: string) {
+    if (actual !== expected) Err(409, this.et('changedReload'));
+  }
+
+  ensureImportDatesEditable(enrollment: CorrectEnrollmentDto['expected'], enrolledOn: string) {
+    if (enrollment.placements.length !== 1 || enrollment.status !== 'active' || enrollment.leftOn !== null
+      || enrollment.placements[0].validTo !== null || enrollment.placements[0].validFrom !== enrollment.enrolledOn
+      || enrolledOn > enrollment.enrolledOn) {
+      Err(409, this.et('importDatesNeedReview'));
+    }
+  }
+
   ensureCorrection(
     enrollment: { enrolledOn: string; leftOn: string | null; status: string },
     placements: CorrectEnrollmentDto['expected']['placements'], data: CorrectEnrollmentDto,

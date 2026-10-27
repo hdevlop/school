@@ -124,7 +124,8 @@
     "test:offline:renewal": "bun run --cwd apps/dashboard test:offline:renewal",
     "test:offline:navigation": "bun run --cwd apps/dashboard test:offline:navigation",
     "test:offline:errors": "bun run --cwd apps/dashboard test:offline:errors",
-    "test:offline:switch": "bun run --cwd apps/dashboard test:offline:switch"
+    "test:offline:switch": "bun run --cwd apps/dashboard test:offline:switch",
+    "test:offline:recovery": "bun run --cwd apps/dashboard test:offline:recovery"
   },
   "devDependencies": {
     "@sms/server": "workspace:*",
@@ -150,7 +151,7 @@
     "najm-event": "2.0.2",
     "najm-guard": "2.2.1",
     "najm-i18n": "2.2.0",
-    "najm-kit": "3.7.0",
+    "najm-kit": "3.7.1",
     "najm-mcp": "2.2.5",
     "najm-next": "0.15.1",
     "najm-offline": "0.1.0",

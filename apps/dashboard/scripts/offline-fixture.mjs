@@ -18,8 +18,13 @@ const stats = { missingRequests: 0, assetRequests: 0, bytesServed: 0 };
 let installMode = 'shell';
 let missingAsset = process.env.OFFLINE_MISSING_ASSET === '1';
 let assetDelayMs = 0;
+let recovery = null;
 const server = Bun.serve({ hostname: '127.0.0.1', port: Number(process.env.OFFLINE_FIXTURE_PORT ?? 0), idleTimeout: 30, async fetch(request) {
   const path = new URL(request.url).pathname;
+  if (path === '/recovery-control' && request.method === 'POST') {
+    recovery = await request.json();
+    return Response.json(recovery);
+  }
   if (path === '/navigation-proof' || path === '/navigation-proof/other') return new Response('<!doctype html><div id="root"></div><script type="module" src="/navigation-proof.js"></script>', { headers: { 'Content-Type': 'text/html' } });
   if (path === '/navigation-proof.js') return new Response(navigationScript, { headers: { 'Content-Type': 'application/javascript' } });
   if (path === '/preparation-proof.js') return new Response(preparationScript, { headers: { 'Content-Type': 'application/javascript' } });
@@ -41,7 +46,13 @@ const server = Bun.serve({ hostname: '127.0.0.1', port: Number(process.env.OFFLI
     return createNajmServiceWorker({ cacheId: 'myscolai-shell', cacheVersion: manifest.version + '-next', offlineUrl: manifest.document,
       precache: manifest.assets, navigationFallback: { paths: [...SHELL_PATHS] }, updatePolicy: 'staged' })();
   }
-  if (path === '/api/health/status') return Response.json({ status: 'ok' });
+  if (path === '/api/health/status') return Response.json({ status: 'ok' }, { status: recovery?.health ?? 200 });
+  if (path === '/home' && recovery) {
+    const delay = request.headers.get('accept')?.includes('text/html') ? recovery.navigationDelay : recovery.delay;
+    if (delay) await new Promise(resolve => setTimeout(resolve, delay));
+    return new Response('<!doctype html><h1>Live School page</h1>', { status: recovery.page,
+      headers: { 'Content-Type': 'text/html', 'Cache-Control': 'no-store' } });
+  }
   if (path === '/students/slow') { await new Promise(resolve => setTimeout(resolve, 12000)); return new Response('Slow online document'); }
   if ((path.startsWith('/offline-shell/') || manifest.assets.includes(path)) && !path.includes('..')) {
     if (path === manifest.assets.at(-1)) {

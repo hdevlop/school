@@ -63,20 +63,19 @@ for (const name of (process.env.OFFLINE_BROWSERS ?? 'chromium').split(',')) {
     child.kill();
     await exited;
     await assert.rejects(fetch(origin + 'api/health/status'), 'The server must actually be stopped');
-    // French, Arabic and English stacked, led by the language the app last
-    // displayed: French until one is recorded, then the shell's English.
-    const ORDER = { fr: ['fr:ltr', 'ar:rtl', 'en:ltr'], en: ['en:ltr', 'fr:ltr', 'ar:rtl'] };
-    const branded = async (path, lead = 'fr') => {
+    // The public fallback is one English notice, regardless of app language.
+    const branded = async path => {
       const response = await page.goto(origin + path.slice(1));
       assert.equal(response.status(), 503, path);
       await page.getByRole('heading', { name: 'MyScolAI is offline', exact: true }).waitFor();
-      assert.deepEqual(await page.locator('main > section').evaluateAll(sections => sections.map(section => section.lang + ':' + section.dir)), ORDER[lead], path);
-      assert.equal(await page.locator('html').getAttribute('lang'), lead, path);
+      assert.equal(await page.getByRole('heading').count(), 1, path);
+      assert.equal(await page.locator('html').getAttribute('lang'), 'en', path);
+      assert.equal(await page.locator('html').getAttribute('dir'), 'ltr', path);
       assert.equal(await page.locator('meta[name="school-shell-version"]').count(), 0, path + ' must not get the shell');
     };
     for (const path of UNLISTED) await branded(path);
     await page.reload();
-    await page.getByRole('heading', { name: 'MyScolAI est hors ligne', exact: true }).waitFor();
+    await page.getByRole('heading', { name: 'MyScolAI is offline', exact: true }).waitFor();
     for (const path of ['/home', '/students/fixture-id']) {
       await page.goto(origin + path.slice(1));
       await page.getByText('School data is not available offline yet.', { exact: false }).waitFor();
@@ -89,10 +88,10 @@ for (const name of (process.env.OFFLINE_BROWSERS ?? 'chromium').split(',')) {
     try { await assert.rejects(excluded.goto(origin + 'api/health/status', { timeout: 8000 })); } finally { await excluded.close(); }
     // An evicted shell changes nothing for unlisted pages; listed ones get the branded page too.
     await page.evaluate(async ({ version, document }) => (await caches.open('najm-pwa:myscolai-shell:' + version)).delete(document), manifest);
-    await branded('/welcome', 'en');
-    await branded('/home', 'en');
+    await branded('/welcome');
+    await branded('/home');
     assert.deepEqual(errors, []);
-    console.log(`${name}: PASS ${UNLISTED.length} unlisted documents show the branded offline page with the server stopped (and on reload), listed routes keep the shell, /api stays a browser error, an evicted shell falls back to the branded page, French/Arabic/English stacked and led by the language the app last displayed, online 200/404/auth redirect/download unchanged`);
+    console.log(`${name}: PASS ${UNLISTED.length} unlisted documents show one English offline page with the server stopped (and on reload), listed routes keep the shell, /api stays a browser error, an evicted shell falls back to the branded page, online 200/404/auth redirect/download unchanged`);
   } catch (error) {
     failed = true;
     console.error(`${name}: FAIL`, error.stack);

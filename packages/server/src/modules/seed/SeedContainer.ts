@@ -349,7 +349,7 @@ export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, ClassRoutineService, [ClassRoutineRepository, ClassRoutineValidator]);
 
   registerSeedDeps(seedContainer, FeeTypeValidator, [FeeTypeRepository]);
-  registerSeedDeps(seedContainer, FeeTypeService, [FeeTypeRepository, FeeTypeValidator]);
+  registerSeedDeps(seedContainer, FeeTypeService, [FeeTypeRepository, FeeTypeValidator, StorageService]);
 
   registerSeedDeps(seedContainer, ParentValidator, [ParentRepository, UserValidator]);
   registerSeedDeps(seedContainer, ParentService, [ParentRepository, ParentValidator, UserService, AuthService, StorageService, ParentChildrenRepository]);

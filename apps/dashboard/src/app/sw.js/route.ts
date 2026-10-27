@@ -5,13 +5,7 @@ import { SHELL_PATHS } from '@/offline/routes';
 
 export const dynamic = 'force-dynamic';
 
-// The offline page stacks these, led by the language the app last displayed
-// (`rememberOfflineLanguage`); before any is recorded, French leads.
-const OFFLINE_PAGE_LANGUAGES = ['fr', 'ar', 'en'] as const;
-const offlinePageLanguages = OFFLINE_PAGE_LANGUAGES.map(language => {
-  const { title, description, retry } = schoolI18n.translations[language].offlinePage;
-  return { language, direction: schoolI18n.direction(language), title, description, retryLabel: retry };
-});
+const offlinePage = schoolI18n.translations.en.offlinePage;
 
 // Turned off (SCHOOL_OFFLINE=off), a worker without the shell takes over and
 // drops the shell's caches; downloaded data stays locked by the server's refusals.
@@ -24,10 +18,14 @@ export const GET = createOfflineShellWorker({
   manifest: () => readShellManifest(process.cwd(), process.env.NEXT_PUBLIC_SCHOOL_SHELL_VERSION),
   push: { defaultTitle: 'MyScolAI', notificationPath: '/notifications' },
   offlineDocument: {
-    languages: offlinePageLanguages,
-    themeColor: '#000000',
-    backgroundColor: '#ffffff',
-    foregroundColor: '#000000',
-    mutedColor: '#475569',
+    language: 'en',
+    direction: 'ltr',
+    title: offlinePage.title,
+    description: offlinePage.description,
+    retryLabel: offlinePage.retry,
+    themeColor: '#d64e57',
+    backgroundColor: '#fff6f5',
+    foregroundColor: '#b83d46',
+    mutedColor: '#64748b',
   },
 });

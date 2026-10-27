@@ -1,11 +1,12 @@
 "use client"
 
 import { PermissionButton } from '@/components/PermissionButton';
+import { BulkDeleteDialog } from '@/components/BulkDeleteDialog';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, useTableStore, useResolvedToolbarLabels, type ContextMenuItem } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { GraduationCap, Plus, Printer, SearchX } from 'lucide-react';
+import { GraduationCap, Plus, Printer, SearchX, Upload } from 'lucide-react';
 import FullStudentForm from './FullStudentForm';
 import { useStudents } from '../hooks/useStudents';
 import { useTranslation } from 'najm-i18n/react';
@@ -24,7 +25,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import { importStudentApi, deleteStudentApi } from '@/services/studentApi';
-import { deleteSelection } from '@/shared/deleteSelection';
+import { deleteSelection, type DeleteSelectionProgress } from '@/shared/deleteSelection';
 import { buildStudentImport } from '../config/studentImport';
 import { announceInvitation } from '@/shared/invitationNotice';
 import { useAcademicYearOptions, useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
@@ -33,6 +34,15 @@ import { localDateInput } from 'najm-kit/format';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { usePermissions } from 'najm-auth/client/react';
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
+import { focusTableForKeyboard } from '@/shared/focusTableForKeyboard';
+
+interface StudentImportProgress {
+  phase: 'checking' | 'importing' | 'refreshing';
+  total: number;
+  processed: number;
+  created: number;
+  failed: number;
+}
 
 function StudentsPrintButton({ loading }: { loading: boolean }) {
   const actions: ContextMenuItem[] = useTableStore.use.toolbarActions();
@@ -60,6 +70,27 @@ function StudentsPrintButton({ loading }: { loading: boolean }) {
     >
       <Printer aria-hidden="true" className="h-4 w-4 text-primary" />
     </NButton>
+  );
+}
+
+function StudentsImportButton() {
+  const { t } = useTranslation();
+  const actions: ContextMenuItem[] = useTableStore.use.toolbarActions();
+  const labels = useResolvedToolbarLabels(useTableStore.use.toolbarLabels());
+  const importAction = actions.find(action => action.label === (labels.import ?? 'Import'));
+  if (!importAction) return null;
+
+  return (
+    <PermissionButton
+      permission="create:students"
+      type="button"
+      variant="outline"
+      size="sm"
+      onClick={() => importAction.onSelect?.()}
+    >
+      <Upload aria-hidden="true" className="h-4 w-4" />
+      {t('students.import.button')}
+    </PermissionButton>
   );
 }
 
@@ -100,6 +131,7 @@ function StudentsTable() {
   } = useStudents();
   const { filters, filteredStudents } = useStudentsTableFilters(students);
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
+  const [importProgress, setImportProgress] = useState<StudentImportProgress | null>(null);
 
   const { openDialog, confirmDelete } = useDialog();
 
@@ -190,59 +222,106 @@ function StudentsTable() {
 
   const queryClient = useQueryClient();
   const handleBulkDelete = (ids: string[]) => {
-    confirmDelete({
-      itemName: t('students.dialogs.bulkDeleteItemName', { count: ids.length }),
-      warningText: t('students.dialogs.deleteWarning'),
-      onConfirm: async () => {
-        const result = await deleteSelection(ids, id => withAcademicYear(viewingYear, () => deleteStudentApi(id)));
-        setRowSelection(Object.fromEntries(result.failed.map(({ id }) => [id, true])));
-        await Promise.all(['students', 'parents', 'fees'].map(key => queryClient.invalidateQueries({ queryKey: [key] })));
-        if (result.deleted.length) toast.success(t('common.deletedCount', { count: result.deleted.length }));
-        if (result.failed.length) toast.error(t('common.deleteFailedCount', { count: result.failed.length }), {
-          description: [...new Set(result.failed.map(item => item.message))].join(' · '),
-        });
+    const total = new Set(ids).size;
+    openDialog({
+      title: t('common.delete'),
+      size: 'sm',
+      render: ({ dialog, zIndex, confirm, cancel, onOpenChange }) => (
+        <BulkDeleteDialog
+          title={dialog.title}
+          total={total}
+          itemName={t('students.dialogs.bulkDeleteItemName', { count: total })}
+          warningText={t('students.dialogs.deleteWarning')}
+          confirmText={t('common.delete')}
+          cancelText={t('common.cancel')}
+          loading={dialog.primaryButton?.loading}
+          zIndex={zIndex}
+          onOpenChange={onOpenChange}
+          onCancel={() => cancel()}
+          onConfirm={onProgress => confirm(onProgress)}
+        />
+      ),
+      primaryButton: {
+        onClick: async (onProgress: (progress: DeleteSelectionProgress) => void) => {
+          const result = await deleteSelection(ids, id => withAcademicYear(viewingYear, () => deleteStudentApi(id)), onProgress);
+          setRowSelection(Object.fromEntries(result.failed.map(({ id }) => [id, true])));
+          await Promise.all(['students', 'parents', 'fees'].map(key => queryClient.invalidateQueries({ queryKey: [key] })));
+          if (result.deleted.length) toast.success(t('common.deletedCount', { count: result.deleted.length }));
+          if (result.failed.length) toast.error(t('common.deleteFailedCount', { count: result.failed.length }), {
+            description: [...new Set(result.failed.map(item => item.message))].join(' · '),
+          });
+        },
       },
     });
   };
-  const toolbarLabels = useMemo(() => ({ importDescription: t('students.import.description') }), [t]);
+  const toolbarLabels = useMemo(() => {
+    const labels = { importDescription: t('students.import.description') };
+    if (!importProgress) return labels;
+
+    const percent = importProgress.total ? Math.floor(importProgress.processed / importProgress.total * 100) : 0;
+    const progress = t('students.import.progress', { ...importProgress, percent });
+    return {
+      ...labels,
+      importPreview: () => importProgress.phase === 'checking'
+        ? t('students.import.checking', { count: importProgress.total })
+        : progress,
+      importConfirm: importProgress.phase === 'refreshing'
+        ? t('students.import.refreshing')
+        : importProgress.phase === 'checking'
+          ? t('common.processing')
+          : t('students.import.importing', { percent }),
+    };
+  }, [t, importProgress]);
 
   // Rows are checked first and a file with any mistake creates nobody; the
   // NTable dialog stays open and shows why. Students are then created one at
   // a time in the active year, through the import route that permits missing
   // guardian contacts. A row the server refuses does not stop the others.
   const handleImport = async (rows: Record<string, unknown>[]) => {
-    const importFeeTypes = feeTypes ?? (await refetchFeeTypes()).data ?? [];
-    const { students: payloads, problems } = buildStudentImport(rows, newStudentClasses ?? [], await refetchBusinessDate(), importFeeTypes);
-    if (problems.length) {
-      throw new Error(problems.slice(0, 5).map(({ row, reason, value }) =>
-        t('students.import.problem', { row, reason: t(`students.import.reasons.${reason}`, { value: value ?? '' }) })).join(' · '));
-    }
-
-    const failed: string[] = [];
-    for (const [index, payload] of payloads.entries()) {
-      try {
-        // The year header binds only to a request started inside the scope.
-        await withAcademicYear(activeYear, () => importStudentApi(payload));
-      } catch (cause) {
-        failed.push(t('students.import.problem', { row: index + 2, reason: cause instanceof Error ? cause.message : '' }));
+    setImportProgress({ phase: 'checking', total: rows.length, processed: 0, created: 0, failed: 0 });
+    try {
+      const importFeeTypes = feeTypes ?? (await refetchFeeTypes()).data ?? [];
+      const { students: payloads, problems } = buildStudentImport(rows, newStudentClasses ?? [], await refetchBusinessDate(), importFeeTypes);
+      if (problems.length) {
+        throw new Error(problems.slice(0, 5).map(({ row, reason, value }) =>
+          t('students.import.problem', { row, reason: t(`students.import.reasons.${reason}`, { value: value ?? '' }) })).join(' · '));
       }
-    }
-    await Promise.all(['students', 'parents', 'users'].map(key => queryClient.invalidateQueries({ queryKey: [key] })));
 
-    const created = payloads.length - failed.length;
-    if (!created && failed.length) {
-      throw new Error(`${t('students.import.failed', { count: failed.length })}\n${failed.slice(0, 5).join('\n')}`);
-    }
-    if (created) toast.success(t('students.import.created', { count: created }));
-    if (failed.length) {
-      toast.error(t('students.import.failed', { count: failed.length }), { description: failed.slice(0, 5).join('\n') });
+      const failed: string[] = [];
+      setImportProgress({ phase: 'importing', total: payloads.length, processed: 0, created: 0, failed: 0 });
+      for (const [index, payload] of payloads.entries()) {
+        try {
+          // The year header binds only to a request started inside the scope.
+          await withAcademicYear(activeYear, () => importStudentApi(payload));
+        } catch (cause) {
+          failed.push(t('students.import.problem', { row: index + 2, reason: cause instanceof Error ? cause.message : '' }));
+        }
+        setImportProgress({
+          phase: 'importing', total: payloads.length, processed: index + 1,
+          created: index + 1 - failed.length, failed: failed.length,
+        });
+      }
+      setImportProgress(current => current && { ...current, phase: 'refreshing' });
+      await Promise.all(['students', 'parents', 'users'].map(key => queryClient.invalidateQueries({ queryKey: [key] })));
+
+      const created = payloads.length - failed.length;
+      if (!created && failed.length) {
+        throw new Error(`${t('students.import.failed', { count: failed.length })}\n${failed.slice(0, 5).join('\n')}`);
+      }
+      if (created) toast.success(t('students.import.created', { count: created }));
+      if (failed.length) {
+        toast.error(t('students.import.failed', { count: failed.length }), { description: failed.slice(0, 5).join('\n') });
+      }
+    } finally {
+      setImportProgress(null);
     }
   };
 
   const total = filteredStudents.length;
+  const isStudentListEmpty = !isCountUnknown(error, students, isStudentsLoading) && students?.length === 0;
 
   return (
-    <div className='flex flex-col gap-2 w-full h-full min-h-0'>
+    <div className='flex flex-col gap-2 w-full h-full min-h-0' onPointerDownCapture={focusTableForKeyboard}>
       <NPageHeader
         icon={GraduationCap}
         title={title}
@@ -257,6 +336,8 @@ function StudentsTable() {
         permissionResource="students"
         className='min-h-0 flex-1'
         classNames={{
+          cards: 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5',
+          header: isStudentListEmpty ? 'hidden' : undefined,
           tableHeader: '[&_th:has(.student-name-column)]:w-[18%] [&_th:has(.student-arabic-name-column)]:w-[14%] [&_th:has(.student-email-column)]:w-[18%] [&_th:has(.student-class-column)]:w-[7%] [&_th:has(.student-section-column)]:w-[8%] [&_th:has(.student-gender-column)]:w-[8%] [&_th:last-child]:w-12',
         }}
         data={filteredStudents}
@@ -296,10 +377,13 @@ function StudentsTable() {
             title={t('emptyStates.students.title')}
             description={t('emptyStates.students.description')}
             action={canCreate ? (
-              <PermissionButton permission="create:students" size="sm" onClick={handleAddClick}>
-                <Plus className="h-4 w-4" />
-                {t('students.dialogs.createButton')}
-              </PermissionButton>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <PermissionButton permission="create:students" size="sm" onClick={handleAddClick}>
+                  <Plus className="h-4 w-4" />
+                  {t('students.dialogs.createButton')}
+                </PermissionButton>
+                <StudentsImportButton />
+              </div>
             ) : undefined}
           />
         )}

@@ -51,9 +51,13 @@ try {
   }
   // No manual registration of /sw.js: the actual application must do it.
   await page.goto(origin + 'login');
-  // A silent/slow controller is not proof of a legacy build. Every waiting
-  // update uses the explicit action (or natural activation after clients close).
-  await page.locator('[data-school-offline-action="update"]').click({ timeout: 30000 });
+  // Staging stays silent. Let the update activate naturally after the old
+  // controlled document closes; the product never asks for an update click.
+  await waitForOfflineCondition(page, async () => (await navigator.serviceWorker.getRegistration())?.waiting?.state === 'installed', null, { timeout: 30000 });
+  assert.equal(await page.locator('[data-school-offline-status]').count(), 0, 'Staged updates must stay silent');
+  await page.close();
+  page = await context.newPage();
+  await page.goto(origin + 'login');
   await page.waitForFunction(() => navigator.serviceWorker.controller?.scriptURL.endsWith('/sw.js'), null, { timeout: 30000 }).catch(async error => {
     console.error('Registration state:', await page.evaluate(async () => {
       const r = await navigator.serviceWorker.getRegistration();
@@ -62,7 +66,6 @@ try {
     }));
     throw error;
   });
-  await page.locator('[data-school-offline-action="update"]').waitFor({ state: 'hidden' });
   // Inspect the real worker protocol, without a product status or test hook.
   await waitForOfflineCondition(page, async () => {
     const worker = navigator.serviceWorker.controller;
@@ -97,22 +100,9 @@ try {
   const peer = await context.newPage();
   await peer.goto(origin + 'login');
   await peer.waitForFunction(count => Object.keys(localStorage).filter(key => key.startsWith('school.shell.pin:')).length > count, initialPins);
-  // A byte-identical staged update at a new public worker URL exercises the
-  // consent client in a tab whose School preparation budget is exhausted.
-  await page.evaluate(async () => {
-    const registration = await navigator.serviceWorker.register('/sw.js?exhausted-budget-proof=1');
-    if (!registration.waiting) await new Promise((resolve, reject) => {
-      const worker = registration.installing;
-      if (!worker) return reject(new Error('Expected a new worker'));
-      const check = () => {
-        if (worker.state === 'installed') resolve();
-        if (worker.state === 'redundant') reject(new Error('Staged lifecycle worker failed'));
-      };
-      worker.addEventListener('statechange', check); check();
-    });
-  });
-  await peer.locator('[data-school-offline-action="update"]').click({ timeout: 30000 });
-  await peer.locator('[data-school-offline-action="update"]').waitFor({ state: 'hidden' });
+  // An exhausted preparation budget still permits the peer to pin its build
+  // without showing an update/preparation notice or spending another attempt.
+  assert.equal(await peer.locator('[data-school-offline-status]').count(), 0, 'No update prompt in the peer');
   assert.equal(await peer.evaluate(async () => {
     const { version } = await (await fetch('/offline-shell/manifest.json')).json();
     return JSON.parse(localStorage.getItem('school.shell.preparation-budget:' + version)).attempts;
@@ -145,12 +135,12 @@ try {
   for (const path of ['login', 'welcome', 'forgot-password', 'academic-year-migration', 'some/unlisted/page']) {
     assert.equal((await page.goto(origin + path)).status(), 503, path);
     await page.getByRole('heading', { name: 'MyScolAI is offline', exact: true }).waitFor();
-    // Stacked, led by the shell's English: the language the app displayed last.
-    assert.deepEqual(await page.locator('main > section').evaluateAll(sections => sections.map(section => section.lang)), ['en', 'fr', 'ar'], path);
+    assert.equal(await page.locator('html').getAttribute('lang'), 'en', path);
+    assert.equal(await page.getByRole('heading').count(), 1, path);
   }
   assert.deepEqual(errors, []);
   await page.screenshot({ path: resolve(artifacts, 'offline-real-registration.png') });
-  console.log('PASS actual Next login: explicit update consent, silent preparation, exhausted-budget peer still pins and activates updates, offline capture handler survives the limit, stopped-server /home launch/reload, real sign-in redirect kept, the displayed language recorded, branded page for unlisted documents led by the last displayed language. Synthetic display metadata only.');
+  console.log('PASS actual Next login: silent preparation and staged updates, exhausted-budget peer still pins without notices, natural activation after tabs close, stopped-server /home launch/reload, real sign-in redirect kept, the displayed language recorded, single English branded page for unlisted documents. Synthetic display metadata only.');
 } finally {
   await context?.close(); fixture?.kill(); server?.kill(); await log.close();
 }

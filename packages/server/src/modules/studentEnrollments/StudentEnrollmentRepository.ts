@@ -195,6 +195,19 @@ export class StudentEnrollmentRepository {
     return row ?? null;
   }
 
+  async lockAdmissionDate(studentId: string) {
+    await this.db.select({ id: students.id }).from(students).where(eq(students.id, studentId)).for('update');
+  }
+
+  async correctAdmissionDate(studentId: string, admissionDate: string, actor: { id: string; role: string }, before: string) {
+    await this.db.update(students).set({ enrollmentDate: admissionDate }).where(eq(students.id, studentId));
+    await this.db.insert(auditLogs).values({ userId: actor.id, userRole: actor.role, action: 'correct',
+      resource: 'students', resourceId: studentId, status: 'success', metadata: {
+        academicYearId: this.year.id, reason: 'Admission date restored from imported student file',
+        before: { enrollmentDate: before }, after: { enrollmentDate: admissionDate },
+      } });
+  }
+
   async listActiveStudentProjections() {
     return this.db.select({
       studentId: students.id,

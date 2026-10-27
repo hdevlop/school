@@ -19,10 +19,13 @@ describe('academic structure seed', () => {
     expect(structure.subjects.length).toBeGreaterThan(0);
   });
 
-  it('leaves ids and room numbers to the database and the school', () => {
+  it('leaves ids to the database and numbers rooms sequentially for the selected sections', () => {
     const { classes, sections } = academicStructure('2026-2027');
     expect(classes.some((schoolClass) => 'id' in schoolClass)).toBe(false);
-    expect(sections.some((section) => 'id' in section || 'roomNumber' in section)).toBe(false);
+    expect(sections.some((section) => 'id' in section)).toBe(false);
+    expect(sections.map((section) => section.roomNumber)).toEqual(Array.from({ length: 45 }, (_, index) => index + 1));
+    const primary = academicStructure('2026-2027', ['Primaire']);
+    expect(primary.sections.map((section) => section.roomNumber)).toEqual(Array.from({ length: 18 }, (_, index) => index + 1));
   });
 
   it('keeps only the chosen cycles and their sections', () => {

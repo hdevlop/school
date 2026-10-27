@@ -25,6 +25,7 @@ import StudentsTable from '@/features/Students/components/StudentsTable';
 import { RenderedActiveAcademicYearProvider } from '@/features/Settings/context/RenderedActiveAcademicYear';
 import { AcademicYearSelectionOwner } from '@/features/AcademicYears/components/AcademicYearSelectionOwner';
 import { createShellNavItems, navLabel } from './shellNavigation';
+import { useOnlineRecovery } from './onlineRecovery';
 
 installShellTransport();
 // The shell has no route tree: profile pages read their id from the path.
@@ -45,11 +46,6 @@ function App({ bootstrap, privateAccess }: { bootstrap: ShellBootstrap; privateA
   // subscribes (a passive effect): the shell refuses reads made without it.
   useLayoutEffect(() => connectOfflineRuntime(client, () => source.current, true), [client]);
   const path = usePathname();
-  const [updateReady, setUpdateReady] = useState(false);
-  const [updateAction, setUpdateAction] = useState<(() => Promise<void>) | null>(null);
-  const [blocked, setBlocked] = useState(false);
-  const [updating, setUpdating] = useState(false);
-  const [reachable, setReachable] = useState(false);
   const { t, language } = useTranslation();
   // Online HTML gets these attributes from its server layout. The neutral
   // entry must seed them from the same active provider language at startup.
@@ -82,27 +78,11 @@ function App({ bootstrap, privateAccess }: { bootstrap: ShellBootstrap; privateA
     let cancelled = false;
     let dispose: (() => void) | undefined;
     const version = document.querySelector('meta[name="school-shell-version"]')?.getAttribute('content');
-    if (version) void connectShellUpdates(version, () => false, setUpdateReady).then(updates => {
+    if (version) void connectShellUpdates(version, () => false, () => undefined).then(updates => {
       if (cancelled) { updates.dispose(); return; }
       dispose = updates.dispose;
-      setUpdateAction(() => async () => {
-        setUpdating(true); setBlocked(false);
-        try { const result = await updates.activate(); setBlocked(!result.activated); if (result.activated) setUpdateReady(false); }
-        catch { setBlocked(true); }
-        finally { setUpdating(false); }
-      });
     }).catch(() => undefined);
-    const check = async () => {
-      // Avoid unnecessary probes when the browser already reports a definite
-      // disconnection. An associated Wi-Fi connection still gets a real probe.
-      if (!navigator.onLine) { if (!cancelled) setReachable(false); return; }
-      try {
-        const response = await fetch('/api/health/status', { cache: 'no-store', signal: AbortSignal.timeout(3000) });
-        if (!cancelled) setReachable(response.ok && (response.headers.get('content-type') ?? '').includes('json'));
-      } catch { if (!cancelled) setReachable(false); }
-    };
-    void check(); const timer = setInterval(() => { void check(); }, 30_000);
-    return () => { cancelled = true; dispose?.(); clearInterval(timer); };
+    return () => { cancelled = true; dispose?.(); };
   }, [bootstrap.accountId, bootstrap.academicYear, bootstrap.role, privateAccess]);
   const route = routeForPath(bootstrap.routes, path);
   const navItems = useMemo(() => createShellNavItems(t, bootstrap.role, bootstrap.routes), [t, bootstrap.role, bootstrap.routes]);
@@ -122,9 +102,6 @@ function App({ bootstrap, privateAccess }: { bootstrap: ShellBootstrap; privateA
     <main className="min-w-0 flex-1 overflow-auto p-6">
       <div className="flex items-center justify-between gap-4"><h1 className="text-xl font-semibold">{navLabel(navItems, route?.href) ?? route?.label ?? t('offlineShell.title')}</h1>
         <a data-online className="rounded-md border px-3 py-2 text-sm" href={location.href}>{t('offlineShell.retry')}</a></div>
-      {reachable && <p>{t('offlineShell.onlineAvailable')}</p>}
-      {updateReady && <button type="button" disabled={updating} onClick={() => { void updateAction?.(); }}>{t('offlineShell.update')}</button>}
-      {blocked && <p>{t('offlineShell.updateBlocked')}</p>}
       {(!privateAccess || route?.href !== '/students') && <section className="mt-6 rounded-lg border bg-card p-6"><p>{t(route ? 'offlineShell.noData' : 'offlineShell.unavailable')}</p></section>}
       {privateAccess && path === '/students' && <StudentsTable />}
       {bootstrap.academicYear && route?.href === '/students' && /^\/students\/[^/]+$/.test(path) && (privateAccess
@@ -135,6 +112,7 @@ function App({ bootstrap, privateAccess }: { bootstrap: ShellBootstrap; privateA
 }
 
 function Boot() {
+  useOnlineRecovery();
   const hasReadAccount = () => { try { return !!JSON.parse(pointerValue() ?? 'null')?.accountId; } catch { return true; } };
   const load = () => { try { return hasReadAccount() ? null : readBootstrap(localStorage); } catch { return null; } };
   const [bootstrap, setBootstrap] = useState(load);
