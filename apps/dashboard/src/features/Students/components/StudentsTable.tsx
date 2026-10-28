@@ -13,6 +13,8 @@ import { useTranslation } from 'najm-i18n/react';
 import StudentCard from './StudentCard';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes';
+import { getAvailableFeeTypes } from '@/features/Financial/FeeTypes/config/feeTypeOptions';
+import { getFeeTypesApi } from '@/services/feeTypeApi';
 import SimpleStudentForm from './SimpleStudentForm';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { useStudentsTableColumns } from '../hooks/useStudentsTableColumns';
@@ -26,7 +28,7 @@ import { toast } from 'sonner';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import { importStudentApi, deleteStudentApi } from '@/services/studentApi';
 import { deleteSelection, type DeleteSelectionProgress } from '@/shared/deleteSelection';
-import { buildStudentImport } from '../config/studentImport';
+import { buildStudentImport, type StudentImportFeeType } from '../config/studentImport';
 import { announceInvitation } from '@/shared/invitationNotice';
 import { useAcademicYearOptions, useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYear';
@@ -117,7 +119,7 @@ function StudentsTable() {
   const { classes: activeYearClasses, refetch: refetchActiveYearClasses } = useClasses({ academicYear: activeYear, enabled: viewsOtherYear });
   const newStudentClasses = viewsOtherYear ? activeYearClasses : classes;
   // Fee types fill the new-student form and match the fees of an imported file.
-  const { feeTypes, refetch: refetchFeeTypes } = useFeeTypes({ enabled: canCreate });
+  const { feeTypes } = useFeeTypes({ enabled: canCreate });
   const { businessDate, isBusinessDateLoading, refetchBusinessDate } = useBusinessDate();
   const { data: registeredYears } = useAcademicYearOptions();
   const activeYearCalendar = registeredYears?.years.find((year) => year.label === activeYear);
@@ -284,8 +286,15 @@ function StudentsTable() {
   const handleImport = async (rows: Record<string, unknown>[]) => {
     setImportProgress({ phase: 'checking', total: rows.length, processed: 0, created: 0, failed: 0 });
     try {
-      const importFeeTypes = feeTypes ?? (await refetchFeeTypes()).data ?? [];
-      const { students: payloads, problems } = buildStudentImport(rows, newStudentClasses ?? [], await refetchBusinessDate(), importFeeTypes);
+      // Seeding may have added templates since the table's query was cached.
+      const hasFees = rows.some(row => Array.isArray(row.fees) && row.fees.length > 0);
+      const [catalog, admissionDate] = await Promise.all([
+        hasFees ? getFeeTypesApi() : Promise.resolve({ data: [] }),
+        refetchBusinessDate(),
+      ]);
+      if (!Array.isArray(catalog?.data)) throw new Error(t('fees.import.catalogUnavailable'));
+      const importFeeTypes = getAvailableFeeTypes<StudentImportFeeType>(catalog.data);
+      const { students: payloads, problems } = buildStudentImport(rows, newStudentClasses ?? [], admissionDate, importFeeTypes);
       if (problems.length) {
         throw new Error(problems.slice(0, 5).map(({ row, reason, value }) =>
           t('students.import.problem', { row, reason: t(`students.import.reasons.${reason}`, { value: value ?? '' }) })).join(' · '));

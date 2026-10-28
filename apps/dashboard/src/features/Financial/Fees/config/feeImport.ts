@@ -1,6 +1,6 @@
 import { isDateOnly } from '@sms/contracts/academic-years';
 import { createFeeSchemas } from './feeSchemas';
-import { PAYMENT_METHOD_VALUES, type StudentFinancialImport } from '@sms/contracts';
+import { findFeeTypesByName, PAYMENT_METHOD_VALUES, type StudentFinancialImport } from '@sms/contracts';
 
 type Student = { id: string; studentCode: string };
 type FeeType = { id: string; name: string; labels?: Record<string, string> | null; paymentType: string; amount?: unknown };
@@ -57,7 +57,7 @@ export function buildFeeImport(
       if (!text(row.feeTypeId) && !feeTypeName) { fail('unknownFeeType'); continue; }
       const types = row.feeTypeId
         ? feeTypes.filter(type => type.id === text(row.feeTypeId))
-        : feeTypes.filter(type => [type.name, ...Object.values(type.labels ?? {})].some(name => normalize(name) === feeTypeName));
+        : findFeeTypesByName(feeTypes, text(row.feeType));
       if (types.length !== 1) { fail('unknownFeeType'); continue; }
       if (row.academicYear && text(row.academicYear) !== academicYear) { fail('wrongYear'); continue; }
       const effectiveDate = text(row.effectiveDate);
@@ -91,8 +91,8 @@ export function buildFeeImport(
       if (fields.some(field => line[field] != null && typeof line[field] !== 'string' && typeof line[field] !== 'number')) {
         fail('invalidPayment'); continue;
       }
-      const types = feeTypes.filter(type => line.feeTypeId ? type.id === text(line.feeTypeId)
-        : [type.name, ...Object.values(type.labels ?? {})].some(name => normalize(name) === normalize(line.feeType)));
+      const types = line.feeTypeId ? feeTypes.filter(type => type.id === text(line.feeTypeId))
+        : findFeeTypesByName(feeTypes, text(line.feeType));
       if (types.length !== 1) { fail('unknownFeeType'); continue; }
       const amount = Number(line.amount);
       const month = text(line.month);

@@ -11,6 +11,19 @@ const t = (key: string) => key;
 const build = (rows: Record<string, unknown>[]) => buildFeeImport(rows, students, types, year, t);
 
 describe('fee assignment import', () => {
+  it('uses the same French name matching for legacy fee assignments and receipt allocations', () => {
+    const result = buildFeeImport([{ studentCode: 'F001', fees: [
+      { feeType: 'Frais de scolarité', schedule: 'monthly', baseAmount: 400 },
+      { feeType: 'Frais Inscription', baseAmount: 200 },
+    ], payments: [{ feeType: 'Frais de scolarité', receiptNumber: '1/26', paymentDate: '2026-09-01', paymentMethod: 'cash', month: '2026-09', amount: 400 }] }], students, [
+      { id: 'FT00', name: 'Tuition Fee', labels: null, paymentType: 'recurring' },
+      { id: 'FT01', name: 'Registration Fee', paymentType: 'oneTime' },
+    ], year, t);
+    expect(result.problems).toEqual([]);
+    expect(result.students[0].fees.map(fee => fee.feeTypeId)).toEqual(['FT00', 'FT01']);
+    expect(result.students[0].payments[0].allocations).toEqual([{ feeTypeId: 'FT00', month: '2026-09', amount: 400 }]);
+  });
+
   it('retains the source admission date for the explicit date review and rejects invalid dates', () => {
     const result = build([{ studentCode: 'F001', enrollmentDate: '2026-09-01', fees: [], payments: [] }]);
     expect(result.students[0].enrollmentDate).toBe('2026-09-01');

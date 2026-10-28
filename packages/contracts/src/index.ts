@@ -9,6 +9,7 @@
 export * from './enums';
 export * from './landing';
 export * from './classNames';
+export * from './feeTypeNames';
 export * from './payroll';
 export * from './receipts';
 export * from './schoolDefaults';

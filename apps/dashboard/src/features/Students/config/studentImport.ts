@@ -1,4 +1,4 @@
-import { findClassByName, GENDER_VALUES, SCHEDULE_VALUES, STUDENT_STATUS_VALUES, type Gender, type Schedule, type StudentStatus } from '@sms/contracts';
+import { findClassByName, findFeeTypesByName, GENDER_VALUES, SCHEDULE_VALUES, STUDENT_STATUS_VALUES, type Gender, type Schedule, type StudentStatus } from '@sms/contracts';
 import { isDateOnly } from '@sms/contracts/academic-years';
 import { academicYearStartDate, firstYearEnrolledOn } from './newStudentEnrollment';
 import { createParentSchemas, type ParentImportValues } from '@/features/Parents/config/parentSchemas';
@@ -88,11 +88,13 @@ interface ImportClass {
   sections?: { id: string; name: string }[] | null;
 }
 
-interface ImportFeeType {
+export interface StudentImportFeeType {
   id: string;
   name: string;
+  labels?: Record<string, string> | null;
   paymentType?: string | null;
   amount?: string | number | null;
+  status?: string | null;
 }
 
 /** Spreadsheet cells arrive as strings, numbers or ISO date-times. */
@@ -126,7 +128,7 @@ export function buildStudentImport(
   rows: Record<string, unknown>[],
   classes: ImportClass[],
   admissionDate: string,
-  feeTypes: ImportFeeType[] = [],
+  feeTypes: StudentImportFeeType[] = [],
 ): { students: StudentImportPayload[]; problems: StudentImportProblem[] } {
   const students: StudentImportPayload[] = [];
   const problems: StudentImportProblem[] = [];
@@ -221,11 +223,12 @@ export function buildStudentImport(
         }
         const before = rowProblems.length;
         const text = (key: string) => cellText(entry[key]);
-        // Fee types are matched by id, else by name as the fee types page shows it.
+        // An id takes priority; otherwise require one saved or translated name.
         const typeId = text('feeTypeId');
         const typeName = text('feeType') || text('feeTypeName');
+        const namedTypes = typeName ? findFeeTypesByName(feeTypes, typeName) : [];
         const feeType = (typeId ? feeTypes.find(candidate => candidate.id === typeId) : undefined)
-          ?? (typeName ? feeTypes.find(candidate => sameName(candidate.name.trim(), typeName)) : undefined);
+          ?? (namedTypes.length === 1 ? namedTypes[0] : undefined);
         if (!feeType) {
           problem('unknownFeeType', typeName || typeId);
           return;

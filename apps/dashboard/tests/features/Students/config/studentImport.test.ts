@@ -205,6 +205,37 @@ describe('student import', () => {
       ]);
     });
 
+    it('matches French fee names against older English defaults without saved labels', () => {
+      const result = buildStudentImport([{
+        ...enrolled, fees: [{ feeType: 'Frais Inscription' }, { feeType: 'Frais de scolarité', schedule: 'monthly' }],
+      }], classes, '2026-01-12', [
+        { id: 'FT01', name: 'Registration Fee', paymentType: 'oneTime', labels: null },
+        { id: 'FT00', name: 'Tuition Fee', paymentType: 'recurring' },
+      ]);
+      expect(result.problems).toEqual([]);
+      expect(result.students[0].fees).toEqual([
+        { feeTypeId: 'FT01', schedule: 'oneTime' }, { feeTypeId: 'FT00', schedule: 'monthly' },
+      ]);
+    });
+
+    it('matches custom translations and refuses ambiguous names unless an id resolves them', () => {
+      const types = [
+        { id: 'meal', name: 'Daily Meal', labels: { fr: 'Repas à la journée', ar: 'وجبة اليوم', es: 'Comida del día' } },
+        { id: 'other', name: 'Repas à la journée' },
+      ];
+      for (const name of ['وجبة اليوم', 'Comida del día']) {
+        const result = buildStudentImport([{ ...enrolled, fees: [{ feeType: name }] }], classes, '2026-01-12', types);
+        expect(result.problems).toEqual([]);
+        expect(result.students[0].fees?.[0].feeTypeId).toBe('meal');
+      }
+      const ambiguous = { ...enrolled, fees: [{ feeType: 'Repas à la journée' }] };
+      expect(buildStudentImport([ambiguous], classes, '2026-01-12', types).problems)
+        .toEqual([{ row: 2, reason: 'unknownFeeType', value: 'Repas à la journée' }]);
+      const explicit = buildStudentImport([{ ...enrolled, fees: [{ feeTypeId: 'meal', feeType: 'Repas à la journée' }] }], classes, '2026-01-12', types);
+      expect(explicit.problems).toEqual([]);
+      expect(explicit.students[0].fees?.[0].feeTypeId).toBe('meal');
+    });
+
     it('refuses fees the server would refuse, before any student is created', () => {
       const result = buildStudentImport([{
         ...enrolled, enrollmentDate: '2025-10-15',
