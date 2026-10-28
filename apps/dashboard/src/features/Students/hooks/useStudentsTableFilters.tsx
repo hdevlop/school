@@ -3,6 +3,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import { STUDENT_YEAR_ENROLLMENT_STATUS_VALUES } from '@sms/contracts';
 import { useTableViewFilter } from '@/hooks/useTableViewFilter';
+import { compareStudentActivity } from '../config/studentActivity';
 
 type StudentFilterRow = { status?: string };
 
@@ -21,7 +22,8 @@ export const useStudentsTableFilters = (students = []) => {
     return students.filter(student => matches(student) && matchesView(student)
       && (!needle || String(student.name ?? '').toLowerCase().includes(needle)
         || String(student.arabicName ?? '').toLowerCase().includes(needle)
-        || String(student.studentCode ?? '').toLowerCase().includes(needle)));
+        || String(student.studentCode ?? '').toLowerCase().includes(needle)))
+      .sort(compareStudentActivity);
   }, [students, name, matches, matchesView]);
 
   const filters = useMemo(() => [

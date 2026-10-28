@@ -2577,7 +2577,9 @@
       "paidToDate": "Payé à ce jour",
       "totalFees": "Total des frais",
       "tpe": "Carte bancaire",
-      "overdueAmount": "Montant en retard"
+      "overdueAmount": "Montant en retard",
+      "overdueToDate": "En retard à ce jour",
+      "futureInstallmentsExcluded": "Échéances futures exclues"
     },
     "classBulk": {
       "action": "Facturer une classe",

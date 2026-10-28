@@ -79,7 +79,8 @@ function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeo
   const [statusFilter, setStatusFilter] = useState(initialFilters.statusFilter);
   const [scheduleFilter, setScheduleFilter] = useState<Schedule>();
 
-  // Summary cards always cover the viewed year, independently of table filters.
+  // Summary cards cover the viewed year independently of table filters;
+  // overdueAmount includes only installment balances overdue as of today.
   const { data: summaryFees, isLoading: isSummaryLoading, error: summaryError } = useYearScopedList({
     resource: 'fees',
     fetch: () => getFeesApi(),
@@ -435,8 +436,9 @@ function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeo
           />
           <NStatCard
             icon={Wallet}
-            label={t('fees.stats.overdueAmount')}
+            label={t('fees.stats.overdueToDate')}
             value={majorMoney(stats.overdue / 100)}
+            subtext={t('fees.stats.futureInstallmentsExcluded')}
             className="min-w-0"
             classNames={{
               icon: 'bg-red-500/10 text-red-600 dark:text-red-400',

@@ -1855,7 +1855,9 @@
       "paidToDate": "المدفوع حتى الآن",
       "totalFees": "إجمالي الرسوم",
       "tpe": "البطاقة البنكية",
-      "overdueAmount": "المبلغ المتأخر"
+      "overdueAmount": "المبلغ المتأخر",
+      "overdueToDate": "المتأخر حتى اليوم",
+      "futureInstallmentsExcluded": "الأقساط المستقبلية غير مشمولة"
     },
     "classBulk": {
       "action": "فرض رسوم على فصل",

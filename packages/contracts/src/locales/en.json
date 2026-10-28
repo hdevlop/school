@@ -1604,7 +1604,9 @@
       "paidToDate": "Paid so far",
       "totalFees": "Total fees",
       "tpe": "Card",
-      "overdueAmount": "Overdue amount"
+      "overdueAmount": "Overdue amount",
+      "overdueToDate": "Overdue to date",
+      "futureInstallmentsExcluded": "Future installments excluded"
     },
     "classBulk": {
       "action": "Charge a class",

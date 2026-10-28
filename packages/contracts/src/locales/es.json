@@ -1841,7 +1841,9 @@
       "paidToDate": "Pagado hasta hoy",
       "totalFees": "Total de cuotas",
       "tpe": "Tarjeta",
-      "overdueAmount": "Importe vencido"
+      "overdueAmount": "Importe vencido",
+      "overdueToDate": "Vencido hasta hoy",
+      "futureInstallmentsExcluded": "Cuotas futuras excluidas"
     },
     "classBulk": {
       "action": "Cobrar a una clase",
