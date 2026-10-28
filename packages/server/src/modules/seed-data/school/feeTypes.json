@@ -160,5 +160,20 @@
     "amount": 100,
     "paymentType": "recurring",
     "status": "active"
+  },
+  {
+    "id": "FT12",
+    "name": "Repas à la journée",
+    "labels": {
+      "fr": "Repas à la journée",
+      "ar": "وجبة اليوم",
+      "en": "Daily Meal",
+      "es": "Comida del día"
+    },
+    "description": "Per-use school meal fee. Select the occasional schedule and record each meal when used.",
+    "category": "cafeteria",
+    "amount": 35,
+    "paymentType": "oneTime",
+    "status": "active"
   }
 ]

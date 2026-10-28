@@ -207,11 +207,24 @@ describe('default fee type seed', () => {
 
   it('adds each missing default once and keeps alias metadata out of stored records', async () => {
     const { service, created, records } = seedHarness();
-    expect(await service.seedDemoFeeTypes(feeTypeData as any)).toHaveLength(12);
+    expect(await service.seedDemoFeeTypes(feeTypeData as any)).toHaveLength(feeTypeData.length);
     expect(await service.seedDemoFeeTypes(feeTypeData as any)).toEqual([]);
-    expect(created).toHaveLength(12);
-    expect(new Set(records.map(record => record.id)).size).toBe(12);
+    expect(created).toHaveLength(feeTypeData.length);
+    expect(new Set(records.map(record => record.id)).size).toBe(feeTypeData.length);
     expect(created.some(record => 'aliases' in record)).toBe(false);
+  });
+
+  it('reuses an existing daily meal in any supported language without changing its price or id', async () => {
+    const dailyMeal = feeTypeData.find(type => type.id === 'FT12');
+    expect(dailyMeal).toBeDefined();
+    for (const name of Object.values(dailyMeal!.labels!)) {
+      const existing = [{ id: 'existing-meal', name, amount: 40, status: 'inactive' }];
+      const { service, created, records } = seedHarness(existing);
+      expect(await service.seedDemoFeeTypes([dailyMeal] as any)).toEqual([]);
+      expect(created).toEqual([]);
+      expect(records).toEqual(existing);
+      expect((await service.resolveSeedFeeTypeIds([dailyMeal] as any)).get('FT12')).toBe('existing-meal');
+    }
   });
 
   it('reuses the seven live French names with different ids without changing their prices', async () => {

@@ -59,6 +59,15 @@ describe('academic structure seed', () => {
     expect(new Set(all.feeTypes.map((feeType) => feeType.id)).size).toBe(all.feeTypes.length);
   });
 
+  it('includes the daily meal alongside the monthly cafeteria fee by default', () => {
+    const { feeTypes } = academicStructure('2026-2027');
+    expect(feeTypes.find(type => type.id === 'FT12')).toMatchObject({
+      name: 'Repas à la journée', category: 'cafeteria', amount: 35, paymentType: 'oneTime', status: 'active',
+      labels: { en: 'Daily Meal', fr: 'Repas à la journée', ar: 'وجبة اليوم', es: 'Comida del día' },
+    });
+    expect(feeTypes.find(type => type.id === 'FT03')).toMatchObject({ amount: 400, paymentType: 'recurring' });
+  });
+
   it('reads --levels without caring about accents or case', () => {
     expect(parseAcademicLevels([])).toEqual(ACADEMIC_LEVELS);
     expect(parseAcademicLevels(['--levels=maternelle,PRIMAIRE,college'])).toEqual(['Maternelle', 'Primaire', 'Collège']);
