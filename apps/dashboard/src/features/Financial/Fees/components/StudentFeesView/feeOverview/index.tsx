@@ -13,6 +13,7 @@ import { MobileFeesList } from './MobileFeesList';
 import { useTranslation } from 'najm-i18n/react';
 import { useFees } from '../../../hooks/useFees';
 import EditFeeForm from '../../EditFeeForm';
+import { OccasionalChargeButton } from '../../OccasionalChargeButton';
 import { useFeeTypes } from '../../../../FeeTypes/hooks/useFeeTypes';
 import InstallmentsTable from '@/features/Financial/Installment/components/InstallmentsTable';
 import { CreditCard, Pencil, Trash2, SearchX } from 'lucide-react';
@@ -165,10 +166,13 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
 
       {selectedFee && (
         <div className='flex min-h-0 flex-1 flex-col gap-2 max-lg:flex-none'>
-          <Label className="flex shrink-0 items-center gap-2 text-lg text-gray-800">
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-2">
+          <Label className="flex items-center gap-2 text-lg text-gray-800">
             <span>📅</span>
             {t('fees.studentView.installments')}
           </Label>
+          <OccasionalChargeButton fee={selectedFee} />
+          </div>
           <InstallmentsTable
             key={selectedFee.id}
             fee={selectedFee.installments}

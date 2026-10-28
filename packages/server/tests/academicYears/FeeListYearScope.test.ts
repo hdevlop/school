@@ -106,6 +106,64 @@ describe('normal fee list year scope', () => {
     expect(statements.at(-1)!.sql).not.toContain('"fees"."schedule" =');
   });
 
+  it('keeps exact annual billing queries separate from one-time registration', async () => {
+    const statements: Array<{ sql: string; params: unknown[] }> = [];
+    const repo = new FeeRepository();
+    (repo as any).year = oldYear;
+    repo.db = drizzle(async (sql, params) => {
+      statements.push({ sql, params });
+      return { rows: [] };
+    }) as any;
+    const service = new FeeService(repo, {} as any, {} as any, {} as any, {} as any,
+      {} as any, {} as any, {} as any, {} as any);
+    await service.getAll({ schedule: 'annually', classId: 'cp', sectionId: 'cp-a' });
+    const query = statements[0];
+    const predicate = query.sql.slice(query.sql.lastIndexOf('where'), query.sql.indexOf('group by'));
+    expect(predicate).toContain('"fees"."schedule" =');
+    expect(predicate).not.toContain('"fees"."schedule" in');
+    expect(query.params).toContain('annually');
+    expect(query.params).not.toContain('oneTime');
+    expect(query.params).not.toContain('monthly');
+    expect(query.params).toContain('cp');
+    expect(query.params).toContain('cp-a');
+    expect(query.params).toContain(oldYear.id);
+    expect(query.params).toContain(oldYear.label);
+  });
+
+  it('finds full tuition paid across all installment schedules, excluding other fee categories', async () => {
+    expect(listFeesQueryDto.parse({ tuitionPayment: 'paidInFull' })).toEqual({ tuitionPayment: 'paidInFull' });
+    expect(listFeesQueryDto.safeParse({ tuitionPayment: 'invalid' }).success).toBe(false);
+    const statements: Array<{ sql: string; params: unknown[] }> = [];
+    const repo = new FeeRepository();
+    (repo as any).year = oldYear;
+    repo.db = drizzle(async (sql, params) => {
+      statements.push({ sql, params });
+      return { rows: [] };
+    }) as any;
+    const service = new FeeService(repo, {} as any, {} as any, {} as any, {} as any,
+      {} as any, {} as any, {} as any, {} as any);
+    await service.getAll({ tuitionPayment: 'paidInFull', classId: 'cp', sectionId: 'cp-a' });
+    const query = statements[0];
+    const [beforeHaving, having] = query.sql.split(' having ');
+    const predicate = beforeHaving.slice(beforeHaving.lastIndexOf('where'), beforeHaving.indexOf('group by'));
+    expect(predicate).toContain('"fee_types"."category" =');
+    expect(query.params).toContain('tuition');
+    expect(query.sql).not.toContain('"fees"."schedule" =');
+    expect(having).toContain('count("fees"."id") > 0');
+    expect(having).toContain('sum("fees"."net_amount"::numeric)');
+    expect(having).toContain('<=');
+    expect(having).toContain('"payments"."status" =');
+    expect(having).toContain('coalesce("payments"."settled_date", "payments"."payment_date") <=');
+    expect(query.params).toContain('cp');
+    expect(query.params).toContain('cp-a');
+    expect(query.params).toContain(oldYear.id);
+    expect(query.params).toContain(oldYear.label);
+
+    await service.getAll();
+    expect(statements.at(-1)!.sql).not.toContain(' having ');
+    expect(statements.at(-1)!.params).not.toContain('tuition');
+  });
+
   it('accepts class and section IDs while rejecting empty or non-string IDs', () => {
     expect(listFeesQueryDto.parse({ classId: 'cp', sectionId: 'cp-a' })).toEqual({ classId: 'cp', sectionId: 'cp-a' });
     for (const key of ['classId', 'sectionId']) {

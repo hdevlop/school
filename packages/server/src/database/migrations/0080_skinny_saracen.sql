@@ -1,0 +1,1 @@
+ALTER TYPE "public"."paymentMethod" ADD VALUE 'bankDeposit' BEFORE 'check';

@@ -14,7 +14,7 @@ import {
 import { genderEnum, studentStatusEnum } from '../../shared/enums';
 import { latitudeDto, longitudeDto, placeIdDto } from '../../shared/locationDto';
 import { isDateOnly } from '@sms/contracts/academic-years';
-import { correctEnrollmentDto } from '../studentEnrollments/StudentEnrollmentDto';
+import { endEnrollmentDto, correctEnrollmentDto } from '../studentEnrollments/StudentEnrollmentDto';
 
 const transportAssignmentDto = z.object({
   vehicleId: z.string().min(1),
@@ -72,6 +72,7 @@ export const createStudentsBulkDto = z.array(createStudentDto);
 export const studentAdmissionDto = createStudentDto.pick({ studentCode: true, classId: true, sectionId: true, yearEnrolledOn: true });
 export type StudentAdmissionDto = z.infer<typeof studentAdmissionDto>;
 export const importStudentDto = createStudentDto.extend({
+  departure: endEnrollmentDto.optional(),
   parents: z.array(z.union([z.string().min(1), importParentDto])).optional(),
 });
 // Credentials are not part of a profile edit. `omit` alone would only strip a

@@ -11,6 +11,8 @@ import {
   formatDateOnly,
   resolveFeeEffectiveDate,
   type FeeEffectiveDateError,
+  toCents,
+  fromCents,
 } from '../utils';
 import { InstallmentService } from '../installments/InstallmentService';
 import { SettingsRepository } from '../../settings/SettingsRepository';
@@ -20,7 +22,7 @@ import { StudentEnrollmentRepository } from '../../studentEnrollments/StudentEnr
 import { AcademicYearValidator, type ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 import { FinancialAuditService } from '../auditLog/FinancialAuditService';
 import { Year } from '../../academicYears/requestYear';
-import type { CreateFeeDto, UpdateFeeDto, ClassBulkFeeDto, ListFeesQueryDto } from './FeeDto';
+import type { AddOccasionalChargeDto, CreateFeeDto, UpdateFeeDto, ClassBulkFeeDto, ListFeesQueryDto } from './FeeDto';
 
 const FEE_UPDATE_KEYS = [
   'studentId', 'schedule', 'academicYear', 'effectiveDate', 'baseAmount',
@@ -154,7 +156,8 @@ export class FeeService {
 
     const baseAmount = data.baseAmount !== undefined ? data.baseAmount : feeType.amount;
 
-    const schedule = feeType.paymentType === 'oneTime' ? 'oneTime' : data.schedule; // FIX: SEC-014 — enforce catalog policy.
+    const schedule = data.schedule === 'occasional' ? 'occasional' : feeType.paymentType === 'oneTime' ? 'oneTime' : data.schedule;
+    this.feeValidator.ensureOccasionalDiscount(schedule, data.discountAmount);
     this.feeValidator.ensureDiscountWithinAmount(baseAmount, data.discountAmount);
     const { grossAmount, netAmount, totalDiscount } = calculateFeeAmounts(
       feeType.paymentType,
@@ -307,15 +310,23 @@ export class FeeService {
     await this.requireWritableYear(existingFee.academicYear, role);
     const feeData: Record<string, any> = pickProps(data, FEE_UPDATE_KEYS);
 
-    const needsRecalculation =
+    const preservesOccasional = existingFee.schedule === 'occasional' && (data.schedule ?? existingFee.schedule) === 'occasional';
+    if (preservesOccasional) {
+      this.feeValidator.ensureOccasionalDiscount('occasional', data.discountAmount);
+      this.feeValidator.ensureOccasionalHistoryUnchanged(existingFee, data);
+      // The unit price applies to future meals; existing charges keep their amounts.
+      for (const key of ['studentId', 'academicYear', 'effectiveDate', 'schedule', 'discountAmount']) delete feeData[key];
+    }
+    const needsRecalculation = !preservesOccasional && (
       data.baseAmount !== undefined ||
       data.schedule !== undefined ||
       data.discountAmount !== undefined ||
       data.academicYear !== undefined ||
       data.effectiveDate !== undefined ||
-      data.studentId !== undefined;
+      data.studentId !== undefined);
 
     if (needsRecalculation) {
+      this.feeValidator.ensureOccasionalConversionAllowed(existingFee);
       this.feeValidator.ensureScheduleEditable(Number(existingFee.paymentCount || 0));
 
       const [feeType, student, settings] = await Promise.all([
@@ -344,8 +355,10 @@ export class FeeService {
         this.feeValidator.mapEffectiveDateError(error);
       }
 
-      const schedule = feeType.paymentType === 'oneTime' ? 'oneTime'
-        : data.schedule !== undefined ? data.schedule : existingFee.schedule;
+      const requestedSchedule = data.schedule ?? existingFee.schedule;
+      const schedule = requestedSchedule === 'occasional' ? 'occasional'
+        : feeType.paymentType === 'oneTime' ? 'oneTime' : requestedSchedule;
+      this.feeValidator.ensureOccasionalDiscount(schedule, data.discountAmount);
       const discountAmount = data.discountAmount !== undefined
         ? data.discountAmount
         : getFeeDiscountPerPeriod({ ...existingFee, paymentType: feeType.paymentType }, {
@@ -430,6 +443,27 @@ export class FeeService {
   }
 
   @Transaction()
+  async addOccasionalCharge(id: string, data: AddOccasionalChargeDto, actorId: string, role?: string) {
+    await this.feeValidator.checkExists(id);
+    await this.installmentService.lockFeeSchedule(id);
+    const fee = await this.feeValidator.checkExists(id);
+    const year = await this.requireWritableYear(fee.academicYear, role);
+    const enrollment = await this.enrollments.getByStudentAndYear(fee.studentId, year.id);
+    this.feeValidator.ensureOccasionalCharge(fee, data.date, year, enrollment);
+    await this.feeValidator.validateFeeTypeExists(fee.feeTypeId, true);
+    const result = await this.installmentService.appendOccasionalCharge(id, data);
+    if (!result.created) return result.installment;
+    const total = result.installments.filter(item => item.status !== 'cancelled')
+      .reduce((sum, item) => sum + toCents(item.amount), 0);
+    await this.feeRepository.update(id, { grossAmount: fromCents(total), netAmount: fromCents(total), discountAmount: '0.00' });
+    await this.recalculate(id);
+    await this.auditService.record({ entityType: 'fee_installment', entityId: result.installment.id,
+      action: 'installment.occasional_created', actorId, before: null, after: result.installment,
+      metadata: { feeId: id, date: data.date, amount: data.amount } });
+    return result.installment;
+  }
+
+  @Transaction()
   async delete(id: string, actorId?: string, role?: string) {
     const target = await this.feeValidator.checkExists(id);
     await this.requireWritableYear(target.academicYear, role);
@@ -485,7 +519,8 @@ export class FeeService {
     const netAmount = Number(fee.netAmount) || 0;
     const installments = (fee.installments || []) as Array<{ dueDate: string; status: string }>;
 
-    const status = calculateFeeStatus(netAmount, totalAllocated, installments);
+    const status = fee.schedule === 'occasional' && installments.length === 0
+      ? 'pending' : calculateFeeStatus(netAmount, totalAllocated, installments);
 
     const updated = await this.feeRepository.updateAllYears(id, {
       paidAmount: amountToString(totalAllocated),

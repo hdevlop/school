@@ -194,7 +194,7 @@ export class StudentService {
       status: data.status,
     });
 
-    await this.studentEnrollments.create({
+    const enrollment = await this.studentEnrollments.create({
       studentId: student.id,
       academicYearId: year.id,
       classId: data.classId,
@@ -204,6 +204,11 @@ export class StudentService {
 
     const linkedParents = await this.parentService.processParents(student, parentsToProcess, source);
     await this.feeService.processFees(student, validatedData.fees, actor ?? { id: user!.id }, data.yearEnrolledOn, year.label);
+
+    // Keep fee creation on the original enrollment, then end it atomically.
+    if (source === 'import' && data.departure) {
+      await this.studentEnrollments.end(enrollment.id, data.departure, actorId!);
+    }
 
     if (data.transportAssignment) {
       await this.studentRouteService.assign({

@@ -24,6 +24,16 @@ export const FEE_STATUS_TRANSLATION_PREFIX = 'fees.status';
 export const buildScheduleOptions = (t: Translate): readonly EnumOption<Schedule>[] =>
   optionsFromValues(SCHEDULE_VALUES, t, SCHEDULE_TRANSLATION_PREFIX);
 
+/** Annually in the roster means all tuition for the viewed year is paid. */
+export const getFeeListFrequencyFilter = (frequency?: Schedule): {
+  schedule?: Schedule;
+  tuitionPayment?: 'paidInFull';
+} => frequency === 'annually' ? { tuitionPayment: 'paidInFull' } : frequency ? { schedule: frequency } : {};
+
+export const buildFeeListFrequencyOptions = (t: Translate): readonly EnumOption<Schedule>[] =>
+  buildScheduleOptions(t).filter(option => option.value !== 'oneTime').map(option =>
+    option.value === 'annually' ? { ...option, label: t('fees.filters.fullTuitionPaid') } : option);
+
 /**
  * Fee status — shown, never sent.
  *

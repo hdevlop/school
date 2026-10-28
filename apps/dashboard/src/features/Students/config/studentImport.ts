@@ -22,7 +22,7 @@ export const STUDENT_IMPORT_COLUMNS = [
   'studentCode', 'name', 'email', 'phone', 'class', 'section', 'gender', 'status',
   'address', 'dateOfBirth', 'enrollmentDate', 'arabicName',
   'guardianName', 'guardianPhone', 'guardianPhone2', 'guardianEmail', 'guardianCin', 'guardianRelationship',
-  'parents', 'fees',
+  'parents', 'fees', 'left', 'leftOn',
 ] as const;
 
 export type StudentImportReason =
@@ -30,6 +30,7 @@ export type StudentImportReason =
   | 'invalidArabicName'
   | 'invalidGender'
   | 'invalidStatus'
+  | 'missingLeavingDate'
   | 'unknownClass'
   | 'unknownSection'
   | 'invalidDate'
@@ -57,6 +58,7 @@ export interface StudentImportPayload {
   dateOfBirth?: string;
   gender: Gender;
   status?: StudentStatus;
+  departure?: { leftOn: string; status: 'withdrawn' };
   classId: string;
   sectionId: string;
   enrollmentDate: string;
@@ -90,6 +92,7 @@ interface ImportFeeType {
   id: string;
   name: string;
   paymentType?: string | null;
+  amount?: string | number | null;
 }
 
 /** Spreadsheet cells arrive as strings, numbers or ISO date-times. */
@@ -254,11 +257,22 @@ export function buildStudentImport(
           if (effectiveDate < firstBillable) problem('feeBeforeEnrollment', effectiveDate);
         }
 
+        if (schedule === 'occasional' && (!effectiveDate || (discountAmount ?? 0) !== 0)) problem('invalidFee', at);
         if (rowProblems.length > before || !schedule) return;
+        // Student creation sets up an empty container. The finance import reads
+        // the original file and restores each historical occasional charge.
+        if (schedule === 'occasional') {
+          const existing = fees.find(fee => fee.feeTypeId === feeType.id && fee.schedule === 'occasional');
+          if (existing) {
+            if (effectiveDate < existing.effectiveDate!) existing.effectiveDate = effectiveDate;
+            return;
+          }
+        }
         fees.push({
           feeTypeId: feeType.id,
           schedule,
-          ...(baseAmount != null && { baseAmount }),
+          ...(schedule === 'occasional' && Number(feeType.amount) > 0
+            ? { baseAmount: Number(feeType.amount) } : baseAmount != null ? { baseAmount } : {}),
           ...(effectiveDate && { effectiveDate }),
           ...(discountAmount != null && { discountAmount }),
           ...(discountReason && { discountReason }),
@@ -272,6 +286,16 @@ export function buildStudentImport(
       return;
     }
 
+    const left = record.left === true || ['true', '1', 'yes'].includes(field('left').toLowerCase());
+    const leftOn = dayOf(field('leftOn'));
+    if (left && !leftOn) {
+      problems.push({ row, reason: 'missingLeavingDate' });
+      return;
+    }
+    if (leftOn && (!isDateOnly(leftOn) || leftOn <= firstYearEnrolledOn(enrollmentDate, studentClass.academicYear))) {
+      problems.push({ row, reason: 'invalidDate', value: leftOn });
+      return;
+    }
     const phone = field('phone');
     const address = field('address');
     students.push({
@@ -284,6 +308,7 @@ export function buildStudentImport(
       ...(dateOfBirth && { dateOfBirth }),
       gender,
       ...(status && { status }),
+      ...(leftOn && { departure: { leftOn, status: 'withdrawn' as const } }),
       classId: studentClass.id,
       sectionId: section.id,
       enrollmentDate,

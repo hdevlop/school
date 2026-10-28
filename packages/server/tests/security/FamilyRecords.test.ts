@@ -48,7 +48,7 @@ function family() {
   const studentService = new StudentService(
     studentRepository as any, studentValidator, userService as any, auth as any, parentService,
     { processFees: async () => {} } as any, {} as any,
-    { resolveNewStudentPlacement: async () => ({ id: 'year', label: '2026-2027' }), create: async (row: any, actorId: string) => { enrollments.push({ ...row, actorId }); } } as any,
+    { resolveNewStudentPlacement: async () => ({ id: 'year', label: '2026-2027' }), create: async (row: any, actorId: string) => { const record = { ...row, id: 'enrollment', actorId }; enrollments.push(record); return record; }, end: async (id: string, data: any, actorId: string) => { Object.assign(enrollments.find(row => row.id === id), data, { endedBy: actorId }); } } as any,
     storage as any,
   );
   return { studentService, parentService, parentValidator, users, students, parents, links, enrollments };
@@ -177,5 +177,20 @@ describe('manual parent requirements and file-import exception', () => {
       await expect(f.studentService.createForImport(input as never, actor)).rejects.toThrow();
       expect([f.users, f.students, f.parents]).toEqual([[], [], []]);
     }
+  });
+});
+
+
+describe('departed student import', () => {
+  it('creates the family record and ends its enrollment with an audit actor', async () => {
+    const f = family();
+    await f.studentService.createForImport(importStudentDto.parse({ ...student, departure: { leftOn: '2026-10-12', status: 'withdrawn' } }), actor);
+    expect(f.students).toHaveLength(1);
+    expect(f.enrollments[0]).toMatchObject({ leftOn: '2026-10-12', status: 'withdrawn', endedBy: 'admin' });
+  });
+  it('does not let a non-administrator bypass enrollment permissions through import', async () => {
+    const f = family();
+    await expect(f.studentService.createForImport(importStudentDto.parse({ ...student, departure: { leftOn: '2026-10-12', status: 'withdrawn' } }), { id: 'secretary', role: 'secretary' })).rejects.toThrow();
+    expect(f.students).toHaveLength(0);
   });
 });

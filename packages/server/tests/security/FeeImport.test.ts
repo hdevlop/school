@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { describe, expect, it } from 'bun:test';
-import { buildImportedFeePlan, sameImportedSchedule } from '../../src/modules/financial/fees/feeImportPlan';
+import { buildImportedFeePlan, planOccasionalImport, sameImportedSchedule } from '../../src/modules/financial/fees/feeImportPlan';
 import { importStudentFeesDto, importStudentFeesWithDatesDto } from '../../src/modules/financial/fees/FeeImportDto';
 import { importedEnrollmentDates } from '../../src/modules/studentEnrollments/importEnrollmentDates';
 import { StudentEnrollmentValidator } from '../../src/modules/studentEnrollments/StudentEnrollmentValidator';
@@ -79,5 +79,45 @@ describe('financial import schedules and transport validation', () => {
     expect(metadata).toContain('update:payments');
     expect(JSON.stringify(getGuardMetadata(FeeController, 'importStudentFeesWithDates'))).toContain('update:students');
     expect(JSON.stringify(getGuardMetadata(FeeController, 'importStudentFeesWithDates'))).toContain('update:payments');
+  });
+});
+
+
+describe('occasional historical charges', () => {
+  const charges = [
+    { feeTypeId: 'meals', schedule: 'occasional' as const, baseAmount: 35, effectiveDate: '2026-09-01' },
+    { feeTypeId: 'meals', schedule: 'occasional' as const, baseAmount: 70, effectiveDate: '2026-10-01' },
+  ];
+  it('restores source amounts as dated charges instead of generating a subscription', () => {
+    const plan = buildImportedFeePlan(charges, { ...context, paymentType: 'oneTime', defaultAmount: 35 });
+    expect(plan.schedule).toBe('occasional');
+    expect(plan.installments.map(i => [i.dueDate, i.amount])).toEqual([['2026-09-01', 35], ['2026-10-01', 70]]);
+    expect(plan.netAmount).toBe('105.00');
+  });
+  it('accepts multiple occasional charges in one month, with stable source identities', () => {
+    const plan = buildImportedFeePlan(charges.map(item => ({ ...item, effectiveDate: '2026-09-01' })), context);
+    const first = planOccasionalImport('fee', [], plan.installments);
+    expect(first.additions).toHaveLength(2);
+    expect(first.source.map(item => item.id)).toEqual(['imp_occ_fee_2026-09-01_1', 'imp_occ_fee_2026-09-01_2']);
+  });
+  it('reuses source charges and preserves a meal subsequently added from the UI', () => {
+    const plan = buildImportedFeePlan(charges, context);
+    const first = planOccasionalImport('fee', [], plan.installments);
+    const manual = { id: 'occ_fee_manual', number: 3, dueDate: '2026-10-12', amount: '35', status: 'paid' };
+    const replay = planOccasionalImport('fee', [...first.source, manual], plan.installments);
+    expect(replay.additions).toEqual([]);
+    expect(replay.source).toHaveLength(2);
+    expect(replay.source.some(item => item.id === manual.id)).toBe(false);
+  });
+  it('refuses changed or removed source charges instead of overwriting history', () => {
+    const plan = buildImportedFeePlan(charges, context);
+    const first = planOccasionalImport('fee', [], plan.installments);
+    expect(() => planOccasionalImport('fee', first.source, [{ ...plan.installments[0], amount: 40 }, plan.installments[1]])).toThrow();
+    expect(() => planOccasionalImport('fee', first.source, plan.installments.slice(0, 1))).toThrow();
+  });
+  it('requires a source date and does not mix occasional charges with a subscription', () => {
+    expect(importStudentFeesDto.safeParse({ studentId: 'student', fees: charges, payments: [] }).success).toBe(true);
+    expect(importStudentFeesDto.safeParse({ studentId: 'student', fees: [{ ...charges[0], effectiveDate: undefined }], payments: [] }).success).toBe(false);
+    expect(() => buildImportedFeePlan([charges[0], { ...charges[1], schedule: 'monthly' }], context)).toThrow();
   });
 });

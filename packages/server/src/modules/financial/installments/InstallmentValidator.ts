@@ -20,6 +20,10 @@ export class InstallmentValidator {
     Err(409, this.t('scheduleChangeNeedsFeeEdit'));
   }
 
+  ensureOccasionalReplay(existing: { dueDate: string; amount: string | number }, date: string, amount: number) {
+    if (existing.dueDate !== date || toCents(existing.amount) !== toCents(amount)) Err(409, this.t('occasionalRequestConflict'));
+  }
+
   ensureAmountUnchanged(requestedAmount: number | undefined, existingAmount: string | number) {
     if (requestedAmount !== undefined && toCents(requestedAmount) !== toCents(existingAmount)) {
       this.ensureManagedSchedule();

@@ -1,6 +1,6 @@
 import { Service, Err, I18n } from '../../najm';
 import { StudentRepository } from './StudentRepository';
-import { UserValidator } from '../../auth';
+import { isAdministratorRole, UserValidator } from '../../auth';
 import { ClassValidator } from '../classes/ClassValidator';
 import { SectionValidator } from '../sections/SectionValidator';
 import { StudentEnrollmentRepository } from '../studentEnrollments/StudentEnrollmentRepository';
@@ -34,6 +34,7 @@ export class StudentValidator {
   // FIX: SEC-001 — child writes retain their standalone route policies.
   ensureNestedCreateAllowed(data: ImportStudentDto, actor?: { id: string; role: string }) {
     if (!actor?.id) Err(403, this.st('createRequiresActor'));
+    if (data.departure && !isAdministratorRole(actor?.role)) this.ensureCorrectionActor();
     if (data.fees?.length && !['admin', 'principal', 'accounting'].includes(actor!.role)) {
       Err(403, this.st('nestedFeesRequireFinancial'));
     }
@@ -45,8 +46,10 @@ export class StudentValidator {
   parseNestedCreate(data: ImportStudentDto, source: 'manual' | 'import' = 'manual') {
     // File values are restored by Najm after route validation. Parse only the
     // nested payloads here so the multipart image remains a File.
-    const schema = source === 'import' ? importStudentDto : createStudentDto;
-    return schema.pick({ parents: true, fees: true, transportAssignment: true }).parse(data);
+    const fields = { parents: true, fees: true, transportAssignment: true } as const;
+    return source === 'import'
+      ? importStudentDto.pick(fields).parse(data)
+      : createStudentDto.pick(fields).parse(data);
   }
 
   ensureCreateAllowed(data: ImportStudentDto) {

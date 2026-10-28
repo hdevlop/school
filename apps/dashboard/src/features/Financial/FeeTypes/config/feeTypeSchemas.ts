@@ -22,6 +22,9 @@ const numberField = (schema: z.ZodNumber): any =>
 export const createFeeTypeSchema = (t: T) => z.object({
   id: z.preprocess((value) => (value === '' ? undefined : value), z.string().min(1).nullish().optional()),
   name: z.string().min(2, t('feeTypes.validation.nameMinLength')).max(100, t('feeTypes.validation.tooLong')),
+  labels: z.record(z.string(), z.string().trim().max(100, t('feeTypes.validation.tooLong')))
+    .transform(labels => Object.fromEntries(Object.entries(labels).filter(([, label]) => label)))
+    .optional(),
   image: z.union([z.string(), z.instanceof(File), z.null()]).optional(),
   description: z.string().max(500, t('feeTypes.validation.tooLong')).optional().nullable(),
   category: z.string(),

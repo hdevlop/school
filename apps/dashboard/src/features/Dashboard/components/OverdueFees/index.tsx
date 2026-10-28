@@ -1,9 +1,10 @@
 'use client';
 
 import { NButton } from 'najm-kit';
+import Link from 'next/link';
 
 import React from 'react';
-import { NAvatar, NCard, NajmScroll } from 'najm-kit';
+import { NAvatar, NCard, NCardAction, NajmScroll } from 'najm-kit';
 import { Clock, Bell } from 'lucide-react';
 import { cn } from 'najm-kit';
 import { NSkeletonEventList } from 'najm-kit';
@@ -12,6 +13,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import DashboardEmptyState from '../DashboardEmptyState';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { OVERDUE_FEES_HREF } from '@/features/Financial/Fees/config/feeNavigation';
 
 interface OverdueFeesProps {
   className?: string;
@@ -46,6 +48,11 @@ const OverdueFees: React.FC<OverdueFeesProps> = ({ className = '' }) => {
       skeleton={<NSkeletonEventList />}
       classNames={{ content: 'flex-1 min-h-0' }}
     >
+      <NCardAction>
+        <NButton asChild variant="link" size="sm" className="h-auto p-0 text-xs font-medium lg:text-sm">
+          <Link href={OVERDUE_FEES_HREF} prefetch={false}>{t('dashboard.finance.viewAll')}</Link>
+        </NButton>
+      </NCardAction>
       {rows.length === 0 ? (
         <DashboardEmptyState icon={Clock} title={t('dashboard.finance.noOverdue')} />
       ) : (

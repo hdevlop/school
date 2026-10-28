@@ -933,6 +933,7 @@
       "aging31_60": "31–60 days",
       "aging60plus": "60+ days",
       "overdueFees": "Overdue Fees",
+      "viewAll": "View all",
       "recentPayments": "Recent Payments",
       "calendar": "Calendar",
       "remind": "Remind",
@@ -1469,6 +1470,8 @@
     },
     "form": {
       "feeTypeInformation": "Fee Type Information",
+      "translatedNames": "Translated names (optional)",
+      "translatedNamesHint": "Enter a name for each language. If left blank, the fee type name is shown.",
       "name": "Fee Type Name",
       "namePlaceholder": "Enter fee type name",
       "category": "Category",
@@ -1598,6 +1601,8 @@
     },
     "stats": {
       "collected": "Collected to date",
+      "paidToDate": "Paid so far",
+      "totalFees": "Total fees",
       "tpe": "Card",
       "overdueAmount": "Overdue amount"
     },
@@ -1728,7 +1733,12 @@
       "studentNotEnrolledInAcademicYear": "The student was not enrolled in this school year",
       "effectiveDateOutsideEnrollmentPeriod": "The billing start date must fall within the student's enrollment period for this school year, on or after their enrollment date",
       "invalidEffectiveDate": "Invalid billing start date",
-      "feeTypeInactive": "This fee type is disabled and cannot be assigned to students"
+      "feeTypeInactive": "This fee type is disabled and cannot be assigned to students",
+      "occasionalOnly": "Charges can only be added to an active occasional fee.",
+      "occasionalDate": "Choose a date within the school year and the student's enrollment, on or after this fee starts and no later than today.",
+      "occasionalDiscount": "Enter the final price for each occasional charge; a recurring discount does not apply.",
+      "occasionalHistoryLocked": "Existing occasional charges must be kept. Only the price of future charges and notes can be changed.",
+      "occasionalRequestConflict": "This request was already used for another charge."
     },
     "validation": {
       "studentRequired": "Student is required",
@@ -1874,6 +1884,7 @@
       "filterByFeeType": "Filter by fee type...",
       "allSections": "All sections",
       "allSchedules": "Frequency",
+      "fullTuitionPaid": "Annually",
       "filterByStatus": "Filter by status...",
       "filterBySchedule": "Filter by schedule...",
       "filterByAcademicYear": "Filter by academic year...",
@@ -1887,7 +1898,8 @@
       "quarterly": "Quarterly",
       "semester": "Semester",
       "annually": "Annually",
-      "oneTime": "One Time"
+      "oneTime": "One Time",
+      "occasional": "Occasional"
     },
     "status": {
       "pending": "Pending",
@@ -1995,6 +2007,15 @@
       "paidGroup": "Paid ({{count}})",
       "remaining": "Remaining",
       "overdueAmount": "Overdue"
+    },
+    "occasional": {
+      "unitPrice": "Unit price",
+      "hint": "No automatic charges. Add a dated meal or charge each time the service is used.",
+      "addMeal": "Add meal",
+      "addCharge": "Add charge",
+      "date": "Date",
+      "added": "Charge added",
+      "failed": "Could not add the charge."
     }
   },
   "students": {
@@ -2020,6 +2041,7 @@
       "transferred": "Placement changed",
       "end": "End enrollment",
       "endAction": "End enrollment",
+      "disable": "Disable student",
       "ended": "Enrollment ended",
       "failed": "The enrollment could not be changed",
       "enrolledOn": "Enrolled on",
@@ -2465,6 +2487,7 @@
         "missingName": "the name is missing",
         "invalidGender": "gender must be M or F, not \"{{value}}\"",
         "invalidStatus": "unknown status \"{{value}}\"",
+        "missingLeavingDate": "A leaving date (leftOn) is required for a student marked as left.",
         "unknownClass": "no class named \"{{value}}\"",
         "unknownSection": "the class has no section named \"{{value}}\"",
         "invalidDate": "\"{{value}}\" is not a YYYY-MM-DD date",
@@ -3565,6 +3588,7 @@
       "cash": "Cash",
       "check": "Check",
       "bankTransfer": "Bank Transfer",
+      "bankDeposit": "Bank deposit",
       "creditCard": "Credit Card",
       "debitCard": "Debit Card",
       "online": "Online Payment",
@@ -4669,6 +4693,7 @@
     "paymentMethods": {
       "cash": "Cash",
       "bankTransfer": "Bank Transfer",
+      "bankDeposit": "Bank deposit",
       "check": "Check",
       "creditCard": "Credit Card",
       "debitCard": "Debit Card",
@@ -6668,6 +6693,7 @@
     "methods": {
       "cash": "Cash",
       "bankTransfer": "Bank transfer",
+      "bankDeposit": "Bank deposit",
       "check": "Check",
       "creditCard": "Credit card",
       "debitCard": "Debit card",
@@ -6676,6 +6702,7 @@
     }
   },
   "validationMessages": {
+    "occasionalImportRequiresDateAndFinalAmount": "Occasional imports require a charge date and a final amount without a recurring discount",
     "duplicatePermissionIds": "Duplicate permission IDs",
     "duplicateSidebarEntries": "Duplicate sidebar entries",
     "pointsRange": "Points must be between 0 and 100.",

@@ -80,7 +80,7 @@ const FeeItem = ({
     const feeTypeAmount = selectedFeeType?.amount || 0
     const paymentType = selectedFeeType?.paymentType || 'recurring'
 
-    const isScheduleDisabled = paymentType === 'oneTime'
+    const isOccasional = schedule === 'occasional'
 
     useEffect(() => {
        if (feeTypeId && selectedFeeType && !baseAmount) {
@@ -90,7 +90,7 @@ const FeeItem = ({
 
     useEffect(() => {
        if (feeTypeId && selectedFeeType) {
-          if (paymentType === 'oneTime' && schedule !== 'oneTime') {
+          if (paymentType === 'oneTime' && schedule !== 'oneTime' && schedule !== 'occasional') {
              setValue(`${prefix}.schedule`, 'oneTime')
              return
           }
@@ -116,7 +116,11 @@ const FeeItem = ({
        return buildInstallmentsPreview(netAmount, schedule || 'monthly', calculationContext)
     }, [calculationContext, netAmount, schedule, selectedFeeType])
 
-    const scheduleOptions = buildScheduleOptions(t)
+    useEffect(() => {
+       if (isOccasional && discountAmount) setValue(`${prefix}.discountAmount`, 0)
+    }, [isOccasional, discountAmount, prefix, setValue])
+
+    const scheduleOptions = buildScheduleOptions(t).filter(option => paymentType !== 'oneTime' || ['oneTime', 'occasional'].includes(option.value))
 
     return (
        <div className='flex flex-col gap-3'>
@@ -138,27 +142,30 @@ const FeeItem = ({
                 name="baseAmount"
                 type='number'
                 icon={DollarSign}
-                formLabel={t('fees.form.amount') || 'Amount'}
+                formLabel={t(isOccasional ? 'fees.occasional.unitPrice' : 'fees.form.amount')}
                 placeholder="0"
                 required
              />
 
-             <FormInput
-                name="schedule"
-                type='select'
-                icon={CalendarClock}
-                formLabel={t('fees.form.schedule')}
-                placeholder={t('fees.form.schedulePlaceholder')}
-                items={scheduleOptions}
-                required
-                disabled={isScheduleDisabled}
-             />
+             <div className="flex flex-col gap-1">
+                <FormInput
+                   name="schedule"
+                   type='select'
+                   icon={CalendarClock}
+                   formLabel={t('fees.form.schedule')}
+                   placeholder={t('fees.form.schedulePlaceholder')}
+                   items={scheduleOptions}
+                   required
+                />
+                {isOccasional && <p className="text-xs text-muted-foreground">{t('fees.occasional.hint')}</p>}
+             </div>
 
              <FormInput
                 name="discountAmount"
                 type='number'
                 icon={BadgeMinus}
                 formLabel={t('fees.form.discountAmount')}
+                disabled={isOccasional}
                 placeholder={t('fees.form.discountAmountPlaceholder')}
              />
 

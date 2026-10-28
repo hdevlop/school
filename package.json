@@ -70,7 +70,7 @@
     "test:ownership": "bun test packages/server/tests/ownership",
     "test:security": "bun test packages/server/tests/security",
     "test:role-access:integration": "bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/RoleAccessDatabase.test.ts packages/server/tests/acceptance/SplitPermissionsDatabase.test.ts",
-    "test:finance": "bun test packages/server/tests/security/FinanceIntegrity.test.ts packages/server/tests/security/MoneyPrecision.test.ts packages/server/tests/security/FinanceEditWorkflow.test.ts apps/dashboard/tests/features/Financial",
+    "test:finance": "bun test packages/server/tests/security/FinanceIntegrity.test.ts packages/server/tests/security/MoneyPrecision.test.ts packages/server/tests/security/FinanceEditWorkflow.test.ts packages/server/tests/security/OccasionalFees.test.ts packages/server/tests/security/FeeImport.test.ts packages/server/tests/security/OccasionalFeeImport.test.ts apps/dashboard/tests/features/Financial",
     "test:finance:integration": "bun scripts/run-finance-acceptance.ts",
     "test:calendar:integration": "bun scripts/run-calendar-acceptance.ts",
     "test:chat": "bun test packages/server/tests/chat",

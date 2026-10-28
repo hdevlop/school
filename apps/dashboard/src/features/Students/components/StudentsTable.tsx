@@ -6,7 +6,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, useTableStore, useResolvedToolbarLabels, type ContextMenuItem } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { GraduationCap, Plus, Printer, SearchX, Upload } from 'lucide-react';
+import { Eye, Pencil, Trash2, LogOut, GraduationCap, Plus, Printer, SearchX, Upload } from 'lucide-react';
 import FullStudentForm from './FullStudentForm';
 import { useStudents } from '../hooks/useStudents';
 import { useTranslation } from 'najm-i18n/react';
@@ -35,6 +35,9 @@ import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { usePermissions } from 'najm-auth/client/react';
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
 import { focusTableForKeyboard } from '@/shared/focusTableForKeyboard';
+
+import { useDisableStudent } from '../hooks/useDisableStudent';
+import { getStudentRowClassName, isStudentDisabled } from '../config/studentActivity';
 
 interface StudentImportProgress {
   phase: 'checking' | 'importing' | 'refreshing';
@@ -109,6 +112,7 @@ function StudentsTable() {
   // A new student is placed in the active year, as the server requires,
   // whichever year is viewed, so the form offers the active year's classes.
   const { viewingYear, activeYear } = useViewingAcademicYear();
+  const disableStudent = useDisableStudent(viewingYear ?? activeYear);
   const viewsOtherYear = !!viewingYear && !!activeYear && viewingYear !== activeYear;
   const { classes: activeYearClasses, refetch: refetchActiveYearClasses } = useClasses({ academicYear: activeYear, enabled: viewsOtherYear });
   const newStudentClasses = viewsOtherYear ? activeYearClasses : classes;
@@ -342,6 +346,18 @@ function StudentsTable() {
         }}
         data={filteredStudents}
         getRowId={(student) => student.id}
+        getRowClassName={getStudentRowClassName}
+        menuButton
+        menu={{ row: (student) => [
+          { label: t('common.view'), icon: Eye, onSelect: () => handleView(student) },
+          ...(!isFamily ? [
+            { label: t('common.edit'), icon: Pencil, permission: 'update:students', onSelect: () => handleEdit(student) },
+            { label: t('students.enrollment.disable'), icon: LogOut,
+              disabled: !['admin', 'principal'].includes(role ?? '') || isStudentDisabled(student),
+              onSelect: () => disableStudent(student) },
+            { label: t('common.delete'), icon: Trash2, permission: 'delete:students', danger: true, separatorBefore: true, onSelect: () => handleDelete(student) },
+          ] : []),
+        ] }}
         columns={columns}
         filters={filters}
         isFilteredEmpty={filteredStudents.length === 0 && !!students?.length}

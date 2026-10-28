@@ -62,6 +62,7 @@ export function getFeeDiscountPerPeriod(
   fee: { paymentType: string; schedule: string; discountAmount?: string | number | null },
   context: FeeCalculationContext,
 ): number {
+  if (fee.schedule === 'occasional') return 0;
   const months = fee.paymentType === 'recurring' && fee.schedule !== 'oneTime'
     ? calculateRemainingMonthsInYear(context) : 1;
   // FIX: SEC-006 — never feed a saved yearly total back as a monthly discount.
@@ -75,6 +76,9 @@ export const calculateFeeAmounts = (
   discount: number | string | null = 0,
   context: FeeCalculationContext = {},
 ) => {
+  if (schedule === 'occasional') {
+    return { grossAmount: 0, totalDiscount: 0, netAmount: 0, periods: 0, monthsRemaining: 0 };
+  }
   const baseCents = toCents(amount ?? 0);
   const discountCents = toCents(discount ?? 0);
 

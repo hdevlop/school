@@ -167,8 +167,9 @@ export class FeeRepository {
     }));
   }
 
-  async getAll(studentId?: string, schedule?: ListFeesQueryDto['schedule'], roster: Pick<ListFeesQueryDto, 'classId' | 'sectionId'> = {}) {
+  async getAll(studentId?: string, schedule?: ListFeesQueryDto['schedule'], roster: Pick<ListFeesQueryDto, 'classId' | 'sectionId' | 'tuitionPayment'> = {}) {
     const { id: academicYearId, label: academicYear } = this.year;
+    const tuitionPaidInFull = roster.tuitionPayment === 'paidInFull';
     const today = formatDateOnly(getBusinessDate());
     // Pick one placement per enrollment before joining fees. Joining every
     // transfer would multiply each fee and inflate the financial aggregates.
@@ -246,6 +247,7 @@ export class FeeRepository {
       collectedCashToDate: sql<string>`coalesce(sum(${collectedToDateForFee('cash')}), 0)::text`.as('collectedCashToDate'),
       collectedCheckToDate: sql<string>`coalesce(sum(${collectedToDateForFee('check')}), 0)::text`.as('collectedCheckToDate'),
       collectedBankTransferToDate: sql<string>`coalesce(sum(${collectedToDateForFee('bankTransfer')}), 0)::text`.as('collectedBankTransferToDate'),
+      collectedBankDepositToDate: sql<string>`coalesce(sum(${collectedToDateForFee('bankDeposit')}), 0)::text`.as('collectedBankDepositToDate'),
       collectedTpeToDate: sql<string>`coalesce(sum(${collectedToDateForFee('creditCard', 'debitCard')}), 0)::text`.as('collectedTpeToDate'),
       collectedOnlineToDate: sql<string>`coalesce(sum(${collectedToDateForFee('online')}), 0)::text`.as('collectedOnlineToDate'),
       collectedMobilePaymentToDate: sql<string>`coalesce(sum(${collectedToDateForFee('mobilePayment')}), 0)::text`.as('collectedMobilePaymentToDate'),
@@ -279,13 +281,18 @@ export class FeeRepository {
         or(isNotNull(studentEnrollments.id), isNotNull(fees.id)),
         // Filter before aggregating so balances and collection metrics use only matching fees.
         schedule ? eq(fees.schedule, schedule) : undefined,
+        tuitionPaidInFull ? eq(feeTypes.category, 'tuition') : undefined,
       ))
       .groupBy(
         students.id, students.name, students.studentCode, users.image,
         studentEnrollments.id, lastPlacement.id,
         classes.id, classes.name, sections.id, sections.name,
       )
-      .orderBy(desc(getMaxCreatedAt()), students.name);
+      .having(tuitionPaidInFull ? sql`
+        count(${fees.id}) > 0
+        and coalesce(sum(${fees.netAmount}::numeric), 0) <= coalesce(sum(${collectedToDateForFee()}), 0)
+      ` : undefined)
+      .orderBy(sql`${getMaxCreatedAt()} desc nulls last`, students.name);
 
     return result.map((student) => ({
       academicYear,

@@ -1046,6 +1046,7 @@
       "noOverdue": "Sin cuotas vencidas",
       "noRecentPayments": "Sin pagos recientes",
       "overdueFees": "Cuotas vencidas",
+      "viewAll": "Ver todo",
       "recentPayments": "Pagos recientes",
       "totalStudents": "Total de estudiantes",
       "totalTeachers": "Total de profesores",
@@ -1837,6 +1838,8 @@
     },
     "stats": {
       "collected": "Cobrado hasta hoy",
+      "paidToDate": "Pagado hasta hoy",
+      "totalFees": "Total de cuotas",
       "tpe": "Tarjeta",
       "overdueAmount": "Importe vencido"
     },
@@ -1927,7 +1930,8 @@
       "filterByStatus": "Filtrar por estado",
       "searchByStudent": "Buscar estudiante...",
       "allSections": "Todas las secciones",
-      "allSchedules": "Frecuencia"
+      "allSchedules": "Frecuencia",
+      "fullTuitionPaid": "Anual"
     },
     "dialogs": {
       "createButton": "Crear",
@@ -1972,7 +1976,8 @@
       "quarterly": "Trimestral",
       "semester": "Semestral",
       "annually": "Anual",
-      "oneTime": "Única vez"
+      "oneTime": "Única vez",
+      "occasional": "Ocasional"
     },
     "success": {
       "paymentDeleted": "Pago eliminado correctamente",
@@ -2040,7 +2045,12 @@
       "studentNotEnrolledInAcademicYear": "El alumno no estaba matriculado en este curso escolar",
       "effectiveDateOutsideEnrollmentPeriod": "La fecha de inicio de facturación debe estar dentro del periodo de matrícula del alumno en este curso escolar, a partir de su fecha de matrícula",
       "invalidEffectiveDate": "Fecha de inicio de facturación no válida",
-      "feeTypeInactive": "Este tipo de cuota está desactivado y no puede asignarse a alumnos"
+      "feeTypeInactive": "Este tipo de cuota está desactivado y no puede asignarse a alumnos",
+      "occasionalOnly": "Solo se pueden añadir consumos a una tarifa ocasional activa.",
+      "occasionalDate": "Elija una fecha dentro del curso y la matrícula, a partir del inicio de esta tarifa y no posterior a hoy.",
+      "occasionalDiscount": "Introduzca el precio final de cada consumo; no se aplica un descuento recurrente.",
+      "occasionalHistoryLocked": "Los consumos existentes deben conservarse. Solo se pueden cambiar el precio de consumos futuros y las notas.",
+      "occasionalRequestConflict": "Esta solicitud ya se utilizó para otro consumo."
     },
     "studentView": {
       "pay": "Pagar",
@@ -2096,6 +2106,15 @@
       "feesRequired": "Añade al menos una cuota",
       "chargeDateRequired": "Elige la fecha de la lista de clase en este curso escolar",
       "chargeDateInTerm": "Elige una fecha de cobro entre septiembre y junio"
+    },
+    "occasional": {
+      "unitPrice": "Precio unitario",
+      "hint": "Sin cargos automáticos. Añada una comida o un consumo fechado cada vez que se utilice.",
+      "addMeal": "Añadir comida",
+      "addCharge": "Añadir consumo",
+      "date": "Fecha",
+      "added": "Consumo añadido",
+      "failed": "No se pudo añadir el consumo."
     }
   },
   "behaviorRewards": {
@@ -3029,6 +3048,7 @@
     },
     "paymentMethods": {
       "bankTransfer": "Transferencia bancaria",
+      "bankDeposit": "Depósito bancario",
       "cash": "Efectivo",
       "check": "Cheque",
       "creditCard": "Tarjeta de crédito",
@@ -3140,6 +3160,8 @@
       "descriptionLabel": "Descripción",
       "descriptionPlaceholder": "Ingrese la descripción",
       "feeTypeInformation": "Información del tipo de cuota",
+      "translatedNames": "Nombres traducidos (opcional)",
+      "translatedNamesHint": "Introduce un nombre para cada idioma. Si el campo está vacío, se muestra el nombre del tipo de cuota.",
       "name": "Nombre",
       "namePlaceholder": "Ingrese el nombre",
       "paymentType": "Tipo de pago",
@@ -3634,6 +3656,7 @@
     },
     "methods": {
       "bankTransfer": "Transferencia bancaria",
+      "bankDeposit": "Depósito bancario",
       "cash": "Efectivo",
       "check": "Cheque",
       "creditCard": "Tarjeta de crédito",
@@ -4277,6 +4300,7 @@
       "transferred": "Asignación cambiada",
       "end": "Finalizar matrícula",
       "endAction": "Finalizar matrícula",
+      "disable": "Desactivar alumno",
       "ended": "Matrícula finalizada",
       "failed": "No se pudo cambiar la matrícula",
       "enrolledOn": "Matriculado el",
@@ -4564,6 +4588,7 @@
         "missingName": "falta el nombre",
         "invalidGender": "el género debe ser M o F, no \"{{value}}\"",
         "invalidStatus": "estado desconocido \"{{value}}\"",
+        "missingLeavingDate": "Se requiere una fecha de salida (leftOn) para un alumno que se ha ido.",
         "unknownClass": "no hay ninguna clase llamada \"{{value}}\"",
         "unknownSection": "la clase no tiene ninguna sección llamada \"{{value}}\"",
         "invalidDate": "\"{{value}}\" no es una fecha AAAA-MM-DD",
@@ -5959,6 +5984,7 @@
     "methods": {
       "cash": "Efectivo",
       "bankTransfer": "Transferencia bancaria",
+      "bankDeposit": "Depósito bancario",
       "check": "Cheque",
       "creditCard": "Tarjeta de crédito",
       "debitCard": "Tarjeta de débito",
@@ -5967,6 +5993,7 @@
     }
   },
   "validationMessages": {
+    "occasionalImportRequiresDateAndFinalAmount": "Las importaciones ocasionales requieren una fecha de cargo y un importe final sin descuento recurrente",
     "duplicatePermissionIds": "Permisos duplicados",
     "duplicateSidebarEntries": "Entradas de menú duplicadas",
     "pointsRange": "Los puntos deben estar entre 0 y 100.",

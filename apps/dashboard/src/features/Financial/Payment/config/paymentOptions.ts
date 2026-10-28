@@ -61,8 +61,8 @@ export const buildPaymentEditMethodOptions = (
 /**
  * The methods the cashier's Record Payment dialog offers.
  *
- * A subset of `PAYMENT_METHOD_VALUES`: the four that dialog offered before
- * its labels were translated, kept as they were. `debitCard`, `online` and
+ * A subset of `PAYMENT_METHOD_VALUES`: the methods that dialog offers
+ * with bank deposits separate from transfers. `debitCard`, `online` and
  * `mobilePayment` stay accepted by the API and selectable when a stored
  * payment is corrected; offering them at the desk is a product decision, not
  * a translation one. `paymentOptions.test.ts` pins the list.
@@ -71,6 +71,7 @@ export const DESK_PAYMENT_METHOD_VALUES = [
   'cash',
   'check',
   'bankTransfer',
+  'bankDeposit',
   'creditCard',
 ] as const satisfies readonly PaymentMethod[];
 

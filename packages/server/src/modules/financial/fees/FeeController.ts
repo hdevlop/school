@@ -7,6 +7,8 @@ import { FeeImportService } from './FeeImportService';
 import { importStudentFeesDto, importStudentFeesWithDatesDto, previewFeeImportDatesDto,
   type ImportStudentFeesDto, type ImportStudentFeesWithDatesDto, type PreviewFeeImportDatesDto } from './FeeImportDto';
 import {
+  addOccasionalChargeDto,
+  type AddOccasionalChargeDto,
   createFeeDto,
   createFeesBulkDto,
   classBulkFeeDto,
@@ -37,7 +39,7 @@ export class FeeController {
   @Get()
   @CanSchoolWide('read:fees')
   @Validate({ query: listFeesQueryDto })
-  @McpTool({ description: 'List student fee totals in the selected year, optionally filtered by class, section and payment schedule', readOnly: true })
+  @McpTool({ description: 'List student fee totals in the selected year, optionally filtered by class, section and exact payment schedule. tuitionPayment=paidInFull returns only tuition totals fully paid through today, regardless of installment schedule.', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getFees(@Query() filters: ListFeesQueryDto = {}) {
     return this.feeService.getAll(filters);
@@ -164,6 +166,14 @@ export class FeeController {
   @ResMsg('fees.success.updated')
   async update(@Params('id') id: string, @Body() body: UpdateFeeDto, @User() user: { id: string; role?: string }) {
     return this.feeService.update(id, body, user.id, user.role);
+  }
+
+  @Post('/:id/occasional-charges')
+  @CanSchoolWide('update:fees')
+  @Validate({ params: feeIdParam, body: addOccasionalChargeDto })
+  @ResMsg('fees.success.updated')
+  async addOccasionalCharge(@Params('id') id: string, @Body() body: AddOccasionalChargeDto, @User() user: { id: string; role?: string }) {
+    return this.feeService.addOccasionalCharge(id, body, user.id, user.role);
   }
 
   @Delete('/bulk')

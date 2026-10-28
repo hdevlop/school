@@ -1044,6 +1044,7 @@
       "aging31_60": "31–60 يوم",
       "aging60plus": "60+ يوم",
       "overdueFees": "الرسوم المتأخرة",
+      "viewAll": "عرض الكل",
       "recentPayments": "المدفوعات الأخيرة",
       "calendar": "التقويم",
       "remind": "تذكير",
@@ -1851,6 +1852,8 @@
     },
     "stats": {
       "collected": "المحصل حتى اليوم",
+      "paidToDate": "المدفوع حتى الآن",
+      "totalFees": "إجمالي الرسوم",
       "tpe": "البطاقة البنكية",
       "overdueAmount": "المبلغ المتأخر"
     },
@@ -1941,7 +1944,8 @@
       "filterByStatus": "تصفية حسب الحالة",
       "searchByStudent": "البحث عن طالب...",
       "allSections": "جميع الشعب",
-      "allSchedules": "التكرار"
+      "allSchedules": "التكرار",
+      "fullTuitionPaid": "سنوي"
     },
     "dialogs": {
       "createButton": "إنشاء",
@@ -1986,7 +1990,8 @@
       "quarterly": "ربع سنوي",
       "semester": "نصف سنوي",
       "annually": "سنوي",
-      "oneTime": "مرة واحدة"
+      "oneTime": "مرة واحدة",
+      "occasional": "عرضي"
     },
     "success": {
       "paymentDeleted": "تم حذف الدفع بنجاح",
@@ -2054,7 +2059,12 @@
       "studentNotEnrolledInAcademicYear": "لم يكن التلميذ مسجلاً في هذه السنة الدراسية",
       "effectiveDateOutsideEnrollmentPeriod": "يجب أن يقع تاريخ بدء الفوترة ضمن فترة تسجيل التلميذ في هذه السنة الدراسية، ابتداءً من تاريخ تسجيله",
       "invalidEffectiveDate": "تاريخ بدء الفوترة غير صالح",
-      "feeTypeInactive": "هذا النوع من الرسوم معطّل ولا يمكن إسناده إلى التلاميذ"
+      "feeTypeInactive": "هذا النوع من الرسوم معطّل ولا يمكن إسناده إلى التلاميذ",
+      "occasionalOnly": "يمكن إضافة استهلاك إلى رسم عرضي نشط فقط.",
+      "occasionalDate": "اختر تاريخاً ضمن السنة الدراسية وفترة تسجيل التلميذ، من بداية هذا الرسم وحتى اليوم.",
+      "occasionalDiscount": "أدخل الثمن النهائي لكل استهلاك؛ لا يطبق تخفيض دوري.",
+      "occasionalHistoryLocked": "يجب الاحتفاظ بالاستهلاكات السابقة. يمكن تغيير ثمن الاستهلاكات المقبلة والملاحظات فقط.",
+      "occasionalRequestConflict": "سبق استخدام هذا الطلب لاستهلاك آخر."
     },
     "studentView": {
       "pay": "دفع",
@@ -2110,6 +2120,15 @@
       "feesRequired": "أضف رسمًا واحدًا على الأقل",
       "chargeDateRequired": "اختر تاريخ لائحة القسم في هذه السنة الدراسية",
       "chargeDateInTerm": "اختر تاريخ فوترة بين شتنبر ويونيو"
+    },
+    "occasional": {
+      "unitPrice": "ثمن الوحدة",
+      "hint": "لا توجد رسوم تلقائية. أضف وجبة أو رسماً مؤرخاً عند كل استخدام.",
+      "addMeal": "إضافة وجبة",
+      "addCharge": "إضافة استهلاك",
+      "date": "التاريخ",
+      "added": "تمت إضافة الاستهلاك",
+      "failed": "تعذرت إضافة الاستهلاك."
     }
   },
   "behaviorRewards": {
@@ -3043,6 +3062,7 @@
     },
     "paymentMethods": {
       "bankTransfer": "تحويل بنكي",
+      "bankDeposit": "إيداع بنكي",
       "cash": "نقدًا",
       "check": "شيك",
       "creditCard": "بطاقة ائتمان",
@@ -3154,6 +3174,8 @@
       "descriptionLabel": "الوصف",
       "descriptionPlaceholder": "أدخل الوصف",
       "feeTypeInformation": "معلومات نوع الرسوم",
+      "translatedNames": "الأسماء المترجمة (اختياري)",
+      "translatedNamesHint": "أدخل اسماً لكل لغة. إذا تركت الحقل فارغاً، سيظهر اسم نوع الرسوم.",
       "name": "الاسم",
       "namePlaceholder": "أدخل الاسم",
       "paymentType": "نوع الدفع",
@@ -3648,6 +3670,7 @@
     },
     "methods": {
       "bankTransfer": "تحويل بنكي",
+      "bankDeposit": "إيداع بنكي",
       "cash": "نقدًا",
       "check": "شيك",
       "creditCard": "بطاقة ائتمان",
@@ -4291,6 +4314,7 @@
       "transferred": "تم تغيير التوزيع",
       "end": "إنهاء التسجيل",
       "endAction": "إنهاء التسجيل",
+      "disable": "تعطيل التلميذ",
       "ended": "تم إنهاء التسجيل",
       "failed": "تعذّر تعديل التسجيل",
       "enrolledOn": "تاريخ التسجيل",
@@ -4578,6 +4602,7 @@
         "missingName": "الاسم مفقود",
         "invalidGender": "يجب أن يكون الجنس M أو F، وليس \"{{value}}\"",
         "invalidStatus": "حالة غير معروفة \"{{value}}\"",
+        "missingLeavingDate": "يجب تحديد تاريخ المغادرة (leftOn) للتلميذ المغادر.",
         "unknownClass": "لا يوجد قسم باسم \"{{value}}\"",
         "unknownSection": "لا يحتوي القسم على فوج باسم \"{{value}}\"",
         "invalidDate": "\"{{value}}\" ليس تاريخًا بصيغة YYYY-MM-DD",
@@ -5973,6 +5998,7 @@
     "methods": {
       "cash": "نقداً",
       "bankTransfer": "تحويل بنكي",
+      "bankDeposit": "إيداع بنكي",
       "check": "شيك",
       "creditCard": "بطاقة ائتمان",
       "debitCard": "بطاقة سحب",
@@ -5981,6 +6007,7 @@
     }
   },
   "validationMessages": {
+    "occasionalImportRequiresDateAndFinalAmount": "يتطلب استيراد الرسوم العرضية تاريخ الرسوم ومبلغا نهائيا دون خصم متكرر",
     "duplicatePermissionIds": "معرّفات صلاحيات مكررة",
     "duplicateSidebarEntries": "عناصر قائمة جانبية مكررة",
     "pointsRange": "يجب أن تكون النقاط بين 0 و100.",

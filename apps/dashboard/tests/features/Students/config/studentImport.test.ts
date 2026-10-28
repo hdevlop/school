@@ -241,3 +241,42 @@ describe('student import', () => {
     }
   });
 });
+
+
+describe('departed student import', () => {
+  it('keeps a departed student and carries the departure to the server', () => {
+    const result = buildStudentImport([{ ...exported, left: true, leftOn: '2025-10-12', enrollmentDate: '2025-09-01' }], classes, '2026-01-12');
+    expect(result.problems).toEqual([]);
+    expect(result.students[0].departure).toEqual({ leftOn: '2025-10-12', status: 'withdrawn' });
+  });
+  it('refuses to silently activate a departed student without a leaving date', () => {
+    const result = buildStudentImport([{ ...exported, left: true }], classes, '2026-01-12');
+    expect(result.students).toEqual([]);
+    expect(result.problems[0].reason).toBe('missingLeavingDate');
+  });
+  it('refuses a departure before enrollment or an impossible date', () => {
+    for (const leftOn of ['2025-09-01', '2025-08-31', '2025-02-30']) {
+      expect(buildStudentImport([{ ...exported, left: true, leftOn, enrollmentDate: '2025-09-01' }], classes, '2026-01-12').problems[0].reason).toBe('invalidDate');
+    }
+  });
+});
+
+
+describe('occasional fee containers in student import', () => {
+  it('creates one empty container at the catalog unit price for several historical charges', () => {
+    const mealTypes = [{ id: 'meal', name: 'Daily meal', paymentType: 'oneTime', amount: 35 }];
+    const result = buildStudentImport([{ ...exported, enrollmentDate: '2025-09-01', fees: [
+      { feeType: 'Daily meal', schedule: 'occasional', baseAmount: 70, effectiveDate: '2025-10-01' },
+      { feeType: 'Daily meal', schedule: 'occasional', baseAmount: 105, effectiveDate: '2025-09-01' },
+    ] }], classes, '2026-01-12', mealTypes);
+    expect(result.problems).toEqual([]);
+    expect(result.students[0].fees).toEqual([{ feeTypeId: 'meal', schedule: 'occasional', baseAmount: 35, effectiveDate: '2025-09-01' }]);
+  });
+  it('refuses undated occasional source charges', () => {
+    const result = buildStudentImport([{ ...exported, fees: [
+      { feeType: 'Daily meal', schedule: 'occasional', baseAmount: 35 },
+    ] }], classes, '2026-01-12', [{ id: 'meal', name: 'Daily meal', amount: 35 }]);
+    expect(result.students).toEqual([]);
+    expect(result.problems[0].reason).toBe('invalidFee');
+  });
+});

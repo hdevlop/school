@@ -30,11 +30,26 @@ describe('feeTypeSchema', () => {
     expect(hasFiles(cleared)).toBe(false);
   });
 
-  it('accepts a custom name while leaving seeded translations and enabled state out of form edits', () => {
+  it('saves translated names while leaving enabled state out of form edits', () => {
     const parsed = feeTypeSchema.parse({ ...feeType, name: 'Atelier robotique', labels: { fr: 'Scolarité' }, status: 'inactive' });
     expect(parsed.name).toBe('Atelier robotique');
-    expect(parsed).not.toHaveProperty('labels');
+    expect(parsed.labels).toEqual({ fr: 'Scolarité' });
     expect(parsed).not.toHaveProperty('status');
+  });
+
+  it('trims translations, removes blank labels, and supports clearing every translation', () => {
+    expect(feeTypeSchema.parse({ ...feeType, labels: { en: ' Daily Meal ', fr: 'Repas à la journée', ar: '', es: '  ' } }).labels)
+      .toEqual({ en: 'Daily Meal', fr: 'Repas à la journée' });
+    expect(feeTypeSchema.parse({ ...feeType, labels: { en: '', fr: ' ' } }).labels).toEqual({});
+    expect(feeTypeSchema.parse(feeType)).not.toHaveProperty('labels');
+    expect(feeTypeSchema.safeParse({ ...feeType, labels: { en: 'a'.repeat(101) } }).success).toBe(false);
+  });
+
+  it('keeps translations alongside an uploaded image in multipart submissions', () => {
+    const labels = { en: 'Daily Meal', fr: 'Repas à la journée', ar: 'وجبة اليوم', es: 'Comida del día' };
+    const parsed = feeTypeSchema.parse({ ...feeType, labels, image: new File(['image'], 'meal.png') });
+    expect(JSON.parse(toFormData(parsed).get('labels') as string)).toEqual(labels);
+    expect(toFormData(feeTypeSchema.parse({ ...feeType, labels: { en: '' } })).get('labels')).toBe('{}');
   });
 
   it('defaults to recurring and lets the API supply the initial active status', () => {

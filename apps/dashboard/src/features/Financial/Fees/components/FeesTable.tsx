@@ -2,7 +2,7 @@
 
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useCallback, useMemo, useState } from 'react';
+import { Suspense, useCallback, useMemo, useState } from 'react';
 import type { Schedule } from '@sms/contracts';
 import { NPageHeader, NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState, NStatCard, NStatCardSkeleton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
@@ -19,7 +19,7 @@ import { useStudents } from '@/features/Students/hooks/useStudents';
 import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { createBulkFeesApi, getFeesApi, importStudentFeesApi, previewFeeImportDatesApi } from '@/services/feeApi';
 import { getFeeTypesApi } from '@/services/feeTypeApi';
@@ -30,7 +30,8 @@ import { FeeImportDatesPreview } from './FeeImportDatesPreview';
 import { withFeeYear } from '../utils/feeUtils';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { useFeesTableColumns } from '../hooks/useFeesTableColumns';
-import { buildScheduleOptions } from '../config/feeOptions';
+import { buildFeeListFrequencyOptions, getFeeListFrequencyFilter } from '../config/feeOptions';
+import { resolveFeeEntryFilters } from '../config/feeNavigation';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
 import { useViewingAcademicYear, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
@@ -46,7 +47,7 @@ function CreateFeeForm({ feeTypes }) {
   return <FeeForm students={students} feeTypes={feeTypes} />;
 }
 
-function FeesTableForYear() {
+function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeof resolveFeeEntryFilters> }) {
 
   const { t } = useTranslation();
   const { majorMoney } = useSchoolFormat();
@@ -63,7 +64,7 @@ function FeesTableForYear() {
   const { isAcademicYearLoading } = useActiveAcademicYear();
   const { viewingYear } = useViewingAcademicYear();
 
-  const [selection, setSelection] = useState<FeeRosterSelection | null>(null);
+  const [selection, setSelection] = useState<FeeRosterSelection | null>(initialFilters.selection);
   const { classId: selectedClassId, sectionId: selectedSectionId } = resolveFeeRosterSelection(classes, sections, selection);
   const catalogsReady = !isClassesLoading && !isSectionsLoading && !classesError && !sectionsError;
   const rosterReady = Boolean(catalogsReady && selectedClassId);
@@ -75,7 +76,7 @@ function FeesTableForYear() {
     setSelection({ classId: selectedClassId, sectionId: sectionId === '__all__' ? '' : sectionId });
   }, [selectedClassId]);
   const [searchText, setSearchText] = useState('');
-  const [statusFilter, setStatusFilter] = useState('__all__');
+  const [statusFilter, setStatusFilter] = useState(initialFilters.statusFilter);
   const [scheduleFilter, setScheduleFilter] = useState<Schedule>();
 
   // Summary cards always cover the viewed year, independently of table filters.
@@ -94,7 +95,7 @@ function FeesTableForYear() {
     isDeleting,
     refetch,
   } = useFees({
-    schedule: scheduleFilter,
+    ...getFeeListFrequencyFilter(scheduleFilter),
     classId: isAllClasses ? undefined : selectedClassId || undefined,
     sectionId: selectedSectionId || undefined,
     enabled: rosterReady,
@@ -125,11 +126,12 @@ function FeesTableForYear() {
     totals.collected += toMinorUnits(row.collectedToDate, 2) ?? 0;
     totals.cash += toMinorUnits(row.collectedCashToDate, 2) ?? 0;
     totals.check += toMinorUnits(row.collectedCheckToDate, 2) ?? 0;
+    totals.bankDeposit += toMinorUnits(row.collectedBankDepositToDate, 2) ?? 0;
     totals.bankTransfer += toMinorUnits(row.collectedBankTransferToDate, 2) ?? 0;
     totals.tpe += toMinorUnits(row.collectedTpeToDate, 2) ?? 0;
     totals.overdue += toMinorUnits(row.overdueAmount, 2) ?? 0;
     return totals;
-  }, { collected: 0, cash: 0, check: 0, bankTransfer: 0, tpe: 0, overdue: 0 }), [summaryFees]);
+  }, { collected: 0, cash: 0, check: 0, bankTransfer: 0, bankDeposit: 0, tpe: 0, overdue: 0 }), [summaryFees]);
 
   const classOptions = useMemo(
     () => [
@@ -190,9 +192,9 @@ function FeesTableForYear() {
       onChange: (value: string) => setScheduleFilter(value === '__all__' ? undefined : value as Schedule),
       options: [
         { value: '__all__', label: t('common.all') },
-        ...buildScheduleOptions(t),
+        ...buildFeeListFrequencyOptions(t),
       ],
-      className: 'w-full lg:w-44',
+      className: 'w-full lg:w-56',
     },
     {
       name: 'status',
@@ -377,15 +379,15 @@ function FeesTableForYear() {
       </NPageHeader>
 
       {isSummaryLoading ? (
-        <div className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-3 2xl:grid-cols-6">
-          {Array.from({ length: 6 }, (_, index) => <NStatCardSkeleton key={index} />)}
+        <div className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-7">
+          {Array.from({ length: 7 }, (_, index) => <NStatCardSkeleton key={index} />)}
         </div>
       ) : hasFailedToLoad(summaryError, summaryFees) ? (
         isAuthorizationError(summaryError)
           ? <NForbiddenState surface="panel" />
           : <NErrorState surface="panel" />
       ) : (
-        <div className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-3 2xl:grid-cols-6">
+        <div className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-7">
           <NStatCard
             icon={HandCoins}
             label={t('fees.stats.collected')}
@@ -414,6 +416,13 @@ function FeesTableForYear() {
             icon={Landmark}
             label={t('payments.methods.bankTransfer')}
             value={majorMoney(stats.bankTransfer / 100)}
+            className="min-w-0"
+            classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
+          />
+          <NStatCard
+            icon={Landmark}
+            label={t('payments.methods.bankDeposit')}
+            value={majorMoney(stats.bankDeposit / 100)}
             className="min-w-0"
             classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
           />
@@ -498,6 +507,13 @@ function FeesTableForYear() {
   );
 }
 
+function FeesTableEntry() {
+  const searchParams = useSearchParams();
+  const initialFilters = resolveFeeEntryFilters(searchParams.get('status'));
+  const yearKey = useViewingYearKey();
+  return <FeesTableForYear key={`${yearKey}:${initialFilters.statusFilter}`} initialFilters={initialFilters} />;
+}
+
 export default function FeesTable() {
-  return <FeesTableForYear key={useViewingYearKey()} />;
+  return <Suspense><FeesTableEntry /></Suspense>;
 }

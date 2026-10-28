@@ -1,0 +1,1 @@
+ALTER TYPE "public"."schedule" ADD VALUE 'occasional';

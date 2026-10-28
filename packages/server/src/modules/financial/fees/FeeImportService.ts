@@ -13,7 +13,7 @@ import { PaymentService } from '../payments/PaymentService';
 import { PaymentRepository } from '../payments/PaymentRepository';
 import { AllocationRepository } from '../allocations/AllocationRepository';
 import { FinancialAuditService } from '../auditLog/FinancialAuditService';
-import { buildImportedFeePlan, sameImportedSchedule } from './feeImportPlan';
+import { buildImportedFeePlan, planOccasionalImport, sameImportedSchedule } from './feeImportPlan';
 import { toCents, fromCents } from '../utils';
 import type { ImportStudentFeesDto } from './FeeImportDto';
 import type { ImportDateCorrectionDto } from '../../studentEnrollments/StudentEnrollmentDto';
@@ -55,7 +55,7 @@ export class FeeImportService {
     if (!student) this.validator.refuse('unknownStudent');
     const settings = await this.settings.getAdminSettings();
     const grouped = Map.groupBy(data.fees, fee => fee.feeTypeId);
-    const feeMap = new Map<string, { id: string; paymentType: string; installments: Array<{ number: number; dueDate: string; amount: string | number }> }>();
+    const feeMap = new Map<string, { id: string; paymentType: string; schedule?: string; installments: Array<{ number: number; dueDate: string; amount: string | number }> }>();
     let createdFees = 0, createdPayments = 0, reusedFees = 0, reusedPayments = 0, settledPayments = 0;
     for (const [feeTypeId, lines] of grouped) {
       const type = await this.feeValidator.validateFeeTypeExists(feeTypeId, true);
@@ -69,6 +69,34 @@ export class FeeImportService {
         this.feeValidator.mapEffectiveDateError(error);
       }
       const existingFee = await this.fees.getByStudentAndYear(data.studentId, year.label, feeTypeId);
+      if (plan.schedule === 'occasional') {
+        const fee = existingFee ?? await this.feeService.create({ ...lines[0], baseAmount: Number(type.amount),
+          studentId: data.studentId, academicYear: year.label }, actor.id, actor.role);
+        await this.installments.lockFeeSchedules([fee.id]);
+        const locked = await this.fees.getByStudentAndYear(data.studentId, year.label, feeTypeId);
+        if (!locked || locked.schedule !== 'occasional') this.validator.refuse('existingFeeConflict');
+        const current = await this.installments.getByFeeId(fee.id);
+        let merged: ReturnType<typeof planOccasionalImport>;
+        try { merged = planOccasionalImport(fee.id, current, plan.installments); }
+        catch { this.validator.refuse('existingFeeConflict'); }
+        if (merged.additions.length) {
+          await this.installments.createBulk(merged.additions);
+          const total = [...current, ...merged.additions].filter(item => item.status !== 'cancelled')
+            .reduce((sum, item) => sum + toCents(item.amount), 0);
+          const updated = await this.fees.update(fee.id, { grossAmount: fromCents(total), netAmount: fromCents(total), discountAmount: '0.00',
+            // Preserve a unit price subsequently edited by the school.
+            baseAmount: current.length ? locked.baseAmount : String(type.amount),
+            effectiveDate: locked.effectiveDate && locked.effectiveDate < plan.installments[0].dueDate
+              ? locked.effectiveDate : plan.installments[0].dueDate });
+          await this.feeService.recalculate(fee.id);
+          await this.audit.record({ entityType: 'fee', entityId: fee.id, action: 'fee.imported', actorId: actor.id,
+            before: existingFee, after: updated, metadata: { source: 'MyskoolPlus', sourceCharges: lines, installments: merged.additions } });
+          createdFees++;
+        } else reusedFees++;
+        feeMap.set(feeTypeId, { id: fee.id, paymentType: type.paymentType, schedule: 'occasional', installments: merged.source });
+        continue;
+      }
+      if (existingFee?.schedule === 'occasional') this.validator.refuse('existingFeeConflict');
       let fee: { id: string; netAmount: string } = existingFee;
       const before = existingFee;
       if (fee) {
@@ -101,6 +129,7 @@ export class FeeImportService {
       createdFees++;
     }
     const seenReceipts = new Set<string>();
+    const sourceAllocated = new Map<string, number>();
     for (const payment of data.payments) {
       if (seenReceipts.has(payment.receiptNumber)) this.validator.refuse('receiptConflict');
       seenReceipts.add(payment.receiptNumber);
@@ -111,12 +140,28 @@ export class FeeImportService {
           const existing = await this.fees.getByStudentAndYear(data.studentId, year.label, line.feeTypeId);
           if (!existing) this.validator.refuse('missingInstallment');
           const type = await this.feeValidator.validateFeeTypeExists(line.feeTypeId);
-          fee = { id: existing.id, paymentType: type.paymentType, installments: await this.installments.getByFeeId(existing.id) };
+          fee = { id: existing.id, paymentType: type.paymentType, schedule: existing.schedule, installments: await this.installments.getByFeeId(existing.id) };
           feeMap.set(line.feeTypeId, fee);
         }
         const matching = line.month === 'registration'
-          ? (fee.paymentType === 'oneTime' && fee.installments.length === 1 ? fee.installments : [])
+          ? (fee.schedule === 'occasional' || (fee.paymentType === 'oneTime' && fee.installments.length === 1) ? fee.installments : [])
           : fee.installments.filter(item => item.dueDate.slice(0, 7) === line.month);
+        if (fee.schedule === 'occasional') {
+          let remaining = toCents(line.amount);
+          for (const item of matching) {
+            const key = `${fee.id}:${item.number}`;
+            const used = sourceAllocated.get(key) ?? 0;
+            const amount = Math.min(remaining, Math.max(0, toCents(item.amount) - used));
+            if (amount > 0) {
+              allocations.push({ feeId: fee.id, number: item.number, amount: Number(fromCents(amount)) });
+              sourceAllocated.set(key, used + amount);
+              remaining -= amount;
+            }
+            if (!remaining) break;
+          }
+          if (remaining) this.validator.refuse('missingInstallment');
+          continue;
+        }
         if (matching.length !== 1) this.validator.refuse('missingInstallment');
         allocations.push({ feeId: fee.id, number: matching[0].number, amount: line.amount });
       }

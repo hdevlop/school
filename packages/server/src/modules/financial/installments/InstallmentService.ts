@@ -115,6 +115,7 @@ export class InstallmentService {
     const { id: feeId, schedule, netAmount, effectiveDate, createdAt } = fee;
     await this.lockFeeSchedule(feeId);
     await this.installmentRepository.deleteByFeeId(feeId);
+    if (schedule === 'occasional') return [];
     const settings = await this.settingsRepository.getAdminSettings();
 
     // Prefer effectiveDate (enrollment date) over createdAt so mid-year and
@@ -148,6 +149,23 @@ export class InstallmentService {
 
     this.events.emit('installments.generated', { feeId, count: installments.length });
     return installments;
+  }
+
+  /** Called by FeeService inside its transaction and fee schedule lock. */
+  async appendOccasionalCharge(feeId: string, data: { requestId: string; date: string; amount: number }) {
+    const installments = await this.installmentRepository.getByFeeId(feeId);
+    const id = `occ_${feeId}_${data.requestId}`;
+    const existing = installments.find(item => item.id === id);
+    if (existing) {
+      this.installmentValidator.ensureOccasionalReplay(existing, data.date, data.amount);
+      return { installment: existing, created: false, installments };
+    }
+    const installment = await this.installmentRepository.create({
+      id, feeId, number: Math.max(0, ...installments.map(item => item.number)) + 1,
+      dueDate: data.date, amount: data.amount.toFixed(2), paidAmount: '0.00',
+      status: data.date < formatDateOnly(getBusinessDate()) ? 'overdue' : 'pending',
+    });
+    return { installment, created: true, installments: [...installments, installment] };
   }
 
   async getInstallmentStats() {

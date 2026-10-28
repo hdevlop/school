@@ -2,7 +2,7 @@ import { api } from './http';
 import type { Schedule, StudentFinancialImport, FinancialImportDatePreview } from '@sms/contracts';
 
 // One row per student for fees charged to the request's school year.
-export type FeeListFilters = { schedule?: Schedule; classId?: string; sectionId?: string };
+export type FeeListFilters = { schedule?: Schedule; tuitionPayment?: 'paidInFull'; classId?: string; sectionId?: string };
 
 export const getFeesApi = async (filters: FeeListFilters = {}) => {
   const res = await api.get('/fees', { params: filters });
@@ -47,6 +47,11 @@ export const getInstallmentsByFeeApi = async (feeId) => {
 
 export const createFeeApi = async (data) => {
   const res = await api.post('/fees', data);
+  return res.data;
+};
+
+export const addOccasionalChargeApi = async (feeId: string, data: { date: string; amount: number; requestId: string }) => {
+  const res = await api.post(`/fees/${feeId}/occasional-charges`, data);
   return res.data;
 };
 

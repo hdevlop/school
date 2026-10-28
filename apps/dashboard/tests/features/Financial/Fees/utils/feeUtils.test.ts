@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { calculateFeeAmounts, calculateTotalFees, getFeeDiscountAmount, getFeeDiscountPerPeriod, getFeeEditNetAmount, prepareFeeEdit, getFeeTypeDisplayName, getStudentFeesDisplayData, withFeeYear } from '@/features/Financial/Fees/utils/feeUtils';
+import { buildInstallmentsPreview, calculateFeeAmounts, calculateTotalFees, getFeeDiscountAmount, getFeeDiscountPerPeriod, getFeeEditNetAmount, prepareFeeEdit, getFeeTypeDisplayName, getStudentFeesDisplayData, withFeeYear } from '@/features/Financial/Fees/utils/feeUtils';
 import { translations } from '@sms/contracts/locales';
 
 const seededFeeTypes = [
@@ -141,5 +141,18 @@ describe('new student billing preview', () => {
     expect(calculateFeeAmounts('recurring', 2000, 'monthly', 0, context).netAmount).toBe(18000);
     expect(calculateFeeAmounts('recurring', 2000, 'monthly', 100, context).netAmount).toBe(17100);
     expect(calculateFeeAmounts('recurring', 2000, 'monthly', 0, { ...context, effectiveDate: '2026-11-21' }).netAmount).toBe(16000);
+  });
+});
+
+
+describe('occasional fee preview', () => {
+  it('shows zero initially and generates no preview installments', () => {
+    expect(calculateFeeAmounts('recurring', 35, 'occasional').netAmount).toBe(0);
+    expect(buildInstallmentsPreview(0, 'occasional')).toEqual([]);
+  });
+  it('preserves recorded totals when editing the price of future meals', () => {
+    const fee = { id: 'fee', schedule: 'occasional', baseAmount: 35, grossAmount: 70, netAmount: 70, discountAmount: 0 };
+    expect(getFeeEditNetAmount(fee, { schedule: 'occasional', baseAmount: 40, discountAmount: 0 })).toBe(70);
+    expect(prepareFeeEdit(fee, { schedule: 'occasional', baseAmount: 40, discountAmount: 0 })).toEqual({ id: 'fee', baseAmount: 40 });
   });
 });

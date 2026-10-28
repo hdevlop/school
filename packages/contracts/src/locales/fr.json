@@ -1716,6 +1716,7 @@
       "aging31_60": "31–60 jours",
       "aging60plus": "60+ jours",
       "overdueFees": "Frais en Retard",
+      "viewAll": "Tout voir",
       "recentPayments": "Paiements Récents",
       "calendar": "Calendrier",
       "remind": "Rappeler",
@@ -2505,6 +2506,7 @@
     "paymentMethods": {
       "cash": "Espèces",
       "bankTransfer": "Virement bancaire",
+      "bankDeposit": "Versement bancaire",
       "check": "Chèque",
       "creditCard": "Carte de crédit",
       "debitCard": "Carte de débit",
@@ -2572,6 +2574,8 @@
     },
     "stats": {
       "collected": "Encaissé à ce jour",
+      "paidToDate": "Payé à ce jour",
+      "totalFees": "Total des frais",
       "tpe": "Carte bancaire",
       "overdueAmount": "Montant en retard"
     },
@@ -2662,7 +2666,8 @@
       "filterByStatus": "Filtrer par statut",
       "searchByStudent": "Rechercher un élève...",
       "allSections": "Toutes les sections",
-      "allSchedules": "Fréquence"
+      "allSchedules": "Fréquence",
+      "fullTuitionPaid": "Annuel"
     },
     "dialogs": {
       "createButton": "Créer",
@@ -2707,7 +2712,8 @@
       "quarterly": "Trimestriel",
       "semester": "Semestre",
       "annually": "Annuel",
-      "oneTime": "Unique"
+      "oneTime": "Unique",
+      "occasional": "Occasionnel"
     },
     "success": {
       "paymentDeleted": "Paiement supprimé avec succès",
@@ -2775,7 +2781,12 @@
       "studentNotEnrolledInAcademicYear": "L'élève n'était pas inscrit pour cette année scolaire",
       "effectiveDateOutsideEnrollmentPeriod": "La date de début de facturation doit être comprise dans la période d'inscription de l'élève pour cette année scolaire, à partir de sa date d'inscription",
       "invalidEffectiveDate": "Date de début de facturation invalide",
-      "feeTypeInactive": "Ce type de frais est désactivé et ne peut pas être attribué aux élèves"
+      "feeTypeInactive": "Ce type de frais est désactivé et ne peut pas être attribué aux élèves",
+      "occasionalOnly": "Les consommations peuvent uniquement être ajoutées à un frais occasionnel actif.",
+      "occasionalDate": "Choisissez une date dans l’année scolaire et la période d’inscription, à partir du début de ce frais et au plus tard aujourd’hui.",
+      "occasionalDiscount": "Saisissez le prix final de chaque consommation ; aucune réduction récurrente ne s’applique.",
+      "occasionalHistoryLocked": "Les consommations existantes doivent être conservées. Seuls le prix des prochaines consommations et les notes peuvent être modifiés.",
+      "occasionalRequestConflict": "Cette demande a déjà été utilisée pour une autre consommation."
     },
     "studentView": {
       "pay": "Payer",
@@ -2831,6 +2842,15 @@
       "feesRequired": "Ajoutez au moins un frais",
       "chargeDateRequired": "Choisissez la date de la liste de classe dans cette année scolaire",
       "chargeDateInTerm": "Choisissez une date de facturation entre septembre et juin"
+    },
+    "occasional": {
+      "unitPrice": "Prix unitaire",
+      "hint": "Aucun frais automatique. Ajoutez un repas ou une consommation datée à chaque utilisation.",
+      "addMeal": "Ajouter un repas",
+      "addCharge": "Ajouter une consommation",
+      "date": "Date",
+      "added": "Consommation ajoutée",
+      "failed": "Impossible d’ajouter la consommation."
     }
   },
   "behaviorRewards": {
@@ -3796,6 +3816,8 @@
       "descriptionLabel": "Description",
       "descriptionPlaceholder": "Entrez la description",
       "feeTypeInformation": "Informations sur le type de frais",
+      "translatedNames": "Noms traduits (facultatif)",
+      "translatedNamesHint": "Saisissez un nom pour chaque langue. Si le champ est vide, le nom du type de frais est affiché.",
       "name": "Nom",
       "namePlaceholder": "Entrez le nom",
       "paymentType": "Type de paiement",
@@ -4290,6 +4312,7 @@
     },
     "methods": {
       "bankTransfer": "Virement bancaire",
+      "bankDeposit": "Versement bancaire",
       "cash": "Espèces",
       "check": "Chèque",
       "creditCard": "Carte de crédit",
@@ -4429,6 +4452,7 @@
       "transferred": "Affectation modifiée",
       "end": "Terminer l'inscription",
       "endAction": "Terminer l'inscription",
+      "disable": "Désactiver l’élève",
       "ended": "Inscription terminée",
       "failed": "L'inscription n'a pas pu être modifiée",
       "enrolledOn": "Inscrit le",
@@ -4716,6 +4740,7 @@
         "missingName": "le nom est manquant",
         "invalidGender": "le genre doit être M ou F, pas « {{value}} »",
         "invalidStatus": "statut inconnu « {{value}} »",
+        "missingLeavingDate": "Une date de départ (leftOn) est obligatoire pour un élève parti.",
         "unknownClass": "aucune classe nommée « {{value}} »",
         "unknownSection": "la classe n’a pas de section nommée « {{value}} »",
         "invalidDate": "« {{value}} » n’est pas une date AAAA-MM-JJ",
@@ -6063,6 +6088,7 @@
     "methods": {
       "cash": "Espèces",
       "bankTransfer": "Virement bancaire",
+      "bankDeposit": "Versement bancaire",
       "check": "Chèque",
       "creditCard": "Carte de crédit",
       "debitCard": "Carte de débit",
@@ -6071,6 +6097,7 @@
     }
   },
   "validationMessages": {
+    "occasionalImportRequiresDateAndFinalAmount": "Les imports occasionnels nécessitent une date de facturation et un montant final sans remise récurrente",
     "duplicatePermissionIds": "Permissions en double",
     "duplicateSidebarEntries": "Entrées de menu en double",
     "pointsRange": "Les points doivent être compris entre 0 et 100.",

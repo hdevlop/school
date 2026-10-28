@@ -188,7 +188,7 @@ export class RolloverService {
           academicYear: dto.toYear,
         });
         const baseAmount = Number(sourceFee.feeTypeAmount);
-        const schedule = sourceFee.paymentType === 'oneTime' ? 'oneTime' : sourceFee.schedule || 'oneTime';
+        const schedule = sourceFee.schedule === 'occasional' ? 'occasional' : sourceFee.paymentType === 'oneTime' ? 'oneTime' : sourceFee.schedule || 'oneTime';
         const discountAmount = dto.copyDiscounts ? getFeeDiscountPerPeriod({ ...sourceFee, schedule }, {
           academicYear: dto.fromYear, startMonth, endMonth, effectiveDate: sourceFee.effectiveDate,
         }) : 0;

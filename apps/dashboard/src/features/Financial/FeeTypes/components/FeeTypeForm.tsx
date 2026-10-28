@@ -5,7 +5,8 @@ import { AvatarFormInput, FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React, { useMemo } from 'react'
-import { DollarSign, Tag, FileText, Layers, CreditCard } from 'lucide-react'
+import { DollarSign, Tag, FileText, Layers, CreditCard, Languages } from 'lucide-react'
+import { schoolI18n } from '@sms/contracts/locales'
 import { useDialog } from '@/shared/useDialog'
 import { useTranslation } from 'najm-i18n/react'
 import { createFeeTypeSchema } from '../config/feeTypeSchemas'
@@ -20,6 +21,10 @@ const FeeTypeForm = ({ feeType = null }) => {
    const defaultValues = {
       ...(feeType?.id && { id: feeType.id }),
       name: feeType?.name || '',
+      labels: {
+         ...feeType?.labels,
+         ...Object.fromEntries(schoolI18n.supportedLanguages.map(language => [language, feeType?.labels?.[language] ?? ''])),
+      },
       image: feeType?.image ?? null,
       description: feeType?.description || '',
       category: feeType?.category || 'tuition', 
@@ -100,6 +105,24 @@ const FeeTypeForm = ({ feeType = null }) => {
                         required={true}
                      />
                   </div>
+               </div>
+
+               <FormSectionHeader
+                  icon={Languages}
+                  title={t('feeTypes.form.translatedNames')}
+               />
+               <p className='text-sm text-muted-foreground'>{t('feeTypes.form.translatedNamesHint')}</p>
+               <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                  {schoolI18n.supportedLanguages.map(language => (
+                     <FormInput
+                        key={language}
+                        name={`labels.${language}`}
+                        type='text'
+                        icon={Languages}
+                        formLabel={`${t('feeTypes.form.name')} (${t(`languages.${language}`)})`}
+                        placeholder={t('feeTypes.form.namePlaceholder')}
+                     />
+                  ))}
                </div>
 
                <FormSectionHeader

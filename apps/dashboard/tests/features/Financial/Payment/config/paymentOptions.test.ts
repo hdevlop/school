@@ -48,11 +48,12 @@ describe('payment edit methods', () => {
 });
 
 describe('the desk payment methods', () => {
-  it('offers the four methods the cashier dialog takes, in this order', () => {
+  it('offers the methods the cashier dialog takes, in this order', () => {
     expect(buildDeskPaymentMethodOptions(echo).map((option) => option.value)).toEqual([
       'cash',
       'check',
       'bankTransfer',
+      'bankDeposit',
       'creditCard',
     ]);
   });

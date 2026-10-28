@@ -21,7 +21,8 @@ export type ScheduleType =
   | 'quarterly'
   | 'semester'
   | 'annually'
-  | 'oneTime';
+  | 'oneTime'
+  | 'occasional';
 
 export interface ScheduleConfig {
   count: number;
@@ -49,6 +50,8 @@ export function getScheduleConfig(type: ScheduleType, start: Date, end: Date): S
   const months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
 
   switch (type) {
+    case 'occasional':
+      return { count: 0, interval: 0 };
     case 'monthly':
       return { count: months, interval: 1 };
     case 'quarterly':

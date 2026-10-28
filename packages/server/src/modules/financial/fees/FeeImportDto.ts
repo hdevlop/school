@@ -9,7 +9,9 @@ const day = z.string().refine(isDateOnly, 'Expected a real YYYY-MM-DD date');
 export const importStudentFeesDto = z.object({
   studentId: requiredId,
   enrollmentDate: day.optional(),
-  fees: z.array(createFeeDto.omit({ studentId: true })).max(200),
+  fees: z.array(createFeeDto.omit({ studentId: true }).refine(fee => fee.schedule !== 'occasional'
+    || (Boolean(fee.effectiveDate) && (fee.discountAmount ?? 0) === 0),
+    'Occasional imports require a charge date and a final amount without a recurring discount')).max(200),
   payments: z.array(z.object({
     receiptNumber: z.string().trim().min(1).max(50),
     myskoolPlusReceipt: z.string().trim().max(100).optional(),

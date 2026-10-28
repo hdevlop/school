@@ -2,13 +2,13 @@
 
 import React from 'react';
 import { NAvatar } from 'najm-kit';
-import { Label } from 'najm-kit';
 import { Progress } from 'najm-kit';
 import { NBadge } from 'najm-kit';
 import { SimpleTooltip } from 'najm-kit';
 import { FileX2 } from 'lucide-react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
+import { getFeeCardSummary } from '../utils/feeCardSummary';
 
 const FeeCard = ({ data }: any) => {
   const { t } = useTranslation();
@@ -17,44 +17,33 @@ const FeeCard = ({ data }: any) => {
   const student = data?.student;
   const className = data?.class?.name;
   const sectionName = data?.section?.name;
+  const placement = [className, sectionName].filter(Boolean).join(' - ');
+  const studentDetails = [student?.studentCode, placement].filter(Boolean).join(' | ');
 
-  const netAmount = Number(data?.netAmount ?? 0);
-  const totalPaid = Number(data?.totalPaid ?? 0);
-  const totalDue = Number(data?.totalDue ?? 0);
-  const hasOverdue = Number(data?.overdueAmount ?? 0) > 0;
-  const hasFees = Number(data?.totalFees ?? 0) > 0;
-
-  const isPaid = hasFees && totalDue <= 0;
-  const progress = netAmount > 0 ? Math.min((totalPaid / netAmount) * 100, 100) : isPaid ? 100 : 0;
+  const { hasFees, hasOverdue, isPaid, paidAmount, overdueAmount, netAmount, progress } = getFeeCardSummary(data ?? undefined);
 
   return (
     <div
-      className={`flex flex-col gap-3 p-4 ${
+      className={`flex h-full flex-col gap-3 border p-4 ${
         isPaid
-          ? 'border border-green-300 bg-green-50/80 text-green-950'
-          : ''
+          ? 'border-green-300 bg-green-50/80 text-green-950'
+          : 'border-transparent'
       }`}
     >
-      <div className="flex flex-wrap items-start gap-3 pe-8">
+      <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-x-3 pe-6">
         <NAvatar
           src={student?.image}
           fallback={student?.name}
           size="sm"
           className="shrink-0"
         />
-        <div className="min-w-0 flex-1 basis-32">
-          <Label className="text-sm font-bold text-foreground block whitespace-normal break-words">
+        <div className="min-w-0">
+          <p title={student?.name} className="truncate text-sm leading-5 font-bold text-foreground">
             {student?.name}
-          </Label>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>{student?.studentCode}</span>
-            {(className || sectionName) && (
-              <>
-                <span className="text-border">|</span>
-                <span>{className}{sectionName ? ` - ${sectionName}` : ''}</span>
-              </>
-            )}
-          </div>
+          </p>
+          <p title={studentDetails} className="truncate text-xs leading-4 text-muted-foreground">
+            {studentDetails || '\u00a0'}
+          </p>
         </div>
         {isPaid ? (
           <NBadge status="paid" look="solid" showIcon className="basis-auto shrink-0">
@@ -68,17 +57,26 @@ const FeeCard = ({ data }: any) => {
       </div>
 
       {hasFees ? <>
-        <div className="text-center">
-          <p className={`text-xl font-bold tabular-nums ${isPaid ? 'text-green-600' : hasOverdue ? 'text-red-600' : 'text-foreground'}`}>
-            {majorMoney(isPaid ? netAmount : totalDue)}
-          </p>
-        </div>
+        <dl className={`grid gap-3 text-center ${hasOverdue ? 'grid-cols-2' : 'grid-cols-1'}`}>
+          <div className="min-w-0">
+            <dt className="text-xs text-muted-foreground">{t('fees.stats.paidToDate')}</dt>
+            <dd className={`text-lg font-bold tabular-nums wrap-anywhere ${isPaid ? 'text-green-600' : 'text-foreground'}`}>
+              {majorMoney(paidAmount)}
+            </dd>
+          </div>
+          {hasOverdue && <div className="min-w-0 border-s border-border/50 ps-3">
+            <dt className="text-xs text-muted-foreground">{t('fees.stats.overdueAmount')}</dt>
+            <dd className={`text-lg font-bold tabular-nums wrap-anywhere ${hasOverdue ? 'text-red-600' : 'text-muted-foreground'}`}>
+              {majorMoney(overdueAmount)}
+            </dd>
+          </div>}
+        </dl>
 
-        <div className="space-y-1">
+        <div className="mt-auto space-y-1">
           <Progress value={progress} className="h-2" color="success" />
-          <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-            <span>{t('fees.table.paidAmount')}: {majorMoney(totalPaid)}</span>
-            <span>{Math.round(progress)}%</span>
+          <div className="flex items-center justify-between gap-2 text-[11px] text-muted-foreground">
+            <span>{t('fees.stats.totalFees')}: {majorMoney(netAmount)}</span>
+            <span className="shrink-0">{Math.round(progress)}%</span>
           </div>
         </div>
       </> : (

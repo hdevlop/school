@@ -1,6 +1,14 @@
 import { z } from 'zod';
 import { academicYearField, optionalDateField, optionalId, requiredId, money } from '../../../shared/fields';
 import { feeStatusEnum, scheduleEnum } from '../../../shared/enums';
+import { isDateOnly } from '@sms/contracts/academic-years';
+
+export const addOccasionalChargeDto = z.object({
+  date: z.string().refine(isDateOnly, 'Expected a real YYYY-MM-DD date'),
+  amount: money().positive('Amount must be positive'),
+  requestId: z.uuid(),
+}).strict();
+export type AddOccasionalChargeDto = z.infer<typeof addOccasionalChargeDto>;
 
 const feeSchema = z.object({
   id: optionalId,
@@ -47,6 +55,7 @@ export const feeIdParam = z.object({ id: z.string().min(1) });
 export const studentIdParam = z.object({ studentId: z.string().min(1) });
 export const listFeesQueryDto = z.object({
   schedule: scheduleEnum.optional(),
+  tuitionPayment: z.literal('paidInFull').optional(),
   classId: z.string().min(1).optional(),
   sectionId: z.string().min(1).optional(),
 });

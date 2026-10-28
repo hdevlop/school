@@ -108,6 +108,7 @@ const PERSISTED_ENUMS: Partial<Record<EnumKey, readonly string[]>> = {
   paymentMethod: [
                    'cash',
                    'bankTransfer',
+                   'bankDeposit',
                    'check',
                    'creditCard',
                    'debitCard',
@@ -119,7 +120,7 @@ const PERSISTED_ENUMS: Partial<Record<EnumKey, readonly string[]>> = {
   payslipStatus: ['pending', 'paid', 'cancelled'],
   refuelStatus: ['pending', 'completed', 'cancelled'],
   relationshipType: ['father', 'mother', 'guardian', 'stepparent', 'grandparent', 'other'],
-  schedule: ['monthly', 'quarterly', 'semester', 'annually', 'oneTime'],
+  schedule: ['monthly', 'quarterly', 'semester', 'annually', 'oneTime', 'occasional'],
   sectionStatus: ['active', 'inactive', 'archived'],
   shift: ['morning', 'afternoon', 'evening', 'fullDay'],
   staffStatus: ['active', 'inactive', 'onLeave', 'suspended', 'terminated'],

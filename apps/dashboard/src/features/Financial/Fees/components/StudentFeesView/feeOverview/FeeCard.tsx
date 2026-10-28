@@ -34,10 +34,10 @@ const FeeCard = ({ data }: { data: any }) => {
   const overdueCount = fee.installments?.filter((s) => s.isOverdue).length || 0;
   const style = statusStyles[overdueCount > 0 ? 'overdue' : fee.status] || statusStyles.pending;
 
-  const discountAmount = Number(fee.baseAmount ?? 0) - Number(fee.netAmount ?? 0);
+  const discountAmount = Number(fee.discountAmount ?? fee.discount ?? 0);
   const hasDiscount = discountAmount > 0;
   const balance = Number(fee.balance) || 0;
-  const isFullyPaid = balance <= 0;
+  const isFullyPaid = balance <= 0 && !(fee.schedule === 'occasional' && installmentsCount === 0);
   const progressPercentage = fee.netAmount > 0 ? (fee.paidAmount / fee.netAmount) * 100 : 0;
 
   const card = (

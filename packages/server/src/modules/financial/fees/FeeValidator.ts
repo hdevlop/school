@@ -3,6 +3,8 @@ import { FeeRepository } from './FeeRepository';
 import { StudentValidator } from '../../students/StudentValidator';
 import { FeeTypeValidator } from '../feeTypes/FeeTypeValidator';
 import { FeeEffectiveDateError, isValidDateOnly, toCents } from '../utils';
+import { getBusinessDate } from '../../../shared/businessDate';
+import { formatDateOnly } from '../utils/dateOnly';
 
 @Service()
 export class FeeValidator {
@@ -31,6 +33,35 @@ export class FeeValidator {
 
   ensureWritableYear(year: { status: string }, role?: string) {
     if (role && year.status === 'draft') Err(409, this.t('draftYear'));
+  }
+
+  ensureOccasionalDiscount(schedule: string, discount?: number | string | null) {
+    if (schedule === 'occasional' && toCents(discount ?? 0) !== 0) Err(422, this.t('occasionalDiscount'));
+  }
+
+  ensureOccasionalHistoryUnchanged(fee: any, data: any) {
+    if ((data.studentId !== undefined && data.studentId !== fee.studentId)
+      || (data.effectiveDate !== undefined && data.effectiveDate !== fee.effectiveDate)
+      || (data.academicYear !== undefined && data.academicYear !== fee.academicYear)) {
+      Err(409, this.t('occasionalHistoryLocked'));
+    }
+  }
+
+  ensureOccasionalConversionAllowed(fee: { schedule: string; installments?: unknown; totalInstallments?: unknown }) {
+    if (fee.schedule === 'occasional' && ((Array.isArray(fee.installments) && fee.installments.length > 0) || Number(fee.totalInstallments) > 0)) {
+      Err(409, this.t('occasionalHistoryLocked'));
+    }
+  }
+
+  ensureOccasionalCharge(fee: { schedule: string; status: string; effectiveDate?: string | null }, date: string,
+    year: { reportingStartsOn: string; reportingEndsOn: string }, enrollment: { enrolledOn: string; leftOn: string | null } | null) {
+    if (fee.schedule !== 'occasional' || fee.status === 'cancelled') Err(409, this.t('occasionalOnly'));
+    if (!isValidDateOnly(date) || date > formatDateOnly(getBusinessDate())
+      || date < year.reportingStartsOn || date > year.reportingEndsOn
+      || !enrollment || date < enrollment.enrolledOn || (enrollment.leftOn && date >= enrollment.leftOn)
+      || (fee.effectiveDate && date < fee.effectiveDate)) {
+      Err(422, this.t('occasionalDate'));
+    }
   }
 
   ensureSelectedFeeYear(academicYear: string | undefined, selectedYear: string) {

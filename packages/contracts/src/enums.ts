@@ -230,7 +230,7 @@ export type FeeCategory = (typeof FEE_CATEGORY_VALUES)[number];
 export const PAYMENT_TYPE_VALUES = ['recurring', 'oneTime'] as const;
 export type PaymentType = (typeof PAYMENT_TYPE_VALUES)[number];
 
-export const SCHEDULE_VALUES = ['monthly', 'quarterly', 'semester', 'annually', 'oneTime'] as const;
+export const SCHEDULE_VALUES = ['monthly', 'quarterly', 'semester', 'annually', 'oneTime', 'occasional'] as const;
 export type Schedule = (typeof SCHEDULE_VALUES)[number];
 
 export const FEE_STATUS_VALUES = ['pending', 'partiallyPaid', 'paid', 'overdue'] as const;
@@ -248,6 +248,7 @@ export type FeeInstallmentStatus = (typeof FEE_INSTALLMENT_STATUS_VALUES)[number
 export const PAYMENT_METHOD_VALUES = [
   'cash',
   'bankTransfer',
+  'bankDeposit',
   'check',
   'creditCard',
   'debitCard',

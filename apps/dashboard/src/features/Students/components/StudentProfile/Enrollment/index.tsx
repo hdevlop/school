@@ -93,12 +93,12 @@ export default function EnrollmentPanel({ studentId, showHistory = true }: { stu
   const openEnd = (current: EnrollmentPlacement) => {
     if (!targetEnrollment) return;
     openDialog({
-      title: t('students.enrollment.end'),
+      title: t('students.enrollment.disable'),
       children: <EndEnrollmentForm current={current} />,
       width: 'xl',
       primaryButton: {
         form: 'student-end-enrollment-form',
-        text: t('students.enrollment.endAction'),
+        text: t('students.enrollment.disable'),
         onClick: (values) => run(
           () => withAcademicYear(targetEnrollment.academicYear.label, () => end({ enrollmentId: targetEnrollment.id, ...values })),
           t('students.enrollment.ended'),
@@ -148,7 +148,7 @@ export default function EnrollmentPanel({ studentId, showHistory = true }: { stu
               </NButton>
               <NButton type="button" size="sm" variant="outline" className="gap-2" onClick={() => openEnd(openPlacement)}>
                 <LogOut className="h-4 w-4" />
-                {t('students.enrollment.end')}
+                {t('students.enrollment.disable')}
               </NButton>
             </>
           )}

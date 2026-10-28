@@ -67,7 +67,7 @@ const SimpleFeeFormContent = ({ fee, feeTypes, isEditMode }) => {
    const feeTypeAmount = selectedFeeType?.amount || 0
    const paymentType = fee?.paymentType || selectedFeeType?.paymentType || 'recurring'
 
-   const isScheduleDisabled = paymentType === 'oneTime'
+   const isOccasional = schedule === 'occasional'
 
    useEffect(() => {
       if (feeTypeId && selectedFeeType && !baseAmount) {
@@ -77,7 +77,7 @@ const SimpleFeeFormContent = ({ fee, feeTypes, isEditMode }) => {
 
    useEffect(() => {
       if (feeTypeId && selectedFeeType) {
-         if (paymentType === 'oneTime' && schedule !== 'oneTime') {
+         if (paymentType === 'oneTime' && schedule !== 'oneTime' && schedule !== 'occasional') {
             setValue(f('schedule'), 'oneTime')
             return
          }
@@ -87,7 +87,11 @@ const SimpleFeeFormContent = ({ fee, feeTypes, isEditMode }) => {
       }
    }, [baseAmount, schedule, discountAmount, selectedFeeType, paymentType, f, feeTypeId, setValue, fee])
 
-   const scheduleOptions = buildScheduleOptions(t)
+   useEffect(() => {
+      if (isOccasional && discountAmount) setValue(f('discountAmount'), 0)
+   }, [isOccasional, discountAmount, f, setValue])
+
+   const scheduleOptions = buildScheduleOptions(t).filter(option => paymentType !== 'oneTime' || ['oneTime', 'occasional'].includes(option.value))
 
    // Shown, never sent: feeSchema has no `status`, so the server keeps
    // deriving it from the installments and the payments against them.
@@ -123,21 +127,23 @@ const SimpleFeeFormContent = ({ fee, feeTypes, isEditMode }) => {
                   name='baseAmount'
                   type='number'
                   icon={DollarSign}
-                  formLabel={t('fees.form.amount') || 'Amount'}
+                  formLabel={t(isOccasional ? 'fees.occasional.unitPrice' : 'fees.form.amount')}
                   placeholder="0"
                   required={true}
                />
 
-               <FormInput
-                  name='schedule'
-                  type='select'
-                  icon={CalendarClock}
-                  formLabel={t('fees.form.schedule')}
-                  placeholder={t('fees.form.schedulePlaceholder')}
-                  items={scheduleOptions}
-                  required={true}
-                  disabled={isScheduleDisabled}
-               />
+               <div className="flex flex-col gap-1">
+                  <FormInput
+                     name='schedule'
+                     type='select'
+                     icon={CalendarClock}
+                     formLabel={t('fees.form.schedule')}
+                     placeholder={t('fees.form.schedulePlaceholder')}
+                     items={scheduleOptions}
+                     required={true}
+                  />
+                  {isOccasional && <p className="text-xs text-muted-foreground">{t('fees.occasional.hint')}</p>}
+               </div>
             </div>
 
             {/* Discount Amount and Status - 2 Columns */}
@@ -147,6 +153,7 @@ const SimpleFeeFormContent = ({ fee, feeTypes, isEditMode }) => {
                   type='number'
                   icon={BadgeMinus}
                   formLabel={t('fees.form.discountAmount')}
+                  disabled={isOccasional}
                   placeholder={t('fees.form.discountAmountPlaceholder')}
                />
 

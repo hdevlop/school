@@ -151,6 +151,7 @@ export const getFeeDiscountPerPeriod = (fee: {
   schedule?: string; baseAmount?: string | number; grossAmount?: string | number; discountAmount?: string | number;
   discount?: string | number; paymentType?: string;
 }) => {
+  if (fee.schedule === 'occasional') return 0;
   const periods = fee.schedule === 'oneTime' || fee.paymentType === 'oneTime' ? 1
     : Math.max(1, Math.round(Number(fee.grossAmount || 0) / Number(fee.baseAmount || 1)));
   return Math.round(getFeeDiscountAmount(fee) * 100 / periods) / 100;
@@ -168,6 +169,7 @@ export const prepareFeeEdit = (fee: any, values: any) => {
 
 /** The edit cannot change billing dates; retain the saved chargeable month count. */
 export const getFeeEditNetAmount = (fee: any, values: any) => {
+  if (values.schedule === 'occasional') return fee.schedule === 'occasional' ? Number(fee.netAmount || 0) : 0;
   const changes = prepareFeeEdit(fee, values);
   if (changes.baseAmount === undefined && changes.schedule === undefined && changes.discountAmount === undefined) {
     return Number(fee.netAmount || 0);
@@ -224,6 +226,9 @@ export const calculateFeeAmounts = (
   discount: number = 0,
   context: FeePreviewContext = {},
 ) => {
+  if (schedule === 'occasional') {
+    return { grossAmount: 0, totalDiscount: 0, netAmount: 0, periods: 0, monthsRemaining: 0 };
+  }
   const baseAmount = Number(amount) || 0;
   const discountVal = Number(discount) || 0;
 
@@ -306,7 +311,7 @@ export const getAcademicYearDateRange = (): { startDate; endDate } => {
   };
 };
 
-export type ScheduleType = 'monthly' | 'quarterly' | 'semester' | 'annually' | 'oneTime';
+export type ScheduleType = 'monthly' | 'quarterly' | 'semester' | 'annually' | 'oneTime' | 'occasional';
 
 export interface PreviewInstallment {
   number: number;
@@ -334,6 +339,7 @@ export function getScheduleConfig(type: ScheduleType, start: Date, end: Date): {
   const months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
 
   switch (type) {
+    case 'occasional': return { count: 0, interval: 0 };
     case 'monthly':   return { count: months, interval: 1 };
     case 'quarterly': return { count: Math.ceil(months / 3), interval: 3 };
     case 'semester':  return { count: Math.ceil(months / 6), interval: 6 };
@@ -347,6 +353,7 @@ export function buildInstallmentsPreview(
   schedule: ScheduleType,
   context: FeePreviewContext = {},
 ): PreviewInstallment[] {
+  if (schedule === 'occasional') return [];
   const { startDate, endDate } = getPreviewRange(context);
   const reference = context.effectiveDate ? parseDateOnlyLocal(context.effectiveDate) : parseDateOnlyLocal(startDate);
   const start = resolveAcademicPeriodStart(parseDateOnlyLocal(startDate), parseDateOnlyLocal(endDate), reference);

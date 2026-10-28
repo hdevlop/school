@@ -11,6 +11,7 @@ import { CalendarClock, CheckCircle2, ChevronDown, CreditCard, MoreVertical } fr
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import FeeCategoryIcon from '../../FeeCategoryIcon';
+import { OccasionalChargeButton } from '../../OccasionalChargeButton';
 import InstallmentDetails from '@/features/Financial/Installment/components/InstallmentDetails';
 import { UPCOMING_STATUS_COLOR, displayInstallmentStatus } from '@/features/Financial/Installment/config/installmentStatus';
 import { isInstallmentPayable } from '@/features/Financial/Payment/store/paymentStore';
@@ -44,10 +45,10 @@ export function MobileFeesList({ fees, initialOpenFeeId = null, feeMenu, onPayIn
 
   // Fees still owed first, overdue ones at the top; fully paid fees fold away.
   const { owed, paid } = useMemo(() => {
-    const owedFees = fees.filter((fee) => feeBalance(fee) > 0);
+    const owedFees = fees.filter((fee) => feeBalance(fee) > 0 || fee.schedule === 'occasional');
     return {
       owed: [...owedFees].sort((a, b) => Number(overdueCount(b) > 0) - Number(overdueCount(a) > 0)),
-      paid: fees.filter((fee) => feeBalance(fee) <= 0),
+      paid: fees.filter((fee) => feeBalance(fee) <= 0 && fee.schedule !== 'occasional'),
     };
   }, [fees]);
 
@@ -194,6 +195,8 @@ function FeeRow({ fee, open, onToggle, menu, onPayInstallment }: {
       </div>
 
       {open && (
+        <div>
+        {fee.schedule === 'occasional' && <div className="border-t p-3"><OccasionalChargeButton fee={fee} /></div>}
         <ul className="divide-y border-t">
           {installments.map((installment: any) => {
             const payable = isInstallmentPayable(installment);
@@ -244,6 +247,7 @@ function FeeRow({ fee, open, onToggle, menu, onPayInstallment }: {
             );
           })}
         </ul>
+        </div>
       )}
     </div>
   );
