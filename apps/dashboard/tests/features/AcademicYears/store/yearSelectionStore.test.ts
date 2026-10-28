@@ -14,20 +14,20 @@ function memoryStorage() {
 const session = memoryStorage();
 const local = memoryStorage();
 const hadWindow = 'window' in globalThis;
+const previousWindow = globalThis.window;
 (globalThis as any).window = { sessionStorage: session, localStorage: local };
 
 const { selectedYearLabel, useYearSelectionStore } = await import('@/features/AcademicYears/store/yearSelectionStore');
-const { captureRequestHeaders } = await import('@/lib/requestHeaders');
 const { selectionStorageKey } = await import('@/features/AcademicYears/utils/yearSelection');
 
 const store = () => useYearSelectionStore.getState();
 const key = selectionStorageKey('user-1');
 
 afterAll(() => {
-  // The store stays bound as the default header source for this process;
-  // idle, it adds no header to other suites' requests.
+  // Leave no selected year or browser storage behind for other suites.
   store().clear();
-  if (!hadWindow) delete (globalThis as any).window;
+  if (hadWindow) (globalThis as any).window = previousWindow;
+  else delete (globalThis as any).window;
 });
 
 beforeEach(() => {
@@ -92,12 +92,32 @@ describe('the tab viewing-year owner', () => {
     expect(local.values.get(key)).toBeUndefined();
   });
 
-  it('sends the selection as the default X-Academic-Year header of requests started outside a scope', () => {
-    expect(captureRequestHeaders()['X-Academic-Year']).toBeUndefined();
-    store().initialize({ accountId: 'user-1', canChooseYear: true });
-    expect(captureRequestHeaders()['X-Academic-Year']).toBe('2026-2027');
-    store().select('2025-2026');
-    expect(captureRequestHeaders()['X-Academic-Year']).toBe('2025-2026');
+  it('sends the selection as the default X-Academic-Year header of requests started outside a scope', async () => {
+    // Binding happens on the first browser import. Other suites may already
+    // have imported the store without a window or replaced the header source.
+    const child = Bun.spawn([process.execPath, '--eval', `
+      const storage = () => ({ getItem: () => null, setItem: () => {}, removeItem: () => {} });
+      globalThis.window = { sessionStorage: storage(), localStorage: storage() };
+      const { useYearSelectionStore } = await import(${JSON.stringify(new URL('../../../../src/features/AcademicYears/store/yearSelectionStore.ts', import.meta.url).href)});
+      const { captureRequestHeaders } = await import(${JSON.stringify(new URL('../../../../src/lib/requestHeaders.ts', import.meta.url).href)});
+      const store = useYearSelectionStore.getState;
+      const year = () => captureRequestHeaders()['X-Academic-Year'] ?? null;
+      const headers = [year()];
+      store().setActiveLabel('2026-2027');
+      store().initialize({ accountId: 'user-1', canChooseYear: true });
+      headers.push(year());
+      store().select('2025-2026');
+      headers.push(year());
+      store().clear();
+      headers.push(year());
+      process.stdout.write(JSON.stringify(headers));
+    `], { stdout: 'pipe', stderr: 'pipe' });
+    const [stdout, stderr, code] = await Promise.all([
+      new Response(child.stdout).text(), new Response(child.stderr).text(), child.exited,
+    ]);
+    expect(stderr).toBe('');
+    expect(code).toBe(0);
+    expect(JSON.parse(stdout)).toEqual([null, '2026-2027', '2025-2026', null]);
   });
 
   it('forgets the account and holds reads again after sign-out', () => {
