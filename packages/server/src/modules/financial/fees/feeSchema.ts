@@ -1,4 +1,4 @@
-import { date, integer, pgEnum, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
+import { date, index, integer, pgEnum, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
 
 import {
   assignedByRef,
@@ -48,6 +48,8 @@ export const feeInstallments = pgTable('fee_installments', {
   paidAmount: moneyField('paid_amount').default('0'),
   status: feeInstallmentStatusEnum('status').default('pending').notNull(),
   ...timestamps,
-});
+}, (table) => ({
+  feeIdx: index('fee_installments_fee_idx').on(table.feeId),
+}));
 
 export const feeInstallmentRef = createRef('installment_id', () => feeInstallments.id);

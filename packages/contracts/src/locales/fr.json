@@ -940,7 +940,7 @@
       "employeeCodeExists": "Un membre du personnel avec ce code existe déjà",
       "cinExists": "Un membre du personnel avec ce CIN existe déjà",
       "emailRequiredForLogin": "Un e-mail est requis pour créer un accès",
-      "roleHasNoAppAccess": "Ce rôle ne donne pas accès à l'application",
+      "roleHasNoAppAccess": "Ce poste ne donne pas accès à l'application",
       "loginBeyondActor": "Vous ne pouvez attribuer, modifier ou supprimer qu'un compte dont vous détenez vous-même les accès",
       "driverLicenseRequired": "Le profil de permis de conduire est requis",
       "driverFieldRequired": "Le champ {{field}} du chauffeur est requis",
@@ -961,13 +961,13 @@
       "total": "Total du personnel",
       "payroll": "Masse Salariale",
       "activeRoles": "Personnel actif",
-      "uniqueRoles": "Rôles distincts",
+      "uniqueRoles": "Postes distincts",
       "nonTeaching": "Personnel non-enseignant actif"
     },
     "table": {
       "name": "Nom",
       "employeeCode": "Code Employé",
-      "role": "Rôle",
+      "role": "Intitulé du poste",
       "cin": "CIN",
       "phone": "Téléphone",
       "salary": "Salaire",
@@ -977,9 +977,9 @@
     },
     "filters": {
       "search": "Rechercher par nom ou code...",
-      "filterByRole": "Filtrer par rôle",
+      "filterByRole": "Filtrer par poste",
       "filterByCategory": "Filtrer par catégorie",
-      "manageRoles": "Gérer les rôles"
+      "manageRoles": "Gérer les postes"
     },
     "roles": {
       "teacher": "Enseignant",
@@ -989,7 +989,7 @@
       "secretary": "Secrétaire",
       "receptionist": "Réceptionniste",
       "accountant": "Comptable",
-      "supervisor": "Surveillant général",
+      "supervisor": "Surveillant",
       "librarian": "Bibliothécaire",
       "itSupport": "Support IT",
       "assistant": "Assistant",
@@ -1034,7 +1034,7 @@
       "phonePlaceholder": "Saisir le numéro de téléphone",
       "emailPlaceholder": "Saisir l'e-mail",
       "statusPlaceholder": "Sélectionner le statut",
-      "rolePlaceholder": "Sélectionner le rôle",
+      "rolePlaceholder": "Sélectionner le poste",
       "genderPlaceholder": "Sélectionner le genre",
       "cinPlaceholder": "Saisir la CIN",
       "employeeCodePlaceholder": "Saisir le code de l'employé",
@@ -1062,7 +1062,9 @@
       "shift": "Horaire",
       "startDate": "Date de début",
       "vehicle": "Véhicule",
-      "zone": "Zone"
+      "zone": "Zone",
+      "jobTitleSearchPlaceholder": "Rechercher un poste...",
+      "noJobTitlesFound": "Aucun poste trouvé."
     },
     "dialogs": {
       "createTitle": "Créer un membre du personnel",
@@ -1098,7 +1100,7 @@
       "phoneInvalid": "Numéro de téléphone invalide",
       "emailInvalid": "Adresse e-mail invalide",
       "addressRequired": "L'adresse est obligatoire",
-      "roleRequired": "Le rôle est obligatoire",
+      "roleRequired": "Le poste est obligatoire",
       "dateInvalid": "Saisissez une date valide",
       "numberInvalid": "Saisissez un nombre valide",
       "positiveNumber": "Doit être supérieur à zéro",
@@ -1123,17 +1125,17 @@
   },
   "staffRoles": {
     "success": {
-      "retrieved": "Rôles du personnel récupérés avec succès",
-      "created": "Rôle du personnel créé avec succès",
-      "updated": "Rôle du personnel mis à jour avec succès",
-      "deleted": "Rôle du personnel désactivé avec succès"
+      "retrieved": "Postes récupérés avec succès",
+      "created": "Poste créé avec succès",
+      "updated": "Poste mis à jour avec succès",
+      "deleted": "Poste désactivé avec succès"
     },
     "errors": {
-      "notFound": "Rôle du personnel introuvable",
-      "codeExists": "Un rôle du personnel avec ce code existe déjà",
-      "invalidRole": "Rôle invalide ou inactif",
-      "systemRoleInUse": "Les rôles système ne peuvent pas être supprimés",
-      "invalidCode": "Code de rôle invalide"
+      "notFound": "Poste introuvable",
+      "codeExists": "Un poste avec ce code existe déjà",
+      "invalidRole": "Poste invalide ou inactif",
+      "systemRoleInUse": "Les postes système ne peuvent pas être supprimés",
+      "invalidCode": "Code de poste invalide"
     },
     "table": {
       "code": "Code",
@@ -1143,7 +1145,7 @@
       "system": "Système"
     },
     "form": {
-      "addNewRole": "Ajouter un nouveau rôle",
+      "addNewRole": "Ajouter un poste",
       "code": "Code",
       "codePlaceholder": "ex. counselor",
       "label": "Libellé par défaut",
@@ -1160,12 +1162,12 @@
       "active": "Actif"
     },
     "dialogs": {
-      "createTitle": "Créer un rôle du personnel",
-      "createButton": "Créer le rôle",
-      "editTitle": "Modifier le rôle du personnel",
-      "updateButton": "Mettre à jour",
-      "deleteButton": "Désactiver le rôle",
-      "manageTitle": "Gérer les rôles du personnel"
+      "createTitle": "Créer un poste",
+      "createButton": "Créer le poste",
+      "editTitle": "Modifier le poste",
+      "updateButton": "Mettre à jour le poste",
+      "deleteButton": "Désactiver le poste",
+      "manageTitle": "Gérer les postes"
     },
     "categories": {
       "teaching": "Enseignement",
@@ -3132,9 +3134,9 @@
       "update": "Mettre à jour cette fiche de paie ?"
     },
     "staffRoles": {
-      "create": "Créer ce rôle du personnel ?",
-      "update": "Mettre à jour ce rôle du personnel ?",
-      "delete": "Désactiver ce rôle du personnel ? Les rôles utilisés sont désactivés, pas supprimés."
+      "create": "Créer ce poste ?",
+      "update": "Mettre à jour ce poste ?",
+      "delete": "Désactiver ce poste ? Les postes utilisés sont désactivés, pas supprimés."
     },
     "alerts": {
       "create": "Créer cette alerte ?",

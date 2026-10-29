@@ -153,8 +153,8 @@ function FeeRow({ fee, open, onToggle, menu, onPayInstallment }: {
               />
             </span>
             <span className="min-w-0 flex-1 truncate font-semibold text-foreground">{fee.name}</span>
-            <span className={cn('shrink-0 font-bold tabular-nums', isPaid ? 'text-emerald-700' : 'text-red-600')}>
-              {majorMoney(isPaid ? fee.paidAmount : balance)}
+            <span className="shrink-0 font-bold text-black tabular-nums">
+              {t('installments.paidAmount', { amount: majorMoney(fee.paidAmount ?? 0) })}
             </span>
             <ChevronDown className={cn('h-4 w-4 shrink-0 text-muted-foreground transition-transform', open && 'rotate-180')} />
           </span>

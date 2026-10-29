@@ -12,7 +12,7 @@ const ROLES = [
   { code: 'secretary',    label: 'Secretary',       labels: { fr: 'Secrétaire', ar: 'سكرتير', es: 'Secretario' },                     category: 'administration', sortOrder: 31, isSystem: false },
   { code: 'receptionist', label: 'Receptionist',    labels: { fr: 'Réceptionniste', ar: 'موظف الاستقبال', es: 'Recepcionista' },      category: 'administration', sortOrder: 32, isSystem: false },
   { code: 'accountant',   label: 'Accountant',      labels: { fr: 'Comptable', ar: 'محاسب', es: 'Contable' },                         category: 'administration', sortOrder: 33, isSystem: false },
-  { code: 'supervisor',   label: 'General Supervisor', labels: { fr: 'Surveillant général', ar: 'الحارس العام', es: 'Supervisor general' }, category: 'administration', sortOrder: 34, isSystem: false },
+  { code: 'supervisor',   label: 'Supervisor', labels: { fr: 'Surveillant', ar: 'مشرف', es: 'Supervisor' }, category: 'administration', sortOrder: 34, isSystem: false },
   { code: 'librarian',    label: 'Librarian',       labels: { fr: 'Bibliothécaire', ar: 'أمين المكتبة', es: 'Bibliotecario' },         category: 'support',        sortOrder: 40, isSystem: false },
   { code: 'itSupport',    label: 'IT Support',      labels: { fr: 'Support informatique', ar: 'دعم تقني', es: 'Soporte informático' }, category: 'support',        sortOrder: 41, isSystem: false },
   { code: 'assistant',    label: 'Assistant',       labels: { fr: 'Assistant', ar: 'مساعد', es: 'Asistente' },                        category: 'support',        sortOrder: 42, isSystem: false },

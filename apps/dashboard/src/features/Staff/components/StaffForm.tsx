@@ -25,7 +25,7 @@ import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 const FormInput = (props: ComponentProps<typeof KitFormInput>) => {
   const form = useFormContext();
   const touched = useRef(false);
-  const discrete = ['select', 'multiselect', 'date', 'switch'].includes(props.type);
+  const discrete = ['select', 'combobox', 'multiselect', 'date', 'switch'].includes(props.type);
   return (
     <div className="contents" onBlurCapture={(event) => {
       if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
@@ -304,8 +304,9 @@ const PersonalStep = ({ form, lockedRole, onRoleChange }) => {
           <FormInput name="employeeCode" type="text" formLabel={t('staff.table.employeeCode')} placeholder={t('staff.form.employeeCodePlaceholder')} icon={Hash} />
           <FormInput name="cin" type="text" formLabel={t('staff.table.cin')} placeholder={t('staff.form.cinPlaceholder')} icon={IdCard} required />
           <FormInput name="gender" type="select" formLabel={t('staff.form.gender')} placeholder={t('staff.form.genderPlaceholder')} items={genderOptions} icon={UserRound} />
-          <FormInput name="role" type="select" formLabel={t('staff.table.role')} placeholder={t('staff.form.rolePlaceholder')} items={roleOptions} icon={Briefcase} required disabled={lockedRole}
-            dropdownClassName="[&_[data-radix-select-viewport]]:h-auto [&_[data-radix-select-viewport]]:max-h-[min(18rem,var(--radix-select-content-available-height))]"
+          <FormInput name="role" type="combobox" formLabel={t('staff.table.role')} placeholder={t('staff.form.rolePlaceholder')} items={roleOptions} icon={Briefcase} required disabled={lockedRole}
+            searchPlaceholder={t('staff.form.jobTitleSearchPlaceholder')}
+            emptyMessage={t('staff.form.noJobTitlesFound')}
           />
           <FormInput name="status" type="select" formLabel={t('staff.table.status')} placeholder={t('staff.form.statusPlaceholder')} items={statusOptions} icon={Activity} required />
         </div>

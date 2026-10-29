@@ -2797,7 +2797,7 @@
       "employeeCodeExists": "A staff member with this employee code already exists",
       "cinExists": "A staff member with this CIN already exists",
       "emailRequiredForLogin": "Email is required to create a staff login",
-      "roleHasNoAppAccess": "This staff role does not grant app access",
+      "roleHasNoAppAccess": "This job title does not grant app access",
       "loginBeyondActor": "You can only give, change or remove a login whose access you hold yourself",
       "driverLicenseRequired": "Driver license profile is required",
       "driverFieldRequired": "Driver {{field}} is required",
@@ -2818,13 +2818,13 @@
       "total": "Total Staff",
       "payroll": "Total Payroll",
       "activeRoles": "Active Staff",
-      "uniqueRoles": "Distinct Roles",
+      "uniqueRoles": "Distinct job titles",
       "nonTeaching": "Active Non-Teaching Staff"
     },
     "table": {
       "name": "Name",
       "employeeCode": "Employee Code",
-      "role": "Role",
+      "role": "Job title",
       "cin": "CIN",
       "phone": "Phone",
       "salary": "Salary",
@@ -2834,9 +2834,9 @@
     },
     "filters": {
       "search": "Search by name or code...",
-      "filterByRole": "Filter by role",
+      "filterByRole": "Filter by job title",
       "filterByCategory": "Filter by category",
-      "manageRoles": "Manage Roles",
+      "manageRoles": "Manage job titles",
       "manageScopes": "Scopes"
     },
     "roles": {
@@ -2847,7 +2847,7 @@
       "secretary": "Secretary",
       "receptionist": "Receptionist",
       "accountant": "Accountant",
-      "supervisor": "General Supervisor",
+      "supervisor": "Supervisor",
       "librarian": "Librarian",
       "itSupport": "IT Support",
       "assistant": "Assistant",
@@ -2898,7 +2898,7 @@
       "phonePlaceholder": "Enter phone number",
       "emailPlaceholder": "Enter email",
       "statusPlaceholder": "Select status",
-      "rolePlaceholder": "Select role",
+      "rolePlaceholder": "Select job title",
       "genderPlaceholder": "Select gender",
       "cinPlaceholder": "Enter CIN",
       "employeeCodePlaceholder": "Enter employee code",
@@ -2931,7 +2931,9 @@
       "createLogin": "Create a login account",
       "email": "Email",
       "password": "Password",
-      "passwordPlaceholder": "Leave blank for default password"
+      "passwordPlaceholder": "Leave blank for default password",
+      "jobTitleSearchPlaceholder": "Search job titles...",
+      "noJobTitlesFound": "No job titles found."
     },
     "dialogs": {
       "createTitle": "Create Staff Member",
@@ -2961,7 +2963,7 @@
       "phoneInvalid": "Invalid phone number",
       "emailInvalid": "Invalid email address",
       "addressRequired": "Address is required",
-      "roleRequired": "Role is required",
+      "roleRequired": "Job title is required",
       "dateInvalid": "Enter a valid date",
       "numberInvalid": "Enter a valid number",
       "positiveNumber": "Must be greater than zero",
@@ -2986,17 +2988,17 @@
   },
   "staffRoles": {
     "success": {
-      "retrieved": "Staff roles retrieved successfully",
-      "created": "Staff role created successfully",
-      "updated": "Staff role updated successfully",
-      "deleted": "Staff role deactivated successfully"
+      "retrieved": "Job titles retrieved successfully",
+      "created": "Job title created successfully",
+      "updated": "Job title updated successfully",
+      "deleted": "Job title deactivated successfully"
     },
     "errors": {
-      "notFound": "Staff role not found",
-      "codeExists": "A staff role with this code already exists",
-      "invalidRole": "Invalid or inactive role",
-      "systemRoleInUse": "System roles cannot be removed",
-      "invalidCode": "Invalid role code"
+      "notFound": "Job title not found",
+      "codeExists": "A job title with this code already exists",
+      "invalidRole": "Invalid or inactive job title",
+      "systemRoleInUse": "System job titles cannot be removed",
+      "invalidCode": "Invalid job title code"
     },
     "table": {
       "code": "Code",
@@ -3006,7 +3008,7 @@
       "system": "System"
     },
     "form": {
-      "addNewRole": "Add new role",
+      "addNewRole": "Add job title",
       "code": "Code",
       "codePlaceholder": "e.g. counselor",
       "label": "Default Label",
@@ -3023,12 +3025,12 @@
       "active": "Active"
     },
     "dialogs": {
-      "createTitle": "Create Staff Role",
-      "createButton": "Create Role",
-      "editTitle": "Edit Staff Role",
-      "updateButton": "Update Role",
-      "deleteButton": "Deactivate Role",
-      "manageTitle": "Manage Staff Roles"
+      "createTitle": "Create job title",
+      "createButton": "Create job title",
+      "editTitle": "Edit job title",
+      "updateButton": "Update job title",
+      "deleteButton": "Deactivate job title",
+      "manageTitle": "Manage job titles"
     },
     "categories": {
       "teaching": "Teaching",
@@ -5788,9 +5790,9 @@
       "update": "Update this payroll record?"
     },
     "staffRoles": {
-      "create": "Create this staff role?",
-      "update": "Update this staff role?",
-      "delete": "Deactivate this staff role? Roles in use are deactivated, not deleted."
+      "create": "Create this job title?",
+      "update": "Update this job title?",
+      "delete": "Deactivate this job title? Job titles in use are deactivated, not deleted."
     },
     "alerts": {
       "create": "Create this alert?",

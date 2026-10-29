@@ -2396,9 +2396,9 @@
       "update": "¿Actualizar esta nómina?"
     },
     "staffRoles": {
-      "create": "¿Crear este rol del personal?",
-      "update": "¿Actualizar este rol del personal?",
-      "delete": "¿Desactivar este rol del personal? Los roles en uso se desactivan, no se eliminan."
+      "create": "¿Crear este puesto?",
+      "update": "¿Actualizar este puesto?",
+      "delete": "¿Desactivar este puesto? Los puestos en uso se desactivan, no se eliminan."
     },
     "alerts": {
       "create": "¿Crear esta alerta?",
@@ -3880,7 +3880,7 @@
       "employeeCodeExists": "Ya existe un miembro del personal con este código de empleado",
       "cinExists": "Ya existe un miembro del personal con este CIN",
       "emailRequiredForLogin": "Se requiere un correo electrónico para crear un acceso",
-      "roleHasNoAppAccess": "Este rol no da acceso a la aplicación",
+      "roleHasNoAppAccess": "Este puesto no da acceso a la aplicación",
       "loginBeyondActor": "Solo puede otorgar, cambiar o eliminar un acceso cuyos permisos usted mismo tiene",
       "driverLicenseRequired": "Se requiere el perfil del permiso de conducir",
       "driverFieldRequired": "El campo {{field}} del conductor es obligatorio",
@@ -3901,13 +3901,13 @@
       "total": "Total Personal",
       "payroll": "Nómina Total",
       "activeRoles": "Personal Activo",
-      "uniqueRoles": "Roles Distintos",
+      "uniqueRoles": "Puestos distintos",
       "nonTeaching": "Personal No Docente Activo"
     },
     "table": {
       "name": "Nombre",
       "employeeCode": "Código de Empleado",
-      "role": "Rol",
+      "role": "Puesto",
       "cin": "CIN",
       "phone": "Teléfono",
       "salary": "Salario",
@@ -3917,9 +3917,9 @@
     },
     "filters": {
       "search": "Buscar por nombre o código...",
-      "filterByRole": "Filtrar por rol",
+      "filterByRole": "Filtrar por puesto",
       "filterByCategory": "Filtrar por categoría",
-      "manageRoles": "Gestionar Roles"
+      "manageRoles": "Gestionar puestos"
     },
     "roles": {
       "teacher": "Profesor",
@@ -3929,7 +3929,7 @@
       "secretary": "Secretario(a)",
       "receptionist": "Recepcionista",
       "accountant": "Contador",
-      "supervisor": "Supervisor general",
+      "supervisor": "Supervisor",
       "librarian": "Bibliotecario",
       "itSupport": "Soporte IT",
       "assistant": "Asistente",
@@ -3974,7 +3974,7 @@
       "phonePlaceholder": "Introduce el teléfono",
       "emailPlaceholder": "Introduce el correo",
       "statusPlaceholder": "Selecciona el estado",
-      "rolePlaceholder": "Selecciona el rol",
+      "rolePlaceholder": "Selecciona el puesto",
       "genderPlaceholder": "Selecciona el género",
       "cinPlaceholder": "Introduce el CIN",
       "employeeCodePlaceholder": "Introduce el código de empleado",
@@ -4002,7 +4002,9 @@
       "shift": "Turno",
       "startDate": "Fecha de inicio",
       "vehicle": "Vehículo",
-      "zone": "Zona"
+      "zone": "Zona",
+      "jobTitleSearchPlaceholder": "Buscar puestos...",
+      "noJobTitlesFound": "No se encontraron puestos."
     },
     "dialogs": {
       "createTitle": "Crear miembro del personal",
@@ -4038,7 +4040,7 @@
       "phoneInvalid": "Número de teléfono no válido",
       "emailInvalid": "Correo electrónico no válido",
       "addressRequired": "La dirección es obligatoria",
-      "roleRequired": "El rol es obligatorio",
+      "roleRequired": "El puesto es obligatorio",
       "dateInvalid": "Introduce una fecha válida",
       "numberInvalid": "Introduce un número válido",
       "positiveNumber": "Debe ser mayor que cero",
@@ -4063,17 +4065,17 @@
   },
   "staffRoles": {
     "success": {
-      "retrieved": "Roles del personal recuperados con éxito",
-      "created": "Rol del personal creado con éxito",
-      "updated": "Rol del personal actualizado con éxito",
-      "deleted": "Rol del personal desactivado con éxito"
+      "retrieved": "Puestos recuperados con éxito",
+      "created": "Puesto creado con éxito",
+      "updated": "Puesto actualizado con éxito",
+      "deleted": "Puesto desactivado con éxito"
     },
     "errors": {
-      "notFound": "Rol del personal no encontrado",
-      "codeExists": "Ya existe un rol del personal con este código",
-      "invalidRole": "Rol inválido o inactivo",
-      "systemRoleInUse": "Los roles del sistema no se pueden eliminar",
-      "invalidCode": "Código de rol no válido"
+      "notFound": "Puesto no encontrado",
+      "codeExists": "Ya existe un puesto con este código",
+      "invalidRole": "Puesto inválido o inactivo",
+      "systemRoleInUse": "Los puestos del sistema no se pueden eliminar",
+      "invalidCode": "Código de puesto no válido"
     },
     "table": {
       "code": "Código",
@@ -4083,7 +4085,7 @@
       "system": "Sistema"
     },
     "form": {
-      "addNewRole": "Añadir nuevo rol",
+      "addNewRole": "Añadir puesto",
       "code": "Código",
       "codePlaceholder": "ej. counselor",
       "label": "Etiqueta por defecto",
@@ -4100,12 +4102,12 @@
       "active": "Activo"
     },
     "dialogs": {
-      "createTitle": "Crear Rol del Personal",
-      "createButton": "Crear Rol",
-      "editTitle": "Editar Rol del Personal",
-      "updateButton": "Actualizar",
-      "deleteButton": "Desactivar Rol",
-      "manageTitle": "Gestionar Roles del Personal"
+      "createTitle": "Crear puesto",
+      "createButton": "Crear puesto",
+      "editTitle": "Editar puesto",
+      "updateButton": "Actualizar puesto",
+      "deleteButton": "Desactivar puesto",
+      "manageTitle": "Gestionar puestos"
     },
     "categories": {
       "teaching": "Docencia",

@@ -75,18 +75,18 @@ const FeeCard = ({ data }: { data: any }) => {
         />
       </div>
 
-      {/* Compact Balance + Stats Row */}
+      {/* Compact Paid Amount + Stats Row */}
       <div className="flex items-center justify-between">
         <div className="flex min-w-0 items-center">
           {isFullyPaid ? (
-            <NBadge look='solid' color='success' className="gap-1.5">
+            <NBadge look='solid' color='success' className="gap-1.5 text-black">
               <CheckCircle2 className="h-4 w-4" />
               <span className="font-semibold">{t('fees.status.paid')}</span>
-              {majorMoney(fee.paidAmount)}
+              {majorMoney(fee.paidAmount ?? 0)}
             </NBadge>
           ) : (
-            <Label className="text-md font-bold text-red-600 tabular-nums">
-              {majorMoney(fee.balance)}
+            <Label className="text-md font-bold text-black tabular-nums">
+              {t('installments.paidAmount', { amount: majorMoney(fee.paidAmount ?? 0) })}
             </Label>
           )}
         </div>
