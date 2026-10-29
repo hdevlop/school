@@ -4,12 +4,13 @@ import { ClassService } from '../../src/modules/classes/ClassService';
 import type { ClassRepository } from '../../src/modules/classes/ClassRepository';
 import type { ClassValidator } from '../../src/modules/classes/ClassValidator';
 import type { SettingsRepository } from '../../src/modules/settings/SettingsRepository';
+import type { SectionService } from '../../src/modules/sections/SectionService';
 
 test('class count reuses the validated selected-year roster and returns zero for a successful empty read', async () => {
   const validate = mock(async (_id: string) => undefined);
   const roster = mock(async (_id: string) => [{ id: 'a' }, { id: 'b' }]);
   const service = new ClassService({ getClassStudents: roster } as unknown as ClassRepository,
-    { ensureInSelectedYear: validate } as unknown as ClassValidator, {} as SettingsRepository);
+    { ensureInSelectedYear: validate } as unknown as ClassValidator, {} as SettingsRepository, {} as SectionService);
   expect(await service.getStudentCount('selected-class')).toEqual({ count: 2 });
   expect(validate).toHaveBeenCalledWith('selected-class');
   expect(roster).toHaveBeenCalledWith('selected-class');
@@ -21,7 +22,7 @@ test('an inaccessible or wrong-year class fails before counting its roster', asy
   const roster = mock(async () => []);
   const service = new ClassService({ getClassStudents: roster } as unknown as ClassRepository,
     { ensureInSelectedYear: async () => { throw new Error('Class unavailable in selected scope'); } } as unknown as ClassValidator,
-    {} as SettingsRepository);
+    {} as SettingsRepository, {} as SectionService);
   await expect(service.getStudentCount('outside-class')).rejects.toThrow('Class unavailable in selected scope');
   expect(roster).not.toHaveBeenCalled();
 });

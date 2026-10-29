@@ -25,7 +25,7 @@ describe('class naming at the API boundary', () => {
       ensureExistsByName: async (name: string) => { expect(name).toBe('1APG'); return { id: 'class', name: 'CP' }; },
     } as any, {
       getPublicSettings: async () => ({ currentAcademicYear: '2026-2027' }),
-    } as any);
+    } as any, {} as any);
     expect((await service.getStudentsByName('1APG', 'A')).map(student => student.id)).toEqual(['student']);
     expect(calls).toEqual([['CP', 'A', '2026-2027']]);
   });

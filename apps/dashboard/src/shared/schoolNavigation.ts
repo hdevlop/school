@@ -26,6 +26,16 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
 
   const routine: GatedNavItem = { id: '/class-routines', label: tf('navigation.classRoutines', 'Routine'), icon: FEATURE_ICONS.classRoutines, href: '/class-routines', access: 'classRoutines' };
   const notifications: GatedNavItem = { id: '/notifications', label: t('notifications.inbox'), icon: FEATURE_ICONS.notifications, href: '/notifications' };
+  const evaluations: GatedNavItem = {
+    id: 'evaluations',
+    label: t('navigation.evaluations'),
+    icon: FEATURE_ICONS.evaluations,
+    children: [
+      { id: '/assessments', label: t('navigation.assessments'), icon: FEATURE_ICONS.assessments, href: '/assessments', access: 'assessments' },
+      { id: '/exam-planning', label: t('navigation.assessmentPlanning'), icon: FEATURE_ICONS.assessmentPlanning, href: '/exam-planning', access: 'exams' },
+      { id: '/exams', label: t('navigation.exams'), icon: FEATURE_ICONS.exams, href: '/exams', access: 'exams' },
+    ],
+  };
 
   if (isFamily && !allFeatures) {
     return [
@@ -47,8 +57,7 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
           { id: '/discipline', label: t('navigation.discipline'), icon: FEATURE_ICONS.discipline, href: '/discipline', access: 'discipline' },
         ],
       },
-      { id: '/assessments', label: t('navigation.assessments'), icon: FEATURE_ICONS.assessments, href: '/assessments', access: 'assessments' },
-      { id: '/exams', label: t('navigation.exams'), icon: FEATURE_ICONS.exams, href: '/exams', access: 'exams' },
+      evaluations,
       { id: '/calendar', label: t('navigation.calendar'), icon: FEATURE_ICONS.calendar, href: '/calendar', access: 'calendar' },
       routine,
       notifications,
@@ -94,8 +103,7 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
         { id: '/behavior-rewards', label: t('navigation.behaviorRewardsShort'), icon: FEATURE_ICONS.behaviorRewards, href: '/behavior-rewards', access: 'behaviorRewards' },
       ],
     },
-    { id: '/assessments', label: t('navigation.assessments'), icon: FEATURE_ICONS.assessments, href: '/assessments', access: 'assessments' },
-    { id: '/exams', label: t('navigation.exams'), icon: FEATURE_ICONS.exams, href: '/exams', access: 'exams' },
+    evaluations,
     { id: '/grades', label: t('navigation.grades'), icon: FEATURE_ICONS.grades, href: '/grades', access: 'grades' },
     { id: '/calendar', label: t('navigation.calendar'), icon: FEATURE_ICONS.calendar, href: '/calendar', access: 'calendar' },
     routine,

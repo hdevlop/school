@@ -76,3 +76,10 @@ apps/dashboard/playwright-report/
 apps/dashboard/playwright/.auth/
 # Local security audit evidence and pre-fix snapshots.
 .security-audit/
+
+# Local planning experiments and captures; retain the reusable design references.
+/work/*
+!/work/visualizations/
+/work/visualizations/*
+!/work/visualizations/assessment-planning.html
+!/work/visualizations/assessment-planning-preview.html

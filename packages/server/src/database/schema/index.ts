@@ -207,6 +207,7 @@ export {
   rolloverRunStatusEnum,
 } from '../../modules/financial/rollover/rolloverSchema';
 export { schoolLanding } from '../../modules/landing/LandingSchema';
+export { examPlanning } from '../../modules/examPlanning/ExamPlanningSchema';
 export { visitRequests, visitRequestStatusEnum } from '../../modules/visitRequests/VisitRequestSchema';
 // Chatbot settings and sessions belong to najm-chatbot; RAG tables come
 // from najm-rag below.

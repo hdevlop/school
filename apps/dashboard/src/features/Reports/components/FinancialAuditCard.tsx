@@ -53,8 +53,8 @@ const FinancialAuditCard: React.FC<{ className?: string }> = ({ className = '' }
       onRetry={() => refetch()}
     >
       <div className="mb-3 flex justify-end">
-        <NButton size="sm" variant="outline" disabled={isFetching} onClick={() => refetch()}>
-          <RefreshCw className="me-2 h-4 w-4" />{t('common.refresh')}
+        <NButton size="sm" variant="outline" disabled={isFetching} onClick={() => refetch()} leftIcon={<RefreshCw className="h-4 w-4" />}>
+          {t('common.refresh')}
         </NButton>
       </div>
       <div className="max-h-96 overflow-auto rounded-lg border">

@@ -18,8 +18,7 @@ export function FeesPrintButton({ loading }: { loading: boolean }) {
       title={action.label}
       disabled={loading}
       onClick={() => action.onSelect?.()}
-    >
-      <Printer aria-hidden="true" className="size-4" />
-    </NButton>
+      leftIcon={<Printer className="size-4" />}
+    />
   );
 }

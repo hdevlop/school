@@ -55,8 +55,8 @@ export default function DisciplineDetails({
             variant={resolved ? 'secondary' : 'default'}
             loading={resolving}
             onClick={resolved ? onReopen : onResolve}
+            leftIcon={resolved ? <RotateCcw className="h-4 w-4" /> : <ShieldCheck className="h-4 w-4" />}
           >
-            {resolved ? <RotateCcw className="h-4 w-4" /> : <ShieldCheck className="h-4 w-4" />}
             {resolved ? t('discipline.dialogs.reopenButton') : t('discipline.dialogs.resolveButton')}
           </NButton>
         )}

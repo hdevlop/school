@@ -72,9 +72,8 @@ function StudentsPrintButton({ loading }: { loading: boolean }) {
       aria-label={printAction.label}
       title={printAction.label}
       onClick={() => printAction.onSelect?.()}
-    >
-      <Printer aria-hidden="true" className="h-4 w-4 text-primary" />
-    </NButton>
+      leftIcon={<Printer className="h-4 w-4 text-primary" />}
+    />
   );
 }
 

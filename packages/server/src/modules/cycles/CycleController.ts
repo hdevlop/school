@@ -55,7 +55,7 @@ export class CycleController {
   @Delete('/:id')
   @Can('delete:cycles')
   @Validate({ params: cycleIdParam })
-  @McpTool({ description: 'Delete a school cycle', confirm: { level: 'danger', message: 'confirm.cycles.delete' } })
+  @McpTool({ description: 'Delete a school cycle and its classes and empty sections across all school years', confirm: { level: 'danger', message: 'confirm.cycles.delete' } })
   @ResMsg('cycles.success.deleted')
   async delete(@Params('id') id: string) {
     return this.cycleService.delete(id);

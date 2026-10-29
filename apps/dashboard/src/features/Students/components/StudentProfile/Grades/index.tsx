@@ -229,8 +229,7 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
       />
       {canEdit && (
         <div className="flex shrink-0 justify-end border-t border-slate-200 bg-white pt-3">
-          <NButton type="button" onClick={handleSaveAll} disabled={isSaving || !changedGrades.length}>
-            <Save className="mr-2 h-4 w-4" />
+          <NButton type="button" onClick={handleSaveAll} disabled={isSaving || !changedGrades.length} loading={isSaving} leftIcon={<Save className="h-4 w-4" />}>
             {t('common.save')}
           </NButton>
         </div>

@@ -2,7 +2,7 @@
 
 import { NButton, SimpleTooltip } from 'najm-kit';
 
-import { Loader2, Send, Users, CheckCircle2, XCircle, Clock3, CircleDashed } from 'lucide-react';
+import { Send, Users, CheckCircle2, XCircle, Clock3, CircleDashed } from 'lucide-react';
 import { cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 
@@ -69,13 +69,13 @@ export default function RosterHeader({
       {stats.pending > 0 && <span role="status" className="order-last basis-full text-end text-xs text-amber-700 dark:text-amber-300">{t('attendance.roster.unsavedMarks', { count: stats.pending })}</span>}
       <NButton
         onClick={onSubmit}
+        loading={isSubmitting}
+        leftIcon={<Send className="h-4 w-4" />}
         disabled={isSubmitting || !hasChanges || !canSubmit}
         aria-label={title}
         title={title}
         className="h-10 w-10 shrink-0 cursor-pointer p-0 disabled:cursor-not-allowed"
-      >
-        {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-      </NButton>
+      />
     </div>
   );
 }

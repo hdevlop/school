@@ -25,3 +25,9 @@ test('the shell draws the online sidebar groups, icons and current labels for pr
 test('family roles keep their own sidebar labels', () => {
   expect(createShellNavItems(t, 'parent', [{ href: '/students', label: 'Students' }])).toMatchObject([{ href: '/students', label: 'navigation.myChildren' }]);
 });
+
+test('the evaluations group only includes pages actually prepared offline', () => {
+  const items = createShellNavItems(t, 'teacher', [{ href: '/assessments', label: 'Assessments' }, { href: '/exams', label: 'Exams' }]);
+  expect(items.find(item => item.id === 'evaluations')?.children?.map(item => item.href)).toEqual(['/assessments', '/exams']);
+  expect(navLabel(items, '/exam-planning')).toBeUndefined();
+});

@@ -21,6 +21,7 @@ import { localDateInput } from 'najm-kit/format'
 import { useAcademicYearOptions, useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear'
 import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYear'
 import { eligibleAssessmentTeachers } from '../config/assessmentTeachers'
+import type { AssessmentPlanning } from '@sms/contracts';
 
 const AssessmentTeacherSelect = () => {
   const { t } = useTranslation();
@@ -105,7 +106,7 @@ const SectionsMultiselect = ({ initialClassId }) => {
 const mergeDescriptionAndInstructions = (description?: string, instructions?: string) =>
   [description, instructions].filter(Boolean).join('\n\n');
 
-const AssessmentForm = ({ assessment = null }) => {
+const AssessmentForm = ({ assessment = null, defaultPlanning }: { assessment?: any; defaultPlanning?: AssessmentPlanning }) => {
   const { t } = useTranslation();
   const assessmentSchema = useMemo(() => createAssessmentSchema(t), [t]);
   const { pop } = useDialog();
@@ -160,6 +161,7 @@ const AssessmentForm = ({ assessment = null }) => {
     const sectionIds = [...new Set((formData.sectionIds || []).filter(Boolean))];
     pop({
       ...formData,
+      ...(!assessment?.id && defaultPlanning ? { planning: defaultPlanning } : {}),
       instructions: '',
       sectionIds,
       sectionId: sectionIds[0] || undefined,

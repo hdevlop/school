@@ -17,6 +17,7 @@ export const assessmentSelect = {
   teacherAssignmentId: assessments.teacherAssignmentId,
   title: assessments.title,
   description: assessments.description,
+  planning: assessments.planning,
   type: assessments.type,
   totalMarks: assessments.totalMarks,
   passingMarks: assessments.passingMarks,
@@ -71,6 +72,17 @@ export class AssessmentRepository {
           id: sections.id,
           name: sections.name,
         },
+        targetSections: sql<{ id: string; name: string; classId: string }[]>`(
+          SELECT COALESCE(jsonb_agg(jsonb_build_object(
+            'id', target_section.id, 'name', target_section.name, 'classId', target_section.class_id
+          ) ORDER BY target_section.name), '[]'::jsonb)
+          FROM sections AS target_section
+          WHERE target_section.id = ANY(
+            CASE WHEN jsonb_array_length(COALESCE(${assessments.sectionIds}, '[]'::jsonb)) > 0
+              THEN ARRAY(SELECT jsonb_array_elements_text(${assessments.sectionIds}))
+              ELSE ARRAY[${teacherAssignments.sectionId}] END
+          )
+        )`,
       })
       .from(assessments)
       .leftJoin(teacherAssignments, eq(assessments.teacherAssignmentId, teacherAssignments.id))

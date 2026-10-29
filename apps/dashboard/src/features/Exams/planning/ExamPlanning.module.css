@@ -1,0 +1,125 @@
+@font-face {
+  font-family: PlanningArabic;
+  src: url('/fonts/assessment-planning/FreeSerif.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+.page {
+  --planning-bg: var(--background);
+  --planning-panel: var(--card);
+  --planning-text: var(--foreground);
+  --planning-muted: var(--muted-foreground);
+  --planning-line: var(--border);
+  --planning-accent: var(--primary);
+  --planning-selected: var(--accent);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  gap: 16px;
+}
+
+.page *, .page *::before, .page *::after { box-sizing: border-box; }
+.main { color: var(--planning-text); font: 14px/1.5 var(--font-sans); }
+.main button, .main input, .main select, .main textarea { font-family: inherit; }
+.main button { cursor: pointer; }
+.main button:disabled { cursor: default; opacity: .5; }
+.main button:focus-visible, .main input:focus-visible, .main select:focus-visible, .main textarea:focus-visible {
+  outline: 2px solid var(--planning-accent);
+  outline-offset: 3px;
+}
+.main svg { width: 17px; height: 17px; flex-shrink: 0; }
+
+.scrollArea { flex: 1; min-height: 0; min-width: 0; }
+.main { padding: 0 0 16px; }
+.toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-bottom: 8px; margin-bottom: 17px; }
+.toolbarControls { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; min-width: 0; }
+.toolbarActions { display: flex; align-items: center; flex-wrap: wrap; min-width: 0; gap: 8px; }
+.dateFilters { display: flex; flex-wrap: wrap; gap: 16px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.dateField { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.dateField > span { font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.classRow { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+.classButton { display: inline-flex; align-items: center; gap: 7px; padding: 7px 11px; border: var(--border-width, 1px) solid var(--planning-line); border-radius: var(--radius); background: var(--planning-panel); color: var(--planning-muted); font-size: 12px; line-height: 18px; }
+.classButton:hover:not(:disabled) { border-color: var(--planning-accent); }
+.classButton[aria-pressed='true'] { border-color: var(--planning-accent); color: var(--planning-accent); box-shadow: inset 0 0 0 .5px var(--planning-accent); }
+.dot { width: 7px; height: 7px; flex-shrink: 0; border-radius: 50%; }
+.editorLayout { display: grid; grid-template-columns: minmax(0,1.3fr) minmax(0,.9fr); gap: 17px; align-items: start; }
+.schedules { min-width: 0; }
+.scheduleGroup + .scheduleGroup { margin-top: 22px; }
+.sectionTitle { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; min-height: 20px; margin: 0 0 11px; }
+.sectionInfo { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.page .sectionTitle h2 { color: var(--planning-text); font: 700 13px/1.5 var(--font-sans); margin: 0; }
+.sectionTools { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-inline-start: auto; }
+.scheduleAction { font-size: 11px; }
+.secondary { font-size: 11px; font-weight: 400; color: var(--planning-muted); }
+.day { border: var(--border-width, 1px) solid var(--planning-line); border-radius: var(--radius); background: var(--planning-panel); margin-bottom: 10px; overflow: hidden; }
+.page .dayHeading { margin: 0; }
+.dayTitle { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 10px; padding: 9px 12px; border: 0; background: var(--planning-accent); color: var(--primary-foreground); font: 700 12px/1.5 var(--font-sans); text-align: start; }
+.dayTitle[aria-expanded='true'] { border-bottom: var(--border-width, 1px) solid var(--planning-line); }
+.main .dayTitle:focus-visible { outline-color: var(--primary-foreground); outline-offset: -3px; }
+.dayTools { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.dayTitle[aria-expanded='true'] .dayChevron { transform: rotate(180deg); }
+.dayTitle .secondary { color: inherit; }
+.entry { display: grid; grid-template-columns: minmax(0,1fr) 17px; align-items: center; width: 100%; gap: 10px; padding: 9px 12px; border: 0; border-bottom: var(--border-width, 1px) solid var(--planning-line); background: transparent; color: var(--planning-text); text-align: left; }
+.entry:last-child { border-bottom: 0; }
+.entry:hover:not(:disabled) { background: var(--planning-selected); }
+.entry[aria-pressed='true'] { background: var(--planning-selected); box-shadow: inset 3px 0 var(--planning-accent); }
+.entryLabel { display: block; font: 700 12px/1.5 var(--font-sans); overflow-wrap: anywhere; }
+.entryLabel[lang='ar'] { font: 700 17px/1.5 PlanningArabic, serif; }
+.entryTopic { display: block; margin-top: 2px; color: var(--planning-muted); font-size: 11px; }
+.entryArrow { width: 13px !important; height: 13px !important; color: var(--planning-muted); }
+.editPanel { position: sticky; top: 16px; min-width: 0; padding: 15px; border: var(--border-width, 1px) solid var(--planning-line); border-radius: var(--radius); background: var(--planning-panel); }
+.editHeading { display: flex; align-items: center; gap: 10px; min-width: 0; padding-bottom: 12px; border-bottom: var(--border-width, 1px) solid var(--planning-line); margin-bottom: 15px; }
+.editHeading svg { width: 13px; height: 13px; }
+.page .editSubject { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; color: var(--planning-text); font: 700 16px/1.5 var(--font-sans); margin: 0; }
+.page .editSubject[lang='ar'] { font: 700 21px/1.5 PlanningArabic, serif; }
+.editDate { display: flex; align-items: center; gap: 6px; flex: 0 1 auto; min-width: 0; overflow: hidden; color: var(--planning-muted); font-size: 11px; margin: 0; }
+.editDate > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fieldLabel { display: block; color: var(--planning-text); font-size: 12px; font-weight: 700; margin-bottom: 7px; }
+.fieldLabel [lang='ar'] { font: 400 16px/1.5 PlanningArabic, serif; margin-inline-start: 5px; }
+.page .lessonsInput { display: block; width: 100%; min-height: 215px; padding: 11px; resize: vertical; border: var(--border-width, 1px) solid var(--planning-line); border-radius: var(--radius); background: var(--planning-panel); color: var(--planning-text); font: 400 13px/1.7 var(--font-sans); }
+.page .lessonsInput[lang='ar'] { font: 400 18px/1.7 PlanningArabic, serif; }
+.fieldNote { color: var(--planning-muted); font-size: 11px; margin: 6px 0 15px; }
+.applyButton { font-size: 12px; white-space: normal; }
+.editorStatus { min-height: 18px; color: var(--planning-muted); font-size: 11px; margin: 10px 0 0; }
+.details { margin: 0 0 15px; border-top: var(--border-width, 1px) solid var(--planning-line); padding-top: 10px; }
+.detailFields { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: end; gap: 10px; margin-top: 12px; }
+.detailFields > div { min-width: 0; }
+.detailDate { grid-column: 1 / -1; }
+.editorActions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
+.textButton { padding: 0; border: 0; background: none; color: var(--planning-muted); font-size: 11px; }
+.deleteButton { margin-inline-end: auto; color: var(--destructive); }
+.paperStage { padding: 15px; border-radius: var(--radius); background: var(--muted); }
+.paperStage iframe { max-width: 794px; margin: 0 auto; border: 0; border-radius: 0; }
+.previewTip { color: var(--planning-muted); font-size: 11px; text-align: center; margin: 12px 0 0; }
+.empty { padding: 22px; border: 1px dashed var(--planning-line); border-radius: var(--radius); color: var(--planning-muted); font-size: 12px; }
+.alert { color: var(--destructive); background: var(--planning-panel); border: var(--border-width, 1px) solid var(--planning-line); border-radius: var(--radius); padding: 15px; font-size: 12px; }
+
+.page:dir(rtl) .entry { text-align: right; }
+.page:dir(rtl) .editSubject { text-align: left; }
+.page:dir(rtl) .entry[aria-pressed='true'] { box-shadow: inset -3px 0 var(--planning-accent); }
+.page:dir(rtl) .entryArrow { transform: rotate(180deg); }
+
+@media (max-width: 850px) {
+  .editorLayout { grid-template-columns: minmax(0,1fr); }
+  .editPanel { position: static; order: -1; }
+  .page .lessonsInput { min-height: 150px; }
+}
+@media (max-width: 620px) {
+  .toolbarControls { width: 100%; }
+  .toolbarActions { margin-inline-start: auto; }
+  .dateFilters { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; gap: 12px; }
+  .dateField { flex-direction: column; align-items: stretch; gap: 5px; }
+  .classButton { padding: 7px 9px; }
+  .paperStage { padding: 5px; }
+}
+@media (pointer: coarse) {
+  .main button { min-height: 44px; }
+  .page .lessonsInput { font-size: 16px; }
+}
+@media (max-width: 480px) {
+  .detailFields { grid-template-columns: minmax(0, 1fr); }
+}

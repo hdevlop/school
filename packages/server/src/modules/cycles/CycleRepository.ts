@@ -1,6 +1,6 @@
-import { and, eq, exists, or } from 'drizzle-orm';
+import { and, eq, exists, inArray, or } from 'drizzle-orm';
 import { DB } from '../../database/db';
-import { accountantAssignments, classes, cycles } from '../../database/schema';
+import { accountantAssignments, classes, cycles, sections } from '../../database/schema';
 import { Repository } from '../../najm';
 
 const cycleSelect = {
@@ -39,9 +39,35 @@ export class CycleRepository {
     return row || null;
   }
 
-  // A cycle is shared by every year. A class of any year, or an accountant's
-  // assignment, that names it keeps it; deleting it would quietly unlink past
-  // years' classes, or fail on the assignment.
+  async lockForMutation(id: string) {
+    await this.db.select({ id: cycles.id }).from(cycles)
+      .where(eq(cycles.id, id)).for('update');
+  }
+
+  // Cycle deletion is an explicit all-years operation on this shared catalog.
+  // Lock parents before children so new classes/sections cannot join midway.
+  async lockClassesForDeletion(cycleId: string) {
+    return this.db.select({ id: classes.id }).from(classes)
+      .where(eq(classes.cycleId, cycleId)).orderBy(classes.id).for('update');
+  }
+
+  async lockSectionsForDeletion(classIds: string[]) {
+    if (!classIds.length) return [];
+    return this.db.select({ id: sections.id }).from(sections)
+      .where(inArray(sections.classId, classIds)).orderBy(sections.id).for('update');
+  }
+
+  async deleteClassSections(classIds: string[]) {
+    if (!classIds.length) return;
+    await this.db.delete(sections).where(inArray(sections.classId, classIds));
+  }
+
+  async deleteClasses(cycleId: string) {
+    await this.db.delete(classes).where(eq(classes.cycleId, cycleId));
+  }
+
+  // Check after the class cascade: accountant assignments still protect the
+  // cycle, and no class may be left behind and silently unlinked.
   async isInUse(id: string) {
     const [row] = await this.db.select({ id: cycles.id }).from(cycles).where(and(eq(cycles.id, id), or(
       exists(this.db.select({ id: classes.id }).from(classes).where(eq(classes.cycleId, id))),

@@ -283,7 +283,7 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
         <p className="text-xs text-muted-foreground">{t('roleAccess.sessionsHint')}</p>
         <div className="flex justify-end gap-2">
           <Button variant="outline" onClick={() => setReview(false)} disabled={isSaving}>{t('common.cancel')}</Button>
-          <Button onClick={apply} disabled={isSaving}>{isSaving && <Loader2 className="size-4 animate-spin" />}{t('roleAccess.apply')}</Button>
+          <Button onClick={apply} disabled={isSaving} loading={isSaving}>{t('roleAccess.apply')}</Button>
         </div>
       </section>}
     </div>

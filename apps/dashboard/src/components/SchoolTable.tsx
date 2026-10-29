@@ -30,9 +30,8 @@ function DeleteSelection({ onDelete, loading, disabled }: { onDelete: (ids: stri
       title={label}
       disabled={disabled}
       onClick={disabled ? undefined : () => onDelete(ids)}
-    >
-      <Trash2 aria-hidden="true" className="size-5" />
-    </NButton>
+      leftIcon={<Trash2 className="size-5" />}
+    />
   );
 }
 

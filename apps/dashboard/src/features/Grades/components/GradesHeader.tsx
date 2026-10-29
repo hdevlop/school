@@ -1,4 +1,4 @@
-import { TrendingUp, TrendingDown, Target, Loader2, Send } from 'lucide-react';
+import { TrendingUp, TrendingDown, Target, Send } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { NButton, SimpleTooltip } from 'najm-kit';
 import { cn } from 'najm-kit';
@@ -81,12 +81,13 @@ export default function GradesHeader({
         ) : null}
         <NButton
           onClick={onSubmit}
+          loading={isSubmitting}
+          leftIcon={<Send className="h-4 w-4" />}
           disabled={isSubmitting || !hasChanges || !canSubmit}
           aria-label={title}
           title={title}
           className="h-auto min-h-10 shrink-0 cursor-pointer gap-2 px-3 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
           {title}
         </NButton>
       </div>

@@ -59,8 +59,7 @@ function FamilyLinkPicker({ target, linkedIds }: { target: LinkTarget; linkedIds
         disabled={isPending}
         className="w-full"
       />
-      <NButton type="button" loading={isPending} disabled={!options.some(option => option.value === selectedId)} onClick={() => mutateAsync()}>
-        <Link2 aria-hidden="true" className="size-4" />
+      <NButton type="button" loading={isPending} disabled={!options.some(option => option.value === selectedId)} onClick={() => mutateAsync()} leftIcon={<Link2 className="size-4" />}>
         {t(selectingStudent ? 'parents.profile.linkStudent' : 'parents.family.linkParent')}
       </NButton>
     </div>
@@ -102,15 +101,13 @@ export function FamilyUnlinkButton({ parentId, studentId, name }: { parentId: st
   if (!can('delete:parents')) return null;
   const label = t('parents.family.unlink');
   return (
-    <NButton type="button" variant="ghost" size="icon-sm" aria-label={`${label}: ${name}`} title={label} loading={isPending}
+    <NButton type="button" variant="ghost" size="icon-sm" aria-label={`${label}: ${name}`} title={label} loading={isPending} leftIcon={<Unlink className="size-4" />}
       onClick={() => confirmDelete({
         title: label,
         itemName: name,
         warningText: t('parents.family.unlinkWarning'),
         confirmText: label,
         onConfirm: () => mutateAsync(),
-      })}>
-      <Unlink aria-hidden="true" className="size-4" />
-    </NButton>
+      })} />
   );
 }

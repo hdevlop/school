@@ -1,5 +1,16 @@
 # Academic-year history implementation evidence
 
+## Cycle deletion cascade, 2026-10-29
+
+The owner requested that deleting a cycle also delete the classes and sections created under it. Cycles remain shared catalogs: this is an explicit operation across all school years, independent of the viewed year. Ordinary class and section operations retain their selected-year filters, and cycle MCP tools still have no year input.
+
+Cycle deletion locks the cycle, its classes and their sections in one transaction, reuses the class/section validators, then removes the sections, classes and cycle. Current students, historical placements, teacher/assistant assignments and accountant assignments remain protected; a refusal rolls back the whole operation. Unrelated cycles/classes stay intact. No schema, migration or package changes. Seed-container dependency declarations now match both the class and cycle deletion services.
+
+- Guarded local `school_history_test` catalog transport suite: **7 pass**, including REST/MCP cascades, classes in 2024-2025 and 2026-2027, historical-student protection and full rollback when an accountant still uses the cycle.
+- Class/section transport regressions: **9 pass**. Academic-year suite: **431 pass** after correcting the explicit seed dependencies.
+- Root lint, full workspace typecheck and isolated production build (`.next-cycle-deletion-20261029`) pass. Lint retains the existing ParentsTable hook-dependency warning.
+- No main-school data was changed by the regression tests. Fixture-created records were removed; the historical class temporarily linked for the refusal case was restored, including its previous update timestamp.
+
 ## Assistant selected-year transport and GPT-OSS acceptance, 2026-10-01
 
 The owner saved their OpenRouter key and confirmed a successful browser greeting with `openai/gpt-oss-120b`. Authenticated settings now reports enabled OpenRouter, that model and `hasKey:true`; no secret was read or printed. This supersedes the provider prerequisites in the earlier entries below.

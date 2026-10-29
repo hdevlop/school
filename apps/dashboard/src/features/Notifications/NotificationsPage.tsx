@@ -67,8 +67,8 @@ export default function NotificationsPage() {
             title={t('notifications.markAll')}
             disabled={list.isPending || list.isError || items.length === 0 || markAll.isPending}
             loading={markAll.isPending}
+            leftIcon={<CheckCheck size={16} />}
           >
-            <CheckCheck size={16} aria-hidden />
             <span className="max-sm:hidden">{t('notifications.markAll')}</span>
           </NButton>
           <PageHeaderGlobalActions />

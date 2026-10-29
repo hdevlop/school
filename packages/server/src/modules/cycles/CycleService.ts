@@ -1,14 +1,18 @@
 import { schoolCycleForLevel } from '@sms/contracts';
-import { Service } from '../../najm';
+import { Service, Transaction } from '../../najm';
 import { CycleRepository } from './CycleRepository';
 import { CycleValidator } from './CycleValidator';
 import type { CreateCycleDto, UpdateCycleDto } from './CycleDto';
+import { ClassValidator } from '../classes/ClassValidator';
+import { SectionValidator } from '../sections/SectionValidator';
 
 @Service()
 export class CycleService {
   constructor(
     private cycleRepository: CycleRepository,
     private cycleValidator: CycleValidator,
+    private classValidator: ClassValidator,
+    private sectionValidator: SectionValidator,
   ) {}
 
   async getAll() {
@@ -39,9 +43,24 @@ export class CycleService {
     return this.cycleRepository.update(id, data);
   }
 
-  // A cycle any year uses stays; deactivate it instead.
+  // A shared cycle owns its classes and sections across every school year.
+  // Reuse domain checks without changing the request's selected-year scope.
+  @Transaction()
   async delete(id: string) {
+    await this.cycleRepository.lockForMutation(id);
     await this.cycleValidator.ensureExists(id);
+    const classes = await this.cycleRepository.lockClassesForDeletion(id);
+    for (const schoolClass of classes) {
+      await this.classValidator.ensureHasNoStaff(schoolClass.id);
+    }
+    const classIds = classes.map(schoolClass => schoolClass.id);
+    const sections = await this.cycleRepository.lockSectionsForDeletion(classIds);
+    for (const section of sections) {
+      await this.sectionValidator.ensureHasNoStudents(section.id);
+      await this.sectionValidator.ensureHasNoAssignments(section.id);
+    }
+    await this.cycleRepository.deleteClassSections(classIds);
+    await this.cycleRepository.deleteClasses(id);
     await this.cycleValidator.ensureNotInUse(id);
     return this.cycleRepository.delete(id);
   }

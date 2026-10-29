@@ -337,10 +337,10 @@ export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, SubjectService, [SubjectRepository, SubjectValidator]);
 
   registerSeedDeps(seedContainer, ClassValidator, [ClassRepository, SettingsRepository]);
-  registerSeedDeps(seedContainer, ClassService, [ClassRepository, ClassValidator, SettingsRepository]);
+  registerSeedDeps(seedContainer, ClassService, [ClassRepository, ClassValidator, SettingsRepository, SectionService]);
 
   registerSeedDeps(seedContainer, CycleValidator, [CycleRepository]);
-  registerSeedDeps(seedContainer, CycleService, [CycleRepository, CycleValidator]);
+  registerSeedDeps(seedContainer, CycleService, [CycleRepository, CycleValidator, ClassValidator, SectionValidator]);
 
   registerSeedDeps(seedContainer, SectionValidator, [SectionRepository, ClassRepository, SettingsRepository]);
   registerSeedDeps(seedContainer, SectionService, [SectionRepository, SectionValidator, StudentEnrollmentService]);

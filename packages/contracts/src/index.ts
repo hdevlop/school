@@ -14,4 +14,7 @@ export * from './payroll';
 export * from './receipts';
 export * from './schoolDefaults';
 export * from './academicStructure';
+export * from './assessmentPlanning';
+export * from './examPlanning';
+export * from './examPlanningJson';
 export type { StudentFinancialImport, FinancialImportDateCorrection, FinancialImportDatePreview } from './financialImport';

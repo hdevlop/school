@@ -36,6 +36,12 @@ async function create(kind: keyof typeof created, path: string, year: string, bo
 const ids = (body: Record<string, any>) => (body.data as Array<{ id: string }>).map((row) => row.id);
 
 beforeAll(async () => {
+  const { db } = await import('../../src/database/db');
+  const { sql } = await import('drizzle-orm');
+  const [fixture] = await db.execute(sql`select current_database() as database,
+    (select id from school_history_fixture_marker) as marker`);
+  expect(fixture.database).toBe('school_history_test');
+  expect(fixture.marker).toBe('academic-history-alerts-v1');
   await server.listen(port);
   const login = await request('/auth/login', undefined, 'POST',
     { email: 'admin@history.example.test', password: adminPassword }, '');
@@ -149,5 +155,81 @@ describe('authenticated Classes, Sections and Class routines REST and MCP on the
     expect(await list('classes_get_classes', '2025-2026')).toContain(created.classes[0]);
     expect(await list('classes_get_classes', undefined, '2024-2025')).toEqual(['history-class-2024']);
     expect(await list('sections_get_sections', undefined, '2025-2026')).toContain(created.sections[0]);
+  });
+
+  it('deletes a class and its empty sections together, only in the selected year', async () => {
+    const klass = await create('classes', '/classes', '2025-2026', { name: 'Cascade class', level: 'Middle' });
+    expect(klass.status).toBe(200);
+    const id = klass.body.data.id as string;
+    const sectionIds: string[] = [];
+    for (const name of ['A', 'B']) {
+      const section = await create('sections', '/sections', '2025-2026', { classId: id, name });
+      expect(section.status).toBe(200);
+      sectionIds.push(section.body.data.id);
+    }
+
+    expect((await request(`/classes/${id}`, '2026-2027', 'DELETE')).status).toBe(404);
+    for (const sectionId of sectionIds) {
+      expect((await request(`/sections/${sectionId}`, '2025-2026')).status).toBe(200);
+    }
+    expect((await request(`/classes/${id}`, '2025-2026', 'DELETE')).status).toBe(200);
+    expect((await request(`/classes/${id}`, '2025-2026')).status).toBe(404);
+    for (const sectionId of sectionIds) {
+      expect((await request(`/sections/${sectionId}`, '2025-2026')).status).toBe(404);
+    }
+    expect((await request(`/sections/${created.sections[0]}`, '2025-2026')).status).toBe(200);
+  });
+
+  it('rolls back earlier section deletions when a later section still has an assigned teacher', async () => {
+    const klass = await create('classes', '/classes', '2025-2026', { name: 'Protected cascade class', level: 'Middle' });
+    expect(klass.status).toBe(200);
+    const classId = klass.body.data.id as string;
+    const sectionIds: string[] = [];
+    for (const name of ['A', 'B']) {
+      const section = await create('sections', '/sections', '2025-2026', { classId, name });
+      expect(section.status).toBe(200);
+      sectionIds.push(section.body.data.id);
+    }
+    sectionIds.sort((a, b) => a.localeCompare(b));
+    const { db } = await import('../../src/database/db');
+    const { teacherAssignments } = await import('../../src/database/schema');
+    const { eq } = await import('drizzle-orm');
+    const [existing] = await db.select().from(teacherAssignments)
+      .where(eq(teacherAssignments.id, 'history-assignment-2025'));
+    const [assignment] = await db.insert(teacherAssignments).values({
+      classId, sectionId: sectionIds[1], teacherId: existing.teacherId, subjectId: existing.subjectId,
+    }).returning();
+    try {
+      const refused = await request(`/classes/${classId}`, '2025-2026', 'DELETE');
+      expect(refused.status).toBe(409);
+      expect(refused.body.message).toContain('Assigned teachers or staff:');
+      expect((await request(`/classes/${classId}`, '2025-2026')).status).toBe(200);
+      for (const sectionId of sectionIds) {
+        expect((await request(`/sections/${sectionId}`, '2025-2026')).status).toBe(200);
+      }
+    } finally {
+      await db.delete(teacherAssignments).where(eq(teacherAssignments.id, assignment.id));
+    }
+  });
+
+  it('also removes sections when deleting a class over authenticated MCP', async () => {
+    const klass = await create('classes', '/classes', '2025-2026', { name: 'MCP cascade class', level: 'Middle' });
+    expect(klass.status).toBe(200);
+    const id = klass.body.data.id as string;
+    const section = await create('sections', '/sections', '2025-2026', { classId: id, name: 'A' });
+    expect(section.status).toBe(200);
+    const { Client } = await import('@modelcontextprotocol/sdk/client/index.js');
+    const { StreamableHTTPClientTransport } = await import('@modelcontextprotocol/sdk/client/streamableHttp.js');
+    const client = new Client({ name: 'school-class-deletion-test', version: '1.0.0' });
+    const transport = new StreamableHTTPClientTransport(new URL(`http://localhost:${port}/api/mcp`), {
+      requestInit: { headers: { Authorization: `Bearer ${adminToken}`, 'X-Academic-Year': '2025-2026' } },
+    });
+    await client.connect(transport);
+    try {
+      const result = await client.callTool({ name: 'classes_delete_by_id', arguments: { id } });
+      expect(result.isError).not.toBe(true);
+      expect((await request(`/classes/${id}`, '2025-2026')).status).toBe(404);
+      expect((await request(`/sections/${section.body.data.id}`, '2025-2026')).status).toBe(404);
+    } finally { await transport.close(); }
   });
 });

@@ -79,6 +79,8 @@ export const FEATURE_ICONS = {
   behaviorRewards: Award,
 
   assessments: ClipboardList,
+  evaluations: ClipboardList,
+  assessmentPlanning: CalendarRange,
   exams: FileText,
   grades: Award,
   calendar: CalendarDays,

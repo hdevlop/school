@@ -1,6 +1,17 @@
 import { z } from 'zod';
 import { dateField, num, optionalId, requiredId } from '../../shared/fields';
 import { assessmentStatusEnum, assessmentTypeEnum } from '../../shared/enums';
+import { ASSESSMENT_PLANNING_LIMITS as limits, REVISION_LANGUAGES } from '@sms/contracts';
+
+export const assessmentPlanningDto = z.object({
+  round: z.string().trim().min(1).max(limits.round),
+  semester: z.union([z.literal(1), z.literal(2)]),
+  groups: z.array(z.object({
+    label: z.string().trim().max(limits.label),
+    language: z.enum(REVISION_LANGUAGES),
+    lessons: z.array(z.string().trim().min(1).max(limits.lesson)).max(limits.lessons),
+  })).min(1).max(limits.groups),
+});
 
 const assessmentSchema = z.object({
   classId: requiredId,
@@ -11,6 +22,7 @@ const assessmentSchema = z.object({
   teacherAssignmentId: optionalId,
   title: z.string().min(3, 'Title must be at least 3 characters').max(200, 'Title too long'),
   description: z.string().max(1000, 'Description too long').optional().nullable(),
+  planning: assessmentPlanningDto.nullish(),
   type: assessmentTypeEnum.default('quiz'),
   date: dateField,
   duration: num().int().min(1, 'Duration must be at least 1 minute').max(480, 'Duration cannot exceed 8 hours'),

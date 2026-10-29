@@ -4,6 +4,7 @@ import { createRef, idField, numericField, timestamps } from '../../database/sha
 import { getEnumValues } from '../../shared/enums';
 import { teacherAssignmentRef } from '../teachers/teacherSchema';
 import { academicYears } from '../academicYears/AcademicYearSchema';
+import type { AssessmentPlanning } from '@sms/contracts';
 
 export const assessmentTypeEnum = pgEnum('assessmentType', getEnumValues('assessmentType'));
 export const assessmentStatusEnum = pgEnum('assessmentStatus', getEnumValues('assessmentStatus'));
@@ -23,6 +24,7 @@ export const assessments = pgTable('assessments', {
   instructions: text('instructions'),
   status: assessmentStatusEnum('status').notNull().default('scheduled'),
   sectionIds: jsonb('section_ids').$type<string[]>(),
+  planning: jsonb('planning').$type<AssessmentPlanning>(),
   ...timestamps,
 }, (table) => [index('assessments_year_date_idx').on(table.academicYearId, table.date)]);
 

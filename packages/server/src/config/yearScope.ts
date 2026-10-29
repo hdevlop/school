@@ -7,6 +7,7 @@ import { ClassController } from '../modules/classes/ClassController';
 import { ClassRoutineController } from '../modules/classRoutines/ClassRoutineController';
 import { DisciplineController } from '../modules/discipline/DisciplineController';
 import { ExamController } from '../modules/exams/ExamController';
+import { ExamPlanningController } from '../modules/examPlanning/ExamPlanningController';
 import { SectionController } from '../modules/sections/SectionController';
 import { EventController } from '../modules/events/EventController';
 import { OperationsDashboardController } from '../modules/dashboard/operations/OperationsDashboardController';
@@ -67,6 +68,7 @@ export const yearScopedModules = {
   sections: SectionController,
   discipline: DisciplineController,
   exams: ExamController,
+  'exam-planning': ExamPlanningController,
   events: EventController,
   'operations-dashboard': OperationsDashboardController,
   parents: ParentController,

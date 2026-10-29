@@ -121,8 +121,8 @@ function SettingsFooter({ control, ready, saveFailed, onDiscard }: {
         >
           <RotateCcw className="h-4 w-4" aria-hidden />
         </NButton>
-        <PermissionButton permission="update:settings" type="submit" form={SETTINGS_FORM_ID} disabled={!ready || !isDirty || isSubmitting} loading={isSubmitting} loadingText={t('common.saving')}>
-          <Save className="h-4 w-4" aria-hidden />{t('settings.saveSettings')}
+        <PermissionButton permission="update:settings" type="submit" form={SETTINGS_FORM_ID} disabled={!ready || !isDirty || isSubmitting} loading={isSubmitting} loadingText={t('common.saving')} leftIcon={<Save className="h-4 w-4" />}>
+          {t('settings.saveSettings')}
         </PermissionButton>
       </div>
     </div>

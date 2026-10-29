@@ -58,8 +58,7 @@ export const PaymentRecordedPrompt = ({ payment, student }: PaymentRecordedPromp
           {t('common.close')}
         </NButton>
         {canPrint && (
-          <NButton onClick={handlePrint} loading={isReceiptLoading} disabled={isReceiptLoading} className="gap-2">
-            <Printer className="h-4 w-4" />
+          <NButton onClick={handlePrint} loading={isReceiptLoading} disabled={isReceiptLoading} className="gap-2" leftIcon={<Printer className="h-4 w-4" />}>
             {t('payments.dialogs.printReceipt')}
           </NButton>
         )}

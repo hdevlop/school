@@ -4,6 +4,7 @@ import { ClassRepository } from './ClassRepository';
 import { ClassValidator } from './ClassValidator';
 import type { CreateClassDto, CreateClassesBulkDto, UpdateClassDto } from './ClassDto';
 import { SettingsRepository } from '../settings/SettingsRepository';
+import { SectionService } from '../sections/SectionService';
 import { getCurrentAcademicYear } from '../financial/utils';
 
 @Service()
@@ -13,6 +14,7 @@ export class ClassService {
     private classRepository: ClassRepository,
     private classValidator: ClassValidator,
     private settingsRepository: SettingsRepository,
+    private sectionService: SectionService,
   ) { }
 
   // The selected year's classes. A class belongs to the year it was
@@ -101,8 +103,13 @@ export class ClassService {
   async delete(id: string) {
     await this.classValidator.ensureInSelectedYear(id);
     await this.classRepository.lockForMutation(id);
-    await this.classValidator.ensureHasNoSections(id);
     await this.classValidator.ensureHasNoStaff(id);
+    const sections = await this.classRepository.getClassSections(id);
+    // Reuse section deletion checks and roll back the whole class if any
+    // section still holds students, history or staff assignments.
+    for (const section of sections.sort((a, b) => a.id.localeCompare(b.id))) {
+      await this.sectionService.delete(section.id);
+    }
     return await this.classRepository.delete(id);
   }
 

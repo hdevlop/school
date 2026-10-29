@@ -283,8 +283,8 @@ function ClassRoutinePageForYear() {
               <h2 className="mt-4 text-lg font-semibold">{t('classRoutines.ui.empty.title')}</h2>
               <p className="mt-1 max-w-md text-sm text-muted-foreground">{t('classRoutines.ui.empty.description')}</p>
               {canCreate && sectionId ? (
-                <NButton className="mt-5" onClick={createRoutine} disabled={mutations.createSchedule.isPending}>
-                  <Plus className="h-4 w-4" /> {t('classRoutines.ui.actions.createRoutine')}
+                <NButton className="mt-5" onClick={createRoutine} disabled={mutations.createSchedule.isPending} leftIcon={<Plus className="h-4 w-4" />}>
+                  {t('classRoutines.ui.actions.createRoutine')}
                 </NButton>
               ) : null}
             </div>
