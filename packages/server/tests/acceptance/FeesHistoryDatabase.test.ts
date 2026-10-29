@@ -15,10 +15,32 @@ const { feeTypes } = await import('../../src/modules/financial/feeTypes/feeTypeS
 const { fees, feeInstallments } = await import('../../src/modules/financial/fees/feeSchema');
 const { payments } = await import('../../src/modules/financial/payments/paymentSchema');
 const { paymentAllocations } = await import('../../src/modules/financial/allocations/allocationSchema');
+const { academicYears } = await import('../../src/modules/academicYears/AcademicYearSchema');
 const { FeeRepository } = await import('../../src/modules/financial/fees/FeeRepository');
 const rollback = Symbol('rollback');
 
 describe('fee year scope on the marked PostgreSQL fixture', () => {
+  it('returns zero totals for a year without fees', async () => {
+    try {
+      await db.transaction(async (transaction) => {
+        const tx = transaction as unknown as typeof db;
+        await tx.insert(academicYears).values({
+          id: 'history-fee-summary-empty', label: '2098-2099', provenance: 'assumed',
+          instructionStartsOn: '2098-09-01', instructionEndsOn: '2099-06-30',
+          reportingStartsOn: '2098-09-01', reportingEndsOn: '2099-08-31', paymentCloseoutOn: '2099-08-31',
+        });
+        const { repo, inYear } = await scopedHistoryRepository(FeeRepository, tx);
+        const summary = await inYear('history-fee-summary-empty', () => repo.getSummary());
+        expect(Object.fromEntries(Object.entries(summary).map(([key, value]) => [key, Number(value)]))).toEqual({
+          collected: 0, cash: 0, check: 0, bankTransfer: 0, bankDeposit: 0, tpe: 0, overdue: 0,
+        });
+        throw rollback;
+      });
+    } catch (error) {
+      if (error !== rollback) throw error;
+    }
+  });
+
   it('limits student totals and receipt metrics to the selected payment schedule', async () => {
     try {
       await db.transaction(async (transaction) => {
@@ -101,6 +123,7 @@ describe('fee year scope on the marked PostgreSQL fixture', () => {
         const feeId = 'history-fee-asof';
         const read = async () => (await inYear('history-year-2026', () => repo.getAll(studentId)))[0];
         const before = await read();
+        const summaryBefore = await inYear('history-year-2026', () => repo.getSummary());
         await tx.insert(feeTypes).values({ id: 'history-type-asof', name: 'As-of-date fee',
           category: 'tuition', amount: '1300', paymentType: 'recurring', status: 'active' });
         await tx.insert(fees).values({ id: feeId, studentId, feeTypeId: 'history-type-asof',
@@ -115,6 +138,7 @@ describe('fee year scope on the marked PostgreSQL fixture', () => {
         const receipts = [
           { id: 'asof-received', status: 'completed' as const, paymentMethod: 'cash' as const, amount: '100', paymentDate: day(0), installmentId: 'asof-past' },
           { id: 'asof-advance', status: 'completed' as const, paymentMethod: 'bankTransfer' as const, amount: '70', paymentDate: day(-1), installmentId: 'asof-future' },
+          { id: 'asof-bank-deposit', status: 'completed' as const, paymentMethod: 'bankDeposit' as const, amount: '35.50', paymentDate: day(0), installmentId: 'asof-today' },
           { id: 'asof-full', status: 'completed' as const, paymentMethod: 'check' as const, amount: '100', paymentDate: day(-1), installmentId: 'asof-paid' },
           { id: 'asof-credit-card', status: 'completed' as const, paymentMethod: 'creditCard' as const, amount: '20', paymentDate: day(0), installmentId: 'asof-today' },
           { id: 'asof-debit-card', status: 'completed' as const, paymentMethod: 'debitCard' as const, amount: '30', paymentDate: day(0), installmentId: 'asof-today' },
@@ -141,19 +165,25 @@ describe('fee year scope on the marked PostgreSQL fixture', () => {
         })));
 
         const after = await read();
-        expect(Number(after.collectedToDate) - Number(before?.collectedToDate ?? 0)).toBe(360);
+        expect(Number(after.collectedToDate) - Number(before?.collectedToDate ?? 0)).toBe(395.5);
         expect(Number(after.collectedCashToDate) - Number(before?.collectedCashToDate ?? 0)).toBe(100);
         expect(Number(after.collectedCheckToDate) - Number(before?.collectedCheckToDate ?? 0)).toBe(100);
         expect(Number(after.collectedBankTransferToDate) - Number(before?.collectedBankTransferToDate ?? 0)).toBe(70);
+        expect(Number(after.collectedBankDepositToDate) - Number(before?.collectedBankDepositToDate ?? 0)).toBe(35.5);
         expect(Number(after.collectedTpeToDate) - Number(before?.collectedTpeToDate ?? 0)).toBe(50);
         expect(Number(after.collectedOnlineToDate) - Number(before?.collectedOnlineToDate ?? 0)).toBe(15);
         expect(Number(after.collectedMobilePaymentToDate) - Number(before?.collectedMobilePaymentToDate ?? 0)).toBe(25);
         const methodFields = ['collectedCashToDate', 'collectedCheckToDate', 'collectedBankTransferToDate',
-          'collectedTpeToDate', 'collectedOnlineToDate', 'collectedMobilePaymentToDate'] as const;
-        expect(methodFields.reduce((total, field) => total + Number(after[field]) - Number(before?.[field] ?? 0), 0)).toBe(360);
+          'collectedBankDepositToDate', 'collectedTpeToDate', 'collectedOnlineToDate', 'collectedMobilePaymentToDate'] as const;
+        expect(methodFields.reduce((total, field) => total + Number(after[field]) - Number(before?.[field] ?? 0), 0)).toBe(395.5);
         expect(Number(after.overdueAmount) - Number(before?.overdueAmount ?? 0)).toBe(300);
         // The existing annual balance still includes the future-dated completed receipts.
-        expect(Number(after.totalPaid) - Number(before?.totalPaid ?? 0)).toBe(535);
+        expect(Number(after.totalPaid) - Number(before?.totalPaid ?? 0)).toBe(570.5);
+        const summaryAfter = await inYear('history-year-2026', () => repo.getSummary());
+        for (const [field, expected] of Object.entries({ collected: 395.5, cash: 100, check: 100,
+          bankTransfer: 70, bankDeposit: 35.5, tpe: 50, overdue: 300 })) {
+          expect(Number(summaryAfter[field]) - Number(summaryBefore[field])).toBe(expected);
+        }
         throw rollback;
       });
     } catch (error) {
@@ -174,6 +204,8 @@ describe('fee year scope on the marked PostgreSQL fixture', () => {
         const currentBefore = await inYear('history-year-2026', () => repo.getAll(studentId));
         const allBefore = (await repo.getAllYears()).find((row) => row.student.id === studentId)!;
         const oldOverdueBefore = await inYear('history-year-2025', () => repo.getOverdueSummary());
+        const oldSummaryBefore = await inYear('history-year-2025', () => repo.getSummary());
+        const currentSummaryBefore = await inYear('history-year-2026', () => repo.getSummary());
 
         await tx.insert(feeTypes).values({ id: feeTypeId, name: 'History fee DB', category: 'tuition',
           amount: '100', paymentType: 'oneTime', status: 'active' });
@@ -197,6 +229,16 @@ describe('fee year scope on the marked PostgreSQL fixture', () => {
         ]);
 
         await expect(repo.getAll()).rejects.toThrow('Resolved academic year is missing');
+        await expect(repo.getSummary()).rejects.toThrow('Resolved academic year is missing');
+        for (const [year, before, paid] of [
+          ['history-year-2025', oldSummaryBefore, 30],
+          ['history-year-2026', currentSummaryBefore, 20],
+        ] as const) {
+          const summary = await inYear(year, () => repo.getSummary());
+          expect(Number(summary.collected) - Number(before.collected)).toBe(paid);
+          expect(Number(summary.cash) - Number(before.cash)).toBe(paid);
+          expect(Number(summary.overdue) - Number(before.overdue)).toBe(100 - paid);
+        }
         const old = (await inYear('history-year-2025', () => repo.getAll(studentId)))[0];
         const current = (await inYear('history-year-2026', () => repo.getAll(studentId)))[0];
         expect(old.enrollmentId).toBeNull();

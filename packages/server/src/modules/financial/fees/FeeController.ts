@@ -45,6 +45,14 @@ export class FeeController {
     return this.feeService.getAll(filters);
   }
 
+  @Get('/summary')
+  @CanSchoolWide('read:fees')
+  @McpTool({ description: 'Get selected-year fee collections by payment method and overdue installment balances through today', readOnly: true })
+  @ResMsg('fees.success.statsRetrieved')
+  async getSummary() {
+    return this.feeService.getSummary();
+  }
+
   @Get('/outstanding')
   @CanSchoolWide('read:fees')
   @McpTool({ description: 'List students owing fees of any school year, with every year summed. Élèves qui doivent encore payer. التلاميذ الذين لم يدفعوا الرسوم بعد.', readOnly: true })

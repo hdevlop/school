@@ -44,7 +44,7 @@ function PaymentsTable({studentId}) {
     studentPaymentsError,
     isUpdating,
     updatePayment,
-  } = usePayments({ studentId });
+  } = usePayments({ studentId, enabled: !studentId });
   const queryClient = useQueryClient();
 
   const { openDialog, pop } = useDialog();

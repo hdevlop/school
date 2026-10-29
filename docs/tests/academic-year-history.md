@@ -1,5 +1,29 @@
 # Academic-year history implementation evidence
 
+## Student fee detail loading, 2026-10-29
+
+The student fee screen requested the school-wide payment list just to obtain its payment mutation. It now disables that unused list. Student History and Documents also avoid school-wide payment/fee lists and redundant current-year details when their data is already supplied. The actual student's payments and payment actions remain available.
+
+Selected-year student overview, receipt metrics and fee/installment rows now start together. The explicit all-year student read also starts its overview and details together. Year filters, historical placement, payment calculations and response shapes are unchanged.
+
+- Local authenticated MCP measurements: the removed school-wide payments result contained **886,515 bytes** of uncompressed JSON. The sampled student's current-year and all-year responses contain **8,670** and **8,576 bytes** respectively, and both match their before-change JSON exactly. After-change request samples were **57–71 ms** and **54–57 ms**; these are local API measurements, not production page timings.
+- Student/year tests: **15 pass**, including a deferred-overview regression proving the installment and metrics reads start before that overview resolves. Guarded fixture database/REST/MCP acceptance: **7 pass**.
+- Root lint, workspace typecheck and production build pass. Lint retains the existing ParentsTable hook-dependency warning.
+- No main-school financial records changed. Fixture writes were rolled back or removed. Not committed or deployed; production page timing after these changes remains unverified.
+
+## Fee statistics query, 2026-10-29
+
+Reloading production Fees reproduced student cards appearing while the seven year-wide totals remained loading; the totals appeared about 14 seconds after reload. This is observation of the existing production version, not deployment verification.
+
+The stats now read `GET /fees/summary` / `fees_get_summary`. One database query aggregates completed allocations by method and overdue installment balances for the selected fee year. It retains settlement-date cutoffs, excludes cancelled and future installments from overdue balances, and returns exact decimal strings. The existing `fees` account/year cache namespace still receives finance mutation invalidations. The full-roster mapper also now returns its previously omitted bank-deposit collection field.
+
+Local authenticated MCP comparison on the same year: full roster **3,617 ms / 542,783 bytes**; summary **38–45 ms / 180 bytes**, measured on uncompressed result JSON. All seven totals match the full roster. Production latency after this change remains unmeasured.
+
+- Focused list/year/permission and MCP read-only/name checks: **43 pass**. Finance suite: **220 pass**.
+- Guarded `school_history_test` database/REST/MCP acceptance: **7 pass**, covering three fee years, cross-year receipt allocations, missing enrollment, partial payments, every payment method, future/voided/unsettled receipts, cancelled installments, empty-year zero totals, and invalid/conflicting year selections.
+- Root lint, workspace typecheck and production build pass. Lint retains the existing ParentsTable hook-dependency warning.
+- No main-school financial records changed. Temporary fixture writes were rolled back or removed. Not committed or deployed.
+
 ## Cycle deletion cascade, 2026-10-29
 
 The owner requested that deleting a cycle also delete the classes and sections created under it. Cycles remain shared catalogs: this is an explicit operation across all school years, independent of the viewed year. Ordinary class and section operations retain their selected-year filters, and cycle MCP tools still have no year input.

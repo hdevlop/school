@@ -8,6 +8,7 @@ import { formatDateOnly } from '../utils/dateOnly';
 import { Year } from '../../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 import type { ListFeesQueryDto } from './FeeDto';
+import type { FeeSummary } from '@sms/contracts';
 import {
   getAvgPaymentAmount,
   getCompletedPaymentCount,
@@ -101,6 +102,64 @@ export class FeeRepository {
   // ============================================
   // Public Methods
   // ============================================
+
+  /** Aggregate once for the year instead of loading every student's fee roster. */
+  async getSummary(): Promise<FeeSummary> {
+    const today = formatDateOnly(getBusinessDate());
+    const allocations = this.db.$with('fee_summary_allocations').as(this.db.select({
+      installmentId: paymentAllocations.installmentId,
+      amount: paymentAllocations.amount,
+      paymentMethod: payments.paymentMethod,
+    }).from(paymentAllocations)
+      .innerJoin(fees, eq(paymentAllocations.feeId, fees.id))
+      .innerJoin(payments, eq(paymentAllocations.paymentId, payments.id))
+      .where(and(
+        this.inSelectedYear(),
+        eq(payments.status, 'completed'),
+        sql`coalesce(${payments.settledDate}, ${payments.paymentDate}) <= ${today}`,
+      )));
+
+    const collectedByMethod = (...methods: (typeof payments.$inferSelect.paymentMethod)[]) => sql<string>`
+      coalesce(sum(${allocations.amount}::numeric)
+        filter (where ${inArray(allocations.paymentMethod, methods)}), 0)::text
+    `;
+    const collected = this.db.$with('fee_summary_collected').as(this.db.select({
+      collected: sql<string>`coalesce(sum(${allocations.amount}::numeric), 0)::text`.as('collected'),
+      cash: collectedByMethod('cash').as('cash'),
+      check: collectedByMethod('check').as('check'),
+      bankTransfer: collectedByMethod('bankTransfer').as('bank_transfer'),
+      bankDeposit: collectedByMethod('bankDeposit').as('bank_deposit'),
+      tpe: collectedByMethod('creditCard', 'debitCard').as('tpe'),
+    }).from(allocations));
+
+    const paidInstallments = this.db.$with('fee_summary_paid_installments').as(this.db.select({
+      installmentId: allocations.installmentId,
+      paidAmount: sql<string>`sum(${allocations.amount}::numeric)`.as('summary_installment_paid'),
+    }).from(allocations).groupBy(allocations.installmentId));
+    const overdue = this.db.$with('fee_summary_overdue').as(this.db.select({
+      overdue: sql<string>`coalesce(sum(greatest(${feeInstallments.amount}::numeric
+        - coalesce(${paidInstallments.paidAmount}, 0), 0)), 0)::text`.as('overdue'),
+    }).from(feeInstallments)
+      .innerJoin(fees, eq(feeInstallments.feeId, fees.id))
+      .leftJoin(paidInstallments, eq(paidInstallments.installmentId, feeInstallments.id))
+      .where(and(
+        this.inSelectedYear(),
+        sql`${feeInstallments.dueDate} < ${today}`,
+        sql`${feeInstallments.status} != 'cancelled'`,
+      )));
+
+    const [summary] = await this.db.with(allocations, collected, paidInstallments, overdue)
+      .select({
+        collected: collected.collected,
+        cash: collected.cash,
+        check: collected.check,
+        bankTransfer: collected.bankTransfer,
+        bankDeposit: collected.bankDeposit,
+        tpe: collected.tpe,
+        overdue: overdue.overdue,
+      }).from(collected).crossJoin(overdue);
+    return summary;
+  }
 
   // Every year's fees, one row per student with the student's current class.
   // An explicit all-year read: year-scoped lists use getAll.
@@ -313,6 +372,7 @@ export class FeeRepository {
       collectedCashToDate: student.collectedCashToDate,
       collectedCheckToDate: student.collectedCheckToDate,
       collectedBankTransferToDate: student.collectedBankTransferToDate,
+      collectedBankDepositToDate: student.collectedBankDepositToDate,
       collectedTpeToDate: student.collectedTpeToDate,
       collectedOnlineToDate: student.collectedOnlineToDate,
       collectedMobilePaymentToDate: student.collectedMobilePaymentToDate,
@@ -384,7 +444,7 @@ export class FeeRepository {
   // callers (seeding, cross-year debt); year-scoped screens use getByStudent.
   async getByStudentAllYears(studentId: string) {
     // Get overview data
-    const [overview] = await this.db
+    const [overviewRows, feesList] = await Promise.all([this.db
       .select({
         studentId: students.id,
         studentName: students.name,
@@ -418,11 +478,13 @@ export class FeeRepository {
       .leftJoin(fees, eq(fees.studentId, students.id))
 
       .where(eq(students.id, studentId))
-      .groupBy(students.id, students.name, students.studentCode, users.image, classes.id, classes.name, sections.id, sections.name);
+      .groupBy(students.id, students.name, students.studentCode, users.image, classes.id, classes.name, sections.id, sections.name),
+      this.listStudentFeeRows(studentId),
+    ]);
 
+    const [overview] = overviewRows;
     if (!overview) return null;
 
-    const feesList = await this.listStudentFeeRows(studentId);
     return this.formatStudentFeeResponse(overview, feesList);
   }
 
@@ -542,12 +604,12 @@ export class FeeRepository {
 
   async getByStudent(studentId: string) {
     const academicYear = this.year.label;
-    const [annual] = await this.getAll(studentId);
-    if (!annual) return null;
 
     // These metrics must follow the fee year, including allocations made by a
-    // receipt dated in another year. Money stays numeric in PostgreSQL here.
-    const [metricsRows, feesList] = await Promise.all([
+    // receipt dated in another year. Start independent reads together so the
+    // installments do not wait for the student's roster totals.
+    const [annualRows, metricsRows, feesList] = await Promise.all([
+      this.getAll(studentId),
       this.db.select({
         totalOverdueAmount: sql<string>`coalesce((
           select sum("fee_installments"."amount"::numeric)
@@ -600,6 +662,9 @@ export class FeeRepository {
       }).from(students).where(eq(students.id, studentId)).limit(1),
       this.listStudentFeeRows(studentId, academicYear),
     ]);
+
+    const [annual] = annualRows;
+    if (!annual) return null;
 
     const metrics = metricsRows[0];
     const response = this.formatStudentFeeResponse({

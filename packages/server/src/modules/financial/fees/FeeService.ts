@@ -61,6 +61,10 @@ export class FeeService {
     return this.feeRepository.getAll(undefined, filters.schedule, filters);
   }
 
+  async getSummary() {
+    return this.feeRepository.getSummary();
+  }
+
   /**
    * Students owing fees of any school year, whichever year is viewed: the
    * explicit all-year read behind the fees table's outstanding scope. Each

@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
 import { eq, inArray } from 'drizzle-orm';
+import { toCents } from '../../src/modules/financial/utils/money';
 
 const rawUrl = process.env.SCHOOL_HISTORY_TEST_DB_URL;
 const adminPassword = process.env.SCHOOL_HISTORY_ADMIN_PASSWORD;
@@ -67,6 +68,28 @@ afterAll(async () => {
 });
 
 describe('authenticated fee year scope', () => {
+  it('serves one summary matching the full roster for each selected year', async () => {
+    const fields = {
+      collected: 'collectedToDate', cash: 'collectedCashToDate', check: 'collectedCheckToDate',
+      bankTransfer: 'collectedBankTransferToDate', bankDeposit: 'collectedBankDepositToDate',
+      tpe: 'collectedTpeToDate', overdue: 'overdueAmount',
+    };
+    for (const year of ['2024-2025', '2025-2026', '2026-2027']) {
+      const summary = await request('/fees/summary', year);
+      const roster = await request('/fees', year);
+      expect(summary.status).toBe(200);
+      expect(Object.keys(summary.body.data).sort()).toEqual(Object.keys(fields).sort());
+      for (const [field, rosterField] of Object.entries(fields)) {
+        expect(toCents(summary.body.data[field])).toBe(roster.body.data.reduce(
+          (sum: number, row: Record<string, string>) => sum + toCents(row[rosterField]), 0,
+        ));
+      }
+    }
+    expect((await request('/fees/summary', 'invalid')).status).toBe(400);
+    expect((await request('/fees/summary?academicYear=2025-2026', '2026-2027')).status).toBe(400);
+    expect((await server.fetch(new Request(`${base}/fees/summary`))).status).toBe(401);
+  });
+
   it('filters the fee list by schedule and rejects unknown schedules', async () => {
     for (const [schedule, includesFee] of [['oneTime', true], ['monthly', false]] as const) {
       const response = await request(`/fees?schedule=${schedule}`, '2025-2026');
@@ -90,6 +113,13 @@ describe('authenticated fee year scope', () => {
       const list = tools.tools.find((item) => item.name === 'fees_get_fees');
       expect(list?.inputSchema.properties).toHaveProperty('academicYear');
       expect(list?.inputSchema.properties).toHaveProperty('schedule');
+      const summary = tools.tools.find((item) => item.name === 'fees_get_summary');
+      expect(summary?.inputSchema.properties).toHaveProperty('academicYear');
+      const result = await client.callTool({ name: summary!.name, arguments: { academicYear: '2025-2026' } }) as {
+        content: Array<{ text: string }>; isError?: boolean;
+      };
+      expect(result.isError).not.toBe(true);
+      expect(JSON.parse(result.content[0].text)).toEqual((await request('/fees/summary', '2025-2026')).body.data);
       for (const [schedule, includesFee] of [['oneTime', true], ['monthly', false]] as const) {
         const result = await client.callTool({ name: list!.name,
           arguments: { academicYear: '2025-2026', schedule } }) as {

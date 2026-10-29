@@ -160,7 +160,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
     createBulkFees,
   } = useFees({ studentId, studentAllYears: true, enabled: false });
   const { isAcademicYearLoading } = useActiveAcademicYear();
-  const { createPayment } = usePayments();
+  const { createPayment } = usePayments({ enabled: false });
   const { feeTypes } = useFeeTypes();
   const [selectedFeeId, setSelectedFeeId] = useState(initialFeeId);
   const [activeTab, setActiveTab] = useState("overview");

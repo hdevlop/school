@@ -21,7 +21,7 @@ import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
-import { createBulkFeesApi, getFeesApi, importStudentFeesApi, previewFeeImportDatesApi } from '@/services/feeApi';
+import { createBulkFeesApi, getFeesApi, getFeeSummaryApi, importStudentFeesApi, previewFeeImportDatesApi } from '@/services/feeApi';
 import { getFeeTypesApi } from '@/services/feeTypeApi';
 import { useQueryClient } from '@tanstack/react-query';
 import { buildFeeImport, isFeeReport } from '../config/feeImport';
@@ -35,9 +35,9 @@ import { resolveFeeEntryFilters } from '../config/feeNavigation';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
 import { useViewingAcademicYear, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
-import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useYearScopedDetail } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
-import { toMinorUnits, useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { canPerformAction } from '@/shared/actionPermissions';
 
@@ -80,10 +80,11 @@ function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeo
   const [scheduleFilter, setScheduleFilter] = useState<Schedule>();
 
   // Summary cards cover the viewed year independently of table filters;
-  // overdueAmount includes only installment balances overdue as of today.
-  const { data: summaryFees, isLoading: isSummaryLoading, error: summaryError } = useYearScopedList({
+  // The summary includes only collections and overdue balances through today.
+  const { data: stats, isLoading: isSummaryLoading, error: summaryError } = useYearScopedDetail({
     resource: 'fees',
-    fetch: () => getFeesApi(),
+    parts: ['summary'],
+    fetch: getFeeSummaryApi,
   });
 
   const {
@@ -121,18 +122,6 @@ function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeo
       return true;
     });
   }, [fees, selectedClassId, selectedSectionId, searchText, statusFilter, isAllClasses]);
-
-  const stats = useMemo(() => summaryFees.reduce((totals, row) => {
-    // Fee amounts have two decimal places; sum in minor units to keep totals exact.
-    totals.collected += toMinorUnits(row.collectedToDate, 2) ?? 0;
-    totals.cash += toMinorUnits(row.collectedCashToDate, 2) ?? 0;
-    totals.check += toMinorUnits(row.collectedCheckToDate, 2) ?? 0;
-    totals.bankDeposit += toMinorUnits(row.collectedBankDepositToDate, 2) ?? 0;
-    totals.bankTransfer += toMinorUnits(row.collectedBankTransferToDate, 2) ?? 0;
-    totals.tpe += toMinorUnits(row.collectedTpeToDate, 2) ?? 0;
-    totals.overdue += toMinorUnits(row.overdueAmount, 2) ?? 0;
-    return totals;
-  }, { collected: 0, cash: 0, check: 0, bankTransfer: 0, bankDeposit: 0, tpe: 0, overdue: 0 }), [summaryFees]);
 
   const classOptions = useMemo(
     () => [
@@ -383,7 +372,7 @@ function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeo
         <div className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-7">
           {Array.from({ length: 7 }, (_, index) => <NStatCardSkeleton key={index} />)}
         </div>
-      ) : hasFailedToLoad(summaryError, summaryFees) ? (
+      ) : hasFailedToLoad(summaryError, stats ? [stats] : []) ? (
         isAuthorizationError(summaryError)
           ? <NForbiddenState surface="panel" />
           : <NErrorState surface="panel" />
@@ -392,7 +381,7 @@ function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeo
           <NStatCard
             icon={HandCoins}
             label={t('fees.stats.collected')}
-            value={majorMoney(stats.collected / 100)}
+            value={majorMoney(stats?.collected ?? 0)}
             className="min-w-0"
             classNames={{
               icon: 'bg-green-500/10 text-green-600 dark:text-green-400',
@@ -402,42 +391,42 @@ function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeo
           <NStatCard
             icon={Banknote}
             label={t('payments.methods.cash')}
-            value={majorMoney(stats.cash / 100)}
+            value={majorMoney(stats?.cash ?? 0)}
             className="min-w-0"
             classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
           />
           <NStatCard
             icon={ReceiptText}
             label={t('payments.methods.check')}
-            value={majorMoney(stats.check / 100)}
+            value={majorMoney(stats?.check ?? 0)}
             className="min-w-0"
             classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
           />
           <NStatCard
             icon={Landmark}
             label={t('payments.methods.bankTransfer')}
-            value={majorMoney(stats.bankTransfer / 100)}
+            value={majorMoney(stats?.bankTransfer ?? 0)}
             className="min-w-0"
             classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
           />
           <NStatCard
             icon={Landmark}
             label={t('payments.methods.bankDeposit')}
-            value={majorMoney(stats.bankDeposit / 100)}
+            value={majorMoney(stats?.bankDeposit ?? 0)}
             className="min-w-0"
             classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
           />
           <NStatCard
             icon={CreditCard}
             label={t('fees.stats.tpe')}
-            value={majorMoney(stats.tpe / 100)}
+            value={majorMoney(stats?.tpe ?? 0)}
             className="min-w-0"
             classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
           />
           <NStatCard
             icon={Wallet}
             label={t('fees.stats.overdueToDate')}
-            value={majorMoney(stats.overdue / 100)}
+            value={majorMoney(stats?.overdue ?? 0)}
             subtext={t('fees.stats.futureInstallmentsExcluded')}
             className="min-w-0"
             classNames={{

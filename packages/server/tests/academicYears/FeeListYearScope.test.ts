@@ -295,4 +295,27 @@ describe('normal fee list year scope', () => {
     expect(feeRows?.params).toContain('2025-2026');
     expect(feeRows?.params).toContain('student-1');
   });
+
+  it('starts student installments and payment metrics while the overview is still pending', async () => {
+    const repo = new FeeRepository();
+    (repo as any).year = oldYear;
+    let finishOverview!: (rows: []) => void;
+    const overview = new Promise<[]>((resolve) => { finishOverview = resolve; });
+    (repo as any).getAll = () => overview;
+    let queriesStarted!: () => void;
+    const started = new Promise<void>((resolve) => { queriesStarted = resolve; });
+    let queries = 0;
+    repo.db = drizzle(async () => {
+      if (++queries === 2) queriesStarted();
+      return { rows: [] };
+    }) as any;
+
+    const pending = repo.getByStudent('student-1');
+    // A sequential implementation never starts these reads until the
+    // overview resolves, so this regression would time out.
+    await started;
+    expect(queries).toBe(2);
+    finishOverview([]);
+    expect(await pending).toBeNull();
+  });
 });

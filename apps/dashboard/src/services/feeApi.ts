@@ -1,11 +1,16 @@
 import { api } from './http';
-import type { Schedule, StudentFinancialImport, FinancialImportDatePreview } from '@sms/contracts';
+import type { FeeSummary, Schedule, StudentFinancialImport, FinancialImportDatePreview } from '@sms/contracts';
 
 // One row per student for fees charged to the request's school year.
 export type FeeListFilters = { schedule?: Schedule; tuitionPayment?: 'paidInFull'; classId?: string; sectionId?: string };
 
 export const getFeesApi = async (filters: FeeListFilters = {}) => {
   const res = await api.get('/fees', { params: filters });
+  return res.data;
+};
+
+export const getFeeSummaryApi = async (): Promise<{ data: FeeSummary }> => {
+  const res = await api.get('/fees/summary');
   return res.data;
 };
 

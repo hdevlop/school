@@ -78,6 +78,7 @@ describe('routes that were admin-only ask for a permission', () => {
 
   it('gives finance routes the finance permissions instead of the finance roles', () => {
     expect(guards(FeeController, 'getFees')).toEqual(schoolWide('read:fees'));
+    expect(guards(FeeController, 'getSummary')).toEqual(schoolWide('read:fees'));
     expect(guards(FeeController, 'deleteById')).toEqual(schoolWide('delete:fees'));
     expect(guards(PaymentController, 'record')).toEqual(schoolWide('create:payments'));
     expect(guards(PaymentController, 'voidPayment')).toEqual(schoolWide('update:payments'));

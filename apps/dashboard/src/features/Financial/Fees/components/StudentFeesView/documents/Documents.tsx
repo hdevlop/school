@@ -12,7 +12,7 @@ export const Documents = ({ studentId }) => {
   const { t } = useTranslation();
   const { currency, displayDateOnly, majorMoney } = useSchoolFormat();
   const { printReceipt, isReceiptLoading } = usePrintReceipt();
-  const { studentPayments, isStudentPaymentsLoading } = usePayments({ studentId });
+  const { studentPayments, isStudentPaymentsLoading } = usePayments({ studentId, enabled: false });
 
   const payments = Array.isArray(studentPayments) ? studentPayments : [];
   const completedPayments = payments.filter((p) => p.status === 'completed');

@@ -18,8 +18,8 @@ export const PaymentHistory = ({ studentId, studentFees: initialStudentFees }: P
 
   const shouldFetchStudentFees = !initialStudentFees && Boolean(studentId);
   const { studentFees: fetchedStudentFees, isStudentFeesLoading } = useFees({
-    studentId,
-    enabled: shouldFetchStudentFees,
+    studentId: shouldFetchStudentFees ? studentId : undefined,
+    enabled: false,
   });
   const studentFees = initialStudentFees ?? fetchedStudentFees;
 
