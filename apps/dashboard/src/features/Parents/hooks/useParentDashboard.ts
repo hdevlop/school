@@ -77,18 +77,21 @@ export function useParentDashboard(parentId: string) {
 
   const childDataQuery = useQuery({
     queryKey: ['parents', parentId, 'dashboard-children', childIds, viewingYear ?? null, canReadFees],
-    queryFn: () => withAcademicYear(viewingYear, async () => {
+    queryFn: () => withAcademicYear(viewingYear, () => {
       // One read for the family: the incidents the viewer may see, counted per
-      // child. A refused read is "unknown", not "none".
-      const incidents = await getDisciplineApi()
+      // child. A refused read is "unknown", not "none". Every read starts
+      // before the first await: the year scope binds only those, and none of
+      // them waits for another.
+      const incidentsRequest = getDisciplineApi()
         .then((response) => (Array.isArray(response?.data) ? response.data : []))
         .catch(() => null);
       return Promise.all(
         children.map(async (child: any): Promise<ParentChildDashboardData> => {
-          const [attendance, grades, feeAccount] = await Promise.all([
+          const [attendance, grades, feeAccount, incidents] = await Promise.all([
             safelyCollection(getAttendanceByStudentApi(child.id)),
             safelyCollection(getGradesByStudentApi(child.id)),
             canReadFees ? safely<any>(getFeesByStudentApi(child.id), null) : null,
+            incidentsRequest,
           ]);
           const fees = Array.isArray(feeAccount?.fees) ? feeAccount.fees : [];
           const overdueAmount = Number(feeAccount?.summary?.totalOverdueAmount) || 0;
@@ -119,7 +122,8 @@ export function useParentDashboard(parentId: string) {
 
       return { assessments, events };
     },
-    enabled: familyQuery.isSuccess,
+    // Not the family's: start beside its read rather than after it.
+    enabled: Boolean(parentId) && !isResolving,
     staleTime: 60_000,
   });
 

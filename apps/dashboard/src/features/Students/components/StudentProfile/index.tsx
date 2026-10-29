@@ -22,6 +22,9 @@ import { useAlerts } from '@/features/Alerts/hooks/useAlerts';
 import { useDialog } from '@/shared/useDialog';
 import { useStudents } from '@/features/Students/hooks/useStudents';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
+import { useStudentAttendanceRecords } from '@/features/Attendance/hooks/useAttendance';
+import { useStudentReport } from '@/features/Grades/hooks/useGrades';
+import { useFees } from '@/features/Financial/Fees/hooks/useFees';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import SimpleStudentForm from '../SimpleStudentForm';
@@ -45,6 +48,12 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
   const { updateStudent, isUpdating } = useStudents({ enabled: false });
   const { classes } = useClasses({ enabled: canEdit });
   const { viewingYear } = useViewingAcademicYear();
+  // The sidebar mounts only once the student has loaded. Its reads start here,
+  // beside the student's, and reach it as props: they arrive with the record
+  // instead of one round trip after it, and its mount refetches nothing.
+  const { data: attendanceResponse } = useStudentAttendanceRecords(studentId);
+  const { data: reportResponse } = useStudentReport(studentId || null);
+  const { studentFees } = useFees({ studentId, studentYear: viewingYear, enabled: false });
   const canReadFees = isSchoolWide && can('read:fees');
   const canReadTransport = isSchoolWide && can('read:student-routes');
   const { alerts } = useAlerts({ studentId, enabled: Boolean(studentId) && can('read:alerts') });
@@ -80,7 +89,13 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
     { value: 'overview', icon: User, label: t('students.profile.tabs.overview'), content: (
       <div className="grid min-w-0 gap-3 lg:grid-cols-[18rem_minmax(0,1fr)] xl:grid-cols-[20rem_minmax(0,1fr)]">
         <div className="self-start overflow-hidden rounded-xl border border-border">
-          <LeftSidebar student={student} isLoading={isStudentLoading} />
+          <LeftSidebar
+            student={student}
+            isLoading={isStudentLoading}
+            attendanceResponse={attendanceResponse}
+            reportResponse={reportResponse}
+            studentFees={studentFees}
+          />
         </div>
         <div className="flex min-w-0 flex-col gap-3">
           <OverviewTab {...sharedTabProps} />

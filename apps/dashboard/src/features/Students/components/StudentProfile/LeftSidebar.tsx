@@ -12,9 +12,9 @@ import {
   UserRound,
 } from 'lucide-react';
 import { NAvatar, NBadge, NStatCard } from 'najm-kit';
-import { useStudentReport } from '@/features/Grades/hooks/useGrades';
-import { useFees } from '@/features/Financial/Fees/hooks/useFees';
-import { useStudentAttendanceRecords } from '@/features/Attendance/hooks/useAttendance';
+import type { useStudentReport } from '@/features/Grades/hooks/useGrades';
+import type { useFees } from '@/features/Financial/Fees/hooks/useFees';
+import type { useStudentAttendanceRecords } from '@/features/Attendance/hooks/useAttendance';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { Student } from './types';
 import { useTranslation } from 'najm-i18n/react';
@@ -48,19 +48,23 @@ const SkeletonBox = () => (
 interface LeftSidebarProps {
   student: Student | null | undefined;
   isLoading?: boolean;
+  // The viewed year's attendance, grades and fees, read by the profile beside
+  // the student so they do not wait for this sidebar to mount.
+  attendanceResponse?: ReturnType<typeof useStudentAttendanceRecords>['data'];
+  reportResponse?: ReturnType<typeof useStudentReport>['data'];
+  studentFees?: ReturnType<typeof useFees>['studentFees'];
 }
 
 export default function LeftSidebar({
   student,
   isLoading,
+  attendanceResponse,
+  reportResponse,
+  studentFees,
 }: LeftSidebarProps) {
   const { t, language } = useTranslation();
   const { majorMoney } = useSchoolFormat();
-  // The viewed year's attendance, grades and fees; every year's with history off.
   const { viewingYear } = useViewingAcademicYear();
-  const { data: attendanceResponse } = useStudentAttendanceRecords(student?.id);
-  const { data: reportResponse } = useStudentReport(student?.id || null);
-  const { studentFees } = useFees({ studentId: student?.id, studentYear: viewingYear, enabled: false });
 
   const attendanceRowsRaw = attendanceResponse?.data ?? attendanceResponse ?? [];
   const attendanceRows = Array.isArray(attendanceRowsRaw) ? attendanceRowsRaw : [];
