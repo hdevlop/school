@@ -293,19 +293,24 @@ export class StudentRepository {
       .orderBy(parents.name);
   }
 
-  // School-wide counts for one year over that year's enrollments (one per
-  // student), so a year's figures match its student list, including students
-  // who left during the year.
-  async getCount() {
+  // The student list includes all enrollments; dashboard totals request only
+  // active enrollments, using the selected year's status rather than today's
+  // student projection.
+  async getCount(activeOnly = false) {
     const [row] = await this.db
       .select({ count: count() })
       .from(studentEnrollments)
       .innerJoin(students, eq(studentEnrollments.studentId, students.id))
-      .where(and(eq(studentEnrollments.academicYearId, this.year.id), this.ownedWhere(), studentTeacherInYear(this.year.id, this._scopeCtx)));
+      .where(and(
+        eq(studentEnrollments.academicYearId, this.year.id),
+        activeOnly ? eq(studentEnrollments.status, 'active') : undefined,
+        this.ownedWhere(),
+        studentTeacherInYear(this.year.id, this._scopeCtx),
+      ));
     return row;
   }
 
-  async getStudentsByGender() {
+  async getStudentsByGender(activeOnly = false) {
     const genderCounts = await this.db
       .select({
         gender: students.gender,
@@ -313,7 +318,12 @@ export class StudentRepository {
       })
       .from(studentEnrollments)
       .innerJoin(students, eq(studentEnrollments.studentId, students.id))
-      .where(and(eq(studentEnrollments.academicYearId, this.year.id), this.ownedWhere(), studentTeacherInYear(this.year.id, this._scopeCtx)))
+      .where(and(
+        eq(studentEnrollments.academicYearId, this.year.id),
+        activeOnly ? eq(studentEnrollments.status, 'active') : undefined,
+        this.ownedWhere(),
+        studentTeacherInYear(this.year.id, this._scopeCtx),
+      ))
       .groupBy(students.gender);
 
     return genderCounts

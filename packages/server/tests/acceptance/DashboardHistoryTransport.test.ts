@@ -227,20 +227,20 @@ describe('dashboards over the history fixture', () => {
     }
   });
 
-  it('counts enrolled students by year and keeps each dashboard to its audience', async () => {
+  it('counts active enrollments by year and keeps each dashboard to its audience', async () => {
     const studentsCard = (widgets: Array<{ icon: string; value: number }>) =>
       widgets.find((widget) => widget.icon === 'studentImage')?.value;
     expect(studentsCard(await data('/dashboard/widgets', '2024-2025'))).toBe(7);
-    expect(studentsCard(await data('/dashboard/widgets', '2025-2026'))).toBe(8);
+    expect(studentsCard(await data('/dashboard/widgets', '2025-2026'))).toBe(6);
     expect(studentsCard(await data('/dashboard/widgets', '2026-2027'))).toBe(8);
     expect(studentsCard(await data('/dashboard/widgets'))).toBe(8);
     // The principal's finance cards used to receive no figures at all.
-    expect(studentsCard(await data('/dashboard/widgets', '2025-2026', principalToken))).toBe(8);
+    expect(studentsCard(await data('/dashboard/widgets', '2025-2026', principalToken))).toBe(6);
 
     for (const [label, yearId] of [['2024-2025', 'history-year-2024'], ['2025-2026', 'history-year-2025']]) {
       const [expected] = await db.select({ count: count() }).from(studentEnrollments)
         .innerJoin(students, eq(studentEnrollments.studentId, students.id))
-        .where(and(eq(studentEnrollments.academicYearId, yearId), inArray(students.gender, ['M', 'F'])));
+        .where(and(eq(studentEnrollments.academicYearId, yearId), eq(studentEnrollments.status, 'active'), inArray(students.gender, ['M', 'F'])));
       const chart = await data('/dashboard/students-by-gender', label) as Array<{ value: number }>;
       expect(chart.reduce((sum, slice) => sum + slice.value, 0)).toBe(expected.count);
     }

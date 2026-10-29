@@ -138,12 +138,12 @@ export class DashboardService {
     };
   }
 
-  // The finance dashboard's cards: the selected year's enrollments, fee-year
+  // The finance dashboard's cards: the selected year's active enrollments, fee-year
   // revenue and paid expenses over its reporting dates. Teachers and parents
   // are not recorded per year, so their counts are current.
   async getWidgets() {
     const [studentsCount, teachersCount, parentsCount, earnings, expenses] = await Promise.all([
-      this.studentService.getCount(),
+      this.studentService.getCount(true),
       this.teacherService.getCount(),
       this.parentService.getCount(),
       this.paymentService.getTotalRevenue(),
@@ -180,6 +180,6 @@ export class DashboardService {
   }
 
   async getStudentsByGender() {
-    return this.studentService.getStudentsByGender();
+    return this.studentService.getStudentsByGender(true);
   }
 }

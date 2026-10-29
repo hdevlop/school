@@ -1,11 +1,18 @@
-import { describe, expect, it } from 'bun:test';
+import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
 import { drizzle } from 'drizzle-orm/pg-proxy';
+import { i18n } from 'najm-i18n';
+import { schoolI18n } from '@sms/contracts/locales';
+import { Server } from '../../src/najm';
 import { DashboardService } from '../../src/modules/dashboard/DashboardService';
 import { AcademicDashboardService } from '../../src/modules/dashboard/academic/AcademicDashboardService';
 import { OperationsDashboardService } from '../../src/modules/dashboard/operations/OperationsDashboardService';
 import { AttendanceRepository } from '../../src/modules/attendance/AttendanceRepository';
 import { StudentRepository } from '../../src/modules/students/StudentRepository';
 import { holdsDay } from '../../src/modules/academicYears/academicRecordYear';
+
+const server = new Server({ isolated: true, silent: true }).use(i18n(schoolI18n.options));
+beforeAll(async () => { await server.init(); });
+afterAll(async () => { await server.stop(); });
 
 const oldYear = { id: 'year-old', label: '2019-2020', reportingStartsOn: '2019-09-01', reportingEndsOn: '2020-08-31' };
 // Holds any date this suite can run on, so "today" always falls inside it.
@@ -59,7 +66,17 @@ describe('students of the selected year', () => {
       students: { getStudentsByGender: async (...args: unknown[]) => { calls.push(args); return ['year']; } },
     });
     expect<unknown>(await service.getStudentsByGender()).toEqual(['year']);
-    expect(calls).toEqual([[]]);
+    expect(calls).toEqual([[true]]);
+  });
+
+  it('requests active enrollments for the students card', async () => {
+    const calls: unknown[] = [];
+    const service = dashboard(oldYear, {
+      students: { getCount: async (...args: unknown[]) => { calls.push(args); return { count: 6 }; } },
+    });
+    const widgets = await service.getWidgets();
+    expect(widgets.find((widget) => widget.icon === 'studentImage')?.value).toBe(6);
+    expect(calls).toEqual([[true]]);
   });
 });
 
@@ -144,7 +161,7 @@ describe("the admin's today snapshot", () => {
 describe('academic KPIs for the selected year', () => {
   function academic(year: object, todayMarks: Array<{ status: string }> | Error, calls: string[] = []) {
     return inYear(new AcademicDashboardService(
-      { getCount: async () => { calls.push('students'); return { count: 8 }; } } as any,
+      { getCount: async (activeOnly: boolean) => { expect(activeOnly).toBe(true); calls.push('students'); return { count: 8 }; } } as any,
       { getCount: async () => ({ count: 3 }) } as any,
       { getToday: async () => {
         calls.push('attendance');
@@ -214,12 +231,12 @@ describe('dashboard year SQL', () => {
     expect(months[0]).toEqual({ month: '2019-09', present: 0, absent: 0, late: 0, total: 0 });
   });
 
-  async function studentStatement(method: 'getCount' | 'getStudentsByGender') {
+  async function studentStatement(method: 'getCount' | 'getStudentsByGender', activeOnly = false) {
     let captured = { sql: '', params: [] as unknown[] };
     const repo: any = new StudentRepository();
     Object.defineProperty(repo, 'year', { value: oldYear });
     repo.db = drizzle(async (sql, params) => { captured = { sql, params }; return { rows: [] }; });
-    await repo[method]();
+    await repo[method](activeOnly);
     return captured;
   }
 
@@ -233,5 +250,15 @@ describe('dashboard year SQL', () => {
     expect(gender.sql).toContain('where "student_enrollments"."academic_year_id" = $1 group by "students"."gender"');
     expect(gender.sql).not.toContain('"students"."status"');
     expect(gender.params).toEqual(['year-old']);
+  });
+
+  it('uses the selected enrollment status for dashboard totals and the gender chart', async () => {
+    const count = await studentStatement('getCount', true);
+    const gender = await studentStatement('getStudentsByGender', true);
+    for (const statement of [count, gender]) {
+      expect(statement.sql).toContain('"student_enrollments"."status" = $2');
+      expect(statement.sql).not.toContain('"students"."status"');
+      expect(statement.params).toEqual(['year-old', 'active']);
+    }
   });
 });

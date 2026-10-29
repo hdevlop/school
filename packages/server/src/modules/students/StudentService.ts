@@ -39,12 +39,12 @@ export class StudentService {
     return { id: record?.id ?? null, name: record?.name ?? null };
   }
 
-  async getCount() {
-    return this.studentRepository.getCount();
+  async getCount(activeOnly = false) {
+    return this.studentRepository.getCount(activeOnly);
   }
 
-  async getStudentsByGender() {
-    return this.studentRepository.getStudentsByGender();
+  async getStudentsByGender(activeOnly = false) {
+    return this.studentRepository.getStudentsByGender(activeOnly);
   }
 
   async getAll(onDate?: string) {

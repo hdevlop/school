@@ -4,6 +4,7 @@ import { ComboboxInput, SelectInput, TextInput, NButton, Popover, PopoverContent
 import { Filter, Plus } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { PermissionButton } from '@/components/PermissionButton';
+import { FeesPrintButton } from './FeesPrintButton';
 
 export type FeeTableFilter = {
   name: string;
@@ -26,7 +27,7 @@ export function FeesMobileToolbar({ filters, onCreate, loading }: {
   const { t } = useTranslation();
   const [schoolClass, section, ...additional] = filters;
   return (
-    <div className="grid w-full min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto_auto] items-center gap-2 md:hidden">
+    <div className="grid w-full min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto_auto_auto] items-center gap-2 md:hidden">
       <ComboboxInput
         value={schoolClass.value}
         onChange={schoolClass.onChange}
@@ -59,6 +60,7 @@ export function FeesMobileToolbar({ filters, onCreate, loading }: {
             : <SelectInput key={filter.name} value={filter.value} onChange={filter.onChange} items={filter.options ?? []} placeholder={filter.placeholder} aria-label={filter.placeholder} showIcon={false} className="w-full" />)}
         </PopoverContent>
       </Popover>
+      <FeesPrintButton loading={loading} />
       <PermissionButton permission="create:fees" variant="outline" size="icon" className="size-10 text-primary" onClick={onCreate} aria-label={t('fees.dialogs.createButton')} disabled={loading}>
         <Plus className="size-5" />
       </PermissionButton>

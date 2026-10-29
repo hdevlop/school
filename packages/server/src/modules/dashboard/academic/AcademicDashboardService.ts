@@ -32,7 +32,7 @@ export class AcademicDashboardService {
       todayAttendance,
       allGrades,
     ] = await Promise.all([
-      this.studentService.getCount(),
+      this.studentService.getCount(true),
       this.teacherService.getCount(),
       holdsToday ? this.attendanceRepository.getToday('student') : null,
       this.gradeService.getAll(),

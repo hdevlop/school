@@ -444,13 +444,17 @@ function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeo
         columns={columns}
         dataActions
         toolbarActionDisplay="settings"
-        headerSlot={<FeesPrintButton loading={isLoading} />}
         onDataChange={handleImport}
         showImportButton={canImport}
         toolbarLabels={toolbarLabels}
         filters={filters}
         renderToolbar={() => (
-          <FeesMobileToolbar filters={filters} onCreate={handleAddClick} loading={isLoading} />
+          <>
+            <FeesMobileToolbar filters={filters} onCreate={handleAddClick} loading={isLoading} />
+            <div className="hidden md:flex">
+              <FeesPrintButton loading={isLoading} />
+            </div>
+          </>
         )}
         onCreate={handleAddClick}
         onView={handleView}

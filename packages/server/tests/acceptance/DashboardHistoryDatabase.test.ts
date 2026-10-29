@@ -58,6 +58,14 @@ describe('dashboard figures on the marked PostgreSQL fixture', () => {
     expect((await inYear(NEW, () => students.getCount())).count).toBe(8);
   });
 
+  it('excludes withdrawn and graduated enrollments only from dashboard counts in their year', async () => {
+    const { repo: students, inYear } = await scopedHistoryRepository(StudentRepository, db);
+    // Mariam and Hamza are active in 2024-2025, then leave in 2025-2026.
+    expect((await inYear(OLDEST, () => students.getCount(true))).count).toBe(7);
+    expect((await inYear(OLD, () => students.getCount(true))).count).toBe(6);
+    expect((await inYear(NEW, () => students.getCount(true))).count).toBe(8);
+  });
+
   it('charts each year of attendance in its own months, legacy rows by their date', async () => {
     try {
       await db.transaction(async (transaction) => {
