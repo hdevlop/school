@@ -277,7 +277,11 @@ const PersonalStep = ({ form, lockedRole, onRoleChange }) => {
         value: role.code,
         label: role?.labels?.[language] || role.label || role.code,
       }))
-      .sort((a, b) => a.label.localeCompare(b.label));
+      .sort((a, b) => {
+        if (a.value === 'other') return b.value === 'other' ? 0 : 1;
+        if (b.value === 'other') return -1;
+        return a.label.localeCompare(b.label);
+      });
   }, [activeStaffRoles, language]);
 
   const genderOptions = [
