@@ -28,7 +28,7 @@ export const createParentSchemas = (t: T) => {
       .nullable()
       .optional(),
   );
-  const cinField = z.string().trim().min(8, t('validationMessages.cinMustBeAtLeast8Characters')).max(20, t('validationMessages.cinTooLong'));
+  const cinField = z.string().trim().min(7, t('validationMessages.cinMustBeAtLeast7Characters')).max(20, t('validationMessages.cinTooLong'));
   const addressField = z.string().max(500, t('validationMessages.addressTooLong')).optional();
 
   /**

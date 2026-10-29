@@ -49,7 +49,7 @@ export const createTeacherSchemas = (t: T, { requireEmail = true } = {}) => {
     /^(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/,
     t('validationMessages.dateMustBeInYyyyMmDdMmDd'),
   );
-  const cinField = z.string().min(8, t('validationMessages.cinMustBeAtLeast8Characters')).max(20, t('validationMessages.cinTooLong'));
+  const cinField = z.string().min(7, t('validationMessages.cinMustBeAtLeast7Characters')).max(20, t('validationMessages.cinTooLong'));
   const addressField = z.string().max(500, t('validationMessages.addressTooLong')).optional();
   const validNumber = () => z.number({ error: t('validationMessages.mustBeAValidNumber') });
 

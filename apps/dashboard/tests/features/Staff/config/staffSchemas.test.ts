@@ -26,6 +26,20 @@ const validPersonal = {
 const validEmployment = { compensationMode: 'monthly', salary: '3000', hireDate: '2026-09-01' };
 
 describe('staff form schemas', () => {
+  it('accepts seven-character CINs and keeps the length limits in every language', () => {
+    for (const language of Object.keys(CATALOGS)) {
+      const { personal } = createStaffSchemas(translatorFor(language));
+      for (const cin of ['A123456', '1234567', 'AB123456', 'A'.repeat(20)]) {
+        expect(personal.safeParse({ ...validPersonal, cin }).success, cin).toBe(true);
+      }
+      for (const cin of ['', 'A12345', 'A'.repeat(21)]) {
+        expect(personal.safeParse({ ...validPersonal, cin }).success, cin).toBe(false);
+      }
+      const short = personal.safeParse({ ...validPersonal, cin: 'A12345' });
+      expect(messagesByPath(short.error!).cin).toBe(lookup(language, 'staff.validation.cinMin'));
+    }
+  });
+
   it('allows editing persisted assignments with null optional fields without imposing dates', () => {
     const { assignmentStep, full } = createStaffSchemas(translatorFor('en'));
     for (const role of ['cleaner', 'security', 'assistant', 'accountant', 'busAssistant']) {

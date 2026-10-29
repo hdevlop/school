@@ -32,7 +32,7 @@ export const createStaffSchemas = (t: T, today = new Date().toISOString().slice(
     id: z.string().optional(),
     name: nameString,
     employeeCode: optionalString(z.string().max(50, tooLong)),
-    cin: z.string().min(8, t('staff.validation.cinMin')).max(20, tooLong),
+    cin: z.string().min(7, t('staff.validation.cinMin')).max(20, tooLong),
     gender: z.enum(['M', 'F']).optional(),
     phone: phoneString,
     email: z.string().email(t('staff.validation.emailInvalid')).optional().or(z.literal('')),

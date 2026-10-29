@@ -26,7 +26,7 @@ export const timeField = z.union([
       return match ? `${match[1].padStart(2, '0')}:${match[2]}` : val;
     }),
 ]).optional().nullable();
-export const cinField = z.string().min(8, 'CIN must be at least 8 characters').max(20, 'CIN too long');
+export const cinField = z.string().min(7, 'CIN must be at least 7 characters').max(20, 'CIN too long');
 export const addressField = z.string().max(500, 'Address too long').optional();
 export const academicYearField = z
   .string()

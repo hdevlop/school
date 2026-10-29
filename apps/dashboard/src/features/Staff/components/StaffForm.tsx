@@ -304,7 +304,9 @@ const PersonalStep = ({ form, lockedRole, onRoleChange }) => {
           <FormInput name="employeeCode" type="text" formLabel={t('staff.table.employeeCode')} placeholder={t('staff.form.employeeCodePlaceholder')} icon={Hash} />
           <FormInput name="cin" type="text" formLabel={t('staff.table.cin')} placeholder={t('staff.form.cinPlaceholder')} icon={IdCard} required />
           <FormInput name="gender" type="select" formLabel={t('staff.form.gender')} placeholder={t('staff.form.genderPlaceholder')} items={genderOptions} icon={UserRound} />
-          <FormInput name="role" type="select" formLabel={t('staff.table.role')} placeholder={t('staff.form.rolePlaceholder')} items={roleOptions} icon={Briefcase} required disabled={lockedRole} />
+          <FormInput name="role" type="select" formLabel={t('staff.table.role')} placeholder={t('staff.form.rolePlaceholder')} items={roleOptions} icon={Briefcase} required disabled={lockedRole}
+            dropdownClassName="[&_[data-radix-select-viewport]]:h-auto [&_[data-radix-select-viewport]]:max-h-[min(18rem,var(--radix-select-content-available-height))]"
+          />
           <FormInput name="status" type="select" formLabel={t('staff.table.status')} placeholder={t('staff.form.statusPlaceholder')} items={statusOptions} icon={Activity} required />
         </div>
       </div>
