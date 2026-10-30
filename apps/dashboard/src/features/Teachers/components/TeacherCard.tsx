@@ -9,6 +9,7 @@ import { Label } from 'najm-kit';
 import { useRouter } from 'next/navigation';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 const TeacherCard = ({ data }) => {
    const { t } = useTranslation();
@@ -46,7 +47,7 @@ const TeacherCard = ({ data }) => {
          className="flex cursor-pointer items-start gap-4 p-4 transition-all hover:bg-primary/[0.035] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
       >
          <div className="shrink-0">
-            <NAvatar src={teacher?.image} fallback={teacher.name} size="lg" version={teacher?.updatedAt} />
+            <NAvatar src={teacher?.image} fallback={teacher.name} size="lg" version={avatarVersion(teacher?.image, teacher?.updatedAt)} />
          </div>
 
          {/* min-w-0 lets a long name or email shrink to the card instead of

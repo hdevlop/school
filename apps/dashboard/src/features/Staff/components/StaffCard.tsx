@@ -7,6 +7,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { getStaffAvatar } from '../utils/staffAvatar';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { formatAssignments } from '../utils/staffAssignments';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 const resolveRoleLabel = (staff, language, t) => {
   if (!staff?.role) return '-';
@@ -30,7 +31,7 @@ const StaffCard = ({ data, details = false }) => {
           fallbackSrc={getStaffAvatar(staff?.role, staff?.gender)}
           fallback={staff?.name}
           size="lg"
-          version={staff?.updatedAt}
+          version={avatarVersion(staff?.image, staff?.updatedAt)}
         />
       </div>
 

@@ -6,6 +6,7 @@ import { NAvatar } from 'najm-kit';
 import { NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 
 
@@ -25,7 +26,7 @@ const StudentCard = ({ data }) => {
           src={student?.image}
           fallback={student.name}
           size="lg"
-          version={student?.updatedAt}
+          version={avatarVersion(student?.image, student?.updatedAt)}
         />
       </div>
 

@@ -3,6 +3,7 @@ import { NAvatar } from 'najm-kit';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 export const useDriversTableColumns = () => {
   const { t } = useTranslation();
@@ -14,7 +15,7 @@ export const useDriversTableColumns = () => {
       header: t('drivers.table.name'),
       cell: ({ row }) => {
         const driver = row.original;
-        return <NAvatar src={driver?.image} title={driver.name} size='sm' version={driver?.updatedAt} />;
+        return <NAvatar src={driver?.image} title={driver.name} size='sm' version={avatarVersion(driver?.image, driver?.updatedAt)} />;
       },
       enableSorting: true,
     },

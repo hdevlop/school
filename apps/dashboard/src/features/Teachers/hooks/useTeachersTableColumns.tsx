@@ -3,6 +3,7 @@ import { NAvatar } from 'najm-kit';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 export const useTeachersTableColumns = () => {
   const { t } = useTranslation();
@@ -14,7 +15,7 @@ export const useTeachersTableColumns = () => {
       header: t('teachers.table.name'),
       cell: ({ row }) => {
         const teacher = row.original;
-        return <NAvatar src={teacher?.image} title={teacher.name} size='sm' version={teacher?.updatedAt} />;
+        return <NAvatar src={teacher?.image} title={teacher.name} size='sm' version={avatarVersion(teacher?.image, teacher?.updatedAt)} />;
       },
       enableSorting: true,
     },

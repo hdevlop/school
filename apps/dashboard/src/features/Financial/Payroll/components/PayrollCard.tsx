@@ -8,6 +8,7 @@ import { Badge, NAvatar } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 export type PayrollRow = {
   id: string;
@@ -73,7 +74,7 @@ export function PayrollStaff({ row }: { row: PayrollRow }) {
       src={row.image || getStaffAvatar(row.role, row.gender)}
       title={row.name || '-'}
       size="sm"
-      version={row.updatedAt}
+      version={avatarVersion(row.image || getStaffAvatar(row.role, row.gender), row.updatedAt)}
     />
   );
   // Only teachers have a profile page to open.

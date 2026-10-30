@@ -9,6 +9,7 @@ import {
   rewardClasses,
   tagClass,
 } from '../behaviorRewardConstants';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 const BehaviorRewardDetails = ({ behaviorReward }: { behaviorReward: any }) => {
   const { t } = useTranslation();
@@ -19,7 +20,7 @@ const BehaviorRewardDetails = ({ behaviorReward }: { behaviorReward: any }) => {
   return (
     <div className="space-y-5 p-1">
       <div className="flex items-center gap-4 rounded-xl border border-emerald-100 bg-emerald-50/70 p-4 dark:border-emerald-900 dark:bg-emerald-950/30">
-        <NAvatar src={reward.student?.image} title={reward.student?.name} subtitle={reward.student?.studentCode || '—'} size="lg" version={reward.updatedAt} />
+        <NAvatar src={reward.student?.image} title={reward.student?.name} subtitle={reward.student?.studentCode || '—'} size="lg" version={avatarVersion(reward.student?.image, reward.updatedAt)} />
         <div className="min-w-0 flex-1">
           <div className="mt-2 flex flex-wrap gap-2">
             <NBadge className={tagClass(recognitionClasses, reward.recognitionLevel)}>

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { MessageSquare } from 'lucide-react';
 import { Input, NAvatar, NBadge, NButton, cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 const percentOf = (obtained, total) => {
   if (obtained == null || obtained === '' || !total) return null;
@@ -70,7 +71,7 @@ export default function GradeRosterCard({ data: row, canEdit, onEdit, onToggleSt
   return (
     <div className="flex flex-col gap-2 px-3 py-2.5">
       <div className="flex items-center gap-3">
-        <NAvatar src={row.studentImage} fallback={row.studentName} size="md" version={row.studentUpdatedAt} />
+        <NAvatar src={row.studentImage} fallback={row.studentName} size="md" version={avatarVersion(row.studentImage, row.studentUpdatedAt)} />
         <div className="min-w-0 flex-1">
           <div className="truncate text-sm font-semibold">{row.studentName}</div>
           <div className="mt-0.5 flex min-w-0 items-center gap-2">

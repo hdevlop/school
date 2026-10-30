@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { NAvatar } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import type { ColumnDef } from '@tanstack/react-table';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 export const useStudentsTableColumns = () => {
   const { t } = useTranslation();
@@ -27,7 +28,7 @@ export const useStudentsTableColumns = () => {
             src={student?.image}
             title={student.name}
             size="sm"
-            version={student?.updatedAt}
+            version={avatarVersion(student?.image, student?.updatedAt)}
           />
         );
       },

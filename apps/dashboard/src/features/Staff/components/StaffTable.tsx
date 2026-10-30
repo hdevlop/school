@@ -22,6 +22,7 @@ import { formatAssignments } from '../utils/staffAssignments';
 import { getStaffAvatar } from '../utils/staffAvatar';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 const calculateStaffPay = (row) => {
   if (row?.compensationMode === 'hourly') {
@@ -188,7 +189,7 @@ const StaffTable = () => {
             fallbackSrc={getStaffAvatar(staffMember?.role, staffMember?.gender)}
             title={staffMember?.name || '-'}
             size="sm"
-            version={staffMember?.updatedAt}
+            version={avatarVersion(staffMember?.image, staffMember?.updatedAt)}
           />
         );
       },

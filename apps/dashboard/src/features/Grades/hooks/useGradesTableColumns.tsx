@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { NBadge, NButton } from 'najm-kit';
 import { NAvatar } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { avatarVersion } from '@/lib/avatarVersion';
 const computePercent = (obtained, total) => {
   if (obtained == null || total == null) return null;
   const o = Number(obtained);
@@ -43,7 +44,7 @@ export const useGradesTableColumns = ({
         const image = row.original.studentImage;
         const updatedAt = row.original.studentUpdatedAt;
         if (!name) return <span className="text-gray-400">{t('common.notAssigned')}</span>;
-        return <NAvatar src={image} title={name} size="sm" version={updatedAt} />;
+        return <NAvatar src={image} title={name} size="sm" version={avatarVersion(image, updatedAt)} />;
       },
       filterFn: (row, _id, value) => {
         const needle = String(value ?? '').toLowerCase().trim();

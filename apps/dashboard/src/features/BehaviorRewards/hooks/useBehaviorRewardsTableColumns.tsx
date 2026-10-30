@@ -7,6 +7,7 @@ import {
   rewardClasses,
   tagClass,
 } from '../behaviorRewardConstants';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 export const useBehaviorRewardsTableColumns = () => {
   const { t } = useTranslation();
@@ -25,7 +26,7 @@ export const useBehaviorRewardsTableColumns = () => {
             title={student?.name || '—'}
             subtitle={student?.studentCode || '—'}
             size="sm"
-            version={row.original.updatedAt}
+            version={avatarVersion(student?.image, row.original.updatedAt)}
           />
         );
       },

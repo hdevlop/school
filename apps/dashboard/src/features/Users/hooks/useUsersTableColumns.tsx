@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { NAvatar } from 'najm-kit';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 export const useUsersTableColumns = () => {
   const { t } = useTranslation();
@@ -24,7 +25,7 @@ export const useUsersTableColumns = () => {
       header: t('users.table.name'),
       cell: ({ row }) => {
         const user = row.original;
-        return <NAvatar src={user.image} title={user.name} version={user?.updatedAt} />;
+        return <NAvatar src={user.image} title={user.name} version={avatarVersion(user.image, user?.updatedAt)} />;
       },
       enableSorting: true,
     },

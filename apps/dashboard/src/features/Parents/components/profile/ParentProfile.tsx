@@ -44,6 +44,7 @@ import ParentForm from '../SimpleParentForm';
 import ParentAttentionCard from './ParentAttentionCard';
 import ParentDetailsTab from './ParentDetailsTab';
 import { FamilyLinkButton } from '../FamilyLinkActions';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 const TABS = ['overview', 'details'] as const;
 type ParentTab = (typeof TABS)[number];
@@ -445,7 +446,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                           src={child.image}
                           fallback={child.name}
                           size="md"
-                          version={child.updatedAt}
+                          version={avatarVersion(child.image, child.updatedAt)}
                         />
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-semibold">{child.name}</p>

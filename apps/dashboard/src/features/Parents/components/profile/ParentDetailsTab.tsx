@@ -12,6 +12,7 @@ import {
   MARITAL_STATUS_TRANSLATION_PREFIX,
   RELATIONSHIP_TYPE_TRANSLATION_PREFIX,
 } from '../../config/parentOptions';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 interface ParentDetailsTabProps {
   parent: any;
@@ -102,7 +103,7 @@ const ParentDetailsTab: React.FC<ParentDetailsTabProps> = ({ parent, linkedChild
                     src={child.image}
                     fallback={child.name}
                     size="sm"
-                    version={child.updatedAt}
+                    version={avatarVersion(child.image, child.updatedAt)}
                     className="shrink-0"
                   />
                   <div className="min-w-0 flex-1 text-start">

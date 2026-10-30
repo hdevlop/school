@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { NAvatar, NBadge, SimpleTooltip } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 export const useParentsTableColumns = () => {
   const { t } = useTranslation();
@@ -18,7 +19,7 @@ export const useParentsTableColumns = () => {
             src={parent?.image}
             title={parent.name}
             size='sm'
-            version={parent?.updatedAt}
+            version={avatarVersion(parent?.image, parent?.updatedAt)}
             className={isOrphaned ? 'opacity-70 grayscale' : undefined}
           />
         );

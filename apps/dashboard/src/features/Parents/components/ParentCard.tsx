@@ -6,6 +6,7 @@ import { Label, NAvatar, NBadge, SimpleTooltip } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { cn } from 'najm-kit';
 import { useRouter } from 'next/navigation';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 const ParentInfoRow = ({ icon: Icon, label, value, muted }) => (
   <div className="flex min-w-0 items-center gap-2 text-sm">
@@ -62,7 +63,7 @@ const ParentCard = ({ data }) => {
           alt={parent.name}
           fallback={parent.name?.trim().split(/\s+/).map((part) => part.charAt(0)).join('').slice(0, 2).toUpperCase()}
           size="lg"
-          version={data?.updatedAt}
+          version={avatarVersion(data?.image, data?.updatedAt)}
         />
       </div>
 

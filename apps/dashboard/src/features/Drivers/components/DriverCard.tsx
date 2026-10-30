@@ -7,6 +7,7 @@ import { NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 const DriverCard = ({ data }) => {
    const { t } = useTranslation();
@@ -16,7 +17,7 @@ const DriverCard = ({ data }) => {
    return (
       <div className="flex items-start gap-4 p-4">
          <div className="shrink-0">
-            <NAvatar src={driver?.image} fallback={driver.name} size="lg" version={driver?.updatedAt} />
+            <NAvatar src={driver?.image} fallback={driver.name} size="lg" version={avatarVersion(driver?.image, driver?.updatedAt)} />
          </div>
 
          <div className="min-w-0 flex-1 flex flex-col gap-2">

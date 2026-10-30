@@ -5,11 +5,12 @@ import { NAvatar, NStatCard, NBadge } from 'najm-kit';
 import { NSection, NSectionInfo } from 'najm-kit';
 import { Label } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 const UserHeader = ({ user }) => {
   return (
     <div className="flex flex-col items-center border-none md:flex-row md:gap-4">
-      <NAvatar src={user.image} fallback={user.name} size="lg" version={user?.updatedAt} />
+      <NAvatar src={user.image} fallback={user.name} size="lg" version={avatarVersion(user.image, user?.updatedAt)} />
       <div className="flex flex-col justify-center items-center md:items-start">
         <Label className="text-md font-bold">{user.name}</Label>
         <Label className="text-sm ">{user.email}</Label>

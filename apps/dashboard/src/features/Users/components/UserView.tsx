@@ -3,6 +3,7 @@
 import { Hash, Mail, Phone, Shield, User, UserCheck } from 'lucide-react';
 import { Card, NAvatar, NBadge, NEmptyState, NSection, NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 const UserView = ({ user }) => {
   const { t } = useTranslation();
@@ -12,7 +13,7 @@ const UserView = ({ user }) => {
   return (
     <div className="flex flex-col gap-4 h-full w-full overflow-auto">
       <Card className="flex p-5 items-center flex-col md:flex-row md:gap-4">
-        <NAvatar src={user.image} fallback={user.name} size="xl" version={user.updatedAt} />
+        <NAvatar src={user.image} fallback={user.name} size="xl" version={avatarVersion(user.image, user.updatedAt)} />
         <div className="flex flex-col items-center md:items-start md:gap-0.5 min-w-0">
           <p className="text-2xl font-bold break-words">{user.name}</p>
           <p className="break-all">{user.email}</p>

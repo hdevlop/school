@@ -9,6 +9,7 @@ import {
   rewardClasses,
   tagClass,
 } from '../behaviorRewardConstants';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 const BehaviorRewardCard = ({ data }: { data: any }) => {
   const { t } = useTranslation();
@@ -25,7 +26,7 @@ const BehaviorRewardCard = ({ data }: { data: any }) => {
         title={reward.student?.name}
         subtitle={reward.student?.studentCode || '—'}
         size="lg"
-        version={reward.updatedAt}
+        version={avatarVersion(reward.student?.image, reward.updatedAt)}
       />
       <div className="min-w-0 flex-1 space-y-3">
         <div className="flex flex-wrap gap-2">

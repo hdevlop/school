@@ -6,6 +6,7 @@ import { Label } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import type { RosterStatus, RosterMark } from '../hooks/useAttendanceRoster';
 import RosterMarks from './RosterMarks';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 interface RosterCardProps {
   readOnly?: boolean;
@@ -51,7 +52,7 @@ export default function RosterCard({
           src={avatarSrc ?? data.image}
           fallback={data.name}
           size="md"
-          version={data.updatedAt}
+          version={avatarVersion(avatarSrc ?? data.image, data.updatedAt)}
           classNames={classNames?.avatar}
         />
         <div className="min-w-0 flex-1">

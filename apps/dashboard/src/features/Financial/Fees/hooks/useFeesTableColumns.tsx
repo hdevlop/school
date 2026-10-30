@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { NAvatar, NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { avatarVersion } from '@/lib/avatarVersion';
 
 export const useFeesTableColumns = () => {
   const { t } = useTranslation();
@@ -25,7 +26,7 @@ export const useFeesTableColumns = () => {
       cell: ({ row }: any) => {
         const student = row.original.student;
         return student ? (
-          <NAvatar src={student.image} title={student.name} size='sm' version={student?.updatedAt} />
+          <NAvatar src={student.image} title={student.name} size='sm' version={avatarVersion(student.image, student?.updatedAt)} />
         ) : (
           <span className="text-gray-400">{t('common.notAvailable')}</span>
         );
