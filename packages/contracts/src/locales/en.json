@@ -5575,7 +5575,6 @@
       "resetFilters": "Reset filters",
       "search": "Search",
       "unmarked": "Not recorded",
-      "unsavedMarks": "{{count}} unsaved marks",
       "markAllPresent": "Mark all present"
     }
   },

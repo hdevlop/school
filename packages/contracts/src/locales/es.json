@@ -1847,7 +1847,6 @@
       "search": "Buscar",
       "submitError": "Error al guardar la asistencia",
       "unmarked": "Sin registrar",
-      "unsavedMarks": "{{count}} marcas sin guardar",
       "markAllPresent": "Marcar todos presentes"
     }
   },

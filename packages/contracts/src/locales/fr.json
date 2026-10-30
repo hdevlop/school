@@ -2450,7 +2450,6 @@
       "search": "Rechercher",
       "submitError": "Échec de l'enregistrement de la présence",
       "unmarked": "Non renseigné",
-      "unsavedMarks": "{{count}} pointages non enregistrés",
       "markAllPresent": "Marquer tout le monde présent"
     }
   },

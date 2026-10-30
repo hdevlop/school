@@ -114,10 +114,10 @@ export const useAttendanceRoster = ({
   }, [existingByPerson]);
 
   const stats = useMemo(() => {
-    const s = { total: roster.length, present: 0, absent: 0, late: 0, unmarked: 0, pending: changes.length };
+    const s = { total: roster.length, present: 0, absent: 0, late: 0, unmarked: 0 };
     roster.forEach((p) => { s[getStatus(p.id)]++; });
     return s;
-  }, [roster, getStatus, changes.length]);
+  }, [roster, getStatus]);
 
   const shiftDate = useCallback((days: number) => {
     setSelectedDate(shiftLocalISODate(selectedDate, days));

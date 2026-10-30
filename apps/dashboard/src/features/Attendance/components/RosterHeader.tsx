@@ -6,7 +6,7 @@ import { Send, Users, CheckCircle2, XCircle, Clock3, CircleDashed } from 'lucide
 import { cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 
-interface Stats { total: number; present: number; absent: number; late: number; unmarked: number; pending: number }
+interface Stats { total: number; present: number; absent: number; late: number; unmarked: number }
 
 interface Props {
   hasChanges: boolean;
@@ -66,7 +66,6 @@ export default function RosterHeader({
         <StatItem icon={XCircle} label={t('attendance.roster.absent')} value={stats.absent} tone="red" />
         <StatItem icon={Clock3} label={t('attendance.roster.late')} value={stats.late} tone="amber" />
       </div>
-      {stats.pending > 0 && <span role="status" className="order-last basis-full text-end text-xs text-amber-700 dark:text-amber-300">{t('attendance.roster.unsavedMarks', { count: stats.pending })}</span>}
       <NButton
         onClick={onSubmit}
         loading={isSubmitting}

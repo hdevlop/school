@@ -1861,7 +1861,6 @@
       "search": "بحث",
       "submitError": "فشل حفظ الحضور",
       "unmarked": "غير مسجل",
-      "unsavedMarks": "{{count}} علامات حضور غير محفوظة",
       "markAllPresent": "تحديد الجميع حاضرين"
     }
   },
