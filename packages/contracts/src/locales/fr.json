@@ -766,6 +766,8 @@
     }
   },
   "common": {
+    "allStatuses": "Tous les statuts",
+    "allRoles": "Tous les rôles",
     "filters": "Filtres",
     "deleteFailedCount": "{{count}} fiche(s) non supprimée(s)",
     "deletedCount": "{{count}} fiche(s) supprimée(s)",
@@ -2425,6 +2427,8 @@
       "present": "Présent",
       "absent": "Absent",
       "late": "En retard",
+      "absentAndLate": "Absents et retards",
+      "signature": "Signature",
       "allPresent": "Tous présents",
       "allAbsent": "Tous absents",
       "code": "Code",

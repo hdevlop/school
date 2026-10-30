@@ -1130,6 +1130,8 @@
     }
   },
   "common": {
+    "allStatuses": "Todos los estados",
+    "allRoles": "Todos los roles",
     "filters": "Filtros",
     "deleteFailedCount": "No se pudieron eliminar {{count}} registro(s)",
     "deletedCount": "{{count}} registro(s) eliminado(s)",
@@ -1822,6 +1824,8 @@
       "present": "Presente",
       "absent": "Ausente",
       "late": "Tarde",
+      "absentAndLate": "Ausentes y retrasos",
+      "signature": "Firma",
       "allPresent": "Todos presentes",
       "allAbsent": "Todos ausentes",
       "code": "Código",

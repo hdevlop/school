@@ -6,8 +6,9 @@ import RosterMarks from '../components/RosterMarks';
 import type { RosterStatus, RosterMark } from './useAttendanceRoster';
 import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { avatarVersion } from '@/lib/avatarVersion';
 
-const ROSTER_KEEP_COLUMNS = new Set(['select', 'studentCode', 'name', 'email', 'phone', 'class', 'section', 'gender']);
+const ROSTER_KEEP_COLUMNS = new Set(['select', 'studentCode', 'name', 'phone', 'class', 'section', 'gender']);
 
 
 interface RosterColumnsOptions {
@@ -39,7 +40,9 @@ export const useStudentRosterColumns = ({ getStatus, setStatus, readOnly }: Rost
   return useMemo(() => {
     const base = studentColumns.filter((col: any) =>
       ROSTER_KEEP_COLUMNS.has(col.id ?? col.accessorKey)
-    );
+    ).map((col: any) => (col.id ?? col.accessorKey) === 'phone'
+      ? { ...col, accessorFn: (student: any) => student.phone?.trim() || student.contactPhone || '' }
+      : col);
     return [...base, statusCell({ getStatus, setStatus, readOnly }, t('common.status'))];
   }, [t, studentColumns, getStatus, setStatus, readOnly]);
 };
@@ -63,7 +66,7 @@ export const useStaffRosterColumns = ({ getStatus, setStatus, renderDetails, rea
             src={staff.image || getStaffAvatar(staff.role, staff.gender)}
             title={staff.name}
             size="sm"
-            version={staff.updatedAt}
+            version={avatarVersion(staff.image || getStaffAvatar(staff.role, staff.gender), staff.updatedAt)}
           />
         );
       },

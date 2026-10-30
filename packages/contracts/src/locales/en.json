@@ -1024,6 +1024,8 @@
     }
   },
   "common": {
+    "allStatuses": "All Statuses",
+    "allRoles": "All Roles",
     "filters": "Filters",
     "deleteFailedCount": "{{count}} record(s) could not be deleted",
     "deletedCount": "{{count}} record(s) deleted",
@@ -5550,6 +5552,8 @@
       "present": "Present",
       "absent": "Absent",
       "late": "Late",
+      "absentAndLate": "Absent and late",
+      "signature": "Signature",
       "allPresent": "All Present",
       "allAbsent": "All Absent",
       "code": "Code",

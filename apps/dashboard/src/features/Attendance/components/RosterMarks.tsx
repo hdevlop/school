@@ -51,7 +51,7 @@ export default function RosterMarks({ current, onSelect, className, disabled = f
   const { t } = useTranslation();
   return (
     <div className="flex flex-col items-center gap-1">
-    {showHint && <span className="min-h-4 text-xs text-muted-foreground">{current === 'unmarked' ? t('attendance.roster.unmarked') : '\u00a0'}</span>}
+    {showHint && current === 'unmarked' && <span className="text-xs text-muted-foreground">{t('attendance.roster.unmarked')}</span>}
     <div className={cn('flex w-full justify-center gap-2', className)}>
       {ROSTER_STATUSES.map((status) => {
         const meta = ROSTER_STATUS_META[status];

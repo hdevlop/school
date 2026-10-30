@@ -7,6 +7,9 @@ import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { CalendarCheck, SearchX } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import RosterHeader from './RosterHeader';
+import RosterPrintMenu from './RosterPrintMenu';
+import { useRosterPrint } from '../hooks/useRosterPrint';
+import type { RosterPrintChoice } from '../config/rosterPrint';
 import RosterFilters from './RosterFilters';
 import { filterRoster } from '../config/filterRoster';
 import RosterCard from './RosterCard';
@@ -85,7 +88,10 @@ function StaffAttendanceTable() {
       ...filter,
       ...binding,
       ...(filter.name === 'role' || filter.name === 'status'
-        ? { options: [{ value: '', label: t('common.all') }, ...(filter.options ?? [])] }
+        ? {
+            placeholder: t(filter.name === 'role' ? 'common.allRoles' : 'common.allStatuses'),
+            options: [{ value: '', label: t(filter.name === 'role' ? 'common.allRoles' : 'common.allStatuses') }, ...(filter.options ?? [])],
+          }
         : {}),
     };
   });
@@ -99,6 +105,19 @@ function StaffAttendanceTable() {
     setRole('');
   };
   const total = staffRows.length;
+  // The print menu picks the marks, so it prints every staff member whatever
+  // the search, role and status filters show.
+  const print = useRosterPrint();
+  const genderLabel = (gender?: string | null) => gender === 'M' ? t('common.male') : gender === 'F' ? t('common.female') : gender ?? '';
+  const printRoster = (choice: RosterPrintChoice) => print(choice, staffRows.map((person: any) => ({
+    cells: [person.name ?? '', genderLabel(person.gender), person.phone ?? '', person.role ? t(`staff.roles.${person.role}`) : ''],
+    mark: roster.getStatus(person.id),
+  })), {
+    title: t('attendance.roster.staffTitle'),
+    date: roster.selectedDate,
+    details: [],
+    columns: [t('staff.table.name'), t('students.table.gender'), t('teachers.table.phone'), t('staff.table.role')],
+  });
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-2">
@@ -112,8 +131,19 @@ function StaffAttendanceTable() {
         </NPageHeaderActions>
       </NPageHeader>
 
-      <RosterFilters filters={filters} onReset={resetFilters} canReset={!!search || !!status || !!role}>
+      <RosterFilters
+        filters={filters}
+        onReset={resetFilters}
+        canReset={!!search || !!status || !!role}
+      >
         <RosterHeader
+          print={(
+            <RosterPrintMenu
+              counts={roster.stats}
+              onPrint={printRoster}
+              disabled={total === 0 || isStaffLoading || isAttendanceLoading || !!attendanceError || !!staffError}
+            />
+          )}
           hasChanges={roster.hasChanges}
           isSubmitting={isSubmittingRoster}
           stats={roster.stats}

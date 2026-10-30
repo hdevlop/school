@@ -1144,6 +1144,8 @@
     }
   },
   "common": {
+    "allStatuses": "جميع الحالات",
+    "allRoles": "جميع الأدوار",
     "filters": "الفلاتر",
     "deleteFailedCount": "تعذر حذف {{count}} سجل",
     "deletedCount": "تم حذف {{count}} سجل",
@@ -1836,6 +1838,8 @@
       "present": "حاضر",
       "absent": "غائب",
       "late": "متأخر",
+      "absentAndLate": "الغائبون والمتأخرون",
+      "signature": "التوقيع",
       "allPresent": "الكل حاضر",
       "allAbsent": "الكل غائب",
       "code": "الرمز",

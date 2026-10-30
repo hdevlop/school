@@ -8,11 +8,14 @@ import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptySt
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { CalendarCheck, SearchX } from 'lucide-react';
 import RosterHeader from './RosterHeader';
+import RosterPrintMenu from './RosterPrintMenu';
 import RosterFilters from './RosterFilters';
 import { filterRoster } from '../config/filterRoster';
+import { orderByCycle, type RosterPrintChoice } from '../config/rosterPrint';
 import RosterCard from './RosterCard';
 import { useStudentAttendance } from '../hooks/useAttendance';
 import { useAttendanceRoster } from '../hooks/useAttendanceRoster';
+import { useRosterPrint } from '../hooks/useRosterPrint';
 import { useStudentRosterColumns } from '../hooks/useAttendanceTableColumns';
 import { useStudentsOnDate } from '@/features/Students/hooks/useStudents';
 import { useSections } from '@/features/Sections/hooks/useSections';
@@ -236,6 +239,30 @@ function StudentAttendanceTableForYear() {
     setSearch('');
     setStatus('');
   };
+  // The print menu picks the marks, so it prints the whole class or section
+  // whatever the search and status filters show. One section names its class
+  // in the sheet's header, so only the whole school needs a class column.
+  const print = useRosterPrint();
+  const genderLabel = (gender?: string | null) => gender === 'M' ? t('common.male') : gender === 'F' ? t('common.female') : gender ?? '';
+  const printRoster = (choice: RosterPrintChoice) => print(choice, orderByCycle(filteredStudents).map((student: any) => ({
+    cells: [
+      student.studentCode ?? '',
+      student.name ?? '',
+      genderLabel(student.gender),
+      student.phone?.trim() || student.contactPhone || '',
+      ...(isAllClasses ? [student.class?.name ?? '', student.section?.name ?? ''] : []),
+    ],
+    mark: roster.getStatus(student.id),
+  })), {
+    title: t('attendance.roster.studentTitle'),
+    date: roster.selectedDate,
+    details: [
+      { label: t('attendance.roster.class'), value: classOptions.find((option) => option.value === selectedClassId)?.label ?? '' },
+      ...(isAllClasses ? [] : [{ label: t('attendance.roster.section'), value: sectionOptions.find((option) => option.value === selectedSectionId)?.label ?? '' }]),
+      ...(selectedAssignment ? [{ label: t('attendance.roster.teacherSubject'), value: `${selectedAssignment.name} - ${selectedAssignment.subjectName}` }] : []),
+    ],
+    columns: [t('attendance.roster.code'), t('students.table.name'), t('students.table.gender'), t('students.table.phone'), ...(isAllClasses ? [t('attendance.roster.class'), t('attendance.roster.section')] : [])],
+  });
 
   const filters = useMemo(
     () => [
@@ -254,7 +281,7 @@ function StudentAttendanceTableForYear() {
         label: t('attendance.roster.section'),
         type: 'select',
         placeholder: isAllClasses
-          ? t('common.all')
+          ? t('attendance.roster.allSections')
           : !selectedClassId
             ? t('attendance.roster.selectClass')
             : isSectionsLoading
@@ -306,10 +333,10 @@ function StudentAttendanceTableForYear() {
         label: t('attendance.roster.status'),
         value: status,
         onChange: setStatus,
-        placeholder: t('attendance.roster.status'),
+        placeholder: t('common.allStatuses'),
         type: 'select',
         options: [
-          { value: '', label: t('common.all') },
+          { value: '', label: t('common.allStatuses') },
           { value: 'present', label: t('attendance.roster.present') },
           { value: 'absent', label: t('attendance.roster.absent') },
           { value: 'late', label: t('attendance.roster.late') },
@@ -371,6 +398,13 @@ function StudentAttendanceTableForYear() {
         canReset={!isAllClasses || !!search || !!status}
       >
         <RosterHeader
+          print={(
+            <RosterPrintMenu
+              counts={roster.stats}
+              onPrint={printRoster}
+              disabled={filteredStudents.length === 0 || isStudentsLoading || isAttendanceLoading || !!attendanceError || !!studentsError}
+            />
+          )}
           hasChanges={roster.hasChanges}
           isSubmitting={isSubmitting}
           stats={roster.stats}
