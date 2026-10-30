@@ -26,7 +26,6 @@
     "groupNumber": "Grupo de lecciones {{number}}",
     "groupLabel": "Área (opcional)",
     "groupLabelPlaceholder": "Por ejemplo: Gramática",
-    "language": "Idioma de las lecciones",
     "lessons": "Lecciones para repasar",
     "lessonsHelp": "Una lección por línea. El texto árabe se escribe de derecha a izquierda.",
     "addGroup": "Añadir área",
@@ -1429,7 +1428,8 @@
     "openSidebar": "Abrir menú",
     "closeSidebar": "Cerrar menú",
     "collapseSidebar": "Contraer",
-    "expandSidebar": "Expandir"
+    "expandSidebar": "Expandir",
+    "insurance": "Seguro"
   },
   "classRoutines": {
     "success": {
@@ -4197,6 +4197,10 @@
         "teachingDays": {
           "title": "Días lectivos",
           "description": "Elija los días lectivos de todas las secciones del año académico activo. Mueva las clases y las supervisiones antes de quitar un día. Los horarios históricos conservan sus días."
+        },
+        "officialIdentity": {
+          "title": "Documentos oficiales",
+          "description": "Se imprime en los documentos del ministerio, como la lista del seguro."
         }
       },
       "generalTab": "Sistema",
@@ -4271,7 +4275,14 @@
       "schoolName": "Nombre de la escuela",
       "schoolPhone": "Teléfono de la escuela",
       "schoolStartTime": "Hora de inicio de clases",
-      "title": "Información del centro"
+      "title": "Información del centro",
+      "schoolNameAr": "Nombre del centro (árabe)",
+      "schoolAddressAr": "Dirección (árabe)",
+      "officialPhone1": "Teléfono 1",
+      "officialPhone2": "Teléfono 2",
+      "officialPhone3": "Teléfono 3",
+      "licenseNumber": "Número de autorización",
+      "licenseDate": "Fecha de autorización"
     },
     "security": {
       "apiKey": "Clave API",
@@ -4467,7 +4478,14 @@
       "feesOptional": "Las cuotas son opcionales al inscribirse. Puede añadirlas después desde la pestaña Cuotas del alumno.",
       "noFeeTypesHint": "No hay tipos de cuota configurados. Termine la inscripción sin cuotas o cree uno en Finanzas → Tipos de cuota.",
       "manageFeeTypes": "Abrir tipos de cuota (pestaña nueva)",
-      "saveFailed": "No se pudo validar o guardar al alumno. Sus datos se conservan; vuelva a intentarlo."
+      "saveFailed": "No se pudo validar o guardar al alumno. Sus datos se conservan; vuelva a intentarlo.",
+      "birthplace": "Lugar de nacimiento",
+      "birthplaceLatin": "Lugar de nacimiento (alfabeto latino)",
+      "birthplaceArabic": "Lugar de nacimiento (árabe)",
+      "birthplaceSearch": "Buscar en árabe o en alfabeto latino",
+      "birthplaceManual": "Otro lugar / introducir los nombres manualmente",
+      "birthplaceFormat": "Usa Latino - Árabe, p. ej. Casablanca - الدار البيضاء.",
+      "birthplaceClear": "Borrar el lugar de nacimiento"
     },
     "status": {
       "active": "Activo",
@@ -4648,7 +4666,8 @@
         "unknownFeeType": "no hay ningún tipo de cuota llamado \"{{value}}\"",
         "invalidFee": "la cuota {{value}} no es válida",
         "feeYearMismatch": "la cuota es de {{value}}, no del año en que se inscribe el estudiante",
-        "feeBeforeEnrollment": "la cuota empieza el {{value}}, antes de la inscripción del estudiante"
+        "feeBeforeEnrollment": "la cuota empieza el {{value}}, antes de la inscripción del estudiante",
+        "invalidBirthplace": "El lugar de nacimiento no debe superar los 200 caracteres."
       }
     },
     "card": {
@@ -6043,6 +6062,7 @@
     }
   },
   "validationMessages": {
+    "unknownBirthplaceId": "Elige un lugar de nacimiento válido.",
     "occasionalImportRequiresDateAndFinalAmount": "Las importaciones ocasionales requieren una fecha de cargo y un importe final sin descuento recurrente",
     "duplicatePermissionIds": "Permisos duplicados",
     "duplicateSidebarEntries": "Entradas de menú duplicadas",
@@ -6288,7 +6308,8 @@
     "schoolEmailRequired": "El correo de la escuela es obligatorio",
     "schoolAddressRequired": "La dirección de la escuela es obligatoria",
     "examPlanningMonth": "Mes, fechas o identificadores de examen duplicados no válidos",
-    "examPlanningJsonLimit": "El archivo JSON supera los 5 MB"
+    "examPlanningJsonLimit": "El archivo JSON supera los 5 MB",
+    "atMostThreePhoneNumbers": "Introduce como máximo tres números de teléfono"
   },
   "academic": {
     "accountantAssignmentOptional": "La asignación a un ciclo es opcional. Puede añadirla más tarde.",
@@ -6353,12 +6374,6 @@
     "lessonsHelp": "Una lección por línea. El texto árabe se escribe de derecha a izquierda.",
     "invalidDraft": "Introduce una asignatura y una fecha de examen válida. Máximo: 40 lecciones por asignatura y 500 caracteres por lección.",
     "printFailed": "No se pudo preparar el calendario de exámenes para imprimir.",
-    "languages": {
-      "fr": "Francés",
-      "ar": "Árabe",
-      "en": "Inglés",
-      "es": "Español"
-    },
     "schedule": "Programa",
     "dayCount": "{{count}} días",
     "subjectCount": "{{count}} asignaturas",
@@ -6384,6 +6399,7 @@
       "invalidFile": "JSON de planificación no válido. Compruebe el formato, la versión, las fechas, las materias y las lecciones.",
       "wrongYear": "Este archivo pertenece a otro curso escolar. Seleccione ese curso antes de importarlo.",
       "unknownClasses": "Algunas clases del archivo no existen en el curso seleccionado.",
+      "ambiguousClasses": "Algunos nombres coinciden con varias clases. Asigne un nombre único a cada clase antes de importar.",
       "fileTooLarge": "El archivo JSON debe tener un tamaño máximo de 5 MB.",
       "exportFailed": "No se pudo exportar la planificación. Recargue la página e inténtelo de nuevo.",
       "importFailed": "No se pudo importar la planificación. Inténtelo de nuevo.",
@@ -6395,6 +6411,62 @@
       "description": "Se eliminarán todos los exámenes planificados y las lecciones de repaso de cada clase y mes de {{year}}, incluidos los cambios sin guardar. Se conservan las clases y su configuración de visibilidad.",
       "cleared": "Se ha vaciado todo el contenido de la planificación.",
       "failed": "No se pudo vaciar la planificación. Inténtelo de nuevo."
+    }
+  },
+  "insurance": {
+    "title": "Seguro",
+    "subtitle": "Lista oficial de inscritos, lista para imprimir por clase",
+    "classes": "Clases",
+    "allClasses": "Todas las clases",
+    "print": "Imprimir",
+    "preview": "Vista previa de la lista del seguro",
+    "popupBlocked": "Permite las ventanas emergentes para imprimir.",
+    "printFailed": "No se pudo imprimir la lista.",
+    "emptyTitle": "No hay alumnos inscritos",
+    "emptyDescription": "Ningún alumno activo está inscrito y asignado a una clase en este curso escolar.",
+    "document": {
+      "title": "Lista oficial de inscritos",
+      "licenseNumber": "N.º de autorización:",
+      "licenseDate": "Fecha:",
+      "academicYear": "Curso escolar:",
+      "class": "Clase:",
+      "address": "Dirección:",
+      "phone": "Teléfono:",
+      "cycles": "Ciclos autorizados:",
+      "rowNumber": "N.º",
+      "massarCode": "Código Massar",
+      "studentName": "Nombre del alumno",
+      "birthDate": "Fecha de nacimiento",
+      "birthPlace": "Lugar",
+      "previousSchool": "Centro de procedencia",
+      "previousSchoolName": "Nombre",
+      "previousLevel": "Último nivel",
+      "leftOn": "Fecha de salida",
+      "currentSchool": "Centro actual",
+      "firstEnrollment": "Fecha de primera inscripción",
+      "renewal": "Fecha de reinscripción este año",
+      "levels": "Niveles cursados",
+      "notes": "Observaciones",
+      "directorSignature": "Firma de la directora pedagógica",
+      "provincialDirectorate": "Dirección provincial",
+      "insurance": "Seguro",
+      "levelNames": {
+        "PS": "Sección pequeña",
+        "MS": "Sección mediana",
+        "GS": "Sección grande",
+        "CP": "1.º de primaria",
+        "CE1": "2.º de primaria",
+        "CE2": "3.º de primaria",
+        "CM1": "4.º de primaria",
+        "CM2": "5.º de primaria",
+        "CE6": "6.º de primaria",
+        "1AC": "1.º de secundaria",
+        "2AC": "2.º de secundaria",
+        "3AC": "3.º de secundaria",
+        "TC": "Tronco común",
+        "1BAC": "1.º de bachillerato",
+        "2BAC": "2.º de bachillerato"
+      }
     }
   }
 }

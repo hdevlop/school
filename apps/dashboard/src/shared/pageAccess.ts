@@ -26,6 +26,7 @@ const schoolWide = (permission: string): PageRule => (viewer) => isSchoolWideRol
 export const PAGE_ACCESS = {
   dashboard: inRoles(STAFF),
   students: can('read:students'),
+  insurance: schoolWide('read:students'),
   parents: can('read:parents'),
   teachers: can('read:teachers'),
   staff: schoolWide('read:staff'),

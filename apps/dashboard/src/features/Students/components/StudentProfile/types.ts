@@ -30,6 +30,9 @@ export interface Student {
   studentCode: string;
   name: string;
   arabicName?: string | null;
+  birthplaceId?: string | null;
+  birthplace?: string | null;
+  birthplaceArabic?: string | null;
   email: string;
   phone: string | null;
   address: string;

@@ -44,8 +44,9 @@ export const isSidebarPermission = (name: string) => name.startsWith('sidebar:')
 
 /** Older roles retain their existing navigation until explicitly configured. */
 export function sidebarEntryVisible(can: (permission: string) => boolean, itemId: string): boolean {
-  // Exam planning follows the Exams sidebar preference.
-  const pageId = itemId === '/exam-planning' || itemId === '/assessment-planning' ? '/exams' : itemId;
+  // Exam planning follows the Exams sidebar preference; insurance follows Students.
+  const pageId = itemId === '/exam-planning' || itemId === '/assessment-planning' ? '/exams'
+    : itemId === '/insurance' ? '/students' : itemId;
   const entry = SIDEBAR_ENTRIES.find((entry) => entry[1] === pageId);
   return !entry || !can(SIDEBAR_CONFIGURED_PERMISSION) || can(sidebarPermission(entry[0]));
 }

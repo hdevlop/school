@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { findBirthplaceById } from '@sms/contracts/birthplaces';
 import { createParentDto, importParentDto } from '../parents/ParentDto';
 import { createFeeDto } from '../financial/fees/FeeDto';
 import {
@@ -44,6 +45,9 @@ const studentSchema = z.object({
   addressLatitude: latitudeDto,
   addressLongitude: longitudeDto,
   dateOfBirth: optionalDateField,
+  birthplaceId: z.string().trim().max(50).refine(id => !id || !!findBirthplaceById(id), 'validationMessages.unknownBirthplaceId').nullish(),
+  birthplace: z.string().trim().max(200).nullish(),
+  birthplaceArabic: z.string().trim().max(200).nullish(),
   gender: genderEnum,
   enrollmentDate: dateField,
   medicalConditions: z.string().max(1000, 'Medical conditions description too long').nullish().optional(),

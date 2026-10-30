@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'bun:test';
 import { examPlanningMonths, examPlanningSemester, type ExamPlanningClass } from '@sms/contracts';
-import { examPlanningEntries, examPlanningRecords, initialPlanningMonth, planningMonthRange, updatePlanningMonthDraft } from '@/features/Exams/planning/examPlanningModel';
+import { examPlanningEntries, examPlanningRecords, initialPlanningMonth, planningMonthRange, planningTextLanguage, updatePlanningMonthDraft } from '@/features/Exams/planning/examPlanningModel';
 
 const classes: ExamPlanningClass[] = [
   { id: 'ps', name: 'PS', visible: true, months: {} },
-  { id: 'cp', name: 'CP', visible: true, months: { '2026-11': [{ id: 'arabic', date: '2026-11-09', subject: 'اللغة العربية', language: 'ar', lessons: ['الجملة الاسمية'] }] } },
+  { id: 'cp', name: 'CP', visible: true, months: { '2026-11': [{ id: 'arabic', date: '2026-11-09', subject: 'اللغة العربية', lessons: ['الجملة الاسمية'] }] } },
 ];
 describe('exam planning dates and document selection', () => {
   it('derives the semester from the month including January and September boundaries', () => {
@@ -19,7 +19,13 @@ describe('exam planning dates and document selection', () => {
     expect(initialPlanningMonth([], '2026-10-28', '2026-2027')).toBe('2026-10');
     expect(initialPlanningMonth([], '2026-10-28', '2025-2026')).toBe('2025-09');
   });
-  it('keeps language, dates and revision topics in the A4 model, including an explicitly cleared draft', () => {
+  it('takes the lesson language from the first letter, like dir="auto"', () => {
+    expect(planningTextLanguage(['', '1. الجملة الاسمية', 'Les accords'])).toBe('ar');
+    expect(planningTextLanguage(['1. Les accords', 'الجملة الاسمية'])).toBe('fr');
+    expect(planningTextLanguage('التربية الإسلامية')).toBe('ar');
+    expect(planningTextLanguage([])).toBe('fr');
+  });
+  it('derives the lesson language and keeps dates and revision topics in the A4 model, including an explicitly cleared draft', () => {
     const range = planningMonthRange('2026-11');
     const records = examPlanningRecords(classes, range);
     expect(records).toHaveLength(1);

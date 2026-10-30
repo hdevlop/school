@@ -26,7 +26,6 @@
     "groupNumber": "Groupe de leçons {{number}}",
     "groupLabel": "Domaine (facultatif)",
     "groupLabelPlaceholder": "Par exemple : Grammaire",
-    "language": "Langue des leçons",
     "lessons": "Leçons ciblées",
     "lessonsHelp": "Une leçon par ligne. Le texte arabe s'écrit de droite à gauche.",
     "addGroup": "Ajouter un domaine",
@@ -1257,6 +1256,10 @@
         "teachingDays": {
           "title": "Jours de cours",
           "description": "Choisissez les jours de cours de toutes les sections de l’année scolaire active. Déplacez les cours et les surveillances avant de retirer un jour. Les emplois du temps historiques conservent leurs jours."
+        },
+        "officialIdentity": {
+          "title": "Documents officiels",
+          "description": "Imprimé sur les documents du ministère, comme la liste d’assurance."
         }
       },
       "generalTab": "Système",
@@ -1435,7 +1438,14 @@
       "schoolName": "Nom de l'école",
       "schoolPhone": "Téléphone de l'école",
       "schoolStartTime": "Heure de début des cours",
-      "title": "Informations de l’établissement"
+      "title": "Informations de l’établissement",
+      "schoolNameAr": "Nom de l’établissement (arabe)",
+      "schoolAddressAr": "Adresse (arabe)",
+      "officialPhone1": "Téléphone 1",
+      "officialPhone2": "Téléphone 2",
+      "officialPhone3": "Téléphone 3",
+      "licenseNumber": "Numéro d’autorisation",
+      "licenseDate": "Date d’autorisation"
     },
     "calendarSystem": {
       "SEMESTER": "Semestre",
@@ -1976,7 +1986,8 @@
     "openSidebar": "Ouvrir le menu",
     "closeSidebar": "Fermer le menu",
     "collapseSidebar": "Réduire",
-    "expandSidebar": "Développer"
+    "expandSidebar": "Développer",
+    "insurance": "Assurance"
   },
   "classRoutines": {
     "success": {
@@ -4619,7 +4630,14 @@
       "feesOptional": "Les frais sont facultatifs à l’inscription. Vous pourrez les ajouter ensuite dans l’onglet Frais de l’élève.",
       "noFeeTypesHint": "Aucun type de frais n’est configuré. Terminez l’inscription sans frais ou créez-en un dans Finances → Types de frais.",
       "manageFeeTypes": "Ouvrir les types de frais (nouvel onglet)",
-      "saveFailed": "Impossible de vérifier ou d’enregistrer l’élève. Vos saisies sont conservées ; veuillez réessayer."
+      "saveFailed": "Impossible de vérifier ou d’enregistrer l’élève. Vos saisies sont conservées ; veuillez réessayer.",
+      "birthplace": "Lieu de naissance",
+      "birthplaceLatin": "Lieu de naissance (alphabet latin)",
+      "birthplaceArabic": "Lieu de naissance (arabe)",
+      "birthplaceSearch": "Rechercher en arabe ou en alphabet latin",
+      "birthplaceManual": "Autre lieu / saisir les noms manuellement",
+      "birthplaceFormat": "Saisir Latin - Arabe, ex. Casablanca - الدار البيضاء.",
+      "birthplaceClear": "Effacer le lieu de naissance"
     },
     "status": {
       "active": "Actif",
@@ -4800,7 +4818,8 @@
         "unknownFeeType": "aucun type de frais nommé « {{value}} »",
         "invalidFee": "le frais {{value}} est invalide",
         "feeYearMismatch": "le frais concerne {{value}}, pas l’année d’inscription de l’élève",
-        "feeBeforeEnrollment": "le frais commence le {{value}}, avant l’inscription de l’élève"
+        "feeBeforeEnrollment": "le frais commence le {{value}}, avant l’inscription de l’élève",
+        "invalidBirthplace": "Le lieu de naissance ne doit pas dépasser 200 caractères."
       }
     },
     "card": {
@@ -6147,6 +6166,7 @@
     }
   },
   "validationMessages": {
+    "unknownBirthplaceId": "Choisissez un lieu de naissance valide.",
     "occasionalImportRequiresDateAndFinalAmount": "Les imports occasionnels nécessitent une date de facturation et un montant final sans remise récurrente",
     "duplicatePermissionIds": "Permissions en double",
     "duplicateSidebarEntries": "Entrées de menu en double",
@@ -6392,7 +6412,8 @@
     "schoolEmailRequired": "L’adresse e-mail de l’école est obligatoire",
     "schoolAddressRequired": "L’adresse de l’école est obligatoire",
     "examPlanningMonth": "Mois, dates ou identifiants d’examen en double invalides",
-    "examPlanningJsonLimit": "Le fichier JSON dépasse 5 Mo"
+    "examPlanningJsonLimit": "Le fichier JSON dépasse 5 Mo",
+    "atMostThreePhoneNumbers": "Saisissez au plus trois numéros de téléphone"
   },
   "academic": {
     "accountantAssignmentOptional": "L’affectation à un cycle est facultative. Vous pourrez l’ajouter plus tard.",
@@ -6457,12 +6478,6 @@
     "lessonsHelp": "Une leçon par ligne. Le texte arabe s’écrit de droite à gauche.",
     "invalidDraft": "Saisissez une matière et une date d’examen valide. Maximum : 40 leçons par matière et 500 caractères par leçon.",
     "printFailed": "Impossible de préparer le calendrier des examens pour l’impression.",
-    "languages": {
-      "fr": "Français",
-      "ar": "Arabe",
-      "en": "Anglais",
-      "es": "Espagnol"
-    },
     "schedule": "Programme",
     "dayCount": "{{count}} jours",
     "subjectCount": "{{count}} matières",
@@ -6488,6 +6503,7 @@
       "invalidFile": "JSON de planification invalide. Vérifiez le format, la version, les dates, les matières et les leçons.",
       "wrongYear": "Ce fichier concerne une autre année scolaire. Sélectionnez cette année avant de l’importer.",
       "unknownClasses": "Certaines classes du fichier n’existent pas dans l’année scolaire sélectionnée.",
+      "ambiguousClasses": "Certains noms correspondent à plusieurs classes. Donnez un nom unique à chaque classe avant l’importation.",
       "fileTooLarge": "Le fichier JSON doit faire 5 Mo maximum.",
       "exportFailed": "Impossible d’exporter la planification. Rechargez la page et réessayez.",
       "importFailed": "Impossible d’importer la planification. Réessayez.",
@@ -6499,6 +6515,62 @@
       "description": "Tous les examens planifiés et les leçons à réviser de chaque classe et de chaque mois de {{year}} seront effacés, y compris les modifications non enregistrées. Les classes et leurs paramètres de visibilité sont conservés.",
       "cleared": "Tout le contenu de la planification a été effacé.",
       "failed": "Impossible d’effacer la planification. Réessayez."
+    }
+  },
+  "insurance": {
+    "title": "Assurance",
+    "subtitle": "Liste officielle des inscrits, prête à imprimer par classe",
+    "classes": "Classes",
+    "allClasses": "Toutes les classes",
+    "print": "Imprimer",
+    "preview": "Aperçu de la liste d’assurance",
+    "popupBlocked": "Autorisez les fenêtres pop-up pour imprimer.",
+    "printFailed": "Impossible d’imprimer la liste.",
+    "emptyTitle": "Aucun élève inscrit",
+    "emptyDescription": "Aucun élève actif n’est inscrit et placé dans une classe pour cette année scolaire.",
+    "document": {
+      "title": "Liste officielle des inscrits",
+      "licenseNumber": "N° d’autorisation :",
+      "licenseDate": "Date :",
+      "academicYear": "Année scolaire :",
+      "class": "Classe :",
+      "address": "Adresse :",
+      "phone": "Téléphone :",
+      "cycles": "Cycles autorisés :",
+      "rowNumber": "N°",
+      "massarCode": "Code Massar",
+      "studentName": "Nom de l’élève",
+      "birthDate": "Date de naissance",
+      "birthPlace": "Lieu",
+      "previousSchool": "Établissement d’origine",
+      "previousSchoolName": "Nom",
+      "previousLevel": "Dernier niveau",
+      "leftOn": "Date de départ",
+      "currentSchool": "Établissement actuel",
+      "firstEnrollment": "Date de première inscription",
+      "renewal": "Date de réinscription cette année",
+      "levels": "Niveaux suivis",
+      "notes": "Observations",
+      "directorSignature": "Signature de la directrice pédagogique",
+      "provincialDirectorate": "Direction provinciale",
+      "insurance": "Assurance",
+      "levelNames": {
+        "PS": "Petite section",
+        "MS": "Moyenne section",
+        "GS": "Grande section",
+        "CP": "1re année primaire",
+        "CE1": "2e année primaire",
+        "CE2": "3e année primaire",
+        "CM1": "4e année primaire",
+        "CM2": "5e année primaire",
+        "CE6": "6e année primaire",
+        "1AC": "1re année collège",
+        "2AC": "2e année collège",
+        "3AC": "3e année collège",
+        "TC": "Tronc commun",
+        "1BAC": "1re année bac",
+        "2BAC": "2e année bac"
+      }
     }
   }
 }

@@ -179,7 +179,7 @@ const FullStudentForm = ({
         })
       : studentData.fees
 
-    const { addressLocation, ...flatStudentFields } = studentFields
+    const { addressLocation, birthplaceEntry: _birthplaceEntry, ...flatStudentFields } = studentFields
     const flatTransportAssignment = canAssignTransport && transportEnabled && transportAssignment
       ? (() => {
           const { pickup, dropoff, ...fields } = transportAssignment

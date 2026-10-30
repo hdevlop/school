@@ -26,7 +26,6 @@
     "groupNumber": "Topic group {{number}}",
     "groupLabel": "Subject area (optional)",
     "groupLabelPlaceholder": "For example: Grammar",
-    "language": "Lesson language",
     "lessons": "Lessons to revise",
     "lessonsHelp": "One lesson per line. Arabic text is written from right to left.",
     "addGroup": "Add subject area",
@@ -1315,6 +1314,10 @@
         "teachingDays": {
           "title": "Teaching days",
           "description": "Choose the teaching days for all sections in the active academic year. Existing lessons and supervision must be moved before removing a day. Historical timetables keep their days."
+        },
+        "officialIdentity": {
+          "title": "Official documents",
+          "description": "Printed on ministry documents such as the insurance register."
         }
       },
       "generalTab": "System",
@@ -1401,7 +1404,14 @@
       "currentAcademicYear": "Current Academic Year",
       "schoolStartTime": "School Start Time",
       "schoolEndTime": "School End Time",
-      "lunchBreakDuration": "Lunch Break Duration (minutes)"
+      "lunchBreakDuration": "Lunch Break Duration (minutes)",
+      "schoolNameAr": "School name (Arabic)",
+      "schoolAddressAr": "Address (Arabic)",
+      "officialPhone1": "Phone 1",
+      "officialPhone2": "Phone 2",
+      "officialPhone3": "Phone 3",
+      "licenseNumber": "License number",
+      "licenseDate": "License date"
     },
     "academic": {
       "semesterPlaceholder": "Semester",
@@ -2270,7 +2280,14 @@
       "feesOptional": "Fees are optional at enrollment. You can add them later from the student’s Fees tab.",
       "noFeeTypesHint": "No fee types are set up. Finish enrollment without fees, or create one under Financial → Fee Types.",
       "manageFeeTypes": "Open Fee Types (new tab)",
-      "saveFailed": "Could not validate or save the student. Your entries are kept; please try again."
+      "saveFailed": "Could not validate or save the student. Your entries are kept; please try again.",
+      "birthplace": "Birthplace",
+      "birthplaceLatin": "Birthplace (Latin script)",
+      "birthplaceArabic": "Birthplace (Arabic)",
+      "birthplaceSearch": "Search in Arabic or Latin script",
+      "birthplaceManual": "Other place / enter names manually",
+      "birthplaceFormat": "Use Latin - Arabic, e.g. Casablanca - الدار البيضاء.",
+      "birthplaceClear": "Clear birthplace"
     },
     "dialogs": {
       "deleteWarning": "Student data will be permanently deleted across all school years.",
@@ -2543,7 +2560,8 @@
         "unknownFeeType": "no fee type named \"{{value}}\"",
         "invalidFee": "the fee {{value}} is invalid",
         "feeYearMismatch": "the fee is for {{value}}, not the year the student joins",
-        "feeBeforeEnrollment": "the fee starts on {{value}}, before the student's enrollment"
+        "feeBeforeEnrollment": "the fee starts on {{value}}, before the student's enrollment",
+        "invalidBirthplace": "Birthplace names must be at most 200 characters."
       }
     }
   },
@@ -5093,7 +5111,8 @@
     "openSidebar": "Open sidebar",
     "closeSidebar": "Close sidebar",
     "collapseSidebar": "Collapse",
-    "expandSidebar": "Expand"
+    "expandSidebar": "Expand",
+    "insurance": "Insurance"
   },
   "classRoutines": {
     "success": {
@@ -6752,6 +6771,7 @@
     }
   },
   "validationMessages": {
+    "unknownBirthplaceId": "Choose a valid birthplace.",
     "occasionalImportRequiresDateAndFinalAmount": "Occasional imports require a charge date and a final amount without a recurring discount",
     "duplicatePermissionIds": "Duplicate permission IDs",
     "duplicateSidebarEntries": "Duplicate sidebar entries",
@@ -6997,7 +7017,8 @@
     "schoolEmailRequired": "School email is required",
     "schoolAddressRequired": "School address is required",
     "examPlanningMonth": "Invalid month, dates or duplicate entry IDs",
-    "examPlanningJsonLimit": "JSON file exceeds 5 MB"
+    "examPlanningJsonLimit": "JSON file exceeds 5 MB",
+    "atMostThreePhoneNumbers": "Enter at most three phone numbers"
   },
   "academic": {
     "accountantAssignmentOptional": "Cycle assignment is optional. You can assign a cycle later.",
@@ -7062,12 +7083,6 @@
     "lessonsHelp": "One lesson per line. Arabic text is written from right to left.",
     "invalidDraft": "Enter a subject and a valid exam date. Use up to 40 lessons per subject and 500 characters per lesson.",
     "printFailed": "Could not prepare the exam schedule for printing.",
-    "languages": {
-      "fr": "French",
-      "ar": "Arabic",
-      "en": "English",
-      "es": "Spanish"
-    },
     "schedule": "Schedule",
     "dayCount": "{{count}} days",
     "subjectCount": "{{count}} subjects",
@@ -7093,6 +7108,7 @@
       "invalidFile": "Invalid planning JSON. Check the format, version, dates, subjects and lessons.",
       "wrongYear": "This file belongs to another school year. Select that year before importing.",
       "unknownClasses": "Some classes in this file do not exist in the selected school year.",
+      "ambiguousClasses": "Some class names match more than one class. Give each class a unique name before importing.",
       "fileTooLarge": "The JSON file must be 5 MB or smaller.",
       "exportFailed": "The planning could not be exported. Reload and try again.",
       "importFailed": "The planning could not be imported. Try again.",
@@ -7104,6 +7120,62 @@
       "description": "This removes all planned exams and revision lessons for every class and month in {{year}}, including unsaved changes. Classes and visibility settings are kept.",
       "cleared": "All planning content has been cleared.",
       "failed": "The planning could not be cleared. Try again."
+    }
+  },
+  "insurance": {
+    "title": "Insurance",
+    "subtitle": "Official list of enrolled students, ready to print by class",
+    "classes": "Classes",
+    "allClasses": "All classes",
+    "print": "Print",
+    "preview": "Insurance list preview",
+    "popupBlocked": "Allow pop-ups to print.",
+    "printFailed": "The list could not be printed.",
+    "emptyTitle": "No enrolled students",
+    "emptyDescription": "No active student is enrolled and placed in a class for this school year.",
+    "document": {
+      "title": "Official list of enrolled students",
+      "licenseNumber": "License no.:",
+      "licenseDate": "Date:",
+      "academicYear": "School year:",
+      "class": "Class:",
+      "address": "Address:",
+      "phone": "Phone:",
+      "cycles": "Licensed cycles:",
+      "rowNumber": "No.",
+      "massarCode": "Massar code",
+      "studentName": "Student name",
+      "birthDate": "Date of birth",
+      "birthPlace": "Place",
+      "previousSchool": "Previous school",
+      "previousSchoolName": "Name",
+      "previousLevel": "Last level",
+      "leftOn": "Date left",
+      "currentSchool": "Current school",
+      "firstEnrollment": "First enrollment date",
+      "renewal": "Re-enrollment date this year",
+      "levels": "Levels studied",
+      "notes": "Notes",
+      "directorSignature": "Head of school signature",
+      "provincialDirectorate": "Provincial directorate",
+      "insurance": "Insurance",
+      "levelNames": {
+        "PS": "Nursery, small section",
+        "MS": "Nursery, middle section",
+        "GS": "Nursery, senior section",
+        "CP": "1st year primary",
+        "CE1": "2nd year primary",
+        "CE2": "3rd year primary",
+        "CM1": "4th year primary",
+        "CM2": "5th year primary",
+        "CE6": "6th year primary",
+        "1AC": "1st year middle school",
+        "2AC": "2nd year middle school",
+        "3AC": "3rd year middle school",
+        "TC": "Common core",
+        "1BAC": "1st year baccalaureate",
+        "2BAC": "2nd year baccalaureate"
+      }
     }
   }
 }

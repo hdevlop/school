@@ -133,3 +133,12 @@ describe('schoolSetupSchema', () => {
     expect(schoolSetupSchema.safeParse({ ...setup, currentAcademicYear: '2026' }).success).toBe(false);
   });
 });
+
+describe('settingsSchema official identity', () => {
+  it('starts empty, keeps local phone numbers and refuses a malformed license date', () => {
+    expect(settingsSchema.parse(minimal)).toMatchObject({ schoolNameAr: '', schoolPhones: [], schoolLicenseNumber: '', schoolLicenseDate: '' });
+    expect(settingsSchema.parse({ ...minimal, schoolPhones: ['0522750085', '', ''] }).schoolPhones).toEqual(['0522750085', '', '']);
+    expect(settingsSchema.safeParse({ ...minimal, schoolPhones: ['call us'] }).success).toBe(false);
+    expect(settingsSchema.safeParse({ ...minimal, schoolLicenseDate: '19/10/2015' }).success).toBe(false);
+  });
+});

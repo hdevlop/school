@@ -14,6 +14,7 @@ import { StudentValidator } from './StudentValidator';
 import { AuthService, UserService } from '../../auth';
 import { StorageService } from 'najm-storage';
 import { nanoid } from 'nanoid';
+import { resolveBirthplace } from '@sms/contracts/birthplaces';
 
 @Service()
 export class StudentService {
@@ -186,6 +187,7 @@ export class StudentService {
       addressLatitude: data.addressLatitude,
       addressLongitude: data.addressLongitude,
       dateOfBirth: data.dateOfBirth,
+      ...resolveBirthplace(data),
       age: calculateAge(data.dateOfBirth),
       gender: data.gender,
       enrollmentDate: data.enrollmentDate,
@@ -239,7 +241,7 @@ export class StudentService {
     const STUDENT_UPDATE_KEYS = [
       'name', 'arabicName', 'studentCode', 'phone', 'address', 'addressPlaceId',
       'addressLatitude', 'addressLongitude', 'gender',
-      'dateOfBirth', 'enrollmentDate', 'graduationDate', 'medicalConditions',
+      'dateOfBirth', 'birthplaceId', 'birthplace', 'birthplaceArabic', 'enrollmentDate', 'graduationDate', 'medicalConditions',
       'previousSchool', 'image'
     ];
 
@@ -256,6 +258,7 @@ export class StudentService {
 
     const userData = { ...pickProps(data, USER_UPDATE_KEYS), ...loginIdentityUpdate(data, student) };
     const studentData = pickProps(data, STUDENT_UPDATE_KEYS);
+    Object.assign(studentData, resolveBirthplace(data));
 
     if (data.image !== undefined) {
       const genderSuffix = data.gender === 'F' ? 'female' : 'male';

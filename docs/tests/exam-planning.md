@@ -10,7 +10,9 @@ separate pages in that dropdown.
   supplies every class, including classes without exams or teaching assignments.
 - `exam_planning` stores one row per class and academic year, with class
   visibility and a map of monthly entries. Each entry has a stable ID, date,
-  subject, language and revision lessons. These plans do not create graded exams.
+  subject and revision lessons. These plans do not create graded exams. Entries
+  no longer store a lesson language; one saved or exported with `language` is
+  still accepted, and the field is dropped.
 - GET `/api/exam-planning` requires `read:exams`. PUT `/:classId` saves a single
   month, preserving other months and visibility. PUT `/visibility` atomically
   saves the selected classes, preserving all revision content. Both writes
@@ -32,10 +34,10 @@ separate pages in that dropdown.
    A4 preview and print use the same dates; a reversed range shows validation.
 2. Every enabled class appears as a tab. **All classes** includes the empty ones.
    The header gear opens the standard settings sheet with all year-owned classes.
-3. Select a subject to edit dates, subject names, language and revision lessons.
+3. Select a subject to edit dates, subject names and revision lessons.
    **Add exam** adds a planning entry without requiring a teacher assignment.
    The default view follows the reference's compact day cards and persistent
-   side editor. Subject/date/language details stay visible for editors.
+   side editor. Subject/date details stay visible for editors.
    The standard app page header is unchanged. UI colors, font, borders and
    radii follow the app theme; the A4 document retains its reference colors.
 4. Save or cancel changes before switching dates/classes or printing. Drafts
@@ -50,9 +52,12 @@ separate pages in that dropdown.
 6. The Najm Kit tabs have automatic width and share a toolbar with the From/To
    filters. All planning date controls use Kit `DateInput`, including the exam
    details editor, with calendar bounds and shared locale/theme formatting.
-7. Subject and lesson language share a row using Kit `TextInput` and
-   `SelectInput`. Delete, Cancel and Preview/Save share the editor action row;
-   fields and actions wrap on narrow screens.
+7. The subject uses Kit `TextInput` and the lessons Kit `Textarea`; neither
+   gets a page-level focus outline over Kit's own ring. There is no lesson
+   language field: the first letter of the text decides, like `dir="auto"`,
+   so Arabic lessons get the Arabic font and right-to-left layout on screen
+   and on the A4 sheet. Delete, Cancel and Preview/Save share the editor
+   action row; actions wrap on narrow screens.
 8. The editor header is one compact row: calendar icon, date/class and subject.
    The edit button and redundant "Edit revision lessons" caption are removed. Long header text
    truncates with its full text available on hover, keeping the row compact.
@@ -87,15 +92,20 @@ preserves an existing nonempty November plan on reruns.
 ### JSON backup and import
 
 - The toolbar exports all saved planning for the viewed school year, including
-  hidden classes, languages, lessons and visibility. Save/cancel drafts first.
+  hidden classes, lessons and visibility. Save/cancel drafts first.
 - JSON uses `format: "school-exam-planning"`, `version: 1`, `schoolYear`,
-  `exportedAt` and `classes` (IDs, names, visibility and months). Maximum 5 MB.
+  `exportedAt` and `classes` (names, visibility and months; no database class IDs).
+  Maximum 5 MB. Older version 1 exports containing class IDs remain accepted;
+  those IDs are ignored and removed during normalization.
 - Import opens a Najm sheet for file selection, validation and a class/count
   preview. Confirming import replaces each included month's entries and restores
   the included classes' visibility. Empty arrays clear a month. Omitted months
-  and classes are preserved. Class names are informational; IDs identify classes.
-- The browser and REST endpoint share validation rules. Invalid dates, duplicate IDs,
+  and classes are preserved. Class names identify classes in the destination's
+  owned school-year catalog, ignoring case, surrounding whitespace and Unicode
+  composition. Matching does not depend on the source database's IDs.
+- The browser and REST endpoint share validation rules. Invalid dates, duplicate entry IDs or class names,
   oversized lessons, unknown versions/classes and another school year are refused.
+  Ambiguous destination names are refused before writing any part of the batch.
   `PUT /api/exam-planning/import` requires school-wide `update:exams` and saves
   the batch in one atomic upsert. Import does not create classes or sections.
 - Repeatable Playwright acceptance uses only the marked local
@@ -114,6 +124,12 @@ preserves an existing nonempty November plan on reruns.
   Full typecheck, production build, translations, workspace boundaries and 738
   frontend/contracts tests passed. Lint passed with the existing ParentsTable
   dependency warning. No main-school records were changed.
+
+- Name-based transfer regressions cover ID-free exports, older exports with
+  foreign database IDs, destination ID resolution, unknown names despite a
+  matching legacy ID, duplicate names and ambiguous destination names. The
+  browser acceptance script checks ID-free downloads and imports a legacy file
+  containing a different machine's class ID.
 
 ### Existing checks
 

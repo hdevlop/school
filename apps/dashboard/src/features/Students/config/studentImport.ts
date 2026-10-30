@@ -20,7 +20,7 @@ const parentSchema = createParentSchemas((key) => key).importParent;
  */
 export const STUDENT_IMPORT_COLUMNS = [
   'studentCode', 'name', 'email', 'phone', 'class', 'section', 'gender', 'status',
-  'address', 'dateOfBirth', 'enrollmentDate', 'arabicName',
+  'address', 'dateOfBirth', 'birthplaceId', 'birthplace', 'birthplaceArabic', 'enrollmentDate', 'arabicName',
   'guardianName', 'guardianPhone', 'guardianPhone2', 'guardianEmail', 'guardianCin', 'guardianRelationship',
   'parents', 'fees', 'left', 'leftOn',
 ] as const;
@@ -28,6 +28,7 @@ export const STUDENT_IMPORT_COLUMNS = [
 export type StudentImportReason =
   | 'missingName'
   | 'invalidArabicName'
+  | 'invalidBirthplace'
   | 'invalidGender'
   | 'invalidStatus'
   | 'missingLeavingDate'
@@ -56,6 +57,9 @@ export interface StudentImportPayload {
   phone?: string;
   address?: string;
   dateOfBirth?: string;
+  birthplaceId?: string;
+  birthplace?: string;
+  birthplaceArabic?: string;
   gender: Gender;
   status?: StudentStatus;
   departure?: { leftOn: string; status: 'withdrawn' };
@@ -144,6 +148,10 @@ export function buildStudentImport(
     if (!name) problem('missingName');
     const arabicName = field('arabicName');
     if (arabicName.length > 100) problem('invalidArabicName');
+    const birthplaceId = field('birthplaceId');
+    const birthplace = field('birthplace');
+    const birthplaceArabic = field('birthplaceArabic');
+    if (birthplaceId.length > 50 || birthplace.length > 200 || birthplaceArabic.length > 200) problem('invalidBirthplace');
 
     const studentCode = field('studentCode');
     if (studentCode && codes.has(studentCode)) problem('duplicateCode', studentCode);
@@ -309,6 +317,9 @@ export function buildStudentImport(
       ...(phone && { phone }),
       ...(address && { address }),
       ...(dateOfBirth && { dateOfBirth }),
+      ...(birthplaceId && { birthplaceId }),
+      ...(birthplace && { birthplace }),
+      ...(birthplaceArabic && { birthplaceArabic }),
       gender,
       ...(status && { status }),
       ...(leftOn && { departure: { leftOn, status: 'withdrawn' as const } }),

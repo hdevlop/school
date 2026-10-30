@@ -25,6 +25,7 @@ import { Checkbox, ImageInput, Input, NAvatar, NCard, NIcon, Textarea } from 'na
 import { NativeProfileSelect } from '../NativeProfileSelect';
 import { Parent, Student } from '../types';
 import { useTranslation } from 'najm-i18n/react';
+import { birthplaceLabel } from '@sms/contracts/birthplace';
 
 type Translate = (key: string, params?: Record<string, unknown> | null) => string;
 
@@ -510,6 +511,7 @@ function ReadOnlyOverview({
             <StudentFact icon={User} label={t('students.form.fullName')} value={student.name} tone="blue" />
             {student.arabicName?.trim() && <StudentFact icon={User} label={t('students.form.arabicName')} value={<span lang="ar" dir="rtl">{student.arabicName}</span>} tone="blue" />}
             <StudentFact icon={IdCard} label={t('students.form.studentCode')} value={student.studentCode} tone="violet" />
+            <StudentFact icon={MapPin} label={t('students.form.birthplace')} value={birthplaceLabel(student, language)} tone="blue" />
             <StudentFact
               icon={Calendar}
               label={t('students.form.dateOfBirth')}

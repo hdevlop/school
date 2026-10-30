@@ -23,6 +23,7 @@ import {
   GradeService,
   AssessmentService,
   ExamService,
+  ExamPlanningRepository,
   AttendanceService,
   AlertRepository,
   AnnouncementRepository,
@@ -52,6 +53,7 @@ export async function clearDemoData(server: Server, { includeAcademic = false }:
   const gradeService = await server.container.resolve(GradeService);
   const assessmentService = await server.container.resolve(AssessmentService);
   const examService = await server.container.resolve(ExamService);
+  const examPlanningRepository = await server.container.resolve(ExamPlanningRepository);
   const attendanceService = await server.container.resolve(AttendanceService);
   const alertRepository = await server.container.resolve(AlertRepository);
   const announcementRepository = await server.container.resolve(AnnouncementRepository);
@@ -114,6 +116,9 @@ export async function clearDemoData(server: Server, { includeAcademic = false }:
 
   await examService.clearForSeedReset();
   console.log('✅ Exams cleared');
+
+  await examPlanningRepository.clearForSeedReset();
+  console.log('✅ Exam planning cleared');
 
   await attendanceService.clearForSeedReset();
   console.log('✅ Attendance cleared');

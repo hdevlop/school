@@ -6,7 +6,7 @@ import { NButton } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { toOfficialClassName, type ExamPlanningClass, type ExamPlanningEntry } from '@sms/contracts';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
-import type { PlanningEntrySelection } from './examPlanningModel';
+import { planningTextLanguage, type PlanningEntrySelection } from './examPlanningModel';
 import styles from './ExamPlanning.module.css';
 
 export function PlanningSchedule({ classes, entriesFor, selected, canEdit, saving, onSelect, onAdd }: {
@@ -48,7 +48,7 @@ export function PlanningSchedule({ classes, entriesFor, selected, canEdit, savin
           </h3>
           <div id={contentId} hidden={collapsed}>
           {dayEntries.map(entry => <button key={entry.id} type="button" disabled={saving} className={styles.entry} aria-pressed={selected?.entryId === entry.id && selected?.classId === cls.id && selected.month === entry.date.slice(0, 7)} onClick={() => onSelect({ classId: cls.id, month: entry.date.slice(0, 7), entryId: entry.id })}>
-            <span><span className={styles.entryLabel} lang={entry.language} dir="auto">{entry.subject}</span><span className={styles.entryTopic}>{t('examPlanning.lessonCount', { count: entry.lessons.filter(line => line.trim()).length })}</span></span>
+            <span><span className={styles.entryLabel} lang={planningTextLanguage(entry.subject)} dir="auto">{entry.subject}</span><span className={styles.entryTopic}>{t('examPlanning.lessonCount', { count: entry.lessons.filter(line => line.trim()).length })}</span></span>
             <ChevronRight className={styles.entryArrow} aria-hidden="true" />
           </button>)}
           </div>

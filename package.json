@@ -18,6 +18,7 @@
     "typecheck": "bun run --cwd packages/contracts typecheck && bun run --cwd packages/server typecheck && bun run --cwd packages/server typecheck:test && bun run --cwd packages/seed typecheck && bun run --cwd apps/dashboard typecheck",
     "test:config": "bun test packages/contracts/tests apps/dashboard/tests",
     "test:exam-planning:browser": "node apps/dashboard/scripts/test-exam-planning-json.mjs",
+    "test:student-birthplace:browser": "node apps/dashboard/scripts/test-student-birthplace-ui.mjs",
     "test:offline": "bun test apps/dashboard/tests/offline packages/server/tests/offline",
     "test:offline:browser": "bun run --cwd apps/dashboard test:offline:browser",
     "test:offline:registration": "bun run --cwd apps/dashboard test:offline:registration",

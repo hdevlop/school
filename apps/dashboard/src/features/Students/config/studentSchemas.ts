@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { GENDER_VALUES, STUDENT_STATUS_VALUES } from '@sms/contracts';
+import { parseBirthplaceEntry } from './birthplaceEntry';
 
 type T = (key: string) => string;
 
@@ -63,6 +64,10 @@ export const createStudentSchemas = (t: T) => {
     addressLocation: locationValueSchema,
     addressPlaceId: z.string().max(255).optional().nullable(),
     dateOfBirth: optionalDateField,
+    birthplaceEntry: z.string().refine(value => !value.trim() || !!parseBirthplaceEntry(value), t('students.form.birthplaceFormat')).optional(),
+    birthplaceId: z.string().max(50).nullish(),
+    birthplace: z.string().trim().max(200, t('students.import.reasons.invalidBirthplace')).nullish(),
+    birthplaceArabic: z.string().trim().max(200, t('students.import.reasons.invalidBirthplace')).nullish(),
     gender: z.enum(GENDER_VALUES),
     enrollmentDate: dateField,
     medicalConditions: z.string().max(1000, t('validationMessages.medicalConditionsDescriptionTooLong')).nullish().optional(),

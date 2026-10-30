@@ -14,6 +14,7 @@ type FeatureDetails = { resources: readonly string[]; section: HomeSection; tone
 // A feature can contain several resources: payments and installments belong to Fees.
 const FEATURE_DETAILS: Partial<Record<PageAccess, FeatureDetails>> = {
   students: { resources: ['students', 'enrollments'], section: 'people', tone: 'blue' },
+  insurance: { resources: ['students'], section: 'people', tone: 'green' },
   parents: { resources: ['parents'], section: 'people', tone: 'teal' },
   teachers: { resources: ['teachers'], section: 'academic', tone: 'rose' },
   staff: { resources: ['staff', 'staff-roles', 'zones'], section: 'people', tone: 'violet' },

@@ -8,25 +8,27 @@ export type ExamPlanningJson = {
   version: 1;
   schoolYear: string;
   exportedAt: string;
-  classes: ExamPlanningClass[];
+  classes: Omit<ExamPlanningClass, 'id'>[];
 };
 
 const monthPattern = /^\d{4}-(0[1-9]|1[0-2])$/;
 const record = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 const onlyKeys = (value: Record<string, unknown>, keys: string[]) => Object.keys(value).every(key => keys.includes(key));
 const text = (value: unknown, max: number): value is string => typeof value === 'string' && value.length > 0 && value.length <= max;
+const classNameKey = (name: string) => name.trim().normalize('NFC').toLowerCase();
 
 export function isExamPlanningEntry(value: unknown): value is ExamPlanningEntry {
+  // `language` is no longer stored: saved plans and older exports may still carry it, and it is dropped.
   if (!record(value) || !onlyKeys(value, ['id', 'date', 'subject', 'language', 'lessons'])) return false;
   return text(value.id, 100) && typeof value.date === 'string' && isDateOnly(value.date)
     && typeof value.subject === 'string' && text(value.subject.trim(), 120)
-    && REVISION_LANGUAGES.some(language => language === value.language)
+    && (!('language' in value) || REVISION_LANGUAGES.some(language => language === value.language))
     && Array.isArray(value.lessons) && value.lessons.length <= 40
     && Array.from(value.lessons).every(lesson => typeof lesson === 'string' && text(lesson.trim(), 500));
 }
 
 export function normalizeExamPlanningEntry(entry: ExamPlanningEntry): ExamPlanningEntry {
-  return { ...entry, subject: entry.subject.trim(), lessons: entry.lessons.map(lesson => lesson.trim()) };
+  return { id: entry.id, date: entry.date, subject: entry.subject.trim(), lessons: entry.lessons.map(lesson => lesson.trim()) };
 }
 
 export function isExamPlanningMonth(month: string, entries: unknown): entries is ExamPlanningEntry[] {
@@ -45,12 +47,14 @@ export function isExamPlanningJson(value: unknown): value is ExamPlanningJson {
     || !isDateOnly(value.exportedAt.slice(0, 10)) || !Number.isFinite(Date.parse(value.exportedAt))) return false;
   if (!Array.isArray(value.classes) || !value.classes.length || value.classes.length > 300) return false;
   const allowedMonths = new Set(examPlanningMonths(value.schoolYear));
-  const classIds = new Set<string>();
+  const classNames = new Set<string>();
   for (const cls of value.classes) {
-    if (!record(cls) || !onlyKeys(cls, ['id', 'name', 'visible', 'months']) || !text(cls.id, 100)
+    // Accept IDs from older exports, but class names alone identify imported classes.
+    if (!record(cls) || !onlyKeys(cls, ['id', 'name', 'visible', 'months']) || ('id' in cls && !text(cls.id, 100))
       || typeof cls.name !== 'string' || !text(cls.name.trim(), 200) || typeof cls.visible !== 'boolean' || !record(cls.months)) return false;
-    if (classIds.has(cls.id)) return false;
-    classIds.add(cls.id);
+    const name = classNameKey(cls.name);
+    if (classNames.has(name)) return false;
+    classNames.add(name);
     for (const [month, entries] of Object.entries(cls.months)) {
       if (!allowedMonths.has(month) || !isExamPlanningMonth(month, entries)) return false;
     }
@@ -61,8 +65,24 @@ export function isExamPlanningJson(value: unknown): value is ExamPlanningJson {
 /** Included months replace their entries; omitted months are preserved on import. */
 export function normalizeExamPlanningJson(document: ExamPlanningJson): ExamPlanningJson {
   return { ...document, classes: document.classes.map(cls => ({
-    ...cls, name: cls.name.trim(), months: Object.fromEntries(Object.entries(cls.months).map(([month, entries]) => [month, entries.map(normalizeExamPlanningEntry)])),
+    name: cls.name.trim(), visible: cls.visible,
+    months: Object.fromEntries(Object.entries(cls.months).map(([month, entries]) => [month, entries.map(normalizeExamPlanningEntry)])),
   })) };
+}
+
+/** Resolve names against the destination's scoped catalog; never trust exported database IDs. */
+export function resolveExamPlanningClasses(document: ExamPlanningJson, catalog: readonly Pick<ExamPlanningClass, 'id' | 'name'>[]):
+  { success: true; classes: ExamPlanningClass[] } | { success: false; error: 'unknownClasses' | 'ambiguousClasses' } {
+  const classes: ExamPlanningClass[] = [];
+  const matchedIds = new Set<string>();
+  for (const cls of document.classes) {
+    const matches = catalog.filter(known => classNameKey(known.name) === classNameKey(cls.name));
+    if (!matches.length) return { success: false, error: 'unknownClasses' };
+    if (matches.length > 1 || matchedIds.has(matches[0].id)) return { success: false, error: 'ambiguousClasses' };
+    matchedIds.add(matches[0].id);
+    classes.push({ ...cls, id: matches[0].id, name: matches[0].name });
+  }
+  return { success: true, classes };
 }
 
 export function parseExamPlanningJson(value: unknown): { success: true; data: ExamPlanningJson } | { success: false } {

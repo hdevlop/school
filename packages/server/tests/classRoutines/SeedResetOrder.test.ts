@@ -30,9 +30,28 @@ import legacyServerFeeTypes from '../../src/modules/seed-data/school/feeTypes.js
 import { TeacherRepository } from '../../src/modules/teachers/TeacherRepository';
 import { StaffAssignmentRepository } from '../../src/modules/staff/StaffAssignmentRepository';
 import { CycleRepository } from '../../src/modules/cycles/CycleRepository';
+import { ExamPlanningRepository } from '../../src/modules/examPlanning/ExamPlanningRepository';
 import { drizzle } from 'drizzle-orm/pg-proxy';
 
 describe('seed reset foreign-key order', () => {
+  it('deletes exam planning across all years without resolving a year or ownership', async () => {
+    const queries: string[] = [];
+    const repository = new ExamPlanningRepository();
+    repository.db = drizzle(async (sql) => {
+      queries.push(sql);
+      return { rows: [] };
+    }) as unknown as typeof repository.db;
+    for (const property of ['year', 'ownedWhere']) {
+      Object.defineProperty(repository, property, {
+        get: () => { throw new Error('Seed cleanup must not resolve request scope'); },
+      });
+    }
+
+    await repository.clearForSeedReset();
+
+    expect(queries).toEqual(['delete from "exam_planning"']);
+  });
+
   it('clears all cycles without needing a selected year after their dependents are gone', async () => {
     const deleted: unknown[] = [];
     const repository = new CycleRepository();
@@ -149,6 +168,8 @@ describe('seed reset foreign-key order', () => {
     expect(at('yearTransitions.clearForSeedReset')).toBeLessThan(at('studentEnrollmentService.clearForSeedReset'));
     expect(at('migrationIssues.clearForSeedReset')).toBeGreaterThan(-1);
     expect(at('migrationIssues.clearForSeedReset')).toBeLessThan(at('studentEnrollmentService.clearForSeedReset'));
+    expect(at('examPlanningRepository.clearForSeedReset')).toBeGreaterThan(-1);
+    expect(at('examPlanningRepository.clearForSeedReset')).toBeLessThan(at('academicYears.clearForSeedReset'));
     expect(at('staffService.clearAssignmentsForSeedReset')).toBeGreaterThan(at('teacherService.clearForSeedReset'));
     expect(at('staffService.clearAssignmentsForSeedReset')).toBeLessThan(at('vehicleService.deleteAll'));
     expect(calls.at(-1)).toBe('academicYears.clearForSeedReset');

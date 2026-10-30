@@ -26,6 +26,7 @@ import { GradeService } from '../grades/GradeService';
 import { AssessmentService } from '../assessments/AssessmentService';
 import { AttendanceService } from '../attendance/AttendanceService';
 import { ExamService } from '../exams/ExamService';
+import { ExamPlanningRepository } from '../examPlanning/ExamPlanningRepository';
 import { AnnouncementService } from '../announcements/AnnouncementService';
 import { AnnouncementRepository } from '../announcements/AnnouncementRepository';
 import { EventService as SchoolEventService } from '../events/EventService';
@@ -87,6 +88,7 @@ export class SeedService {
     private assessmentService: AssessmentService,
     private attendanceService: AttendanceService,
     private examService: ExamService,
+    private examPlanningRepository: ExamPlanningRepository,
     private announcementService: AnnouncementService,
     private announcementRepository: AnnouncementRepository,
     private schoolEventService: SchoolEventService,
@@ -183,6 +185,7 @@ export class SeedService {
     await this.gradeService.clearForSeedReset();
     await this.assessmentService.clearForSeedReset();
     await this.examService.clearForSeedReset();
+    await this.examPlanningRepository.clearForSeedReset();
     await this.attendanceService.clearForSeedReset();
     await this.alertRepository.clearForSeedReset();
     await this.announcementRepository.clearForSeedReset();

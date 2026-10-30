@@ -31,6 +31,13 @@ describe('independent sidebar visibility', () => {
     expect(assessmentsOnly).not.toContain('/exam-planning');
     expect(assessmentsOnly).not.toContain('/exams');
   });
+  it('shows insurance to school-wide student readers and ties it to the Students sidebar choice', () => {
+    expect(ids(createSidebarItems((key) => key, viewer('secretary', ['read:students'])))).toContain('/insurance');
+    expect(ids(createSidebarItems((key) => key, viewer('teacher', ['read:students'])))).not.toContain('/insurance');
+    const base = ['read:students', 'read:parents', SIDEBAR_CONFIGURED_PERMISSION];
+    expect(ids(createSidebarItems((key) => key, viewer('secretary', [...base, 'sidebar:students'])))).toContain('/insurance');
+    expect(ids(createSidebarItems((key) => key, viewer('secretary', [...base, 'sidebar:parents'])))).not.toContain('/insurance');
+  });
   it('preserves legacy navigation until a role is explicitly configured', () => {
     const user = viewer('accounting', ['read:fees', 'read:payroll', 'read:feeTypes']);
     expect(ids(createSidebarItems((key) => key, user))).toEqual(expect.arrayContaining(['/fees', '/payroll', '/fee-types']));

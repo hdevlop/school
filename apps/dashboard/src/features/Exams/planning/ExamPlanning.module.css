@@ -27,7 +27,8 @@
 .main button, .main input, .main select, .main textarea { font-family: inherit; }
 .main button { cursor: pointer; }
 .main button:disabled { cursor: default; opacity: .5; }
-.main button:focus-visible, .main input:focus-visible, .main select:focus-visible, .main textarea:focus-visible {
+/* Kit inputs and buttons draw their own focus ring; only this page's plain buttons need one. */
+.classButton:focus-visible, .dayTitle:focus-visible, .entry:focus-visible {
   outline: 2px solid var(--planning-accent);
   outline-offset: 3px;
 }
@@ -80,15 +81,14 @@
 .editDate > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .fieldLabel { display: block; color: var(--planning-text); font-size: 12px; font-weight: 700; margin-bottom: 7px; }
 .fieldLabel [lang='ar'] { font: 400 16px/1.5 PlanningArabic, serif; margin-inline-start: 5px; }
-.page .lessonsInput { display: block; width: 100%; min-height: 215px; padding: 11px; resize: vertical; border: var(--border-width, 1px) solid var(--planning-line); border-radius: var(--radius); background: var(--planning-panel); color: var(--planning-text); font: 400 13px/1.7 var(--font-sans); }
+.page .lessonsInput { display: block; width: 100%; min-height: 215px; padding: 11px; resize: vertical; font: 400 13px/1.7 var(--font-sans); }
 .page .lessonsInput[lang='ar'] { font: 400 18px/1.7 PlanningArabic, serif; }
 .fieldNote { color: var(--planning-muted); font-size: 11px; margin: 6px 0 15px; }
 .applyButton { font-size: 12px; white-space: normal; }
 .editorStatus { min-height: 18px; color: var(--planning-muted); font-size: 11px; margin: 10px 0 0; }
 .details { margin: 0 0 15px; border-top: var(--border-width, 1px) solid var(--planning-line); padding-top: 10px; }
-.detailFields { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: end; gap: 10px; margin-top: 12px; }
+.detailFields { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: end; gap: 10px; margin-top: 12px; }
 .detailFields > div { min-width: 0; }
-.detailDate { grid-column: 1 / -1; }
 .editorActions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
 .textButton { padding: 0; border: 0; background: none; color: var(--planning-muted); font-size: 11px; }
 .deleteButton { margin-inline-end: auto; color: var(--destructive); }

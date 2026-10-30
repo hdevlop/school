@@ -1,4 +1,4 @@
-import { boolean, doublePrecision, integer, jsonb, numeric, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
+import { boolean, date, doublePrecision, integer, jsonb, numeric, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
 
 import { idField, timestamps } from '../../database/shared';
 import { getEnumValues } from '../../shared/enums';
@@ -20,6 +20,12 @@ export const settings = pgTable('settings', {
   schoolEmail: text('school_email'),
   schoolWebsite: text('school_website'),
   schoolLogo: text('school_logo'),
+  // The official identity printed on ministry documents such as the insurance register.
+  schoolNameAr: text('school_name_ar'),
+  schoolAddressAr: text('school_address_ar'),
+  schoolPhones: jsonb('school_phones').$type<string[]>(),
+  schoolLicenseNumber: text('school_license_number'),
+  schoolLicenseDate: date('school_license_date'),
   receiptLanguage: text('receipt_language').$type<ReceiptLanguage>().notNull().default(DEFAULT_RECEIPT_LANGUAGE),
   currentAcademicYear: text('current_academic_year').notNull(),
   activeAcademicYearId: text('active_academic_year_id').references(() => academicYears.id, { onDelete: 'restrict' }),

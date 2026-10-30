@@ -5,6 +5,12 @@ export type PlanningDateRange = { from: string; to: string };
 export type ExamPlanningDrafts = Record<string, Record<string, ExamPlanningEntry[]>>;
 export type PlanningEntrySelection = { classId: string; month: string; entryId: string };
 
+/** Like `dir="auto"`, the first letter decides: Arabic text gets the Arabic font and right-to-left layout. */
+export function planningTextLanguage(text: string | readonly string[]): 'ar' | 'fr' {
+  const letter = (typeof text === 'string' ? text : text.join('\n')).match(/\p{L}/u)?.[0];
+  return letter && /\p{Script=Arabic}/u.test(letter) ? 'ar' : 'fr';
+}
+
 export function planningMonthRange(month: string): PlanningDateRange {
   const lastDay = new Date(Date.UTC(Number(month.slice(0, 4)), Number(month.slice(5, 7)), 0));
   return { from: `${month}-01`, to: lastDay.toISOString().slice(0, 10) };
@@ -38,6 +44,6 @@ export function examPlanningRecords(classes: ExamPlanningClass[], range: Plannin
   return classes.flatMap(cls => examPlanningEntries(cls, range, drafts).map(entry => ({
     id: `${cls.id}:${entry.date.slice(0, 7)}:${entry.id}`, title: entry.subject, date: entry.date, status: 'scheduled', class: { id: cls.id, name: cls.name },
     subject: { id: entry.subject, name: entry.subject },
-    planning: { round: '', semester: examPlanningSemester(entry.date), groups: [{ label: '', language: entry.language, lessons: entry.lessons }] },
+    planning: { round: '', semester: examPlanningSemester(entry.date), groups: [{ label: '', language: planningTextLanguage(entry.lessons), lessons: entry.lessons }] },
   })));
 }

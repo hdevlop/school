@@ -12,6 +12,7 @@ async function recordReset(includeAcademic?: boolean, failOn?: string) {
       'DriverService', 'ParentService', 'SettingsService', 'AcademicYearRepository',
       'AcademicYearTransitionRepository', 'AcademicYearMigrationIssueRepository',
       'ExpenseService', 'GradeService', 'AssessmentService', 'ExamService',
+      'ExamPlanningRepository',
       'AttendanceService', 'AlertRepository', 'AnnouncementRepository', 'EventService',
       'RefuelService', 'MaintenanceService', 'DisciplineService', 'BehaviorRewardService',
       'ClassRoutineService', 'RolloverService', 'SectionService', 'ClassService',
@@ -46,6 +47,9 @@ describe('interactive school reset cleanup', () => {
     const { calls, error } = await recordReset();
     expect(error).toBeUndefined();
     expect(calls.filter(call => /^(Cycle|Section|Class|Subject|FeeType)Service\./.test(call))).toEqual([]);
+    expect(calls).toContain('ExamPlanningRepository.clearForSeedReset');
+    expect(calls.indexOf('ExamPlanningRepository.clearForSeedReset'))
+      .toBeLessThan(calls.indexOf('AcademicYearRepository.clearForSeedReset'));
     expect(calls.at(-1)).toBe('AcademicYearRepository.clearForSeedReset');
   });
 
@@ -58,6 +62,7 @@ describe('interactive school reset cleanup', () => {
       'StudentEnrollmentService.clearForSeedReset', 'StudentService.deleteAll',
       'TeacherService.clearForSeedReset', 'StaffService.clearAssignmentsForSeedReset',
       'FeeService.clearForSeedReset',
+      'ExamPlanningRepository.clearForSeedReset',
     ]) {
       expect(calls.indexOf(dependency)).toBeGreaterThanOrEqual(0);
       expect(calls.indexOf(dependency)).toBeLessThan(section);
@@ -76,5 +81,14 @@ describe('interactive school reset cleanup', () => {
     expect(calls).not.toContain('SectionService.clearForSeedReset');
     expect(calls).not.toContain('CycleService.clearForSeedReset');
     expect(calls).not.toContain('AcademicYearRepository.clearForSeedReset');
+  });
+
+  it('stops before deleting years or academic structure when planning cleanup fails', async () => {
+    for (const includeAcademic of [false, true]) {
+      const { calls, error } = await recordReset(includeAcademic, 'ExamPlanningRepository.clearForSeedReset');
+      expect(error).toBe('Reset failed');
+      expect(calls).not.toContain('SectionService.clearForSeedReset');
+      expect(calls).not.toContain('AcademicYearRepository.clearForSeedReset');
+    }
   });
 });

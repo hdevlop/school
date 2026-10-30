@@ -94,8 +94,8 @@ try {
   const created = await api('/classes', 'POST', { name: className, level: 'Middle' });
   assert.equal(created.status, 200);
   classId = created.body.data.id;
-  const entry = { id: 'arabic', date: '2026-11-09', subject: 'اللغة العربية', language: 'ar', lessons: ['الجملة الاسمية'] };
-  const december = { ...entry, id: 'december', date: '2026-12-01', subject: 'Français', language: 'fr', lessons: ['Les accords'] };
+  const entry = { id: 'arabic', date: '2026-11-09', subject: 'اللغة العربية', lessons: ['الجملة الاسمية'] };
+  const december = { ...entry, id: 'december', date: '2026-12-01', subject: 'Français', lessons: ['Les accords'] };
   for (const [month, entries] of [['2026-11', [entry]], ['2026-12', [december]], ['2027-01', [{ ...entry, id: 'january', date: '2027-01-04' }]]]) {
     assert.equal((await api(`/exam-planning/${classId}`, 'PUT', { month, entries })).status, 200);
   }
@@ -114,8 +114,10 @@ try {
   assert.equal(exported.version, 1);
   assert.equal(exported.schoolYear, year);
   assert(!Number.isNaN(Date.parse(exported.exportedAt)));
-  const exportedClass = exported.classes.find(cls => cls.id === classId);
-  assert.deepEqual(exportedClass, { id: classId, name: className, visible: true, months: { '2026-11': [entry], '2026-12': [december], '2027-01': [{ ...entry, id: 'january', date: '2027-01-04' }] } });
+  assert(exported.classes.every(cls => !('id' in cls)), 'Exports identify classes by name without database IDs');
+  const exportedClass = exported.classes.find(cls => cls.name === className);
+  assert.deepEqual(exportedClass, { name: className, visible: true, months: { '2026-11': [entry], '2026-12': [december], '2027-01': [{ ...entry, id: 'january', date: '2027-01-04' }] } });
+  const savedExportedClass = { ...exportedClass, id: classId };
   assert.equal(exported.classes.length, baseline.length + 1, 'Export covers the whole catalog, independent of class/date filters');
   console.log('PASS JSON download includes the full year, Arabic/French lessons and visibility');
 
@@ -141,7 +143,7 @@ try {
     ['{broken', 'Invalid planning JSON. Check the format, version, dates, subjects and lessons.'],
     [{ ...document, version: 99 }, 'Invalid planning JSON. Check the format, version, dates, subjects and lessons.'],
     [{ ...document, schoolYear: '2025-2026', classes: [{ ...exportedClass, months: {} }] }, 'This file belongs to another school year. Select that year before importing.'],
-    [{ ...document, classes: [{ ...exportedClass, id: 'unknown-class' }] }, 'Some classes in this file do not exist in the selected school year.'],
+    [{ ...document, classes: [{ ...exportedClass, name: 'Unknown class' }] }, 'Some classes in this file do not exist in the selected school year.'],
     [{ ...document, classes: [{ ...exportedClass, months: { '2026-11': [{ ...entry, date: '2026-11-31' }] } }] }, 'Invalid planning JSON. Check the format, version, dates, subjects and lessons.'],
     [' '.repeat(5 * 1024 * 1024 + 1), 'The JSON file must be 5 MB or smaller.'],
   ]) {
@@ -150,16 +152,16 @@ try {
     assert(await importButton.isDisabled());
   }
   assert.equal(importRequests, 0, 'Invalid files must make no write requests');
-  assert.deepEqual(await ownPlan(), exportedClass, 'Validation failures preserve saved planning');
+  assert.deepEqual(await ownPlan(), savedExportedClass, 'Validation failures preserve saved planning');
   console.log('PASS invalid JSON, version, year, class, date and size are refused without writes');
 
-  await upload(document);
+  await upload({ ...document, classes: document.classes.map(cls => ({ ...cls, id: 'another-machine-class' })) });
   await sheet.getByText('1 classes · 2 months · 1 exams', { exact: true }).waitFor();
   const failImport = route => route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ message: 'Injected test outage' }) });
   await page.route('**/api/exam-planning/import', failImport);
   await importButton.click();
   await sheet.getByRole('alert').filter({ hasText: 'The planning could not be imported. Try again.' }).waitFor();
-  assert.deepEqual(await ownPlan(), exportedClass, 'A failed request must preserve saved planning');
+  assert.deepEqual(await ownPlan(), savedExportedClass, 'A failed request must preserve saved planning');
   await page.unroute('**/api/exam-planning/import', failImport);
   importRequests = 0;
   const importResponse = page.waitForResponse(response => new URL(response.url()).pathname === '/api/exam-planning/import' && response.request().method() === 'PUT');
@@ -179,7 +181,8 @@ try {
   for (const [bad, status] of [
     [{ ...document, version: 2 }, 400],
     [{ ...document, schoolYear: '2025-2026', classes: [{ ...exportedClass, months: {} }] }, 400],
-    [{ ...document, classes: [document.classes[0], { ...exportedClass, id: 'unknown-class', months: {} }] }, 404],
+    [{ ...document, classes: [document.classes[0], { ...exportedClass, name: 'Unknown class', months: {} }] }, 404],
+    [{ ...document, classes: [document.classes[0], { ...exportedClass, name: ` ${className.toLowerCase()} `, months: {} }] }, 400],
   ]) assert.equal((await api('/exam-planning/import', 'PUT', { document: bad })).status, status);
   const unsigned = await fetch(`${origin}/api/exam-planning/import`, { method: 'PUT', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ document }) });
   assert.equal(unsigned.status, 401);
@@ -193,7 +196,7 @@ try {
   await importButton.click();
   await sheet.waitFor({ state: 'hidden' });
   assert.equal(await page.getByRole('button', { name: className, exact: true }).count(), 0);
-  const hidden = (await downloadJson()).classes.find(cls => cls.id === classId);
+  const hidden = (await downloadJson()).classes.find(cls => cls.name === className);
   assert.equal(hidden.visible, false);
   assert.deepEqual(hidden.months['2026-12'], [december]);
   console.log('PASS restored visibility and export of hidden classes with no entries in the current view');

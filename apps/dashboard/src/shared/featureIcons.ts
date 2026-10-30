@@ -27,6 +27,7 @@ import {
   Settings,
   ShieldAlert,
   ShieldCheck,
+  ShieldPlus,
   Tag,
   TrendingDown,
   UserCheck,
@@ -55,6 +56,7 @@ export const FEATURE_ICONS = {
   alerts: AlertTriangle,
 
   students: UserRound,
+  insurance: ShieldPlus,
   parents: UsersRound,
   teachers: GraduationCap,
   staff: UserCog,

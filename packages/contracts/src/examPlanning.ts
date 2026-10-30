@@ -1,10 +1,7 @@
-import type { RevisionLanguage } from './assessmentPlanning';
-
 export type ExamPlanningEntry = {
   id: string;
   date: string;
   subject: string;
-  language: RevisionLanguage;
   lessons: string[];
 };
 

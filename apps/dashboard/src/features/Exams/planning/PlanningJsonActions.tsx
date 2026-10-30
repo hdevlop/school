@@ -5,7 +5,7 @@ import { Download, Upload } from 'lucide-react';
 import { NButton, NSheet } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { toast } from 'sonner';
-import { parseExamPlanningJson, MAX_EXAM_PLANNING_JSON_BYTES, type ExamPlanningClass, type ExamPlanningJson } from '@sms/contracts';
+import { parseExamPlanningJson, resolveExamPlanningClasses, MAX_EXAM_PLANNING_JSON_BYTES, type ExamPlanningClass, type ExamPlanningJson } from '@sms/contracts';
 
 export function PlanningJsonActions({ classes, schoolYear, canEdit, disabled, saving, onImport }: {
   classes: ExamPlanningClass[]; schoolYear: string; canEdit: boolean; disabled: boolean; saving: boolean;
@@ -42,8 +42,8 @@ export function PlanningJsonActions({ classes, schoolYear, canEdit, disabled, sa
       const result = parseExamPlanningJson(JSON.parse((await file.text()).replace(/^\uFEFF/, '')));
       if (!result.success) { setError(t('examPlanning.json.invalidFile')); return; }
       if (result.data.schoolYear !== schoolYear) { setError(t('examPlanning.json.wrongYear')); return; }
-      const known = new Set(classes.map(cls => cls.id));
-      if (result.data.classes.some(cls => !known.has(cls.id))) { setError(t('examPlanning.json.unknownClasses')); return; }
+      const resolved = resolveExamPlanningClasses(result.data, classes);
+      if (resolved.success === false) { setError(t(`examPlanning.json.${resolved.error}`)); return; }
       setDocument(result.data);
     } catch { setError(t('examPlanning.json.invalidFile')); }
     finally { setReading(false); }
@@ -73,7 +73,7 @@ export function PlanningJsonActions({ classes, schoolYear, canEdit, disabled, sa
         {fileError && <p role="alert" className="mt-4 text-sm text-destructive">{fileError}</p>}
         {pendingDocument && <div className="mt-4 space-y-3 text-sm">
           <p>{t('examPlanning.json.summary', { classes: pendingDocument.classes.length, months, entries })}</p>
-          <ul className="space-y-2">{pendingDocument.classes.map(cls => <li key={cls.id} className="rounded-md border p-3">{classes.find(known => known.id === cls.id)?.name ?? cls.name}</li>)}</ul>
+          <ul className="space-y-2">{pendingDocument.classes.map(cls => <li key={cls.name} className="rounded-md border p-3">{cls.name}</li>)}</ul>
         </div>}
       </NSheet>
     </>}

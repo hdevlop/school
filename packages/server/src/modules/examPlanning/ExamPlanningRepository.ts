@@ -8,7 +8,7 @@ import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { examPlanning } from './ExamPlanningSchema';
 import type { SaveExamPlanningDto } from './ExamPlanningDto';
-import type { ExamPlanningJson } from '@sms/contracts';
+import type { ExamPlanningClass } from '@sms/contracts';
 
 @Repository()
 export class ExamPlanningRepository {
@@ -40,7 +40,7 @@ export class ExamPlanningRepository {
       .onConflictDoUpdate({ target: [examPlanning.academicYearId, examPlanning.classId], set: { visible: sql`excluded.visible`, updatedAt: sql`CURRENT_TIMESTAMP` } });
   }
 
-  async importDocument(classes: ExamPlanningJson['classes']) {
+  async importDocument(classes: ExamPlanningClass[]) {
     // One statement makes the entire import atomic. Merge only the included months.
     await this.db.insert(examPlanning).values(classes.map(cls => ({
       academicYearId: this.year.id, classId: cls.id, visible: cls.visible, months: cls.months,
@@ -54,5 +54,10 @@ export class ExamPlanningRepository {
     if (!classIds.length) return;
     await this.db.update(examPlanning).set({ months: {}, updatedAt: sql`CURRENT_TIMESTAMP` })
       .where(and(eq(examPlanning.academicYearId, this.year.id), inArray(examPlanning.classId, classIds)));
+  }
+
+  // Seed resets remove plans in every year before deleting the year registry.
+  async clearForSeedReset() {
+    await this.db.delete(examPlanning);
   }
 }

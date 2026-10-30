@@ -47,6 +47,11 @@ function settingsFormDefaults(settings: AdminSettings) {
     schoolPhone: settings?.schoolPhone || '',
     schoolEmail: settings?.schoolEmail || '',
     receiptLanguage: settings?.receiptLanguage ?? DEFAULT_RECEIPT_LANGUAGE,
+    schoolNameAr: settings?.schoolNameAr ?? '',
+    schoolAddressAr: settings?.schoolAddressAr ?? '',
+    schoolPhones: [0, 1, 2].map((index) => settings?.schoolPhones?.[index] ?? ''),
+    schoolLicenseNumber: settings?.schoolLicenseNumber ?? '',
+    schoolLicenseDate: settings?.schoolLicenseDate ?? '',
     attendanceRequirement: Number(settings?.attendanceRequirement ?? 75),
     attendanceMode: (settings?.attendanceMode as 'daily' | 'per_class') || 'daily',
     maxClassSize: Number(settings?.maxClassSize ?? 34),
@@ -216,13 +221,18 @@ export function SchoolSettingsSheet({ open, onOpenChange, onLeave }: {
   const handleSubmit = async (data: SettingsFormDefaults) => {
     if (!can('update:settings')) return;
     setSaveFailed(false);
-    const { schoolLocation, ...fields } = data;
+    const { schoolLocation, schoolNameAr, schoolAddressAr, schoolPhones, schoolLicenseNumber, schoolLicenseDate, ...fields } = data;
     try {
       await updateSettings({
         ...fields,
         schoolAddress: schoolLocation.address,
         schoolAddressLatitude: schoolLocation.latitude ?? null,
         schoolAddressLongitude: schoolLocation.longitude ?? null,
+        schoolNameAr: schoolNameAr.trim() || null,
+        schoolAddressAr: schoolAddressAr.trim() || null,
+        schoolPhones: schoolPhones.map((phone) => phone.trim()).filter(Boolean),
+        schoolLicenseNumber: schoolLicenseNumber.trim() || null,
+        schoolLicenseDate: schoolLicenseDate || null,
       });
       form.reset(data);
     } catch {

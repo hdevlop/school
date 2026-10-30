@@ -138,6 +138,7 @@ export { AssessmentValidator } from '../assessments/AssessmentValidator';
 
 export { ExamService } from '../exams/ExamService';
 export { ExamRepository } from '../exams/ExamRepository';
+export { ExamPlanningRepository } from '../examPlanning/ExamPlanningRepository';
 export { ExamValidator } from '../exams/ExamValidator';
 
 export { GradeService } from '../grades/GradeService';

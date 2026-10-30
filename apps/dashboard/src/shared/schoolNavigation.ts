@@ -118,6 +118,7 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
         { id: '/subjects', label: t('navigation.subjects'), icon: FEATURE_ICONS.subjects, href: '/subjects', access: 'subjects' },
       ],
     },
+    { id: '/insurance', label: t('navigation.insurance'), icon: FEATURE_ICONS.insurance, href: '/insurance', access: 'insurance' },
     {
       id: 'transport',
       label: t('navigation.transport'),

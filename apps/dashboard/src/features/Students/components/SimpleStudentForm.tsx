@@ -12,6 +12,8 @@ import { useFormContext, useWatch } from 'react-hook-form'
 import { PLACEMENT_FIELDS, createStudentSchemas } from '../config/studentSchemas'
 import { buildGenderOptions } from '../config/studentOptions'
 import { StudentParentsSection } from './StudentParentsSection'
+import { StudentBirthplaceFields } from './StudentBirthplaceFields'
+import { formatBirthplaceEntry } from '../config/birthplaceEntry'
 
 const sectionHeaderClassName = 'student-form-section-header'
 
@@ -31,6 +33,10 @@ export const getStudentDefaultValues = (student = null, businessDate?: string | 
     }),
     addressPlaceId: student?.addressPlaceId ?? null,
     dateOfBirth: student?.dateOfBirth ?? '',
+    birthplaceEntry: formatBirthplaceEntry(student ?? {}),
+    birthplaceId: student?.birthplaceId ?? null,
+    birthplace: student?.birthplace ?? '',
+    birthplaceArabic: student?.birthplaceArabic ?? '',
     gender: student?.gender ?? 'M',
     classId: student?.classId ?? '',
     sectionId: student?.sectionId ?? '',
@@ -50,7 +56,7 @@ const SimpleStudentForm = ({ student = null, classes = [] }) => {
   const studentProfileEditSchema = useMemo(() => createStudentSchemas(t).profileEdit, [t])
   const { pop } = useDialog()
   const handleSubmit = async (studentData) => {
-    const { addressLocation, ...fields } = studentData;
+    const { addressLocation, birthplaceEntry: _birthplaceEntry, ...fields } = studentData;
     for (const field of PLACEMENT_FIELDS) delete fields[field];
     pop({
       ...fields,
@@ -181,6 +187,8 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
             placeholder={t('students.form.dateOfBirthPlaceholder')}
             icon={Calendar}
           />
+
+          <StudentBirthplaceFields prefix={prefix} />
 
           <FormInput
             name='email'

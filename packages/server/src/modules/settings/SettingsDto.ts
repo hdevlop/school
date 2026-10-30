@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { academicYearField, num, phoneField } from '../../shared/fields';
+import { academicYearField, num, optionalDateField, phoneField } from '../../shared/fields';
 import { calendarSystemEnum, languageEnum } from '../../shared/enums';
 import { latitudeDto, longitudeDto, placeIdDto } from '../../shared/locationDto';
 import { ROUTINE_DAYS } from '@sms/contracts/routines';
@@ -18,6 +18,13 @@ const settingsSchema = z.object({
   schoolEmail: z.string().trim().min(1, 'School email is required').email('Invalid email format'),
   schoolWebsite: z.string().url('Must be a valid URL').max(255, 'School website URL too long').optional(),
   schoolLogo: z.string().url('Must be a valid image URL').max(255, 'School logo URL too long').optional(),
+  // The official identity printed on ministry documents. Local numbers keep their leading 0.
+  schoolNameAr: z.string().trim().max(200, 'School name too long').nullable().optional(),
+  schoolAddressAr: z.string().trim().max(500, 'School address too long').nullable().optional(),
+  schoolPhones: z.array(z.string().trim().regex(/^\+?\d[\d .-]{5,19}$/,'Invalid phone number'))
+    .max(3, 'Enter at most three phone numbers').nullable().optional(),
+  schoolLicenseNumber: z.string().trim().max(50, 'License number too long').nullable().optional(),
+  schoolLicenseDate: optionalDateField,
   receiptLanguage: z.enum(RECEIPT_LANGUAGES).optional(),
   currentAcademicYear: academicYearField,
 

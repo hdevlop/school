@@ -84,7 +84,7 @@ function PlanningContent() {
   const addEntry = (cls: ExamPlanningClass) => {
     const date = today >= range.from && today <= range.to ? today : range.from;
     const month = date.slice(0, 7);
-    const entry: ExamPlanningEntry = { id: crypto.randomUUID(), date, subject: t('examPlanning.newEntry'), language: 'fr', lessons: [] };
+    const entry: ExamPlanningEntry = { id: crypto.randomUUID(), date, subject: t('examPlanning.newEntry'), lessons: [] };
     updateEntries(cls, month, [...monthEntriesFor(cls, month), entry]); setSelected({ classId: cls.id, month, entryId: entry.id });
   };
   const updateEntry = (patch: Partial<ExamPlanningEntry>) => {

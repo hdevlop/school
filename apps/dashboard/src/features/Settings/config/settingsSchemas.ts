@@ -40,6 +40,9 @@ export type AttendanceMode = (typeof ATTENDANCE_MODE_VALUES)[number];
 
 export const SETTINGS_THEME_VALUES = ['light', 'dark'] as const;
 
+/** The server's `schoolPhones` rule: digits, spaces, dots and dashes, leading 0 allowed. */
+const OFFICIAL_PHONE = /^\+?\d[\d .-]{5,19}$/;
+
 /**
  * The settings and first-run forms' schemas. They take `t` so a refused field
  * reads in the page's language.
@@ -68,6 +71,15 @@ export const createSettingsSchemas = (t: T) => {
     schoolWebsite: z.string().url(t('validationMessages.mustBeAValidUrl')).max(255, t('validationMessages.schoolWebsiteUrlTooLong')).optional(),
     schoolLogo: z.string().url(t('validationMessages.mustBeAValidImageUrl')).max(255, t('validationMessages.schoolLogoUrlTooLong')).optional(),
     receiptLanguage: z.enum(RECEIPT_LANGUAGES).default(DEFAULT_RECEIPT_LANGUAGE),
+
+    // Official identity, printed on ministry documents. Empty boxes are saved as
+    // null; local numbers keep their leading 0, unlike the contact phone.
+    schoolNameAr: z.string().trim().max(200, t('validationMessages.schoolNameTooLong')).default(''),
+    schoolAddressAr: z.string().trim().max(500, t('validationMessages.schoolAddressTooLong')).default(''),
+    schoolPhones: z.array(z.string().trim().refine((value) => !value || OFFICIAL_PHONE.test(value), t('validationMessages.invalidPhoneNumber')))
+      .max(3, t('validationMessages.atMostThreePhoneNumbers')).default([]),
+    schoolLicenseNumber: z.string().trim().max(50, t('validationMessages.licenseNumberTooLong')).default(''),
+    schoolLicenseDate: z.string().refine((value) => !value || /^\d{4}-\d{2}-\d{2}$/.test(value), t('validationMessages.dateMustBeInYyyyMmDdFormat')).default(''),
 
     // Academic Settings
     attendanceRequirement: numberField(z.number({ error: t('validationMessages.mustBeAValidNumber') }).min(0, t('validationMessages.attendanceRequirementMustBeNonNegative')).max(100, t('validationMessages.attendanceRequirementCannotExceed100'))).default(75.00),

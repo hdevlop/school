@@ -1,4 +1,4 @@
-import { examPlanningMonths, type ExamPlanningJson } from '@sms/contracts';
+import { examPlanningMonths, resolveExamPlanningClasses, type ExamPlanningJson } from '@sms/contracts';
 import { Err, I18n, Service } from '../../najm';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
@@ -33,9 +33,12 @@ export class ExamPlanningService {
   async importDocument(document: ExamPlanningJson) {
     if (document.schoolYear !== this.year.label) Err(400, this.t('examPlanning.json.wrongYear'));
     const classes = await this.getAll();
-    const known = new Set(classes.map(cls => cls.id));
-    if (document.classes.some(cls => !known.has(cls.id))) Err(404, this.t('examPlanning.json.unknownClasses'));
-    await this.repository.importDocument(document.classes);
+    const resolved = resolveExamPlanningClasses(document, classes);
+    if (resolved.success === false) {
+      if (resolved.error === 'unknownClasses') Err(404, this.t('examPlanning.json.unknownClasses'));
+      Err(409, this.t('examPlanning.json.ambiguousClasses'));
+    }
+    await this.repository.importDocument(resolved.classes);
     return this.getAll();
   }
 

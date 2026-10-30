@@ -15,6 +15,13 @@ const exported = {
 };
 
 describe('student import', () => {
+  it('carries birthplace names and catalog IDs through JSON and spreadsheet import', () => {
+    const result = buildStudentImport([{ ...exported, birthplaceId: 'MA-HCP-06141010', birthplace: ' Casablanca ', birthplaceArabic: ' الدار البيضاء ' }], classes, '2026-01-12');
+    expect(result.problems).toEqual([]);
+    expect(result.students[0]).toMatchObject({ birthplaceId: 'MA-HCP-06141010', birthplace: 'Casablanca', birthplaceArabic: 'الدار البيضاء' });
+    expect(buildStudentImport([{ ...exported, birthplace: 'x'.repeat(201) }], classes, '2026-01-12').problems[0].reason).toBe('invalidBirthplace');
+    expect(buildStudentImport([exported], classes, '2026-01-12').students[0]).not.toHaveProperty('birthplace');
+  });
   it('preserves the optional Arabic name and Massar code without replacing the main name', () => {
     const result = buildStudentImport([{ ...exported, studentCode: 'F257114351', arabicName: '  ياسمين العلوي  ' }], classes, '2026-01-12');
     expect(result.problems).toEqual([]);
@@ -266,7 +273,7 @@ describe('student import', () => {
   });
 
   it('has every reason in all four catalogs', () => {
-    const reasons: StudentImportReason[] = ['missingName', 'invalidArabicName', 'invalidGender', 'invalidStatus', 'unknownClass', 'unknownSection', 'invalidDate', 'duplicateCode', 'invalidGuardian', 'unknownFeeType', 'invalidFee', 'feeYearMismatch', 'feeBeforeEnrollment'];
+    const reasons: StudentImportReason[] = ['missingName', 'invalidArabicName', 'invalidBirthplace', 'invalidGender', 'invalidStatus', 'unknownClass', 'unknownSection', 'invalidDate', 'duplicateCode', 'invalidGuardian', 'unknownFeeType', 'invalidFee', 'feeYearMismatch', 'feeBeforeEnrollment'];
     for (const catalog of [en, fr, es, ar] as any[]) {
       for (const reason of reasons) expect(typeof catalog.students.import.reasons[reason]).toBe('string');
     }
