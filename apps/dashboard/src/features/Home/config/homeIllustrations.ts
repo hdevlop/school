@@ -1,5 +1,7 @@
 // One generated transparent atlas: six columns, six rows, in this exact order.
-export const HOME_ICON_ATLAS = '/images/home/feature-icons-v1.png';
+// Served with an immutable cache header (next.config.ts), so a changed atlas
+// must ship under a new file name.
+export const HOME_ICON_ATLAS = '/images/home/feature-icons-v2.webp';
 export const HOME_ICON_INDEX: Readonly<Record<string, number>> = {
   '/dashboard': 0, '/subjects': 1, '/teachers': 2, '/attendance/students': 3,
   '/class-routines': 4, '/assessments': 5, '/exams': 6, '/grades': 7,

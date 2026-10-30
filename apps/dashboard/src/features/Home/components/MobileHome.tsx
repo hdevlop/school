@@ -75,7 +75,8 @@ export default function MobileHome() {
 
   return (
     <main className={styles.screen}>
-      <link rel="preload" as="image" href={HOME_ICON_ATLAS} />
+      {/* The server renders Home for every width; only a phone or tablet shows the tiles. */}
+      <link rel="preload" as="image" type="image/webp" href={HOME_ICON_ATLAS} media="(max-width: 1023px)" fetchPriority="high" />
       <div className={styles.content}>
         <header className={styles.header}>
           <div className={styles.headerLeft}>

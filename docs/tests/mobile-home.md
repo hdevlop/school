@@ -16,8 +16,8 @@ fallbacks contain two initials rather than the full name. Dashboard
 is a regular card at the start of the grid. Home has no search field.
 Feature cards form one continuous three-column grid without section headings.
 
-The generated 36-icon transparent PNG atlas lives at
-`apps/dashboard/public/images/home/feature-icons-v1.png`. Its exact generation
+The generated 36-icon transparent atlas lives at
+`apps/dashboard/public/images/home/feature-icons-v2.webp`. Its exact generation
 and edit prompts are recorded in [the icon evidence](../evidence/mobile-home-icons.md).
 
 ## Permissions

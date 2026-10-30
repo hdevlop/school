@@ -2,10 +2,11 @@
 
 Generated with the built-in imagegen tool, then copied unchanged into School. No CLI/API fallback was used.
 
-- Asset: `apps/dashboard/public/images/home/feature-icons-v1.png`
+- Generated asset: `feature-icons-v1.png` (removed from `public/` on 2026-10-30; recover it from git history at commit `99acdc17`).
 - One square RGBA atlas, exactly six columns by six rows; real alpha transparency is preserved.
 - Dimensions: 1254 by 1254 pixels, 209 by 209 pixels per cell.
 - File size: 1,373,044 bytes. SHA-256: `7bf72eb8c4bae7e2ae7ad3a9cceb44088100b7e3a6e79a808ca3431fc1f8612e`.
+- Served asset: `apps/dashboard/public/images/home/feature-icons-v2.webp`, the same atlas resized with sharp (Lanczos) to 864 by 864 pixels (144 per cell, enough for 48-pixel tiles at 3x) and encoded as WebP (quality 82, alpha quality 90): about 183 KB instead of 1.37 MB. Nothing else was changed.
 - Cell order: `apps/dashboard/src/features/Home/config/homeIllustrations.ts`.
 - The Home uses CSS background positioning; the bitmap is not cropped, recoloured, or edited in code.
 - The original draft had a Home illustration in its final cell. The targeted imagegen edit below replaces that cell with Alerts for the final atlas.
