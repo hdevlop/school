@@ -3,6 +3,7 @@
 import { NAvatar } from 'najm-kit';
 import type { ReactNode } from 'react';
 import { Label } from 'najm-kit';
+import { useTranslation } from 'najm-i18n/react';
 import type { RosterStatus, RosterMark } from '../hooks/useAttendanceRoster';
 import RosterMarks from './RosterMarks';
 
@@ -37,29 +38,35 @@ export default function RosterCard({
   classNames,
   children,
 }: RosterCardProps) {
+  const { t } = useTranslation();
   if (!data) return null;
 
+  const current = getStatus(data.id);
+  const detailLine = [detail, current === 'unmarked' && t('attendance.roster.unmarked')].filter(Boolean).join(' · ');
+
   return (
-    <div className="flex flex-col gap-3 p-4">
+    <div className="flex flex-col gap-2 px-4 py-3">
       <div className="flex items-center gap-3">
         <NAvatar
           src={avatarSrc ?? data.image}
           fallback={data.name}
-          size="lg"
+          size="md"
           version={data.updatedAt}
           classNames={classNames?.avatar}
         />
         <div className="min-w-0 flex-1">
           <Label className="block truncate text-md font-bold">{data.name}</Label>
-          {detail && <span className="block truncate text-xs text-muted-foreground">{detail}</span>}
+          {detailLine && <span className="block truncate text-xs text-muted-foreground">{detailLine}</span>}
+        </div>
+        <div className="shrink-0">
+          <RosterMarks
+            current={current}
+            disabled={readOnly}
+            showHint={false}
+            onSelect={(status) => setStatus(data.id, status)}
+          />
         </div>
       </div>
-
-      <RosterMarks
-        current={getStatus(data.id)}
-        disabled={readOnly}
-        onSelect={(status) => setStatus(data.id, status)}
-      />
       {children}
     </div>
   );

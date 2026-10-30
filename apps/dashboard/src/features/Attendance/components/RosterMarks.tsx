@@ -36,6 +36,8 @@ interface RosterMarksProps {
   onSelect: (status: RosterStatus) => void;
   className?: string;
   disabled?: boolean;
+  /** The "not recorded" line above the marks; a card shows it beside the name instead. */
+  showHint?: boolean;
 }
 
 /**
@@ -45,11 +47,11 @@ interface RosterMarksProps {
  * with the same control — same labels, same pressed state, same handler — and
  * neither can drift from the other.
  */
-export default function RosterMarks({ current, onSelect, className, disabled = false }: RosterMarksProps) {
+export default function RosterMarks({ current, onSelect, className, disabled = false, showHint = true }: RosterMarksProps) {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col items-center gap-1">
-    <span className="min-h-4 text-xs text-muted-foreground">{current === 'unmarked' ? t('attendance.roster.unmarked') : '\u00a0'}</span>
+    {showHint && <span className="min-h-4 text-xs text-muted-foreground">{current === 'unmarked' ? t('attendance.roster.unmarked') : '\u00a0'}</span>}
     <div className={cn('flex w-full justify-center gap-2', className)}>
       {ROSTER_STATUSES.map((status) => {
         const meta = ROSTER_STATUS_META[status];
