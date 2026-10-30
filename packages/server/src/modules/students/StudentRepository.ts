@@ -96,7 +96,20 @@ export class StudentRepository {
       .selectDistinctOn([students.createdAt, studentEnrollments.id], {
         ...studentSelect,
         status: studentEnrollments.status,
-        // Return only completeness, not guardian identity/contact values.
+        // Dated registers need a reachable contact without loading each family
+        // separately. Keep this separate from the student's editable phone.
+        ...(onDate ? {
+          contactPhone: sql<string | null>`COALESCE(NULLIF(TRIM(${students.phone}), ''), (
+            SELECT NULLIF(TRIM(${parents.phone}), '')
+            FROM ${studentParents}
+            INNER JOIN ${parents} ON ${parents.id} = ${studentParents.parentId}
+            WHERE ${studentParents.studentId} = ${students.id}
+              AND NULLIF(TRIM(${parents.phone}), '') IS NOT NULL
+            ORDER BY ${parents.isEmergencyContact} DESC NULLS LAST, ${studentParents.createdAt}, ${parents.id}
+            LIMIT 1
+          ))`,
+        } : {}),
+        // Full guardian records remain on the separate family endpoint.
         missingParentDetails: sql<boolean>`(
           NOT EXISTS (SELECT 1 FROM ${studentParents} WHERE ${studentParents.studentId} = ${students.id})
           OR EXISTS (
