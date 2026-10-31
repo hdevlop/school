@@ -61,14 +61,13 @@ export class ClassRoutineValidator {
     return duty;
   }
 
-  async ensurePeriod(id: string, allowBreak = false, scheduleId?: string) {
+  async ensurePeriod(id: string, scheduleId?: string) {
     const period = await this.repository.getPeriod(id);
     if (!period) Err(404, t('classRoutines.errors.periodNotFound'));
     if (scheduleId && period.scheduleId && period.scheduleId !== scheduleId) {
       Err(409, t('classRoutines.errors.periodNotFound'));
     }
     if (!period.isActive) Err(409, t('classRoutines.errors.periodInactive'));
-    if (!allowBreak && period.isBreak) Err(409, t('classRoutines.errors.breakPeriod'));
     return period;
   }
 
@@ -93,15 +92,19 @@ export class ClassRoutineValidator {
 
   async validateEntry(
     scheduleId: string,
-    data: { dayOfWeek: any; periodId: string; teacherAssignmentId: string; roomNumber?: string | null },
+    data: { dayOfWeek: any; periodId: string; subjectId: string; teacherAssignmentId?: string | null; roomNumber?: string | null },
     excludeEntryId?: string,
   ) {
     const schedule = await this.ensureSchedule(scheduleId);
     if (!schedule.activeDays.includes(data.dayOfWeek)) Err(409, t('classRoutines.errors.inactiveDay'));
-    const period = await this.ensurePeriod(data.periodId, false, scheduleId);
-    const assignment = await this.repository.getAssignment(data.teacherAssignmentId);
-    if (!assignment || assignment.sectionId !== schedule.sectionId) {
-      Err(409, t('classRoutines.errors.invalidAssignment'));
+    // A break is a lesson on a day it holds one, such as a Friday that runs
+    // through the morning; it then cannot also be supervised that day.
+    const period = await this.ensurePeriod(data.periodId, scheduleId);
+    if (!await this.repository.getSubject(data.subjectId)) Err(404, t('classRoutines.errors.subjectNotFound'));
+    const assignment = data.teacherAssignmentId ? await this.repository.getAssignment(data.teacherAssignmentId) : null;
+    if (data.teacherAssignmentId) {
+      if (!assignment || assignment.sectionId !== schedule.sectionId) Err(409, t('classRoutines.errors.invalidAssignment'));
+      if (assignment.subjectId !== data.subjectId) Err(409, t('classRoutines.errors.assignmentSubjectMismatch'));
     }
 
     const ownEntries = await this.repository.getEntries(scheduleId);
@@ -109,6 +112,12 @@ export class ClassRoutineValidator {
       && entry.dayOfWeek === data.dayOfWeek
       && entry.periodId === data.periodId);
     if (sectionConflict) Err(409, t('classRoutines.errors.sectionConflict'));
+    if (period.isBreak) {
+      const duties = await this.repository.getDuties(scheduleId);
+      if (duties.some((duty) => duty.dayOfWeek === data.dayOfWeek && duty.periodId === data.periodId)) {
+        Err(409, t('classRoutines.errors.breakSupervised'));
+      }
+    }
 
     const section = await this.repository.getSection(schedule.sectionId);
     const roomNumber = data.roomNumber || section?.roomNumber || null;
@@ -120,22 +129,25 @@ export class ClassRoutineValidator {
       periodId: data.periodId,
       startTime: period.startTime,
       endTime: period.endTime,
-      teacherId: assignment.teacherId,
+      teacherId: assignment?.teacherId,
       roomNumber,
       excludeEntryId,
     });
-    if (conflicts.some((conflict) => conflict.teacherId === assignment.teacherId)) {
-      Err(409, t('classRoutines.errors.teacherConflict'));
+    // A lesson with no teacher can clash only over its room.
+    if (assignment) {
+      if (conflicts.some((conflict) => conflict.teacherId === assignment.teacherId)) {
+        Err(409, t('classRoutines.errors.teacherConflict'));
+      }
+      const dutyConflicts = await this.repository.findDutyConflicts({
+        scheduleId,
+        academicYear: schedule.academicYear,
+        dayOfWeek: data.dayOfWeek,
+        staffId: assignment.teacherStaffId,
+        startTime: period.startTime,
+        endTime: period.endTime,
+      });
+      if (dutyConflicts.length) Err(409, t('classRoutines.errors.teacherConflict'));
     }
-    const dutyConflicts = await this.repository.findDutyConflicts({
-      scheduleId,
-      academicYear: schedule.academicYear,
-      dayOfWeek: data.dayOfWeek,
-      staffId: assignment.teacherStaffId,
-      startTime: period.startTime,
-      endTime: period.endTime,
-    });
-    if (dutyConflicts.length) Err(409, t('classRoutines.errors.teacherConflict'));
     if (roomNumber && conflicts.some((conflict) => (conflict.roomNumber || conflict.defaultRoomNumber) === roomNumber)) {
       Err(409, t('classRoutines.errors.roomConflict'));
     }
@@ -149,7 +161,7 @@ export class ClassRoutineValidator {
   ) {
     const schedule = await this.ensureSchedule(scheduleId);
     if (!schedule.activeDays.includes(data.dayOfWeek)) Err(409, t('classRoutines.errors.inactiveDay'));
-    const period = await this.ensurePeriod(data.periodId, true, scheduleId);
+    const period = await this.ensurePeriod(data.periodId, scheduleId);
     if (!period.isBreak) Err(409, t('classRoutines.errors.dutyRequiresBreak'));
     const supervisor = await this.repository.getStaffSupervisor(data.staffId);
     if (!supervisor) Err(404, t('staff.errors.notFound'));
@@ -159,6 +171,10 @@ export class ClassRoutineValidator {
       && duty.dayOfWeek === data.dayOfWeek
       && duty.periodId === data.periodId)) {
       Err(409, t('classRoutines.errors.sectionConflict'));
+    }
+    const ownEntries = await this.repository.getEntries(scheduleId);
+    if (ownEntries.some((entry) => entry.dayOfWeek === data.dayOfWeek && entry.periodId === data.periodId)) {
+      Err(409, t('classRoutines.errors.breakHasLesson'));
     }
     const [lessonConflicts, dutyConflicts] = await Promise.all([
       supervisor.teacherId ? this.repository.findConflicts({

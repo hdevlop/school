@@ -61,7 +61,8 @@ try {
           JOIN routine_schedules r ON r.id = e.schedule_id
           JOIN teacher_assignments a ON a.id = e.teacher_assignment_id
           JOIN sections s ON s.id = r.section_id
-          WHERE a.section_id <> r.section_id OR a.class_id <> s.class_id) AS entry_assignment_mismatch,
+          WHERE a.section_id <> r.section_id OR a.class_id <> s.class_id
+             OR a.subject_id <> e.subject_id) AS entry_assignment_mismatch,
         (SELECT count(*)::integer FROM routine_schedules r
           WHERE NOT EXISTS (SELECT 1 FROM routine_periods p WHERE p.schedule_id = r.id)) AS schedules_without_own_periods
     `);

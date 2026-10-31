@@ -4,7 +4,8 @@ import { boolean, check, index, integer, jsonb, pgEnum, pgTable, text, time, tim
 import { actionByRef, createRef, idField, timestamps } from '../../database/shared';
 import { sectionRef } from '../sections/sectionSchema';
 import { staffRef } from '../staff/staffSchema';
-import { teacherAssignmentRef } from '../teachers/teacherSchema';
+import { subjectRef } from '../subjects/subjectSchema';
+import { teacherAssignments } from '../teachers/teacherSchema';
 import type { RoutineContentGroup } from '@sms/contracts/routines';
 
 export const routineStatusEnum = pgEnum('routineStatus', ['draft', 'published', 'archived']);
@@ -92,7 +93,10 @@ export const routineEntries = pgTable('routine_entries', {
   scheduleId: routineScheduleRef(),
   dayOfWeek: routineDayEnum('day_of_week').notNull(),
   periodId: routinePeriodRef(),
-  teacherAssignmentId: teacherAssignmentRef('restrict'),
+  // A lesson is a subject; its teacher, when one is assigned, teaches that
+  // subject to the section. A timetable still keeps an assignment it uses.
+  subjectId: subjectRef('restrict'),
+  teacherAssignmentId: text('teacher_assignment_id').references(() => teacherAssignments.id, { onDelete: 'restrict' }),
   roomNumber: text('room_number'),
   notes: text('notes'),
   contentGroups: jsonb('content_groups').$type<RoutineContentGroup[]>().notNull().default(sql`'[]'::jsonb`),
@@ -103,6 +107,7 @@ export const routineEntries = pgTable('routine_entries', {
     .on(table.scheduleId, table.dayOfWeek, table.periodId),
   scheduleIdx: index('routine_entries_schedule_idx').on(table.scheduleId),
   assignmentIdx: index('routine_entries_assignment_idx').on(table.teacherAssignmentId),
+  subjectIdx: index('routine_entries_subject_idx').on(table.subjectId),
   contentGroupsArrayCheck: check('routine_entries_content_groups_array_check', sql`jsonb_typeof(${table.contentGroups}) = 'array'`),
   versionPositiveCheck: check('routine_entries_version_positive_check', sql`${table.version} > 0`),
 }));

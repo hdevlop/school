@@ -617,6 +617,13 @@
       "when": 1793317211014,
       "tag": "0087_tricky_wendigo",
       "breakpoints": true
+    },
+    {
+      "idx": 88,
+      "version": "7",
+      "when": 1793395990748,
+      "tag": "0088_routine_lesson_subject",
+      "breakpoints": true
     }
   ]
 }

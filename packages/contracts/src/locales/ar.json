@@ -1466,7 +1466,6 @@
       "staleEntry": "تغيّرت هذه الحصة. أعد تحميلها قبل الحفظ.",
       "periodNotFound": "الفترة غير موجودة",
       "periodInactive": "هذه الفترة غير مفعلة",
-      "breakPeriod": "لا يمكن إضافة حصة خلال فترة الاستراحة",
       "invalidPeriodTime": "يجب أن يكون وقت النهاية بعد وقت البداية",
       "periodConflict": "هذه الفترة تتداخل مع فترة أخرى",
       "sectionNotFound": "الفوج غير موجود",
@@ -1484,7 +1483,11 @@
       "layoutPastMidnight": "لا يمكن أن يمتد الجدول بعد منتصف الليل",
       "layoutRemovesLessons": "احذف الحصص من الفترات التي ستزال قبل تغيير الإعدادات",
       "layoutRemovesDuties": "احذف مهام الإشراف من الاستراحات التي ستزال قبل تغيير الإعدادات",
-      "outsideSelectedYear": "يجب أن تنتمي شعبة جدول الحصص إلى السنة الدراسية المحددة"
+      "outsideSelectedYear": "يجب أن تنتمي شعبة جدول الحصص إلى السنة الدراسية المحددة",
+      "subjectNotFound": "المادة غير موجودة",
+      "assignmentSubjectMismatch": "هذا الأستاذ غير مكلف بالمادة المختارة",
+      "breakSupervised": "تم تعيين مراقب لهذه الاستراحة في ذلك اليوم. احذف المراقبة أولاً.",
+      "breakHasLesson": "تتضمن هذه الاستراحة حصة في ذلك اليوم. احذف الحصة أولاً."
     },
     "ui": {
       "title": "الجدول",
@@ -1493,9 +1496,7 @@
         "class": "القسم",
         "section": "الفوج",
         "period": "الحصة",
-        "subjectTeacher": "المادة والأستاذ",
         "room": "القاعة",
-        "notes": "ملاحظات",
         "supervisingStaff": "الموظف المشرف",
         "supervisingTeacher": "الأستاذ المشرف",
         "dutyNotes": "ملاحظات الإشراف",
@@ -1509,7 +1510,9 @@
         "starts": "البداية",
         "ends": "النهاية",
         "breakPeriod": "فترة استراحة",
-        "active": "مفعّل"
+        "active": "مفعّل",
+        "subject": "المادة",
+        "teacher": "الأستاذ"
       },
       "actions": {
         "days": "الأيام",
@@ -1526,7 +1529,8 @@
         "removeSupervision": "حذف الإشراف",
         "addTeachingPeriod": "إضافة حصة دراسية",
         "addBreak": "إضافة استراحة",
-        "useSchoolHours": "استخدام أوقات المدرسة"
+        "useSchoolHours": "استخدام أوقات المدرسة",
+        "lessonInBreak": "وضع حصة في هذه الاستراحة"
       },
       "dialogs": {
         "daysTitle": "أيام الدراسة",
@@ -1539,22 +1543,23 @@
         "assignSupervisor": "تعيين مشرف · {{period}}"
       },
       "placeholders": {
-        "chooseTeacher": "اختر أستاذاً مكلفاً",
-        "searchAssignments": "البحث في التكليفات...",
         "selectStaff": "اختر موظفاً",
-        "selectTeacher": "اختر أستاذاً"
+        "selectTeacher": "اختر أستاذاً",
+        "chooseSubject": "اختر مادة",
+        "searchSubjects": "ابحث عن مادة...",
+        "noTeacher": "بدون أستاذ",
+        "sectionRoom": "الافتراضي: {{room}}"
       },
       "empty": {
         "title": "لا يوجد جدول لهذا الفوج",
         "description": "أنشئ جدول الفوج ثم عدّل الحصص مباشرة من الشبكة.",
-        "noAssignments": "لا توجد تكليفات أساتذة لهذا الفوج."
+        "noSubjects": "لا توجد مواد بعد."
       },
       "grid": {
         "noRoom": "دون قاعة"
       },
       "content": {
         "title": "المواد الفرعية",
-        "help": "ينظم الأستاذ وقت الحصة ويبدّل بين الخيارات حسب الحاجة، دون تحديد أوقات فرعية.",
         "item": "مادة {{number}}",
         "label": "المادة أو النشاط",
         "or": "أو",
@@ -1569,7 +1574,6 @@
         "preview": "معاينة الجدول"
       },
       "validation": {
-        "chooseAssignment": "اختر أستاذاً ومادة",
         "notesMax": "يجب ألا تتجاوز الملاحظات 500 حرف",
         "contentLabelRequired": "أدخل مادة أو نشاطاً",
         "contentLabelMax": "لا تتجاوز 100 حرف لكل عنوان",
@@ -1580,7 +1584,8 @@
         "nameRequired": "أدخل اسماً",
         "teachingPeriodRequired": "أضف حصة دراسية واحدة على الأقل",
         "endAfterStart": "يجب أن يكون وقت النهاية بعد وقت البداية",
-        "noOverlap": "لا يمكن أن تتداخل الحصص الزمنية"
+        "noOverlap": "لا يمكن أن تتداخل الحصص الزمنية",
+        "chooseSubject": "اختر مادة"
       },
       "periodForm": {
         "teachingPeriod": "حصة دراسية",

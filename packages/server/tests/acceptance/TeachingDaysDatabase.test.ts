@@ -25,7 +25,7 @@ describe('school-wide teaching days on PostgreSQL', () => {
           { id: 'td-archive', sectionId: 'history-section-2026-a', academicYear: '2026-2027', name: 'Teaching days archive', status: 'archived', activeDays: ['sunday'] },
         ]);
         await tx.insert(routinePeriods).values({ id: 'td-period', scheduleId: 'td-current', name: 'P1', startTime: '08:00', endTime: '09:00', sortOrder: 1 });
-        await tx.insert(routineEntries).values({ id: 'td-entry', scheduleId: 'td-current', dayOfWeek: 'monday', periodId: 'td-period', teacherAssignmentId: 'history-assignment-2026' });
+        await tx.insert(routineEntries).values({ id: 'td-entry', scheduleId: 'td-current', dayOfWeek: 'monday', periodId: 'td-period', subjectId: 'history-subject-math', teacherAssignmentId: 'history-assignment-2026' });
         const [supervisor] = await tx.select({ id: staff.id }).from(staff).limit(1);
         if (!supervisor) throw new Error('Fixture staff required');
         await tx.insert(routineDuties).values({ id: 'td-duty', scheduleId: 'td-current', dayOfWeek: 'friday', periodId: 'td-period', staffId: supervisor.id });

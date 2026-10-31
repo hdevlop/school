@@ -121,7 +121,7 @@ describe('Class routines selected-year repository on the marked PostgreSQL fixtu
         });
         await tx.insert(routineEntries).values({
           id: `hist-re-${year}`, scheduleId: `hist-rt-${year}`, dayOfWeek: 'monday', periodId: `hist-rp-${year}`,
-          teacherAssignmentId: `history-assignment-${year}`,
+          subjectId: 'history-subject-math', teacherAssignmentId: `history-assignment-${year}`,
         });
       }
       const { repo, inYear } = await scopedHistoryRepository(ClassRoutineRepository, tx);

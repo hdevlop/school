@@ -4,6 +4,7 @@ import type {
   RoutineDuty,
   RoutineEntry,
   RoutinePeriod,
+  RoutineSubject,
 } from './routine';
 import type { RoutineContentGroup } from '@sms/contracts/routines';
 
@@ -19,24 +20,25 @@ export interface RoutineDutyFormProps {
   duty?: RoutineDuty;
   readOnly?: boolean;
   onDelete?: () => Promise<void>;
+  /** Puts a lesson in this break on this day instead of a supervisor. */
+  onUseForLesson?: () => void;
 }
 
 export interface RoutineEntryFormProps {
+  subjectOptions: RoutineSubject[];
   assignmentOptions: RoutineAssignment[];
-  day: string;
-  period: RoutinePeriod;
+  /** The subjects of the routine's other lessons, so the preview takes its grid color. */
+  otherSubjects?: Pick<RoutineSubject, 'id' | 'code'>[];
   entry?: RoutineEntry | null;
   defaultRoom?: string | null;
   onSubmit: (data: RoutineEntryFormValues) => Promise<void>;
   readOnly?: boolean;
-  onDelete?: () => Promise<void>;
-  busy?: boolean;
 }
 
 export interface RoutineEntryFormValues {
-  teacherAssignmentId: string;
+  subjectId: string;
+  teacherAssignmentId: string | null;
   roomNumber?: string;
-  notes?: string;
   contentGroups: RoutineContentGroup[];
 }
 

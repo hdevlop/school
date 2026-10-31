@@ -22,18 +22,25 @@ export interface RoutineAssignment {
   sectionId: string;
 }
 
+export interface RoutineSubject {
+  id: string;
+  name: string;
+  code?: string | null;
+}
+
+// A lesson is a subject; its teacher is optional.
 export interface RoutineEntry {
   id: string;
   scheduleId: string;
   dayOfWeek: RoutineDay;
   periodId: string;
-  teacherAssignmentId: string;
+  teacherAssignmentId: string | null;
   roomNumber?: string | null;
   notes?: string | null;
   contentGroups: RoutineContentGroup[];
   version: number;
-  teacherId: string;
-  teacherName: string;
+  teacherId: string | null;
+  teacherName: string | null;
   subjectId: string;
   subjectName: string;
   subjectCode?: string;

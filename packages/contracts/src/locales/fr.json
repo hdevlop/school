@@ -2010,7 +2010,6 @@
       "staleEntry": "Ce cours a changé. Rechargez-le avant de l'enregistrer.",
       "periodNotFound": "Période introuvable",
       "periodInactive": "Cette période est inactive",
-      "breakPeriod": "Un cours ne peut pas être ajouté pendant une pause",
       "invalidPeriodTime": "L'heure de fin doit être après l'heure de début",
       "periodConflict": "Cette période chevauche une période existante",
       "sectionNotFound": "Section introuvable",
@@ -2028,7 +2027,11 @@
       "layoutPastMidnight": "L'emploi du temps généré ne peut pas dépasser minuit",
       "layoutRemovesLessons": "Supprimez les cours des périodes concernées avant de modifier ces paramètres",
       "layoutRemovesDuties": "Supprimez les surveillances des pauses concernées avant de modifier ces paramètres",
-      "outsideSelectedYear": "La section de l'emploi du temps doit appartenir à l'année scolaire sélectionnée"
+      "outsideSelectedYear": "La section de l'emploi du temps doit appartenir à l'année scolaire sélectionnée",
+      "subjectNotFound": "Matière introuvable",
+      "assignmentSubjectMismatch": "Cet enseignant n'est pas affecté à la matière choisie",
+      "breakSupervised": "Un surveillant est affecté à cette pause ce jour-là. Retirez d'abord la surveillance.",
+      "breakHasLesson": "Cette pause accueille une séance ce jour-là. Retirez d'abord la séance."
     },
     "ui": {
       "title": "Planning",
@@ -2037,9 +2040,7 @@
         "class": "Classe",
         "section": "Section",
         "period": "Période",
-        "subjectTeacher": "Matière et enseignant",
         "room": "Salle",
-        "notes": "Notes",
         "supervisingStaff": "Membre du personnel surveillant",
         "supervisingTeacher": "Enseignant surveillant",
         "dutyNotes": "Notes de surveillance",
@@ -2053,7 +2054,9 @@
         "starts": "Début",
         "ends": "Fin",
         "breakPeriod": "Période de pause",
-        "active": "Actif"
+        "active": "Actif",
+        "subject": "Matière",
+        "teacher": "Enseignant"
       },
       "actions": {
         "days": "Jours",
@@ -2070,7 +2073,8 @@
         "removeSupervision": "Supprimer la surveillance",
         "addTeachingPeriod": "Ajouter une période de cours",
         "addBreak": "Ajouter une pause",
-        "useSchoolHours": "Utiliser les horaires de l’école"
+        "useSchoolHours": "Utiliser les horaires de l’école",
+        "lessonInBreak": "Placer une séance dans cette pause"
       },
       "dialogs": {
         "daysTitle": "Jours de cours",
@@ -2083,22 +2087,23 @@
         "assignSupervisor": "Affecter un surveillant · {{period}}"
       },
       "placeholders": {
-        "chooseTeacher": "Choisir un enseignant affecté",
-        "searchAssignments": "Rechercher des affectations...",
         "selectStaff": "Sélectionner un membre du personnel",
-        "selectTeacher": "Sélectionner un enseignant"
+        "selectTeacher": "Sélectionner un enseignant",
+        "chooseSubject": "Choisir une matière",
+        "searchSubjects": "Rechercher une matière...",
+        "noTeacher": "Sans enseignant",
+        "sectionRoom": "Par défaut : {{room}}"
       },
       "empty": {
         "title": "Aucun planning pour cette section",
         "description": "Créez le planning de la section, puis modifiez les cours directement dans la grille.",
-        "noAssignments": "Aucune affectation d’enseignant pour cette section."
+        "noSubjects": "Aucune matière pour le moment."
       },
       "grid": {
         "noRoom": "Aucune salle"
       },
       "content": {
         "title": "Sous-matières",
-        "help": "L'enseignant organise cette période et alterne les options selon les besoins, sans horaires séparés.",
         "item": "Matière {{number}}",
         "label": "Matière ou activité",
         "or": "OU",
@@ -2113,7 +2118,6 @@
         "preview": "Aperçu de l'emploi du temps"
       },
       "validation": {
-        "chooseAssignment": "Choisissez un enseignant et une matière",
         "notesMax": "Les notes ne peuvent pas dépasser 500 caractères",
         "contentLabelRequired": "Saisissez une matière ou activité",
         "contentLabelMax": "Limitez chaque libellé à 100 caractères",
@@ -2124,7 +2128,8 @@
         "nameRequired": "Saisissez un nom",
         "teachingPeriodRequired": "Ajoutez au moins une période de cours",
         "endAfterStart": "L’heure de fin doit être postérieure à l’heure de début",
-        "noOverlap": "Les périodes ne peuvent pas se chevaucher"
+        "noOverlap": "Les périodes ne peuvent pas se chevaucher",
+        "chooseSubject": "Choisissez une matière"
       },
       "periodForm": {
         "teachingPeriod": "Période de cours",

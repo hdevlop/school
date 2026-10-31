@@ -5135,7 +5135,6 @@
       "staleEntry": "This lesson changed. Reload it before saving again.",
       "periodNotFound": "Routine period not found",
       "periodInactive": "This routine period is inactive",
-      "breakPeriod": "Lessons cannot be assigned to a break period",
       "invalidPeriodTime": "The period end time must be after its start time",
       "periodConflict": "This period overlaps an existing active period",
       "sectionNotFound": "Section not found",
@@ -5153,7 +5152,11 @@
       "layoutPastMidnight": "The generated routine cannot extend past midnight",
       "layoutRemovesLessons": "Remove lessons from periods that will no longer exist before changing these settings",
       "layoutRemovesDuties": "Remove teacher duties from breaks that will no longer exist before changing these settings",
-      "outsideSelectedYear": "The routine's section must belong to the selected school year"
+      "outsideSelectedYear": "The routine's section must belong to the selected school year",
+      "subjectNotFound": "Subject not found",
+      "assignmentSubjectMismatch": "This teacher is not assigned to the chosen subject",
+      "breakSupervised": "A supervisor is assigned to this break on that day. Remove the supervision first.",
+      "breakHasLesson": "This break holds a lesson on that day. Remove the lesson first."
     },
     "ui": {
       "title": "Routine",
@@ -5162,9 +5165,7 @@
         "class": "Class",
         "section": "Section",
         "period": "Period",
-        "subjectTeacher": "Subject and teacher",
         "room": "Room",
-        "notes": "Notes",
         "supervisingStaff": "Supervising staff member",
         "supervisingTeacher": "Supervising teacher",
         "dutyNotes": "Duty notes",
@@ -5178,7 +5179,9 @@
         "starts": "Starts",
         "ends": "Ends",
         "breakPeriod": "Break period",
-        "active": "Active"
+        "active": "Active",
+        "subject": "Subject",
+        "teacher": "Teacher"
       },
       "actions": {
         "days": "Days",
@@ -5195,7 +5198,8 @@
         "removeSupervision": "Remove supervision",
         "addTeachingPeriod": "Add teaching period",
         "addBreak": "Add break / recess",
-        "useSchoolHours": "Use school hours"
+        "useSchoolHours": "Use school hours",
+        "lessonInBreak": "Hold a lesson in this break"
       },
       "dialogs": {
         "daysTitle": "Teaching days",
@@ -5208,22 +5212,23 @@
         "assignSupervisor": "Assign supervisor · {{period}}"
       },
       "placeholders": {
-        "chooseTeacher": "Choose an assigned teacher",
-        "searchAssignments": "Search assignments...",
         "selectStaff": "Select a staff member",
-        "selectTeacher": "Select a teacher"
+        "selectTeacher": "Select a teacher",
+        "chooseSubject": "Choose a subject",
+        "searchSubjects": "Search subjects...",
+        "noTeacher": "No teacher",
+        "sectionRoom": "Default: {{room}}"
       },
       "empty": {
         "title": "No routine for this section",
         "description": "Create the section routine once, then edit lessons directly from the grid.",
-        "noAssignments": "No teacher assignments for this section."
+        "noSubjects": "No subjects yet."
       },
       "grid": {
         "noRoom": "No room"
       },
       "content": {
         "title": "Nested subjects",
-        "help": "The teacher divides this period and rotates alternatives as needed; no separate times are required.",
         "item": "Subject {{number}}",
         "label": "Subject or activity",
         "or": "OR",
@@ -5238,7 +5243,6 @@
         "preview": "Timetable preview"
       },
       "validation": {
-        "chooseAssignment": "Choose a teacher and subject",
         "notesMax": "Notes cannot exceed 500 characters",
         "contentLabelRequired": "Enter a subject or activity",
         "contentLabelMax": "Keep each label under 100 characters",
@@ -5249,7 +5253,8 @@
         "nameRequired": "Enter a name",
         "teachingPeriodRequired": "Add at least one teaching period",
         "endAfterStart": "End time must be after start time",
-        "noOverlap": "Timeline rows cannot overlap"
+        "noOverlap": "Timeline rows cannot overlap",
+        "chooseSubject": "Choose a subject"
       },
       "periodForm": {
         "teachingPeriod": "Teaching period",

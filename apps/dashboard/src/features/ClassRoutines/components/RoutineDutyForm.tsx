@@ -1,7 +1,7 @@
 'use client';
 
-import { ClipboardList, UserRound } from 'lucide-react';
-import { FormInput, NForm } from 'najm-kit';
+import { BookOpen, ClipboardList, UserRound } from 'lucide-react';
+import { FormInput, NButton, NForm } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { z } from 'zod';
 import { useTranslation } from 'najm-i18n/react';
@@ -13,6 +13,7 @@ export default function RoutineDutyForm({
   period,
   duty,
   onDelete,
+  onUseForLesson,
   readOnly = false,
 }: RoutineDutyFormProps) {
   const { pop } = useDialog();
@@ -37,7 +38,7 @@ export default function RoutineDutyForm({
       onSubmit={(data) => pop(data)}
     >
       <div className="space-y-4">
-        <fieldset disabled={readOnly} className="contents">
+        <fieldset disabled={readOnly} className="flex min-w-0 flex-col gap-4">
         <FormInput
           name="staffId"
           type="select"
@@ -53,6 +54,11 @@ export default function RoutineDutyForm({
           <button type="button" className="text-sm font-medium text-destructive" onClick={async () => { await onDelete(); pop(); }}>
             {t('classRoutines.ui.actions.removeSupervision')}
           </button>
+        ) : null}
+        {onUseForLesson ? (
+          <NButton type="button" variant="outline" size="sm" leftIcon={<BookOpen className="h-4 w-4" />} onClick={() => { pop(); onUseForLesson(); }}>
+            {t('classRoutines.ui.actions.lessonInBreak')}
+          </NButton>
         ) : null}
       </div>
     </NForm>

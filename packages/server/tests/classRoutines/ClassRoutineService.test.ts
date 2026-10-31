@@ -57,6 +57,35 @@ describe('new routine school hours', () => {
   });
 });
 
+describe('routine layout changes', () => {
+  it('keeps a lesson held in a break in the same break of the new layout', async () => {
+    const old = [
+      { id: 'old-1', isBreak: false, sortOrder: 1 },
+      { id: 'old-lunch', isBreak: true, sortOrder: 2 },
+      { id: 'old-2', isBreak: false, sortOrder: 3 },
+    ];
+    const moved: Record<string, string> = {};
+    const repository = {
+      getPeriods: async (_inactive: boolean, scheduleId?: string) => (scheduleId ? old : []),
+      getEntries: async () => [{ id: 'friday-lesson', periodId: 'old-lunch' }, { id: 'monday-lesson', periodId: 'old-2' }],
+      getDuties: async () => [],
+      createPeriods: async (rows: any[]) => rows.map((row, index) => ({ ...row, id: `new-${index + 1}` })),
+      updateEntryPeriod: async (id: string, periodId: string) => { moved[id] = periodId; },
+      updateDutyPeriod: async () => undefined,
+      deletePeriods: async () => [],
+      updatePeriod: async () => undefined,
+    };
+    const service = new ClassRoutineService(repository as any, { ensureSchedule: async () => ({}), ensureLayoutKeepsLessons: () => undefined, ensureLayoutKeepsDuties: () => undefined } as any);
+    service.getById = async () => ({}) as any;
+    await service.updateLayout('schedule-1', { periods: [
+      { type: 'lesson', name: 'Period 1', startTime: '08:30', endTime: '09:30' },
+      { type: 'break', name: 'Lunch break', startTime: '09:30', endTime: '10:30' },
+      { type: 'lesson', name: 'Period 2', startTime: '10:30', endTime: '11:30' },
+    ] });
+    expect(moved).toEqual({ 'friday-lesson': 'new-2', 'monday-lesson': 'new-3' });
+  });
+});
+
 describe('routine nested-content updates', () => {
   it('preserves groups on a parent-only update and advances the entry version', async () => {
     const { service, writes } = build();

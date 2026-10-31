@@ -42,7 +42,7 @@ export class ClassRoutineService {
 
   async updatePeriod(id: string, data: UpdateRoutinePeriodDto) {
     const existing = await this.repository.getPeriod(id);
-    if (!existing) return this.validator.ensurePeriod(id, true);
+    if (!existing) return this.validator.ensurePeriod(id);
     await this.validator.ensurePeriodTimes(
       data.startTime ?? existing.startTime,
       data.endTime ?? existing.endTime,
@@ -74,6 +74,10 @@ export class ClassRoutineService {
   async getAssignments(sectionId: string) {
     await this.validator.ensureSectionInSelectedYear(sectionId);
     return this.repository.getAssignmentsForSection(sectionId);
+  }
+
+  async getSubjects() {
+    return this.repository.getSubjects();
   }
 
   async getDutyCandidates() {
@@ -112,6 +116,7 @@ export class ClassRoutineService {
     ]);
     const oldPeriods = ownedPeriods.length ? ownedPeriods : defaultPeriods;
     const oldLessons = oldPeriods.filter((period) => !period.isBreak);
+    const oldBreaks = oldPeriods.filter((period) => period.isBreak);
     const generated = layout.periods.map((period, index) => ({
       name: period.name,
       startTime: period.startTime,
@@ -121,15 +126,19 @@ export class ClassRoutineService {
       isActive: true,
     }));
     const newLessonCount = generated.filter((period) => !period.isBreak).length;
+    const newBreakCount = generated.filter((period) => period.isBreak).length;
     const oldLessonIndex = new Map(oldLessons.map((period, index) => [period.id, index]));
+    const oldBreakIndex = new Map(oldBreaks.map((period, index) => [period.id, index]));
+    // A lesson keeps its place among the lessons, or among the breaks when a
+    // break holds it.
+    const entrySlot = (periodId: string) => oldLessonIndex.has(periodId)
+      ? { isBreak: false, index: oldLessonIndex.get(periodId)! }
+      : oldBreakIndex.has(periodId) ? { isBreak: true, index: oldBreakIndex.get(periodId)! } : undefined;
     const orphanedEntry = entries.find((entry) => {
-      const index = oldLessonIndex.get(entry.periodId);
-      return index === undefined || index >= newLessonCount;
+      const slot = entrySlot(entry.periodId);
+      return !slot || slot.index >= (slot.isBreak ? newBreakCount : newLessonCount);
     });
     this.validator.ensureLayoutKeepsLessons(orphanedEntry);
-    const oldBreaks = oldPeriods.filter((period) => period.isBreak);
-    const oldBreakIndex = new Map(oldBreaks.map((period, index) => [period.id, index]));
-    const newBreakCount = generated.filter((period) => period.isBreak).length;
     const missingDutySlot = duties.some((duty) => {
       const breakIndex = oldBreakIndex.get(duty.periodId);
       return breakIndex === undefined || breakIndex >= newBreakCount;
@@ -148,8 +157,8 @@ export class ClassRoutineService {
       .filter((period) => period.isBreak)
       .sort((a, b) => a.sortOrder - b.sortOrder);
     for (const entry of entries) {
-      const lessonIndex = oldLessonIndex.get(entry.periodId)!;
-      await this.repository.updateEntryPeriod(entry.id, createdLessons[lessonIndex].id);
+      const slot = entrySlot(entry.periodId)!;
+      await this.repository.updateEntryPeriod(entry.id, (slot.isBreak ? createdBreaks : createdLessons)[slot.index].id);
     }
     for (const duty of duties) {
       const nextPeriod = createdBreaks[oldBreakIndex.get(duty.periodId)!];
@@ -167,6 +176,7 @@ export class ClassRoutineService {
     const entry = await this.repository.createEntry({
       scheduleId,
       ...data,
+      teacherAssignmentId: data.teacherAssignmentId || null,
       roomNumber: data.roomNumber || null,
       contentGroups: data.contentGroups ?? [],
     });

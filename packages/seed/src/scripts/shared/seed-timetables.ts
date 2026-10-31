@@ -64,6 +64,7 @@ export async function seedTimetables(classRoutineService: ClassRoutineService, s
         await classRoutineService.addEntry(schedule.id, {
           dayOfWeek: lesson.day as any,
           periodId: lessons[lesson.lesson].id,
+          subjectId: lesson.subjectId,
           teacherAssignmentId: assignmentIds.get(`${sectionId}|${lesson.subjectId}`)!,
         });
         lessonCount++;

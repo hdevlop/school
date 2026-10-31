@@ -6,11 +6,12 @@ import { NajmScroll } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { ROUTINE_DAYS, type RoutineDay, type RoutineSchedule } from '../types';
 import { routineDayLabel, routinePeriodLabel } from '../utils/labels';
-import { colorFor } from './RoutineCell';
+import { subjectColors } from '../utils/subjectColors';
 
 interface WeekLesson {
   id: string;
   subjectId: string;
+  subjectCode?: string;
   subjectName: string;
   place: string;
   room?: string | null;
@@ -49,6 +50,7 @@ function buildWeek(schedules: RoutineSchedule[]) {
       lessons.set(`${entry.dayOfWeek}|${slotKey(period.startTime, period.endTime)}`, {
         id: entry.id,
         subjectId: entry.subjectId,
+        subjectCode: entry.subjectCode,
         subjectName: entry.subjectName,
         place: `${schedule.className} · ${schedule.sectionName}`,
         room: entry.roomNumber || schedule.roomNumber,
@@ -63,9 +65,9 @@ function buildWeek(schedules: RoutineSchedule[]) {
   };
 }
 
-function LessonCard({ lesson, showSubject }: { lesson: WeekLesson; showSubject: boolean }) {
+function LessonCard({ lesson, showSubject, color }: { lesson: WeekLesson; showSubject: boolean; color: string }) {
   return (
-    <div className={`flex h-full min-w-0 flex-col justify-center gap-0.5 rounded-md px-2 py-1.5 ${colorFor(lesson.subjectId)}`}>
+    <div className={`flex h-full min-w-0 flex-col justify-center gap-0.5 rounded-md px-2 py-1.5 ${color}`}>
       <span className="truncate text-sm font-bold leading-tight">{lesson.place}</span>
       <span className="flex min-w-0 items-center justify-between gap-2 text-xs opacity-80">
         <span dir="auto" className="truncate">{showSubject ? lesson.subjectName : null}</span>
@@ -79,9 +81,9 @@ function LessonCard({ lesson, showSubject }: { lesson: WeekLesson; showSubject: 
 
 // A teacher's own sheet names the class first; the subject joins it only when
 // they teach more than one.
-function ClassCell({ lesson, showSubject }: { lesson: WeekLesson; showSubject: boolean }) {
+function ClassCell({ lesson, showSubject, color }: { lesson: WeekLesson; showSubject: boolean; color: string }) {
   return (
-    <div className={`flex h-full min-w-0 flex-col items-center justify-center gap-0.5 rounded-md px-1.5 py-1 text-center ${colorFor(lesson.subjectId)}`}>
+    <div className={`flex h-full min-w-0 flex-col items-center justify-center gap-0.5 rounded-md px-1.5 py-1 text-center ${color}`}>
       <span title={lesson.place} className="max-w-full truncate text-base font-bold leading-tight">{lesson.place}</span>
       {showSubject ? <span dir="auto" className="max-w-full truncate text-xs font-medium opacity-85">{lesson.subjectName}</span> : null}
       {lesson.room ? (
@@ -95,10 +97,14 @@ export default function TeacherWeek({ schedules, today }: { schedules: RoutineSc
   const { t } = useTranslation();
   const { days, slots, lessons } = useMemo(() => buildWeek(schedules), [schedules]);
   const showSubject = useMemo(() => new Set([...lessons.values()].map((lesson) => lesson.subjectId)).size > 1, [lessons]);
+  const colorOf = useMemo(() => subjectColors([...lessons.values()].map((lesson) => ({ id: lesson.subjectId, code: lesson.subjectCode }))), [lessons]);
   const [pickedDay, setPickedDay] = useState<RoutineDay | null>(null);
   const shownDay = pickedDay ?? (today && days.includes(today) ? today : days[0]);
-  const lessonSlots = slots.filter((slot) => !slot.isBreak);
-  const dayLessons = lessonSlots
+  // A break shows as one unless a lesson is held in it, as on a Friday that
+  // runs through the morning.
+  const heldSlots = useMemo(() => new Set([...lessons.keys()].map((key) => key.split('|')[1])), [lessons]);
+  const asBreak = (slot: WeekSlot) => slot.isBreak && !heldSlots.has(slot.key);
+  const dayLessons = slots
     .map((slot) => ({ slot, lesson: lessons.get(`${shownDay}|${slot.key}`) }))
     .filter((item): item is { slot: WeekSlot; lesson: WeekLesson } => Boolean(item.lesson));
 
@@ -119,10 +125,10 @@ export default function TeacherWeek({ schedules, today }: { schedules: RoutineSc
                   <th
                     key={slot.key}
                     scope="col"
-                    className={`border-e border-white/20 px-1 py-2.5 text-center text-xs font-semibold tabular-nums last:border-e-0 ${slot.isBreak ? 'w-16' : ''}`}
+                    className={`border-e border-white/20 px-1 py-2.5 text-center text-xs font-semibold tabular-nums last:border-e-0 ${asBreak(slot) ? 'w-16' : ''}`}
                     dir="ltr"
                   >
-                    {slot.isBreak ? slot.startTime : `${slot.startTime} – ${slot.endTime}`}
+                    {asBreak(slot) ? slot.startTime : `${slot.startTime} – ${slot.endTime}`}
                   </th>
                 ))}
               </tr>
@@ -138,7 +144,8 @@ export default function TeacherWeek({ schedules, today }: { schedules: RoutineSc
                     {day === today ? <span className="block text-[0.7rem] font-medium">{t('classRoutines.ui.teacher.today')}</span> : null}
                   </th>
                   {slots.map((slot) => {
-                    if (slot.isBreak) {
+                    const lesson = lessons.get(`${day}|${slot.key}`);
+                    if (slot.isBreak && !lesson) {
                       return (
                         <td
                           key={slot.key}
@@ -148,10 +155,9 @@ export default function TeacherWeek({ schedules, today }: { schedules: RoutineSc
                         </td>
                       );
                     }
-                    const lesson = lessons.get(`${day}|${slot.key}`);
                     return (
                       <td key={slot.key} className={`h-20 border-e p-1 last:border-e-0 ${day === today ? 'bg-primary/5' : ''}`}>
-                        {lesson ? <ClassCell lesson={lesson} showSubject={showSubject} /> : null}
+                        {lesson ? <ClassCell lesson={lesson} showSubject={showSubject} color={colorOf(lesson.subjectId)} /> : null}
                       </td>
                     );
                   })}
@@ -189,7 +195,7 @@ export default function TeacherWeek({ schedules, today }: { schedules: RoutineSc
                     <span>{slot.startTime}</span>
                     <span className="opacity-70">{slot.endTime}</span>
                   </div>
-                  <div className="min-w-0 flex-1"><LessonCard lesson={lesson} showSubject={showSubject} /></div>
+                  <div className="min-w-0 flex-1"><LessonCard lesson={lesson} showSubject={showSubject} color={colorOf(lesson.subjectId)} /></div>
                 </li>
               ))}
             </ol>

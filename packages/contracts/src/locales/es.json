@@ -1452,7 +1452,6 @@
       "staleEntry": "Esta clase ha cambiado. Recárgala antes de guardar.",
       "periodNotFound": "Periodo no encontrado",
       "periodInactive": "Este periodo está inactivo",
-      "breakPeriod": "No se pueden asignar clases durante un descanso",
       "invalidPeriodTime": "La hora de fin debe ser posterior a la de inicio",
       "periodConflict": "Este periodo se solapa con otro periodo activo",
       "sectionNotFound": "Sección no encontrada",
@@ -1470,7 +1469,11 @@
       "layoutPastMidnight": "El horario generado no puede superar la medianoche",
       "layoutRemovesLessons": "Elimina las clases de los periodos que desaparecerán antes de cambiar estos ajustes",
       "layoutRemovesDuties": "Elimina las supervisiones de los descansos que desaparecerán antes de cambiar estos ajustes",
-      "outsideSelectedYear": "La sección del horario debe pertenecer al año escolar seleccionado"
+      "outsideSelectedYear": "La sección del horario debe pertenecer al año escolar seleccionado",
+      "subjectNotFound": "Materia no encontrada",
+      "assignmentSubjectMismatch": "Este profesor no tiene asignada la materia elegida",
+      "breakSupervised": "Hay un supervisor asignado a este descanso ese día. Quita primero la supervisión.",
+      "breakHasLesson": "Este descanso tiene una clase ese día. Quita primero la clase."
     },
     "ui": {
       "title": "Horario",
@@ -1479,9 +1482,7 @@
         "class": "Clase",
         "section": "Sección",
         "period": "Periodo",
-        "subjectTeacher": "Asignatura y profesor",
         "room": "Aula",
-        "notes": "Notas",
         "supervisingStaff": "Miembro del personal supervisor",
         "supervisingTeacher": "Profesor supervisor",
         "dutyNotes": "Notas de supervisión",
@@ -1495,7 +1496,9 @@
         "starts": "Inicio",
         "ends": "Fin",
         "breakPeriod": "Periodo de descanso",
-        "active": "Activo"
+        "active": "Activo",
+        "subject": "Materia",
+        "teacher": "Profesor"
       },
       "actions": {
         "days": "Días",
@@ -1512,7 +1515,8 @@
         "removeSupervision": "Eliminar supervisión",
         "addTeachingPeriod": "Añadir periodo lectivo",
         "addBreak": "Añadir descanso",
-        "useSchoolHours": "Usar el horario escolar"
+        "useSchoolHours": "Usar el horario escolar",
+        "lessonInBreak": "Poner una clase en este descanso"
       },
       "dialogs": {
         "daysTitle": "Días lectivos",
@@ -1525,22 +1529,23 @@
         "assignSupervisor": "Asignar supervisor · {{period}}"
       },
       "placeholders": {
-        "chooseTeacher": "Elige un profesor asignado",
-        "searchAssignments": "Buscar asignaciones...",
         "selectStaff": "Selecciona un miembro del personal",
-        "selectTeacher": "Selecciona un profesor"
+        "selectTeacher": "Selecciona un profesor",
+        "chooseSubject": "Elige una materia",
+        "searchSubjects": "Buscar materias...",
+        "noTeacher": "Sin profesor",
+        "sectionRoom": "Por defecto: {{room}}"
       },
       "empty": {
         "title": "No hay horario para esta sección",
         "description": "Crea el horario de la sección y edita las clases directamente desde la cuadrícula.",
-        "noAssignments": "No hay asignaciones de profesores para esta sección."
+        "noSubjects": "Todavía no hay materias."
       },
       "grid": {
         "noRoom": "Sin aula"
       },
       "content": {
         "title": "Submaterias",
-        "help": "El docente organiza el periodo y alterna las opciones según sea necesario, sin horarios separados.",
         "item": "Materia {{number}}",
         "label": "Materia o actividad",
         "or": "O",
@@ -1555,7 +1560,6 @@
         "preview": "Vista previa del horario"
       },
       "validation": {
-        "chooseAssignment": "Elige un profesor y una asignatura",
         "notesMax": "Las notas no pueden superar los 500 caracteres",
         "contentLabelRequired": "Introduce una materia o actividad",
         "contentLabelMax": "Limita cada nombre a 100 caracteres",
@@ -1566,7 +1570,8 @@
         "nameRequired": "Introduce un nombre",
         "teachingPeriodRequired": "Añade al menos un periodo lectivo",
         "endAfterStart": "La hora de fin debe ser posterior a la de inicio",
-        "noOverlap": "Los periodos no pueden solaparse"
+        "noOverlap": "Los periodos no pueden solaparse",
+        "chooseSubject": "Elige una materia"
       },
       "periodForm": {
         "teachingPeriod": "Periodo lectivo",

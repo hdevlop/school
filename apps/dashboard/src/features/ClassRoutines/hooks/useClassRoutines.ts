@@ -22,6 +22,13 @@ export const useRoutineAssignments = (sectionId?: string) => useQuery({
   enabled: Boolean(sectionId),
 });
 
+export const useRoutineSubjects = (enabled = true) => useQuery({
+  queryKey: ['class-routines', 'subjects'],
+  queryFn: routineApi.getRoutineSubjectsApi,
+  select: (response) => payload(response, []),
+  enabled,
+});
+
 export const useRoutineDutyCandidates = (enabled = true) => useQuery({
   queryKey: ['class-routines', 'duty-candidates'],
   queryFn: routineApi.getRoutineDutyCandidatesApi,

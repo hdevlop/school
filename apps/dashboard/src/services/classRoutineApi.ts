@@ -16,6 +16,8 @@ export const archiveClassRoutineApi = async (id) => (await api.post(`/class-rout
 
 export const getRoutineAssignmentsApi = async (sectionId) =>
   (await api.get(`/class-routines/assignments/${sectionId}`)).data;
+export const getRoutineSubjectsApi = async () =>
+  (await api.get('/class-routines/subjects')).data;
 export const getRoutineDutyCandidatesApi = async () =>
   (await api.get('/class-routines/duty-candidates')).data;
 export const createRoutineEntryApi = async ({ scheduleId, ...data }) =>

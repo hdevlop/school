@@ -74,10 +74,13 @@ export const routineContentGroupDto = z.discriminatedUnion('kind', [
 ]).pipe(z.custom<RoutineContentGroup>());
 export const routineContentGroupsDto = z.array(routineContentGroupDto).max(MAX_ROUTINE_CONTENT_GROUPS);
 
+// A lesson names its subject; a teacher assigned to that subject in the
+// section is optional, and `null` removes one.
 export const createRoutineEntryDto = z.strictObject({
   dayOfWeek: routineDayDto,
   periodId: id,
-  teacherAssignmentId: id,
+  subjectId: id,
+  teacherAssignmentId: id.nullish(),
   roomNumber: z.string().trim().max(50).nullish(),
   notes: z.string().trim().max(500).nullish(),
   contentGroups: routineContentGroupsDto.optional(),

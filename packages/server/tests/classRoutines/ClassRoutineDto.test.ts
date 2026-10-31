@@ -4,6 +4,7 @@ import { createRoutineEntryDto, updateRoutineEntryDto } from '../../src/modules/
 const base = {
   dayOfWeek: 'friday',
   periodId: 'h1',
+  subjectId: 'arabic',
   teacherAssignmentId: 'arabic-teacher',
 };
 
@@ -36,6 +37,15 @@ describe('routine nested content contract', () => {
     for (const contentGroups of invalid) {
       expect(createRoutineEntryDto.safeParse({ ...base, contentGroups }).success).toBe(false);
     }
+  });
+
+  it('needs a subject and takes a teacher only optionally', () => {
+    const { teacherAssignmentId: _teacher, ...subjectOnly } = base;
+    expect(createRoutineEntryDto.safeParse(subjectOnly).success).toBe(true);
+    expect(createRoutineEntryDto.safeParse({ ...subjectOnly, teacherAssignmentId: null }).success).toBe(true);
+    const { subjectId: _subject, ...teacherOnly } = base;
+    expect(createRoutineEntryDto.safeParse(teacherOnly).success).toBe(false);
+    expect(updateRoutineEntryDto.parse({ teacherAssignmentId: null })).toEqual({ teacherAssignmentId: null });
   });
 
   it('keeps omitted content absent on partial updates and allows an explicit clear', () => {

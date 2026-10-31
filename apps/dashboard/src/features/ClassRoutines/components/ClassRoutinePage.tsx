@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { BookOpen, CalendarClock, Clock3, Plus } from 'lucide-react';
+import { BookOpen, CalendarClock, Clock3, Plus, Trash2 } from 'lucide-react';
 import { ComboboxInput, NajmScroll, NButton, NFilterBar, NPageHeader, NPageHeaderActions, NSheet, NSkeleton, SelectInput } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useAuth } from 'najm-auth/client/react';
@@ -23,10 +23,11 @@ import {
   useRoutineAssignments,
   useRoutineList,
   useRoutineMutations,
+  useRoutineSubjects,
 } from '../hooks/useClassRoutines';
 import type { RoutineDay, RoutineDuty, RoutineEntry, RoutinePeriod } from '../types';
 import type { RoutineEntryFormValues } from '../types/forms';
-import { routinePeriodLabel } from '../utils/labels';
+import { routineDayLabel, routinePeriodLabel } from '../utils/labels';
 
 function ClassRoutinePageForYear() {
   const { t } = useTranslation();
@@ -72,6 +73,7 @@ function ClassRoutinePageForYear() {
   const { data: routine, isPending: routinePending } = useRoutine(scheduleId);
   const routineLoading = Boolean(scheduleId) && routinePending;
   const { data: assignments = [] } = useRoutineAssignments(sectionId);
+  const { data: subjects = [] } = useRoutineSubjects(Boolean(routine));
   const hoursDiffer = useMemo(() => {
     if (!routine?.periods.length || !publicSettings || routine.academicYear !== academicYear) return false;
     const periods = [...routine.periods].sort((a, b) => a.startTime.localeCompare(b.startTime));
@@ -171,6 +173,7 @@ function ClassRoutinePageForYear() {
           period={period}
           duty={duty}
           readOnly={Boolean(duty && !canEdit)}
+          onUseForLesson={!duty && canCreate ? () => openEntry(day, period) : undefined}
           onDelete={duty && canDelete ? async () => {
             await mutations.deleteDuty.mutateAsync({ scheduleId: routine.id, id: duty.id });
           } : undefined}
@@ -296,29 +299,37 @@ function ClassRoutinePageForYear() {
         onOpenChange={(open) => { if (!open && !lessonBusy) setSelectedLesson(null); }}
         icon={BookOpen}
         title={selectedLesson?.entry ? t('classRoutines.ui.dialogs.editLesson') : t('classRoutines.ui.dialogs.addLesson')}
+        description={selectedLesson
+          ? `${routineDayLabel(selectedLesson.day, t)} · ${routinePeriodLabel(selectedLesson.period.name, t)} · ${selectedLesson.period.startTime.slice(0, 5)}–${selectedLesson.period.endTime.slice(0, 5)}`
+          : undefined}
         width={560}
         classNames={{ content: 'max-w-full bg-background', body: 'p-4' }}
         footer={selectedLesson ? (
-          <div className="flex w-full justify-end gap-2">
-            <NButton type="button" variant="outline" onClick={() => setSelectedLesson(null)} disabled={lessonBusy}>{t('common.cancel')}</NButton>
-            {(selectedLesson.entry ? canEdit : canCreate) && <NButton type="submit" form="routine-entry-form" disabled={lessonBusy}>
-              {selectedLesson.entry ? t('classRoutines.ui.actions.updateLesson') : t('classRoutines.ui.actions.addLesson')}
-            </NButton>}
+          <div className="flex w-full flex-wrap items-center gap-2">
+            {selectedLesson.entry && canDelete ? (
+              <NButton type="button" variant="ghost" onClick={deleteLesson} disabled={lessonBusy} leftIcon={<Trash2 className="h-4 w-4" />} className="text-destructive hover:bg-destructive/10 hover:text-destructive">
+                {t('classRoutines.ui.actions.removeLesson')}
+              </NButton>
+            ) : null}
+            <div className="ms-auto flex gap-2">
+              <NButton type="button" variant="outline" onClick={() => setSelectedLesson(null)} disabled={lessonBusy}>{t('common.cancel')}</NButton>
+              {(selectedLesson.entry ? canEdit : canCreate) && <NButton type="submit" form="routine-entry-form" disabled={lessonBusy}>
+                {selectedLesson.entry ? t('classRoutines.ui.actions.updateLesson') : t('classRoutines.ui.actions.addLesson')}
+              </NButton>}
+            </div>
           </div>
         ) : null}
       >
         {selectedLesson ? (
           <RoutineEntryForm
             key={`${selectedLesson.scheduleId}:${selectedLesson.day}:${selectedLesson.period.id}:${selectedLesson.entry?.id || 'new'}`}
+            subjectOptions={subjects}
             assignmentOptions={assignments}
-            day={selectedLesson.day}
-            period={selectedLesson.period}
+            otherSubjects={routine?.entries.filter((item) => item.id !== selectedLesson.entry?.id).map((item) => ({ id: item.subjectId, code: item.subjectCode }))}
             entry={selectedLesson.entry}
             defaultRoom={selectedLesson.defaultRoom}
             onSubmit={saveLesson}
             readOnly={Boolean(selectedLesson.entry && !canEdit)}
-            onDelete={selectedLesson.entry && canDelete ? deleteLesson : undefined}
-            busy={lessonBusy}
           />
         ) : null}
       </NSheet>

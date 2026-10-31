@@ -1,24 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Plus, UserRound } from 'lucide-react';
 import { NajmScroll, NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { ROUTINE_DAYS, type RoutineDay, type RoutineGridProps } from '../types';
 import { routineDayLabel, routinePeriodLabel } from '../utils/labels';
+import { subjectColors } from '../utils/subjectColors';
 import RoutineCell from './RoutineCell';
 
 // Sunday is index 0; the device's day opens first when the routine teaches it.
 const deviceToday = (): RoutineDay => ROUTINE_DAYS[(new Date().getDay() + 6) % 7];
 
 /** Phones: one day of a section's timetable at a time, periods top to bottom. */
-export default function RoutineDayList({ days, periods, entries, duties = [], defaultRoom, editable, canCreate = editable, canUpdate = editable, canDelete = editable, onCellClick, onDutyClick }: RoutineGridProps) {
+export default function RoutineDayList({ days, periods, entries, duties = [], editable, canCreate = editable, canUpdate = editable, canDelete = editable, onCellClick, onDutyClick }: RoutineGridProps) {
   const { t } = useTranslation();
   const [pickedDay, setPickedDay] = useState<RoutineDay | null>(null);
   const today = deviceToday();
   const shownDay = pickedDay && days.includes(pickedDay) ? pickedDay : days.includes(today) ? today : days[0];
   const entryMap = new Map(entries.map((entry) => [`${entry.dayOfWeek}:${entry.periodId}`, entry]));
   const dutyMap = new Map(duties.map((duty) => [`${duty.dayOfWeek}:${duty.periodId}`, duty]));
+  const colorOf = useMemo(() => subjectColors(entries.map((entry) => ({ id: entry.subjectId, code: entry.subjectCode }))), [entries]);
   const dayLabel = shownDay ? routineDayLabel(shownDay, t) : '';
 
   return (
@@ -52,12 +54,13 @@ export default function RoutineDayList({ days, periods, entries, duties = [], de
               </div>
             );
 
-            if (period.isBreak) {
+            const entry = entryMap.get(`${shownDay}:${period.id}`);
+            if (period.isBreak && !entry) {
               const duty = dutyMap.get(`${shownDay}:${period.id}`);
               const label = routinePeriodLabel(period.name, t);
               const content = (
                 <span className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-2 px-2 py-1.5">
-                  <span className="text-xs font-semibold uppercase text-muted-foreground">{label}</span>
+                  <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{label}</span>
                   {duty ? (
                     <NBadge color="primary" look="dash" icon={UserRound} className="max-w-full whitespace-normal normal-case tracking-normal">
                       {duty.staffName}
@@ -79,10 +82,9 @@ export default function RoutineDayList({ days, periods, entries, duties = [], de
               );
             }
 
-            const entry = entryMap.get(`${shownDay}:${period.id}`);
             const lesson = entry ? (
               <div className="overflow-hidden rounded-xl">
-                <RoutineCell subjectId={entry.subjectId} subjectName={entry.subjectName} teacherName={entry.teacherName} roomNumber={entry.roomNumber} defaultRoom={defaultRoom} contentGroups={entry.contentGroups} />
+                <RoutineCell subjectId={entry.subjectId} subjectName={entry.subjectName} teacherName={entry.teacherName} roomNumber={entry.roomNumber} contentGroups={entry.contentGroups} color={colorOf(entry.subjectId)} />
               </div>
             ) : (
               <span className="flex min-h-12 items-center justify-center gap-1.5 rounded-md border border-dashed text-xs text-muted-foreground">

@@ -156,17 +156,15 @@ export class ClassRoutineRepository {
       version: routineEntries.version,
       teacherId: teachers.id,
       teacherName: staff.name,
-      subjectId: subjects.id,
+      subjectId: routineEntries.subjectId,
       subjectName: subjects.name,
       subjectCode: subjects.code,
-      classId: teacherAssignments.classId,
-      sectionId: teacherAssignments.sectionId,
     })
       .from(routineEntries)
-      .innerJoin(teacherAssignments, eq(routineEntries.teacherAssignmentId, teacherAssignments.id))
-      .innerJoin(teachers, eq(teacherAssignments.teacherId, teachers.id))
-      .innerJoin(staff, eq(teachers.staffId, staff.id))
-      .innerJoin(subjects, eq(teacherAssignments.subjectId, subjects.id))
+      .innerJoin(subjects, eq(routineEntries.subjectId, subjects.id))
+      .leftJoin(teacherAssignments, eq(routineEntries.teacherAssignmentId, teacherAssignments.id))
+      .leftJoin(teachers, eq(teacherAssignments.teacherId, teachers.id))
+      .leftJoin(staff, eq(teachers.staffId, staff.id))
       .where(eq(routineEntries.scheduleId, scheduleId));
   }
 
@@ -252,6 +250,18 @@ export class ClassRoutineRepository {
       .where(eq(teacherAssignments.id, id))
       .limit(1);
     return assignment;
+  }
+
+  async getSubject(id: string) {
+    const [subject] = await this.db.select({ id: subjects.id }).from(subjects).where(eq(subjects.id, id)).limit(1);
+    return subject;
+  }
+
+  // Subjects are the school's, not a class's: any of them can be a lesson.
+  async getSubjects() {
+    return this.db.select({ id: subjects.id, name: subjects.name, code: subjects.code })
+      .from(subjects)
+      .orderBy(asc(subjects.name));
   }
 
   async getAssignmentsForSection(sectionId: string) {
@@ -463,7 +473,7 @@ export class ClassRoutineRepository {
     periodId: string;
     startTime: string;
     endTime: string;
-    teacherId: string;
+    teacherId?: string;
     roomNumber?: string | null;
     excludeEntryId?: string;
   }) {
@@ -494,12 +504,13 @@ export class ClassRoutineRepository {
       .innerJoin(routineSchedules, eq(routineEntries.scheduleId, routineSchedules.id))
       .innerJoin(routinePeriods, eq(routineEntries.periodId, routinePeriods.id))
       .innerJoin(sections, eq(routineSchedules.sectionId, sections.id))
-      .innerJoin(teacherAssignments, eq(routineEntries.teacherAssignmentId, teacherAssignments.id))
+      // A lesson with no teacher still holds its room.
+      .leftJoin(teacherAssignments, eq(routineEntries.teacherAssignmentId, teacherAssignments.id))
       .where(and(...conditions));
 
     const targetRoom = input.roomNumber || null;
     return rows.filter((row) =>
-      row.teacherId === input.teacherId
+      (!!input.teacherId && row.teacherId === input.teacherId)
       || (!!targetRoom && (row.roomNumber || row.defaultRoomNumber) === targetRoom),
     );
   }

@@ -69,6 +69,13 @@ export class ClassRoutineController {
     return this.service.getAssignments(sectionId);
   }
 
+  @Get('/subjects')
+  @Can('read:classes')
+  @ResMsg('classRoutines.success.retrieved')
+  async getSubjects() {
+    return this.service.getSubjects();
+  }
+
   @Get('/duty-candidates')
   @canReadRoutineCandidates()
   @ResMsg('classRoutines.success.retrieved')
