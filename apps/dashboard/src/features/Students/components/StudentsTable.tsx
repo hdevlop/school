@@ -345,6 +345,7 @@ function StudentsTable() {
       </NPageHeader>
 
       <NTable
+        exportTitle={viewingYear ? `${title} ${viewingYear}` : title}
         permissionResource="students"
         className='min-h-0 flex-1'
         classNames={{

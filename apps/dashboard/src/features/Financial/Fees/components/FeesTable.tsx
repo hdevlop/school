@@ -446,6 +446,7 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
       )}
 
       <NTable
+        exportTitle={viewingYear ? `${t('navigation.fees')} ${viewingYear}` : t('navigation.fees')}
         permissionResource="fees"
         data={filteredFees}
         isFilteredEmpty={isFilteredEmpty}

@@ -156,6 +156,7 @@ function ParentsTable() {
       </NPageHeader>
 
       <NTable
+        exportTitle={t('navigation.parents')}
         permissionResource="parents"
         data={filteredParents}
         isFilteredEmpty={filteredParents.length === 0 && !!parents?.length}

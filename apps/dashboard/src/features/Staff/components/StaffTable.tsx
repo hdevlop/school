@@ -394,6 +394,7 @@ const StaffTable = () => {
       )}
 
       <NTable
+        exportTitle={t('navigation.staff')}
         permissionResource="staff"
         data={rows}
         columns={columns}

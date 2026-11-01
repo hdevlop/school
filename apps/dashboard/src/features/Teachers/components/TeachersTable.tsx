@@ -168,6 +168,7 @@ function TeachersTable() {
       </NPageHeader>
 
       <NTable
+        exportTitle={t('navigation.teachers')}
         permissionResource="teachers"
         data={teachers}
         getRowId={(teacher) => teacher.id}
