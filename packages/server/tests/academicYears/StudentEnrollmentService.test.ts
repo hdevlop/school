@@ -27,7 +27,7 @@ function build(activeYearId = 'year-current', legacyProjection = false, yearStat
         classYear: '2024-2025', enrollmentDate: '2024-09-01' }
       : { id: 'student-1' },
     hasRecordedPlacement: async () => false,
-    getByStudentAndYear: async () => null,
+    getByStudentAndYear: async (): Promise<typeof enrollment | null> => null,
     getClassAndSection: async (classId: string, sectionId: string) => ({
       classId, sectionId, academicYear: oldYear.label,
     }),
@@ -54,8 +54,86 @@ function build(activeYearId = 'year-current', legacyProjection = false, yearStat
   const settings = { getAdminSettings: async () => ({ activeAcademicYearId: activeYearId }) };
   const migrationIssues = { recordUnknownEnrollmentDate: async () => { writes.push('preserve-legacy-placement'); } };
   const service = new StudentEnrollmentService(repository as any, years as any, settings as any, migrationIssues as any, withEnglishMessages(new StudentEnrollmentValidator()));
-  return { service, writes, repository, current };
+  return { service, writes, repository, current, enrollment, years };
 }
+
+describe('placement changes from Edit Student', () => {
+  const actor = { id: 'admin-1', role: 'admin' };
+  const target = { classId: 'class-other', sectionId: 'section-other' };
+  function editable(active = false) {
+    const fixture = build(active ? oldYear.id : 'year-current');
+    fixture.repository.getByStudentAndYear = async () => fixture.enrollment;
+    const today = getBusinessDateOnly();
+    const offset = (days: number) => {
+      const date = new Date(`${today}T12:00:00Z`);
+      date.setUTCDate(date.getUTCDate() + days);
+      return date.toISOString().slice(0, 10);
+    };
+    const year = active ? { ...oldYear, reportingStartsOn: offset(-7), reportingEndsOn: offset(7) } : oldYear;
+    if (active) {
+      fixture.enrollment.enrolledOn = year.reportingStartsOn;
+      fixture.current.validFrom = year.reportingStartsOn;
+      fixture.years.requireId = async () => year;
+    }
+    Object.defineProperty(fixture.service, 'year', { value: year });
+    return fixture;
+  }
+
+  it('uses the school business date and preserves the previous current-year placement', async () => {
+    const { service, writes } = editable(true);
+    const placement = await service.updatePlacementFromProfile('student-1', target, actor);
+    expect(placement).toMatchObject({ ...target, validFrom: getBusinessDateOnly(), actorId: actor.id });
+    expect(placement.reason).toBeTruthy();
+    expect(writes).toEqual(['close-placement', 'add-placement', 'update-current-student']);
+  });
+
+  it('corrects repeated moves on the same day without an empty interval', async () => {
+    const { service, writes, current } = editable(true);
+    current.validFrom = getBusinessDateOnly();
+    await service.updatePlacementFromProfile('student-1', target, actor);
+    expect(writes).toEqual(['correct-placement', 'audit-correction', 'update-current-student']);
+  });
+
+  it('corrects a past-year placement with an automatic audit note and leaves today unchanged', async () => {
+    const { service, writes, current } = editable();
+    const from = current.validFrom;
+    await service.updatePlacementFromProfile('student-1', target, { ...actor, role: 'principal' });
+    expect(current).toMatchObject({ ...target, validFrom: from, validTo: null });
+    expect(writes).toEqual(['correct-placement', 'audit-correction']);
+  });
+
+  it('does nothing when the selected-year placement is unchanged', async () => {
+    const { service, writes, current } = editable();
+    await service.updatePlacementFromProfile('student-1', current);
+    expect(writes).toEqual([]);
+  });
+
+  it('resolves an omitted class from the selected-year placement', async () => {
+    const { service, current } = editable();
+    await service.updatePlacementFromProfile('student-1', { sectionId: target.sectionId }, actor);
+    expect(current).toMatchObject({ classId: 'class-old', sectionId: target.sectionId });
+  });
+
+  it('keeps role, capacity, enrollment and dated-record protections', async () => {
+    for (const denied of [undefined, { id: 'secretary', role: 'secretary' }]) {
+      const { service, writes } = editable(true);
+      await expect(service.updatePlacementFromProfile('student-1', target, denied)).rejects.toThrow();
+      expect(writes).toEqual([]);
+    }
+    const full = editable(true);
+    full.repository.sectionPeakOccupancy = async () => 30;
+    await expect(full.service.updatePlacementFromProfile('student-1', target, actor)).rejects.toThrow();
+    expect(full.writes).toEqual([]);
+    const absent = editable();
+    absent.repository.getByStudentAndYear = async () => null;
+    await expect(absent.service.updatePlacementFromProfile('student-1', target, actor)).rejects.toThrow();
+    expect(absent.writes).toEqual([]);
+    const conflict = editable();
+    conflict.repository.hasInvalidDatedRecords = async () => true;
+    await expect(conflict.service.updatePlacementFromProfile('student-1', target, actor)).rejects.toThrow();
+    expect(conflict.writes).not.toContain('audit-correction');
+  });
+});
 
 describe('dated enrollment writes', () => {
   it('keeps future active-year moves refused while allowing today', () => {

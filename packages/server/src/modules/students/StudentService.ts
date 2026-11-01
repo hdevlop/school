@@ -255,6 +255,9 @@ export class StudentService {
     await this.studentValidator.ensureEmailUnique(data.email, id);
     await this.studentValidator.ensurePhoneUnique(data.phone ?? undefined, id);
     await this.studentValidator.ensureClassAndSectionValid(data.classId, data.sectionId);
+    if (data.classId !== undefined || data.sectionId !== undefined) {
+      await this.studentEnrollments.updatePlacementFromProfile(id, data, actor);
+    }
 
     const userData = { ...pickProps(data, USER_UPDATE_KEYS), ...loginIdentityUpdate(data, student) };
     const studentData = pickProps(data, STUDENT_UPDATE_KEYS);

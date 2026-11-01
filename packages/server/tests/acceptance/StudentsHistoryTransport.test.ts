@@ -171,7 +171,79 @@ describe('student history over authenticated REST and MCP', () => {
       placement: expected.placements[0], expected, reason };
     expect((await request(`/students/${id}`, '2026-2027', 'PUT', { enrollmentCorrection: data })).status).toBe(404);
     expect((await request('/students/history-student-03', '2025-2026', 'PUT', { enrollmentCorrection: data })).status).toBe(404);
-    expect((await request(`/students/${id}`, '2025-2026', 'PUT', { classId: 'history-class-2025' })).status).toBe(409);
+    expect((await request(`/students/${id}`, '2025-2026', 'PUT', {
+      classId: 'history-class-2025', sectionId: 'history-section-2026-a', previousSchool: reason,
+    })).status).toBe(409);
+    expect(state(await readEnrollment())).toEqual(expected);
+  });
+  it('saves class and section directly from Edit in the selected past year without date or reason inputs', async () => {
+    const original = await readEnrollment();
+    const [projection] = await db.select().from(students).where(eq(students.id, id));
+    const oldAudits = new Set((await db.select({ id: auditLogs.id }).from(auditLogs)
+      .where(eq(auditLogs.resourceId, enrollmentId))).map(row => row.id));
+    let changed = false;
+    try {
+      const saved = await request(`/students/${id}`, '2025-2026', 'PUT', {
+        classId: 'history-class-2025', sectionId: 'history-section-2025-b', previousSchool: reason,
+      }, principal);
+      changed = saved.status === 200;
+      expect(saved.status).toBe(200);
+      expect(saved.body.data).toMatchObject({ sectionId: 'history-section-2025-b', previousSchool: reason });
+      const corrected = await readEnrollment();
+      expect(corrected.placements[0].validFrom).toBe(original.placements[0].validFrom);
+      expect(corrected.placements[0].validTo).toBe(original.placements[0].validTo);
+      const active = (await request(`/students/${id}`, '2026-2027')).body.data;
+      expect(active.sectionId).toBe(projection.sectionId);
+      const audits = await db.select().from(auditLogs).where(eq(auditLogs.resourceId, enrollmentId));
+      expect(audits.filter(row => !oldAudits.has(row.id))).toHaveLength(1);
+    } finally {
+      if (changed) {
+        const current = await readEnrollment();
+        const restored = await request(`/students/${id}`, '2025-2026', 'PUT', {
+          previousSchool: projection.previousSchool,
+          enrollmentCorrection: { enrollmentId, enrolledOn: original.enrolledOn,
+            leftOn: original.leftOn, status: original.status, placement: state(original).placements[0],
+            expected: state(current), reason },
+        });
+        expect(restored.status).toBe(200);
+        const audits = await db.select({ id: auditLogs.id }).from(auditLogs).where(eq(auditLogs.resourceId, enrollmentId));
+        for (const audit of audits.filter(row => !oldAudits.has(row.id))) {
+          await db.delete(auditLogs).where(eq(auditLogs.id, audit.id));
+        }
+      }
+    }
+  });
+  it('reassigns from Edit in the active year, refreshes the roster, and refuses an invalid placement atomically', async () => {
+    const created = await request('/students', '2026-2027', 'POST', {
+      studentCode: `placement-${suffix}`, name: 'Yasmine Bennani', gender: 'F',
+      classId: 'history-class-2026', sectionId: 'history-section-2026-a',
+      enrollmentDate: '2026-09-01', yearEnrolledOn: '2026-09-01',
+    });
+    expect([200, 201]).toContain(created.status);
+    const studentId = created.body.data.id;
+    try {
+      const saved = await request(`/students/${studentId}`, '2026-2027', 'PUT', {
+        classId: 'history-class-2026', sectionId: 'history-section-2026-b', previousSchool: reason,
+      });
+      expect(saved.status).toBe(200);
+      expect(saved.body.data).toMatchObject({ sectionId: 'history-section-2026-b', previousSchool: reason });
+      const roster = await request('/students', '2026-2027');
+      expect(roster.body.data.find(row => row.id === studentId).sectionId).toBe('history-section-2026-b');
+      const history = await request(`/students/${studentId}/enrollments`, '2026-2027');
+      const placements = history.body.data[0].placements;
+      expect(placements).toHaveLength(2);
+      expect(placements[0].sectionId).toBe('history-section-2026-b');
+      expect(placements[1].validTo).toBe(placements[0].validFrom);
+      // A section in another year must not save any part of the profile.
+      const failed = await request(`/students/${studentId}`, '2026-2027', 'PUT', {
+        sectionId: 'history-section-2025-a', previousSchool: 'Must not persist',
+      });
+      expect(failed.status).toBe(422);
+      const after = await request(`/students/${studentId}`, '2026-2027');
+      expect(after.body.data).toMatchObject({ sectionId: 'history-section-2026-b', previousSchool: reason });
+    } finally {
+      expect((await request(`/students/${studentId}`, '2026-2027', 'DELETE')).status).toBe(200);
+    }
   });
   it("advertises one year input and isolates MCP calls by tool input or request header", async () => {
     const { Client } = await import('@modelcontextprotocol/sdk/client/index.js');

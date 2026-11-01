@@ -6,14 +6,13 @@ import { useDialog } from '@/shared/useDialog';
 import { useQuery } from '@tanstack/react-query';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'najm-i18n/react';
-import { CalendarDays, DoorOpen, FileText, GraduationCap, LogOut } from 'lucide-react';
+import { CalendarDays, DoorOpen, GraduationCap, LogOut } from 'lucide-react';
 import { getClassesApi } from '@/services/classApi';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import type { EnrollmentPlacement } from '@/services/studentEnrollmentApi';
 import {
   buildEndEnrollmentSchema,
   buildEnrollSchema,
-  buildTransferSchema,
 } from '@/features/Students/config/enrollmentSchemas';
 import { buildEnrollmentEndStatusOptions } from '@/features/Students/config/enrollmentOptions';
 
@@ -95,48 +94,6 @@ export function EnrollForm({ year, defaultDate }: { year: Year; defaultDate: str
           type="date"
           icon={CalendarDays}
           formLabel={t('students.enrollment.enrolledOn')}
-          required
-        />
-      </div>
-    </NForm>
-  );
-}
-
-export function TransferForm({ year, current }: { year: Year; current: EnrollmentPlacement }) {
-  const { t } = useTranslation();
-  const { pop } = useDialog();
-  const schema = useMemo(() => buildTransferSchema(t, year, current.validFrom), [t, year, current.validFrom]);
-
-  return (
-    <NForm
-      id="student-transfer-form"
-      schema={schema}
-      defaultValues={{ classId: current.classId, sectionId: current.sectionId, validFrom: '', reason: '' }}
-      onSubmit={pop}
-    >
-      <div className="flex flex-col gap-4">
-        <p className="text-sm text-muted-foreground">
-          {t('students.enrollment.currentPlacement', {
-            className: current.className,
-            sectionName: current.sectionName,
-            date: current.validFrom,
-          })}
-        </p>
-        <PlacementFields year={year} />
-        <FormInput
-          name="validFrom"
-          type="date"
-          icon={CalendarDays}
-          formLabel={t('students.enrollment.validFrom')}
-          required
-        />
-        <p className="text-sm text-muted-foreground">{t('students.enrollment.sameDayHint')}</p>
-        <FormInput
-          name="reason"
-          type="textarea"
-          icon={FileText}
-          formLabel={t('students.enrollment.reason')}
-          placeholder={t('students.enrollment.reasonPlaceholder')}
           required
         />
       </div>

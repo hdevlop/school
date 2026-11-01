@@ -178,7 +178,7 @@ A School context provider adds the validated year and the shared role rule to th
 
 ### 0.2 Ground rules
 
-**Owner simplification, 2026-10-15:** Student Edit now edits profile details only. The enrollment-correction inputs, history fetch and frontend correction payload builder were removed completely. Class and section remain enrollment-owned. Earlier same-form correction UI descriptions below are historical; the separate enrollment operations and backend correction contract remain.
+**Owner simplification, 2026-11-01:** Student Edit saves class and section directly, without asking for a placement date or reason. The separate Assignment action and form are removed. The backend enrollment service owns the dated write: active-year changes use the school business date, same-day changes use an audited correction, and past-year changes correct that year's latest placement without changing its dates or today's projection. Role, capacity and dated-record checks remain. The explicit backend enrollment operations and correction contract remain available; the earlier profile-only Edit decision from 2026-10-15 is superseded.
 
 - Use `bun`, never npm/yarn/pnpm, and run commands from the repository root.
 - The Najm source at `C:\Users\hdevlop\Desktop\najm` is **read-only reference**. School uses only the published versions pinned in the root `package.json`. Never link, copy or publish Najm.

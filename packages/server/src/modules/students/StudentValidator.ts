@@ -63,8 +63,6 @@ export class StudentValidator {
 
   async ensureProfileUpdateAllowed(student: ExistingStudent, data: UpdateStudentDto) {
     if (
-      (data.classId !== undefined && data.classId !== student.classId) ||
-      (data.sectionId !== undefined && data.sectionId !== student.sectionId) ||
       (data.status !== undefined && data.status !== student.status)
     ) {
       Err(409, this.st('useEnrollmentOperations'));

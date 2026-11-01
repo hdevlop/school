@@ -9,6 +9,7 @@ import { importedEnrollmentDates } from './importEnrollmentDates';
 import type { FinancialImportDatePreview } from '@sms/contracts';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { getBusinessDateOnly } from '../../shared/businessDate';
 
 @Service()
 export class StudentEnrollmentService {
@@ -272,6 +273,39 @@ export class StudentEnrollmentService {
       );
     }
     return { ...enrollment, placements: [placement] };
+  }
+
+  /** Edit Student owns the interaction; dated enrollment records still own placement. */
+  @Transaction()
+  async updatePlacementFromProfile(studentId: string, data: { classId?: string; sectionId?: string },
+    actor?: { id: string; role: string }) {
+    const selected = this.validator.ensureEnrollmentExists(
+      await this.enrollments.getByStudentAndYear(studentId, this.year.id),
+    );
+    const enrollment = this.validator.ensureEnrollmentExists(await this.enrollments.getById(selected.id, true));
+    const placements = await this.enrollments.listPlacements(enrollment.id);
+    const current = this.validator.ensureClassSection(placements[0]);
+    const classId = data.classId ?? current.classId;
+    const sectionId = data.sectionId ?? current.sectionId;
+    // Compare with the selected year's placement, never today's legacy projection.
+    if (classId === current.classId && sectionId === current.sectionId) return current;
+    this.validator.ensureCorrectionAllowed(actor?.role ?? '');
+    const reason = 'Class or section updated from Edit Student';
+    const settings = await this.settings.getAdminSettings();
+    if (settings?.activeAcademicYearId === this.year.id) {
+      return this.transfer(enrollment.id, {
+        classId, sectionId, validFrom: getBusinessDateOnly(), reason,
+      }, actor!.id, actor!.role);
+    }
+    // Past-year edits correct the last placement in that year and preserve its
+    // dates, exit status and earlier placements through the audited safe path.
+    const status = enrollment.status as CorrectEnrollmentDto['status'];
+    const corrected = await this.correct(enrollment.id, {
+      enrolledOn: enrollment.enrolledOn, leftOn: enrollment.leftOn, status,
+      expected: { enrolledOn: enrollment.enrolledOn, leftOn: enrollment.leftOn, status, placements },
+      placement: { ...current, classId, sectionId }, reason,
+    }, actor!, studentId);
+    return corrected.placements.find(placement => placement.id === current.id)!;
   }
 
   @Transaction()

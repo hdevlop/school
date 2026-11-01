@@ -9,7 +9,8 @@ import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'
 import { IdCard, BookOpen, Hash, User, UserRound, Calendar, CalendarCheck, GraduationCap, DoorOpen, School, Mail, Phone, HeartPulse, Bus } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
 import { useFormContext, useWatch } from 'react-hook-form'
-import { PLACEMENT_FIELDS, createStudentSchemas } from '../config/studentSchemas'
+import { createStudentSchemas } from '../config/studentSchemas'
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole'
 import { buildGenderOptions } from '../config/studentOptions'
 import { StudentParentsSection } from './StudentParentsSection'
 import { StudentBirthplaceFields } from './StudentBirthplaceFields'
@@ -53,13 +54,16 @@ export const getStudentDefaultValues = (student = null, businessDate?: string | 
 const SimpleStudentForm = ({ student = null, classes = [] }) => {
 
   const { t } = useTranslation()
+  const { role } = useViewerRole()
+  const canChangePlacement = (role === 'admin' || role === 'principal') && !!student?.classId && !!student?.sectionId
   const studentProfileEditSchema = useMemo(() => createStudentSchemas(t).profileEdit, [t])
   const { pop } = useDialog()
   const handleSubmit = async (studentData) => {
-    const { addressLocation, birthplaceEntry: _birthplaceEntry, ...fields } = studentData;
-    for (const field of PLACEMENT_FIELDS) delete fields[field];
-    pop({
+    const { addressLocation, birthplaceEntry: _birthplaceEntry, status: _status, classId, sectionId, ...fields } = studentData;
+    await pop({
       ...fields,
+      ...(canChangePlacement && (classId !== student.classId || sectionId !== student.sectionId)
+        ? { classId, sectionId } : {}),
       address: addressLocation.address,
       addressLatitude: addressLocation.latitude ?? null,
       addressLongitude: addressLocation.longitude ?? null,
@@ -74,7 +78,7 @@ const SimpleStudentForm = ({ student = null, classes = [] }) => {
         defaultValues={getStudentDefaultValues(student)}
         onSubmit={handleSubmit}
       >
-        <StudentFormContent classes={classes} student={student} placementReadOnly />
+        <StudentFormContent classes={classes} student={student} placementReadOnly={!canChangePlacement} />
       </NForm>
       {student?.id && <StudentParentsSection studentId={student.id} />}
     </>
@@ -113,12 +117,12 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
   }, [classes, selectedClassId, t]);
 
   useEffect(() => {
-    if (!selectedSectionId || sectionOptions.some(section => section.value === selectedSectionId)) {
+    if (placementReadOnly || !classes.length || !selectedSectionId || sectionOptions.some(section => section.value === selectedSectionId)) {
       return;
     }
 
     setValue(fieldName('sectionId'), '');
-  }, [fieldName, sectionOptions, selectedSectionId, setValue]);
+  }, [classes.length, fieldName, placementReadOnly, sectionOptions, selectedSectionId, setValue]);
 
   const genderOptions = buildGenderOptions(t)
 

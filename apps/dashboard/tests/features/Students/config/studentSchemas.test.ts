@@ -2,7 +2,7 @@ import { describe, expect, it } from 'bun:test';
 import { schoolI18n } from '@sms/contracts/locales';
 import { GENDER_VALUES, STUDENT_STATUS_VALUES } from '@sms/contracts';
 
-import { PLACEMENT_FIELDS, createStudentSchemas } from '@/features/Students/config/studentSchemas';
+import { createStudentSchemas } from '@/features/Students/config/studentSchemas';
 
 // The English catalog, so a message a test reads proves its key exists.
 const english = (key: string, params?: Record<string, unknown>) => schoolI18n.translate('en', key as never, params as never);
@@ -119,7 +119,11 @@ describe('studentProfileEditSchema', () => {
     expect(studentProfileEditSchema.safeParse({ ...student, dateOfBirth: 'yesterday' }).success).toBe(false);
   });
 
-  it('names the fields the enrollment records own', () => {
-    expect([...PLACEMENT_FIELDS]).toEqual(['classId', 'sectionId', 'status']);
+  it('saves class and section changes without requiring a date or reason', () => {
+    expect(studentProfileEditSchema.parse({ ...student, classId: 'cls2', sectionId: 'sec2' })).toMatchObject({
+      classId: 'cls2', sectionId: 'sec2',
+    });
+    expect(studentProfileEditSchema.safeParse({ ...student, sectionId: '' }).success).toBe(false);
+    expect(studentProfileEditSchema.safeParse({ ...student, classId: '' }).success).toBe(false);
   });
 });

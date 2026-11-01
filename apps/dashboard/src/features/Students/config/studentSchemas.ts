@@ -77,21 +77,24 @@ export const createStudentSchemas = (t: T) => {
   });
 
   /**
-   * The profile edit. Class, section and enrollment status belong to the dated
-   * enrollment records, which the server refuses to change through a profile
-   * edit, so they are shown read-only and not required: a student viewed in a
-   * year without a placement has none.
+   * Profile edits can update class and section together. A student viewed in
+   * a year without an enrollment still has neither, so both may be absent.
+   * The server applies placement changes through the dated enrollment service.
    */
   const profileEdit = student.extend({
     classId: optionalId,
     sectionId: optionalId,
     status: z.string().nullish(),
+  }).superRefine((data, context) => {
+    if (data.classId && !data.sectionId) {
+      context.addIssue({ code: 'custom', path: ['sectionId'], message: t('validationMessages.sectionIsRequired') });
+    }
+    if (data.sectionId && !data.classId) {
+      context.addIssue({ code: 'custom', path: ['classId'], message: t('validationMessages.classIsRequired') });
+    }
   });
 
   return { student, profileEdit };
 };
 
 export type StudentFormValues = z.input<ReturnType<typeof createStudentSchemas>['student']>;
-
-/** The fields a profile edit leaves to the enrollment records. */
-export const PLACEMENT_FIELDS = ['classId', 'sectionId', 'status'] as const;

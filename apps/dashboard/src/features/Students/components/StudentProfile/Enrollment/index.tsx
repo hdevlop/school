@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { NBadge, NButton, NEmptyState, NErrorState, NForbiddenState, NSkeleton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { localDateInput } from 'najm-kit/format';
-import { ArrowRightLeft, CalendarRange, LogOut, UserPlus } from 'lucide-react';
+import { CalendarRange, LogOut, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from 'najm-i18n/react';
 import { getAcademicYearsApi } from '@/services/academicYearApi';
@@ -15,14 +15,14 @@ import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewin
 import { dateWithinYear } from '@/features/AcademicYears/utils/viewingYear';
 import { useStudentEnrollments } from '@/features/Students/hooks/useStudentEnrollments';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
-import { EndEnrollmentForm, EnrollForm, TransferForm } from './EnrollmentForms';
+import { EndEnrollmentForm, EnrollForm } from './EnrollmentForms';
 
 const serverMessage = (error: any) => error?.response?.data?.message || error?.message;
 
 /**
  * A student's class and section in each school year, from dated enrollment
- * records, and the commands that change them: enrol in a year, change class or
- * section from a date, or end the enrollment. Its actions target the viewed
+ * records, and commands to enrol in a year or end the enrollment. Class and
+ * section changes save through Edit Student. Its actions target the viewed
  * year, or the active one with history off. Administrators and principals only.
  */
 export default function EnrollmentPanel({ studentId, showHistory = true }: { studentId?: string; showHistory?: boolean }) {
@@ -30,7 +30,7 @@ export default function EnrollmentPanel({ studentId, showHistory = true }: { stu
   const { displayDate, displayDateTime } = useSchoolFormat();
   const { openDialog } = useDialog();
   const { viewingYear, activeYear } = useViewingAcademicYear();
-  const { enrollments, error, isLoading, enroll, transfer, end } = useStudentEnrollments(studentId);
+  const { enrollments, error, isLoading, enroll, end } = useStudentEnrollments(studentId);
   const { data: yearList } = useQuery({
     queryKey: ['academic-years'],
     queryFn: getAcademicYearsApi,
@@ -68,23 +68,6 @@ export default function EnrollmentPanel({ studentId, showHistory = true }: { stu
         onClick: (values) => run(
           () => withAcademicYear(targetYear.label, () => enroll({ studentId, academicYearId: targetYear.id, ...values })),
           t('students.enrollment.enrolled'),
-        ),
-      },
-    });
-  };
-
-  const openTransfer = (current: EnrollmentPlacement) => {
-    if (!targetEnrollment) return;
-    openDialog({
-      title: t('students.enrollment.transfer'),
-      children: <TransferForm year={targetEnrollment.academicYear} current={current} />,
-      width: 'xxl',
-      primaryButton: {
-        form: 'student-transfer-form',
-        text: t('students.enrollment.transferAction'),
-        onClick: (values) => run(
-          () => withAcademicYear(targetEnrollment.academicYear.label, () => transfer({ enrollmentId: targetEnrollment.id, ...values })),
-          t('students.enrollment.transferred'),
         ),
       },
     });
@@ -142,10 +125,6 @@ export default function EnrollmentPanel({ studentId, showHistory = true }: { stu
           )}
           {openPlacement && (
             <>
-              <NButton type="button" size="sm" variant="outline" className="gap-2" onClick={() => openTransfer(openPlacement)}>
-                <ArrowRightLeft className="h-4 w-4" />
-                {t('students.enrollment.transfer')}
-              </NButton>
               <NButton type="button" size="sm" variant="outline" className="gap-2" onClick={() => openEnd(openPlacement)}>
                 <LogOut className="h-4 w-4" />
                 {t('students.enrollment.disable')}

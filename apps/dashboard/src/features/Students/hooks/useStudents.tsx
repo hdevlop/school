@@ -13,7 +13,7 @@ import * as studentApi from '@/services/studentApi';
 export const useStudents = (options?) => {
   const { studentId, enabled = true } = options || {};
 
-  const crud = useEntityCRUD(['students', 'parents', 'fees', 'classes', 'sections'], {
+  const crud = useEntityCRUD(['students', 'parents', 'fees', 'classes', 'sections', 'student-enrollments', 'dashboard'], {
     getAll: studentApi.getStudentsApi,
     getById: studentApi.getStudentByIdApi,
     create: studentApi.createStudentApi,

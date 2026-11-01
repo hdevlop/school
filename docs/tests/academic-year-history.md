@@ -1,5 +1,13 @@
 # Academic-year history implementation evidence
 
+## Student reassignment through Edit, 2026-11-01
+
+Student Edit now saves class and section in the same request as profile details. The separate Assignment button and form are removed, with no placement date or reason input. The enrollment service uses the school business date for active-year moves and audits same-day corrections. Past-year edits correct only that year's latest placement, preserving its dates, earlier history, exit status and today's projection. Administrator/principal restrictions, section capacity and dated-record safeguards still apply. Student saves also invalidate enrollment history and dashboard queries.
+
+- Student feature, identity, birthplace and placement tests: **134 pass**. Academic-year suite: **445 pass**.
+- Guarded local `school_history_test` authenticated REST/MCP suite: **8 pass**, including direct past-year saves, active-year reassignment, refreshed roster, invalid placement refusal and historical isolation. The fixture needed its pending tracked migrations before running; the main school database was not migrated or modified. Temporary student and audit rows were removed, and historical edits restored.
+- Root lint, workspace typecheck and isolated production build (`.next-student-edit-20261101`) pass. Lint retains the existing ParentsTable hook-dependency warning.
+
 ## Student fee detail loading, 2026-10-29
 
 The student fee screen requested the school-wide payment list just to obtain its payment mutation. It now disables that unused list. Student History and Documents also avoid school-wide payment/fee lists and redundant current-year details when their data is already supplied. The actual student's payments and payment actions remain available.
