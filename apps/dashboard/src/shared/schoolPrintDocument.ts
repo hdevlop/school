@@ -10,6 +10,8 @@ export interface SchoolPrintDocumentOptions {
   columns: readonly string[];
   /** Relative data-column widths, normalized to the available page width. */
   columnWeights?: readonly number[];
+  /** Allow longer translated headings to fit their column. */
+  wrapHeadings?: boolean;
   totalLabel: string;
   signature: string;
   assetOrigin: string;
@@ -87,7 +89,7 @@ export function buildSchoolPrintDocument(options: SchoolPrintDocumentOptions, bo
     .signature{min-width:55mm;border-top:0.75pt solid #94a3b8;padding-top:1.2mm;text-align:center;font-size:8.5pt;color:#475569}
     .signature-group{break-inside:avoid}.signature-row td{padding:0;border:0;background:transparent!important}
     ${options.orientation === 'landscape' ? 'td{padding:1mm 2.2mm;font-size:8.5pt}footer{margin-top:8mm}' : ''}
-    ${hasColumnWidths ? 'table{table-layout:fixed}th{white-space:nowrap}th,td{padding-inline:1.5mm}td{overflow-wrap:anywhere}td bdi[dir="ltr"]{white-space:nowrap}.index{width:auto}td.index{padding-inline:1mm}' : ''}
+    ${hasColumnWidths ? `table{table-layout:fixed}th{white-space:${options.wrapHeadings ? 'normal' : 'nowrap'}}th,td{padding-inline:1.5mm}td{overflow-wrap:anywhere}td bdi[dir="ltr"]{white-space:nowrap}.index{width:auto}td.index{padding-inline:1mm}` : ''}
     @page{size:A4 ${options.orientation === 'landscape' ? 'landscape' : 'portrait'};margin:0}thead{display:table-header-group}tr{break-inside:avoid}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   </style></head><body>
   <header class="top"><div class="brand">${logo ? `<img src="${e(logo)}" alt="">` : ''}<div><h1><bdi>${e(options.school.name)}</bdi></h1>${options.school.contact.length ? `<p>${options.school.contact.map((item) => `<bdi>${e(item)}</bdi>`).join(' · ')}</p>` : ''}</div></div>

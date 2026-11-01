@@ -1958,6 +1958,10 @@
       "created": "{{count}} asignación(es) de cuotas importada(s).",
       "failed": "No se pudieron importar {{count}} alumnos. Corrija las filas indicadas y reintente; las filas correctas no se duplicarán."
     },
+    "print": {
+      "dueThroughMonth": "Pendiente hasta fin de mes",
+      "overdueCount": "Cuotas vencidas"
+    },
     "stats": {
       "collectedInPeriod": "Cobrado en el período",
       "collected": "Cobrado hasta hoy",

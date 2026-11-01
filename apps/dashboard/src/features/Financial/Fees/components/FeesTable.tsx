@@ -2,7 +2,8 @@
 
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { Table } from '@tanstack/react-table';
 import type { Schedule } from '@sms/contracts';
 import { NPageHeader, NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState, NStatCard, NStatCardSkeleton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
@@ -32,6 +33,7 @@ import { FeeImportDatesPreview } from './FeeImportDatesPreview';
 import { withFeeYear } from '../utils/feeUtils';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { useFeesTableColumns } from '../hooks/useFeesTableColumns';
+import { useFeesPrint } from '../hooks/useFeesPrint';
 import { buildFeeListFrequencyOptions, getFeeListFrequencyFilter } from '../config/feeOptions';
 import { createFeeListFilterMemory, feeListFiltersKey, resolveFeeListFilters, type FeeListFilters, type FeePaymentDateRange } from '../config/feeListFilters';
 import { useYearSelectionStore } from '@/features/AcademicYears/store/yearSelectionStore';
@@ -154,6 +156,14 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
   );
 
   const columns = useFeesTableColumns();
+  const printTable = useRef<Table<any> | null>(null);
+  const printFees = useFeesPrint({
+    academicYear: viewingYear,
+    details: [
+      ...(!isAllClasses && selectedClassId ? [{ label: t('students.table.class'), value: classOptions.find(option => option.value === selectedClassId)?.label ?? '' }] : []),
+      ...(selectedSectionId ? [{ label: t('students.table.section'), value: sectionOptions.find(option => option.value === selectedSectionId)?.label ?? '' }] : []),
+    ],
+  });
 
   const filters = useMemo<FeeTableFilter[]>(() => [
     {
@@ -454,6 +464,7 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
 
       <NTable
         exportTitle={viewingYear ? `${t('navigation.fees')} ${viewingYear}` : t('navigation.fees')}
+        onPrint={() => printFees(printTable.current)}
         permissionResource="fees"
         data={filteredFees}
         isFilteredEmpty={isFilteredEmpty}
@@ -471,7 +482,7 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
               <FeesDateFilter value={paymentDateRange} onChange={setPaymentDateRange} />
             </div>
             <div className="hidden md:flex">
-              <FeesPrintButton loading={isLoading} />
+              <FeesPrintButton loading={isLoading} tableRef={printTable} />
             </div>
           </>
         )}

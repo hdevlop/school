@@ -125,15 +125,19 @@ describe('fee year scope on the marked PostgreSQL fixture', () => {
         const before = await read();
         const summaryBefore = await inYear('history-year-2026', () => repo.getSummary());
         await tx.insert(feeTypes).values({ id: 'history-type-asof', name: 'As-of-date fee',
-          category: 'tuition', amount: '1300', paymentType: 'recurring', status: 'active' });
+          category: 'tuition', amount: '1550', paymentType: 'recurring', status: 'active' });
         await tx.insert(fees).values({ id: feeId, studentId, feeTypeId: 'history-type-asof',
-          academicYear: '2026-2027', baseAmount: '1300', grossAmount: '1300', netAmount: '1300' });
+          academicYear: '2026-2027', baseAmount: '1550', grossAmount: '1550', netAmount: '1550' });
+        const nextMonth = new Date(getBusinessDate());
+        nextMonth.setDate(1);
+        nextMonth.setMonth(nextMonth.getMonth() + 1);
         await tx.insert(feeInstallments).values([
           { id: 'asof-past', feeId, number: 1, dueDate: day(-1), amount: '400', status: 'partiallyPaid' },
           { id: 'asof-today', feeId, number: 2, dueDate: day(0), amount: '200' },
           { id: 'asof-future', feeId, number: 3, dueDate: day(1), amount: '500' },
           { id: 'asof-cancelled', feeId, number: 4, dueDate: day(-1), amount: '100', status: 'cancelled' },
           { id: 'asof-paid', feeId, number: 5, dueDate: day(-1), amount: '100', status: 'paid' },
+          { id: 'asof-next-month', feeId, number: 6, dueDate: formatDateOnly(nextMonth)!, amount: '250' },
         ]);
         const receipts = [
           { id: 'asof-received', status: 'completed' as const, paymentMethod: 'cash' as const, amount: '100', paymentDate: day(0), installmentId: 'asof-past' },
@@ -177,6 +181,12 @@ describe('fee year scope on the marked PostgreSQL fixture', () => {
           'collectedBankDepositToDate', 'collectedTpeToDate', 'collectedOnlineToDate', 'collectedMobilePaymentToDate'] as const;
         expect(methodFields.reduce((total, field) => total + Number(after[field]) - Number(before?.[field] ?? 0), 0)).toBe(395.5);
         expect(Number(after.overdueAmount) - Number(before?.overdueAmount ?? 0)).toBe(300);
+        // Month-end debt includes this month's upcoming installments, but
+        // only allocations already received reduce it. Cancelled rows do not count.
+        const futureFallsThisMonth = day(1).slice(0, 7) === day(0).slice(0, 7);
+        expect(Number(after.dueThroughMonth) - Number(before?.dueThroughMonth ?? 0)).toBe(374.5 + (futureFallsThisMonth ? 430 : 0));
+        expect(Number(after.overdueInstallmentCount) - Number(before?.overdueInstallmentCount ?? 0)).toBe(1);
+        expect(after.lastPayment).toBe(day(0));
         // The existing annual balance still includes the future-dated completed receipts.
         expect(Number(after.totalPaid) - Number(before?.totalPaid ?? 0)).toBe(570.5);
         const summaryAfter = await inYear('history-year-2026', () => repo.getSummary());

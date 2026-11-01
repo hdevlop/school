@@ -2757,6 +2757,10 @@
       "created": "{{count}} attribution(s) de frais importée(s).",
       "failed": "{{count}} élève(s) non importé(s). Corrigez les lignes indiquées puis réessayez ; les lignes réussies ne seront pas dupliquées."
     },
+    "print": {
+      "dueThroughMonth": "Dû à fin du mois",
+      "overdueCount": "Échéances en retard"
+    },
     "stats": {
       "collectedInPeriod": "Encaissé sur la période",
       "collected": "Encaissé à ce jour",

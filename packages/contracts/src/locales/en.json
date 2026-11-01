@@ -1704,6 +1704,10 @@
       "created": "{{count}} fee assignment(s) imported.",
       "failed": "{{count}} student(s) could not be imported. Correct the reported rows and retry; successful rows will not be duplicated."
     },
+    "print": {
+      "dueThroughMonth": "Due through this month",
+      "overdueCount": "Overdue count"
+    },
     "stats": {
       "collectedInPeriod": "Collected in period",
       "collected": "Collected to date",

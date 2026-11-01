@@ -1,6 +1,6 @@
 import { Repository } from '../../../najm';
 import { eq, desc, and, gte, lte, inArray, isNotNull, isNull, notInArray, or, sql, sum } from 'drizzle-orm';
-import { fees, feeInstallments, feeTypes, paymentAllocations, payments, students, classes, sections, users, studentEnrollments, studentEnrollmentPlacements } from '../../../database/schema';
+import { fees, feeInstallments, feeTypes, paymentAllocations, payments, students, classes, sections, users, parents, studentParents, studentEnrollments, studentEnrollmentPlacements } from '../../../database/schema';
 import { DB } from '../../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
 import { getBusinessDate, jsonAgg } from '../../../shared';
@@ -279,27 +279,63 @@ export class FeeRepository {
     `;
     // Derive the unpaid balance from completed allocations, rather than a
     // cached status: partially paid installments can also be overdue.
-    const overdueAmountForFee = sql`
-      coalesce((
-        select sum(greatest(${feeInstallments.amount}::numeric - coalesce((
+    const installmentBalance = sql`greatest(${feeInstallments.amount}::numeric - coalesce((
           select sum(${paymentAllocations.amount}::numeric)
           from ${paymentAllocations}
           inner join ${payments} on ${paymentAllocations.paymentId} = ${payments.id}
           where ${paymentAllocations.installmentId} = ${feeInstallments.id}
             and ${payments.status} = 'completed'
             and coalesce(${payments.settledDate}, ${payments.paymentDate}) <= ${today}
-        ), 0), 0))
+        ), 0), 0)`;
+    const overdueAmountForFee = sql`
+      coalesce((
+        select sum(${installmentBalance})
         from ${feeInstallments}
         where ${feeInstallments.feeId} = ${fees.id}
           and ${feeInstallments.dueDate} < ${today}
           and ${feeInstallments.status} != 'cancelled'
       ), 0)
     `;
+    const dueThroughMonthForFee = sql`
+      coalesce((
+        select sum(${installmentBalance})
+        from ${feeInstallments}
+        where ${feeInstallments.feeId} = ${fees.id}
+          and ${feeInstallments.dueDate} < (date_trunc('month', ${today}::date) + interval '1 month')::date
+          and ${feeInstallments.status} != 'cancelled'
+      ), 0)
+    `;
+    const overdueInstallmentsForFee = sql`(
+      select count(*) from ${feeInstallments}
+      where ${feeInstallments.feeId} = ${fees.id}
+        and ${feeInstallments.dueDate} < ${today}
+        and ${feeInstallments.status} != 'cancelled'
+        and ${installmentBalance} > 0
+    )`;
+    const lastPaymentForFee = sql`(
+      select max(${payments.paymentDate})
+      from ${paymentAllocations}
+      inner join ${payments} on ${paymentAllocations.paymentId} = ${payments.id}
+      where ${paymentAllocations.feeId} = ${fees.id}
+        and ${payments.status} = 'completed'
+        and coalesce(${payments.settledDate}, ${payments.paymentDate}) <= ${today}
+    )`;
 
     const result = await this.db.select({
       studentId: students.id,
       studentName: students.name,
       studentCode: students.studentCode,
+      studentGender: students.gender,
+      studentPhone: students.phone,
+      contactPhone: sql<string | null>`coalesce(nullif(trim(${students.phone}), ''), (
+        select nullif(trim(${parents.phone}), '')
+        from ${studentParents}
+        inner join ${parents} on ${parents.id} = ${studentParents.parentId}
+        where ${studentParents.studentId} = ${students.id}
+          and nullif(trim(${parents.phone}), '') is not null
+        order by ${parents.isEmergencyContact} desc nulls last, ${studentParents.createdAt}, ${parents.id}
+        limit 1
+      ))`,
       studentImage: sql<string>`coalesce(${users.image}, ${students.image})`,
       enrollmentId: studentEnrollments.id,
       placementId: lastPlacement.id,
@@ -319,6 +355,9 @@ export class FeeRepository {
       collectedOnlineToDate: sql<string>`coalesce(sum(${collectedToDateForFee('online')}), 0)::text`.as('collectedOnlineToDate'),
       collectedMobilePaymentToDate: sql<string>`coalesce(sum(${collectedToDateForFee('mobilePayment')}), 0)::text`.as('collectedMobilePaymentToDate'),
       overdueAmount: sql<string>`coalesce(sum(${overdueAmountForFee}), 0)::text`.as('overdueAmount'),
+      dueThroughMonth: sql<string>`coalesce(sum(${dueThroughMonthForFee}), 0)::text`.as('dueThroughMonth'),
+      overdueInstallmentCount: sql<number>`coalesce(sum(${overdueInstallmentsForFee}), 0)::int`.as('overdueInstallmentCount'),
+      lastPayment: sql<string | null>`max(${lastPaymentForFee})`.as('lastPayment'),
       totalDiscount: getTotalDiscountSum().as('totalDiscount'),
       totalDue: sql<string>`coalesce(sum(${fees.netAmount}::numeric - ${completedAllocatedForFee}), 0)::text`.as('totalDue'),
       paidCount: getStatusCount('paid').as('paidCount'),
@@ -380,6 +419,9 @@ export class FeeRepository {
         id: student.studentId,
         name: student.studentName,
         studentCode: student.studentCode,
+        gender: student.studentGender,
+        phone: student.studentPhone,
+        contactPhone: student.contactPhone,
         image: student.studentImage,
       },
       enrollmentId: student.enrollmentId,
@@ -403,6 +445,10 @@ export class FeeRepository {
       collectedOnlineToDate: student.collectedOnlineToDate,
       collectedMobilePaymentToDate: student.collectedMobilePaymentToDate,
       overdueAmount: student.overdueAmount,
+      dueThroughMonth: student.dueThroughMonth,
+      overdueInstallmentCount: student.overdueInstallmentCount,
+      lastPayment: student.lastPayment,
+      asOfDate: today,
       totalDiscount: student.totalDiscount,
       totalDue: student.totalDue,
       paidCount: student.paidCount,
