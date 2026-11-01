@@ -4,10 +4,13 @@ import { isAdmin, isAuth } from '../auth';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
+/** The folder uploads are stored in, relative to the working directory unless absolute. */
+export const storageBasePath = () => process.env.SCHOOL_STORAGE_PATH?.trim() || 'storage';
+
 export const storageConfig = () =>
   storage({
     provider: 'local',
-    basePath: process.env.SCHOOL_STORAGE_PATH?.trim() || 'storage',
+    basePath: storageBasePath(),
     servePrefix: '/api',
     maxFileSize: MAX_FILE_SIZE,
     allowedCategories: [FileCategory.IMAGE, FileCategory.PDF, FileCategory.DOCUMENT],

@@ -8,6 +8,7 @@ import { themeConfig } from '../../src/config/themeConfig';
 import { AccessResetController } from '../../src/modules/accessReset/AccessResetController';
 import { AttendanceController } from '../../src/modules/attendance/AttendanceController';
 import { AttendanceValidator } from '../../src/modules/attendance/AttendanceValidator';
+import { BackupController } from '../../src/modules/backup/BackupController';
 import { ClassRoutineController } from '../../src/modules/classRoutines/ClassRoutineController';
 import { CycleController } from '../../src/modules/cycles/CycleController';
 import { FinancialAuditController } from '../../src/modules/financial/auditLog/FinancialAuditController';
@@ -266,5 +267,18 @@ describe('staff attendance', () => {
     expect(() => validator.ensureStaffAttendanceAuthorized({ role: 'admin', permissions: ['*:*'] })).not.toThrow();
     expect(() => validator.ensureStaffAttendanceAuthorized({ role: 'supervisor', permissions: ['manage:attendance'] })).toThrow();
     expect(() => validator.ensureStaffAttendanceAuthorized({ role: 'teacher', permissions: ['update:staff-attendance'] })).toThrow();
+  });
+});
+
+// A backup holds every account and its password hash: only the administrator,
+// through *:*, holds these by default, and the principal does not.
+describe('backup routes', () => {
+  it('download with backup:system and restore with restore:system', () => {
+    expect(byPermission(BackupController)).toEqual({ 'backup:system': ['download'], 'restore:system': ['restore'] });
+    const grants = Object.fromEntries(seedData('rolePermissions').map((row: { roleName: string; permissions: string[] }) => [row.roleName, row.permissions]));
+    for (const [role, permissions] of Object.entries(grants)) {
+      if (role === 'admin') continue;
+      expect(permissions.filter((permission) => ['backup:system', 'restore:system'].includes(permission)), role).toEqual([]);
+    }
   });
 });

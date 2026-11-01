@@ -636,6 +636,18 @@
     "action": "admin"
   },
   {
+    "name": "backup:system",
+    "description": "Download a full backup of the school's data, accounts and files",
+    "resource": "system",
+    "action": "backup"
+  },
+  {
+    "name": "restore:system",
+    "description": "Replace all of the school's data from a backup",
+    "resource": "system",
+    "action": "restore"
+  },
+  {
     "name": "*:*",
     "description": "God mode - unlimited access to all resources and actions",
     "resource": "*",

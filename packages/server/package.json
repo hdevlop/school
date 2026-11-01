@@ -64,6 +64,7 @@
     "diject": "0.1.11",
     "drizzle-orm": "0.45.2",
     "drizzle-zod": "^0.8.3",
+    "fflate": "0.8.3",
     "hono": "^4.13.12",
     "ioredis": "5.11.1",
     "lodash.isempty": "^4.4.0",

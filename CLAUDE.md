@@ -58,6 +58,9 @@ All read `apps/dashboard/.env.local`, the monorepo's only env file.
   the reviewed lists of routes left open or behind sign-in alone, by the guards
   that actually run, then that refreshes sharing one cookie (tabs, a lost
   response) all succeed and keep the session
+- `bun run test:backup` - The full backup's archive format, path safety and
+  refusals. `bun run test:backup:db` backs up `school_history_test`, restores
+  it and compares every table and file, inside a transaction it rolls back
 - `bun run test:chat` - The Darija-to-MSA rewrite tool routing applies to chat
   messages: it changes Darija words only, never English, French or Spanish
 - `bun run test:boundaries` - The boundary checker's regression fixtures and the

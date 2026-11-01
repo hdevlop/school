@@ -96,6 +96,8 @@
       "general": "General"
     },
     "actions": {
+      "backup": "Download backups",
+      "restore": "Restore backups",
       "read": "View",
       "create": "Add",
       "update": "Edit",
@@ -1241,6 +1243,45 @@
     "closed": "Closed"
   },
   "settings": {
+    "backup": {
+      "tab": "Backup",
+      "download": {
+        "title": "Download a backup",
+        "description": "One file with all of the school's data: students, parents, staff, grades, attendance, fees, payments, timetables, accounts, settings and uploaded files. Keep it somewhere safe, away from this server.",
+        "action": "Download backup",
+        "done": "Backup downloaded.",
+        "failed": "The backup could not be made. Try again."
+      },
+      "restore": {
+        "title": "Restore from a backup",
+        "description": "Replaces all of the school's current data with a backup made by this version of the app. Everyone is signed out.",
+        "action": "Restore a backup",
+        "warning": "Everything in the school now (every record, account and uploaded file) is replaced by the backup. Changes made after the backup was taken are lost.",
+        "file": "Backup file (.zip)",
+        "madeOn": "Made on {{date}}",
+        "safetyTitle": "1. Download the current data",
+        "safetyDescription": "Keep a backup of the school as it is now, in case you need to go back.",
+        "safetyDone": "Current data downloaded.",
+        "confirm": "2. Type {{word}} to confirm",
+        "confirmWord": "RESTORE",
+        "submit": "Replace all data",
+        "restoring": "Restoring. This can take a few minutes; keep this page open.",
+        "done": "The school was restored. Sign in again.",
+        "failed": "The restore failed. Nothing was changed."
+      },
+      "contents": {
+        "students": "Students",
+        "parents": "Parents",
+        "teachers": "Teachers",
+        "staff": "Staff",
+        "users": "Accounts",
+        "fees": "Fees",
+        "payments": "Payments",
+        "attendance": "Attendance records",
+        "grades": "Grades",
+        "files": "Uploaded files"
+      }
+    },
     "receipts": {
       "title": "Payment receipts",
       "description": "Choose the language used to print all payment receipts, including reprints.",
@@ -5128,6 +5169,17 @@
     "collapseSidebar": "Collapse",
     "expandSidebar": "Expand",
     "insurance": "Insurance"
+  },
+  "backup": {
+    "success": {
+      "restored": "The school was restored from the backup."
+    },
+    "errors": {
+      "invalidFile": "This file is not a school backup.",
+      "damaged": "This backup is incomplete or damaged. Nothing was changed.",
+      "otherVersion": "This backup was made by a different version of the app and cannot be restored here. Nothing was changed.",
+      "tooLarge": "This backup is larger than 512 MB."
+    }
   },
   "classRoutines": {
     "data": {

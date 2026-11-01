@@ -151,3 +151,30 @@ export const formApi = {
   post: (endpoint: string, data: any) => formRequest('post', endpoint, data),
   put: (endpoint: string, data: any) => formRequest('put', endpoint, data),
 };
+
+/**
+ * A request that sends or receives a file rather than JSON. The caller reads
+ * the returned Response; a refusal throws like the JSON helpers do.
+ */
+export async function fileRequest(method: 'GET' | 'POST', url: string, body?: Blob) {
+  const scoped = headersFor(url);
+  await ensureAccessToken(url);
+  const send = () => {
+    const token = auth.client.getAccessToken();
+    const headers: Record<string, string> = { ...scoped };
+    if (body) headers['Content-Type'] = body.type || 'application/octet-stream';
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    return fetch(`/api${url}`, { method, headers, body, credentials: 'include' });
+  };
+  let response = await send();
+  if (response.status === 401) {
+    await auth.client.refresh();
+    response = await send();
+  }
+  if (!response.ok) {
+    const errBody = await response.json().catch(() => ({}));
+    throw new AuthError(response.status, errBody.message || response.statusText, errBody);
+  }
+  if (method !== 'GET') onlineMutationComplete(url);
+  return response;
+}

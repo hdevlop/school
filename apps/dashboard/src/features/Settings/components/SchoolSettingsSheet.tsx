@@ -3,8 +3,8 @@ import { SCHOOL_DEFAULT_DATE_FORMAT, SCHOOL_DEFAULT_TIME_FORMAT } from '@sms/con
 
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useFormState, type Control } from 'react-hook-form';
-import { AlertCircle, BookOpen, Building2, Check, Circle, RotateCcw, Save, Settings as SettingsIcon } from 'lucide-react';
-import { NButton, NConfirmDialog, NForm, NSheet, NSkeleton as Skeleton, Tabs, TabsContent, TabsList, TabsTrigger, useNForm } from 'najm-kit';
+import { AlertCircle, BookOpen, Building2, Check, Circle, DatabaseBackup, RotateCcw, Save, Settings as SettingsIcon } from 'lucide-react';
+import { NButton, NConfirmDialog, NForm, NSheet, NSkeleton as Skeleton, Tabs, TabsContent, TabsList, TabsTrigger, cn, useNForm } from 'najm-kit';
 import { PermissionButton } from '@/components/PermissionButton';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useTranslation } from 'najm-i18n/react';
@@ -19,6 +19,7 @@ import AcademicSection from './sections/AcademicSection';
 import SystemSection from './sections/SystemSection';
 import SecuritySection from './sections/SecuritySection';
 import NotificationSection from './sections/NotificationSection';
+import BackupSection from './sections/BackupSection';
 import { createSettingsSchemas } from '../config/settingsSchemas';
 import { useAdminSettings } from '../hooks/useSettings';
 
@@ -28,6 +29,7 @@ const tabs = [
   { id: 'school', label: 'settings.editor.schoolTab', icon: Building2 },
   { id: 'academic', label: 'settings.editor.academicTab', icon: BookOpen },
   { id: 'system', label: 'settings.editor.generalTab', icon: SettingsIcon },
+  { id: 'backup', label: 'settings.backup.tab', icon: DatabaseBackup },
 ] as const;
 
 type SettingsTab = typeof tabs[number]['id'];
@@ -180,6 +182,8 @@ export function SchoolSettingsSheet({ open, onOpenChange, onLeave }: {
   const form = useNForm({ schema: settingsSchema, defaultValues: settingsFormDefaults(settings) });
   const { errors, submitCount, isDirty } = form.formState;
   const ready = Boolean(settings);
+  // The backup tab is for whoever may download or restore a backup.
+  const visibleTabs = tabs.filter(({ id }) => id !== 'backup' || can('backup:system') || can('restore:system'));
 
   // Follow the saved values while nothing is being edited: the first load,
   // and the refetch after a save or a change made elsewhere.
@@ -256,8 +260,8 @@ export function SchoolSettingsSheet({ open, onOpenChange, onLeave }: {
         <NForm id={SETTINGS_FORM_ID} schema={settingsSchema} form={form} onSubmit={handleSubmit} className="gap-0">
           <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as SettingsTab)} className="gap-0">
             <div className="sticky top-0 z-10 -mx-4 bg-background px-4 pb-2 pt-3">
-              <TabsList aria-label={t('settings.editor.sections')} className="grid h-auto w-full grid-cols-3 max-sm:flex max-sm:flex-nowrap">
-                {tabs.map(({ id, label, icon: Icon }) => (
+              <TabsList aria-label={t('settings.editor.sections')} className={cn('grid h-auto w-full max-sm:flex max-sm:flex-nowrap', visibleTabs.length > 3 ? 'grid-cols-4' : 'grid-cols-3')}>
+                {visibleTabs.map(({ id, label, icon: Icon }) => (
                   <TabsTrigger key={id} value={id} className="group min-h-9 min-w-0 gap-2 max-sm:shrink-0 max-sm:data-[state=active]:flex-1">
                     <Icon className="h-4 w-4 shrink-0" aria-hidden />
                     <span className="truncate max-sm:group-data-[state=inactive]:sr-only">{t(label)}</span>
@@ -278,7 +282,7 @@ export function SchoolSettingsSheet({ open, onOpenChange, onLeave }: {
                     <NButton type="button" variant="ghost" size="sm" onClick={() => refetch()}>{t('academicYearMigration.retry')}</NButton>
                   </div>
                 )}
-                {tabs.map(({ id }) => (
+                {visibleTabs.map(({ id }) => (
                   <TabsContent
                     key={id}
                     value={id}
@@ -289,6 +293,7 @@ export function SchoolSettingsSheet({ open, onOpenChange, onLeave }: {
                     {id === 'school' && <SchoolSection />}
                     {id === 'academic' && <AcademicSection activeYear={settings?.currentAcademicYear} onLeave={onLeave} />}
                     {id === 'system' && <><SystemSection /><SecuritySection /><NotificationSection /></>}
+                    {id === 'backup' && <BackupSection />}
                   </TabsContent>
                 ))}
               </fieldset>

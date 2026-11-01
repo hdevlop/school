@@ -31,6 +31,10 @@
       "types": "./src/locales/index.ts",
       "default": "./src/locales/index.ts"
     },
+    "./backup": {
+      "types": "./src/backup.ts",
+      "default": "./src/backup.ts"
+    },
     "./routines": {
       "types": "./src/routines.ts",
       "default": "./src/routines.ts"

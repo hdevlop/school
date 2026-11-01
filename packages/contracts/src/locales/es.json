@@ -96,6 +96,8 @@
       "general": "General"
     },
     "actions": {
+      "backup": "Descargar copias de seguridad",
+      "restore": "Restaurar copias de seguridad",
       "read": "Ver",
       "create": "Añadir",
       "update": "Editar",
@@ -1436,6 +1438,17 @@
     "collapseSidebar": "Contraer",
     "expandSidebar": "Expandir",
     "insurance": "Seguro"
+  },
+  "backup": {
+    "success": {
+      "restored": "El centro se restauró a partir de la copia de seguridad."
+    },
+    "errors": {
+      "invalidFile": "Este archivo no es una copia de seguridad del centro.",
+      "damaged": "Esta copia de seguridad está incompleta o dañada. No se cambió nada.",
+      "otherVersion": "Esta copia de seguridad se creó con otra versión de la aplicación y no se puede restaurar aquí. No se cambió nada.",
+      "tooLarge": "Esta copia de seguridad supera los 512 MB."
+    }
   },
   "classRoutines": {
     "data": {
@@ -4190,6 +4203,45 @@
     }
   },
   "settings": {
+    "backup": {
+      "tab": "Copia de seguridad",
+      "download": {
+        "title": "Descargar una copia de seguridad",
+        "description": "Un solo archivo con todos los datos del centro: alumnos, padres, personal, notas, asistencia, cuotas, pagos, horarios, cuentas, ajustes y archivos subidos. Guárdalo en un lugar seguro, fuera de este servidor.",
+        "action": "Descargar copia de seguridad",
+        "done": "Copia de seguridad descargada.",
+        "failed": "No se pudo crear la copia de seguridad. Inténtalo de nuevo."
+      },
+      "restore": {
+        "title": "Restaurar una copia de seguridad",
+        "description": "Reemplaza todos los datos actuales del centro por una copia de seguridad creada con esta versión de la aplicación. Se cierra la sesión de todos.",
+        "action": "Restaurar una copia",
+        "warning": "Todo lo que contiene el centro ahora (cada registro, cuenta y archivo subido) se reemplaza por la copia. Se pierden los cambios hechos después de crearla.",
+        "file": "Archivo de copia de seguridad (.zip)",
+        "madeOn": "Creada el {{date}}",
+        "safetyTitle": "1. Descargar los datos actuales",
+        "safetyDescription": "Guarda una copia del centro tal como está ahora, por si necesitas volver atrás.",
+        "safetyDone": "Datos actuales descargados.",
+        "confirm": "2. Escribe {{word}} para confirmar",
+        "confirmWord": "RESTAURAR",
+        "submit": "Reemplazar todos los datos",
+        "restoring": "Restaurando. Puede tardar unos minutos; mantén esta página abierta.",
+        "done": "El centro se restauró. Vuelve a iniciar sesión.",
+        "failed": "La restauración falló. No se cambió nada."
+      },
+      "contents": {
+        "students": "Alumnos",
+        "parents": "Padres",
+        "teachers": "Profesores",
+        "staff": "Personal",
+        "users": "Cuentas",
+        "fees": "Cuotas",
+        "payments": "Pagos",
+        "attendance": "Registros de asistencia",
+        "grades": "Notas",
+        "files": "Archivos subidos"
+      }
+    },
     "receipts": {
       "title": "Recibos de pago",
       "description": "Elija el idioma utilizado para imprimir todos los recibos de pago, incluidas las reimpresiones.",

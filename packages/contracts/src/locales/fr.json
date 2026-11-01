@@ -96,6 +96,8 @@
       "general": "Général"
     },
     "actions": {
+      "backup": "Télécharger les sauvegardes",
+      "restore": "Restaurer les sauvegardes",
       "read": "Voir",
       "create": "Ajouter",
       "update": "Modifier",
@@ -1186,6 +1188,45 @@
     }
   },
   "settings": {
+    "backup": {
+      "tab": "Sauvegarde",
+      "download": {
+        "title": "Télécharger une sauvegarde",
+        "description": "Un seul fichier avec toutes les données de l'établissement : élèves, parents, personnel, notes, absences, frais, paiements, emplois du temps, comptes, paramètres et fichiers déposés. Conservez-le en lieu sûr, ailleurs que sur ce serveur.",
+        "action": "Télécharger la sauvegarde",
+        "done": "Sauvegarde téléchargée.",
+        "failed": "La sauvegarde n'a pas pu être créée. Réessayez."
+      },
+      "restore": {
+        "title": "Restaurer une sauvegarde",
+        "description": "Remplace toutes les données actuelles de l'établissement par une sauvegarde créée par cette version de l'application. Tout le monde est déconnecté.",
+        "action": "Restaurer une sauvegarde",
+        "warning": "Tout ce que contient l'établissement aujourd'hui (chaque fiche, compte et fichier déposé) est remplacé par la sauvegarde. Les modifications faites après la sauvegarde sont perdues.",
+        "file": "Fichier de sauvegarde (.zip)",
+        "madeOn": "Créée le {{date}}",
+        "safetyTitle": "1. Télécharger les données actuelles",
+        "safetyDescription": "Gardez une sauvegarde de l'établissement tel qu'il est maintenant, au cas où il faudrait revenir en arrière.",
+        "safetyDone": "Données actuelles téléchargées.",
+        "confirm": "2. Tapez {{word}} pour confirmer",
+        "confirmWord": "RESTAURER",
+        "submit": "Remplacer toutes les données",
+        "restoring": "Restauration en cours. Cela peut prendre quelques minutes ; gardez cette page ouverte.",
+        "done": "L'établissement a été restauré. Reconnectez-vous.",
+        "failed": "La restauration a échoué. Rien n'a été modifié."
+      },
+      "contents": {
+        "students": "Élèves",
+        "parents": "Parents",
+        "teachers": "Enseignants",
+        "staff": "Personnel",
+        "users": "Comptes",
+        "fees": "Frais",
+        "payments": "Paiements",
+        "attendance": "Présences",
+        "grades": "Notes",
+        "files": "Fichiers déposés"
+      }
+    },
     "receipts": {
       "title": "Reçus de paiement",
       "description": "Choisissez la langue utilisée pour imprimer tous les reçus de paiement, y compris les réimpressions.",
@@ -1997,6 +2038,17 @@
     "collapseSidebar": "Réduire",
     "expandSidebar": "Développer",
     "insurance": "Assurance"
+  },
+  "backup": {
+    "success": {
+      "restored": "L'établissement a été restauré à partir de la sauvegarde."
+    },
+    "errors": {
+      "invalidFile": "Ce fichier n'est pas une sauvegarde de l'établissement.",
+      "damaged": "Cette sauvegarde est incomplète ou endommagée. Rien n'a été modifié.",
+      "otherVersion": "Cette sauvegarde a été créée par une autre version de l'application et ne peut pas être restaurée ici. Rien n'a été modifié.",
+      "tooLarge": "Cette sauvegarde dépasse 512 Mo."
+    }
   },
   "classRoutines": {
     "data": {
