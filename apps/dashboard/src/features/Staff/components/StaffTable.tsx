@@ -332,7 +332,7 @@ const StaffTable = () => {
   ], [t, roleOptions, categoryOptions]);
 
   return (
-    <div data-people-list-loading={isStaffLoading || undefined} className="flex flex-col gap-2 w-full h-full">
+    <div data-list-loading={isStaffLoading || undefined} className="flex flex-col gap-2 w-full h-full">
       <NPageHeader
         icon={Briefcase}
         title={t('navigation.staff')}

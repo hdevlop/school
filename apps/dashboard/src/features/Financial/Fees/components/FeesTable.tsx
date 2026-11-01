@@ -370,7 +370,7 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
   const failedToLoad = hasFailedToLoad(error, fees);
 
   return (
-    <div className='flex flex-col gap-2 w-full h-full'>
+    <div data-list-loading={isLoading || isSummaryLoading || undefined} className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
         icon={CircleDollarSign}
         title={t('navigation.fees')}

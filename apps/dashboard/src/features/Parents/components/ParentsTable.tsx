@@ -145,7 +145,7 @@ function ParentsTable() {
   const total = filteredParents.length;
 
   return (
-    <div data-people-list-loading={isParentsLoading || undefined} className='flex flex-col gap-2 w-full h-full'>
+    <div data-list-loading={isParentsLoading || undefined} className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
         icon={HeartHandshake}
         title={t('navigation.parents')}

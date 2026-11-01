@@ -315,7 +315,7 @@ function StudentsTable() {
   const isStudentListEmpty = !isCountUnknown(error, students, isStudentsLoading) && students?.length === 0;
 
   return (
-    <div data-people-list-loading={isStudentsLoading || undefined} className='flex flex-col gap-2 w-full h-full min-h-0' onPointerDownCapture={focusTableForKeyboard}>
+    <div data-list-loading={isStudentsLoading || undefined} className='flex flex-col gap-2 w-full h-full min-h-0' onPointerDownCapture={focusTableForKeyboard}>
       <NPageHeader
         icon={GraduationCap}
         title={title}

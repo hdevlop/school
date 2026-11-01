@@ -175,7 +175,7 @@ function ExpensesTable() {
   const total = expenses?.length ?? 0;
 
   return (
-    <div className='flex flex-col gap-2 w-full h-full'>
+    <div data-list-loading={isExpensesLoading || undefined} className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
         icon={Receipt}
         title={t('navigation.expenses')}

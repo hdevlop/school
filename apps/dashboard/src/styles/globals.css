@@ -44,22 +44,22 @@ body {
 }
 
 /* Primary-tinted placeholders stay visible throughout the pulse in either theme. */
-[data-people-list-loading="true"] :is(.animate-pulse, [data-slot="skeleton"]) {
+[data-list-loading="true"] :is(.animate-pulse, [data-slot="skeleton"]) {
   background-color: color-mix(in oklab, var(--primary) 30%, var(--card));
-  animation: people-skeleton-pulse 2s ease-in-out infinite;
+  animation: list-skeleton-pulse 2s ease-in-out infinite;
 }
 
-.dark [data-people-list-loading="true"] :is(.animate-pulse, [data-slot="skeleton"]) {
+.dark [data-list-loading="true"] :is(.animate-pulse, [data-slot="skeleton"]) {
   background-color: color-mix(in oklab, var(--primary) 40%, var(--card));
 }
 
-@keyframes people-skeleton-pulse {
+@keyframes list-skeleton-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.75; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-people-list-loading="true"] :is(.animate-pulse, [data-slot="skeleton"]) {
+  [data-list-loading="true"] :is(.animate-pulse, [data-slot="skeleton"]) {
     animation: none;
   }
 }
