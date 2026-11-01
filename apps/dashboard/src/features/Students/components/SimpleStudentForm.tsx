@@ -141,7 +141,7 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
         />
 
         <div className='grid min-w-0 grid-cols-1 md:grid-cols-2 gap-4'>
-          <div className='grid min-w-0 grid-cols-1 gap-4 md:col-span-2 md:grid-cols-3'>
+          <div className='grid min-w-0 grid-cols-1 gap-4 md:col-span-2 md:grid-cols-2'>
             <FormInput
               name='studentCode'
               type='text'
@@ -159,17 +159,17 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
               icon={User}
               required={true}
             />
-
-            <FormInput
-              name='arabicName'
-              type='text'
-              formLabel={t('students.form.arabicName')}
-              placeholder='اسم التلميذ الكامل'
-              icon={User}
-              dir='rtl'
-              lang='ar'
-            />
           </div>
+
+          <FormInput
+            name='arabicName'
+            type='text'
+            formLabel={t('students.form.arabicName')}
+            placeholder='اسم التلميذ الكامل'
+            icon={User}
+            dir='rtl'
+            lang='ar'
+          />
 
           <FormInput
             name='gender'

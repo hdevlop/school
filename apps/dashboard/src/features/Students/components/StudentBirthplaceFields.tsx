@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { ComboboxInput, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from 'najm-kit';
+import { ComboboxInput, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import type * as Catalog from '@sms/contracts/birthplaces';
 import { formatBirthplaceEntry, parseBirthplaceEntry } from '../config/birthplaceEntry';
@@ -30,7 +30,7 @@ export function StudentBirthplaceFields({ prefix = '' }: { prefix?: string }) {
       ? `${label(place)} (${place.provinceLatin})` : label(place) }));
 
   return (
-    <div className="md:col-span-2">
+    <div className="min-w-0">
       <FormField control={control} name={field('birthplaceEntry')} render={({ field: input, fieldState }) => (
         <FormItem>
           <FormLabel>{t('students.form.birthplace')}</FormLabel>
@@ -38,7 +38,7 @@ export function StudentBirthplaceFields({ prefix = '' }: { prefix?: string }) {
             <ComboboxInput
               ariaLabel={t('students.form.birthplace')}
               value={selected?.id ?? (input.value || undefined)}
-              placeholder={t('students.form.birthplaceSearch')} searchPlaceholder={t('students.form.birthplaceSearch')}
+              placeholder={t('students.form.birthplaceFormat')} searchPlaceholder={t('students.form.birthplaceFormat')}
               emptyMessage={t('students.form.birthplaceFormat')}
               items={[...items, { value: '', label: t('students.form.birthplaceClear') }]}
               loading={!catalog} onSearchChange={setQuery} shouldFilter={false} allowFreeText
@@ -54,7 +54,6 @@ export function StudentBirthplaceFields({ prefix = '' }: { prefix?: string }) {
               }}
             />
           </FormControl>
-          <FormDescription>{t('students.form.birthplaceFormat')}</FormDescription>
           <FormMessage />
         </FormItem>
       )} />
