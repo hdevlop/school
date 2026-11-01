@@ -19,6 +19,7 @@ const BackupSection: React.FC = () => {
   const [downloading, setDownloading] = useState(false);
   const [restoreOpen, setRestoreOpen] = useState(false);
   const canDownload = can('backup:system');
+  const canRestore = can('restore:system');
 
   const download = async () => {
     setDownloading(true);
@@ -34,29 +35,23 @@ const BackupSection: React.FC = () => {
   };
 
   return (
-    <>
-      {canDownload && (
-        <SettingsGroup title={t('settings.backup.download.title')} description={t('settings.backup.download.description')} className="sm:grid-cols-1">
-          <div>
-            <NButton type="button" loading={downloading} onClick={download}>
-              <Download className="h-4 w-4" aria-hidden />
-              {t('settings.backup.download.action')}
-            </NButton>
-          </div>
-        </SettingsGroup>
-      )}
-      {can('restore:system') && (
-        <SettingsGroup title={t('settings.backup.restore.title')} description={t('settings.backup.restore.description')} className="sm:grid-cols-1">
-          <div>
-            <NButton type="button" variant="outline" onClick={() => setRestoreOpen(true)}>
-              <Upload className="h-4 w-4" aria-hidden />
-              {t('settings.backup.restore.action')}
-            </NButton>
-          </div>
-          <RestoreBackupSheet open={restoreOpen} onOpenChange={setRestoreOpen} canDownload={canDownload} />
-        </SettingsGroup>
-      )}
-    </>
+    <SettingsGroup title={t('settings.backup.title')} description={t('settings.backup.description')} className="sm:grid-cols-1">
+      <div className="flex flex-wrap gap-2">
+        {canDownload && (
+          <NButton type="button" loading={downloading} onClick={download}>
+            <Download className="h-4 w-4" aria-hidden />
+            {t('settings.backup.download.action')}
+          </NButton>
+        )}
+        {canRestore && (
+          <NButton type="button" variant="outline" onClick={() => setRestoreOpen(true)}>
+            <Upload className="h-4 w-4" aria-hidden />
+            {t('settings.backup.restore.action')}
+          </NButton>
+        )}
+      </div>
+      {canRestore && <RestoreBackupSheet open={restoreOpen} onOpenChange={setRestoreOpen} canDownload={canDownload} />}
+    </SettingsGroup>
   );
 };
 

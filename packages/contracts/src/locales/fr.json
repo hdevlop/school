@@ -1190,9 +1190,9 @@
   "settings": {
     "backup": {
       "tab": "Sauvegarde",
+      "title": "Sauvegarde et restauration",
+      "description": "Téléchargez un seul fichier avec toutes les données et tous les fichiers de l'établissement, et conservez-le en lieu sûr, ailleurs que sur ce serveur. Restaurer une sauvegarde remplace toutes les données actuelles et déconnecte tout le monde.",
       "download": {
-        "title": "Télécharger une sauvegarde",
-        "description": "Un seul fichier avec toutes les données de l'établissement : élèves, parents, personnel, notes, absences, frais, paiements, emplois du temps, comptes, paramètres et fichiers déposés. Conservez-le en lieu sûr, ailleurs que sur ce serveur.",
         "action": "Télécharger la sauvegarde",
         "done": "Sauvegarde téléchargée.",
         "failed": "La sauvegarde n'a pas pu être créée. Réessayez."

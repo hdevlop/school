@@ -1245,9 +1245,9 @@
   "settings": {
     "backup": {
       "tab": "Backup",
+      "title": "Backup and restore",
+      "description": "Download one file with all of the school's data and uploaded files, and keep it somewhere safe, away from this server. Restoring a backup replaces all current data and signs everyone out.",
       "download": {
-        "title": "Download a backup",
-        "description": "One file with all of the school's data: students, parents, staff, grades, attendance, fees, payments, timetables, accounts, settings and uploaded files. Keep it somewhere safe, away from this server.",
         "action": "Download backup",
         "done": "Backup downloaded.",
         "failed": "The backup could not be made. Try again."

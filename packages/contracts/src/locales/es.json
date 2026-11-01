@@ -4205,9 +4205,9 @@
   "settings": {
     "backup": {
       "tab": "Copia de seguridad",
+      "title": "Copia de seguridad y restauración",
+      "description": "Descarga un solo archivo con todos los datos y archivos subidos del centro y guárdalo en un lugar seguro, fuera de este servidor. Restaurar una copia reemplaza todos los datos actuales y cierra la sesión de todos.",
       "download": {
-        "title": "Descargar una copia de seguridad",
-        "description": "Un solo archivo con todos los datos del centro: alumnos, padres, personal, notas, asistencia, cuotas, pagos, horarios, cuentas, ajustes y archivos subidos. Guárdalo en un lugar seguro, fuera de este servidor.",
         "action": "Descargar copia de seguridad",
         "done": "Copia de seguridad descargada.",
         "failed": "No se pudo crear la copia de seguridad. Inténtalo de nuevo."
