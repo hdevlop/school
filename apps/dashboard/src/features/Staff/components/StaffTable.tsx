@@ -23,9 +23,9 @@ import { getStaffAvatar } from '../utils/staffAvatar';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
 import { avatarVersion } from '@/lib/avatarVersion';
+import { exportLabel } from '@/shared/tableExport';
 
 const calculateStaffPay = (row) => {
-import { exportLabel } from '@/shared/tableExport';
   if (row?.compensationMode === 'hourly') {
     return Number(row?.hourlyRate || 0) * Number(row?.workloadHours || 0);
   }
