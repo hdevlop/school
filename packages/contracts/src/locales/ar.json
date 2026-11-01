@@ -1272,6 +1272,7 @@
       "export": "تصدير",
       "exportXlsx": "Excel (.xlsx)",
       "exportCsv": "CSV (.csv)",
+      "exportJson": "JSON (.json)",
       "import": "استيراد",
       "print": "طباعة",
       "importDescription": "اختر ملف XLSX أو CSV أو JSON. يستخدم Excel الورقة الأولى، مع العناوين في الصف الأول.",
@@ -1451,6 +1452,22 @@
     "insurance": "التأمين"
   },
   "classRoutines": {
+    "data": {
+      "export": "تصدير",
+      "exportExcel": "Excel (.xlsx)",
+      "exportJson": "JSON (.json)",
+      "import": "استيراد JSON",
+      "description": "استورد جداول الحصص للسنة الدراسية المحددة. كل قسم وفوج في الملف يستبدل حصصه ودروسه وحراسته، وتبقى الجداول الأخرى دون تغيير. تتم مطابقة الأقسام والمواد والأساتذة والموظفين بالاسم.",
+      "file": "ملف JSON (5 ميغابايت كحد أقصى)",
+      "summary": "{{routines}} جداول · {{lessons}} حصص · {{duties}} حراسات",
+      "invalidFile": "ملف JSON لجدول الحصص غير صالح. تحقق من الصيغة والإصدار والفترات والحصص.",
+      "wrongYear": "هذا الملف يخص سنة دراسية أخرى. اختر تلك السنة قبل الاستيراد.",
+      "fileTooLarge": "يجب ألا يتجاوز حجم ملف JSON خمسة ميغابايت.",
+      "exportFailed": "تعذر تصدير جداول الحصص. أعد تحميل الصفحة وحاول مرة أخرى.",
+      "importFailed": "تعذر استيراد جداول الحصص. حاول مرة أخرى.",
+      "imported": "تم استيراد {{count}} جدول(جداول).",
+      "teachersNotAssigned": "تم استيراد {{count}} حصة دون أستاذها، لأنه لا يدرّس تلك المادة في هذا القسم."
+    },
     "success": {
       "retrieved": "تم استرجاع جدول الحصص بنجاح",
       "created": "تم إنشاء جدول الحصص بنجاح",
@@ -1463,6 +1480,11 @@
       "entryDeleted": "تم حذف الحصة بنجاح"
     },
     "errors": {
+      "importUnknownSection": "{{name}} غير موجود في السنة الدراسية المحددة.",
+      "importAmbiguousSection": "{{name}} يطابق أكثر من فوج. امنح كل فوج اسماً فريداً قبل الاستيراد.",
+      "importUnknownSubject": "المادة {{name}} غير موجودة.",
+      "importUnknownStaff": "{{name}} ليس موظفاً نشطاً.",
+      "importFailedAt": "{{routine}}: {{reason}}",
       "notFound": "جدول الحصص غير موجود",
       "notEditable": "يمكن تعديل المسودات فقط",
       "entryNotFound": "الحصة غير موجودة",

@@ -2,6 +2,7 @@ import { Service, Transaction } from '../../najm';
 import { ClassRoutineRepository } from './ClassRoutineRepository';
 import { ClassRoutineValidator } from './ClassRoutineValidator';
 import { schoolDayPeriods } from '@sms/contracts/routines';
+import { routineNameKey, type RoutineJson, type RoutineJsonLesson } from '@sms/contracts';
 import type {
   CreateRoutineEntryDto,
   CreateRoutineDutyDto,
@@ -180,6 +181,97 @@ export class ClassRoutineService {
       await this.repository.updatePeriod(period.id, { sortOrder: period.sortOrder - 1000 });
     }
     return this.getById(id);
+  }
+
+  /**
+   * Replaces the timetables a file names, in the selected year, or none:
+   * every lesson and supervision goes through the same rules as one added by
+   * hand. Names identify classes, subjects and people; a teacher who does not
+   * teach that subject in the section is left off the lesson and counted.
+   */
+  @Transaction()
+  async importDocument(document: RoutineJson) {
+    this.validator.ensureImportYear(document.schoolYear);
+    const [sectionRows, subjectRows, staffRows, teachingDays] = await Promise.all([
+      this.repository.getSectionsInSelectedYear(),
+      this.repository.getSubjects(),
+      this.repository.getDutyCandidates(),
+      this.repository.getSchoolTeachingDays(),
+    ]);
+    const byName = <Row>(rows: Row[], name: (row: Row) => string | null | undefined, value: string) =>
+      rows.filter((row) => routineNameKey(name(row) ?? '') === routineNameKey(value));
+    const subjectFor = (lesson: RoutineJsonLesson) => {
+      const byCode = lesson.subjectCode ? byName(subjectRows, (row) => row.code, lesson.subjectCode) : [];
+      const named = byName(subjectRows, (row) => row.name, lesson.subject);
+      return byCode.length === 1 ? byCode[0] : named.length === 1 ? named[0] : undefined;
+    };
+
+    // Resolve every name before the first change.
+    const plans = document.routines.map((routine) => {
+      const label = `${routine.className} ${routine.sectionName}`;
+      const section = this.validator.ensureImportSection(
+        sectionRows.filter((row) => routineNameKey(row.className) === routineNameKey(routine.className)
+          && routineNameKey(row.name) === routineNameKey(routine.sectionName)),
+        label,
+      );
+      const lessons = routine.lessons.map((lesson) => ({ lesson, subject: this.validator.ensureImportSubject(subjectFor(lesson), lesson.subject) }));
+      const duties = routine.duties.map((duty) => {
+        const matches = byName(staffRows, (row) => row.staffName, duty.staff);
+        return { duty, staff: this.validator.ensureImportStaff(matches.length === 1 ? matches[0] : undefined, duty.staff) };
+      });
+      return { routine, label, section, lessons, duties };
+    });
+
+    // Clear every target first, so lessons moving between imported sections never meet their old copies.
+    const scheduleIds: string[] = [];
+    for (const plan of plans) {
+      const existing = await this.repository.getPublishedForSection(plan.section.id);
+      const id = existing?.id ?? (await this.repository.createSchedule({
+        sectionId: plan.section.id,
+        name: plan.routine.name,
+        activeDays: teachingDays,
+        status: 'published',
+        publishedAt: new Date().toISOString(),
+      })).id;
+      await this.repository.clearScheduleContent(id);
+      await this.repository.updateSchedule(id, { name: plan.routine.name });
+      scheduleIds.push(id);
+    }
+
+    let lessons = 0;
+    let duties = 0;
+    let teachersNotAssigned = 0;
+    for (const [index, plan] of plans.entries()) {
+      const id = scheduleIds[index];
+      try {
+        const { periods } = await this.updateLayout(id, { periods: plan.routine.periods.map(({ type, name, startTime, endTime }) => ({ type, name, startTime, endTime })) });
+        const periodAt = (position: number) => periods[position - 1].id;
+        const assignments = await this.repository.getAssignmentsForSection(plan.section.id);
+        for (const { lesson, subject } of plan.lessons) {
+          const assignment = lesson.teacher
+            ? assignments.find((row) => row.subjectId === subject.id && routineNameKey(row.teacherName) === routineNameKey(lesson.teacher!))
+            : undefined;
+          if (lesson.teacher && !assignment) teachersNotAssigned++;
+          await this.addEntry(id, {
+            dayOfWeek: lesson.day,
+            periodId: periodAt(lesson.period),
+            subjectId: subject.id,
+            teacherAssignmentId: assignment?.id ?? null,
+            roomNumber: lesson.roomNumber,
+            notes: lesson.notes,
+            contentGroups: lesson.contentGroups,
+          });
+          lessons++;
+        }
+        for (const { duty, staff } of plan.duties) {
+          await this.addDuty(id, { dayOfWeek: duty.day, periodId: periodAt(duty.period), staffId: staff.staffId, notes: duty.notes });
+          duties++;
+        }
+      } catch (error) {
+        this.validator.refuseImportOf(plan.label, error);
+      }
+    }
+    return { routines: plans.length, lessons, duties, teachersNotAssigned };
   }
 
   async addEntry(scheduleId: string, data: CreateRoutineEntryDto) {

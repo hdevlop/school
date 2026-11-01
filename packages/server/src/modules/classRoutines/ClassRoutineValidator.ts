@@ -90,6 +90,35 @@ export class ClassRoutineValidator {
     return section;
   }
 
+  // An imported file names the year it was exported from; it lands only in that year.
+  ensureImportYear(schoolYear: string) {
+    if (schoolYear !== this.year.label) Err(400, t('classRoutines.data.wrongYear'));
+  }
+
+  // A file's class and section name one section of the selected year, exactly.
+  ensureImportSection<Section>(matches: Section[], name: string): Section {
+    if (!matches.length) Err(404, t('classRoutines.errors.importUnknownSection', { name }));
+    if (matches.length > 1) Err(409, t('classRoutines.errors.importAmbiguousSection', { name }));
+    return matches[0];
+  }
+
+  ensureImportSubject<Subject>(subject: Subject | undefined, name: string): Subject {
+    if (!subject) Err(404, t('classRoutines.errors.importUnknownSubject', { name }));
+    return subject!;
+  }
+
+  ensureImportStaff<Staff>(member: Staff | undefined, name: string): Staff {
+    if (!member) Err(404, t('classRoutines.errors.importUnknownStaff', { name }));
+    return member!;
+  }
+
+  // A rule refused one timetable's lesson or supervision: say which timetable.
+  refuseImportOf(routine: string, error: unknown): never {
+    const status = typeof (error as { status?: unknown })?.status === 'number' ? (error as { status: number }).status : 500;
+    const reason = error instanceof Error ? error.message : String(error);
+    return Err(status, t('classRoutines.errors.importFailedAt', { routine, reason })) as never;
+  }
+
   async validateEntry(
     scheduleId: string,
     data: { dayOfWeek: any; periodId: string; subjectId: string; teacherAssignmentId?: string | null; roomNumber?: string | null },

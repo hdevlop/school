@@ -1158,6 +1158,7 @@
       "export": "Export",
       "exportXlsx": "Excel (.xlsx)",
       "exportCsv": "CSV (.csv)",
+      "exportJson": "JSON (.json)",
       "import": "Import",
       "print": "Print",
       "importDescription": "Choose an XLSX, CSV or JSON file. Excel uses the first worksheet, with headers in its first row.",
@@ -5129,6 +5130,22 @@
     "insurance": "Insurance"
   },
   "classRoutines": {
+    "data": {
+      "export": "Export",
+      "exportExcel": "Excel (.xlsx)",
+      "exportJson": "JSON (.json)",
+      "import": "Import JSON",
+      "description": "Import timetables for the selected school year. Each class and section in the file replaces its periods, lessons and supervision; other timetables stay unchanged. Classes, subjects, teachers and staff are matched by name.",
+      "file": "JSON file (maximum 5 MB)",
+      "summary": "{{routines}} timetables · {{lessons}} lessons · {{duties}} supervisions",
+      "invalidFile": "Invalid timetable JSON. Check the format, version, periods and lessons.",
+      "wrongYear": "This file belongs to another school year. Select that year before importing.",
+      "fileTooLarge": "The JSON file must be 5 MB or smaller.",
+      "exportFailed": "The timetables could not be exported. Reload and try again.",
+      "importFailed": "The timetables could not be imported. Try again.",
+      "imported": "{{count}} timetable(s) imported.",
+      "teachersNotAssigned": "{{count}} lesson(s) were imported without their teacher, who does not teach that subject in the class."
+    },
     "success": {
       "retrieved": "Class routine retrieved successfully",
       "created": "Class routine created successfully",
@@ -5141,6 +5158,11 @@
       "entryDeleted": "Lesson removed successfully"
     },
     "errors": {
+      "importUnknownSection": "{{name}} does not exist in the selected school year.",
+      "importAmbiguousSection": "{{name}} matches more than one section. Give each section a unique name before importing.",
+      "importUnknownSubject": "The subject {{name}} does not exist.",
+      "importUnknownStaff": "{{name}} is not an active staff member.",
+      "importFailedAt": "{{routine}}: {{reason}}",
       "notFound": "Class routine not found",
       "notEditable": "Only draft routines can be edited",
       "entryNotFound": "Routine lesson not found",

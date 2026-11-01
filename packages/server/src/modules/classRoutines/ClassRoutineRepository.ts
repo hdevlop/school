@@ -283,6 +283,20 @@ export class ClassRoutineRepository {
       .orderBy(asc(subjects.name), asc(staff.name));
   }
 
+  // Import matches a file's class and section names against the selected year's.
+  async getSectionsInSelectedYear() {
+    return this.db.select({ id: sections.id, name: sections.name, className: classes.name })
+      .from(sections)
+      .innerJoin(classes, eq(sections.classId, classes.id))
+      .where(eq(classes.academicYear, this.year.label));
+  }
+
+  // Import replaces a timetable's lessons and supervision; its periods follow with the layout.
+  async clearScheduleContent(scheduleId: string) {
+    await this.db.delete(routineEntries).where(eq(routineEntries.scheduleId, scheduleId));
+    await this.db.delete(routineDuties).where(eq(routineDuties.scheduleId, scheduleId));
+  }
+
   // A new timetable takes the selected year.
   async createSchedule(data: Omit<typeof routineSchedules.$inferInsert, 'academicYear'>) {
     const [created] = await this.db.insert(routineSchedules)

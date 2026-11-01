@@ -30,6 +30,8 @@ describe('split action guards', () => {
       expect(permission(ClassRoutineController, method)).toEqual(['delete:class-routines']);
     }
     expect(permission(ClassRoutineController, 'publish')).toEqual(['update:class-routines']);
+    // An import creates, rewrites and removes: it asks for all three.
+    expect(permission(ClassRoutineController, 'importDocument')).toEqual(['create:class-routines', 'update:class-routines', 'delete:class-routines']);
   });
 
   it('keeps candidate details available to editors without opening them to timetable readers', () => {

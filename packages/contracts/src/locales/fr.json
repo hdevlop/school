@@ -898,6 +898,7 @@
       "export": "Exporter",
       "exportXlsx": "Excel (.xlsx)",
       "exportCsv": "CSV (.csv)",
+      "exportJson": "JSON (.json)",
       "import": "Importer",
       "print": "Imprimer",
       "importDescription": "Choisissez un fichier XLSX, CSV ou JSON. Excel utilise la première feuille, avec les en-têtes sur la première ligne.",
@@ -1998,6 +1999,22 @@
     "insurance": "Assurance"
   },
   "classRoutines": {
+    "data": {
+      "export": "Exporter",
+      "exportExcel": "Excel (.xlsx)",
+      "exportJson": "JSON (.json)",
+      "import": "Importer un JSON",
+      "description": "Importez les emplois du temps de l'année scolaire sélectionnée. Chaque classe et section du fichier remplace ses créneaux, ses cours et sa surveillance ; les autres emplois du temps ne changent pas. Les classes, matières, enseignants et membres du personnel sont reconnus par leur nom.",
+      "file": "Fichier JSON (5 Mo maximum)",
+      "summary": "{{routines}} emplois du temps · {{lessons}} cours · {{duties}} surveillances",
+      "invalidFile": "JSON d'emploi du temps invalide. Vérifiez le format, la version, les créneaux et les cours.",
+      "wrongYear": "Ce fichier appartient à une autre année scolaire. Sélectionnez cette année avant d'importer.",
+      "fileTooLarge": "Le fichier JSON doit faire 5 Mo au maximum.",
+      "exportFailed": "Les emplois du temps n'ont pas pu être exportés. Rechargez la page et réessayez.",
+      "importFailed": "Les emplois du temps n'ont pas pu être importés. Réessayez.",
+      "imported": "{{count}} emploi(s) du temps importé(s).",
+      "teachersNotAssigned": "{{count}} cours ont été importés sans leur enseignant, qui n'enseigne pas cette matière dans la classe."
+    },
     "success": {
       "retrieved": "Emploi du temps récupéré avec succès",
       "created": "Emploi du temps créé avec succès",
@@ -2010,6 +2027,11 @@
       "entryDeleted": "Cours supprimé avec succès"
     },
     "errors": {
+      "importUnknownSection": "{{name}} n'existe pas dans l'année scolaire sélectionnée.",
+      "importAmbiguousSection": "{{name}} correspond à plusieurs sections. Donnez un nom unique à chaque section avant d'importer.",
+      "importUnknownSubject": "La matière {{name}} n'existe pas.",
+      "importUnknownStaff": "{{name}} n'est pas un membre actif du personnel.",
+      "importFailedAt": "{{routine}} : {{reason}}",
       "notFound": "Emploi du temps introuvable",
       "notEditable": "Seuls les brouillons peuvent être modifiés",
       "entryNotFound": "Cours introuvable",

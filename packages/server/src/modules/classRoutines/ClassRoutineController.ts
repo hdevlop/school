@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { canReadRoutineCandidates } from './ClassRoutineGuards';
+import { canImportRoutines, canReadRoutineCandidates } from './ClassRoutineGuards';
 import { Can } from '../../auth';
 import { ClassRoutineService } from './ClassRoutineService';
 import {
@@ -15,6 +15,7 @@ import {
   routineListQuery,
   routineLayoutDto,
   routineBulkLayoutDto,
+  importRoutinesDto,
   routineTeacherParam,
   updateRoutineEntryDto,
   updateRoutineDutyDto,
@@ -27,6 +28,7 @@ import {
   type RoutineListQuery,
   type RoutineLayoutDto,
   type RoutineBulkLayoutDto,
+  type ImportRoutinesDto,
   type UpdateRoutineEntryDto,
   type RoutineEntryDeleteQuery,
   type UpdateRoutineDutyDto,
@@ -188,6 +190,14 @@ export class ClassRoutineController {
   @ResMsg('classRoutines.success.updated')
   async update(@Params('id') id: string, @Body() body: UpdateRoutineScheduleDto) {
     return this.service.update(id, body);
+  }
+
+  @Post('/import')
+  @canImportRoutines()
+  @Validate(importRoutinesDto)
+  @ResMsg('classRoutines.success.updated')
+  async importDocument(@Body() body: ImportRoutinesDto) {
+    return this.service.importDocument(body.document);
   }
 
   @Post('/bulk/layout')

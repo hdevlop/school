@@ -18,6 +18,7 @@ import RoutineEntryForm from './RoutineEntryForm';
 import RoutineDutyForm from './RoutineDutyForm';
 import RoutineGrid from './RoutineGrid';
 import RoutinePeriodsEditor from './RoutinePeriodsEditor';
+import { RoutineDataActions } from './RoutineDataActions';
 import TeacherRoutinePage from './TeacherRoutinePage';
 import {
   useRoutine,
@@ -297,6 +298,14 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
           </>
         )}
         <div className="flex shrink-0 justify-end gap-2 empty:hidden md:ms-auto">
+          <RoutineDataActions
+            routines={printableRoutines}
+            schoolYear={listedYear ?? ''}
+            disabled={busy || printBusy}
+            canImport={canCreate && canEdit && canDelete}
+            importing={mutations.importRoutines.isPending}
+            onImport={async (document) => (await mutations.importRoutines.mutateAsync(document))?.data}
+          />
           {canEdit ? (
             <NButton variant="outline" className="h-10 px-3 md:px-4" disabled={busy || !activeClasses.length} onClick={openPeriodsForm}>
               <Clock3 className="h-4 w-4" /> {t('classRoutines.ui.actions.periods')}

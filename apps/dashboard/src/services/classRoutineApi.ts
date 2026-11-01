@@ -11,6 +11,7 @@ export const createClassRoutineApi = async (data) => (await api.post('/class-rou
 export const updateClassRoutineApi = async ({ id, ...data }) => (await api.put(`/class-routines/${id}`, data)).data;
 export const updateRoutineLayoutApi = async ({ id, ...data }) => (await api.put(`/class-routines/${id}/layout`, data)).data;
 export const updateRoutineLayoutsApi = async (data) => (await api.post('/class-routines/bulk/layout', data)).data;
+export const importClassRoutinesApi = async (document) => (await api.post('/class-routines/import', { document })).data;
 export const deleteClassRoutineApi = async (id) => (await api.delete(`/class-routines/${id}`)).data;
 export const publishClassRoutineApi = async (id) => (await api.post(`/class-routines/${id}/publish`)).data;
 export const archiveClassRoutineApi = async (id) => (await api.post(`/class-routines/${id}/archive`)).data;

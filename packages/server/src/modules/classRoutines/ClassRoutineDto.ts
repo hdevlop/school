@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { MAX_ROUTINE_CONTENT_GROUPS, MAX_ROUTINE_CONTENT_LABEL_LENGTH, ROUTINE_DAYS } from '@sms/contracts/routines';
 import type { RoutineContentGroup } from '@sms/contracts/routines';
+import { isRoutineJson, MAX_ROUTINE_JSON_BYTES, normalizeRoutineJson, type RoutineJson } from '@sms/contracts';
 
 const id = z.string().min(1);
 export const routineDayDto = z.enum(ROUTINE_DAYS);
@@ -101,6 +102,12 @@ export const createRoutineDutyDto = z.object({
 });
 export const updateRoutineDutyDto = createRoutineDutyDto.pick({ staffId: true, notes: true }).partial();
 
+// A whole timetable file: the shared contract checks its shape, the service its names and rules.
+export const importRoutinesDto = z.object({
+  document: z.custom<RoutineJson>(isRoutineJson, 'classRoutines.data.invalidFile').transform(normalizeRoutineJson),
+}).strict()
+  .refine(value => new TextEncoder().encode(JSON.stringify(value.document)).byteLength <= MAX_ROUTINE_JSON_BYTES, 'classRoutines.data.fileTooLarge');
+
 export type RoutineListQuery = z.infer<typeof routineListQuery>;
 export type CreateRoutinePeriodDto = z.infer<typeof createRoutinePeriodDto>;
 export type UpdateRoutinePeriodDto = z.infer<typeof updateRoutinePeriodDto>;
@@ -113,3 +120,4 @@ export type UpdateRoutineEntryDto = z.infer<typeof updateRoutineEntryDto>;
 export type RoutineEntryDeleteQuery = z.infer<typeof routineEntryDeleteQuery>;
 export type CreateRoutineDutyDto = z.infer<typeof createRoutineDutyDto>;
 export type UpdateRoutineDutyDto = z.infer<typeof updateRoutineDutyDto>;
+export type ImportRoutinesDto = z.infer<typeof importRoutinesDto>;

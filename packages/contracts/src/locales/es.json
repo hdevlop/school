@@ -1258,6 +1258,7 @@
       "export": "Exportar",
       "exportXlsx": "Excel (.xlsx)",
       "exportCsv": "CSV (.csv)",
+      "exportJson": "JSON (.json)",
       "import": "Importar",
       "print": "Imprimir",
       "importDescription": "Elija un archivo XLSX, CSV o JSON. Excel usa la primera hoja, con los encabezados en la primera fila.",
@@ -1437,6 +1438,22 @@
     "insurance": "Seguro"
   },
   "classRoutines": {
+    "data": {
+      "export": "Exportar",
+      "exportExcel": "Excel (.xlsx)",
+      "exportJson": "JSON (.json)",
+      "import": "Importar JSON",
+      "description": "Importa los horarios del año escolar seleccionado. Cada clase y sección del archivo reemplaza sus periodos, clases y vigilancia; los demás horarios no cambian. Las clases, asignaturas, profesores y personal se reconocen por su nombre.",
+      "file": "Archivo JSON (máximo 5 MB)",
+      "summary": "{{routines}} horarios · {{lessons}} clases · {{duties}} vigilancias",
+      "invalidFile": "JSON de horario no válido. Revisa el formato, la versión, los periodos y las clases.",
+      "wrongYear": "Este archivo pertenece a otro año escolar. Selecciona ese año antes de importar.",
+      "fileTooLarge": "El archivo JSON debe ocupar 5 MB o menos.",
+      "exportFailed": "No se pudieron exportar los horarios. Recarga e inténtalo de nuevo.",
+      "importFailed": "No se pudieron importar los horarios. Inténtalo de nuevo.",
+      "imported": "{{count}} horario(s) importado(s).",
+      "teachersNotAssigned": "{{count}} clase(s) se importaron sin su profesor, que no imparte esa asignatura en la clase."
+    },
     "success": {
       "retrieved": "Horario obtenido correctamente",
       "created": "Horario creado correctamente",
@@ -1449,6 +1466,11 @@
       "entryDeleted": "Clase eliminada correctamente"
     },
     "errors": {
+      "importUnknownSection": "{{name}} no existe en el año escolar seleccionado.",
+      "importAmbiguousSection": "{{name}} coincide con más de una sección. Da a cada sección un nombre único antes de importar.",
+      "importUnknownSubject": "La asignatura {{name}} no existe.",
+      "importUnknownStaff": "{{name}} no es un miembro activo del personal.",
+      "importFailedAt": "{{routine}}: {{reason}}",
       "notFound": "Horario no encontrado",
       "notEditable": "Solo se pueden editar borradores",
       "entryNotFound": "Clase no encontrada",

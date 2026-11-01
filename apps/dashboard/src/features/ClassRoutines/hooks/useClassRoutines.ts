@@ -98,5 +98,7 @@ export function useRoutineMutations() {
     deleteDuty: useNamedMutation(routineApi.deleteRoutineDutyApi, t('classRoutines.ui.messages.supervisionRemoved')),
     createPeriod: useNamedMutation(routineApi.createRoutinePeriodApi, t('classRoutines.ui.messages.periodCreated')),
     updatePeriod: useNamedMutation(routineApi.updateRoutinePeriodApi, t('classRoutines.ui.messages.periodUpdated')),
+    // The import sheet reports the outcome and any refusal itself.
+    importRoutines: useMutation<any, any, any>({ mutationFn: routineApi.importClassRoutinesApi, onSuccess: invalidate }),
   };
 }

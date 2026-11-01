@@ -1,7 +1,7 @@
 import { composeGuards, createGuard } from 'najm-guard';
 import { matchPermission } from 'najm-auth/client';
 import { Injectable, User } from '../../najm';
-import { isAuth } from '../../auth';
+import { Can, isAuth } from '../../auth';
 
 /** Candidate contact details belong to timetable editors, not every reader. */
 @Injectable()
@@ -13,3 +13,10 @@ export class RoutineCandidateGuard {
 }
 
 export const canReadRoutineCandidates = composeGuards(isAuth(), createGuard(RoutineCandidateGuard)());
+
+/** An import creates timetables, rewrites them and removes their old lessons: it asks for all three. */
+export const canImportRoutines = composeGuards(
+  Can('create:class-routines'),
+  Can('update:class-routines'),
+  Can('delete:class-routines'),
+);
