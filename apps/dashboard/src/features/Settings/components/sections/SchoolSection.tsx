@@ -32,20 +32,20 @@ const SchoolSection: React.FC = () => {
 
         <FormInput name="schoolNameAr" type="text" formLabel={t('settings.school.schoolNameAr')} icon={Building2} dir="rtl" lang="ar" />
 
-        <div className="sm:col-span-2">
+        <div>
           <FormLocationInput
             name="schoolLocation"
             formLabel={t('settings.school.schoolAddress')}
             placeholder={t('settings.editor.addressPlaceholder')}
             required
-            classNames={{ status: 'hidden' }}
+            classNames={{ label: 'min-h-4', status: 'hidden' }}
             providerMeta={schoolLocation && schoolPlaceId
               ? { provider: 'google', placeId: schoolPlaceId, ...schoolLocation }
               : null}
             onProviderMetaChange={(meta) => setValue('schoolAddressPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
           />
         </div>
-        <div className="sm:col-span-2">
+        <div>
           <FormInput name="schoolAddressAr" type="text" formLabel={t('settings.school.schoolAddressAr')} icon={MapPin} dir="rtl" lang="ar" />
         </div>
       </SettingsGroup>
