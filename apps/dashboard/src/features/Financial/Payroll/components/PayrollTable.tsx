@@ -4,7 +4,7 @@
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useCallback, useMemo, useState } from 'react';
-import { Banknote, CalendarDays, Clock, HandCoins, ReceiptText, Undo2, Wallet, SearchX } from 'lucide-react';
+import { Banknote, CalendarDays, Clock, HandCoins, ReceiptText, Undo2 } from 'lucide-react';
 import { NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
@@ -310,7 +310,7 @@ const PayrollTable = () => {
   return (
     <div className="flex flex-col gap-2 w-full h-full">
       <NPageHeader
-        icon={Wallet}
+        icon={FEATURE_ICONS.payroll}
         title={t('navigation.payroll')}
         subtitle={isCountUnknown(loadError, tableRows, isLoading)
           ? formatPeriod(effectivePeriod, locale)
@@ -412,7 +412,7 @@ const PayrollTable = () => {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.payroll}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

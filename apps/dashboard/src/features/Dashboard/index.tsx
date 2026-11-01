@@ -1,7 +1,9 @@
 'use client'
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import { NPageHeader, NPageHeaderActions, cn } from 'najm-kit';
-import { LayoutDashboard } from 'lucide-react';
+
 import { useAuth } from 'najm-auth/client/react';
 import FinanceKpis from './components/FinanceKpis';
 import StudentsGenderChart from './components/StudentsGenderChart';
@@ -31,7 +33,7 @@ const SchoolDashboard = ({ role }: { role: string | undefined }) => {
   return (
     <div className='flex flex-col w-full h-full min-h-0 gap-2 max-md:overflow-y-auto'>
       <NPageHeader
-        icon={LayoutDashboard}
+        icon={FEATURE_ICONS.dashboard}
         title={t('navigation.dashboard')}
       >
         <NPageHeaderActions>

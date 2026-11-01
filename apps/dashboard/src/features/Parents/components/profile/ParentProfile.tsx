@@ -1,5 +1,7 @@
 "use client";
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { NAvatar, NBadge, NButton, NCard, NCardAction, NCardFooter, NEmptyState, NErrorState, NajmScroll, NLoadingState, NPageHeader, NPageHeaderActions, NProgress, NStatCard, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
@@ -18,7 +20,6 @@ import {
   LayoutDashboard,
   MapPin,
   Pencil,
-  ReceiptText,
   Star,
   UserRound,
   UsersRound,
@@ -298,7 +299,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
     <NajmScroll axis="y" className="h-full min-h-0 w-full flex-1">
     <div className="flex min-h-full min-w-0 flex-col gap-2 fit:h-full">
       <NPageHeader
-        icon={UsersRound}
+        icon={FEATURE_ICONS.parents}
         title={parent.name}
         subtitle={text('subtitle')}
       >
@@ -425,7 +426,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
 
               {children.length === 0 ? (
                 <NEmptyState
-                  icon={UsersRound}
+                  icon={FEATURE_ICONS.students}
                   title={t('parents.profile.noChildrenLinked')}
                   description={text('noChildrenDescription')}
                   className="min-h-56"
@@ -498,7 +499,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
 
               {dashboard.attendanceChart.length === 0 ? (
                 <NEmptyState
-                  icon={CalendarRange}
+                  icon={FEATURE_ICONS.studentAttendance}
                   title={text('noAttendance')}
                   description={text('noAttendanceDescription')}
                   className="min-h-56"
@@ -582,7 +583,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
 
               {dashboard.recentGrades.length === 0 ? (
                 <NEmptyState
-                  icon={Award}
+                  icon={FEATURE_ICONS.grades}
                   title={text('noGrades')}
                   description={text('noGradesDescription')}
                   className="min-h-56"
@@ -631,7 +632,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
 
               {dashboard.totalFees <= 0 ? (
                 <NEmptyState
-                  icon={ReceiptText}
+                  icon={FEATURE_ICONS.fees}
                   title={text('noFees')}
                   description={text('noFeesDescription')}
                   className="min-h-56"
@@ -697,7 +698,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
 
               {dashboard.upcomingEvents.length === 0 ? (
                 <NEmptyState
-                  icon={CalendarDays}
+                  icon={FEATURE_ICONS.calendar}
                   title={text('noEvents')}
                   description={text('noEventsDescription')}
                   className="min-h-56"

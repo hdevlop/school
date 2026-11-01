@@ -1,5 +1,7 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import { NButton, NEmptyState, NStatCard } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -222,7 +224,7 @@ export default function GradesTab({ studentId, student }: { studentId?: string; 
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={GraduationCap}
+            icon={FEATURE_ICONS.grades}
             title={t('students.profile.gradeDetails.noneRecorded')}
             className="min-h-64"
           />

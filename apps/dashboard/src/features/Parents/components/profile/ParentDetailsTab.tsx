@@ -1,5 +1,7 @@
 "use client";
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import React from 'react';
 import Link from 'next/link';
 import { HeartHandshake, Phone, UserRound, UsersRound } from 'lucide-react';
@@ -90,7 +92,7 @@ const ParentDetailsTab: React.FC<ParentDetailsTabProps> = ({ parent, linkedChild
 
       <NCard title={t('parents.profile.linkedChildren')} icon={UsersRound}>
         {linkedChildren.length === 0 ? (
-          <NEmptyState surface="panel" icon={UsersRound} title={t('parents.profile.noChildrenLinked')} />
+          <NEmptyState surface="panel" icon={FEATURE_ICONS.students} title={t('parents.profile.noChildrenLinked')} />
         ) : (
           <ul className="divide-y divide-border/60">
             {linkedChildren.map((child) => (

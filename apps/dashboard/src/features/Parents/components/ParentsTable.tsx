@@ -6,7 +6,7 @@ import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptySt
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { TablePrintButton } from '@/components/TablePrintButton';
-import { HeartHandshake, Plus, SearchX } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import React, { useMemo } from 'react';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import { matchesAnyChild } from '@/features/Classes/hooks/classSectionScope';
@@ -147,7 +147,7 @@ function ParentsTable() {
   return (
     <div data-list-loading={isParentsLoading || undefined} className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
-        icon={HeartHandshake}
+        icon={FEATURE_ICONS.parents}
         title={t('navigation.parents')}
         subtitle={isCountUnknown(error, parents, isParentsLoading) ? undefined : t('parents.subtitle.count', { count: total })}
       >
@@ -189,7 +189,7 @@ function ParentsTable() {
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={hasSelection ? SearchX : FEATURE_ICONS.parents}
+            icon={FEATURE_ICONS.parents}
             title={t(hasSelection ? 'emptyStates.filtered.title' : 'emptyStates.parents.title')}
             description={t(hasSelection ? 'emptyStates.filtered.description' : 'emptyStates.parents.description')}
             action={hasSelection || !canCreate ? undefined : (
@@ -203,7 +203,7 @@ function ParentsTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.parents}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

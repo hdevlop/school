@@ -1,7 +1,9 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import Link from 'next/link';
-import { ChevronRight, School, UsersRound } from 'lucide-react';
+import { ChevronRight, UsersRound } from 'lucide-react';
 import { NCard, NCardAction, NEmptyState, NSkeleton, NajmScroll, cn, getNChartColor } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import type { TeacherDashboardClass } from '@sms/contracts/teacher-dashboard';
@@ -94,7 +96,7 @@ const MyClassesCard = ({ classes, loading, error, onRetry, className }: MyClasse
           </ul>
         </NajmScroll>
       ) : (
-        <NEmptyState icon={School} title={t('dashboard.teacher.classes.empty')} className="py-4" />
+        <NEmptyState icon={FEATURE_ICONS.classes} title={t('dashboard.teacher.classes.empty')} className="py-4" />
       )}
     </NCard>
   );

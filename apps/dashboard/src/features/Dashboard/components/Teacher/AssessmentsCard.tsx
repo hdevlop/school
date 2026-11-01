@@ -1,5 +1,7 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import Link from 'next/link';
 import { ChevronRight, ClipboardList, FileText } from 'lucide-react';
 import { NCard, NCardAction, NEmptyState, NProgress, NSkeleton, cn } from 'najm-kit';
@@ -82,7 +84,7 @@ const AssessmentsCard = ({ assessments, loading, error, onRetry, className }: As
           })}
         </ul>
       ) : (
-        <NEmptyState icon={ClipboardList} title={t('dashboard.teacher.assessments.empty')} className="py-4" />
+        <NEmptyState icon={FEATURE_ICONS.assessments} title={t('dashboard.teacher.assessments.empty')} className="py-4" />
       )}
     </NCard>
   );

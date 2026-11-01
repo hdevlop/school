@@ -1,9 +1,10 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import { useCallback, useState } from 'react';
 import Link from 'next/link';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AlertTriangle } from 'lucide-react';
 import { Card, NButton, NDialog, NPageHeader, NPageHeaderActions, useCardViewport, NScrollContinuation } from 'najm-kit';
 import { ViewingYearSelector } from './ViewingYearSelector';
 import { useTranslation } from 'najm-i18n/react';
@@ -82,7 +83,7 @@ export default function MigrationIssueReviewPage() {
 
   return (
     <div className="flex min-w-0 flex-col gap-4">
-      <NPageHeader icon={AlertTriangle} title={t('academicYearMigration.title')}>
+      <NPageHeader icon={FEATURE_ICONS.academicYearMigration} title={t('academicYearMigration.title')}>
         <NPageHeaderActions><ViewingYearSelector /></NPageHeaderActions>
       </NPageHeader>
       <p className="text-sm text-muted-foreground">{t('academicYearMigration.description')}</p>

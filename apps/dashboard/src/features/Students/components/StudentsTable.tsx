@@ -7,7 +7,7 @@ import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptySt
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { TablePrintButton } from '@/components/TablePrintButton';
-import { Eye, Pencil, Trash2, LogOut, GraduationCap, Plus, SearchX, Upload } from 'lucide-react';
+import { Eye, Pencil, Trash2, LogOut, Plus, Upload } from 'lucide-react';
 import FullStudentForm from './FullStudentForm';
 import { useStudents } from '../hooks/useStudents';
 import { useTranslation } from 'najm-i18n/react';
@@ -317,7 +317,7 @@ function StudentsTable() {
   return (
     <div data-list-loading={isStudentsLoading || undefined} className='flex flex-col gap-2 w-full h-full min-h-0' onPointerDownCapture={focusTableForKeyboard}>
       <NPageHeader
-        icon={GraduationCap}
+        icon={FEATURE_ICONS.students}
         title={title}
         subtitle={isCountUnknown(error, students, isStudentsLoading) ? undefined : t('students.subtitle.count', { count: total })}
       >
@@ -398,7 +398,7 @@ function StudentsTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.students}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

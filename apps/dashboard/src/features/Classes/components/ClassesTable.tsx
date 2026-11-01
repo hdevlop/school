@@ -9,7 +9,7 @@ import { useAcademicTableActions } from '@/features/Classes/hooks/useAcademicTab
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
 import { deleteClassApi } from '@/services/classApi';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { School, Plus, SearchX } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import ClassForm from './ClassForm';
 import { useClasses } from '../hooks/useClasses';
 import { useTranslation } from 'najm-i18n/react';
@@ -94,7 +94,7 @@ function ClassesTable() {
   return (
     <div className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
-        icon={School}
+        icon={FEATURE_ICONS.classes}
         title={t('navigation.classes')}
         subtitle={isCountUnknown(error, classes, isClassesLoading) ? undefined : t('classes.subtitle.count', { count: total })}
       >
@@ -144,7 +144,7 @@ function ClassesTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.classes}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

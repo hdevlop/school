@@ -1,6 +1,8 @@
 'use client';
 
-import { CalendarClock, Clock, Layers3 } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
+import { Clock, Layers3 } from 'lucide-react';
 import { NajmScroll, NEmptyState, NErrorState, NPageHeader, NPageHeaderActions } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useTeacherOverview } from '@/features/Dashboard/hooks/useTeacherDashboard';
@@ -43,7 +45,7 @@ export default function TeacherRoutinePage() {
   return (
     <div className="flex h-full min-h-0 min-w-0 w-full flex-1 flex-col gap-3 overflow-hidden">
       <NPageHeader
-        icon={CalendarClock}
+        icon={FEATURE_ICONS.classRoutines}
         title={t('classRoutines.ui.teacher.myWeekTitle')}
         subtitle={t('classRoutines.ui.teacher.myWeekSubtitle')}
         className="shrink-0"
@@ -76,7 +78,7 @@ export default function TeacherRoutinePage() {
       ) : (
         <NajmScroll axis="y" autoHide="scroll" className="flex-1">
           <NEmptyState
-            icon={CalendarClock}
+            icon={FEATURE_ICONS.classRoutines}
             title={t('classRoutines.ui.teacher.noRoutine')}
             description={t('classRoutines.ui.teacher.noRoutineDescription')}
             className="rounded-2xl border border-dashed bg-card/50 py-10"

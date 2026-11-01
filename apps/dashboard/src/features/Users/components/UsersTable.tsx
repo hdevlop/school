@@ -5,7 +5,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Eye, KeyRound, Pencil, Trash2, UserCog, Plus, SearchX } from 'lucide-react';
+import { Eye, KeyRound, Pencil, Trash2, Plus } from 'lucide-react';
 import React from 'react';
 import UserForm from './UserForm';
 import UserView from './UserView';
@@ -127,7 +127,7 @@ function UsersTable() {
   return (
     <div className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
-        icon={UserCog}
+        icon={FEATURE_ICONS.users}
         title={t('navigation.users')}
         subtitle={isCountUnknown(error, users, isUsersLoading) ? undefined : t('users.subtitle.count', { count: total })}
       >
@@ -173,7 +173,7 @@ function UsersTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.users}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

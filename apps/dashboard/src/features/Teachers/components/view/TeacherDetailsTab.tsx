@@ -1,7 +1,9 @@
 "use client";
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import React, { useMemo } from 'react';
-import { Briefcase, GraduationCap, SearchX, UserRound, UsersRound } from 'lucide-react';
+import { Briefcase, GraduationCap, UserRound, UsersRound } from 'lucide-react';
 import { NBadge, NCard, NEmptyState, NErrorState } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
@@ -169,12 +171,12 @@ const TeacherDetailsTab: React.FC<TeacherDetailsTabProps> = ({ teacher, classes,
           showViewToggle={false}
           showColumnVisibility={false}
           renderEmpty={() => (
-            <NEmptyState surface="panel" icon={UsersRound} title={t('teachers.form.noAssignments')} />
+            <NEmptyState surface="panel" icon={FEATURE_ICONS.classes} title={t('teachers.form.noAssignments')} />
           )}
           renderFilteredEmpty={() => (
             <NEmptyState
               surface="panel"
-              icon={SearchX}
+              icon={FEATURE_ICONS.classes}
               title={t('emptyStates.filtered.title')}
               description={t('emptyStates.filtered.description')}
             />

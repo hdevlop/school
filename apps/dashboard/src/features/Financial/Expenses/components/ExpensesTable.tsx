@@ -6,7 +6,7 @@ import { NPageHeader, NPageHeaderActions, NEmptyState, NErrorState, NForbiddenSt
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Receipt, Plus, SearchX, Eye, Pencil, Trash2, Check, X, Banknote } from 'lucide-react';
+import { Plus, Eye, Pencil, Trash2, Check, X, Banknote } from 'lucide-react';
 import { toast } from 'sonner';
 import { handleApprovalApi, recordPaymentApi } from '@/services/expenseApi';
 import ExpensePaymentForm from './ExpensePaymentForm';
@@ -177,7 +177,7 @@ function ExpensesTable() {
   return (
     <div data-list-loading={isExpensesLoading || undefined} className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
-        icon={Receipt}
+        icon={FEATURE_ICONS.expenses}
         title={t('navigation.expenses')}
         subtitle={isCountUnknown(error, expenses, isExpensesLoading) ? undefined : t('expenses.subtitle.count', { count: total })}
       >
@@ -224,7 +224,7 @@ function ExpensesTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.expenses}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

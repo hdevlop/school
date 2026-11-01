@@ -1,6 +1,8 @@
 'use client';
 
-import { CalendarDays, UserRound } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
+import { CalendarDays } from 'lucide-react';
 import { NButton, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { isAuthorizationError, isNotFoundError } from '@/services/apiError';
@@ -52,7 +54,7 @@ const TeacherOverview = ({ teacherId, onViewDetails }: TeacherOverviewProps) => 
   // teacher or grant access.
   if (loadError) {
     if (isNotFoundError(loadError)) {
-      return <NEmptyState surface="panel" icon={UserRound} title={t('teachers.profile.teacherNotFound')} className="min-h-80" />;
+      return <NEmptyState surface="panel" icon={FEATURE_ICONS.teachers} title={t('teachers.profile.teacherNotFound')} className="min-h-80" />;
     }
     if (isAuthorizationError(loadError)) return <NForbiddenState surface="panel" className="min-h-80" />;
     return <NErrorState surface="panel" title={t('common.feedback.errorTitle')} onRetry={retry} className="min-h-80" />;

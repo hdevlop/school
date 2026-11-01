@@ -1,7 +1,8 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import React from 'react';
-import { FileBarChart } from 'lucide-react';
 import { NPageHeader, NPageHeaderActions } from 'najm-kit';
 import IncomeExpensesTrend from '@/features/Dashboard/components/IncomeExpensesTrend';
 import ExpenseBreakdownChart from './components/ExpenseBreakdownChart';
@@ -22,7 +23,7 @@ const ReportsPage: React.FC = () => {
   return (
     <div className="flex flex-col gap-2 h-full overflow-auto pb-4">
       <NPageHeader
-        icon={FileBarChart}
+        icon={FEATURE_ICONS.reports}
         title={t('reports.title')}
         subtitle={t('reports.year', { year })}
       >

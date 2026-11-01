@@ -1,5 +1,7 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { NajmScroll, NButton, NEmptyState, NErrorState, NForbiddenState, NLoadingState, NPageHeader, NPageHeaderActions, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
@@ -132,7 +134,7 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
     <NajmScroll axis="y" className="h-full min-h-0 w-full flex-1">
     <div className="flex min-h-full min-w-0 flex-col gap-2 fit:h-full">
       <NPageHeader
-        icon={GraduationCap}
+        icon={FEATURE_ICONS.students}
         title={student?.name ?? t('students.profile.detailsTitle')}
         subtitle={t('students.profile.detailsSubtitle')}
       >
@@ -171,7 +173,7 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
           {isAuthorizationError(studentError)
             ? <NForbiddenState surface="panel" />
             : !studentError || isNotFoundError(studentError)
-              ? <NEmptyState surface="panel" icon={GraduationCap} title={t('students.errors.notFound')} />
+              ? <NEmptyState surface="panel" icon={FEATURE_ICONS.students} title={t('students.errors.notFound')} />
               : <NErrorState surface="panel" onRetry={() => refetchStudent()} />}
         </div>
       ) : (

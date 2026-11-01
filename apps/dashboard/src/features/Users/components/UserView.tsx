@@ -1,5 +1,7 @@
 "use client";
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import { Hash, Mail, Phone, Shield, User, UserCheck } from 'lucide-react';
 import { Card, NAvatar, NBadge, NEmptyState, NSection, NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
@@ -8,7 +10,7 @@ import { avatarVersion } from '@/lib/avatarVersion';
 const UserView = ({ user }) => {
   const { t } = useTranslation();
 
-  if (!user) return <NEmptyState title={t('users.errors.notFound')} />;
+  if (!user) return <NEmptyState icon={FEATURE_ICONS.users} title={t('users.errors.notFound')} />;
 
   return (
     <div className="flex flex-col gap-4 h-full w-full overflow-auto">

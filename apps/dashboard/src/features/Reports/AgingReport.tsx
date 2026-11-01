@@ -1,7 +1,8 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import React from 'react';
-import { AlertTriangle } from 'lucide-react';
 import { NPageHeader, NPageHeaderActions } from 'najm-kit';
 import AgingDetailTable from './components/AgingDetailTable';
 import { useTranslation } from 'najm-i18n/react';
@@ -15,7 +16,7 @@ const AgingReportPage: React.FC = () => {
   return (
     <div className="flex flex-col gap-2 h-full overflow-hidden">
       <NPageHeader
-        icon={AlertTriangle}
+        icon={FEATURE_ICONS.agingReport}
         title={t('reports.aging.title')}
         subtitle={viewingYear ? t('reports.year', { year: viewingYear }) : undefined}
       >

@@ -1,5 +1,7 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import { PermissionButton } from '@/components/PermissionButton';
 import { NButton, NPageHeader, NPageHeaderActions, NTabs, NLoadingState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
@@ -310,7 +312,7 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col gap-3">
-      <NPageHeader icon={CalendarDays} title={t('navigation.calendar')}>
+      <NPageHeader icon={FEATURE_ICONS.calendar} title={t('navigation.calendar')}>
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
         </NPageHeaderActions>

@@ -8,7 +8,7 @@ import { useAcademicTableActions } from '@/features/Classes/hooks/useAcademicTab
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
 import { deleteSubjectApi } from '@/services/subjectApi';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { BookOpen, Plus, SearchX } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import React from 'react';
 import SubjectForm from './SubjectForm';
 import { useSubjects } from '../hooks/useSubjects';
@@ -83,7 +83,7 @@ function SubjectsTable() {
   return (
     <div className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
-        icon={BookOpen}
+        icon={FEATURE_ICONS.subjects}
         title={t('navigation.subjects')}
         subtitle={isCountUnknown(error, subjects, isSubjectsLoading) ? undefined : t('subjects.subtitle.count', { count: total })}
       >
@@ -130,7 +130,7 @@ function SubjectsTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.subjects}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

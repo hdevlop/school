@@ -1,6 +1,8 @@
 "use client";
 
-import { CalendarClock, CalendarDays, Clock, Layers3 } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
+import { CalendarDays, Clock, Layers3 } from 'lucide-react';
 import { NCard, NCardAction, NEmptyState, NErrorState } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import TeacherWeek from '@/features/ClassRoutines/components/TeacherWeek';
@@ -48,7 +50,7 @@ export default function TeacherTimetableTab({ teacherId }: TeacherTimetableTabPr
         <TeacherWeek schedules={schedules} />
       ) : (
         <NEmptyState
-          icon={CalendarClock}
+          icon={FEATURE_ICONS.classRoutines}
           title={t('classRoutines.ui.teacher.noRoutine')}
           description={t('classRoutines.ui.teacher.noRoutineDescription')}
           className="py-8"

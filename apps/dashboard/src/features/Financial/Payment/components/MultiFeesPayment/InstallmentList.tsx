@@ -1,6 +1,6 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useState, useEffect, useMemo } from 'react';
-import { ChevronDown, ChevronUp, AlertTriangle, CalendarClock, Clock, CheckCircle2, LockKeyhole, SearchX } from 'lucide-react';
+import { ChevronDown, ChevronUp, AlertTriangle, CalendarClock, Clock, CheckCircle2, LockKeyhole } from 'lucide-react';
 import { NBadge, Label, NajmScroll, NEmptyState } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from '../../store/paymentStore';
@@ -237,7 +237,7 @@ const FeeInstallmentsTable = ({
                renderFilteredEmpty={() => (
                  <NEmptyState
                    surface="panel"
-                   icon={SearchX}
+                   icon={FEATURE_ICONS.installments}
                    title={t('emptyStates.filtered.title')}
                    description={t('emptyStates.filtered.description')}
                  />

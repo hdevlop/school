@@ -1,5 +1,7 @@
 'use client'
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import { Bus } from 'lucide-react'
 import { NPageHeader, NPageHeaderActions, NSkeleton, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit'
 import { useVehicles } from '@/features/Vehicles/hooks/useVehicles'
@@ -54,7 +56,7 @@ export default function TransportPage() {
   return (
     <div className="flex flex-col gap-2 w-full h-full">
       <NPageHeader
-        icon={Bus}
+        icon={FEATURE_ICONS.transport}
         title={t('navigation.transport')}
         subtitle={t('transport.panel.manageSubtitle')}
       >

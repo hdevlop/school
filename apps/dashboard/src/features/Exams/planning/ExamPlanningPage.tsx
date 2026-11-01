@@ -161,10 +161,10 @@ function PlanningContent() {
                 {visibleClasses.map(cls => <button className={styles.classButton} key={cls.id} type="button" title={cls.name} aria-pressed={classId === cls.id} disabled={dirty || saving} onClick={() => { setClass(cls.id); setSelected(null); }}><span className={styles.dot} style={{ background: classDocumentColors(cls.name)[0] }} aria-hidden="true" />{toOfficialClassName(cls.name)}</button>)}
               </div>
               {invalidRange ? <p className={styles.alert} role="alert">{t('assessmentPlanning.invalidRange')}</p>
-                : !shownClasses.length ? <NEmptyState surface="panel" title={t('examPlanning.noClasses')} description={t('examPlanning.chooseClasses')} />
+                : !shownClasses.length ? <NEmptyState icon={FEATURE_ICONS.assessmentPlanning} surface="panel" title={t('examPlanning.noClasses')} description={t('examPlanning.chooseClasses')} />
                 : <TabsContent value={view} className="mt-0 min-w-0">
                   {view === 'preview' ? invalidDraft ? <p role="alert" className={styles.alert}>{t('examPlanning.invalidDraft')}</p>
-                    : !records.length ? <NEmptyState surface="panel" title={t('examPlanning.emptyTitle')} description={t('examPlanning.emptyDescription')} />
+                    : !records.length ? <NEmptyState icon={FEATURE_ICONS.assessmentPlanning} surface="panel" title={t('examPlanning.emptyTitle')} description={t('examPlanning.emptyDescription')} />
                     : settingsError ? <NErrorState surface="panel" /> : isSettingsLoading ? <NLoadingState surface="panel" label={t('common.loading')} />
                     : <>
                       <div className={styles.paperStage}><PlanningPreview html={buildPlanningDocument(records, documentOptions)} title={t('assessmentPlanning.previewTab')} /></div>

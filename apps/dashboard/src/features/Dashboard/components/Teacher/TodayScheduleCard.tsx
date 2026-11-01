@@ -1,7 +1,9 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import Link from 'next/link';
-import { BookOpen, CalendarDays, CalendarOff, CheckCircle2, Clock, MapPin, UsersRound } from 'lucide-react';
+import { BookOpen, CalendarDays, CheckCircle2, Clock, MapPin, UsersRound } from 'lucide-react';
 import { NBadge, NButton, NCard, NCardAction, NEmptyState, NSkeleton, NajmScroll, cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import type { TeacherDashboardSession, TeacherSessionStatus } from '@sms/contracts/teacher-dashboard';
@@ -148,7 +150,7 @@ const TodayScheduleCard = ({ sessions, nextSession, loading, error, onRetry, cla
           </NajmScroll>
         </div>
       ) : (
-        <NEmptyState icon={CalendarOff} title={t('dashboard.teacher.schedule.empty')} className="py-4" />
+        <NEmptyState icon={FEATURE_ICONS.classRoutines} title={t('dashboard.teacher.schedule.empty')} className="py-4" />
       )}
     </NCard>
   );

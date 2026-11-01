@@ -2,7 +2,7 @@
 
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { Eye, Pencil, ShieldAlert, Trash2, Plus, SearchX } from 'lucide-react';
+import { Eye, Pencil, Trash2, Plus } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
@@ -116,7 +116,7 @@ export default function DisciplineTable() {
   return (
     <div className="flex h-full min-h-0 w-full flex-col gap-2">
       <NPageHeader
-        icon={ShieldAlert}
+        icon={FEATURE_ICONS.discipline}
         title={t('navigation.discipline')}
         subtitle={isCountUnknown(error, incidents || [], isDisciplineLoading) ? undefined : t('discipline.table.count', { count: incidents?.length || 0 })}
       >
@@ -152,7 +152,7 @@ export default function DisciplineTable() {
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={scope.hasSelection ? SearchX : FEATURE_ICONS.discipline}
+            icon={FEATURE_ICONS.discipline}
             title={scope.hasSelection ? t('emptyStates.filtered.title') : t('emptyStates.discipline.title')}
             description={scope.hasSelection ? t('emptyStates.filtered.description') : isFamily ? t('emptyStates.familyDescription') : t('emptyStates.discipline.description')}
             action={scope.hasSelection || isFamily ? undefined : (
@@ -166,7 +166,7 @@ export default function DisciplineTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.discipline}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

@@ -8,7 +8,7 @@ import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptySt
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { TablePrintButton } from '@/components/TablePrintButton';
-import { Eye, Pencil, Trash2, Users, Plus, SearchX } from 'lucide-react';
+import { Eye, Pencil, Trash2, Plus } from 'lucide-react';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { announceInvitation } from '@/shared/invitationNotice';
@@ -159,7 +159,7 @@ function TeachersTable() {
   return (
     <div data-list-loading={isTeachersLoading || undefined} className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
-        icon={Users}
+        icon={FEATURE_ICONS.teachers}
         title={t('navigation.teachers')}
         subtitle={isCountUnknown(error, teachers, isTeachersLoading) ? undefined : t('teachers.subtitle.count', { count: total })}
       >
@@ -213,7 +213,7 @@ function TeachersTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.teachers}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

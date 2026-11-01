@@ -2,7 +2,7 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useMemo } from 'react';
-import { Banknote, Briefcase, BriefcaseBusiness, Calendar, Eye, Hash, IdCard, MapPinned, Pencil, Phone, Trash2, UserRound, Wallet, Plus, SearchX } from 'lucide-react';
+import { Banknote, Briefcase, BriefcaseBusiness, Calendar, Eye, Hash, IdCard, MapPinned, Pencil, Phone, Trash2, UserRound, Wallet, Plus } from 'lucide-react';
 import { Badge, NAvatar, NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
@@ -334,7 +334,7 @@ const StaffTable = () => {
   return (
     <div data-list-loading={isStaffLoading || undefined} className="flex flex-col gap-2 w-full h-full">
       <NPageHeader
-        icon={Briefcase}
+        icon={FEATURE_ICONS.staff}
         title={t('navigation.staff')}
         subtitle={isCountUnknown(isError ? error : null, rows, isStaffLoading) ? undefined : t('staff.subtitle.count', { count: rows.length })}
       >
@@ -439,7 +439,7 @@ const StaffTable = () => {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.staff}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

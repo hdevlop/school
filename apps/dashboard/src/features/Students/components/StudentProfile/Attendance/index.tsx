@@ -1,9 +1,11 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import { NBadge, NEmptyState, NStatCard } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useMemo } from 'react';
-import { CalendarCheck, CalendarDays, CheckCircle2, Clock3, UserX } from 'lucide-react';
+import { CalendarCheck, CheckCircle2, Clock3, UserX } from 'lucide-react';
 import { useStudentAttendanceRecords } from '@/features/Attendance/hooks/useAttendance';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
@@ -150,7 +152,7 @@ export default function AttendanceTab({ studentId, student }: { studentId?: stri
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={CalendarDays}
+            icon={FEATURE_ICONS.studentAttendance}
             title={t('students.profile.attendanceDetails.noExceptions')}
             className="min-h-64"
           />

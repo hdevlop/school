@@ -9,7 +9,7 @@ import { NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActi
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { toast } from 'sonner';
-import { Ban, CheckCircle2, Landmark, RotateCw, SearchX, Undo2 } from 'lucide-react';
+import { Ban, CheckCircle2, Landmark, RotateCw, Undo2 } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
@@ -216,7 +216,7 @@ export default function FinancialOperationsPage() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.financialOperations}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

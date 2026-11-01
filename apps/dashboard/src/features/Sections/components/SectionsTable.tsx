@@ -8,7 +8,7 @@ import { useAcademicTableActions } from '@/features/Classes/hooks/useAcademicTab
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
 import { deleteSectionApi } from '@/services/sectionApi';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Layers, Plus, SearchX } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import React, { useMemo } from 'react';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import SectionForm from './SectionForm';
@@ -92,7 +92,7 @@ function SectionsTable() {
   return (
     <div className='flex flex-col gap-2 w-full h-full min-h-0'>
       <NPageHeader
-        icon={Layers}
+        icon={FEATURE_ICONS.sections}
         title={t('navigation.sections')}
         subtitle={isCountUnknown(error, sections, isSectionsLoading) ? undefined : t('sections.subtitle.count', { count: total })}
       >
@@ -127,7 +127,7 @@ function SectionsTable() {
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={scope.hasSelection ? SearchX : FEATURE_ICONS.sections}
+            icon={FEATURE_ICONS.sections}
             title={t(scope.hasSelection ? 'emptyStates.filtered.title' : 'emptyStates.sections.title')}
             description={t(scope.hasSelection ? 'emptyStates.filtered.description' : 'emptyStates.sections.description')}
             action={scope.hasSelection ? undefined : (
@@ -141,7 +141,7 @@ function SectionsTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.sections}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

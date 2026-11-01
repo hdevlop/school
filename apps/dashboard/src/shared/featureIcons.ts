@@ -14,6 +14,7 @@ import {
   ClipboardList,
   CreditCard,
   FileText,
+  FileBarChart,
   GraduationCap,
   HandCoins,
   House,
@@ -40,9 +41,9 @@ import {
 /**
  * The one icon each feature is drawn with.
  *
- * The sidebar builds its nav items from this map, and every list view's empty
- * state reads the same entry, so a screen cannot show one mark in the
- * navigation and a different one in its own body. Picking an icon at a call
+ * The sidebar, page headers and empty states read the same entry, so a screen
+ * cannot show one mark in the navigation and a different one in its own body.
+ * Picking an icon at a call
  * site is what let the generic `Inbox` stand in for twenty-seven features.
  *
  * Keys that are not in the sidebar (payments, installments, drivers) are still
@@ -105,6 +106,9 @@ export const FEATURE_ICONS = {
   users: UserCog,
   visitRequests: CalendarCheck,
   publicPage: School,
+  reports: FileBarChart,
+  agingReport: AlertTriangle,
+  academicYearMigration: AlertTriangle,
 } as const satisfies Record<string, LucideIcon>;
 
 export type FeatureIconKey = keyof typeof FEATURE_ICONS;

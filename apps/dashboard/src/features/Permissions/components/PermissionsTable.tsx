@@ -5,7 +5,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { KeyRound, Plus, SearchX } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import React from 'react';
 import PermissionForm from './PermissionForm';
 import { usePermissions } from '../hooks/usePermissions';
@@ -97,7 +97,7 @@ function PermissionsTable() {
   return (
     <div className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
-        icon={KeyRound}
+        icon={FEATURE_ICONS.permissions}
         title={tf('navigation.permissions', 'Permissions')}
         subtitle={isCountUnknown(error, permissions, isPermissionsLoading) ? undefined : t('permissions.subtitle.count', { count: total })}
       >
@@ -142,7 +142,7 @@ function PermissionsTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.permissions}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

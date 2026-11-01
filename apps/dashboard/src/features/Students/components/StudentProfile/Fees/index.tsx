@@ -3,7 +3,7 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AlertTriangle, CalendarClock, CheckCircle2, CircleDollarSign, Clock, CreditCard, FileText, SearchX } from 'lucide-react';
+import { AlertTriangle, CalendarClock, CheckCircle2, CircleDollarSign, Clock, CreditCard, FileText } from 'lucide-react';
 import { useCallback, useMemo } from 'react';
 import { NBadge, NCard, NStatCard, NEmptyState } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
@@ -370,7 +370,7 @@ export default function FeesTab({ studentId, student, onOpenFeeRecord }: FeesTab
           renderFilteredEmpty={() => (
             <NEmptyState
               surface="panel"
-              icon={SearchX}
+              icon={FEATURE_ICONS.fees}
               title={t('emptyStates.filtered.title')}
               description={t('emptyStates.filtered.description')}
             />

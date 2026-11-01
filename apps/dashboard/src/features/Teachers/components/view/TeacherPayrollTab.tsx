@@ -1,7 +1,9 @@
 "use client";
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import React, { useMemo } from 'react';
-import { Banknote, CalendarDays, FileText, ReceiptText, SearchX } from 'lucide-react';
+import { Banknote, CalendarDays, FileText, ReceiptText } from 'lucide-react';
 import { NBadge, NCard, NEmptyState, NErrorState, NForbiddenState, NStatCard } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
@@ -149,12 +151,12 @@ const TeacherPayrollTab: React.FC<TeacherPayrollTabProps> = ({ teacher, today })
           showViewToggle={false}
           showColumnVisibility={false}
           renderEmpty={() => (
-            <NEmptyState surface="panel" icon={ReceiptText} title={t('teachers.profile.noPayments')} />
+            <NEmptyState surface="panel" icon={FEATURE_ICONS.payroll} title={t('teachers.profile.noPayments')} />
           )}
           renderFilteredEmpty={() => (
             <NEmptyState
               surface="panel"
-              icon={SearchX}
+              icon={FEATURE_ICONS.payroll}
               title={t('emptyStates.filtered.title')}
               description={t('emptyStates.filtered.description')}
             />

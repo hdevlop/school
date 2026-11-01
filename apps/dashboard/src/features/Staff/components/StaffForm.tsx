@@ -1,5 +1,7 @@
 "use client";
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ComponentProps, ComponentType, ReactNode } from 'react';
 import { Activity, Award, Briefcase, Calendar, Car, CreditCard, FileText, Hash, HeartPulse, IdCard, Loader2, Mail, MapPin, Phone, User, UserRound, Wallet } from 'lucide-react';
@@ -480,7 +482,7 @@ const AssignmentsStep = ({ form }) => {
                 ) : isVehiclesLoading ? (
                   <p role="status" className="text-sm text-muted-foreground">{t('common.loading')}</p>
                 ) : Array.isArray(vehicles) && vehicles.length === 0 ? (
-                  <NEmptyState surface="panel" icon={Car} title={t('staff.form.noVehiclesTitle')}
+                  <NEmptyState surface="panel" icon={FEATURE_ICONS.vehicles} title={t('staff.form.noVehiclesTitle')}
                     description={t('staff.form.vehicleSetupHint')}
                     action={can('create:vehicles') ? (
                       <NButton type="button" onClick={handleCreateVehicle}>{t('vehicles.dialogs.createButton')}</NButton>

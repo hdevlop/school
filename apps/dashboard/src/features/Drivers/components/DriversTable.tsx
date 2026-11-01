@@ -5,7 +5,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Car, Plus, SearchX } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import DriverForm from './DriverForm';
 import { useDrivers } from '../hooks/useDrivers';
 import { useTranslation } from 'najm-i18n/react';
@@ -112,7 +112,7 @@ function DriversTable() {
   return (
     <div className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
-        icon={Car}
+        icon={FEATURE_ICONS.drivers}
         title={t('navigation.drivers')}
         subtitle={isCountUnknown(error, drivers, isDriversLoading) ? undefined : t('drivers.subtitle.count', { count: total })}
       >
@@ -159,7 +159,7 @@ function DriversTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.drivers}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCheck, CircleCheck, CircleSlash, SearchX, Trash2 } from 'lucide-react';
+import { CheckCheck, CircleCheck, CircleSlash, Trash2 } from 'lucide-react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
@@ -110,7 +110,7 @@ export default function AlertsTable() {
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={scope.hasSelection ? SearchX : FEATURE_ICONS.alerts}
+            icon={FEATURE_ICONS.alerts}
             title={t(scope.hasSelection ? 'emptyStates.filtered.title' : 'alerts.page.emptyTitle')}
             description={t(scope.hasSelection ? 'emptyStates.filtered.description' : 'alerts.page.emptyDescription')}
           />
@@ -118,7 +118,7 @@ export default function AlertsTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.alerts}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

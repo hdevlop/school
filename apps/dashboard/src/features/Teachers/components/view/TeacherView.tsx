@@ -89,7 +89,7 @@ const TeacherView: React.FC<TeacherViewProps> = ({ teacherId }) => {
   const recordState = isLoading ? (
     <NLoadingState surface="panel" label={t('common.loading')} className="min-h-80" />
   ) : !teacher && (!error || isNotFoundError(error)) ? (
-    <NEmptyState surface="panel" icon={UserRound} title={t('teachers.profile.teacherNotFound')} className="min-h-80" />
+    <NEmptyState surface="panel" icon={FEATURE_ICONS.teachers} title={t('teachers.profile.teacherNotFound')} className="min-h-80" />
   ) : !teacher && isAuthorizationError(error) ? (
     <NForbiddenState surface="panel" className="min-h-80" />
   ) : !teacher ? (

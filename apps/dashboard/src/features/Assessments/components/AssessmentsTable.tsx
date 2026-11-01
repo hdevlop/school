@@ -5,7 +5,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { ClipboardList, Plus, SearchX } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import React, { useMemo } from 'react';
 import AssessmentForm from './AssessmentForm';
 import AssessmentCard from './AssessmentCard';
@@ -99,7 +99,7 @@ function AssessmentsTable() {
   return (
     <div className='flex flex-col gap-2 w-full h-full min-h-0'>
       <NPageHeader
-        icon={ClipboardList}
+        icon={FEATURE_ICONS.assessments}
         title={t('navigation.assessments')}
         subtitle={isCountUnknown(error, assessments, isAssessmentsLoading) ? undefined : t('assessments.subtitle.count', { count: total })}
       >
@@ -132,7 +132,7 @@ function AssessmentsTable() {
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={scope.hasSelection ? SearchX : FEATURE_ICONS.assessments}
+            icon={FEATURE_ICONS.assessments}
             title={scope.hasSelection ? t('emptyStates.filtered.title') : t('emptyStates.assessments.title')}
             description={scope.hasSelection ? t('emptyStates.filtered.description') : isFamily ? t('emptyStates.familyDescription') : t('emptyStates.assessments.description')}
             action={scope.hasSelection || isFamily ? undefined : (
@@ -146,7 +146,7 @@ function AssessmentsTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.assessments}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

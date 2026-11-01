@@ -20,7 +20,7 @@ const TeacherDashboard = () => {
   return (
     <div className="flex h-full min-h-0 w-full flex-col gap-2">
       <NPageHeader
-        icon={FEATURE_ICONS.teachers}
+        icon={FEATURE_ICONS.dashboard}
         title={firstName ? t('dashboard.teacher.welcomeBack', { name: firstName }) : t('dashboard.teacher.title')}
         subtitle={t('dashboard.teacher.subtitle')}
       >

@@ -6,7 +6,7 @@ import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptySt
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
-import { Eye, EyeOff, Megaphone, Pencil, Plus, SearchX, Trash2 } from 'lucide-react';
+import { Eye, EyeOff, Megaphone, Pencil, Plus, Trash2 } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import AnnouncementForm from './AnnouncementForm';
 import AnnouncementCard from './AnnouncementCard';
@@ -128,7 +128,7 @@ function AnnouncementsTable() {
   return (
     <div className='flex flex-col gap-2 w-full h-full min-h-0'>
       <NPageHeader
-        icon={Megaphone}
+        icon={FEATURE_ICONS.announcements}
         title={t('navigation.announcements')}
         subtitle={isCountUnknown(error, announcements, isAnnouncementsLoading) ? undefined : t('announcements.subtitle.count', { count: total })}
       >
@@ -163,7 +163,7 @@ function AnnouncementsTable() {
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={classFilter ? SearchX : FEATURE_ICONS.announcements}
+            icon={FEATURE_ICONS.announcements}
             title={classFilter ? t('emptyStates.filtered.title') : t('emptyStates.announcements.title')}
             description={classFilter ? t('emptyStates.filtered.description') : canCreate
               ? t('emptyStates.announcements.description')
@@ -179,7 +179,7 @@ function AnnouncementsTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.announcements}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

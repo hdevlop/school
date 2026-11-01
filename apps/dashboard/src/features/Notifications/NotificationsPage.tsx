@@ -1,6 +1,8 @@
 'use client';
 
-import { Bell, CheckCheck } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
+import { CheckCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import {
@@ -56,7 +58,7 @@ export default function NotificationsPage() {
 
   return (
     <div className="flex min-h-0 w-full flex-col gap-2">
-      <NPageHeader icon={Bell} title={t('notifications.inbox')}>
+      <NPageHeader icon={FEATURE_ICONS.notifications} title={t('notifications.inbox')}>
         <NPageHeaderActions>
           {/* Icon only at phone width, where the label left no room for the title. */}
           <NButton
@@ -83,7 +85,7 @@ export default function NotificationsPage() {
           ? <NForbiddenState surface="panel" />
           : <NErrorState surface="panel" title={t('notifications.loadError')} onRetry={() => void list.refetch()} />
       ) : items.length === 0 ? (
-        <NEmptyState icon={Bell} title={t('notifications.empty')} />
+        <NEmptyState icon={FEATURE_ICONS.notifications} title={t('notifications.empty')} />
       ) : null}
       <div className="space-y-2">
         {list.isSuccess && items.map((item) => (

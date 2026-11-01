@@ -4,7 +4,7 @@ import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useMemo } from 'react';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
-import { Award, Plus, SearchX } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
@@ -95,7 +95,7 @@ const BehaviorRewardsTable = () => {
   return (
     <div className="flex h-full min-h-0 w-full flex-col gap-2">
       <NPageHeader
-        icon={Award}
+        icon={FEATURE_ICONS.behaviorRewards}
         title={t('navigation.behaviorRewards')}
         subtitle={isCountUnknown(error, tableData, isBehaviorRewardsLoading) ? undefined : t('behaviorRewards.table.recordCount', { count: total })}
       >
@@ -142,7 +142,7 @@ const BehaviorRewardsTable = () => {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.behaviorRewards}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

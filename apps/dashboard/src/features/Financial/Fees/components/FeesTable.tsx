@@ -7,7 +7,7 @@ import type { Schedule } from '@sms/contracts';
 import { NPageHeader, NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState, NStatCard, NStatCardSkeleton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Banknote, CircleDollarSign, CreditCard, HandCoins, Landmark, Plus, ReceiptText, SearchX, Wallet } from 'lucide-react';
+import { Banknote, CreditCard, HandCoins, Landmark, Plus, ReceiptText, Wallet } from 'lucide-react';
 import FeeForm from './FeeForm';
 import EditFeeForm from './EditFeeForm';
 import { useFees } from '../hooks/useFees';
@@ -372,7 +372,7 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
   return (
     <div data-list-loading={isLoading || isSummaryLoading || undefined} className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
-        icon={CircleDollarSign}
+        icon={FEATURE_ICONS.fees}
         title={t('navigation.fees')}
         subtitle={isCountUnknown(error, fees, isLoading)
           ? undefined
@@ -510,7 +510,7 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.fees}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

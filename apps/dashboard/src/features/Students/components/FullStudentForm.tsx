@@ -1,5 +1,7 @@
 'use client'
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import { useCallback, useMemo, useRef, useState } from 'react'
 import type { ComponentProps, ComponentType, ReactNode } from 'react'
 import { NButton, NEmptyState, WizardForm } from 'najm-kit'
@@ -7,7 +9,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useDialog } from '@/shared/useDialog'
 import type { StepConfig } from 'najm-kit'
-import { GraduationCap, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react';
 import { getStudentDefaultValues, StudentFormContent } from './SimpleStudentForm'
 import { BulkParentFormContent } from '@/features/Parents/components/BulkParentForm'
 import { createFullStudentSchemas } from '../config/fullStudentSchemas'
@@ -234,7 +236,7 @@ const FullStudentForm = ({
     return (
       <NEmptyState
         surface='panel'
-        icon={GraduationCap}
+        icon={FEATURE_ICONS.classes}
         title={t('students.form.noClassesTitle')}
         description={t(can('create:classes') ? 'students.form.noClassesHint' : 'students.form.noClassesAdminHint')}
         action={can('create:classes') ? (

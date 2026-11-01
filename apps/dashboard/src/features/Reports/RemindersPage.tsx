@@ -1,10 +1,12 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import { NBadge, NAvatar, NButton, NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions } from 'najm-kit';
 import Link from 'next/link';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import React, { useEffect, useId, useMemo, useState } from 'react';
-import { Bell, BellRing, Search } from 'lucide-react';
+import { Bell, BellRing } from 'lucide-react';
 import { useFinanceOverdue } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
@@ -183,7 +185,7 @@ const RemindersPage: React.FC = () => {
   return (
     <div className="flex flex-col gap-2 h-full overflow-hidden">
       <NPageHeader
-        icon={BellRing}
+        icon={FEATURE_ICONS.reminders}
         title={t('reports.reminders.title')}
         subtitle={countUnknown ? (viewingYear ? t('reports.year', { year: viewingYear }) : undefined) : `${viewingYear ? `${t('reports.year', { year: viewingYear })} · ` : ''}${t('reports.reminders.studentsOverdueCount', { count: filtered.length })} · ${majorMoney(totalOverdue)}`}
       >
@@ -228,11 +230,11 @@ const RemindersPage: React.FC = () => {
         isEmpty={!isLoading && rows.length === 0}
         isFilteredEmpty={!isLoading && rows.length > 0 && filtered.length === 0}
         renderEmpty={() => (
-          <NEmptyState icon={BellRing} title={t('reports.reminders.noData')} className="min-h-64" />
+          <NEmptyState icon={FEATURE_ICONS.reminders} title={t('reports.reminders.noData')} className="min-h-64" />
         )}
         renderFilteredEmpty={() => (
           <NEmptyState
-            icon={Search}
+            icon={FEATURE_ICONS.reminders}
             title={search ? t('reports.reminders.noResults', { search }) : t('emptyStates.filtered.title')}
             className="min-h-64"
           />

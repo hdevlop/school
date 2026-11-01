@@ -6,7 +6,7 @@ import { NPageHeader, NPageHeaderActions, NEmptyState, NErrorState, NForbiddenSt
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Tag, Plus, SearchX, Eye, Pencil, Trash2, Power, PowerOff } from 'lucide-react';
+import { Plus, Eye, Pencil, Trash2, Power, PowerOff } from 'lucide-react';
 import React from 'react';
 import FeeTypeForm from './FeeTypeForm';
 import { useFeeTypes } from '../hooks/useFeeTypes';
@@ -115,7 +115,7 @@ function FeeTypesTable() {
   return (
     <div className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
-        icon={Tag}
+        icon={FEATURE_ICONS.feeTypes}
         title={t('navigation.feeTypes')}
         subtitle={isCountUnknown(error, feeTypes, isFeeTypesLoading) ? undefined : t('feeTypes.subtitle.count', { count: total })}
       >
@@ -164,7 +164,7 @@ function FeeTypesTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.feeTypes}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

@@ -1,8 +1,10 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import { useState } from 'react';
 import { Button, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, cn, surfaceBorderClasses } from 'najm-kit';
-import { Loader2, LockKeyhole, Pencil, Plus, Shield, Trash2 } from 'lucide-react';
+import { Loader2, LockKeyhole, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import type { AccessRole } from '@sms/contracts/access-control';
 import { useDialog } from '@/shared/useDialog';
@@ -60,12 +62,12 @@ export default function RolesTable() {
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-2">
-      <NPageHeader icon={Shield} title={t('roleAccess.title')}>
+      <NPageHeader icon={FEATURE_ICONS.roles} title={t('roleAccess.title')}>
         <NPageHeaderActions><PageHeaderGlobalActions /></NPageHeaderActions>
       </NPageHeader>
       {error ? (isAuthorizationError(error) ? <NForbiddenState surface="panel" /> : <NErrorState surface="panel" />)
         : isRolesLoading ? <div className="flex justify-center p-12"><Loader2 className="size-6 animate-spin" aria-label={t('common.loading')} /></div>
-        : !allRoles.length ? <NEmptyState surface="panel" icon={Shield} title={t('emptyStates.roles.title')} action={<Button onClick={add}><Plus className="size-4" />{t('roles.dialogs.createButton')}</Button>} />
+        : !allRoles.length ? <NEmptyState surface="panel" icon={FEATURE_ICONS.roles} title={t('emptyStates.roles.title')} action={<Button onClick={add}><Plus className="size-4" />{t('roles.dialogs.createButton')}</Button>} />
         : <div className={cn('grid min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-lg bg-background lg:grid-cols-[210px_minmax(0,1fr)] lg:grid-rows-1', surfaceBorderClasses())}>
           <aside className="flex min-h-0 flex-col border-solid border-border border-b-[length:var(--border-width)] bg-muted/20 lg:border-b-0 lg:border-e-[length:var(--border-width)]">
             <nav aria-label={t('navigation.roles')} className="flex max-h-40 flex-wrap gap-1 overflow-y-auto px-2 pt-3 pb-2 lg:max-h-none lg:flex-1 lg:flex-col lg:flex-nowrap">

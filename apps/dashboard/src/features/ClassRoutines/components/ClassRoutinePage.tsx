@@ -1,9 +1,11 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+
 import { useEffect, useMemo, useState } from 'react';
-import { BookOpen, CalendarClock, Clock3, Plus, Printer, Settings, Trash2, UserRound } from 'lucide-react';
+import { BookOpen, Clock3, Plus, Printer, Settings, Trash2, UserRound } from 'lucide-react';
 import { toast } from 'sonner';
-import { ComboboxInput, NajmScroll, NButton, NFilterBar, NPageHeader, NPageHeaderActions, NSheet, NSkeleton, SelectInput } from 'najm-kit';
+import { ComboboxInput, NajmScroll, NButton, NEmptyState, NFilterBar, NPageHeader, NPageHeaderActions, NSheet, NSkeleton, SelectInput } from 'najm-kit';
 import { useAuth } from 'najm-auth/client/react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
@@ -254,7 +256,7 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
   return (
     <div className="flex h-full min-h-0 min-w-0 w-full flex-1 flex-col gap-3 overflow-hidden">
       <NPageHeader
-        icon={CalendarClock}
+        icon={FEATURE_ICONS.classRoutines}
         title={t('classRoutines.ui.title')}
         subtitle={t('classRoutines.ui.subtitle')}
         className="shrink-0"
@@ -332,10 +334,8 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
           <NButton variant="outline" className="mt-3" onClick={() => refetchSchedules()}>{t('classRoutines.ui.actions.retry')}</NButton>
         </div>
       ) : allClasses && !visibleClasses.length ? (
-        <div className="grid flex-1 place-content-center rounded-xl border border-dashed p-6 text-center">
-          <h2 className="font-semibold">{t('classRoutines.ui.classSelection.emptyTitle')}</h2>
-          <p className="mt-1 text-sm text-muted-foreground">{t('classRoutines.ui.classSelection.emptyDescription')}</p>
-        </div>
+        <NEmptyState surface="panel" icon={FEATURE_ICONS.classRoutines} className="flex-1"
+          title={t('classRoutines.ui.classSelection.emptyTitle')} description={t('classRoutines.ui.classSelection.emptyDescription')} />
       ) : allClasses && sectionRows.length ? (
         <NajmScroll axis="y" autoHide="scroll" className="min-h-0 flex-1" key="all-classes">
           <div className="flex min-w-0 flex-col gap-8 pb-6 pe-1">
@@ -370,7 +370,7 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
                     />
                   ) : summary ? <ClassRoutineSkeleton /> : (
                     <div className="rounded-xl border border-dashed bg-card/50 p-6">
-                      <p className="text-sm text-muted-foreground">{t('classRoutines.ui.empty.title')}</p>
+                      <NEmptyState icon={FEATURE_ICONS.classRoutines} title={t('classRoutines.ui.empty.title')} />
                       {canCreate && <NButton size="sm" className="mt-3" disabled={mutations.createSchedule.isPending} onClick={() => createRoutine(row.sectionId)} leftIcon={<Plus className="h-4 w-4" />}>{t('classRoutines.ui.actions.createRoutine')}</NButton>}
                     </div>
                   )}
@@ -398,7 +398,7 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
           <div className="grid min-h-full place-items-center p-6 text-center sm:p-10">
             <div>
               <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-primary/10 text-primary">
-                <CalendarClock className="h-7 w-7" />
+                <FEATURE_ICONS.classRoutines className="h-7 w-7" />
               </div>
               <h2 className="mt-4 text-lg font-semibold">{t('classRoutines.ui.empty.title')}</h2>
               <p className="mt-1 max-w-md text-sm text-muted-foreground">{t('classRoutines.ui.empty.description')}</p>

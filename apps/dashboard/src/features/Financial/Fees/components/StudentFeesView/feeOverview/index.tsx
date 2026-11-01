@@ -15,7 +15,7 @@ import EditFeeForm from '../../EditFeeForm';
 import { OccasionalChargeButton } from '../../OccasionalChargeButton';
 import { useFeeTypes } from '../../../../FeeTypes/hooks/useFeeTypes';
 import InstallmentsTable from '@/features/Financial/Installment/components/InstallmentsTable';
-import { CreditCard, Pencil, Trash2, SearchX } from 'lucide-react';
+import { CreditCard, Pencil, Trash2 } from 'lucide-react';
 
 const getFeeBalance = (fee: any) => {
   const explicitBalance = Number(fee?.balance ?? fee?.totalDue ?? fee?.dueAmount);
@@ -160,7 +160,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.fees}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

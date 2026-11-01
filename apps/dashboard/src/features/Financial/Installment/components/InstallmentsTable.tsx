@@ -1,7 +1,7 @@
 "use client"
 
 import type { ReactNode } from 'react';
-import { Download, Printer, SearchX } from 'lucide-react';
+import { Download, Printer } from 'lucide-react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, NButton, NEmptyState, useResolvedToolbarLabels, useTableStore } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
@@ -105,7 +105,7 @@ function InstallmentsTable({ fee, feeName = '', className = '', onPayInstallment
       renderFilteredEmpty={() => (
         <NEmptyState
           surface="panel"
-          icon={SearchX}
+          icon={FEATURE_ICONS.installments}
           title={t('emptyStates.filtered.title')}
           description={t('emptyStates.filtered.description')}
         />

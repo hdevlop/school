@@ -2,7 +2,7 @@
 
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { CalendarRange, Plus, SearchX } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useAcademicTableActions } from '@/features/Classes/hooks/useAcademicTableActions';
@@ -76,7 +76,7 @@ function CyclesTable() {
   return (
     <div className="flex flex-col gap-2 w-full h-full">
       <NPageHeader
-        icon={CalendarRange}
+        icon={FEATURE_ICONS.cycles}
         title={t('navigation.cycles')}
         subtitle={isCountUnknown(error, orderedCycles, isCyclesLoading) ? undefined : t('cycles.subtitle.count', { count: total })}
       >
@@ -123,7 +123,7 @@ function CyclesTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.cycles}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

@@ -4,7 +4,7 @@ import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { CalendarCheck, SearchX } from 'lucide-react';
+
 import { useCallback, useMemo, useState } from 'react';
 import RosterHeader from './RosterHeader';
 import RosterPrintMenu from './RosterPrintMenu';
@@ -125,7 +125,7 @@ function StaffAttendanceTable() {
   return (
     <div className="flex h-full min-h-0 flex-col gap-2">
       {isRosterLoading ? <RosterPageHeaderSkeleton /> : <NPageHeader
-        icon={CalendarCheck}
+        icon={FEATURE_ICONS.staffAttendance}
         title={t('navigation.staffAttendance')}
         subtitle={isCountUnknown(staffError, staffRows, isStaffLoading || isAttendanceLoading || isStaffRolesLoading) ? undefined : t('attendance.subtitle.staffCount', { count: total })}
       >
@@ -183,7 +183,7 @@ function StaffAttendanceTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.staffAttendance}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

@@ -16,7 +16,7 @@ import { PaymentRecordedPrompt } from './ReceiptPrint/PaymentRecordedPrompt';
 import { usePaymentsTableColumns } from '../hooks/usePaymentsTableColumns';
 import { usePaymentsTableFilters } from '../hooks/usePaymentsTableFilters';
 import { usePrintReceipt } from './ReceiptPrint/usePrintReceipt';
-import { Printer, SearchX } from 'lucide-react';
+import { Printer } from 'lucide-react';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
@@ -211,7 +211,7 @@ function PaymentsTable({studentId}) {
       renderFilteredEmpty={() => (
         <NEmptyState
           surface="panel"
-          icon={SearchX}
+          icon={FEATURE_ICONS.payments}
           title={t('emptyStates.filtered.title')}
           description={t('emptyStates.filtered.description')}
         />

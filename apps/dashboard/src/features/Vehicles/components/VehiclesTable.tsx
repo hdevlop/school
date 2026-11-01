@@ -5,7 +5,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Bus, CalendarX, Eye, Pencil, Plus, SearchX, Trash2, UserRound } from 'lucide-react';
+import { CalendarX, Eye, Pencil, Plus, Trash2, UserRound } from 'lucide-react';
 import React from 'react';
 import VehicleForm from './VehicleForm';
 import AssignDriverForm from '@/features/Drivers/components/AssignDriverForm';
@@ -154,7 +154,7 @@ function VehiclesTable() {
   return (
     <div className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
-        icon={Bus}
+        icon={FEATURE_ICONS.vehicles}
         title={t('navigation.vehicles')}
         subtitle={isCountUnknown(error, vehicles, isVehiclesLoading) ? undefined : t('vehicles.subtitle.count', { count: total })}
       >
@@ -201,7 +201,7 @@ function VehiclesTable() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.vehicles}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

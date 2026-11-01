@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { CalendarCheck, SearchX } from 'lucide-react';
+
 import RosterHeader from './RosterHeader';
 import RosterPrintMenu from './RosterPrintMenu';
 import RosterFilters from './RosterFilters';
@@ -388,7 +388,7 @@ function StudentAttendanceTableForYear() {
   return (
     <div className="flex h-full min-h-0 flex-col gap-2">
       {isRosterLoading ? <RosterPageHeaderSkeleton /> : <NPageHeader
-        icon={CalendarCheck}
+        icon={FEATURE_ICONS.studentAttendance}
         title={t('navigation.studentAttendance')}
         subtitle={isCountUnknown(studentsError, filteredStudents, isStudentsLoading || isSectionsLoading || isClassesLoading) ? undefined : t('attendance.subtitle.studentCount', { count: filteredStudents.length })}
       >
@@ -450,7 +450,7 @@ function StudentAttendanceTableForYear() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.studentAttendance}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />

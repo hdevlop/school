@@ -10,7 +10,7 @@ import { SchoolTable as NTable } from '@/components/SchoolTable';
 import GradesHeader from './GradesHeader';
 import GradeRosterCard from './GradeRosterCard';
 import { useTeacherOverview } from '@/features/Dashboard/hooks/useTeacherDashboard';
-import { ClipboardList, FileText, GraduationCap, SearchX } from 'lucide-react';
+import { ClipboardList, FileText } from 'lucide-react';
 import { useGrades } from '../hooks/useGrades';
 import { useStudentsOnDate } from '@/features/Students/hooks/useStudents';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
@@ -437,7 +437,7 @@ function GradesTableForYear() {
   return (
     <div className='flex flex-col gap-2 w-full h-full min-h-0'>
       <NPageHeader
-        icon={GraduationCap}
+        icon={FEATURE_ICONS.grades}
         title={t('grades.messages.pageTitle')}
         subtitle={isCountUnknown(gradesError ?? studentsError, roster, isGradesLoading || isStudentsLoading) ? undefined : `${t('grades.subtitle.count', { count: stats.total })}${selectedSource ? ` · ${selectedSource.title}` : ''}`}
       >
@@ -519,7 +519,7 @@ function GradesTableForYear() {
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={SearchX}
+            icon={FEATURE_ICONS.grades}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
           />
