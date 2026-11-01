@@ -19,7 +19,7 @@ const SchoolSection: React.FC = () => {
     <>
 
       <SettingsGroup title={t('settings.editor.groups.identity.title')} description={t('settings.editor.groups.identity.description')}>
-        <div className="sm:col-span-2">
+        <div>
           <FormInput
             name="schoolName"
             type="text"
@@ -30,24 +30,7 @@ const SchoolSection: React.FC = () => {
           />
         </div>
 
-        <FormInput
-          name="schoolEmail"
-          type="text"
-          formLabel={t('settings.school.schoolEmail')}
-          icon={Mail}
-          placeholder="contact@school.ma"
-          inputMode="email"
-          required={true}
-        />
-
-        <FormInput
-          name="schoolPhone"
-          type="phone"
-          formLabel={t('settings.school.schoolPhone')}
-          icon={Phone}
-          placeholder="+212600000000"
-          required={true}
-        />
+        <FormInput name="schoolNameAr" type="text" formLabel={t('settings.school.schoolNameAr')} icon={Building2} dir="rtl" lang="ar" />
 
         <div className="sm:col-span-2">
           <FormLocationInput
@@ -62,19 +45,38 @@ const SchoolSection: React.FC = () => {
             onProviderMetaChange={(meta) => setValue('schoolAddressPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
           />
         </div>
-      </SettingsGroup>
-
-      <SettingsGroup title={t('settings.editor.groups.officialIdentity.title')} description={t('settings.editor.groups.officialIdentity.description')}>
-        <div className="sm:col-span-2">
-          <FormInput name="schoolNameAr" type="text" formLabel={t('settings.school.schoolNameAr')} icon={Building2} dir="rtl" lang="ar" />
-        </div>
         <div className="sm:col-span-2">
           <FormInput name="schoolAddressAr" type="text" formLabel={t('settings.school.schoolAddressAr')} icon={MapPin} dir="rtl" lang="ar" />
         </div>
-        {[1, 2, 3].map((number) => (
-          <FormInput key={number} name={`schoolPhones.${number - 1}`} type="text" formLabel={t(`settings.school.officialPhone${number}`)}
+      </SettingsGroup>
+
+      <SettingsGroup title={t('settings.editor.groups.contact.title')} description={t('settings.editor.groups.contact.description')}>
+        <FormInput
+          name="schoolEmail"
+          type="text"
+          formLabel={t('settings.school.schoolEmail')}
+          icon={Mail}
+          placeholder="contact@school.ma"
+          inputMode="email"
+          required={true}
+        />
+
+        <FormInput
+          name="schoolPhone"
+          type="phone"
+          formLabel={t('settings.school.officialPhone1')}
+          icon={Phone}
+          placeholder="+212600000000"
+          required={true}
+        />
+
+        {[2, 3].map((number) => (
+          <FormInput key={number} name={`additionalSchoolPhones.${number - 2}`} type="text" formLabel={t(`settings.school.officialPhone${number}`)}
             icon={Phone} placeholder="0522000000" inputMode="tel" dir="ltr" />
         ))}
+      </SettingsGroup>
+
+      <SettingsGroup title={t('settings.editor.groups.officialIdentity.title')} description={t('settings.editor.groups.officialIdentity.description')}>
         <FormInput name="schoolLicenseNumber" type="text" formLabel={t('settings.school.licenseNumber')} icon={FileBadge} dir="ltr" />
         <FormInput name="schoolLicenseDate" type="date" formLabel={t('settings.school.licenseDate')} icon={CalendarDays} />
       </SettingsGroup>

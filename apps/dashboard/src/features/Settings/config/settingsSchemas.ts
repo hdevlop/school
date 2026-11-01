@@ -72,12 +72,12 @@ export const createSettingsSchemas = (t: T) => {
     schoolLogo: z.string().url(t('validationMessages.mustBeAValidImageUrl')).max(255, t('validationMessages.schoolLogoUrlTooLong')).optional(),
     receiptLanguage: z.enum(RECEIPT_LANGUAGES).default(DEFAULT_RECEIPT_LANGUAGE),
 
-    // Official identity, printed on ministry documents. Empty boxes are saved as
-    // null; local numbers keep their leading 0, unlike the contact phone.
+    // The contact phone above is the first document phone too. Only two
+    // additional inputs are needed; local numbers keep their leading 0.
     schoolNameAr: z.string().trim().max(200, t('validationMessages.schoolNameTooLong')).default(''),
     schoolAddressAr: z.string().trim().max(500, t('validationMessages.schoolAddressTooLong')).default(''),
-    schoolPhones: z.array(z.string().trim().refine((value) => !value || OFFICIAL_PHONE.test(value), t('validationMessages.invalidPhoneNumber')))
-      .max(3, t('validationMessages.atMostThreePhoneNumbers')).default([]),
+    additionalSchoolPhones: z.array(z.string().trim().refine((value) => !value || OFFICIAL_PHONE.test(value), t('validationMessages.invalidPhoneNumber')))
+      .max(2, t('validationMessages.atMostThreePhoneNumbers')).default([]),
     schoolLicenseNumber: z.string().trim().max(50, t('validationMessages.licenseNumberTooLong')).default(''),
     schoolLicenseDate: z.string().refine((value) => !value || /^\d{4}-\d{2}-\d{2}$/.test(value), t('validationMessages.dateMustBeInYyyyMmDdFormat')).default(''),
 

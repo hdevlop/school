@@ -136,9 +136,10 @@ describe('schoolSetupSchema', () => {
 
 describe('settingsSchema official identity', () => {
   it('starts empty, keeps local phone numbers and refuses a malformed license date', () => {
-    expect(settingsSchema.parse(minimal)).toMatchObject({ schoolNameAr: '', schoolPhones: [], schoolLicenseNumber: '', schoolLicenseDate: '' });
-    expect(settingsSchema.parse({ ...minimal, schoolPhones: ['0522750085', '', ''] }).schoolPhones).toEqual(['0522750085', '', '']);
-    expect(settingsSchema.safeParse({ ...minimal, schoolPhones: ['call us'] }).success).toBe(false);
+    expect(settingsSchema.parse(minimal)).toMatchObject({ schoolNameAr: '', additionalSchoolPhones: [], schoolLicenseNumber: '', schoolLicenseDate: '' });
+    expect(settingsSchema.parse({ ...minimal, additionalSchoolPhones: ['0522750085', ''] }).additionalSchoolPhones).toEqual(['0522750085', '']);
+    expect(settingsSchema.safeParse({ ...minimal, additionalSchoolPhones: ['call us'] }).success).toBe(false);
+    expect(settingsSchema.safeParse({ ...minimal, additionalSchoolPhones: ['0522750085', '0808524592', '0668095157'] }).success).toBe(false);
     expect(settingsSchema.safeParse({ ...minimal, schoolLicenseDate: '19/10/2015' }).success).toBe(false);
   });
 });

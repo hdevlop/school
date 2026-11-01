@@ -4285,7 +4285,11 @@
       "groups": {
         "identity": {
           "title": "Identidad del centro",
-          "description": "Nombre, dirección y cómo contactan las familias con el centro."
+          "description": "Nombres y direcciones del centro en ambos idiomas."
+        },
+        "contact": {
+          "title": "Contacto",
+          "description": "Correo y hasta tres números. El teléfono 1 es el contacto principal."
         },
         "schoolDay": {
           "title": "Jornada escolar",
@@ -4331,8 +4335,8 @@
           "description": "Elija los días lectivos de todas las secciones del año académico activo. Mueva las clases y las supervisiones antes de quitar un día. Los horarios históricos conservan sus días."
         },
         "officialIdentity": {
-          "title": "Documentos oficiales",
-          "description": "Se imprime en los documentos del ministerio, como la lista del seguro."
+          "title": "Licencia del centro",
+          "description": "Datos de la licencia impresos en los documentos oficiales."
         }
       },
       "generalTab": "Sistema",

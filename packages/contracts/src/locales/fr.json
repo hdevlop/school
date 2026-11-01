@@ -1266,7 +1266,11 @@
       "groups": {
         "identity": {
           "title": "Identité de l’établissement",
-          "description": "Nom, adresse et moyens de contact pour les familles."
+          "description": "Noms et adresses de l’établissement dans les deux langues."
+        },
+        "contact": {
+          "title": "Contact",
+          "description": "E-mail et jusqu’à trois numéros. Le téléphone 1 est le contact principal."
         },
         "schoolDay": {
           "title": "Journée scolaire",
@@ -1312,8 +1316,8 @@
           "description": "Choisissez les jours de cours de toutes les sections de l’année scolaire active. Déplacez les cours et les surveillances avant de retirer un jour. Les emplois du temps historiques conservent leurs jours."
         },
         "officialIdentity": {
-          "title": "Documents officiels",
-          "description": "Imprimé sur les documents du ministère, comme la liste d’assurance."
+          "title": "Autorisation de l’établissement",
+          "description": "Références de l’autorisation imprimées sur les documents officiels."
         }
       },
       "generalTab": "Système",

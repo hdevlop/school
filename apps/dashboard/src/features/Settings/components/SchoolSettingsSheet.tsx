@@ -21,6 +21,7 @@ import SecuritySection from './sections/SecuritySection';
 import NotificationSection from './sections/NotificationSection';
 import BackupSection from './sections/BackupSection';
 import { createSettingsSchemas } from '../config/settingsSchemas';
+import { schoolContactPhoneDefaults, schoolContactPhones } from '../config/schoolContactPhones';
 import { useAdminSettings } from '../hooks/useSettings';
 
 const SETTINGS_FORM_ID = 'settings-form';
@@ -46,12 +47,11 @@ function settingsFormDefaults(settings: AdminSettings) {
       longitude: settings?.schoolAddressLongitude,
     }),
     schoolAddressPlaceId: settings?.schoolAddressPlaceId || null,
-    schoolPhone: settings?.schoolPhone || '',
+    ...schoolContactPhoneDefaults(settings),
     schoolEmail: settings?.schoolEmail || '',
     receiptLanguage: settings?.receiptLanguage ?? DEFAULT_RECEIPT_LANGUAGE,
     schoolNameAr: settings?.schoolNameAr ?? '',
     schoolAddressAr: settings?.schoolAddressAr ?? '',
-    schoolPhones: [0, 1, 2].map((index) => settings?.schoolPhones?.[index] ?? ''),
     schoolLicenseNumber: settings?.schoolLicenseNumber ?? '',
     schoolLicenseDate: settings?.schoolLicenseDate ?? '',
     attendanceRequirement: Number(settings?.attendanceRequirement ?? 75),
@@ -225,7 +225,7 @@ export function SchoolSettingsSheet({ open, onOpenChange, onLeave }: {
   const handleSubmit = async (data: SettingsFormDefaults) => {
     if (!can('update:settings')) return;
     setSaveFailed(false);
-    const { schoolLocation, schoolNameAr, schoolAddressAr, schoolPhones, schoolLicenseNumber, schoolLicenseDate, ...fields } = data;
+    const { schoolLocation, schoolNameAr, schoolAddressAr, additionalSchoolPhones, schoolLicenseNumber, schoolLicenseDate, ...fields } = data;
     try {
       await updateSettings({
         ...fields,
@@ -234,7 +234,7 @@ export function SchoolSettingsSheet({ open, onOpenChange, onLeave }: {
         schoolAddressLongitude: schoolLocation.longitude ?? null,
         schoolNameAr: schoolNameAr.trim() || null,
         schoolAddressAr: schoolAddressAr.trim() || null,
-        schoolPhones: schoolPhones.map((phone) => phone.trim()).filter(Boolean),
+        schoolPhones: schoolContactPhones(fields.schoolPhone, additionalSchoolPhones),
         schoolLicenseNumber: schoolLicenseNumber.trim() || null,
         schoolLicenseDate: schoolLicenseDate || null,
       });

@@ -1317,7 +1317,11 @@
       "groups": {
         "identity": {
           "title": "School identity",
-          "description": "Name, address and how families reach the school."
+          "description": "School names and addresses in both languages."
+        },
+        "contact": {
+          "title": "Contact",
+          "description": "Email and up to three phone numbers. Phone 1 is the main contact."
         },
         "schoolDay": {
           "title": "School day",
@@ -1363,8 +1367,8 @@
           "description": "Choose the teaching days for all sections in the active academic year. Existing lessons and supervision must be moved before removing a day. Historical timetables keep their days."
         },
         "officialIdentity": {
-          "title": "Official documents",
-          "description": "Printed on ministry documents such as the insurance register."
+          "title": "School license",
+          "description": "License details printed on official documents."
         }
       },
       "generalTab": "System",
