@@ -13,7 +13,7 @@ const help = `School seed commands:
   bun seed demo --year=2025-2026 --resume-from=announcements  Resume after Payroll
   bun seed history         Seed the last 3 years up to today; the same students move up each year
   bun seed history --years=4  Seed a longer history
-  bun seed academic        Add the default classes, sections A-C, subjects and fee types for a year
+  bun seed academic        Add the default classes, sections A-B, subjects and fee types for a year
   bun seed academic --year=2026-2027 --levels=maternelle,primaire,college  Without a prompt
   bun seed reset-demo      Delete school data; cycles, classes, sections, subjects and fee types stay
   bun seed reset-all       Delete school data including cycles, classes, sections, subjects and fee types

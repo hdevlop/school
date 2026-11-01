@@ -29,6 +29,15 @@ describe('fixtures', () => {
     expect(feeTypeData).toBe(feeTypesJson);
   });
 
+  it('provides exactly sections A and B for every default class', () => {
+    expect(sectionsData).toHaveLength(classesData.length * 2);
+    for (const schoolClass of classesData) {
+      expect(sectionsData.filter(section => section.classId === schoolClass.id).map(section => section.name)).toEqual(['A', 'B']);
+    }
+    expect(new Set(sectionsData.map(section => section.id)).size).toBe(sectionsData.length);
+    expect(sectionsData.map(section => Number(section.roomNumber))).toEqual(Array.from({ length: 30 }, (_, index) => index + 1));
+  });
+
   it('draws exam and assessment context from reference data, leaving the teacher to the caller', () => {
     const classIds = new Set(classesData.map((entry) => entry.id));
     const subjectIds = new Set(subjectsData.map((entry) => entry.id));

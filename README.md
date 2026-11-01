@@ -123,7 +123,7 @@ and `bun seed reset-all`. Use `bun run gen:demo:ui` for the
 previous demo generator shortcut.
 
 Choose **Seed default data** to initialize school settings and add the default
-classes, sections A-C, subjects and fee types. It asks only for the school
+classes, sections A-B, subjects and fee types. It asks only for the school
 levels, preserves existing settings and records, and adds no demo people.
 Subjects and fee types belong to the whole school. Every registered academic
 year gets the same default classes and sections; the school then changes each

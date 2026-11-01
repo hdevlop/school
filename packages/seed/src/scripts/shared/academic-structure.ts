@@ -21,7 +21,7 @@ export function parseAcademicLevels(args = process.argv.slice(2)): string[] {
 }
 
 /**
- * The default classes, their A/B/C sections and the subjects, with generated
+ * The default classes, their A/B sections and the subjects, with generated
  * ids and sequential room numbers starting at 1 for the selected sections.
  * Sections name their class, which is matched by name in the year, so a
  * class the school already has keeps its id and gains only missing sections.

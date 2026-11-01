@@ -6,7 +6,7 @@ describe('academic structure seed', () => {
     expect(ACADEMIC_LEVELS).toEqual(['Maternelle', 'Primaire', 'Collège', 'Lycée']);
   });
 
-  it('seeds every class with sections A, B and C in the chosen year', () => {
+  it('seeds every class with only sections A and B in the chosen year', () => {
     const structure = academicStructure('2026-2027');
     expect(structure.classes.map((schoolClass) => schoolClass.name)).toEqual([
       'PS', 'MS', 'GS', 'CP', 'CE1', 'CE2', 'CM1', 'CM2', 'CE6', '1AC', '2AC', '3AC', 'TC', '1BAC', '2BAC',
@@ -14,7 +14,7 @@ describe('academic structure seed', () => {
     expect(structure.classes.every((schoolClass) => schoolClass.academicYear === '2026-2027')).toBe(true);
     for (const { name } of structure.classes) {
       expect(structure.sections.filter((section) => section.className === name).map((section) => section.name))
-        .toEqual(['A', 'B', 'C']);
+        .toEqual(['A', 'B']);
     }
     expect(structure.subjects.length).toBeGreaterThan(0);
   });
@@ -23,9 +23,9 @@ describe('academic structure seed', () => {
     const { classes, sections } = academicStructure('2026-2027');
     expect(classes.some((schoolClass) => 'id' in schoolClass)).toBe(false);
     expect(sections.some((section) => 'id' in section)).toBe(false);
-    expect(sections.map((section) => section.roomNumber)).toEqual(Array.from({ length: 45 }, (_, index) => index + 1));
+    expect(sections.map((section) => section.roomNumber)).toEqual(Array.from({ length: 30 }, (_, index) => index + 1));
     const primary = academicStructure('2026-2027', ['Primaire']);
-    expect(primary.sections.map((section) => section.roomNumber)).toEqual(Array.from({ length: 18 }, (_, index) => index + 1));
+    expect(primary.sections.map((section) => section.roomNumber)).toEqual(Array.from({ length: 12 }, (_, index) => index + 1));
   });
 
   it('keeps only the chosen cycles and their sections', () => {
