@@ -183,6 +183,7 @@ function PaymentsTable({studentId}) {
 
   return (
     <NTable
+      exportTitle={feeYear ? `${t('fees.card.payments')} ${feeYear}` : t('fees.card.payments')}
         permissionResource="payments"
       deletePermission="update:payments"
       data={data || []}

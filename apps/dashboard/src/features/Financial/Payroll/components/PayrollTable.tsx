@@ -354,6 +354,7 @@ const PayrollTable = () => {
       )}
 
       <NTable
+        exportTitle={t('navigation.payroll')}
         permissionResource="payroll"
         classNames={{
           content: '[&_table]:min-w-[900px]',

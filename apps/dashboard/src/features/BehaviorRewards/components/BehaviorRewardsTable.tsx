@@ -105,6 +105,7 @@ const BehaviorRewardsTable = () => {
       </NPageHeader>
 
       <NTable
+        exportTitle={t('navigation.behaviorRewards')}
         permissionResource="behavior-rewards"
         responsiveSkeleton
         className="min-h-0 flex-1"

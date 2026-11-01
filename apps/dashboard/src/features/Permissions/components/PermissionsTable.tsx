@@ -107,6 +107,7 @@ function PermissionsTable() {
       </NPageHeader>
 
       <NTable
+        exportTitle={tf('navigation.permissions', 'Permissions')}
         permissionResource="permissions"
         data={permissions}
         columns={columns}

@@ -3,6 +3,7 @@ import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { createSectionSchema } from '../config/sectionSchemas';
 import { academicLevelLabel, compareAcademicLevels } from '@sms/contracts';
+import { exportStatus } from '@/shared/tableExport';
 
 export const useSectionsTableColumns = () => {
   const { t, language } = useTranslation();
@@ -124,6 +125,7 @@ export const useSectionsTableColumns = () => {
     },
     {
       accessorKey: "status",
+      meta: { exportValue: exportStatus(t) },
       header: t('sections.table.status'),
       enableSorting: true,
       enableColumnFilter: true,

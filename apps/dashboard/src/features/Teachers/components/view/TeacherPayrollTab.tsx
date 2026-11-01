@@ -9,6 +9,7 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { getPayrollByStaffApi } from '@/services/payrollApi';
 import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { exportStatus } from '@/shared/tableExport';
 
 interface TeacherPayrollTabProps {
   teacher: any;
@@ -73,6 +74,7 @@ const TeacherPayrollTab: React.FC<TeacherPayrollTabProps> = ({ teacher, today })
     },
     {
       accessorKey: 'status',
+      meta: { exportValue: exportStatus(t) },
       header: t('teachers.profile.table.status'),
       enableSorting: true,
       cell: ({ getValue }) => <NBadge status={getValue() as string} />,
@@ -125,6 +127,7 @@ const TeacherPayrollTab: React.FC<TeacherPayrollTabProps> = ({ teacher, today })
 
       <NCard title={t('dashboard.teacher.payroll.history')} icon={ReceiptText} className="lg:flex-1">
         <NTable
+          exportTitle={[teacher?.name, t('navigation.payroll')].filter(Boolean).join(' - ')}
           data={payslips}
           columns={columns}
           renderCard={renderSlipCard}

@@ -215,6 +215,7 @@ const FeeInstallmentsTable = ({
             <p className="py-1.5 text-center text-xs text-muted-foreground">{t('installments.nothingDue')}</p>
          ) : (
             <NTable
+              showExportButton={false} showPrintButton={false}
                data={visibleRows}
                columns={columns}
                defaultMode="table"

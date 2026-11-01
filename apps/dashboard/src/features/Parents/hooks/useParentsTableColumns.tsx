@@ -3,6 +3,7 @@ import { NAvatar, NBadge, SimpleTooltip } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { avatarVersion } from '@/lib/avatarVersion';
 
+import { exportLabel } from '@/shared/tableExport';
 export const useParentsTableColumns = () => {
   const { t } = useTranslation();
   const orphanMessage = t('parents.tooltips.orphaned');
@@ -54,6 +55,7 @@ export const useParentsTableColumns = () => {
     },
     {
       accessorKey: "relationshipType",
+      meta: { exportValue: exportLabel(code => t(`parents.relationships.${code}`)) },
       header: t('parents.table.relationship'),
       enableSorting: true,
       enableColumnFilter: true,

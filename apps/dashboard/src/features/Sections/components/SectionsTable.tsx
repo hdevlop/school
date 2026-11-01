@@ -102,6 +102,7 @@ function SectionsTable() {
       </NPageHeader>
 
       <NTable
+        exportTitle={t('navigation.sections')}
         permissionResource="sections"
         responsiveSkeleton
         className='min-h-0 flex-1'

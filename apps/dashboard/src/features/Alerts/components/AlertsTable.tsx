@@ -82,6 +82,7 @@ export default function AlertsTable() {
       </NPageHeader>
 
       <NTable
+        exportTitle={t('alerts.page.title')}
         permissionResource="alerts"
         responsiveSkeleton
         className="min-h-0 flex-1"

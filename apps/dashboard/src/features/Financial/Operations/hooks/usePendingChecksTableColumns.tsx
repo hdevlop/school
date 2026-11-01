@@ -6,6 +6,7 @@ import { useSchoolFormat, useSchoolToday } from '@/hooks/useSchoolFormat';
 import { CHECK_STATUS_COLOR, nextCheckStep } from '../config/checkStatus';
 import { checkStudentInitials } from '../config/checkStudentInitials';
 
+import { exportLabel } from '@/shared/tableExport';
 type Options = {
   busyId: string | null;
   /** A bulk run is moving the selected checks; no single check may move meanwhile. */
@@ -79,6 +80,7 @@ export const usePendingChecksTableColumns = ({ busyId, disabled = false, onAdvan
     },
     {
       accessorKey: 'status',
+      meta: { exportValue: exportLabel(code => t(`financialOperations.checkStatuses.${code}`)) },
       header: t('payments.table.status'),
       enableSorting: true,
       enableColumnFilter: true,

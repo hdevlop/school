@@ -35,6 +35,7 @@ function InstallmentsTable({ fee, feeName = '', className = '', onPayInstallment
 
   return (
     <NTable
+      exportTitle={[feeName, t('fees.card.installments')].filter(Boolean).join(' - ')}
       className={className}
       data={fee}
       columns={columns}

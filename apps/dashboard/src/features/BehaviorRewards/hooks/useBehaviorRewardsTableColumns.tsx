@@ -9,6 +9,7 @@ import {
 } from '../behaviorRewardConstants';
 import { avatarVersion } from '@/lib/avatarVersion';
 
+import { exportLabel } from '@/shared/tableExport';
 export const useBehaviorRewardsTableColumns = () => {
   const { t } = useTranslation();
   const { displayDateTime } = useSchoolFormat();
@@ -16,6 +17,8 @@ export const useBehaviorRewardsTableColumns = () => {
   return useMemo(() => [
     {
       accessorKey: 'searchText',
+      // The column filters on a search string but shows, and exports, the student.
+      meta: { exportValue: (_search: unknown, row: { student?: { name?: string } }) => row.student?.name ?? '' },
       header: t('behaviorRewards.table.student'),
       enableSorting: false,
       cell: ({ row }) => {
@@ -44,6 +47,7 @@ export const useBehaviorRewardsTableColumns = () => {
     },
     {
       accessorKey: 'category',
+      meta: { exportValue: exportLabel(code => t(`behaviorRewards.categories.${code}`)) },
       header: t('behaviorRewards.table.positiveBehavior'),
       cell: ({ row }) => (
         <div className="max-w-72 space-y-1.5">
@@ -56,6 +60,7 @@ export const useBehaviorRewardsTableColumns = () => {
     },
     {
       accessorKey: 'recognitionLevel',
+      meta: { exportValue: exportLabel(code => t(`behaviorRewards.recognitionLevels.${code}`)) },
       header: t('behaviorRewards.table.recognition'),
       cell: ({ getValue }) => {
         const value = getValue() as string;
@@ -64,6 +69,7 @@ export const useBehaviorRewardsTableColumns = () => {
     },
     {
       accessorKey: 'rewardType',
+      meta: { exportValue: exportLabel(code => t(`behaviorRewards.rewardTypes.${code}`)) },
       header: t('behaviorRewards.table.reward'),
       cell: ({ getValue }) => {
         const value = getValue() as string;

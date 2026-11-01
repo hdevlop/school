@@ -415,6 +415,7 @@ function StudentAttendanceTableForYear() {
       </RosterFilters>
 
       <NTable<any>
+        showExportButton={false} showPrintButton={false}
         responsiveSkeleton
         data={visibleStudents}
         isFilteredEmpty={filteredStudents.length > 0 && visibleStudents.length === 0}

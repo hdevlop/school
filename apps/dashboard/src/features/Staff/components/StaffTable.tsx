@@ -25,6 +25,7 @@ import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
 import { avatarVersion } from '@/lib/avatarVersion';
 
 const calculateStaffPay = (row) => {
+import { exportLabel } from '@/shared/tableExport';
   if (row?.compensationMode === 'hourly') {
     return Number(row?.hourlyRate || 0) * Number(row?.workloadHours || 0);
   }
@@ -245,6 +246,7 @@ const StaffTable = () => {
     {
       accessorKey: 'compensationMode',
       header: t('staff.table.compensationMode'),
+      meta: { exportValue: exportLabel(code => t(`staff.compensationModes.${code}`)) },
       enableSorting: true,
       cell: ({ getValue }) => t(`staff.compensationModes.${getValue() || 'monthly'}`),
     },
@@ -278,6 +280,7 @@ const StaffTable = () => {
     {
       accessorKey: 'status',
       header: t('staff.table.status'),
+      meta: { exportValue: exportLabel(code => t(`staff.status.${code}`)) },
       enableSorting: true,
       cell: ({ getValue }) => {
         const status = getValue() as string;

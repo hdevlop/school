@@ -164,6 +164,7 @@ function VehiclesTable() {
       </NPageHeader>
 
       <NTable
+        exportTitle={t('navigation.vehicles')}
         permissionResource="vehicles"
         data={vehicles}
         columns={columns}

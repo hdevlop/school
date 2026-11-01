@@ -5,7 +5,7 @@ import { NButton, NTable, useTableStore, type NTableProps } from 'najm-kit';
 import { Eye, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import type { ColumnDef } from '@tanstack/react-table';
-import { withOfficialClassExports } from '@/shared/tableExport';
+import { withSchoolExports } from '@/shared/tableExport';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { canPerformAction, permissionMenuItem, protectMenuItems } from '@/shared/actionPermissions';
 
@@ -33,7 +33,7 @@ function DeleteSelection({ onDelete, loading, disabled }: { onDelete: (ids: stri
   );
 }
 
-/** School's permissions and class-code export policy; exporting, printing and import remain Najm's. */
+/** School's permissions and export policy; exporting, printing and import remain Najm's. */
 export function SchoolTable<T = any>({
   classNameColumns,
   showDeleteSelection = true,
@@ -74,11 +74,15 @@ export function SchoolTable<T = any>({
     background: menu.background ? () => protectMenuItems(viewer, menu.background!()) : undefined,
     header: menu.header ? () => protectMenuItems(viewer, menu.header!()) : undefined,
   } : defaultMenu;
-  const columns = useMemo(() => withOfficialClassExports(props.columns, classNameColumns), [props.columns, classNameColumns]);
+  const columns = useMemo(() => withSchoolExports(props.columns, classNameColumns), [props.columns, classNameColumns]);
   return (
     <NTable
       {...props}
       columns={columns}
+      // Every list exports (Excel, CSV) and prints from the settings menu; import stays opt-in.
+      showExportButton={props.showExportButton ?? true}
+      showPrintButton={props.showPrintButton ?? true}
+      toolbarActionDisplay={props.toolbarActionDisplay ?? 'settings'}
       onCreate={canCreate ? props.onCreate : undefined}
       showAddButton={blockedCreate ? false : props.showAddButton}
       onEdit={canUpdate ? props.onEdit : undefined}

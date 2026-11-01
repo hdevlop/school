@@ -155,6 +155,7 @@ const TeacherDetailsTab: React.FC<TeacherDetailsTabProps> = ({ teacher, classes,
 
       <NCard title={t('teachers.profile.teachingAssignments')} icon={UsersRound} className="lg:flex-1">
         <NTable
+          exportTitle={[teacher?.name, t('navigation.classes')].filter(Boolean).join(' - ')}
           data={rows}
           columns={columns}
           renderCard={AssignmentCard}

@@ -134,6 +134,7 @@ export default function AttendanceTab({ studentId, student }: { studentId?: stri
       </div>
 
       <NTable
+        exportTitle={[student?.name, t('students.profile.tabs.attendance')].filter(Boolean).join(' - ')}
         data={visibleRows}
         columns={columns}
         loading={isLoading}

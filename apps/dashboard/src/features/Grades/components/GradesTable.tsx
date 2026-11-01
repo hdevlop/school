@@ -470,6 +470,7 @@ function GradesTableForYear() {
       </NPageHeader>
 
       <NTable
+        exportTitle={t('grades.messages.pageTitle')}
         className='min-h-0 flex-1'
         data={roster}
         columns={columns}

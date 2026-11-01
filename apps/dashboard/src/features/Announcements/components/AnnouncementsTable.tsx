@@ -138,6 +138,7 @@ function AnnouncementsTable() {
       </NPageHeader>
 
       <NTable
+        exportTitle={t('navigation.announcements')}
         permissionResource="announcements"
         responsiveSkeleton
         className='min-h-0 flex-1'

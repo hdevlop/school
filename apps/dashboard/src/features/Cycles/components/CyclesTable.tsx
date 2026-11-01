@@ -86,6 +86,7 @@ function CyclesTable() {
       </NPageHeader>
 
       <NTable
+        exportTitle={t('navigation.cycles')}
         permissionResource="cycles"
         responsiveSkeleton
         data={orderedCycles}

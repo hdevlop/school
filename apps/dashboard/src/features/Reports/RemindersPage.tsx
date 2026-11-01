@@ -196,6 +196,7 @@ const RemindersPage: React.FC = () => {
         {t('reports.reminders.toastSmsComingSoon')}
       </p>
       <NTable
+        exportTitle={viewingYear ? `${t('reports.reminders.title')} ${viewingYear}` : t('reports.reminders.title')}
         data={filtered}
         columns={columns}
         filters={filters}

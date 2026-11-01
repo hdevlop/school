@@ -22,7 +22,7 @@ const fmtGpa = (value?: number | null) => (value == null ? '-' : Number(value).t
 const gradePercentage = (marks: number | null | undefined, total: number | null | undefined) =>
   marks == null || !total ? null : Number(marks) / Number(total) * 100;
 
-export default function GradesTab({ studentId }: { studentId?: string }) {
+export default function GradesTab({ studentId, student }: { studentId?: string; student?: { name?: string } }) {
   const { t } = useTranslation();
   // Parents and students read the report; staff correct marks in place.
   const { isFamily, can } = useViewerRole();
@@ -203,6 +203,7 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
       </div>
 
       <NTable
+        exportTitle={[student?.name, t('students.profile.tabs.grades')].filter(Boolean).join(' - ')}
         className="min-h-0 flex-1"
         data={rows}
         getRowId={(grade: any) => grade.id}

@@ -3,6 +3,7 @@ import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
+import { exportLabel } from '@/shared/tableExport';
 export const usePaymentsTableColumns = (feeYear?: string) => {
 
   const { displayDateOnly, majorMoney } = useSchoolFormat();
@@ -54,6 +55,7 @@ export const usePaymentsTableColumns = (feeYear?: string) => {
     },
     {
       accessorKey: "paymentMethod",
+      meta: { exportValue: exportLabel(code => t(`payments.methods.${code}`)) },
       header: t('payments.table.paymentMethod'),
       enableSorting: true,
       enableColumnFilter: true,

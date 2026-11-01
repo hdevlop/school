@@ -93,6 +93,7 @@ function SubjectsTable() {
       </NPageHeader>
 
       <NTable
+        exportTitle={t('navigation.subjects')}
         permissionResource="subjects"
         responsiveSkeleton
         data={subjects}

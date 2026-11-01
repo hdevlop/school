@@ -128,6 +128,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-hidden max-lg:flex-none max-lg:overflow-visible">
       <NTable
+        showExportButton={false} showPrintButton={false}
         permissionResource="fees"
         data={fees}
         columns={[]}

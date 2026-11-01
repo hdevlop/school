@@ -109,6 +109,7 @@ function ExamsTable() {
       </NPageHeader>
 
       <NTable
+        exportTitle={t('navigation.exams')}
         permissionResource="exams"
         responsiveSkeleton
         className='min-h-0 flex-1'

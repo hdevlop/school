@@ -4,6 +4,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { EXAM_STATUS_COLORS, EXAM_TYPE_COLORS } from '../examBadgeColors';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
+import { exportLabel } from '@/shared/tableExport';
 const formatDuration = (mins) => {
   if (mins == null) return '—';
   const m = Number(mins);
@@ -30,6 +31,7 @@ export const useExamsTableColumns = () => {
     },
     {
       accessorKey: 'type',
+      meta: { exportValue: exportLabel(code => t(`exams.type.${code}`)) },
       header: t('exams.table.type'),
       enableSorting: true,
       cell: ({ getValue }) => {
@@ -109,6 +111,7 @@ export const useExamsTableColumns = () => {
     },
     {
       accessorKey: 'status',
+      meta: { exportValue: exportLabel(code => t(`exams.status.${code}`)) },
       header: t('exams.table.status'),
       enableSorting: true,
       enableColumnFilter: true,

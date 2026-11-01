@@ -4,6 +4,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { getCategoryClass } from '../lib/expenseCategoryStyles';
 
+import { exportLabel } from '@/shared/tableExport';
 export const useExpensesTableColumns = () => {
   const { t } = useTranslation();
   const { majorMoney, displayDateOnly } = useSchoolFormat();
@@ -11,6 +12,7 @@ export const useExpensesTableColumns = () => {
   return useMemo(() => [
     {
       accessorKey: "category",
+      meta: { exportValue: exportLabel(code => t(`expenses.categories.${code}`)) },
       header: t('expenses.table.category'),
       enableSorting: true,
       cell: ({ getValue }) => {
@@ -56,6 +58,7 @@ export const useExpensesTableColumns = () => {
     },
     {
       accessorKey: "paymentMethod",
+      meta: { exportValue: exportLabel(code => t(`expenses.paymentMethods.${code}`)) },
       header: t('expenses.table.paymentMethod'),
       enableSorting: true,
       cell: ({ getValue }) => {

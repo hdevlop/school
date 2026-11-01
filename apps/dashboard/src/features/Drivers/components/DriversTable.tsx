@@ -122,6 +122,7 @@ function DriversTable() {
       </NPageHeader>
 
       <NTable
+        exportTitle={t('navigation.drivers')}
         permissionResource="drivers"
         data={drivers}
         columns={columns}

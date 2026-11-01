@@ -36,6 +36,7 @@ export const useCyclesTableColumns = () => {
     },
     {
       accessorKey: 'active',
+      meta: { exportValue: (active: unknown) => t(active ? 'status.active' : 'status.inactive') },
       header: t('cycles.table.status'),
       enableSorting: true,
       cell: ({ getValue }) => (

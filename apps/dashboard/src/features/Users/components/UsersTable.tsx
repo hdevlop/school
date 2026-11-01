@@ -137,6 +137,7 @@ function UsersTable() {
       </NPageHeader>
 
       <NTable
+        exportTitle={t('navigation.users')}
         permissionResource="users"
         data={users}
         columns={columns}

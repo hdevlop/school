@@ -4,6 +4,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { AUDIENCE_COLORS, STATUS_COLORS } from '../announcementDisplay';
 
+import { exportLabel } from '@/shared/tableExport';
 export const useAnnouncementsTableColumns = () => {
   const { t } = useTranslation();
   const { displayDateOnly } = useSchoolFormat();
@@ -32,6 +33,7 @@ export const useAnnouncementsTableColumns = () => {
     },
     {
       accessorKey: 'targetAudience',
+      meta: { exportValue: exportLabel(code => t(`announcements.audience.${code}`)) },
       header: t('announcements.table.targetAudience'),
       enableSorting: true,
       cell: ({ getValue }) => {
@@ -69,6 +71,7 @@ export const useAnnouncementsTableColumns = () => {
     },
     {
       accessorKey: 'isPublished',
+      meta: { exportValue: (value: unknown) => t(`announcements.status.${value ? 'published' : 'draft'}`) },
       header: t('announcements.table.isPublished'),
       enableSorting: true,
       filterFn: (row, columnId, filterValue) => String(row.getValue(columnId)) === String(filterValue),

@@ -174,6 +174,7 @@ export default function FinancialOperationsPage() {
       </NPageHeader>
 
       <NTable
+        exportTitle={t('financialOperations.title')}
         permissionResource="payments"
         responsiveSkeleton
         className="min-h-0 flex-1"

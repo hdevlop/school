@@ -3,6 +3,7 @@ import { NAvatar, NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { avatarVersion } from '@/lib/avatarVersion';
+import { exportLabel } from '@/shared/tableExport';
 
 export const useFeesTableColumns = () => {
   const { t } = useTranslation();
@@ -71,6 +72,7 @@ export const useFeesTableColumns = () => {
     },
     {
       id: "status",
+      meta: { exportValue: exportLabel(code => code === 'noFees' ? t('fees.studentView.noFees') : t(`fees.status.${code}`)) },
       accessorFn: (row: any) => {
         if (Number(row.totalFees ?? 0) === 0) return 'noFees';
         if (Number(row.overdueAmount ?? 0) > 0) return 'overdue';

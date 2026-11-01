@@ -104,6 +104,7 @@ function ClassesTable() {
       </NPageHeader>
 
       <NTable
+        exportTitle={t('navigation.classes')}
         permissionResource="classes"
         classNameColumns={['name']}
         responsiveSkeleton

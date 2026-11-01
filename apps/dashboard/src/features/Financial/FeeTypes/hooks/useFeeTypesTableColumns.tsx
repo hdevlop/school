@@ -4,6 +4,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { getFeeTypeDisplayName } from '@/features/Financial/Fees/utils/feeUtils';
 
+import { exportLabel } from '@/shared/tableExport';
 export const useFeeTypesTableColumns = () => {
   const { t, language } = useTranslation();
   const { majorMoney } = useSchoolFormat();
@@ -53,6 +54,7 @@ export const useFeeTypesTableColumns = () => {
     },
     {
       accessorKey: "paymentType",
+      meta: { exportValue: exportLabel(code => t(`payments.type.${code}`)) },
       header: t('feeTypes.table.paymentType'),
       enableSorting: true,
       enableColumnFilter: true,

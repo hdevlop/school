@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { createTable, getCoreRowModel, getFilteredRowModel, getSortedRowModel, getPaginationRowModel, type ColumnDef, type Table } from '@tanstack/react-table';
 import type { NTableColumnMeta } from 'najm-kit';
-import { withOfficialClassExports } from '@/shared/tableExport';
+import { exportCell, exportLabel, withSchoolExports } from '@/shared/tableExport';
 import { buildStudentImport } from '@/features/Students/config/studentImport';
 
 /** What Najm's CSV export writes: field names, and each column's exportValue over visible, filtered, sorted rows. */
@@ -30,7 +30,7 @@ function studentTable() {
       { name: 'Amine', studentCode: 'S2', class: { name: '1AC' }, section: 'B', gender: 'M', email: '' },
       { name: 'Excluded', studentCode: 'S3', class: { name: 'CP' }, section: 'A', gender: 'M', email: '' },
     ],
-    columns: withOfficialClassExports(columns),
+    columns: withSchoolExports(columns),
     state: {
       sorting: [{ id: 'name', desc: false }],
       columnFilters: [{ id: 'name', value: 'i' }],
@@ -65,7 +65,7 @@ describe('School file exports', () => {
     const original = { name: 'CP', class: { id: 'c1', name: 'CP' }, className: 'Blue', 'class.name': 'CE2', classSection: 'CM1 / A' };
     const columns: ColumnDef<typeof original, any>[] = Object.keys(original).map(key => ({ id: key, accessorFn: row => row[key as keyof typeof original] }));
     const table = (classNameColumns?: readonly string[]) => createTable({
-      data: [original], columns: withOfficialClassExports(columns, classNameColumns),
+      data: [original], columns: withSchoolExports(columns, classNameColumns),
       state: {}, onStateChange: () => {}, renderFallbackValue: '', getCoreRowModel: getCoreRowModel(),
     });
     expect(exported(table()).rows[0]).toEqual(['CP', { id: 'c1', name: '1APG' }, 'Blue', '3APG', '4APG / A']);
@@ -75,7 +75,7 @@ describe('School file exports', () => {
 
   it("keeps a column's own exportValue, other metadata and grouped columns", () => {
     const own = (value: unknown) => `own ${value}`;
-    const [kept, grouped] = withOfficialClassExports<{ class: string }>([
+    const [kept, grouped] = withSchoolExports<{ class: string }>([
       { accessorKey: 'class', meta: { exportValue: own } } as ColumnDef<{ class: string }, any>,
       { id: 'group', columns: [{ accessorKey: 'class', meta: { hiddenBelow: 'md' } } as ColumnDef<{ class: string }, any>] },
     ]) as Array<ColumnDef<{ class: string }, any> & { columns?: Array<ColumnDef<{ class: string }, any>> }>;
@@ -83,5 +83,27 @@ describe('School file exports', () => {
     const child = grouped.columns![0].meta as NTableColumnMeta;
     expect(child.hiddenBelow).toBe('md');
     expect(child.exportValue!('CP', {})).toBe('1APG');
+  });
+
+  it('other columns export dates as dates and decimal amounts as numbers; codes stay text', () => {
+    const [plain] = withSchoolExports<{ due: string }>([{ accessorKey: 'due' }]);
+    expect((plain.meta as NTableColumnMeta).exportValue).toBe(exportCell);
+    expect(exportCell('1250.00')).toBe(1250);
+    expect(exportCell('-3.5')).toBe(-3.5);
+    expect((exportCell('2026-10-01') as Date).toISOString()).toBe('2026-10-01T00:00:00.000Z');
+    expect((exportCell('2026-10-01T08:30:00.000Z') as Date).toISOString()).toBe('2026-10-01T08:30:00.000Z');
+    for (const text of ['0612345678', '001', 'F182139021', '+212600000000', '2026-13-45', '3APIC', '1.2.3', '']) {
+      expect(exportCell(text)).toBe(text);
+    }
+    expect(exportCell(null)).toBeNull();
+    expect(exportCell(12)).toBe(12);
+  });
+
+  it('exportLabel translates stored codes and leaves empty values empty', () => {
+    const label = exportLabel(code => ({ paid: 'Payé' } as Record<string, string>)[code] ?? code);
+    expect(label('paid')).toBe('Payé');
+    expect(label('other')).toBe('other');
+    expect(label(null)).toBeNull();
+    expect(label('')).toBe('');
   });
 });

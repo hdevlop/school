@@ -154,6 +154,7 @@ function StaffAttendanceTable() {
       </RosterFilters>
 
       <NTable
+        showExportButton={false} showPrintButton={false}
         responsiveSkeleton
         data={visibleStaff}
         isFilteredEmpty={total > 0 && visibleStaff.length === 0}

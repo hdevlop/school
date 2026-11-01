@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Badge } from 'najm-kit';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { exportStatus } from '@/shared/tableExport';
 
 export const useVehiclesTableColumns = () => {
   const { t } = useTranslation();
@@ -106,6 +107,7 @@ export const useVehiclesTableColumns = () => {
     },
     {
       accessorKey: "status",
+      meta: { exportValue: exportStatus(t) },
       header: t('vehicles.table.status'),
       enableSorting: true,
       cell: ({ getValue }) => {

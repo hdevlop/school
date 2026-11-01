@@ -123,6 +123,7 @@ export default function DisciplineTable() {
         <NPageHeaderActions><PageHeaderGlobalActions /></NPageHeaderActions>
       </NPageHeader>
       <NTable
+        exportTitle={t('navigation.discipline')}
         permissionResource="discipline"
         responsiveSkeleton
         className="min-h-0 flex-1"

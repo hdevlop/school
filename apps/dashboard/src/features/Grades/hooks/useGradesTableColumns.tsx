@@ -3,6 +3,7 @@ import { NBadge, NButton } from 'najm-kit';
 import { NAvatar } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { avatarVersion } from '@/lib/avatarVersion';
+import { exportStatus } from '@/shared/tableExport';
 const computePercent = (obtained, total) => {
   if (obtained == null || total == null) return null;
   const o = Number(obtained);
@@ -140,6 +141,7 @@ export const useGradesTableColumns = ({
     },
     {
       accessorKey: 'status',
+      meta: { exportValue: exportStatus(t) },
       header: t('grades.table.status'),
       enableSorting: false,
       cell: ({ row, getValue }) => {

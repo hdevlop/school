@@ -3,6 +3,7 @@ import { NAvatar } from 'najm-kit';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { avatarVersion } from '@/lib/avatarVersion';
+import { exportStatus } from '@/shared/tableExport';
 
 export const useUsersTableColumns = () => {
   const { t } = useTranslation();
@@ -40,6 +41,7 @@ export const useUsersTableColumns = () => {
     },
     {
       accessorKey: "status",
+      meta: { exportValue: exportStatus(t) },
       header: t('users.table.status'),
       enableSorting: true,
       enableColumnFilter: true,

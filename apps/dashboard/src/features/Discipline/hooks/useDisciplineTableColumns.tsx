@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { NAvatar, NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { exportLabel } from '@/shared/tableExport';
 import {
   ACTION_COLORS,
   SEVERITY_COLORS,
@@ -53,6 +54,7 @@ export const useDisciplineTableColumns = () => {
     },
     {
       accessorKey: 'category',
+      meta: { exportValue: exportLabel(code => t(`discipline.categories.${code}`)) },
       header: t('discipline.table.violation'),
       cell: ({ row }) => (
         <div className="max-w-64">
@@ -65,6 +67,7 @@ export const useDisciplineTableColumns = () => {
     },
     {
       accessorKey: 'severity',
+      meta: { exportValue: exportLabel(code => t(`discipline.severity.${code}`)) },
       header: t('discipline.table.severity'),
       cell: ({ getValue }) => {
         const severity = String(getValue());
@@ -73,6 +76,7 @@ export const useDisciplineTableColumns = () => {
     },
     {
       accessorKey: 'status',
+      meta: { exportValue: exportLabel(code => t(`discipline.status.${code}`)) },
       header: t('discipline.table.status'),
       cell: ({ getValue }) => {
         const status = String(getValue());
@@ -90,6 +94,7 @@ export const useDisciplineTableColumns = () => {
     },
     {
       accessorKey: 'actionType',
+      meta: { exportValue: exportLabel(code => t(`discipline.actions.${code}`)) },
       header: t('discipline.table.action'),
       cell: ({ getValue }) => {
         const action = getValue() as string | null;

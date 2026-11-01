@@ -4,6 +4,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { ASSESSMENT_STATUS_COLORS, ASSESSMENT_TYPE_COLORS } from '../assessmentBadgeColors';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
+import { exportLabel } from '@/shared/tableExport';
 const formatDuration = (mins) => {
   if (!mins && mins !== 0) return '—';
   const m = Number(mins);
@@ -30,6 +31,7 @@ export const useAssessmentsTableColumns = () => {
     },
     {
       accessorKey: 'type',
+      meta: { exportValue: exportLabel(code => t(`assessments.type.${code}`)) },
       header: t('assessments.table.type'),
       enableSorting: true,
       cell: ({ getValue }) => {
@@ -109,6 +111,7 @@ export const useAssessmentsTableColumns = () => {
     },
     {
       accessorKey: 'status',
+      meta: { exportValue: exportLabel(code => t(`assessments.status.${code}`)) },
       header: t('assessments.table.status'),
       enableSorting: true,
       enableColumnFilter: true,

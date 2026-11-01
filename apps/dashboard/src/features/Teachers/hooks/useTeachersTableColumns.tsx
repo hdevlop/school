@@ -4,6 +4,7 @@ import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { avatarVersion } from '@/lib/avatarVersion';
+import { exportStatus } from '@/shared/tableExport';
 
 export const useTeachersTableColumns = () => {
   const { t } = useTranslation();
@@ -67,6 +68,7 @@ export const useTeachersTableColumns = () => {
     },
     {
       accessorKey: "status",
+      meta: { exportValue: exportStatus(t) },
       header: t('teachers.table.status'),
       enableSorting: true,
       enableColumnFilter: true,

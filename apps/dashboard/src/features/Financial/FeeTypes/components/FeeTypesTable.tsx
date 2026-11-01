@@ -125,6 +125,7 @@ function FeeTypesTable() {
       </NPageHeader>
 
       <NTable
+        exportTitle={t('navigation.feeTypes')}
         permissionResource="feeTypes"
         responsiveSkeleton
         data={feeTypes}

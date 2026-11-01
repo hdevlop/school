@@ -15,6 +15,7 @@ import FeeCategoryIcon from '@/features/Financial/Fees/components/FeeCategoryIco
 
 interface FeesTabProps {
   studentId?: string;
+  student?: { name?: string };
   // The students list's profile dialog closes itself first; without one, the
   // tab navigates to the fee record directly (the /students/:id page).
   onOpenFeeRecord?: (feeId?: string) => void;
@@ -89,7 +90,7 @@ const getFeeStatus = (fee: any, remaining: number, overdueCount: number) => {
   return fee?.status || 'pending';
 };
 
-export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
+export default function FeesTab({ studentId, student, onOpenFeeRecord }: FeesTabProps) {
   const { majorMoney, displayDateOnly } = useSchoolFormat();
   const { t } = useTranslation();
   const router = useRouter();
@@ -345,6 +346,7 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
         </div>
 
         <NTable
+          exportTitle={[student?.name, t('students.profile.tabs.fees')].filter(Boolean).join(' - ')}
           data={feeData.feeRows}
           columns={columns}
           bordered={false}
