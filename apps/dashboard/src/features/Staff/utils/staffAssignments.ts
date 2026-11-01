@@ -9,6 +9,10 @@ export const formatAssignment = (assignment: any, language = 'en') => {
     return [assignment.className, assignment.sectionName].filter(Boolean).join(' / ') || assignment.classId || '-';
   }
 
+  if (assignment.type === 'floorManager') {
+    return assignment.className || '-';
+  }
+
   if (assignment.type === 'accountant') {
     return assignment.cycleLabels?.[language] || assignment.cycleName || assignment.cycleId || '-';
   }

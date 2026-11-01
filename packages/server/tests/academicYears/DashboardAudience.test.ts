@@ -33,7 +33,7 @@ describe('dashboard audience', () => {
       expect(allowedRoles(DashboardController, route)).toEqual([STAFF_ROLES]);
     }
     expect(allowedRoles(AcademicDashboardController, 'getKpis')).toEqual([STAFF_ROLES]);
-    for (const outsider of ['parent', 'student', 'driver']) {
+    for (const outsider of ['parent', 'student', 'driver', 'floor_manager']) {
       expect(STAFF_ROLES).not.toContain(outsider);
       expect(FINANCE_ROLES).not.toContain(outsider);
     }

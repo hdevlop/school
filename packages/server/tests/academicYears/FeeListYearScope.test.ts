@@ -149,6 +149,11 @@ describe('normal fee list year scope', () => {
     expect(predicate).toContain('"fee_types"."category" =');
     expect(query.params).toContain('tuition');
     expect(query.sql).not.toContain('"fees"."schedule" =');
+    // A student who left mid-year paid only up to leaving, not the year.
+    expect(predicate).toContain('"student_enrollments"."id" is null or "student_enrollments"."status" not in');
+    expect(query.params).toContain('withdrawn');
+    expect(query.params).toContain('transferred');
+    expect(query.params).not.toContain('graduated');
     expect(having).toContain('count("fees"."id") > 0');
     expect(having).toContain('sum("fees"."net_amount"::numeric)');
     expect(having).toContain('<=');
@@ -162,6 +167,7 @@ describe('normal fee list year scope', () => {
     await service.getAll();
     expect(statements.at(-1)!.sql).not.toContain(' having ');
     expect(statements.at(-1)!.params).not.toContain('tuition');
+    expect(statements.at(-1)!.params).not.toContain('withdrawn');
   });
 
   it('accepts class and section IDs while rejecting empty or non-string IDs', () => {

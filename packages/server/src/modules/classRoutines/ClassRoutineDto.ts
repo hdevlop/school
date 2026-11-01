@@ -65,6 +65,10 @@ export const routineLayoutDto = z.object({
   });
 });
 
+export const routineBulkLayoutDto = routineLayoutDto.safeExtend({
+  scheduleIds: z.array(id).min(1).max(500),
+});
+
 const routineContentLabelDto = z.string().trim().min(1).max(MAX_ROUTINE_CONTENT_LABEL_LENGTH);
 export const routineContentGroupDto = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('fixed'), label: routineContentLabelDto }),
@@ -103,6 +107,7 @@ export type UpdateRoutinePeriodDto = z.infer<typeof updateRoutinePeriodDto>;
 export type CreateRoutineScheduleDto = z.infer<typeof createRoutineScheduleDto>;
 export type UpdateRoutineScheduleDto = z.infer<typeof updateRoutineScheduleDto>;
 export type RoutineLayoutDto = z.infer<typeof routineLayoutDto>;
+export type RoutineBulkLayoutDto = z.infer<typeof routineBulkLayoutDto>;
 export type CreateRoutineEntryDto = z.infer<typeof createRoutineEntryDto>;
 export type UpdateRoutineEntryDto = z.infer<typeof updateRoutineEntryDto>;
 export type RoutineEntryDeleteQuery = z.infer<typeof routineEntryDeleteQuery>;

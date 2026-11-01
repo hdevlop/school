@@ -82,6 +82,11 @@ export const deleteFeeApi = async (id) => {
   return res.data;
 };
 
+export const forceRemoveFeeApi = async (id: string) => {
+  const res = await api.post(`/fees/${id}/force-remove`);
+  return res.data;
+};
+
 export const createBulkFeesApi = async (data) => {
   const res = await api.post('/fees/bulk', data);
   return res.data;

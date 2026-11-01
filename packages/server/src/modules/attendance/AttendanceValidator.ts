@@ -8,6 +8,7 @@ import { TeacherValidator } from '../teachers/TeacherValidator';
 import { SectionValidator } from '../sections/SectionValidator';
 import { SubjectValidator } from '../subjects/SubjectValidator';
 import { StudentEnrollmentRepository } from '../studentEnrollments/StudentEnrollmentRepository';
+import { FloorManagerScopeRepository } from '../staff/floorManagerScope';
 import { getBusinessDate } from '../../shared/businessDate';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
@@ -53,6 +54,7 @@ export class AttendanceValidator {
     private sectionValidator: SectionValidator,
     private subjectValidator: SubjectValidator,
     private enrollments: StudentEnrollmentRepository,
+    private floorManagers: FloorManagerScopeRepository,
   ) { }
 
   async ensureExists(id: string) {
@@ -107,6 +109,14 @@ export class AttendanceValidator {
     }
   }
 
+  // A floor manager marks and corrects only the sections of their classes.
+  async ensureFloorManagerSection(user: { id: string; role?: string }, sectionId: string | null | undefined) {
+    if (user.role !== 'floor_manager') return;
+    if (!sectionId || !await this.floorManagers.managesSection(user.id, sectionId)) {
+      Err(403, this.at('notAuthorizedForSection'));
+    }
+  }
+
   async ensureNoDuplicateDailyAttendance(studentId: string, sectionId: string, date: string) {
     const existing = await this.attendanceRepository.findSameDayForStudentInSection(studentId, sectionId, date);
     if (existing) Err(409, this.at('dailyAlreadyMarked'));
@@ -122,20 +132,24 @@ export class AttendanceValidator {
     sectionId: string,
     oldStatus: string,
     status: string,
-    user: { role?: string; teacherId?: string | null },
+    user: { id?: string; role?: string; teacherId?: string | null },
   ) {
     // The route's update:attendance decides who corrects; a teacher corrects
-    // their own sections, a school-wide role any section and any transition.
+    // their own sections, a school-wide role any section and any transition,
+    // and a floor manager any transition in the sections of their classes.
     const isSchoolWide = SCHOOL_WIDE_ROLES.includes(user.role ?? '');
+    const isFloorManagerOfSection = user.role === 'floor_manager' && !!user.id
+      && await this.floorManagers.managesSection(user.id, sectionId);
+    const correctsAny = isSchoolWide || isFloorManagerOfSection;
     const isTeacherOfSection = await this.attendanceRepository.isTeacherInSection(user.teacherId ?? '', sectionId);
-    if (!isTeacherOfSection && !isSchoolWide) Err(403, this.at('notAuthorizedForSection'));
+    if (!isTeacherOfSection && !correctsAny) Err(403, this.at('notAuthorizedForSection'));
 
     const allowed: Record<string, string[]> = {
       absent: ['late', 'present'],
       late: ['present'],
       present: [],
     };
-    if (!allowed[oldStatus]?.includes(status) && !isSchoolWide) Err(400, this.at('invalidTransition'));
+    if (!allowed[oldStatus]?.includes(status) && !correctsAny) Err(400, this.at('invalidTransition'));
   }
 
   // Marking staff through the general attendance route asks for what the

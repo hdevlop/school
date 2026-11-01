@@ -81,6 +81,7 @@ export { StaffService } from '../staff/StaffService';
 export { StaffRepository } from '../staff/StaffRepository';
 export { StaffValidator } from '../staff/StaffValidator';
 export { StaffAssignmentRepository } from '../staff/StaffAssignmentRepository';
+export { FloorManagerScopeRepository } from '../staff/floorManagerScope';
 export { StaffRoleService } from '../staff/roles/StaffRoleService';
 export { StaffRoleValidator } from '../staff/roles/StaffRoleValidator';
 export { StaffRoleRepository } from '../staff/roles/StaffRoleRepository';
@@ -246,6 +247,7 @@ import { StaffService } from '../staff/StaffService';
 import { StaffRepository } from '../staff/StaffRepository';
 import { StaffValidator } from '../staff/StaffValidator';
 import { StaffAssignmentRepository } from '../staff/StaffAssignmentRepository';
+import { FloorManagerScopeRepository } from '../staff/floorManagerScope';
 import { StaffRoleService } from '../staff/roles/StaffRoleService';
 import { StaffRoleValidator } from '../staff/roles/StaffRoleValidator';
 import { StaffRoleRepository } from '../staff/roles/StaffRoleRepository';
@@ -359,6 +361,7 @@ export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, StaffRoleService, [StaffRoleRepository, RoleService, PermissionService, StaffRoleValidator]);
   registerSeedDeps(seedContainer, StaffValidator, [StaffRepository, StaffRoleRepository, PermissionService]);
   registerSeedDeps(seedContainer, StaffAssignmentRepository, []);
+  registerSeedDeps(seedContainer, FloorManagerScopeRepository, []);
   registerSeedDeps(seedContainer, StaffService, [StaffRepository, StaffValidator, UserService, AuthService, StorageService, DriverRepository, StaffAssignmentRepository, VehicleAssignmentRepository, VehicleAssignmentService]);
 
   registerSeedDeps(seedContainer, DriverValidator, [DriverRepository, UserValidator]);
@@ -464,6 +467,7 @@ export function configureSeedContainer(seedContainer: Container) {
     SectionValidator,
     SubjectValidator,
     StudentEnrollmentRepository,
+    FloorManagerScopeRepository,
   ]);
   registerSeedDeps(seedContainer, AttendanceService, [AttendanceRepository, AttendanceValidator, AcademicYearValidator, SectionRepository]);
 
@@ -519,10 +523,10 @@ export function configureSeedContainer(seedContainer: Container) {
   ]);
   registerSeedDeps(seedContainer, AlertService, [AlertRepository, AlertValidator]);
 
-  registerSeedDeps(seedContainer, DisciplineValidator, [DisciplineRepository]);
+  registerSeedDeps(seedContainer, DisciplineValidator, [DisciplineRepository, FloorManagerScopeRepository]);
   registerSeedDeps(seedContainer, DisciplineService, [DisciplineRepository, DisciplineValidator]);
 
-  registerSeedDeps(seedContainer, BehaviorRewardValidator, [BehaviorRewardRepository]);
+  registerSeedDeps(seedContainer, BehaviorRewardValidator, [BehaviorRewardRepository, FloorManagerScopeRepository]);
   registerSeedDeps(seedContainer, BehaviorRewardService, [BehaviorRewardRepository, BehaviorRewardValidator]);
 
   registerSeedDeps(seedContainer, StudentRouteValidator, [StudentRouteRepository, StudentRepository, StudentEnrollmentRepository]);

@@ -38,5 +38,9 @@
   {
     "name": "supervisor",
     "description": "Surveillant général: school-wide student attendance, discipline and behavior follow-up, parent contact and visit requests, with read access to classes, grades and the timetable"
+  },
+  {
+    "name": "floor_manager",
+    "description": "Responsable d'étage: student attendance, discipline and behavior follow-up for the grades named in their staff record, with read-only access to those students and classes, their grades and the timetable; receives announcements and alerts without sending them, and has no access to parents or visit requests"
   }
 ]

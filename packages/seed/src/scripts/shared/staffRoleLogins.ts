@@ -17,6 +17,7 @@ export const STAFF_ROLE_LOGINS: Record<string, string> = {
   accountant: 'accounting',
   assistant: 'assistant',
   supervisor: 'supervisor',
+  floorManager: 'floor_manager',
 };
 
 /** Link each title to its login role, leaving any link already chosen alone. */

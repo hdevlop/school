@@ -1,10 +1,11 @@
 'use client';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import * as routineApi from '@/services/classRoutineApi';
 import { useTranslation } from 'najm-i18n/react';
+import type { RoutineSchedule, RoutineScheduleSummary } from '../types';
 
 const payload = (response: any, fallback: any) => response?.data ?? fallback;
 const errorMessage = (error: any, fallback: string) => error?.response?.data?.message || error?.message || fallback;
@@ -41,14 +42,23 @@ export const useRoutineDutyCandidates = (enabled = true) => useQuery({
 export const useRoutineList = ({ academicYear, ...filters }: Record<string, any>, enabled = true) => useQuery({
   queryKey: ['class-routines', 'list', academicYear, filters],
   queryFn: () => withAcademicYear(academicYear, () => routineApi.getClassRoutinesApi(filters)),
-  select: (response) => payload(response, []),
+  select: (response): RoutineScheduleSummary[] => payload(response, []),
   enabled,
 });
 
-export const useRoutine = (id?: string) => useQuery({
+/** Load visible weeks in parallel and share the individual routine cache. */
+export const useRoutineDetails = (ids: readonly string[], academicYear?: string) => useQueries({
+  queries: ids.map((id) => ({
+    queryKey: ['class-routines', id],
+    queryFn: () => withAcademicYear(academicYear, () => routineApi.getClassRoutineApi(id)),
+    select: (response: any): RoutineSchedule => payload(response, null),
+  })),
+});
+
+export const useRoutine = (id?: string, academicYear?: string) => useQuery({
   queryKey: ['class-routines', id],
-  queryFn: () => routineApi.getClassRoutineApi(id),
-  select: (response) => payload(response, null),
+  queryFn: () => withAcademicYear(academicYear, () => routineApi.getClassRoutineApi(id)),
+  select: (response): RoutineSchedule | null => payload(response, null),
   enabled: Boolean(id),
 });
 
@@ -76,6 +86,7 @@ export function useRoutineMutations() {
     createSchedule: useNamedMutation(routineApi.createClassRoutineApi, t('classRoutines.ui.messages.routineCreated')),
     updateSchedule: useNamedMutation(routineApi.updateClassRoutineApi, t('classRoutines.ui.messages.routineUpdated')),
     updateLayout: useNamedMutation(routineApi.updateRoutineLayoutApi, t('classRoutines.ui.messages.timesUpdated')),
+    updateLayouts: useNamedMutation(routineApi.updateRoutineLayoutsApi, t('classRoutines.ui.messages.timesUpdated')),
     deleteSchedule: useNamedMutation(routineApi.deleteClassRoutineApi, t('classRoutines.ui.messages.routineDeleted')),
     publishSchedule: useNamedMutation(routineApi.publishClassRoutineApi, t('classRoutines.ui.messages.routinePublished')),
     archiveSchedule: useNamedMutation(routineApi.archiveClassRoutineApi, t('classRoutines.ui.messages.routineArchived')),

@@ -17,16 +17,17 @@ const RULE = 'border-[#8b97ab] dark:border-border';
 const STRIPES = 'bg-[repeating-linear-gradient(45deg,#f4f5f7_0_6px,#eceef2_6px_12px)] dark:bg-[repeating-linear-gradient(45deg,transparent_0_6px,rgba(148,163,184,0.12)_6px_12px)]';
 
 export default function RoutineGrid(props: RoutineGridProps) {
+  const sizing = props.layout === 'stacked' ? '' : 'min-h-0 flex-1';
   return (
     <>
       {/* Wide screens: the week as one sheet, days down and periods across. */}
-      <div className="hidden min-h-0 min-w-0 flex-1 md:flex md:flex-col"><RoutineWeekTable {...props} /></div>
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col md:hidden"><RoutineDayList {...props} /></div>
+      <div className={`hidden min-w-0 md:flex md:flex-col ${sizing}`}><RoutineWeekTable {...props} /></div>
+      <div className={`flex min-w-0 flex-col md:hidden ${sizing}`}><RoutineDayList {...props} /></div>
     </>
   );
 }
 
-function RoutineWeekTable({ days, periods, entries, duties = [], defaultRoom, editable, canCreate = editable, canUpdate = editable, canDelete = editable, onCellClick, onDutyClick }: RoutineGridProps) {
+function RoutineWeekTable({ days, periods, entries, duties = [], defaultRoom, editable, canCreate = editable, canUpdate = editable, canDelete = editable, onCellClick, onDutyClick, layout }: RoutineGridProps) {
   const { t } = useTranslation();
   const entryMap = new Map(entries.map((entry) => [`${entry.dayOfWeek}:${entry.periodId}`, entry]));
   const dutyMap = new Map(duties.map((duty) => [`${duty.dayOfWeek}:${duty.periodId}`, duty]));
@@ -34,10 +35,8 @@ function RoutineWeekTable({ days, periods, entries, duties = [], defaultRoom, ed
   // A break that holds a lesson on some day is as wide as a lesson.
   const narrow = (period: RoutinePeriod) => period.isBreak && !entries.some((entry) => entry.periodId === period.id);
 
-  return (
-    // The frame ends with the week, closing the sheet below its last day; on a
-    // short screen it shrinks to fit, and the week scrolls inside it.
-    <NajmScroll axis="both" autoHide="scroll" className={`min-h-0 rounded-xl border bg-card shadow-sm ${RULE}`}>
+  const table = (
+    <>
       {/* Separate borders: collapsed ones straddle two cells, and a lesson's
           fill on each side then hides the line between two of the same color. */}
       <table className="w-max min-w-full table-fixed border-separate border-spacing-0 text-sm">
@@ -45,7 +44,7 @@ function RoutineWeekTable({ days, periods, entries, duties = [], defaultRoom, ed
         <thead className="sticky top-0 z-20">
           <tr className={`${NAVY} text-white`}>
             <th scope="col" className={`sticky start-0 z-20 w-28 min-w-28 border-e border-white/25 px-2 py-2.5 text-center text-xs font-bold ${NAVY}`}>
-              {t('classRoutines.ui.fields.teachingDays')}
+              {t('classRoutines.ui.fields.days')}
             </th>
             {periods.map((period) => (
               <th key={period.id} scope="col" className={`border-e border-white/25 px-2 py-2.5 text-center last:border-e-0 ${narrow(period) ? 'w-32 min-w-32' : 'w-48 min-w-48'}`}>
@@ -113,6 +112,11 @@ function RoutineWeekTable({ days, periods, entries, duties = [], defaultRoom, ed
           ))}
         </tbody>
       </table>
-    </NajmScroll>
+    </>
   );
+  const frameClassName = `min-h-0 rounded-xl border bg-card shadow-sm ${RULE}`;
+  // Stacked weeks use the page's vertical scroll; only a wide table scrolls locally.
+  return layout === 'stacked'
+    ? <div className={`overflow-x-auto ${frameClassName}`}>{table}</div>
+    : <NajmScroll axis="both" autoHide="scroll" className={frameClassName}>{table}</NajmScroll>;
 }

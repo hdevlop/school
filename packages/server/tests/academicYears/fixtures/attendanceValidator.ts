@@ -8,7 +8,7 @@ export function attendanceValidator(
 ) {
   const validator = withEnglishMessages(new AttendanceValidator(
     repository as unknown as AttendanceRepository,
-    {} as any, {} as any, {} as any, {} as any, {} as any, {} as any,
+    {} as any, {} as any, {} as any, {} as any, {} as any, {} as any, {} as any,
   ));
   Object.assign(validator, { at: (key: string) => key }, overrides);
   return validator;

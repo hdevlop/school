@@ -61,18 +61,19 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
   }, [t, openDialog, feeTypes, isUpdating, updateFee]);
 
   const handleDelete = useCallback((fee) => {
+    const forceRemove = viewer.role === 'admin';
     confirmDelete({
       title: t('common.delete'),
-      warningText: t('common.deleteConfirm'),
+      warningText: t(forceRemove ? 'fees.dialogs.forceRemoveWarning' : 'common.deleteConfirm'),
       cancelText: t('common.cancel'),
       itemName: fee.name,
-      confirmText: t('fees.dialogs.deleteButton'),
+      confirmText: t(forceRemove ? 'fees.dialogs.forceRemoveButton' : 'fees.dialogs.deleteButton'),
       loading: isDeleting,
       onConfirm: async () => {
         await deleteFee(fee.id);
       }
     });
-  }, [t, confirmDelete, isDeleting, deleteFee]);
+  }, [t, confirmDelete, isDeleting, deleteFee, viewer.role]);
 
   const cardsClassName = fullWidth
     ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 items-start gap-3 p-1.5'

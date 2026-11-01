@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { createRoutineEntryDto, updateRoutineEntryDto } from '../../src/modules/classRoutines/ClassRoutineDto';
+import { createRoutineEntryDto, routineBulkLayoutDto, updateRoutineEntryDto } from '../../src/modules/classRoutines/ClassRoutineDto';
 
 const base = {
   dayOfWeek: 'friday',
@@ -7,6 +7,18 @@ const base = {
   subjectId: 'arabic',
   teacherAssignmentId: 'arabic-teacher',
 };
+
+describe('bulk routine layout contract', () => {
+  const periods = [{ type: 'lesson', name: 'Period 1', startTime: '08:30', endTime: '09:30' }];
+  it('requires explicit targets and keeps the shared layout validation', () => {
+    expect(routineBulkLayoutDto.parse({ scheduleIds: ['one', 'two'], periods }).scheduleIds).toEqual(['one', 'two']);
+    expect(routineBulkLayoutDto.safeParse({ scheduleIds: [], periods }).success).toBe(false);
+    expect(routineBulkLayoutDto.safeParse({ periods }).success).toBe(false);
+    expect(routineBulkLayoutDto.safeParse({ scheduleIds: ['one'], periods: [{ ...periods[0], endTime: '08:00' }] }).success).toBe(false);
+    expect(routineBulkLayoutDto.safeParse({ scheduleIds: ['one'], periods: [...periods, ...periods] }).success).toBe(false);
+    expect(routineBulkLayoutDto.safeParse({ scheduleIds: ['one'], periods: [{ ...periods[0], type: 'break' }] }).success).toBe(false);
+  });
+});
 
 describe('routine nested content contract', () => {
   it('accepts three fixed subjects and a fixed subject beside a rotating pair without nested times', () => {

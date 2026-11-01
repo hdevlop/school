@@ -20,7 +20,6 @@ import { CSS } from '@dnd-kit/utilities';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import { BookOpen, Coffee, GripVertical, Plus, Trash2 } from 'lucide-react';
 import { FormInput, NButton, NForm, useNForm } from 'najm-kit';
-import { useDialog } from '@/shared/useDialog';
 import { z } from 'zod';
 import { useTranslation } from 'najm-i18n/react';
 import type { RoutineScheduleFormProps, TimelineItem } from '../types';
@@ -49,12 +48,14 @@ function SortableTimelineRow({
   isBreak,
   name,
   onRemove,
+  disabled,
 }: {
   id: string;
   index: number;
   isBreak: boolean;
   name?: string;
   onRemove: () => void;
+  disabled?: boolean;
 }) {
   const { t } = useTranslation();
   const {
@@ -64,7 +65,7 @@ function SortableTimelineRow({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id });
+  } = useSortable({ id, disabled });
 
   return (
     <div
@@ -117,8 +118,9 @@ function SortableTimelineRow({
 
 export default function RoutineScheduleForm({
   periods,
+  onSubmit,
+  disabled = false,
 }: RoutineScheduleFormProps) {
-  const { pop } = useDialog();
   const { t } = useTranslation();
   const time = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, t('classRoutines.ui.validation.timeFormat'));
   const { publicSettings, isSettingsLoading, isError } = usePublicSettings();
@@ -206,40 +208,43 @@ export default function RoutineScheduleForm({
       schema={schema}
       form={form}
       variant="compact"
-      onSubmit={(data) => pop(data)}
+      onSubmit={onSubmit}
       className="h-auto min-h-0 min-w-0 gap-3"
     >
-      <div className="space-y-2">
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={fields.map((field) => field.id)} strategy={verticalListSortingStrategy}>
-            <div className="space-y-2">
-              {fields.map((field, index) => (
-                <SortableTimelineRow
-                  key={field.id}
-                  id={field.id}
-                  index={index}
-                  isBreak={rows[index]?.type === 'break'}
-                  name={rows[index]?.name}
-                  onRemove={() => removeRow(index)}
-                />
-              ))}
-            </div>
-          </SortableContext>
-        </DndContext>
-      </div>
+      <fieldset disabled={disabled} className="min-w-0 space-y-3">
+        <div className="space-y-2">
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={fields.map((field) => field.id)} strategy={verticalListSortingStrategy}>
+              <div className="space-y-2">
+                {fields.map((field, index) => (
+                  <SortableTimelineRow
+                    key={field.id}
+                    id={field.id}
+                    index={index}
+                    isBreak={rows[index]?.type === 'break'}
+                    name={rows[index]?.name}
+                    onRemove={() => removeRow(index)}
+                    disabled={disabled}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
+        </div>
 
-      <div className="flex flex-col gap-2 pt-1 sm:flex-row sm:flex-wrap sm:justify-center">
-        <NButton type="button" variant="outline" disabled={isSettingsLoading || isError || !publicSettings || !configuredPeriods} className="min-h-11" onClick={() => { if (configuredPeriods) replace(configuredPeriods.map((period) => ({ ...period, name: routinePeriodLabel(period.name, t) }))); }}>
-          {t('classRoutines.ui.actions.useSchoolHours')}
-        </NButton>
-        <NButton type="button" variant="outline" className="min-h-11" onClick={() => addRow('lesson')}>
-          <Plus className="h-4 w-4" /> {t('classRoutines.ui.actions.addTeachingPeriod')}
-        </NButton>
-        <NButton type="button" variant="outline" onClick={() => addRow('break')} className="min-h-11 border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-800 dark:text-amber-300">
-          <Plus className="h-4 w-4" /> {t('classRoutines.ui.actions.addBreak')}
-        </NButton>
-      </div>
-      {!configuredPeriods && <p role="alert" className="text-sm text-destructive">{t('settings.errors.invalidSchoolDay')}</p>}
+        <div className="flex flex-col gap-2 pt-1 sm:flex-row sm:flex-wrap sm:justify-center">
+          <NButton type="button" variant="outline" disabled={isSettingsLoading || isError || !publicSettings || !configuredPeriods} className="min-h-11" onClick={() => { if (configuredPeriods) replace(configuredPeriods.map((period) => ({ ...period, name: routinePeriodLabel(period.name, t) }))); }}>
+            {t('classRoutines.ui.actions.useSchoolHours')}
+          </NButton>
+          <NButton type="button" variant="outline" className="min-h-11" onClick={() => addRow('lesson')}>
+            <Plus className="h-4 w-4" /> {t('classRoutines.ui.actions.addTeachingPeriod')}
+          </NButton>
+          <NButton type="button" variant="outline" onClick={() => addRow('break')} className="min-h-11 border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-800 dark:text-amber-300">
+            <Plus className="h-4 w-4" /> {t('classRoutines.ui.actions.addBreak')}
+          </NButton>
+        </div>
+        {!configuredPeriods && <p role="alert" className="text-sm text-destructive">{t('settings.errors.invalidSchoolDay')}</p>}
+      </fieldset>
     </NForm>
   );
 }

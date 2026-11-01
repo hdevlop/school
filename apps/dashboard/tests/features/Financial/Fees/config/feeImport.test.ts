@@ -134,6 +134,15 @@ describe('fee assignment import', () => {
     expect(result.problems.map(problem => problem.message)).toEqual(['fees.import.wrongYear', 'fees.import.invalidDate', 'fees.import.duplicate']);
   });
 
+  it('keeps several occasional charges in one month, as the server numbers each of them', () => {
+    const meal = { feeTypeId: 'tuition', schedule: 'occasional', effectiveDate: '2026-10-01' };
+    const result = build([{ studentCode: 'F001', fees: [{ ...meal, baseAmount: 70 }, { ...meal, baseAmount: 35 }] }]);
+    expect(result.problems).toEqual([]);
+    expect(result.students[0].fees.map(fee => fee.baseAmount)).toEqual([70, 35]);
+    const monthly = { feeTypeId: 'tuition', schedule: 'monthly', effectiveDate: '2026-10-01' };
+    expect(build([{ studentCode: 'F001', fees: [monthly, monthly] }]).problems[0].message).toBe('fees.import.duplicate');
+  });
+
   it('refuses invalid amounts, discounts, schedules and non-scalar fields', () => {
     for (const detail of [{ baseAmount: '-1' }, { baseAmount: 'abc' }, { discountAmount: '401' },
       { discountAmount: '-1' }, { schedule: 'weekly' }, { baseAmount: { value: 500 } }]) {

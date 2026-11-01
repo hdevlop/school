@@ -29,14 +29,16 @@ const reachesOwnClass = (userId: string, role: string) => and(
 export const Announcement = own(announcements)
   .for('student', when(reaches('students')))
   .for('parent', when(reaches('parents')))
-  .for('teacher', when(reaches('teachers')));
+  .for('teacher', when(reaches('teachers')))
+  .for('floor_manager', when(reaches('teachers')));
 
 // A najm rule is one join chain, so the other ways to reach an announcement
 // are alternative tokens the repository ORs with the rule above.
 export const AnnouncementForClass = own(announcements)
   .for('student', when(reachesOwnClass))
   .for('parent', when(reachesOwnClass))
-  .for('teacher', when(reachesOwnClass));
+  .for('teacher', when(reachesOwnClass))
+  .for('floor_manager', when(reachesOwnClass));
 
 /** Authors see what they wrote, drafts included. */
 export const AnnouncementByAuthor = own(announcements)

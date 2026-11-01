@@ -72,6 +72,7 @@ describe('school-wide ownership roles', () => {
       'accounting', 'admin', 'assistant', 'driver', 'principal', 'secretary', 'supervisor',
     ]);
     expect(SCHOOL_WIDE_ROLES).not.toContain('teacher');
+    expect(SCHOOL_WIDE_ROLES).not.toContain('floor_manager');
     expect(SCHOOL_WIDE_ROLES).not.toContain('parent');
     expect(SCHOOL_WIDE_ROLES).not.toContain('student');
   });

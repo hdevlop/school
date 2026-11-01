@@ -70,9 +70,13 @@ export function pageViewer(session: {
   return { role: session.user.role, can: (permission) => matchPermission(permissions, permission) };
 }
 
-/** A usable home for every signed-in account, including non-staff roles. */
+/**
+ * A usable home for every signed-in account, including non-staff roles. A
+ * floor manager reads only their classes, so the school-wide dashboard is not
+ * theirs; they start, like a family, from their students.
+ */
 export function dashboardLandingPath(viewer: PageViewer): string {
-  if (viewer.role === 'parent' || viewer.role === 'student') {
+  if (viewer.role === 'parent' || viewer.role === 'student' || viewer.role === 'floor_manager') {
     return PAGE_ACCESS.students(viewer) ? '/students' : '/notifications';
   }
   return PAGE_ACCESS.dashboard(viewer) ? '/dashboard' : '/notifications';

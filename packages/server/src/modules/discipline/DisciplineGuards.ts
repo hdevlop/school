@@ -1,8 +1,13 @@
-import { Can, own, join, where } from '../../auth';
+import { sql } from 'drizzle-orm';
+import { Can, own, join, where, when } from '../../auth';
 import { composeGuards } from 'najm-guard';
 import { disciplineIncidents, parents, studentParents, students } from '../../database/schema';
+import { managesClass } from '../staff/floorManagerScope';
 
-/** Teachers see the incidents they reported; students their own; parents their children's. */
+/**
+ * Teachers see the incidents they reported; floor managers those in their
+ * classes and their own; students their own; parents their children's.
+ */
 export const Discipline = own(disciplineIncidents)
   .for('teacher', where(disciplineIncidents.reportedBy))
   .for('parent',
@@ -14,7 +19,9 @@ export const Discipline = own(disciplineIncidents)
   .for('student',
     join(disciplineIncidents.studentId, students.id),
     where(students.userId),
-  );
+  )
+  .for('floor_manager', when((userId: string) => sql`(${disciplineIncidents.reportedBy} = ${userId}
+    or ${managesClass(disciplineIncidents.classId, userId)})`));
 
 export const canReadDiscipline = composeGuards(Can('read:discipline'));
 export const canCreateDiscipline = composeGuards(Can('create:discipline'));

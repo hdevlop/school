@@ -99,6 +99,7 @@ export class AttendanceService {
     await this.years.resolveRecord(academicYearId, data.date, user.role);
     const teacherId = await this.teacherIdForUser(user);
     await this.attendanceValidator.ensureTeacherCanMark(data, teacherId, user.role);
+    await this.attendanceValidator.ensureFloorManagerSection(user, data.sectionId);
     const mode = await this.attendanceRepository.getAttendanceMode();
 
     if (mode === 'daily') {
@@ -155,7 +156,7 @@ export class AttendanceService {
     await this.attendanceValidator.validateAttendanceDate(targetDate, user.role);
     const teacherId = await this.teacherIdForUser(user);
     await this.attendanceValidator.validateStatusCorrection(
-      sectionId, existing.status, status, { role: user.role, teacherId },
+      sectionId, existing.status, status, { id: user.id, role: user.role, teacherId },
     );
 
     await this.attendanceRepository.update(existing.id, {
@@ -222,6 +223,7 @@ export class AttendanceService {
     const record = await this.getById(id, user.role);
     const teacherId = await this.teacherIdForUser(user);
     await this.attendanceValidator.ensureTeacherCanUpdate(record, teacherId, user.role);
+    await this.attendanceValidator.ensureFloorManagerSection(user, record.sectionId);
     return await this.attendanceRepository.update(id, attendanceData);
   }
 

@@ -175,7 +175,7 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
     const permission = baseline.catalog.find((p) => p.id === id);
     return permission ? permissionLabel(permission) : id;
   };
-  const scope = isSchoolWideRole(role.name) ? 'schoolWide' : ['teacher', 'parent', 'student'].includes(role.name) ? role.name : 'unconfigured';
+  const scope = isSchoolWideRole(role.name) ? 'schoolWide' : ['teacher', 'floor_manager', 'parent', 'student'].includes(role.name) ? role.name : 'unconfigured';
 
   return (
     <div className="flex min-w-0 flex-col gap-3" aria-busy={isSaving}>

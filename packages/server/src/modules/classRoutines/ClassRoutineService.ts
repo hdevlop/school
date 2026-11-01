@@ -13,6 +13,7 @@ import type {
   UpdateRoutinePeriodDto,
   UpdateRoutineScheduleDto,
   RoutineLayoutDto,
+  RoutineBulkLayoutDto,
 } from './ClassRoutineDto';
 
 @Service()
@@ -103,6 +104,16 @@ export class ClassRoutineService {
     await this.validator.ensureSchedule(id);
     await this.repository.updateSchedule(id, data);
     return this.getById(id);
+  }
+
+  /** Nested layout updates share this transaction: one refusal rolls back the whole selection. */
+  @Transaction()
+  async updateLayouts({ scheduleIds, periods }: RoutineBulkLayoutDto) {
+    const ids = [...new Set(scheduleIds)];
+    // Check every target in the selected year before making the first change.
+    for (const id of ids) await this.validator.ensureSchedule(id);
+    for (const id of ids) await this.updateLayout(id, { periods });
+    return { updated: ids.length };
   }
 
   @Transaction()

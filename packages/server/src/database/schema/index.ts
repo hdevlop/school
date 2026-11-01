@@ -83,6 +83,7 @@ export {
   cleanerAssignments,
   assistantAssignments,
   accountantAssignments,
+  floorManagerAssignments,
   securityAssignments,
   busAssistantAssignments,
 } from '../../modules/staff/staffAssignmentSchema';

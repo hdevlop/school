@@ -76,6 +76,7 @@ export const {
   DRIVER: 'driver',
   ASSISTANT: 'assistant',
   SUPERVISOR: 'supervisor', // surveillant général
+  FLOOR_MANAGER: 'floor_manager', // responsable d'étage
 });
 
 // ============================================================================
@@ -102,8 +103,8 @@ const SCHOOL_WIDE_ROLE_KEYS = [
 /**
  * Roles whose reads of an owned resource are school-wide. Their route
  * permissions (`read:students`, …) still decide what they can reach.
- * Teacher, parent and student reads are limited by each resource's `.for()`
- * rules, and any other role — including one created later in the roles
+ * Teacher, floor manager, parent and student reads are limited by each
+ * resource's `.for()` rules, and any other role — including one created later in the roles
  * screen — sees no owned rows until it is listed here or given a rule.
  */
 export const SCHOOL_WIDE_ROLES: readonly string[] = SCHOOL_WIDE_ROLE_KEYS.map((key) => ROLES[key]);

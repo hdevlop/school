@@ -7,7 +7,7 @@ import {
 import { Repository, t } from '../../najm';
 import { Owned, type OwnedWhere } from '../../auth';
 import { count, eq, desc, inArray, and, or, gt, lte, isNull, sql } from 'drizzle-orm';
-import { Student, studentTeacherInYear } from './StudentGuards';
+import { Student, studentReachedInYear } from './StudentGuards';
 import { ScopeContext } from '../../auth';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
@@ -157,7 +157,7 @@ export class StudentRepository {
           or(isNull(studentEnrollmentPlacements.validTo), gt(studentEnrollmentPlacements.validTo, onDate)),
         ] : []),
         this.ownedWhere(),
-        studentTeacherInYear(this.year.id, this._scopeCtx, studentEnrollmentPlacements.id),
+        studentReachedInYear(this.year.id, this._scopeCtx, studentEnrollmentPlacements.id),
         onDate ? undefined : sql`NOT EXISTS (SELECT 1 FROM student_enrollment_placements later
           WHERE later.enrollment_id = ${studentEnrollments.id}
             AND later.valid_from > ${studentEnrollmentPlacements.validFrom})`,
@@ -321,7 +321,7 @@ export class StudentRepository {
         eq(studentEnrollments.academicYearId, this.year.id),
         activeOnly ? eq(studentEnrollments.status, 'active') : undefined,
         this.ownedWhere(),
-        studentTeacherInYear(this.year.id, this._scopeCtx),
+        studentReachedInYear(this.year.id, this._scopeCtx),
       ));
     return row;
   }
@@ -338,7 +338,7 @@ export class StudentRepository {
         eq(studentEnrollments.academicYearId, this.year.id),
         activeOnly ? eq(studentEnrollments.status, 'active') : undefined,
         this.ownedWhere(),
-        studentTeacherInYear(this.year.id, this._scopeCtx),
+        studentReachedInYear(this.year.id, this._scopeCtx),
       ))
       .groupBy(students.gender);
 

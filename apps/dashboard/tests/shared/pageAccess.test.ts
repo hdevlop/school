@@ -43,6 +43,9 @@ describe('page access', () => {
       expect(dashboardLandingPath(viewer(role, []))).toBe('/notifications');
     }
     expect(dashboardLandingPath(viewer('driver', ['read:students']))).toBe('/notifications');
+    // A floor manager reads only their classes: no school-wide dashboard.
+    expect(PAGE_ACCESS.dashboard(viewer('floor_manager', []))).toBe(false);
+    expect(dashboardLandingPath(viewer('floor_manager', ['read:students']))).toBe('/students');
     expect(dashboardLandingPath(viewer('custom-role', []))).toBe('/notifications');
   });
 });

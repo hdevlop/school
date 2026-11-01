@@ -8,6 +8,7 @@ import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewin
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import * as feeApi from '@/services/feeApi';
 import { getStudentFeesDisplayData } from '../utils/feeUtils';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 
 type UseFeesOptions = {
   feeId?: string;
@@ -27,17 +28,18 @@ type UseFeesOptions = {
 
 export const useFees = (options?: UseFeesOptions) => {
   const { t, language } = useTranslation();
+  const viewer = useViewerRole();
   const { feeId, studentId, enabled = true, schedule, tuitionPayment, classId, sectionId, allYears = false, studentYear, studentAllYears = false } = options || {};
   const { viewingYear } = useViewingAcademicYear();
   const mutationYear = studentYear ?? viewingYear;
 
-  const crud = useEntityCRUD(['fees', 'installments', 'payments'], {
+  const crud = useEntityCRUD(['fees', 'installments', 'payments', 'student-credits'], {
     getAll: () => feeApi.getFeesApi(),
     getByScope: feeApi.getOutstandingFeesApi,
     getByStudentAllYears: feeApi.getFeesByStudentAllYearsApi,
     create: feeApi.createFeeApi,
     update: feeApi.updateFeeApi,
-    delete: feeApi.deleteFeeApi,
+    delete: viewer.role === 'admin' ? feeApi.forceRemoveFeeApi : feeApi.deleteFeeApi,
     deleteBulk: feeApi.deleteBulkFeesApi,
     createBulk: feeApi.createBulkFeesApi,
   });

@@ -19,9 +19,14 @@ export interface RoutineDutyFormProps {
   period: RoutinePeriod;
   duty?: RoutineDuty;
   readOnly?: boolean;
-  onDelete?: () => Promise<void>;
+  onSubmit: (data: RoutineDutyFormValues) => Promise<void>;
   /** Puts a lesson in this break on this day instead of a supervisor. */
   onUseForLesson?: () => void;
+}
+
+export interface RoutineDutyFormValues {
+  staffId: string;
+  notes?: string;
 }
 
 export interface RoutineEntryFormProps {
@@ -30,7 +35,6 @@ export interface RoutineEntryFormProps {
   /** The subjects of the routine's other lessons, so the preview takes its grid color. */
   otherSubjects?: Pick<RoutineSubject, 'id' | 'code'>[];
   entry?: RoutineEntry | null;
-  defaultRoom?: string | null;
   onSubmit: (data: RoutineEntryFormValues) => Promise<void>;
   readOnly?: boolean;
 }
@@ -43,6 +47,8 @@ export interface RoutineEntryFormValues {
 }
 
 export interface RoutineGridProps {
+  /** Stacked grids grow with their content and share the page's vertical scroll. */
+  layout?: 'fill' | 'stacked';
   days: RoutineDay[];
   periods: RoutinePeriod[];
   entries: RoutineEntry[];
@@ -62,4 +68,6 @@ export interface RoutinePeriodFormProps {
 
 export interface RoutineScheduleFormProps {
   periods: RoutinePeriod[];
+  onSubmit: (data: { periods: TimelineItem[] }) => Promise<void>;
+  disabled?: boolean;
 }

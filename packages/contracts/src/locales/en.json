@@ -82,6 +82,7 @@
       "teacher": "Assigned records only. Permissions do not expand teacher ownership.",
       "parent": "Linked children only. Permissions do not expand parent ownership.",
       "student": "Own records only. Permissions do not expand student ownership.",
+      "floor_manager": "Classes of the grades assigned in their staff record only. Permissions do not expand floor manager ownership.",
       "unconfigured": "This custom role has no record scope configured. Permissions alone do not grant access to owned school records."
     },
     "categories": {
@@ -1725,6 +1726,8 @@
       "paymentVoided": "Payment voided successfully"
     },
     "errors": {
+      "forceRemovalAdminOnly": "Only an administrator can force-remove a fee",
+      "forceRemovalChanged": "The fee or its payment links changed. Refresh and try again.",
       "idExists": "Fee ID already exists",
       "notFound": "Fee not found",
       "paymentNotFound": "Payment not found",
@@ -1895,6 +1898,8 @@
       "netAmountForYear": "Total for billing period (after discount)"
     },
     "dialogs": {
+      "forceRemoveButton": "Force Remove Fee",
+      "forceRemoveWarning": "Remove this fee and its payment links? Receipts are kept, linked funds return as student credit, and the removal is recorded in the audit log.",
       "createTitle": "Create New Fee",
       "createButton": "Create Fee",
       "viewTitle": "Fee Details",
@@ -1941,6 +1946,8 @@
       "searchByStudentCode": "Search by student code...",
       "filterByFeeType": "Filter by fee type...",
       "allSections": "All sections",
+      "allClasses": "All classes",
+      "allStatuses": "All statuses",
       "allSchedules": "Frequency",
       "fullTuitionPaid": "Annually",
       "filterByStatus": "Filter by status...",
@@ -2825,6 +2832,7 @@
       "assistantClassRequired": "Assistant assignment requires a class",
       "busAssistantVehicleRequired": "Bus assistant assignment requires a vehicle",
       "accountantCycleRequired": "Accountant assignment requires a cycle",
+      "floorManagerGradeRequired": "Floor manager assignment requires a grade",
       "securityZoneRequired": "Security assignment requires a zone",
       "driverVehicleRequired": "Driver assignment requires a vehicle",
       "staffNotFound": "Staff not found",
@@ -2868,6 +2876,7 @@
       "receptionist": "Receptionist",
       "accountant": "Accountant",
       "supervisor": "Supervisor",
+      "floorManager": "Floor Manager",
       "librarian": "Librarian",
       "itSupport": "IT Support",
       "assistant": "Assistant",
@@ -2947,6 +2956,7 @@
       "class": "Class",
       "section": "Section",
       "cycle": "Cycle",
+      "grades": "Grades",
       "startDate": "Start Date",
       "createLogin": "Create a login account",
       "email": "Email",
@@ -5159,6 +5169,28 @@
       "breakHasLesson": "This break holds a lesson on that day. Remove the lesson first."
     },
     "ui": {
+      "bulkPeriods": {
+        "description": "Set the same periods and breaks for one or more classes.",
+        "targetClasses": "Apply to classes",
+        "allSections": "Updates every section timetable in the selected classes. Lessons and supervision keep their slots.",
+        "sectionCount": "Sections: {{count}}",
+        "targetCount": "Timetables selected: {{count}}",
+        "source": "Load periods from",
+        "noRoutines": "Create a routine for a section before setting its periods."
+      },
+      "classSelection": {
+        "title": "Classes to show",
+        "description": "Choose the classes to display and print. Your choice is remembered in this browser.",
+        "apply": "Save filter",
+        "clear": "Clear selection",
+        "selected": "Selected classes ({{count}})",
+        "emptyTitle": "No classes selected",
+        "emptyDescription": "Use the gear button to choose classes to display and print.",
+        "saved": "Class filter saved.",
+        "saveError": "This browser could not save the filter. Check its site storage settings and try again."
+      },
+
+      "allClasses": "All classes",
       "title": "Routine",
       "subtitle": "Build a conflict-safe weekly timetable for every section",
       "fields": {
@@ -5170,6 +5202,7 @@
         "supervisingTeacher": "Supervising teacher",
         "dutyNotes": "Duty notes",
         "teachingDays": "Teaching days",
+        "days": "Days",
         "type": "Type",
         "nameLabel": "Name / label",
         "startTime": "Start time",
@@ -5184,6 +5217,7 @@
         "teacher": "Teacher"
       },
       "actions": {
+        "retry": "Retry",
         "days": "Days",
         "periods": "Periods",
         "saveDays": "Save days",
@@ -5199,7 +5233,8 @@
         "addTeachingPeriod": "Add teaching period",
         "addBreak": "Add break / recess",
         "useSchoolHours": "Use school hours",
-        "lessonInBreak": "Hold a lesson in this break"
+        "lessonInBreak": "Hold a lesson in this break",
+        "print": "Print"
       },
       "dialogs": {
         "daysTitle": "Teaching days",
@@ -5226,6 +5261,10 @@
       },
       "grid": {
         "noRoom": "No room"
+      },
+      "print": {
+        "title": "Timetable",
+        "failed": "Could not prepare the timetable for printing."
       },
       "content": {
         "title": "Nested subjects",
@@ -5283,6 +5322,7 @@
         "weeklyRoutine": "Loading weekly routine..."
       },
       "messages": {
+        "loadError": "Could not load the timetable. Please try again.",
         "saveError": "Unable to save the routine.",
         "routineCreated": "Routine created.",
         "routineUpdated": "Routine updated.",
@@ -7030,6 +7070,7 @@
   },
   "academic": {
     "accountantAssignmentOptional": "Cycle assignment is optional. You can assign a cycle later.",
+    "floorManagerAssignmentHint": "Access is limited to the students, attendance, discipline and grades of these grades' classes, this year and the years after.",
     "deleteWarning": "Linked records are protected. Deleted records cannot be recovered.",
     "classRequired": "Please select a class.",
     "cycleNameRequired": "Cycle name is required.",

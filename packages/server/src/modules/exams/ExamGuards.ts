@@ -1,6 +1,6 @@
 import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where, when } from '../../auth';
 import { exams, teachers, staff, teacherAssignments } from '../../database/schema';
-import { placedOnSourceDate } from '../academicSources/placedOnSourceDate';
+import { placedOnSourceDate, targetsManagedSection } from '../academicSources/placedOnSourceDate';
 
 export const Exam = own(exams)
   .for('teacher',
@@ -8,7 +8,8 @@ export const Exam = own(exams)
     join(teacherAssignments.teacherId, teachers.id),
     join(teachers.staffId, staff.id),
     where(staff.userId),
-  );
+  )
+  .for('floor_manager', when((userId: string) => targetsManagedSection(exams, userId)));
 
 // A student sees an exam of a section they were placed in on the exam date, and
 // a parent their children's; the current section would lose a transferred

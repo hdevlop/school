@@ -24,8 +24,12 @@ describe('initial fees roster selection', () => {
       { classId: 'cp', sectionId: 'cp-b' },
       { classId: 'cp', sectionId: '' },
       { classId: 'all', sectionId: '' },
-      { classId: 'all', sectionId: 'ce1-a' },
     ]) expect(resolveFeeRosterSelection(classes, sections, selection)).toEqual(selection);
+  });
+
+  it('drops a section under All classes, which shows no section filter', () => {
+    expect(resolveFeeRosterSelection(classes, sections, { classId: 'all', sectionId: 'ce1-a' }))
+      .toEqual({ classId: 'all', sectionId: '' });
   });
 
   it('selects A on a class change and repairs a missing or mismatched selection', () => {

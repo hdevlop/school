@@ -7,6 +7,7 @@ import {
   classes,
   cycles,
   drivers,
+  floorManagerAssignments,
   sections,
   securityAssignments,
   staff,
@@ -144,6 +145,19 @@ export class StaffRepository {
       .leftJoin(cycles, eq(accountantAssignments.cycleId, cycles.id))
       .where(inArray(accountantAssignments.staffId, staffIds));
 
+    const floorManagerRows = await this.db
+      .select({
+        id: floorManagerAssignments.id,
+        staffId: floorManagerAssignments.staffId,
+        status: floorManagerAssignments.status,
+        startDate: floorManagerAssignments.startDate,
+        endDate: floorManagerAssignments.endDate,
+        notes: floorManagerAssignments.notes,
+        className: floorManagerAssignments.className,
+      })
+      .from(floorManagerAssignments)
+      .where(inArray(floorManagerAssignments.staffId, staffIds));
+
     const securityRows = await this.db
       .select({
         id: securityAssignments.id,
@@ -200,6 +214,7 @@ export class StaffRepository {
     cleanerRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'cleaner' }));
     assistantRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'assistant' }));
     accountantRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'accountant' }));
+    floorManagerRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'floorManager' }));
     securityRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'security' }));
     busAssistantRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'busAssistant' }));
     driverRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'driver' }));

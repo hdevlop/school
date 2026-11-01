@@ -82,4 +82,6 @@ export interface RoutineSchedule {
   entries: RoutineEntry[];
   duties: RoutineDuty[];
 }
+
+export type RoutineScheduleSummary = Omit<RoutineSchedule, 'periods' | 'entries' | 'duties'>;
 import type { RoutineContentGroup } from '@sms/contracts/routines';

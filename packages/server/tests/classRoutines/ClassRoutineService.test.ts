@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'bun:test';
+import { getTransactionalMethods } from 'najm-database';
 import { ClassRoutineService } from '../../src/modules/classRoutines/ClassRoutineService';
 import { ClassRoutineValidator } from '../../src/modules/classRoutines/ClassRoutineValidator';
 
@@ -58,6 +59,32 @@ describe('new routine school hours', () => {
 });
 
 describe('routine layout changes', () => {
+  const layout = { periods: [{ type: 'lesson' as const, name: 'Period 1', startTime: '08:30', endTime: '09:30' }] };
+  it('checks every target before changing any timetable and updates duplicates only once', async () => {
+    const calls: string[] = [];
+    const service = new ClassRoutineService({} as any, { ensureSchedule: async (id: string) => { calls.push(`check:${id}`); } } as any);
+    service.updateLayout = async (id, value) => { calls.push(`write:${id}`); expect(value).toEqual(layout); return {} as any; };
+    expect(await service.updateLayouts({ scheduleIds: ['one', 'two', 'one'], ...layout })).toEqual({ updated: 2 });
+    expect(calls).toEqual(['check:one', 'check:two', 'write:one', 'write:two']);
+  });
+
+  it('makes no changes when a selected target is outside the request year or missing', async () => {
+    const writes: string[] = [];
+    const service = new ClassRoutineService({} as any, { ensureSchedule: async (id: string) => {
+      if (id === 'other-year') throw new Error('not found in selected year');
+    } } as any);
+    service.updateLayout = async (id) => { writes.push(id); return {} as any; };
+    await expect(service.updateLayouts({ scheduleIds: ['one', 'other-year'], ...layout })).rejects.toThrow('not found in selected year');
+    expect(writes).toEqual([]);
+  });
+
+  it('propagates a rejected layout so the enclosing database transaction rolls back', async () => {
+    const service = new ClassRoutineService({} as any, { ensureSchedule: async () => ({}) } as any);
+    service.updateLayout = async (id) => { if (id === 'two') throw new Error('layout removes lessons'); return {} as any; };
+    await expect(service.updateLayouts({ scheduleIds: ['one', 'two'], ...layout })).rejects.toThrow('layout removes lessons');
+    expect(getTransactionalMethods(ClassRoutineService).some(({ propertyKey }) => propertyKey === 'updateLayouts')).toBe(true);
+  });
+
   it('keeps a lesson held in a break in the same break of the new layout', async () => {
     const old = [
       { id: 'old-1', isBreak: false, sortOrder: 1 },

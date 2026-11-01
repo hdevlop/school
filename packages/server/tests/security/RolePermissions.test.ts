@@ -169,6 +169,15 @@ describe('seeded permissions', () => {
       expect(accounting.has(permission), permission).toBe(true);
     }
   });
+
+  // A floor manager (responsable d'étage) follows its students like the surveillant
+  // général, who alone edits student records, deals with parents and visits and
+  // writes to the school.
+  it('give the floor manager the supervisor\'s work without student edits, parents, visits or sending', () => {
+    const keptBySupervisor = ['update:students', 'read:parents', 'read:visit-requests', 'update:visit-requests', 'create:alerts', 'create:announcements', 'update:announcements'];
+    expect([...grants.floor_manager].sort()).toEqual(grants.supervisor.filter((permission: string) => !keptBySupervisor.includes(permission)).sort());
+    for (const received of ['read:alerts', 'update:alerts', 'read:announcements']) expect(grants.floor_manager).toContain(received);
+  });
 });
 
 describe('the deploy migration', () => {
@@ -200,6 +209,21 @@ describe('the deploy migration', () => {
     expect(grantedTo('principal').has('read:payroll')).toBe(false);
     expect(grantedTo('accounting').has('create:staff')).toBe(false);
     expect(grantedTo('secretary').size).toBe(0);
+  });
+});
+
+describe('the floor manager migration', () => {
+  const sql = readFileSync(new URL('../../src/database/migrations/0089_floor_manager_role.sql', import.meta.url), 'utf8');
+
+  // An existing database gets the role a new one is seeded with.
+  it('grants the seeded defaults', () => {
+    const grants = seedData('rolePermissions').find((row: { roleName: string }) => row.roleName === 'floor_manager').permissions;
+    expect([...sql.matchAll(/'([\w-]+:[\w-]+)'/g)].map((match) => match[1]).sort()).toEqual([...grants].sort());
+  });
+
+  it('links the floor manager job title to the login', () => {
+    expect(sql).toContain(`SELECT 'floorManager', 'Floor Manager'`);
+    expect(sql).toContain(`WHERE "roles"."name" = 'floor_manager'`);
   });
 });
 

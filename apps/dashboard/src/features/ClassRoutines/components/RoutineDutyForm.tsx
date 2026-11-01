@@ -2,7 +2,6 @@
 
 import { BookOpen, ClipboardList, UserRound } from 'lucide-react';
 import { FormInput, NButton, NForm } from 'najm-kit';
-import { useDialog } from '@/shared/useDialog';
 import { z } from 'zod';
 import { useTranslation } from 'najm-i18n/react';
 import { useRoutineDutyCandidates } from '../hooks/useClassRoutines';
@@ -12,11 +11,10 @@ import { routinePeriodLabel } from '../utils/labels';
 export default function RoutineDutyForm({
   period,
   duty,
-  onDelete,
+  onSubmit,
   onUseForLesson,
   readOnly = false,
 }: RoutineDutyFormProps) {
-  const { pop } = useDialog();
   const { t } = useTranslation();
   const schema = z.object({
     staffId: z.string().min(1, t('classRoutines.ui.validation.chooseSupervisor')),
@@ -35,28 +33,23 @@ export default function RoutineDutyForm({
       id="routine-duty-form"
       schema={schema}
       defaultValues={{ staffId: duty?.staffId || '', notes: duty?.notes || '' }}
-      onSubmit={(data) => pop(data)}
+      onSubmit={onSubmit}
     >
       <div className="space-y-4">
         <fieldset disabled={readOnly} className="flex min-w-0 flex-col gap-4">
-        <FormInput
-          name="staffId"
-          type="select"
-          formLabel={isLunch ? t('classRoutines.ui.fields.supervisingStaff') : t('classRoutines.ui.fields.supervisingTeacher')}
-          placeholder={isLunch ? t('classRoutines.ui.placeholders.selectStaff') : t('classRoutines.ui.placeholders.selectTeacher')}
-          icon={UserRound}
-          items={supervisors}
-          required
-        />
-        <FormInput name="notes" type="textarea" formLabel={t('classRoutines.ui.fields.dutyNotes')} icon={ClipboardList} />
+          <FormInput
+            name="staffId"
+            type="select"
+            formLabel={isLunch ? t('classRoutines.ui.fields.supervisingStaff') : t('classRoutines.ui.fields.supervisingTeacher')}
+            placeholder={isLunch ? t('classRoutines.ui.placeholders.selectStaff') : t('classRoutines.ui.placeholders.selectTeacher')}
+            icon={UserRound}
+            items={supervisors}
+            required
+          />
+          <FormInput name="notes" type="textarea" formLabel={t('classRoutines.ui.fields.dutyNotes')} icon={ClipboardList} />
         </fieldset>
-        {onDelete ? (
-          <button type="button" className="text-sm font-medium text-destructive" onClick={async () => { await onDelete(); pop(); }}>
-            {t('classRoutines.ui.actions.removeSupervision')}
-          </button>
-        ) : null}
         {onUseForLesson ? (
-          <NButton type="button" variant="outline" size="sm" leftIcon={<BookOpen className="h-4 w-4" />} onClick={() => { pop(); onUseForLesson(); }}>
+          <NButton type="button" variant="outline" size="sm" leftIcon={<BookOpen className="h-4 w-4" />} onClick={onUseForLesson}>
             {t('classRoutines.ui.actions.lessonInBreak')}
           </NButton>
         ) : null}

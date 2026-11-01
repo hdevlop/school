@@ -14,6 +14,7 @@ import {
   routineIdParam,
   routineListQuery,
   routineLayoutDto,
+  routineBulkLayoutDto,
   routineTeacherParam,
   updateRoutineEntryDto,
   updateRoutineDutyDto,
@@ -25,6 +26,7 @@ import {
   type CreateRoutineScheduleDto,
   type RoutineListQuery,
   type RoutineLayoutDto,
+  type RoutineBulkLayoutDto,
   type UpdateRoutineEntryDto,
   type RoutineEntryDeleteQuery,
   type UpdateRoutineDutyDto,
@@ -186,6 +188,14 @@ export class ClassRoutineController {
   @ResMsg('classRoutines.success.updated')
   async update(@Params('id') id: string, @Body() body: UpdateRoutineScheduleDto) {
     return this.service.update(id, body);
+  }
+
+  @Post('/bulk/layout')
+  @Can('update:class-routines')
+  @Validate(routineBulkLayoutDto)
+  @ResMsg('classRoutines.success.updated')
+  async updateLayouts(@Body() body: RoutineBulkLayoutDto) {
+    return this.service.updateLayouts(body);
   }
 
   @Put('/:id/layout')

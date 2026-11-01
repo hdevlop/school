@@ -1,7 +1,8 @@
-import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where } from '../../auth';
+import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where, when } from '../../auth';
 import { students, teachers, staff, parents, teacherAssignments, studentParents, studentEnrollments, studentEnrollmentPlacements } from '../../database/schema';
 import { sql, type SQLWrapper } from 'drizzle-orm';
 import type { ScopeContext } from '../../auth';
+import { managesStudent, managesStudentInYear } from '../staff/floorManagerScope';
 
 export const Student = own(students)
   .for('student',
@@ -19,14 +20,17 @@ export const Student = own(students)
     join(students.id, studentParents.studentId),
     join(studentParents.parentId, parents.id),
     where(parents.userId),
-  );
+  )
+  .for('floor_manager', when((userId: string) => managesStudent(students.id, userId)));
 
 export { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete };
 
-// Shared identity can be readable through any recorded teaching relationship.
-// A year's roster additionally requires that relationship in that same year.
-export function studentTeacherInYear(yearId: string, context?: ScopeContext, placementId?: SQLWrapper) {
+// Shared identity can be readable through any recorded teaching relationship,
+// or any placement in a floor manager's class. A year's roster additionally
+// requires that relationship in that same year.
+export function studentReachedInYear(yearId: string, context?: ScopeContext, placementId?: SQLWrapper) {
   const actor = context?.getUser();
+  if (actor?.role === 'floor_manager') return managesStudentInYear(students.id, yearId, actor.id, placementId);
   if (actor?.role !== 'teacher') return undefined;
   return sql`EXISTS (SELECT 1 FROM student_enrollments e
     JOIN student_enrollment_placements p ON p.enrollment_id = e.id

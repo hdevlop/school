@@ -13,7 +13,7 @@ import RoutineCell from './RoutineCell';
 const deviceToday = (): RoutineDay => ROUTINE_DAYS[(new Date().getDay() + 6) % 7];
 
 /** Phones: one day of a section's timetable at a time, periods top to bottom. */
-export default function RoutineDayList({ days, periods, entries, duties = [], editable, canCreate = editable, canUpdate = editable, canDelete = editable, onCellClick, onDutyClick }: RoutineGridProps) {
+export default function RoutineDayList({ days, periods, entries, duties = [], editable, canCreate = editable, canUpdate = editable, canDelete = editable, onCellClick, onDutyClick, layout }: RoutineGridProps) {
   const { t } = useTranslation();
   const [pickedDay, setPickedDay] = useState<RoutineDay | null>(null);
   const today = deviceToday();
@@ -22,9 +22,11 @@ export default function RoutineDayList({ days, periods, entries, duties = [], ed
   const dutyMap = new Map(duties.map((duty) => [`${duty.dayOfWeek}:${duty.periodId}`, duty]));
   const colorOf = useMemo(() => subjectColors(entries.map((entry) => ({ id: entry.subjectId, code: entry.subjectCode }))), [entries]);
   const dayLabel = shownDay ? routineDayLabel(shownDay, t) : '';
+  const stacked = layout === 'stacked';
+  const ScrollContainer = stacked ? 'div' : NajmScroll;
 
   return (
-    <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3">
+    <div className={`flex min-w-0 flex-col gap-3 ${stacked ? '' : 'min-h-0 flex-1'}`}>
       <div className="grid shrink-0 gap-1 rounded-xl border bg-card p-1" style={{ gridTemplateColumns: `repeat(${days.length}, minmax(0, 1fr))` }} role="tablist" aria-label={t('classRoutines.ui.fields.teachingDays')}>
         {days.map((day) => (
           <button
@@ -44,8 +46,8 @@ export default function RoutineDayList({ days, periods, entries, duties = [], ed
 
       <h2 className="shrink-0 px-1 text-sm font-semibold text-foreground">{dayLabel}</h2>
 
-      <NajmScroll key={shownDay} axis="y" autoHide="scroll" className="flex-1">
-        <ol className="flex flex-col gap-2 pe-2 pb-20" role="tabpanel" aria-label={dayLabel}>
+      <ScrollContainer key={shownDay} className={stacked ? '' : 'flex-1'} {...(stacked ? {} : { axis: 'y' as const, autoHide: 'scroll' as const })}>
+        <ol className={`flex flex-col gap-2 pe-2 ${stacked ? 'pb-2' : 'pb-20'}`} role="tabpanel" aria-label={dayLabel}>
           {shownDay ? periods.map((period) => {
             const time = (
               <div className="flex w-12 shrink-0 flex-col items-center justify-center gap-1 text-xs font-medium tabular-nums text-muted-foreground" dir="ltr">
@@ -106,7 +108,7 @@ export default function RoutineDayList({ days, periods, entries, duties = [], ed
             );
           }) : null}
         </ol>
-      </NajmScroll>
+      </ScrollContainer>
     </div>
   );
 }

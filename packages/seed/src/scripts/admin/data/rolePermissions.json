@@ -341,6 +341,33 @@
     ]
   },
   {
+    "roleName": "floor_manager",
+    "permissions": [
+      "read:students",
+      "read:teachers",
+      "read:classes",
+      "read:sections",
+      "read:subjects",
+      "create:attendance",
+      "read:attendance",
+      "update:attendance",
+      "create:discipline",
+      "read:discipline",
+      "update:discipline",
+      "create:behavior-rewards",
+      "read:behavior-rewards",
+      "update:behavior-rewards",
+      "read:grades",
+      "read:exams",
+      "read:assessments",
+      "read:events",
+      "read:alerts",
+      "update:alerts",
+      "read:announcements",
+      "read:offline"
+    ]
+  },
+  {
     "roleName": "driver",
     "permissions": [
       "read:students",

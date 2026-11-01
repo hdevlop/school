@@ -82,6 +82,7 @@
       "teacher": "Solo registros asignados. Los permisos no amplían el alcance del docente.",
       "parent": "Solo hijos vinculados. Los permisos no amplían el alcance del familiar.",
       "student": "Solo registros propios. Los permisos no amplían el alcance del alumno.",
+      "floor_manager": "Solo las clases de los niveles asignados en su ficha de personal. Los permisos no amplían el alcance del responsable de planta.",
       "unconfigured": "Este rol personalizado no tiene un alcance de registros configurado. Los permisos por sí solos no dan acceso a los registros protegidos."
     },
     "categories": {
@@ -1476,6 +1477,28 @@
       "breakHasLesson": "Este descanso tiene una clase ese día. Quita primero la clase."
     },
     "ui": {
+      "bulkPeriods": {
+        "description": "Define los mismos periodos y descansos para una o varias clases.",
+        "targetClasses": "Aplicar a las clases",
+        "allSections": "Actualiza los horarios de todas las secciones de las clases seleccionadas. Las clases y la supervisión conservan sus franjas.",
+        "sectionCount": "Secciones: {{count}}",
+        "targetCount": "Horarios seleccionados: {{count}}",
+        "source": "Cargar periodos de",
+        "noRoutines": "Crea el horario de una sección antes de definir sus periodos."
+      },
+      "classSelection": {
+        "title": "Clases para mostrar",
+        "description": "Elige las clases que se mostrarán e imprimirán. Tu selección se recuerda en este navegador.",
+        "apply": "Guardar filtro",
+        "clear": "Borrar selección",
+        "selected": "Clases seleccionadas ({{count}})",
+        "emptyTitle": "Ninguna clase seleccionada",
+        "emptyDescription": "Usa el botón de ajustes para elegir las clases que se mostrarán e imprimirán.",
+        "saved": "Filtro de clases guardado.",
+        "saveError": "Este navegador no pudo guardar el filtro. Revisa sus ajustes de almacenamiento del sitio e inténtalo de nuevo."
+      },
+
+      "allClasses": "Todas las clases",
       "title": "Horario",
       "subtitle": "Crea un horario semanal sin conflictos para cada sección",
       "fields": {
@@ -1487,6 +1510,7 @@
         "supervisingTeacher": "Profesor supervisor",
         "dutyNotes": "Notas de supervisión",
         "teachingDays": "Días lectivos",
+        "days": "Días",
         "type": "Tipo",
         "nameLabel": "Nombre / etiqueta",
         "startTime": "Hora de inicio",
@@ -1501,6 +1525,7 @@
         "teacher": "Profesor"
       },
       "actions": {
+        "retry": "Reintentar",
         "days": "Días",
         "periods": "Periodos",
         "saveDays": "Guardar días",
@@ -1516,7 +1541,8 @@
         "addTeachingPeriod": "Añadir periodo lectivo",
         "addBreak": "Añadir descanso",
         "useSchoolHours": "Usar el horario escolar",
-        "lessonInBreak": "Poner una clase en este descanso"
+        "lessonInBreak": "Poner una clase en este descanso",
+        "print": "Imprimir"
       },
       "dialogs": {
         "daysTitle": "Días lectivos",
@@ -1543,6 +1569,10 @@
       },
       "grid": {
         "noRoom": "Sin aula"
+      },
+      "print": {
+        "title": "Horario",
+        "failed": "No se pudo preparar el horario para imprimir."
       },
       "content": {
         "title": "Submaterias",
@@ -1600,6 +1630,7 @@
         "weeklyRoutine": "Cargando horario semanal..."
       },
       "messages": {
+        "loadError": "No se pudo cargar el horario. Inténtalo de nuevo.",
         "saveError": "No se pudo guardar el horario.",
         "routineCreated": "Horario creado.",
         "routineUpdated": "Horario actualizado.",
@@ -1986,10 +2017,14 @@
       "filterByStatus": "Filtrar por estado",
       "searchByStudent": "Buscar estudiante...",
       "allSections": "Todas las secciones",
+      "allClasses": "Todas las clases",
+      "allStatuses": "Todos los estados",
       "allSchedules": "Frecuencia",
       "fullTuitionPaid": "Anual"
     },
     "dialogs": {
+      "forceRemoveButton": "Forzar eliminación",
+      "forceRemoveWarning": "¿Eliminar esta cuota y sus vínculos de pago? Se conservan los recibos, los importes vinculados vuelven como saldo a favor y la eliminación queda registrada en la auditoría.",
       "createButton": "Crear",
       "createTitle": "Crear",
       "deleteButton": "Eliminar",
@@ -2061,6 +2096,8 @@
       "updated": "Cuota actualizado correctamente"
     },
     "errors": {
+      "forceRemovalAdminOnly": "Solo un administrador puede forzar la eliminación de una cuota",
+      "forceRemovalChanged": "La cuota o sus vínculos de pago han cambiado. Actualice e inténtelo de nuevo.",
       "installmentMissingForFee": "La cuota n.º {{number}} no existe para la tarifa {{feeId}}",
       "noInstallmentsMatched": "Ninguna cuota coincide con las asignaciones solicitadas",
       "allocationsExceedPayment": "Las asignaciones no pueden superar el importe del pago",
@@ -3896,6 +3933,7 @@
       "assistantClassRequired": "La asignación de un asistente requiere una clase",
       "busAssistantVehicleRequired": "La asignación de un acompañante de autobús requiere un vehículo",
       "accountantCycleRequired": "La asignación de un contable requiere un ciclo",
+      "floorManagerGradeRequired": "La asignación de un responsable de planta requiere un nivel",
       "securityZoneRequired": "La asignación de un agente de seguridad requiere una zona",
       "driverVehicleRequired": "La asignación de un conductor requiere un vehículo",
       "staffNotFound": "Miembro del personal no encontrado",
@@ -3938,6 +3976,7 @@
       "receptionist": "Recepcionista",
       "accountant": "Contador",
       "supervisor": "Supervisor",
+      "floorManager": "Responsable de planta",
       "librarian": "Bibliotecario",
       "itSupport": "Soporte IT",
       "assistant": "Asistente",
@@ -4005,6 +4044,7 @@
       "assignments": "Asignaciones",
       "class": "Clase",
       "cycle": "Ciclo",
+      "grades": "Niveles",
       "driverLicense": "Permiso de conducir",
       "email": "Correo electrónico",
       "shift": "Turno",
@@ -6321,6 +6361,7 @@
   },
   "academic": {
     "accountantAssignmentOptional": "La asignación a un ciclo es opcional. Puede añadirla más tarde.",
+    "floorManagerAssignmentHint": "El acceso se limita a los alumnos, la asistencia, la disciplina y las notas de las clases de estos niveles, este curso y los siguientes.",
     "deleteWarning": "Los registros vinculados están protegidos. Los registros eliminados no se pueden recuperar.",
     "classRequired": "Seleccione una clase.",
     "cycleNameRequired": "El nombre del ciclo es obligatorio.",

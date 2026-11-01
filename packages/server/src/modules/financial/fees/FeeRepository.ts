@@ -1,5 +1,5 @@
 import { Repository } from '../../../najm';
-import { eq, desc, and, inArray, isNotNull, or, sql, sum } from 'drizzle-orm';
+import { eq, desc, and, inArray, isNotNull, isNull, notInArray, or, sql, sum } from 'drizzle-orm';
 import { fees, feeInstallments, feeTypes, paymentAllocations, payments, students, classes, sections, users, studentEnrollments, studentEnrollmentPlacements } from '../../../database/schema';
 import { DB } from '../../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
@@ -30,6 +30,10 @@ import {
   getTotalPaidSum,
   getTotalUnpaidAmount
 } from './FeeUtils';
+
+// A student who left during the year is billed only up to leaving, so having
+// paid that much is not having paid the year's tuition.
+const LEFT_DURING_YEAR = ['withdrawn', 'transferred'] as const;
 
 @Repository()
 export class FeeRepository {
@@ -341,6 +345,9 @@ export class FeeRepository {
         // Filter before aggregating so balances and collection metrics use only matching fees.
         schedule ? eq(fees.schedule, schedule) : undefined,
         tuitionPaidInFull ? eq(feeTypes.category, 'tuition') : undefined,
+        tuitionPaidInFull
+          ? or(isNull(studentEnrollments.id), notInArray(studentEnrollments.status, [...LEFT_DURING_YEAR]))
+          : undefined,
       ))
       .groupBy(
         students.id, students.name, students.studentCode, users.image,

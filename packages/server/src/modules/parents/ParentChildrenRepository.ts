@@ -12,7 +12,7 @@ import {
   students,
   users,
 } from '../../database/schema';
-import { Student, studentTeacherInYear } from '../students/StudentGuards';
+import { Student, studentReachedInYear } from '../students/StudentGuards';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { studentSelect } from './ParentRepository';
@@ -40,7 +40,7 @@ export class ParentChildrenRepository {
   private readCondition(parentId: string) {
     return and(
       this.ownedWhere(),
-      studentTeacherInYear(this.year.id, this._scopeCtx),
+      studentReachedInYear(this.year.id, this._scopeCtx),
       eq(studentParents.parentId, parentId),
     );
   }
@@ -64,7 +64,7 @@ export class ParentChildrenRepository {
       .leftJoin(studentEnrollmentPlacements, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
       .where(and(
         this.ownedWhere(),
-        studentTeacherInYear(this.year.id, this._scopeCtx),
+        studentReachedInYear(this.year.id, this._scopeCtx),
         inArray(studentParents.parentId, parentIds),
       ))
       .orderBy(studentParents.parentId, students.id, desc(studentEnrollmentPlacements.validFrom));

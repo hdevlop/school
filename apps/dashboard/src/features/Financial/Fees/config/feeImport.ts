@@ -79,9 +79,12 @@ export function buildFeeImport(
         problems.push({ row: index + 2, message: parsed.error.issues.map(issue => issue.message).join('; ') });
         continue;
       }
+      // Occasional charges (meals by the day) may repeat within a month; the server keeps each by its ordinal.
       const key = JSON.stringify([parsed.data.studentId, parsed.data.feeTypeId, ...(nested ? [parsed.data.effectiveDate ?? '', parsed.data.schedule] : [])]);
-      if (seen.has(key)) { fail('duplicate'); continue; }
-      seen.add(key);
+      if (!(nested && parsed.data.schedule === 'occasional')) {
+        if (seen.has(key)) { fail('duplicate'); continue; }
+        seen.add(key);
+      }
       fees.push(parsed.data);
       target.fees.push({ ...parsed.data, feeTypeId: type.id });
     }

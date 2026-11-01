@@ -1,5 +1,7 @@
-import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where } from '../../auth';
+import { sql } from 'drizzle-orm';
+import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where, when } from '../../auth';
 import { attendance, students, staff, parents, studentParents, teachers, teacherAssignments } from '../../database/schema';
+import { managesSection, managesStudent } from '../staff/floorManagerScope';
 
 export const Attendance = own(attendance)
   .for('teacher',
@@ -16,6 +18,11 @@ export const Attendance = own(attendance)
     join(attendance.studentId, students.id),
     where(students.userId),
   )
+  // Student marks taken in a section of their classes, and an older mark with
+  // no section by its student; never staff attendance.
+  .for('floor_manager', when((userId: string) => sql`(${attendance.studentId} is not null and (
+    ${managesSection(attendance.sectionId, userId)}
+    or (${attendance.sectionId} is null and ${managesStudent(attendance.studentId, userId)})))`))
   .writeBy(attendance.studentId);
 
 // A najm rule is one join chain, so a teacher's other readable rows are

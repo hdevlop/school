@@ -75,6 +75,8 @@ export const createStaffSchemas = (t: T, today = new Date().toISOString().slice(
     assignments: z.array(assignment).optional(),
     // Assistant-only: many classes selected in a single multiselect (expanded on submit).
     classIds: z.array(z.string()).optional(),
+    // Floor-manager-only: grades by class name, likewise one assignment each.
+    classNames: z.array(z.string()).optional(),
   });
 
   const driverDetails = z.object({

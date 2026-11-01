@@ -2,7 +2,7 @@
 
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { Suspense, useCallback, useMemo, useState } from 'react';
+import { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import type { Schedule } from '@sms/contracts';
 import { NPageHeader, NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState, NStatCard, NStatCardSkeleton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
@@ -19,7 +19,7 @@ import { useStudents } from '@/features/Students/hooks/useStudents';
 import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { createBulkFeesApi, getFeesApi, getFeeSummaryApi, importStudentFeesApi, previewFeeImportDatesApi } from '@/services/feeApi';
 import { getFeeTypesApi } from '@/services/feeTypeApi';
@@ -31,7 +31,8 @@ import { withFeeYear } from '../utils/feeUtils';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { useFeesTableColumns } from '../hooks/useFeesTableColumns';
 import { buildFeeListFrequencyOptions, getFeeListFrequencyFilter } from '../config/feeOptions';
-import { resolveFeeEntryFilters } from '../config/feeNavigation';
+import { createFeeListFilterMemory, feeListFiltersKey, resolveFeeListFilters, type FeeListFilters } from '../config/feeListFilters';
+import { useYearSelectionStore } from '@/features/AcademicYears/store/yearSelectionStore';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
 import { useViewingAcademicYear, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
@@ -47,7 +48,9 @@ function CreateFeeForm({ feeTypes }) {
   return <FeeForm students={students} feeTypes={feeTypes} />;
 }
 
-function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeof resolveFeeEntryFilters> }) {
+const feeListMemory = createFeeListFilterMemory(() => window.sessionStorage);
+
+function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeListFilters; memoryKey: string | null }) {
 
   const { t } = useTranslation();
   const { majorMoney } = useSchoolFormat();
@@ -75,9 +78,15 @@ function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeo
   const setSelectedSectionId = useCallback((sectionId: string) => {
     setSelection({ classId: selectedClassId, sectionId: sectionId === '__all__' ? '' : sectionId });
   }, [selectedClassId]);
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState(initialFilters.searchText);
   const [statusFilter, setStatusFilter] = useState(initialFilters.statusFilter);
-  const [scheduleFilter, setScheduleFilter] = useState<Schedule>();
+  const [scheduleFilter, setScheduleFilter] = useState<Schedule | undefined>(initialFilters.scheduleFilter);
+
+  // Keep the filters for this tab, so opening a student's fees and coming
+  // back (Back button or sidebar) returns to the same list.
+  useEffect(() => {
+    if (memoryKey) feeListMemory.write(memoryKey, { selection, statusFilter, scheduleFilter, searchText });
+  }, [memoryKey, selection, statusFilter, scheduleFilter, searchText]);
 
   // Summary cards cover the viewed year independently of table filters;
   // The summary includes only collections and overdue balances through today.
@@ -125,7 +134,7 @@ function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeo
 
   const classOptions = useMemo(
     () => [
-      { value: 'all', label: t('common.all') || 'All' },
+      { value: 'all', label: t('fees.filters.allClasses') },
       ...(classes || []).map((c: any) => ({ value: c.id, label: c.name })),
     ],
     [classes, t],
@@ -133,12 +142,9 @@ function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeo
 
   const sectionOptions = useMemo(
     () => (sections || [])
-      .filter((s: any) => isAllClasses || s.classId === selectedClassId)
-      .map((s: any) => ({
-        value: s.id,
-        label: isAllClasses ? `${s.class?.name || classes?.find(c => c.id === s.classId)?.name || ''} - ${s.name}` : s.name,
-      })),
-    [sections, classes, selectedClassId, isAllClasses],
+      .filter((s: any) => s.classId === selectedClassId)
+      .map((s: any) => ({ value: s.id, label: s.name })),
+    [sections, selectedClassId],
   );
 
   const columns = useFeesTableColumns();
@@ -152,19 +158,20 @@ function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeo
       value: selectedClassId,
       onChange: setSelectedClassId,
       options: classOptions,
-      className: 'w-full sm:w-24 xl:w-24',
+      className: 'w-full sm:w-40 xl:w-40',
     },
-    {
+    // A section belongs to one class, so All classes offers none.
+    ...(isAllClasses ? [] : [{
       name: 'section',
       type: 'select',
       showIcon: false,
       placeholder: t('fees.filters.section'),
       value: selectedSectionId || '__all__',
       onChange: setSelectedSectionId,
-      options: [{ value: '__all__', label: t('common.all') }, ...sectionOptions],
+      options: [{ value: '__all__', label: t('fees.filters.allSections') }, ...sectionOptions],
       disabled: sectionOptions.length === 0,
-      className: 'w-full sm:w-28 xl:w-28',
-    },
+      className: 'w-full sm:w-40 xl:w-40',
+    } satisfies FeeTableFilter]),
     {
       name: 'search',
       placeholder: t('fees.filters.searchByStudent') || 'Search student...',
@@ -194,14 +201,14 @@ function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeo
       value: statusFilter,
       onChange: setStatusFilter,
       options: [
-        { value: '__all__', label: t('common.all') || 'All' },
+        { value: '__all__', label: t('fees.filters.allStatuses') },
         { value: 'overdue', label: t('fees.status.overdue') || 'Overdue' },
         { value: 'paying', label: t('fees.status.paying') || 'Paying' },
         { value: 'paid', label: t('fees.status.paid') || 'Paid' },
       ],
-      className: 'w-full lg:w-36',
+      className: 'w-full lg:w-44',
     },
-  ], [t, selectedClassId, selectedSectionId, setSelectedClassId, setSelectedSectionId, searchText, statusFilter, scheduleFilter, classOptions, sectionOptions]);
+  ], [t, selectedClassId, selectedSectionId, setSelectedClassId, setSelectedSectionId, searchText, statusFilter, scheduleFilter, classOptions, sectionOptions, isAllClasses]);
 
   const handleAddClick = () => {
     if (!viewingYear) return;
@@ -331,12 +338,13 @@ function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeo
   };
 
   const handleDelete = (fee) => {
+    const forceRemove = viewer.role === 'admin';
     confirmDelete({
       title: t('common.delete'),
-      warningText: t('common.deleteConfirm'),
+      warningText: t(forceRemove ? 'fees.dialogs.forceRemoveWarning' : 'common.deleteConfirm'),
       cancelText: t('common.cancel'),
       itemName: fee.name,
-      confirmText: t('fees.dialogs.deleteButton'),
+      confirmText: t(forceRemove ? 'fees.dialogs.forceRemoveButton' : 'fees.dialogs.deleteButton'),
       loading: isDeleting,
       onConfirm: async () => {
         await deleteFee(fee.id);
@@ -503,10 +511,28 @@ function FeesTableForYear({ initialFilters }: { initialFilters: ReturnType<typeo
 }
 
 function FeesTableEntry() {
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const initialFilters = resolveFeeEntryFilters(searchParams.get('status'));
+  const status = searchParams.get('status');
   const yearKey = useViewingYearKey();
-  return <FeesTableForYear key={`${yearKey}:${initialFilters.statusFilter}`} initialFilters={initialFilters} />;
+  const accountId = useYearSelectionStore(state => state.accountId);
+  // The year resolves on the client after the account is known, so storage is
+  // read only after hydration.
+  const memoryKey = accountId && yearKey !== 'resolving' ? feeListFiltersKey(accountId, yearKey) : null;
+  const initialFilters = resolveFeeListFilters(status, memoryKey ? feeListMemory.read(memoryKey) : undefined);
+
+  // Once a `?status=` link has been applied and remembered, drop it from the
+  // address, so Back from a student returns to the tab's later filters.
+  useEffect(() => {
+    if (!status || !memoryKey) return;
+    const rest = new URLSearchParams(searchParams.toString());
+    rest.delete('status');
+    const query = rest.toString();
+    router.replace(`${pathname}${query ? `?${query}` : ''}`, { scroll: false });
+  }, [status, memoryKey, searchParams, pathname, router]);
+
+  return <FeesTableForYear key={`${yearKey}:${status ?? ''}`} initialFilters={initialFilters} memoryKey={memoryKey} />;
 }
 
 export default function FeesTable() {

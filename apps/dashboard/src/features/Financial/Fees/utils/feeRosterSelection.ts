@@ -8,15 +8,16 @@ export function defaultFeeSection(sections: readonly Section[], classId: string)
   return (available.find((section) => section.name.trim().toUpperCase() === 'A') ?? available[0])?.id ?? '';
 }
 
-/** Resolve IDs from this year's catalogs, without initially selecting every student. */
+/**
+ * Resolve IDs from this year's catalogs, without initially selecting every
+ * student. All classes has no section filter, so it never narrows by one.
+ */
 export function resolveFeeRosterSelection(
   classes: readonly SchoolClass[],
   sections: readonly Section[],
   selection: FeeRosterSelection | null,
 ): FeeRosterSelection {
-  if (selection?.classId === 'all') {
-    return { classId: 'all', sectionId: sections.some((section) => section.id === selection.sectionId) ? selection.sectionId : '' };
-  }
+  if (selection?.classId === 'all') return { classId: 'all', sectionId: '' };
   if (selection && classes.some((schoolClass) => schoolClass.id === selection.classId)) {
     return {
       classId: selection.classId,

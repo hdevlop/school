@@ -1,8 +1,9 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { FeeService } from './FeeService';
+import { FeeForceRemovalService } from './FeeForceRemovalService';
 import { buildFeeRecalculationResponse } from './buildFeeRecalculationResponse';
-import { CanSchoolWide, isAdministrator } from '../../../auth';
+import { CanSchoolWide, isAdmin, isAdministrator } from '../../../auth';
 import { FeeImportService } from './FeeImportService';
 import { importStudentFeesDto, importStudentFeesWithDatesDto, previewFeeImportDatesDto,
   type ImportStudentFeesDto, type ImportStudentFeesWithDatesDto, type PreviewFeeImportDatesDto } from './FeeImportDto';
@@ -34,12 +35,13 @@ export class FeeController {
   constructor(
     private feeService: FeeService,
     private feeImportService: FeeImportService,
+    private feeForceRemovalService: FeeForceRemovalService,
   ) { }
 
   @Get()
   @CanSchoolWide('read:fees')
   @Validate({ query: listFeesQueryDto })
-  @McpTool({ description: 'List student fee totals in the selected year, optionally filtered by class, section and exact payment schedule. tuitionPayment=paidInFull returns only tuition totals fully paid through today, regardless of installment schedule.', readOnly: true })
+  @McpTool({ description: 'List student fee totals in the selected year, optionally filtered by class, section and exact payment schedule. tuitionPayment=paidInFull returns only tuition totals fully paid through today, regardless of installment schedule, for students who did not leave during the year (withdrawn or transferred).', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getFees(@Query() filters: ListFeesQueryDto = {}) {
     return this.feeService.getAll(filters);
@@ -208,6 +210,16 @@ export class FeeController {
   @ResMsg('fees.success.deleted')
   async deleteById(@Params('id') id: string, @User() user: { id: string; role?: string }) {
     return this.feeService.delete(id, user.id, user.role);
+  }
+
+  @Post('/:id/force-remove')
+  @isAdmin()
+  @CanSchoolWide('delete:fees', 'update:payments')
+  @Validate({ params: feeIdParam })
+  @McpTool({ description: 'Admin force removal of a fee: preserves receipts, returns linked funds as student credit, and audits removed payment links', confirm: { level: 'danger', message: 'fees.dialogs.forceRemoveWarning' } })
+  @ResMsg('fees.success.deleted')
+  async forceRemoveById(@Params('id') id: string, @User() user: { id: string; role?: string }) {
+    return this.feeForceRemovalService.remove(id, user);
   }
 
   @Post('/recalculate/:id')

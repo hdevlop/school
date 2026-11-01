@@ -115,6 +115,18 @@ export class FeeValidator {
     if (await this.feeRepository.hasAllocations(id)) Err(409, this.t('feeDeleteHasAllocations'));
   }
 
+  ensureForceRemovalActor(actor: { id?: string; role?: string }) {
+    if (!actor.id || actor.role !== 'admin') Err(403, this.t('forceRemovalAdminOnly'));
+  }
+
+  ensureForceRemovalUnchanged(unchanged: boolean) {
+    if (!unchanged) Err(409, this.t('forceRemovalChanged'));
+  }
+
+  ensureForceRemovalCredit(status: string | undefined, original: number, remaining: number) {
+    if (status === 'cancelled' || original <= 0 || remaining > original) Err(409, this.t('forceRemovalChanged'));
+  }
+
   ensureRecalculationFee<T>(fee: T | null | undefined): T {
     if (!fee) Err(404, this.t('notFound'));
     return fee;

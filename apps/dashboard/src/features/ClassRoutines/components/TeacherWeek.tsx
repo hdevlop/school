@@ -119,7 +119,7 @@ export default function TeacherWeek({ schedules, today }: { schedules: RoutineSc
             <thead className="sticky top-0 z-20">
               <tr className="bg-slate-800 text-white dark:bg-slate-900">
                 <th scope="col" className="sticky start-0 z-20 w-24 border-e border-white/20 bg-slate-800 px-2 py-2.5 text-start text-xs font-semibold dark:bg-slate-900">
-                  {t('classRoutines.ui.fields.teachingDays')}
+                  {t('classRoutines.ui.fields.days')}
                 </th>
                 {slots.map((slot) => (
                   <th

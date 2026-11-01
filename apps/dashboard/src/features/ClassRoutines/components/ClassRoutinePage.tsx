@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { BookOpen, CalendarClock, Clock3, Plus, Trash2 } from 'lucide-react';
+import { BookOpen, CalendarClock, Clock3, Plus, Printer, Settings, Trash2, UserRound } from 'lucide-react';
+import { toast } from 'sonner';
 import { ComboboxInput, NajmScroll, NButton, NFilterBar, NPageHeader, NPageHeaderActions, NSheet, NSkeleton, SelectInput } from 'najm-kit';
-import { useDialog } from '@/shared/useDialog';
 import { useAuth } from 'najm-auth/client/react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
@@ -13,29 +13,36 @@ import { useViewingAcademicYear, useViewingYearKey } from '@/features/AcademicYe
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import ClassRoutineSkeleton from './ClassRoutineSkeleton';
+import RoutineClassSettings from './RoutineClassSettings';
 import RoutineEntryForm from './RoutineEntryForm';
 import RoutineDutyForm from './RoutineDutyForm';
 import RoutineGrid from './RoutineGrid';
-import RoutineScheduleForm from './RoutineScheduleForm';
+import RoutinePeriodsEditor from './RoutinePeriodsEditor';
 import TeacherRoutinePage from './TeacherRoutinePage';
 import {
   useRoutine,
+  useRoutineDetails,
   useRoutineAssignments,
   useRoutineList,
   useRoutineMutations,
   useRoutineSubjects,
 } from '../hooks/useClassRoutines';
-import type { RoutineDay, RoutineDuty, RoutineEntry, RoutinePeriod } from '../types';
-import type { RoutineEntryFormValues } from '../types/forms';
+import type { RoutineDay, RoutineDuty, RoutineEntry, RoutinePeriod, RoutineSchedule } from '../types';
+import type { RoutineDutyFormValues, RoutineEntryFormValues } from '../types/forms';
 import { routineDayLabel, routinePeriodLabel } from '../utils/labels';
+import { buildRoutineDocuments, printRoutineDocument } from '../utils/routinePrint';
+import { selectRoutineSchedules } from '../utils/selectRoutineSchedules';
+import { subjectColors } from '../utils/subjectColors';
+import { useRoutineClassFilter } from '../hooks/useRoutineClassFilter';
 
-function ClassRoutinePageForYear() {
-  const { t } = useTranslation();
+const ALL_CLASSES = 'all';
+
+function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
+  const { t, language } = useTranslation();
   const { can } = useViewerRole();
   const canCreate = can('create:class-routines');
   const canEdit = can('update:class-routines');
   const canDelete = can('delete:class-routines');
-  const { openDialog } = useDialog();
   const { classes, isClassesLoading } = useClasses();
   const { academicYear, isAcademicYearLoading } = useActiveAcademicYear();
   const { publicSettings } = usePublicSettings();
@@ -52,28 +59,51 @@ function ClassRoutinePageForYear() {
   const [classId, setClassId] = useState('');
   const [sectionId, setSectionId] = useState('');
   const [scheduleId, setScheduleId] = useState('');
+  const { visibleClassIds, ready: filterReady, hasSavedFilter, save: saveClassFilter } = useRoutineClassFilter(accountId, listedYear);
+  const [classSelection, setClassSelection] = useState<string[] | null>(null);
+  const [periodsEditor, setPeriodsEditor] = useState<{ classIds: string[]; sourceId?: string } | null>(null);
+  const visibleClasses = useMemo(() => visibleClassIds === null
+    ? activeClasses
+    : activeClasses.filter((item) => visibleClassIds.includes(item.id)), [activeClasses, visibleClassIds]);
+  const allClasses = classId === ALL_CLASSES;
   const [selectedLesson, setSelectedLesson] = useState<{
+    routine: RoutineSchedule;
     scheduleId: string;
     day: RoutineDay;
     period: RoutinePeriod;
     entry?: RoutineEntry;
-    defaultRoom?: string | null;
+  } | null>(null);
+  const [selectedDuty, setSelectedDuty] = useState<{
+    routine: RoutineSchedule;
+    scheduleId: string;
+    day: RoutineDay;
+    period: RoutinePeriod;
+    duty?: RoutineDuty;
   } | null>(null);
 
   const classSections = useMemo(
     () => (sections || []).filter((section) => !classId || section.classId === classId),
     [sections, classId],
   );
-  const selectedClass = activeClasses.find((item) => item.id === classId);
-  const { data: schedules = [], isPending: schedulesPending } = useRoutineList(
-    { sectionId, academicYear: selectedClass?.academicYear },
-    Boolean(sectionId),
+  const sectionRows = useMemo(() => visibleClasses.flatMap((schoolClass) => (sections || [])
+    .filter((section) => section.classId === schoolClass.id)
+    .map((section) => ({ sectionId: section.id, className: schoolClass.name, sectionName: section.name }))), [visibleClasses, sections]);
+  const { data: schedules = [], isPending: schedulesPending, isFetching: schedulesFetching, isError: schedulesError, refetch: refetchSchedules } = useRoutineList(
+    { sectionId: allClasses ? undefined : sectionId, academicYear: listedYear },
+    Boolean(filterReady && listedYear && (allClasses || sectionId)),
   );
-  const schedulesLoading = Boolean(sectionId) && schedulesPending;
-  const { data: routine, isPending: routinePending } = useRoutine(scheduleId);
-  const routineLoading = Boolean(scheduleId) && routinePending;
-  const { data: assignments = [] } = useRoutineAssignments(sectionId);
-  const { data: subjects = [] } = useRoutineSubjects(Boolean(routine));
+  const schedulesLoading = Boolean(listedYear && (allClasses || sectionId)) && schedulesPending;
+  const { data: loadedRoutine, isPending: routinePending, isFetching: routineFetching, isError: routineError } = useRoutine(allClasses ? undefined : scheduleId);
+  const routine = !allClasses && loadedRoutine?.sectionId === sectionId ? loadedRoutine : null;
+  const routineLoading = !allClasses && Boolean(scheduleId) && routinePending;
+  const allSchedules = useMemo(() => allClasses ? selectRoutineSchedules(sectionRows.map((row) => row.sectionId), schedules) : [], [allClasses, sectionRows, schedules]);
+  const allScheduleIds = allSchedules.flatMap((schedule) => schedule ? [schedule.id] : []);
+  const allDetails = useRoutineDetails(allScheduleIds, listedYear);
+  const detailsById = new Map(allDetails.map((detail, index) => [allScheduleIds[index], detail]));
+  const printableRoutines = allClasses ? allDetails.flatMap((detail) => detail.data ? [detail.data] : []) : routine ? [routine] : [];
+  const printBusy = schedulesFetching || schedulesError || (!allClasses && (routineFetching || routineError)) || allDetails.some((detail) => !detail.data || detail.isFetching || detail.isError);
+  const { data: assignments = [] } = useRoutineAssignments(selectedLesson?.routine.sectionId);
+  const { data: subjects = [] } = useRoutineSubjects(Boolean(selectedLesson));
   const hoursDiffer = useMemo(() => {
     if (!routine?.periods.length || !publicSettings || routine.academicYear !== academicYear) return false;
     const periods = [...routine.periods].sort((a, b) => a.startTime.localeCompare(b.startTime));
@@ -85,10 +115,11 @@ function ClassRoutinePageForYear() {
   }, [routine, publicSettings, academicYear]);
 
   useEffect(() => {
-    setClassId((current) => activeClasses.some((item) => item.id === current)
+    if (!filterReady) return;
+    setClassId((current) => current === ALL_CLASSES || activeClasses.some((item) => item.id === current)
       ? current
-      : (activeClasses[0]?.id || ''));
-  }, [activeClasses]);
+      : hasSavedFilter ? ALL_CLASSES : (activeClasses[0]?.id || ''));
+  }, [activeClasses, filterReady, hasSavedFilter]);
 
   useEffect(() => {
     setSectionId((current) => classSections.some((section) => section.id === current)
@@ -103,37 +134,26 @@ function ClassRoutinePageForYear() {
     setScheduleId((current) => schedules.some((item) => item.id === current) ? current : (preferred?.id || ''));
   }, [schedules]);
 
-  const openPeriodsForm = () => {
-    if (!routine) return;
-    openDialog({
-      title: t('classRoutines.ui.dialogs.periodsTitle'),
-      description: t('classRoutines.ui.dialogs.periodsDescription'),
-      width: '4xl',
-      height: 'full',
-      children: <RoutineScheduleForm periods={routine.periods} />,
-      primaryButton: {
-        form: 'routine-schedule-form',
-        text: t('classRoutines.ui.actions.savePeriods'),
-        onClick: ({ periods }) => mutations.updateLayout.mutateAsync({ id: routine.id, periods }),
-      },
-      secondaryButton: { text: t('common.cancel') },
-    });
-  };
+  const openPeriodsForm = () => setPeriodsEditor({
+    classIds: (allClasses ? visibleClasses : activeClasses.filter((item) => item.id === classId)).map((item) => item.id),
+    sourceId: printableRoutines[0]?.id,
+  });
 
-  const createRoutine = async () => {
-    if (!canCreate || !sectionId || !selectedClass) return;
-    const selectedSection = classSections.find((item) => item.id === sectionId);
+  const createRoutine = async (targetSectionId: string) => {
+    const selectedSection = (sections || []).find((item) => item.id === targetSectionId);
+    const selectedClass = activeClasses.find((item) => item.id === selectedSection?.classId);
+    if (!canCreate || !selectedSection || !selectedClass) return;
     const response: any = await mutations.createSchedule.mutateAsync({
-      sectionId,
+      sectionId: targetSectionId,
       name: `${selectedClass.name} · ${selectedSection?.name || t('classRoutines.ui.title')}`,
     });
     const created = response?.data;
     if (created?.id) setScheduleId(created.id);
   };
 
-  const openEntry = (day: RoutineDay, period: RoutinePeriod, entry?: RoutineEntry) => {
-    if (!routine || !(entry ? canEdit || canDelete : canCreate)) return;
-    setSelectedLesson({ scheduleId: routine.id, day, period, entry, defaultRoom: routine.roomNumber });
+  const openEntry = (targetRoutine: RoutineSchedule, day: RoutineDay, period: RoutinePeriod, entry?: RoutineEntry) => {
+    if (!(entry ? canEdit || canDelete : canCreate)) return;
+    setSelectedLesson({ routine: targetRoutine, scheduleId: targetRoutine.id, day, period, entry });
   };
 
   const saveLesson = async (data: RoutineEntryFormValues) => {
@@ -162,42 +182,73 @@ function ClassRoutinePageForYear() {
 
   const lessonBusy = mutations.createEntry.isPending || mutations.updateEntry.isPending || mutations.deleteEntry.isPending;
 
-  const openDuty = (day: RoutineDay, period: RoutinePeriod, duty?: RoutineDuty) => {
-    if (!routine || !(duty ? canEdit || canDelete : canCreate)) return;
-    openDialog({
-      title: duty
-        ? t('classRoutines.ui.dialogs.editSupervision')
-        : t('classRoutines.ui.dialogs.assignSupervisor', { period: routinePeriodLabel(period.name, t) }),
-      children: (
-        <RoutineDutyForm
-          period={period}
-          duty={duty}
-          readOnly={Boolean(duty && !canEdit)}
-          onUseForLesson={!duty && canCreate ? () => openEntry(day, period) : undefined}
-          onDelete={duty && canDelete ? async () => {
-            await mutations.deleteDuty.mutateAsync({ scheduleId: routine.id, id: duty.id });
-          } : undefined}
-        />
-      ),
-      primaryButton: (duty ? canEdit : canCreate) ? {
-        form: 'routine-duty-form',
-        text: duty ? t('classRoutines.ui.actions.updateSupervision') : t('classRoutines.ui.actions.assignSupervisor'),
-        onClick: async (data) => {
-          if (!data) return;
-          if (duty) await mutations.updateDuty.mutateAsync({ scheduleId: routine.id, id: duty.id, ...data });
-          else await mutations.createDuty.mutateAsync({
-            scheduleId: routine.id,
-            dayOfWeek: day,
-            periodId: period.id,
-            ...data,
-          });
-        },
-      } : undefined,
-      secondaryButton: { text: t('common.cancel') },
-    });
+  const openDuty = (targetRoutine: RoutineSchedule, day: RoutineDay, period: RoutinePeriod, duty?: RoutineDuty) => {
+    if (!(duty ? canEdit || canDelete : canCreate)) return;
+    setSelectedDuty({ routine: targetRoutine, scheduleId: targetRoutine.id, day, period, duty });
   };
 
-  const busy = isClassesLoading || isSectionsLoading || isAcademicYearLoading;
+  const saveDuty = async (data: RoutineDutyFormValues) => {
+    if (!selectedDuty || !(selectedDuty.duty ? canEdit : canCreate)) return;
+    const { scheduleId: selectedScheduleId, day, period, duty } = selectedDuty;
+    try {
+      if (duty) await mutations.updateDuty.mutateAsync({ scheduleId: selectedScheduleId, id: duty.id, ...data });
+      else await mutations.createDuty.mutateAsync({ scheduleId: selectedScheduleId, dayOfWeek: day, periodId: period.id, ...data });
+    } catch {
+      return;
+    }
+    setSelectedDuty(null);
+  };
+
+  const deleteDuty = async () => {
+    if (!canDelete || !selectedDuty?.duty) return;
+    const { scheduleId: selectedScheduleId, duty } = selectedDuty;
+    try {
+      await mutations.deleteDuty.mutateAsync({ scheduleId: selectedScheduleId, id: duty.id });
+    } catch {
+      return;
+    }
+    setSelectedDuty(null);
+  };
+
+  const dutyBusy = mutations.createDuty.isPending || mutations.updateDuty.isPending || mutations.deleteDuty.isPending;
+
+  const printRoutines = async (routines: readonly RoutineSchedule[]) => {
+    if (!routines.length) return;
+    const html = buildRoutineDocuments(routines.map((item) => ({ data: {
+      days: item.activeDays,
+      periods: item.periods,
+      entries: item.entries,
+      duties: item.duties,
+    }, options: {
+      language,
+      title: t('classRoutines.ui.print.title'),
+      classLabel: t('classRoutines.ui.fields.class'),
+      className: [item.className, item.sectionName].filter(Boolean).join(' '),
+      dayHeader: t('classRoutines.ui.fields.days'),
+      orLabel: t('classRoutines.ui.content.or'),
+      dayLabel: (day: RoutineDay) => routineDayLabel(day, t),
+      periodLabel: (period: RoutinePeriod) => routinePeriodLabel(period.name, t),
+      colorOf: subjectColors(item.entries.map((entry) => ({ id: entry.subjectId, code: entry.subjectCode }))),
+    } })));
+    try { await printRoutineDocument(html); } catch { toast.error(t('classRoutines.ui.print.failed')); }
+  };
+
+  const busy = !filterReady || isClassesLoading || isSectionsLoading || isAcademicYearLoading;
+  const customClasses = visibleClasses.length !== activeClasses.length;
+  const openClassSettings = () => setClassSelection((allClasses
+    ? visibleClasses
+    : activeClasses.filter((item) => item.id === classId)).map((item) => item.id));
+  const applyClassSelection = () => {
+    if (classSelection === null) return;
+    const ids = activeClasses.filter((item) => classSelection.includes(item.id)).map((item) => item.id);
+    if (!saveClassFilter(ids.length === activeClasses.length ? null : ids)) {
+      toast.error(t('classRoutines.ui.classSelection.saveError'));
+      return;
+    }
+    setClassId(ALL_CLASSES);
+    setClassSelection(null);
+    toast.success(t('classRoutines.ui.classSelection.saved'));
+  };
 
   return (
     <div className="flex h-full min-h-0 min-w-0 w-full flex-1 flex-col gap-3 overflow-hidden">
@@ -226,12 +277,12 @@ function ClassRoutinePageForYear() {
                 placeholder={t('students.filters.filterByClass')}
                 value={classId}
                 onChange={setClassId}
-                items={activeClasses.map((item) => ({ value: item.id, label: item.name }))}
+                items={[{ value: ALL_CLASSES, label: customClasses ? t('classRoutines.ui.classSelection.selected', { count: visibleClasses.length }) : t('classRoutines.ui.allClasses') }, ...activeClasses.map((item) => ({ value: item.id, label: item.name }))]}
                 showIcon={false}
                 className="w-full min-w-0"
               />
             </div>
-            <div className="min-w-0 flex-1 lg:w-48 lg:flex-initial">
+            {!allClasses && <div className="min-w-0 flex-1 lg:w-48 lg:flex-initial">
               <SelectInput
                 ariaLabel={t('classRoutines.ui.fields.section')}
                 placeholder={t('students.filters.filterBySection')}
@@ -242,17 +293,21 @@ function ClassRoutinePageForYear() {
                 showIcon={false}
                 className="w-full min-w-0"
               />
-            </div>
+            </div>}
           </>
         )}
         <div className="flex shrink-0 justify-end gap-2 empty:hidden md:ms-auto">
-          {canEdit && routine ? (
-            <>
-              <NButton variant="outline" className="h-10 px-3 md:px-4" onClick={openPeriodsForm}>
-                <Clock3 className="h-4 w-4" /> {t('classRoutines.ui.actions.periods')}
-              </NButton>
-            </>
+          {canEdit ? (
+            <NButton variant="outline" className="h-10 px-3 md:px-4" disabled={busy || !activeClasses.length} onClick={openPeriodsForm}>
+              <Clock3 className="h-4 w-4" /> {t('classRoutines.ui.actions.periods')}
+            </NButton>
           ) : null}
+          <NButton variant="outline" className="h-10 w-10 p-0" disabled={busy} onClick={openClassSettings} aria-label={t('classRoutines.ui.classSelection.title')} title={t('classRoutines.ui.classSelection.title')} aria-haspopup="dialog" aria-expanded={classSelection !== null}>
+            <Settings className="h-4 w-4" />
+          </NButton>
+          <NButton variant="outline" className="h-10 px-3 md:px-4" disabled={busy || printBusy || !printableRoutines.length} onClick={() => printRoutines(printableRoutines)} aria-label={t('classRoutines.ui.actions.print')} title={t('classRoutines.ui.actions.print')}>
+            <Printer className="h-4 w-4" /> <span className="hidden sm:inline">{t('classRoutines.ui.actions.print')}</span>
+          </NButton>
         </div>
       </NFilterBar>
 
@@ -261,6 +316,59 @@ function ClassRoutinePageForYear() {
       {busy || schedulesLoading || routineLoading ? (
         <NajmScroll axis="y" autoHide="scroll" className="flex-1">
           <ClassRoutineSkeleton />
+        </NajmScroll>
+      ) : schedulesError ? (
+        <div role="alert" className="rounded-xl border p-6 text-center">
+          <p>{t('classRoutines.ui.messages.loadError')}</p>
+          <NButton variant="outline" className="mt-3" onClick={() => refetchSchedules()}>{t('classRoutines.ui.actions.retry')}</NButton>
+        </div>
+      ) : allClasses && !visibleClasses.length ? (
+        <div className="grid flex-1 place-content-center rounded-xl border border-dashed p-6 text-center">
+          <h2 className="font-semibold">{t('classRoutines.ui.classSelection.emptyTitle')}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{t('classRoutines.ui.classSelection.emptyDescription')}</p>
+        </div>
+      ) : allClasses && sectionRows.length ? (
+        <NajmScroll axis="y" autoHide="scroll" className="min-h-0 flex-1" key="all-classes">
+          <div className="flex min-w-0 flex-col gap-8 pb-6 pe-1">
+            {sectionRows.map((row, index) => {
+              const summary = allSchedules[index];
+              const detail = summary ? detailsById.get(summary.id) : undefined;
+              const week = detail?.data;
+              const heading = `${row.className} · ${row.sectionName}`;
+              return (
+                <section key={row.sectionId} aria-label={heading} className="min-w-0">
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                    <h2 className="text-lg font-semibold">{heading}</h2>
+                  </div>
+                  {detail?.isError ? (
+                    <div role="alert" className="rounded-xl border p-4">
+                      <p>{t('classRoutines.ui.messages.loadError')}</p>
+                      <NButton variant="outline" size="sm" className="mt-2" onClick={() => detail.refetch()}>{t('classRoutines.ui.actions.retry')}</NButton>
+                    </div>
+                  ) : week ? (
+                    <RoutineGrid
+                      layout="stacked"
+                      days={week.activeDays}
+                      periods={week.periods}
+                      entries={week.entries}
+                      duties={week.duties}
+                      defaultRoom={week.roomNumber}
+                      canCreate={canCreate}
+                      canUpdate={canEdit}
+                      canDelete={canDelete}
+                      onCellClick={(day, period, entry) => openEntry(week, day, period, entry)}
+                      onDutyClick={(day, period, duty) => openDuty(week, day, period, duty)}
+                    />
+                  ) : summary ? <ClassRoutineSkeleton /> : (
+                    <div className="rounded-xl border border-dashed bg-card/50 p-6">
+                      <p className="text-sm text-muted-foreground">{t('classRoutines.ui.empty.title')}</p>
+                      {canCreate && <NButton size="sm" className="mt-3" disabled={mutations.createSchedule.isPending} onClick={() => createRoutine(row.sectionId)} leftIcon={<Plus className="h-4 w-4" />}>{t('classRoutines.ui.actions.createRoutine')}</NButton>}
+                    </div>
+                  )}
+                </section>
+              );
+            })}
+          </div>
         </NajmScroll>
       ) : routine ? (
         <RoutineGrid
@@ -273,8 +381,8 @@ function ClassRoutinePageForYear() {
           canCreate={canCreate}
           canUpdate={canEdit}
           canDelete={canDelete}
-          onCellClick={openEntry}
-          onDutyClick={openDuty}
+          onCellClick={(day, period, entry) => openEntry(routine, day, period, entry)}
+          onDutyClick={(day, period, duty) => openDuty(routine, day, period, duty)}
         />
       ) : (
         <NajmScroll axis="y" autoHide="scroll" className="flex-1 rounded-2xl border border-dashed bg-card/50">
@@ -286,7 +394,7 @@ function ClassRoutinePageForYear() {
               <h2 className="mt-4 text-lg font-semibold">{t('classRoutines.ui.empty.title')}</h2>
               <p className="mt-1 max-w-md text-sm text-muted-foreground">{t('classRoutines.ui.empty.description')}</p>
               {canCreate && sectionId ? (
-                <NButton className="mt-5" onClick={createRoutine} disabled={mutations.createSchedule.isPending} leftIcon={<Plus className="h-4 w-4" />}>
+                <NButton className="mt-5" onClick={() => createRoutine(sectionId)} disabled={mutations.createSchedule.isPending} leftIcon={<Plus className="h-4 w-4" />}>
                   {t('classRoutines.ui.actions.createRoutine')}
                 </NButton>
               ) : null}
@@ -294,13 +402,75 @@ function ClassRoutinePageForYear() {
           </div>
         </NajmScroll>
       )}
+      <RoutineClassSettings
+        classes={activeClasses}
+        selection={classSelection}
+        onChange={setClassSelection}
+        onApply={applyClassSelection}
+        onClose={() => setClassSelection(null)}
+      />
+      {periodsEditor ? <RoutinePeriodsEditor
+        classes={activeClasses}
+        initialClassIds={periodsEditor.classIds}
+        initialSourceId={periodsEditor.sourceId}
+        academicYear={listedYear}
+        saving={mutations.updateLayouts.isPending}
+        onSave={async (data) => {
+          await mutations.updateLayouts.mutateAsync(data);
+          setPeriodsEditor(null);
+        }}
+        onClose={() => setPeriodsEditor(null)}
+      /> : null}
+      <NSheet
+        open={Boolean(selectedDuty)}
+        onOpenChange={(open) => { if (!open && !dutyBusy) setSelectedDuty(null); }}
+        icon={UserRound}
+        title={selectedDuty?.duty
+          ? t('classRoutines.ui.dialogs.editSupervision')
+          : t('classRoutines.ui.dialogs.assignSupervisor', { period: selectedDuty ? routinePeriodLabel(selectedDuty.period.name, t) : '' })}
+        description={selectedDuty
+          ? `${selectedDuty.routine.className} ${selectedDuty.routine.sectionName} · ${routineDayLabel(selectedDuty.day, t)} · ${routinePeriodLabel(selectedDuty.period.name, t)} · ${selectedDuty.period.startTime.slice(0, 5)}–${selectedDuty.period.endTime.slice(0, 5)}`
+          : undefined}
+        width={560}
+        classNames={{ content: 'max-w-full bg-background', body: 'p-4' }}
+        footer={selectedDuty ? (
+          <div className="flex w-full flex-wrap items-center gap-2">
+            {selectedDuty.duty && canDelete ? (
+              <NButton type="button" variant="ghost" onClick={deleteDuty} disabled={dutyBusy} leftIcon={<Trash2 className="h-4 w-4" />} className="text-destructive hover:bg-destructive/10 hover:text-destructive">
+                {t('classRoutines.ui.actions.removeSupervision')}
+              </NButton>
+            ) : null}
+            <div className="ms-auto flex gap-2">
+              <NButton type="button" variant="outline" onClick={() => setSelectedDuty(null)} disabled={dutyBusy}>{t('common.cancel')}</NButton>
+              {(selectedDuty.duty ? canEdit : canCreate) && <NButton type="submit" form="routine-duty-form" loading={dutyBusy} disabled={dutyBusy}>
+                {selectedDuty.duty ? t('classRoutines.ui.actions.updateSupervision') : t('classRoutines.ui.actions.assignSupervisor')}
+              </NButton>}
+            </div>
+          </div>
+        ) : null}
+      >
+        {selectedDuty ? (
+          <RoutineDutyForm
+            key={`${selectedDuty.scheduleId}:${selectedDuty.day}:${selectedDuty.period.id}:${selectedDuty.duty?.id || 'new'}`}
+            period={selectedDuty.period}
+            duty={selectedDuty.duty}
+            onSubmit={saveDuty}
+            readOnly={dutyBusy || Boolean(selectedDuty.duty && !canEdit)}
+            onUseForLesson={!selectedDuty.duty && canCreate && !dutyBusy ? () => {
+              const { routine: dutyRoutine, day, period } = selectedDuty;
+              setSelectedDuty(null);
+              openEntry(dutyRoutine, day, period);
+            } : undefined}
+          />
+        ) : null}
+      </NSheet>
       <NSheet
         open={Boolean(selectedLesson)}
         onOpenChange={(open) => { if (!open && !lessonBusy) setSelectedLesson(null); }}
         icon={BookOpen}
         title={selectedLesson?.entry ? t('classRoutines.ui.dialogs.editLesson') : t('classRoutines.ui.dialogs.addLesson')}
         description={selectedLesson
-          ? `${routineDayLabel(selectedLesson.day, t)} · ${routinePeriodLabel(selectedLesson.period.name, t)} · ${selectedLesson.period.startTime.slice(0, 5)}–${selectedLesson.period.endTime.slice(0, 5)}`
+          ? `${selectedLesson.routine.className} ${selectedLesson.routine.sectionName} · ${routineDayLabel(selectedLesson.day, t)} · ${routinePeriodLabel(selectedLesson.period.name, t)} · ${selectedLesson.period.startTime.slice(0, 5)}–${selectedLesson.period.endTime.slice(0, 5)}`
           : undefined}
         width={560}
         classNames={{ content: 'max-w-full bg-background', body: 'p-4' }}
@@ -325,9 +495,8 @@ function ClassRoutinePageForYear() {
             key={`${selectedLesson.scheduleId}:${selectedLesson.day}:${selectedLesson.period.id}:${selectedLesson.entry?.id || 'new'}`}
             subjectOptions={subjects}
             assignmentOptions={assignments}
-            otherSubjects={routine?.entries.filter((item) => item.id !== selectedLesson.entry?.id).map((item) => ({ id: item.subjectId, code: item.subjectCode }))}
+            otherSubjects={selectedLesson.routine.entries.filter((item) => item.id !== selectedLesson.entry?.id).map((item) => ({ id: item.subjectId, code: item.subjectCode }))}
             entry={selectedLesson.entry}
-            defaultRoom={selectedLesson.defaultRoom}
             onSubmit={saveLesson}
             readOnly={Boolean(selectedLesson.entry && !canEdit)}
           />
@@ -341,8 +510,9 @@ export default function ClassRoutinePage() {
   const { user } = useAuth();
   const { isResolving } = useViewingAcademicYear();
   const yearKey = useViewingYearKey();
-  if (isResolving) return <ClassRoutineSkeleton />;
+  const accountId = (user as { id?: string } | null)?.id;
+  if (isResolving || !accountId) return <ClassRoutineSkeleton />;
   // A teacher plans nothing here: they see their own week.
   if ((user as any)?.role === 'teacher') return <TeacherRoutinePage key={yearKey} />;
-  return <ClassRoutinePageForYear key={yearKey} />;
+  return <ClassRoutinePageForYear key={`${accountId}:${yearKey}`} accountId={accountId} />;
 }

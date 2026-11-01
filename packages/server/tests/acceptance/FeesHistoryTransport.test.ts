@@ -14,6 +14,9 @@ process.env.DB_URL = rawUrl;
 const { db } = await import('../../src/database/db');
 const { feeTypes } = await import('../../src/modules/financial/feeTypes/feeTypeSchema');
 const { fees, feeInstallments } = await import('../../src/modules/financial/fees/feeSchema');
+const { payments } = await import('../../src/modules/financial/payments/paymentSchema');
+const { paymentAllocations } = await import('../../src/modules/financial/allocations/allocationSchema');
+const { studentCreditLots, studentCreditApplications } = await import('../../src/modules/financial/credits/creditSchema');
 const { financialAuditLogs } = await import('../../src/modules/financial/auditLog/auditLogSchema');
 const { server } = await import('../../src/index');
 const suffix = crypto.randomUUID().slice(0, 8);
@@ -21,6 +24,7 @@ const feeTypeId = `history-fee-rest-type-${suffix}`;
 const oldId = `history-fee-rest-old-${suffix}`;
 const currentId = `history-fee-rest-new-${suffix}`;
 const feeIds = [oldId, currentId];
+const paymentIds: string[] = [];
 const base = 'http://school.local/api';
 const port = 5505;
 let token: string;
@@ -62,12 +66,113 @@ beforeAll(async () => {
 afterAll(async () => {
   await server.stop();
   await db.delete(financialAuditLogs).where(inArray(financialAuditLogs.entityId, feeIds));
+  if (paymentIds.length) await db.delete(payments).where(inArray(payments.id, paymentIds));
   await db.delete(feeInstallments).where(inArray(feeInstallments.feeId, feeIds));
   await db.delete(fees).where(inArray(fees.id, feeIds));
   await db.delete(feeTypes).where(eq(feeTypes.id, feeTypeId));
 });
 
 describe('authenticated fee year scope', () => {
+  it.skipIf(!process.env.SCHOOL_HISTORY_PRINCIPAL_PASSWORD)('refuses force removal by a signed-in principal', async () => {
+    const login = await server.fetch(new Request(`${base}/auth/login`, {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ email: 'principal@history.example.test', password: process.env.SCHOOL_HISTORY_PRINCIPAL_PASSWORD }),
+    }));
+    expect(login.status).toBe(200);
+    const body = await login.json() as Record<string, any>;
+    const principalToken = body.data?.accessToken ?? body.accessToken ?? body.data?.tokens?.accessToken;
+    const response = await server.fetch(new Request(`${base}/fees/${currentId}/force-remove`, {
+      method: 'POST', headers: { Authorization: `Bearer ${principalToken}`, 'X-Academic-Year': '2026-2027' },
+    }));
+    expect(response.status).toBe(403);
+    expect((await request(`/fees/${currentId}`, '2026-2027')).status).toBe(200);
+  });
+
+  it('force-removes a paid fee, restores credit, and keeps the other year portion of a shared receipt', async () => {
+    const studentId = 'history-student-04';
+    const targetFee = `force-fee-${suffix}`;
+    const otherFee = `force-other-${suffix}`;
+    const receiptId = `force-receipt-${suffix}`;
+    const lotId = `force-credit-${suffix}`;
+    const targetInstallment = `force-inst-${suffix}`;
+    const otherInstallment = `force-other-inst-${suffix}`;
+    const directId = `force-direct-${suffix}`;
+    const applicationId = `force-applied-${suffix}`;
+    const otherAllocation = `force-untouched-${suffix}`;
+    feeIds.push(targetFee, otherFee);
+    paymentIds.push(receiptId);
+    await db.insert(fees).values([
+      { id: targetFee, studentId, feeTypeId, academicYear: '2026-2027',
+        baseAmount: '40', grossAmount: '40', netAmount: '40', paidAmount: '40', status: 'paid' },
+      { id: otherFee, studentId, feeTypeId, academicYear: '2025-2026',
+        baseAmount: '50', grossAmount: '50', netAmount: '50', paidAmount: '50', status: 'paid' },
+    ]);
+    await db.insert(feeInstallments).values([
+      { id: targetInstallment, feeId: targetFee, number: 1, dueDate: '2026-09-01', amount: '40', paidAmount: '40', status: 'paid' },
+      { id: otherInstallment, feeId: otherFee, number: 1, dueDate: '2025-09-01', amount: '50', paidAmount: '50', status: 'paid' },
+    ]);
+    await db.insert(payments).values({ id: receiptId, studentId, amount: '100',
+      paymentDate: '2026-10-01', paymentMethod: 'cash', status: 'completed' });
+    await db.insert(paymentAllocations).values([
+      { id: directId, paymentId: receiptId, feeId: targetFee, installmentId: targetInstallment, amount: '20' },
+      { id: applicationId, paymentId: receiptId, feeId: targetFee, installmentId: targetInstallment, amount: '20' },
+      { id: otherAllocation, paymentId: receiptId, feeId: otherFee, installmentId: otherInstallment, amount: '50' },
+    ]);
+    await db.insert(studentCreditLots).values({ id: lotId, studentId, sourcePaymentId: receiptId,
+      originalAmount: '30', remainingAmount: '10', status: 'available' });
+    await db.insert(studentCreditApplications).values({ creditLotId: lotId, feeId: targetFee,
+      installmentId: targetInstallment, paymentAllocationId: applicationId, amount: '20', status: 'active' });
+
+    expect((await server.fetch(new Request(`${base}/fees/${targetFee}/force-remove`, { method: 'POST' }))).status).toBe(401);
+    expect((await request(`/fees/${targetFee}/force-remove`, '2025-2026', 'POST')).status).toBe(404);
+    expect((await request(`/fees/${targetFee}`, '2026-2027', 'DELETE')).status).toBe(409);
+    const result = await request(`/fees/${targetFee}/force-remove`, '2026-2027', 'POST');
+    expect(result.status, JSON.stringify(result.body)).toBe(200);
+    expect((await request(`/fees/${targetFee}`, '2026-2027')).status).toBe(404);
+    expect((await request(`/fees/${targetFee}/force-remove`, '2026-2027', 'POST')).status).toBe(404);
+    expect(await db.select().from(paymentAllocations).where(eq(paymentAllocations.feeId, targetFee))).toEqual([]);
+    expect(await db.select().from(studentCreditApplications).where(eq(studentCreditApplications.feeId, targetFee))).toEqual([]);
+    expect(await db.select().from(feeInstallments).where(eq(feeInstallments.feeId, targetFee))).toEqual([]);
+    const [keptAllocation] = await db.select().from(paymentAllocations).where(eq(paymentAllocations.id, otherAllocation));
+    expect(keptAllocation.amount).toBe('50.00');
+    const [receipt] = await db.select().from(payments).where(eq(payments.id, receiptId));
+    expect(receipt).toMatchObject({ amount: '100.00', status: 'completed' });
+    const [lot] = await db.select().from(studentCreditLots).where(eq(studentCreditLots.id, lotId));
+    expect(lot).toMatchObject({ originalAmount: '50.00', remainingAmount: '50.00', status: 'available' });
+    const [audit] = await db.select().from(financialAuditLogs).where(eq(financialAuditLogs.entityId, targetFee));
+    expect(audit).toMatchObject({ action: 'fee.forceRemoved', actorId: 'history-admin' });
+    expect((audit.before as any).allocations).toHaveLength(2);
+    expect((audit.before as any).creditApplications).toHaveLength(1);
+    expect((audit.metadata as any).receipts[0].id).toBe(receiptId);
+  });
+
+  it('rolls credit changes back when a later receipt prevents force removal', async () => {
+    const studentId = 'history-student-05';
+    const feeId = `force-rollback-${suffix}`;
+    const installmentId = `force-rollback-inst-${suffix}`;
+    const firstReceipt = `force-rb-a-${suffix}`;
+    const secondReceipt = `force-rb-b-${suffix}`;
+    feeIds.push(feeId);
+    paymentIds.push(firstReceipt, secondReceipt);
+    await db.insert(fees).values({ id: feeId, studentId, feeTypeId, academicYear: '2026-2027',
+      baseAmount: '40', grossAmount: '40', netAmount: '40' });
+    await db.insert(feeInstallments).values({ id: installmentId, feeId, number: 1, dueDate: '2026-09-01', amount: '40' });
+    await db.insert(payments).values([firstReceipt, secondReceipt].map(id => ({ id, studentId, amount: '20',
+      paymentDate: '2026-10-01', paymentMethod: 'cash' as const, status: 'completed' as const })));
+    await db.insert(paymentAllocations).values([firstReceipt, secondReceipt].map((paymentId, index) => ({
+      id: `force-rb-link-${index}-${suffix}`, paymentId, feeId, installmentId, amount: '20',
+    })));
+    // Deliberately inconsistent legacy credit, encountered after the first
+    // receipt would have gained a lot. The entire removal must roll back.
+    await db.insert(studentCreditLots).values({ studentId, sourcePaymentId: secondReceipt,
+      originalAmount: '5', remainingAmount: '5', status: 'cancelled' });
+    expect((await request(`/fees/${feeId}/force-remove`, '2026-2027', 'POST')).status).toBe(409);
+    expect((await request(`/fees/${feeId}`, '2026-2027')).status).toBe(200);
+    expect(await db.select().from(studentCreditLots).where(eq(studentCreditLots.sourcePaymentId, firstReceipt))).toEqual([]);
+    expect(await db.select().from(paymentAllocations).where(eq(paymentAllocations.feeId, feeId))).toHaveLength(2);
+    expect(await db.select().from(financialAuditLogs).where(eq(financialAuditLogs.entityId, feeId))).toEqual([]);
+  });
+
   it('serves one summary matching the full roster for each selected year', async () => {
     const fields = {
       collected: 'collectedToDate', cash: 'collectedCashToDate', check: 'collectedCheckToDate',

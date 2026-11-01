@@ -35,6 +35,7 @@ const staffAssignmentSchema = z.object({
   classId: z.string().min(1).optional(),
   sectionId: z.string().min(1).optional().nullable(),
   cycleId: z.string().min(1).optional(),
+  className: z.string().trim().min(1).max(100).optional(),
   vehicleId: z.string().min(1).optional(),
   status: z.enum(['active', 'completed', 'cancelled']).optional(),
   startDate: dateField.optional().nullable(),

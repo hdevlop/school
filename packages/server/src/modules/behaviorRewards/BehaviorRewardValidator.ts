@@ -1,6 +1,7 @@
 import { Err, I18n, Service } from '../../najm';
 import { SCHOOL_WIDE_ROLES } from '../../auth';
 import { BehaviorRewardRepository } from './BehaviorRewardRepository';
+import { FloorManagerScopeRepository } from '../staff/floorManagerScope';
 
 export type BehaviorRewardActor = {
   id: string;
@@ -16,7 +17,10 @@ export const isBehaviorRewardDateInFuture = (value: string, now = new Date()) =>
 export class BehaviorRewardValidator {
   @I18n('behaviorRewards.errors') private bt!: (key: string) => string;
 
-  constructor(private behaviorRewardRepository: BehaviorRewardRepository) {}
+  constructor(
+    private behaviorRewardRepository: BehaviorRewardRepository,
+    private floorManagers: FloorManagerScopeRepository,
+  ) {}
 
   async ensureExists(id: string) {
     const record = await this.behaviorRewardRepository.getById(id);
@@ -25,9 +29,10 @@ export class BehaviorRewardValidator {
   }
 
   // The route's permission decides who records; a teacher records for their
-  // own sections, a school-wide role for any student.
+  // own sections, a floor manager for their classes, a school-wide role for
+  // any student.
   ensureSupportedActor(actor: BehaviorRewardActor) {
-    if (actor.role !== 'teacher' && !SCHOOL_WIDE_ROLES.includes(actor.role ?? '')) {
+    if (actor.role !== 'teacher' && actor.role !== 'floor_manager' && !SCHOOL_WIDE_ROLES.includes(actor.role ?? '')) {
       Err(403, this.bt('forbidden'));
     }
   }
@@ -48,6 +53,9 @@ export class BehaviorRewardValidator {
     if (actor.role === 'teacher') {
       const assigned = await this.behaviorRewardRepository.isTeacherAssignedToSection(actor.id, placement.sectionId);
       if (!assigned) Err(403, this.bt('studentNotAssigned'));
+    }
+    if (actor.role === 'floor_manager' && !await this.floorManagers.managesClass(actor.id, placement.classId)) {
+      Err(403, this.bt('studentNotAssigned'));
     }
 
     return placement;

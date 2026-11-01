@@ -45,7 +45,7 @@ export default function AlertsTable() {
   const statusActions = (alert: AlertRecord) => {
     const allowed = isFamily
       ? (isAboutSomeone(alert) && alert.status === 'active' ? ['acknowledged'] : [])
-      : role === 'teacher' && !isAboutSomeone(alert)
+      : (role === 'teacher' || role === 'floor_manager') && !isAboutSomeone(alert)
         ? []
         : STATUS_ACTIONS.map((item) => item.status);
     return STATUS_ACTIONS

@@ -30,6 +30,12 @@ const preferredColor = ({ id, code }: ColoredSubject) => printedColor(code) ?? h
 
 export const colorFor = (subject: ColoredSubject) => SUBJECT_COLORS[preferredColor(subject)];
 
+/** A palette entry's light fill and ink, for the printed sheet, which has no Tailwind. */
+export function printedInk(color: string) {
+  const [, fill = '#e6e9ef', ink = '#4a5568'] = /bg-\[(#[0-9a-f]{6})\] text-\[(#[0-9a-f]{6})\]/i.exec(color) ?? [];
+  return { fill, ink };
+}
+
 /**
  * One color per subject on a sheet. A subject the printed sheet colors keeps
  * that color; any other keeps its own across sections unless another subject

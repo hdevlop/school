@@ -1,4 +1,4 @@
-import { date, pgTable, text } from 'drizzle-orm/pg-core';
+import { date, index, pgTable, text } from 'drizzle-orm/pg-core';
 
 import { classRef } from '../classes/classSchema';
 import { sectionRef } from '../sections/sectionSchema';
@@ -61,6 +61,15 @@ export const accountantAssignments = pgTable('accountant_assignments', {
   cycleId: cycleRef('restrict'),
 });
 
+// A floor manager runs grades, named as their classes are (PS, CP, CE1...). The
+// name, not one year's class row, so next year's classes of that grade follow.
+export const floorManagerAssignments = pgTable('floor_manager_assignments', {
+  ...staffAssignmentFields(),
+  className: text('class_name').notNull(),
+}, (table) => [
+  index('floor_manager_assignments_class_name_idx').on(table.className),
+]);
+
 export const securityAssignments = pgTable('security_assignments', {
   ...staffAssignmentFields(),
   zoneId: zoneRef('restrict'),
@@ -76,5 +85,6 @@ export type StaffCredential = typeof staffCredentials.$inferSelect;
 export type CleanerAssignment = typeof cleanerAssignments.$inferSelect;
 export type AssistantAssignment = typeof assistantAssignments.$inferSelect;
 export type AccountantAssignment = typeof accountantAssignments.$inferSelect;
+export type FloorManagerAssignment = typeof floorManagerAssignments.$inferSelect;
 export type SecurityAssignment = typeof securityAssignments.$inferSelect;
 export type BusAssistantAssignment = typeof busAssistantAssignments.$inferSelect;

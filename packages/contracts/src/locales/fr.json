@@ -82,6 +82,7 @@
       "teacher": "Données affectées uniquement. Les permissions n’élargissent pas le périmètre de l’enseignant.",
       "parent": "Enfants liés uniquement. Les permissions n’élargissent pas le périmètre du parent.",
       "student": "Données personnelles uniquement. Les permissions n’élargissent pas le périmètre de l’élève.",
+      "floor_manager": "Classes des niveaux affectés dans sa fiche personnel uniquement. Les permissions n’élargissent pas le périmètre du responsable d’étage.",
       "unconfigured": "Ce rôle personnalisé n’a pas de périmètre de données configuré. Les permissions seules ne donnent pas accès aux données protégées de l’école."
     },
     "categories": {
@@ -949,6 +950,7 @@
       "assistantClassRequired": "L'affectation d'un assistant exige une classe",
       "busAssistantVehicleRequired": "L'affectation d'un accompagnateur de bus exige un véhicule",
       "accountantCycleRequired": "L'affectation d'un comptable exige un cycle",
+      "floorManagerGradeRequired": "L'affectation d'un responsable d'étage exige un niveau",
       "securityZoneRequired": "L'affectation d'un agent de sécurité exige une zone",
       "driverVehicleRequired": "L'affectation d'un chauffeur exige un véhicule",
       "staffNotFound": "Membre du personnel introuvable",
@@ -991,6 +993,7 @@
       "receptionist": "Réceptionniste",
       "accountant": "Comptable",
       "supervisor": "Surveillant",
+      "floorManager": "Responsable d'étage",
       "librarian": "Bibliothécaire",
       "itSupport": "Support IT",
       "assistant": "Assistant",
@@ -1058,6 +1061,7 @@
       "assignments": "Affectations",
       "class": "Classe",
       "cycle": "Cycle",
+      "grades": "Niveaux",
       "driverLicense": "Permis de conduire",
       "email": "E-mail",
       "shift": "Horaire",
@@ -2034,6 +2038,28 @@
       "breakHasLesson": "Cette pause accueille une séance ce jour-là. Retirez d'abord la séance."
     },
     "ui": {
+      "bulkPeriods": {
+        "description": "Définissez les mêmes périodes et pauses pour une ou plusieurs classes.",
+        "targetClasses": "Appliquer aux classes",
+        "allSections": "Met à jour les emplois du temps de toutes les sections des classes sélectionnées. Les cours et la surveillance conservent leurs créneaux.",
+        "sectionCount": "Sections : {{count}}",
+        "targetCount": "Emplois du temps sélectionnés : {{count}}",
+        "source": "Charger les périodes depuis",
+        "noRoutines": "Créez le planning d’une section avant de définir ses périodes."
+      },
+      "classSelection": {
+        "title": "Classes à afficher",
+        "description": "Choisissez les classes à afficher et à imprimer. Votre choix est mémorisé dans ce navigateur.",
+        "apply": "Enregistrer le filtre",
+        "clear": "Effacer la sélection",
+        "selected": "Classes sélectionnées ({{count}})",
+        "emptyTitle": "Aucune classe sélectionnée",
+        "emptyDescription": "Utilisez le bouton des réglages pour choisir les classes à afficher et à imprimer.",
+        "saved": "Filtre des classes enregistré.",
+        "saveError": "Ce navigateur n’a pas pu enregistrer le filtre. Vérifiez ses paramètres de stockage du site et réessayez."
+      },
+
+      "allClasses": "Toutes les classes",
       "title": "Planning",
       "subtitle": "Créez un emploi du temps hebdomadaire sans conflits pour chaque section",
       "fields": {
@@ -2045,6 +2071,7 @@
         "supervisingTeacher": "Enseignant surveillant",
         "dutyNotes": "Notes de surveillance",
         "teachingDays": "Jours de cours",
+        "days": "Jours",
         "type": "Type",
         "nameLabel": "Nom / libellé",
         "startTime": "Heure de début",
@@ -2059,6 +2086,7 @@
         "teacher": "Enseignant"
       },
       "actions": {
+        "retry": "Réessayer",
         "days": "Jours",
         "periods": "Périodes",
         "saveDays": "Enregistrer les jours",
@@ -2074,7 +2102,8 @@
         "addTeachingPeriod": "Ajouter une période de cours",
         "addBreak": "Ajouter une pause",
         "useSchoolHours": "Utiliser les horaires de l’école",
-        "lessonInBreak": "Placer une séance dans cette pause"
+        "lessonInBreak": "Placer une séance dans cette pause",
+        "print": "Imprimer"
       },
       "dialogs": {
         "daysTitle": "Jours de cours",
@@ -2101,6 +2130,10 @@
       },
       "grid": {
         "noRoom": "Aucune salle"
+      },
+      "print": {
+        "title": "Emploi du temps",
+        "failed": "Impossible de préparer l'emploi du temps pour l'impression."
       },
       "content": {
         "title": "Sous-matières",
@@ -2158,6 +2191,7 @@
         "weeklyRoutine": "Chargement du planning hebdomadaire..."
       },
       "messages": {
+        "loadError": "Impossible de charger l’emploi du temps. Veuillez réessayer.",
         "saveError": "Impossible d’enregistrer le planning.",
         "routineCreated": "Planning créé.",
         "routineUpdated": "Planning mis à jour.",
@@ -2735,10 +2769,14 @@
       "filterByStatus": "Filtrer par statut",
       "searchByStudent": "Rechercher un élève...",
       "allSections": "Toutes les sections",
+      "allClasses": "Toutes les classes",
+      "allStatuses": "Tous les statuts",
       "allSchedules": "Fréquence",
       "fullTuitionPaid": "Annuel"
     },
     "dialogs": {
+      "forceRemoveButton": "Forcer la suppression",
+      "forceRemoveWarning": "Supprimer ces frais et leurs liens de paiement ? Les reçus sont conservés, les montants liés sont restitués en avoir et la suppression est enregistrée dans le journal d’audit.",
       "createButton": "Créer",
       "createTitle": "Créer",
       "deleteButton": "Supprimer",
@@ -2810,6 +2848,8 @@
       "updated": "Frais mis à jour avec succès"
     },
     "errors": {
+      "forceRemovalAdminOnly": "Seul un administrateur peut forcer la suppression de frais",
+      "forceRemovalChanged": "Les frais ou leurs liens de paiement ont changé. Actualisez et réessayez.",
       "installmentMissingForFee": "L'échéance n°{{number}} n'existe pas pour les frais {{feeId}}",
       "noInstallmentsMatched": "Aucune échéance ne correspond aux cibles d'affectation demandées",
       "allocationsExceedPayment": "Les affectations ne peuvent pas dépasser le montant du paiement",
@@ -6425,6 +6465,7 @@
   },
   "academic": {
     "accountantAssignmentOptional": "L’affectation à un cycle est facultative. Vous pourrez l’ajouter plus tard.",
+    "floorManagerAssignmentHint": "Accès limité aux élèves, à l’assiduité, à la discipline et aux notes des classes de ces niveaux, cette année comme les suivantes.",
     "deleteWarning": "Les données liées sont protégées. La suppression est définitive.",
     "classRequired": "Veuillez sélectionner une classe.",
     "cycleNameRequired": "Le nom du cycle est obligatoire.",

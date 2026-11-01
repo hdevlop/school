@@ -1,6 +1,7 @@
 import { Err, I18n, Service } from '../../najm';
 import { SCHOOL_WIDE_ROLES } from '../../auth';
 import { DisciplineRepository } from './DisciplineRepository';
+import { FloorManagerScopeRepository } from '../staff/floorManagerScope';
 
 export type DisciplineUser = { id: string; role?: string };
 
@@ -8,7 +9,10 @@ export type DisciplineUser = { id: string; role?: string };
 export class DisciplineValidator {
   @I18n('discipline.errors') private t!: (key: string) => string;
 
-  constructor(private repository: DisciplineRepository) {}
+  constructor(
+    private repository: DisciplineRepository,
+    private floorManagers: FloorManagerScopeRepository,
+  ) {}
 
   async ensureExists(id: string) {
     const record = await this.repository.getById(id);
@@ -29,11 +33,13 @@ export class DisciplineValidator {
     return { classId: student!.classId!, sectionId: student!.sectionId! };
   }
 
+  // A teacher reports students of the sections they teach, a floor manager
+  // students of their classes.
   async ensureTeacherMayReport(user: DisciplineUser, sectionId: string) {
-    if (user.role !== 'teacher') return;
-    if (!(await this.repository.isTeacherAssignedToSection(user.id, sectionId))) {
-      Err(403, this.t('teacherStudentForbidden'));
-    }
+    const reaches = user.role === 'teacher' ? await this.repository.isTeacherAssignedToSection(user.id, sectionId)
+      : user.role === 'floor_manager' ? await this.floorManagers.managesSection(user.id, sectionId)
+      : true;
+    if (!reaches) Err(403, this.t('teacherStudentForbidden'));
   }
 
   ensureOpen(record: { status: string }) {

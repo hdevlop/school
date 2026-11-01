@@ -47,7 +47,7 @@ type StaffWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLabel
 const StaffWizardForm = WizardForm as ComponentType<StaffWizardFormProps>;
 
 const STAFF_FORM_EXCLUDED_ROLES = new Set(['teacher']);
-const STAFF_ASSIGNMENT_ROLES = new Set(['assistant', 'cleaner', 'accountant', 'security', 'driver', 'busAssistant']);
+const STAFF_ASSIGNMENT_ROLES = new Set(['assistant', 'floorManager', 'cleaner', 'accountant', 'security', 'driver', 'busAssistant']);
 
 const staffRoleHasAssignments = (role?: string) => !role || STAFF_ASSIGNMENT_ROLES.has(role);
 
@@ -93,7 +93,12 @@ const toStaffPayload = (data) => {
   if (data.role === 'assistant') {
     payload.assignments = (data.classIds || []).map((classId) => ({ classId }));
   }
+  // Floor manager picks grades by class name, one assignment row per grade.
+  if (data.role === 'floorManager') {
+    payload.assignments = (data.classNames || []).map((className) => ({ className }));
+  }
   delete payload.classIds;
+  delete payload.classNames;
 
   if (!staffRoleHasAssignments(data.role)) {
     delete payload.assignments;
@@ -112,7 +117,7 @@ const toStaffPayload = (data) => {
         ))
       ))
       .filter((assignment) => Object.keys(assignment).length > 0);
-    if (payload.assignments.length === 0 && !(payload.id && (data.role === 'assistant' || data.role === 'accountant'))) delete payload.assignments;
+    if (payload.assignments.length === 0 && !(payload.id && (data.role === 'assistant' || data.role === 'accountant' || data.role === 'floorManager'))) delete payload.assignments;
   }
 
   return payload;
@@ -154,6 +159,9 @@ const getStaffDefaultValues = (staff = null) => ({
   notes: staff?.notes || '',
   assignments: currentAssignments(staff).length ? currentAssignments(staff) : [{}],
   classIds: currentAssignments(staff).map((assignment) => assignment.classId).filter(Boolean),
+  classNames: currentAssignments(staff)
+    .filter((assignment) => assignment.type === 'floorManager')
+    .map((assignment) => assignment.className).filter(Boolean),
 });
 
 const StaffForm = ({ staff = null, onSubmitStaff }) => {
@@ -198,7 +206,7 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
         title: t('staff.form.assignments'),
         schema: schemas.assignmentStep,
         // `role` is carried (not validated here) so the step can show role-based assignment fields.
-        fields: ['assignments', 'classIds', 'role'],
+        fields: ['assignments', 'classIds', 'classNames', 'role'],
         render: ({ form }) => <AssignmentsStep form={form} />,
       });
     }
@@ -392,7 +400,7 @@ const AssignmentsStep = ({ form }) => {
   const { push } = useDialog();
   const { can } = useViewerRole();
   const role = form.watch('role');
-  const { classes } = useClasses({ enabled: role === 'assistant' });
+  const { classes } = useClasses({ enabled: role === 'assistant' || role === 'floorManager' });
   const { cycles } = useCycles({ activeOnly: true, enabled: role === 'accountant' });
   const { zones } = useZones({ enabled: role === 'cleaner' || role === 'security' });
   const { vehicles, isVehiclesLoading, isError: vehicleError, refetch: refetchVehicles, createVehicle, isCreating } = useManageVehicles({ enabled: role === 'driver' || role === 'busAssistant' });
@@ -427,6 +435,14 @@ const AssignmentsStep = ({ form }) => {
     label: cycle?.labels?.[language] || cycle.name,
   })), [cycles, language]);
 
+  // A grade is a class name. One still assigned but missing from this year's
+  // classes stays offered, so editing shows it instead of silently dropping it.
+  const storedGrades = useMemo(() => form.getValues('classNames') || [], [form]);
+  const gradeOptions = useMemo(() => [...new Set([
+    ...(classes || []).map((classItem) => classItem.name),
+    ...storedGrades,
+  ])].filter(Boolean).map((name) => ({ value: name, label: name })), [classes, storedGrades]);
+
   const classOptions = useMemo(() => (classes || []).map((classItem) => ({
     value: classItem.id,
     label: `${classItem.name}${classItem.academicYear ? ` (${classItem.academicYear})` : ''}`,
@@ -439,6 +455,14 @@ const AssignmentsStep = ({ form }) => {
           <FormSectionHeader icon={Briefcase} title={t('staff.form.assignments')} />
           <FormInput name="classIds" type="multiselect" formLabel={t('staff.form.class')} placeholder={t('staff.form.class')} items={classOptions} icon={Briefcase} />
           <p className="text-sm text-muted-foreground">{t('academic.staffAssignmentOptional')}</p>
+        </>
+      )}
+
+      {role === 'floorManager' && (
+        <>
+          <FormSectionHeader icon={Briefcase} title={t('staff.form.assignments')} />
+          <FormInput name="classNames" type="multiselect" formLabel={t('staff.form.grades')} placeholder={t('staff.form.grades')} items={gradeOptions} icon={Briefcase} />
+          <p className="text-sm text-muted-foreground">{t('academic.floorManagerAssignmentHint')}</p>
         </>
       )}
 

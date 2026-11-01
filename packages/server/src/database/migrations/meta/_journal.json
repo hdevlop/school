@@ -624,6 +624,20 @@
       "when": 1793395990748,
       "tag": "0088_routine_lesson_subject",
       "breakpoints": true
+    },
+    {
+      "idx": 89,
+      "version": "7",
+      "when": 1793451409520,
+      "tag": "0089_floor_manager_role",
+      "breakpoints": true
+    },
+    {
+      "idx": 90,
+      "version": "7",
+      "when": 1793456117420,
+      "tag": "0090_floor_manager_assignments",
+      "breakpoints": true
     }
   ]
 }
