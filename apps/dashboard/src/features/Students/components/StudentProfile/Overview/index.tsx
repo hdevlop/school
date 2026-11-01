@@ -26,6 +26,7 @@ import { NativeProfileSelect } from '../NativeProfileSelect';
 import { Parent, Student } from '../types';
 import { useTranslation } from 'najm-i18n/react';
 import { birthplaceLabel } from '@sms/contracts/birthplace';
+import SectionTitle from '../SectionTitle';
 
 type Translate = (key: string, params?: Record<string, unknown> | null) => string;
 
@@ -63,13 +64,6 @@ const formatDate = (value: string | null | undefined, language: string) => {
   if (Number.isNaN(date.getTime())) return '—';
   return date.toLocaleDateString(language, { year: 'numeric', month: 'short', day: 'numeric' });
 };
-
-const SectionTitle = ({ title }: { title: string }) => (
-  <div className="mb-2 flex items-center gap-2">
-    <span className="h-3.5 w-1 rounded-full bg-primary/70" />
-    <h3 className="shrink-0 text-sm font-bold uppercase tracking-wider text-slate-500">{title}</h3>
-  </div>
-);
 
 const InfoCard = ({ children }: { children: React.ReactNode }) => (
   <NCard className="w-full p-3 transition-shadow hover:shadow-md">

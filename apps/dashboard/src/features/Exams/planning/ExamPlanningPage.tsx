@@ -142,8 +142,7 @@ function PlanningContent() {
           <div className={styles.toolbarControls}>
           <fieldset className={styles.dateFilters} disabled={dirty || saving || isLoading}>
             <div className={styles.dateField}>
-              <span>{t('assessmentPlanning.period')}</span>
-              <DateRangeInput ariaLabel={t('assessmentPlanning.period')} className="w-80 max-sm:w-full" value={range} min={yearFrom} max={yearTo} onChange={({ from, to }) => { if (from && to) { setRange({ from, to }); setClass(classId); setSelected(null); } }} />
+              <DateRangeInput ariaLabel={t('assessmentPlanning.period')} className="w-64 max-sm:w-full" value={range} min={yearFrom} max={yearTo} onChange={({ from, to }) => { if (from && to) { setRange({ from, to }); setClass(classId); setSelected(null); } }} />
             </div>
           </fieldset>
           <div className={styles.toolbarActions}>

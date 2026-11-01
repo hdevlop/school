@@ -10,7 +10,7 @@ export * from './enums';
 export * from './landing';
 export * from './classNames';
 export * from './feeTypeNames';
-export type { FeeSummary } from './feeSummary';
+export type { FeeSummary, FeePaymentDateFilters } from './feeSummary';
 export * from './payroll';
 export * from './receipts';
 export * from './schoolDefaults';

@@ -9,6 +9,7 @@ import { FileX2 } from 'lucide-react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
 import { getFeeCardSummary } from '../utils/feeCardSummary';
+import { isStudentDisabled } from '@/features/Students/config/studentActivity';
 
 const FeeCard = ({ data }: any) => {
   const { t } = useTranslation();
@@ -25,7 +26,7 @@ const FeeCard = ({ data }: any) => {
   return (
     <div
       className={`flex h-full flex-col gap-3 border p-4 ${
-        isPaid
+        isPaid && !isStudentDisabled(data ?? {})
           ? 'border-green-300 bg-green-50/80 text-green-950'
           : 'border-transparent'
       }`}

@@ -2,7 +2,7 @@
 
 
 import { PermissionButton } from '@/components/PermissionButton';
-import { Badge } from 'najm-kit'
+import { Badge, NCard } from 'najm-kit'
 import { useDialog } from '@/shared/useDialog'
 import { DollarSign, Pencil, Plus, Tag } from 'lucide-react'
 import { useFees } from '@/features/Financial/Fees/hooks/useFees'
@@ -55,13 +55,13 @@ export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
 
   return (
     <div className="flex flex-col gap-3 p-1">
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border bg-card px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-1 py-1">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Tag className="h-4 w-4 text-primary" />
+          <Tag aria-hidden="true" className="h-4 w-4 shrink-0 text-primary" />
           <span>{t('fees.studentView.discountCount', { count: feesWithDiscount.length, total: fees.length })}</span>
         </div>
         {totalDiscount > 0 && (
-          <Badge variant="secondary" className="border-green-200 bg-green-50 text-green-700">
+          <Badge variant="secondary" className="border-border bg-primary/10 text-primary">
             {t('fees.studentView.totalSaved', { amount: majorMoney(totalDiscount) })}
           </Badge>
         )}
@@ -77,19 +77,29 @@ export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
           const category = fee.feeType?.category || fee.feeTypeCategory || fee.type || fee.category || fee.schedule || 'fee'
 
           return (
-            <div
+            <NCard
               key={fee.id}
-              className={`relative rounded-lg border bg-card p-4 pr-32 ${
-                hasDiscount ? 'border-green-300 bg-green-50/40' : ''
-              }`}
+              className="border-border p-4"
             >
-              <div className="flex min-w-0 items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <DollarSign className="h-6 w-6" />
+              <div className="flex min-w-0 items-start gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <DollarSign className="h-5 w-5" />
                 </div>
 
-                <div className="min-w-0 space-y-2">
-                  <p className="truncate text-sm font-semibold text-foreground">{fee.name}</p>
+                <div className="min-w-0 flex-1 space-y-2">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <p className="min-w-0 flex-1 text-sm font-semibold text-foreground">{fee.name}</p>
+                    <PermissionButton permission="update:fees"
+                      variant="outline"
+                      size="sm"
+                      className="h-8 shrink-0 gap-1.5 border-border px-2.5 text-xs"
+                      onClick={() => handleEditDiscount(fee)}
+                      title={hasDiscount ? t('fees.studentView.editDiscount') : t('fees.studentView.addDiscount')}
+                    >
+                      {hasDiscount ? <Pencil className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
+                      {hasDiscount ? t('common.edit') : t('fees.studentView.discounts')}
+                    </PermissionButton>
+                  </div>
 
                   <div className="flex min-w-0 items-center gap-2 text-sm">
                     <Tag className="h-3.5 w-3.5 shrink-0 text-primary" />
@@ -103,50 +113,31 @@ export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
                     }</span>
                   </div>
 
-                  <div className="flex min-w-0 items-center gap-2 text-sm">
+                  <div className="flex min-w-0 flex-wrap items-center gap-2 text-sm">
                     <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
                     <span className="shrink-0 text-muted-foreground">{t('fees.table.amount')}:</span>
-                    <span className={hasDiscount ? 'text-muted-foreground line-through' : 'font-semibold text-green-700'}>
+                    <span className={hasDiscount ? 'text-muted-foreground line-through' : 'font-semibold tabular-nums text-foreground'}>
                       {majorMoney(base || net)}
                     </span>
                     {hasDiscount && (
-                      <Badge variant="secondary" className="shrink-0 border-green-200 bg-green-100 px-2 font-semibold text-green-800">
+                      <Badge variant="secondary" className="shrink-0 border-border bg-primary/10 px-2 font-semibold text-primary">
                         {majorMoney(net)}
                       </Badge>
                     )}
                     {hasDiscount && (
-                      <Badge variant="secondary" className="shrink-0 border-green-200 bg-green-50 px-2 text-xs font-semibold text-green-700">
+                      <Badge variant="secondary" className="shrink-0 border-border bg-muted px-2 text-xs font-semibold text-foreground">
                         -{discountPct}%
                       </Badge>
                     )}
                   </div>
 
                   {fee.discountReason && (
-                    <p className="line-clamp-1 text-xs italic text-green-700">"{fee.discountReason}"</p>
+                    <p className="line-clamp-2 text-xs italic text-muted-foreground">"{fee.discountReason}"</p>
                   )}
                 </div>
               </div>
 
-              <PermissionButton permission="update:fees"
-                variant="outline"
-                size="sm"
-                className="absolute right-4 top-4 h-8 px-3 text-xs"
-                onClick={() => handleEditDiscount(fee)}
-                title={hasDiscount ? t('fees.studentView.editDiscount') : t('fees.studentView.addDiscount')}
-              >
-                {hasDiscount ? (
-                  <>
-                    <Pencil className="mr-1.5 h-3.5 w-3.5" />
-                    {t('common.edit')}
-                  </>
-                ) : (
-                  <>
-                    <Plus className="mr-1.5 h-3.5 w-3.5" />
-                    {t('fees.studentView.discounts')}
-                  </>
-                )}
-              </PermissionButton>
-            </div>
+            </NCard>
           )
         })}
       </div>

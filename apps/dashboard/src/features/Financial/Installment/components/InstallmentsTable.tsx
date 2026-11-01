@@ -1,8 +1,9 @@
 "use client"
 
-import { SearchX } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { Download, Printer, SearchX } from 'lucide-react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NEmptyState } from 'najm-kit';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, NButton, NEmptyState, useResolvedToolbarLabels, useTableStore } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import InstallmentCard from './InstallmentCard';
 import InstallmentDetails from './InstallmentDetails';
@@ -11,7 +12,44 @@ import { useTranslation } from 'najm-i18n/react';
 import { useInstallmentsTableColumns } from '../hooks/useInstallmentsTableColumns';
 import { useInstallmentsTableFilters } from '../hooks/useInstallmentsTableFilters';
 
-function InstallmentsTable({ fee, feeName = '', className = '', onPayInstallment, dynamicHeight = true }) {
+/** Keep the visible shortcuts on Najm's current filtered/selected table view. */
+function InstallmentTableActions() {
+  const actions = useTableStore.use.toolbarActions();
+  const labels = useResolvedToolbarLabels(useTableStore.use.toolbarLabels());
+  const exportAction = actions.find(action => action.label === (labels.export ?? 'Export'));
+  const printAction = actions.find(action => action.label === (labels.print ?? 'Print'));
+
+  return <>
+    {printAction && <NButton type="button" variant="outline" size="sm" onClick={() => printAction.onSelect?.()}>
+      <Printer aria-hidden="true" className="h-4 w-4" />
+      {printAction.label}
+    </NButton>}
+    {exportAction && <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <NButton type="button" variant="outline" size="sm">
+          <Download aria-hidden="true" className="h-4 w-4" />
+          {exportAction.label}
+        </NButton>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        {exportAction.submenu?.map(action => <DropdownMenuItem key={action.label} onSelect={() => action.onSelect?.()}>
+          {action.label}
+        </DropdownMenuItem>)}
+      </DropdownMenuContent>
+    </DropdownMenu>}
+  </>;
+}
+
+interface InstallmentsTableProps {
+  fee: any[];
+  feeName?: string;
+  className?: string;
+  onPayInstallment?: (installment: any) => void;
+  dynamicHeight?: boolean;
+  toolbarActions?: ReactNode;
+}
+
+function InstallmentsTable({ fee, feeName = '', className = '', onPayInstallment, dynamicHeight = true, toolbarActions }: InstallmentsTableProps) {
   const { t } = useTranslation();
 
   const rawFilters = useInstallmentsTableFilters();
@@ -43,6 +81,19 @@ function InstallmentsTable({ fee, feeName = '', className = '', onPayInstallment
       renderCard={InstallmentCard}
       defaultMode='table'
       showAddButton={false}
+      showPrintButton
+      showExportButton
+      toolbarActionDisplay="settings"
+      renderToolbar={() => <>
+        <h3 className="me-auto flex min-w-0 items-center gap-2 text-lg text-foreground">
+          <span aria-hidden="true">📅</span>
+          {t('fees.studentView.installments')}
+        </h3>
+        <div className="flex shrink-0 items-center gap-2">
+          {toolbarActions}
+          <InstallmentTableActions />
+        </div>
+      </>}
       renderEmpty={() => (
         <NEmptyState
           surface="panel"

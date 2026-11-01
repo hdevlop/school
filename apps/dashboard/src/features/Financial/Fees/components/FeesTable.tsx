@@ -16,6 +16,7 @@ import FeeCard from './FeeCard';
 import { FeesMobileToolbar, type FeeTableFilter } from './FeesMobileToolbar';
 import { defaultFeeSection, resolveFeeRosterSelection, type FeeRosterSelection } from '../utils/feeRosterSelection';
 import { useStudents } from '@/features/Students/hooks/useStudents';
+import { compareStudentActivity, getStudentRowClassName, isStudentDisabled } from '@/features/Students/config/studentActivity';
 import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
@@ -26,12 +27,13 @@ import { getFeeTypesApi } from '@/services/feeTypeApi';
 import { useQueryClient } from '@tanstack/react-query';
 import { buildFeeImport, isFeeReport } from '../config/feeImport';
 import { FeesPrintButton } from './FeesPrintButton';
+import { FeesDateFilter } from './FeesDateFilter';
 import { FeeImportDatesPreview } from './FeeImportDatesPreview';
 import { withFeeYear } from '../utils/feeUtils';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { useFeesTableColumns } from '../hooks/useFeesTableColumns';
 import { buildFeeListFrequencyOptions, getFeeListFrequencyFilter } from '../config/feeOptions';
-import { createFeeListFilterMemory, feeListFiltersKey, resolveFeeListFilters, type FeeListFilters } from '../config/feeListFilters';
+import { createFeeListFilterMemory, feeListFiltersKey, resolveFeeListFilters, type FeeListFilters, type FeePaymentDateRange } from '../config/feeListFilters';
 import { useYearSelectionStore } from '@/features/AcademicYears/store/yearSelectionStore';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
@@ -81,19 +83,21 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
   const [searchText, setSearchText] = useState(initialFilters.searchText);
   const [statusFilter, setStatusFilter] = useState(initialFilters.statusFilter);
   const [scheduleFilter, setScheduleFilter] = useState<Schedule | undefined>(initialFilters.scheduleFilter);
+  const [paymentDateRange, setPaymentDateRange] = useState<FeePaymentDateRange | undefined>(initialFilters.paymentDateRange);
+  const paymentDates = { dateFrom: paymentDateRange?.from, dateTo: paymentDateRange?.to };
 
   // Keep the filters for this tab, so opening a student's fees and coming
   // back (Back button or sidebar) returns to the same list.
   useEffect(() => {
-    if (memoryKey) feeListMemory.write(memoryKey, { selection, statusFilter, scheduleFilter, searchText });
-  }, [memoryKey, selection, statusFilter, scheduleFilter, searchText]);
+    if (memoryKey) feeListMemory.write(memoryKey, { selection, statusFilter, scheduleFilter, searchText, paymentDateRange });
+  }, [memoryKey, selection, statusFilter, scheduleFilter, searchText, paymentDateRange]);
 
-  // Summary cards cover the viewed year independently of table filters;
-  // The summary includes only collections and overdue balances through today.
+  // Collection cards follow payment dates across the viewed year. Overdue
+  // balances still count every collected allocation through today.
   const { data: stats, isLoading: isSummaryLoading, error: summaryError } = useYearScopedDetail({
     resource: 'fees',
-    parts: ['summary'],
-    fetch: getFeeSummaryApi,
+    parts: ['summary', ...(paymentDateRange ? [paymentDates] : [])],
+    fetch: () => getFeeSummaryApi(paymentDates),
   });
 
   const {
@@ -106,6 +110,7 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
     isDeleting,
     refetch,
   } = useFees({
+    ...paymentDates,
     ...getFeeListFrequencyFilter(scheduleFilter),
     classId: isAllClasses ? undefined : selectedClassId || undefined,
     sectionId: selectedSectionId || undefined,
@@ -122,6 +127,7 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
       if (selectedSectionId && row.section?.id !== selectedSectionId) return false;
       if (query && !row.student?.name?.toLowerCase().includes(query)
         && !row.student?.studentCode?.toLowerCase().includes(query)) return false;
+      if (statusFilter === 'left' && !isStudentDisabled(row)) return false;
 
       const overdue = Number(row.overdueAmount ?? 0);
       const totalDue = Number(row.totalDue ?? 0);
@@ -129,7 +135,7 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
       if (statusFilter === 'overdue' && overdue === 0) return false;
       if (statusFilter === 'paying' && (overdue > 0 || totalDue <= 0)) return false;
       return true;
-    });
+    }).sort(compareStudentActivity);
   }, [fees, selectedClassId, selectedSectionId, searchText, statusFilter, isAllClasses]);
 
   const classOptions = useMemo(
@@ -205,6 +211,7 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
         { value: 'overdue', label: t('fees.status.overdue') || 'Overdue' },
         { value: 'paying', label: t('fees.status.paying') || 'Paying' },
         { value: 'paid', label: t('fees.status.paid') || 'Paid' },
+        { value: 'left', label: t('fees.status.left') },
       ],
       className: 'w-full lg:w-44',
     },
@@ -388,7 +395,7 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
         <div className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-7">
           <NStatCard
             icon={HandCoins}
-            label={t('fees.stats.collected')}
+            label={t(paymentDateRange ? 'fees.stats.collectedInPeriod' : 'fees.stats.collected')}
             value={majorMoney(stats?.collected ?? 0)}
             className="min-w-0"
             classNames={{
@@ -459,7 +466,10 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
         filters={filters}
         renderToolbar={() => (
           <>
-            <FeesMobileToolbar filters={filters} onCreate={handleAddClick} loading={isLoading} />
+            <FeesMobileToolbar filters={filters} onCreate={handleAddClick} loading={isLoading} paymentDateRange={paymentDateRange} onPaymentDateRangeChange={setPaymentDateRange} />
+            <div className="hidden md:flex">
+              <FeesDateFilter value={paymentDateRange} onChange={setPaymentDateRange} />
+            </div>
             <div className="hidden md:flex">
               <FeesPrintButton loading={isLoading} />
             </div>
@@ -478,6 +488,7 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
             : <NErrorState surface="panel" />
         )}
         renderCard={FeeCard}
+        getRowClassName={getStudentRowClassName}
         classNames={{
           header: '[&_[data-ntable-mobile-toolbar]]:hidden max-md:[&_[data-school-create-action]]:hidden',
           cards: 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5',

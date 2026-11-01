@@ -6,6 +6,7 @@ import { Banknote, Briefcase, BriefcaseBusiness, Calendar, Eye, Hash, IdCard, Ma
 import { Badge, NAvatar, NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
+import { TablePrintButton } from '@/components/TablePrintButton';
 import { useTranslation } from 'najm-i18n/react';
 import { announceInvitation } from '@/shared/invitationNotice';
 import { useStaff } from '../hooks/useStaff';
@@ -245,8 +246,8 @@ const StaffTable = () => {
     },
     {
       accessorKey: 'compensationMode',
-      header: t('staff.table.compensationMode'),
       meta: { exportValue: exportLabel(code => t(`staff.compensationModes.${code}`)) },
+      header: t('staff.table.compensationMode'),
       enableSorting: true,
       cell: ({ getValue }) => t(`staff.compensationModes.${getValue() || 'monthly'}`),
     },
@@ -279,8 +280,8 @@ const StaffTable = () => {
     },
     {
       accessorKey: 'status',
-      header: t('staff.table.status'),
       meta: { exportValue: exportLabel(code => t(`staff.status.${code}`)) },
+      header: t('staff.table.status'),
       enableSorting: true,
       cell: ({ getValue }) => {
         const status = getValue() as string;
@@ -331,7 +332,7 @@ const StaffTable = () => {
   ], [t, roleOptions, categoryOptions]);
 
   return (
-    <div className="flex flex-col gap-2 w-full h-full">
+    <div data-people-list-loading={isStaffLoading || undefined} className="flex flex-col gap-2 w-full h-full">
       <NPageHeader
         icon={Briefcase}
         title={t('navigation.staff')}
@@ -399,6 +400,9 @@ const StaffTable = () => {
       <NTable
         exportTitle={t('navigation.staff')}
         permissionResource="staff"
+        dataActions
+        toolbarActionDisplay="settings"
+        headerSlot={<TablePrintButton loading={isStaffLoading} />}
         data={rows}
         columns={columns}
         filters={filters}

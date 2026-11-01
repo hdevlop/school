@@ -7,6 +7,7 @@ import { useResetLogin } from '@/features/Users/hooks/useResetLogin';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
+import { TablePrintButton } from '@/components/TablePrintButton';
 import { Eye, Pencil, Trash2, Users, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import { useRouter } from 'next/navigation';
@@ -156,7 +157,7 @@ function TeachersTable() {
   const total = teachers?.length ?? 0;
 
   return (
-    <div className='flex flex-col gap-2 w-full h-full'>
+    <div data-people-list-loading={isTeachersLoading || undefined} className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
         icon={Users}
         title={t('navigation.teachers')}
@@ -170,6 +171,9 @@ function TeachersTable() {
       <NTable
         exportTitle={t('navigation.teachers')}
         permissionResource="teachers"
+        dataActions
+        toolbarActionDisplay="settings"
+        headerSlot={<TablePrintButton loading={isTeachersLoading} />}
         data={teachers}
         getRowId={(teacher) => teacher.id}
         columns={columns}

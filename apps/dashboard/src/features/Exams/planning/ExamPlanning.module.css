@@ -41,7 +41,6 @@
 .toolbarActions { display: flex; align-items: center; flex-wrap: wrap; min-width: 0; gap: 8px; }
 .dateFilters { display: flex; flex-wrap: wrap; gap: 16px; min-width: 0; margin: 0; padding: 0; border: 0; }
 .dateField { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.dateField > span { font-size: 12px; font-weight: 700; flex-shrink: 0; }
 .classRow { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
 .classButton { display: inline-flex; align-items: center; gap: 7px; padding: 7px 11px; border: var(--border-width, 1px) solid var(--planning-line); border-radius: var(--radius); background: var(--planning-panel); color: var(--planning-muted); font-size: 12px; line-height: 18px; }
 .classButton:hover:not(:disabled) { border-color: var(--planning-accent); }

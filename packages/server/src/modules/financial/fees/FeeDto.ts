@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { academicYearField, optionalDateField, optionalId, requiredId, money } from '../../../shared/fields';
 import { feeStatusEnum, scheduleEnum } from '../../../shared/enums';
 import { isDateOnly } from '@sms/contracts/academic-years';
+import type { FeePaymentDateFilters } from '@sms/contracts';
 
 export const addOccasionalChargeDto = z.object({
   date: z.string().refine(isDateOnly, 'Expected a real YYYY-MM-DD date'),
@@ -53,12 +54,20 @@ export const deleteFeesBulkDto = z.preprocess(
 
 export const feeIdParam = z.object({ id: z.string().min(1) });
 export const studentIdParam = z.object({ studentId: z.string().min(1) });
+const paymentDateFields = {
+  dateFrom: z.string().refine(isDateOnly, 'Expected a real YYYY-MM-DD date').optional(),
+  dateTo: z.string().refine(isDateOnly, 'Expected a real YYYY-MM-DD date').optional(),
+};
+const orderedPaymentDates = ({ dateFrom, dateTo }: FeePaymentDateFilters) => !dateFrom || !dateTo || dateFrom <= dateTo;
+const paymentDateOrderError = { message: 'End date must be on or after start date', path: ['dateTo'] };
+export const feePaymentDatesQueryDto = z.object(paymentDateFields).refine(orderedPaymentDates, paymentDateOrderError);
 export const listFeesQueryDto = z.object({
+  ...paymentDateFields,
   schedule: scheduleEnum.optional(),
   tuitionPayment: z.literal('paidInFull').optional(),
   classId: z.string().min(1).optional(),
   sectionId: z.string().min(1).optional(),
-});
+}).refine(orderedPaymentDates, paymentDateOrderError);
 export type ListFeesQueryDto = z.infer<typeof listFeesQueryDto>;
 // The normal list year is resolved by the shared REST/MCP request scope.
 export const overdueStudentBody = studentIdParam;

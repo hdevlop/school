@@ -6,7 +6,6 @@ import { protectMenuItems } from '@/shared/actionPermissions';
 import { useMediaQuery, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Label } from 'najm-kit';
 import { useCallback, useMemo } from 'react';
 import FeeCard from './FeeCard';
 import { MobileFeesList } from './MobileFeesList';
@@ -79,6 +78,11 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
     ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 items-start gap-3 p-1.5'
     : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 items-start gap-3 p-1.5';
 
+  // Keep one border and slightly enlarge the selected card without shifting the grid.
+  const getFeeRowClassName = useCallback((fee: any) =>
+    `border ring-0 ring-offset-0 shadow-none transition-[scale,border-color] duration-150 motion-reduce:transition-none ${fee.id === selectedFee?.id ? 'z-10 border-secondary/75 motion-safe:scale-[1.015]' : 'border-border'}`,
+  [selectedFee?.id]);
+
   const renderFeeCard = useMemo(() => ({ data }: any) => {
     return <FeeCard data={data} />;
   }, []);
@@ -145,6 +149,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
         showColumnVisibility={false}
         showCheckbox={false}
         selectedRowId={selectedFee?.id ?? null}
+        getRowClassName={getFeeRowClassName}
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
@@ -168,13 +173,6 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
 
       {selectedFee && (
         <div className='flex min-h-0 flex-1 flex-col gap-2 max-lg:flex-none'>
-          <div className="flex shrink-0 flex-wrap items-center justify-between gap-2">
-          <Label className="flex items-center gap-2 text-lg text-gray-800">
-            <span>📅</span>
-            {t('fees.studentView.installments')}
-          </Label>
-          <OccasionalChargeButton fee={selectedFee} />
-          </div>
           <InstallmentsTable
             key={selectedFee.id}
             fee={selectedFee.installments}
@@ -182,6 +180,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
             className={isStacked ? 'h-fit flex-none' : 'min-h-0 flex-1'}
             dynamicHeight={!isStacked}
             onPayInstallment={onPayInstallment}
+            toolbarActions={<OccasionalChargeButton fee={selectedFee} />}
           />
         </div>
       )}

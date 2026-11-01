@@ -1,18 +1,22 @@
 import { SCHEDULE_VALUES } from '@sms/contracts';
 import type { Schedule } from '@sms/contracts';
+import { isDateOnly } from '@sms/contracts/academic-years';
 import type { FeeRosterSelection } from '../utils/feeRosterSelection';
 import { resolveFeeEntryFilters } from './feeNavigation';
+
+export type FeePaymentDateRange = { from: string; to: string };
 
 export type FeeListFilters = {
   selection: FeeRosterSelection | null;
   statusFilter: string;
   scheduleFilter?: Schedule;
   searchText: string;
+  paymentDateRange?: FeePaymentDateRange;
 };
 
 type FilterStorage = Pick<Storage, 'getItem' | 'setItem'>;
 
-const STATUS_FILTERS = ['__all__', 'overdue', 'paying', 'paid'];
+const STATUS_FILTERS = ['__all__', 'overdue', 'paying', 'paid', 'left'];
 
 export const DEFAULT_FEE_LIST_FILTERS: FeeListFilters = { selection: null, statusFilter: '__all__', searchText: '' };
 
@@ -30,7 +34,7 @@ export function parseFeeListFilters(value: string | null): FeeListFilters | unde
     return undefined;
   }
   if (!raw || typeof raw !== 'object') return undefined;
-  const { selection, statusFilter, scheduleFilter, searchText } = raw as Record<string, unknown>;
+  const { selection, statusFilter, scheduleFilter, searchText, paymentDateRange } = raw as Record<string, unknown>;
   const validSelection = selection === null || (
     !!selection && typeof selection === 'object'
     && typeof (selection as FeeRosterSelection).classId === 'string'
@@ -39,11 +43,19 @@ export function parseFeeListFilters(value: string | null): FeeListFilters | unde
   if (!validSelection || typeof statusFilter !== 'string' || !STATUS_FILTERS.includes(statusFilter)) return undefined;
   if (scheduleFilter !== undefined && !SCHEDULE_VALUES.includes(scheduleFilter as Schedule)) return undefined;
   if (typeof searchText !== 'string') return undefined;
+  let dates: FeePaymentDateRange | undefined;
+  if (paymentDateRange !== undefined) {
+    if (!paymentDateRange || typeof paymentDateRange !== 'object') return undefined;
+    const { from, to } = paymentDateRange as Record<string, unknown>;
+    if (typeof from !== 'string' || typeof to !== 'string' || !isDateOnly(from) || !isDateOnly(to) || from > to) return undefined;
+    dates = { from, to };
+  }
   return {
     selection: selection ? { classId: (selection as FeeRosterSelection).classId, sectionId: (selection as FeeRosterSelection).sectionId } : null,
     statusFilter,
     ...(scheduleFilter ? { scheduleFilter: scheduleFilter as Schedule } : {}),
     searchText,
+    ...(dates ? { paymentDateRange: dates } : {}),
   };
 }
 

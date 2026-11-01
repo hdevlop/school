@@ -2750,6 +2750,7 @@
       "failed": "{{count}} élève(s) non importé(s). Corrigez les lignes indiquées puis réessayez ; les lignes réussies ne seront pas dupliquées."
     },
     "stats": {
+      "collectedInPeriod": "Encaissé sur la période",
       "collected": "Encaissé à ce jour",
       "paidToDate": "Payé à ce jour",
       "totalFees": "Total des frais",
@@ -2829,6 +2830,7 @@
       "netAmountForYear": "Total de la période facturée (après remise)"
     },
     "status": {
+      "left": "Parti",
       "paying": "En cours",
       "overdue": "En retard",
       "paid": "Payé",
@@ -2838,6 +2840,8 @@
       "cancelled": "Annulé"
     },
     "filters": {
+      "paymentDates": "Dates de paiement",
+      "clearPaymentDates": "Effacer les dates de paiement",
       "class": "Classe",
       "section": "Section",
       "noSections": "Aucune section",

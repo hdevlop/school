@@ -164,7 +164,7 @@ export default function LeftSidebar({
   ];
 
   return (
-    <aside className="min-h-full bg-gradient-to-b from-slate-50 to-white">
+    <aside className="min-w-0 flex-1 bg-gradient-to-b from-slate-50 to-white">
       <div className="relative">
         <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent" />
         <div className="relative flex flex-col items-center px-4 pt-8 text-center">

@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
+import type { FeePaymentDateFilters } from '@sms/contracts';
 import { FeeService } from './FeeService';
 import { FeeForceRemovalService } from './FeeForceRemovalService';
 import { buildFeeRecalculationResponse } from './buildFeeRecalculationResponse';
@@ -17,6 +18,7 @@ import {
   deleteFeesBulkDto,
   feeIdParam,
   listFeesQueryDto,
+  feePaymentDatesQueryDto,
   overdueStudentBody,
   studentIdParam,
   updateFeeDto,
@@ -41,7 +43,7 @@ export class FeeController {
   @Get()
   @CanSchoolWide('read:fees')
   @Validate({ query: listFeesQueryDto })
-  @McpTool({ description: 'List student fee totals in the selected year, optionally filtered by class, section and exact payment schedule. tuitionPayment=paidInFull returns only tuition totals fully paid through today, regardless of installment schedule, for students who did not leave during the year (withdrawn or transferred).', readOnly: true })
+  @McpTool({ description: 'List student fee totals in the selected year, optionally filtered by class, section, payment schedule and inclusive payment dates (dateFrom/dateTo). Date filters select students with completed, collected payments in that range; balances remain cumulative. tuitionPayment=paidInFull returns fully paid tuition for students who did not leave during the year.', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getFees(@Query() filters: ListFeesQueryDto = {}) {
     return this.feeService.getAll(filters);
@@ -49,10 +51,11 @@ export class FeeController {
 
   @Get('/summary')
   @CanSchoolWide('read:fees')
-  @McpTool({ description: 'Get selected-year fee collections by payment method and overdue installment balances through today', readOnly: true })
+  @Validate({ query: feePaymentDatesQueryDto })
+  @McpTool({ description: 'Get selected-year fee collections by payment method, optionally filtered by inclusive payment dates (dateFrom/dateTo), and current overdue installment balances through today', readOnly: true })
   @ResMsg('fees.success.statsRetrieved')
-  async getSummary() {
-    return this.feeService.getSummary();
+  async getSummary(@Query() filters: FeePaymentDateFilters = {}) {
+    return this.feeService.getSummary(filters);
   }
 
   @Get('/outstanding')

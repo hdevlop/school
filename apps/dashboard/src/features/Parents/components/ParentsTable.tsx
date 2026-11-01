@@ -5,6 +5,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
+import { TablePrintButton } from '@/components/TablePrintButton';
 import { HeartHandshake, Plus, SearchX } from 'lucide-react';
 import React, { useMemo } from 'react';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
@@ -144,7 +145,7 @@ function ParentsTable() {
   const total = filteredParents.length;
 
   return (
-    <div className='flex flex-col gap-2 w-full h-full'>
+    <div data-people-list-loading={isParentsLoading || undefined} className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
         icon={HeartHandshake}
         title={t('navigation.parents')}
@@ -158,6 +159,9 @@ function ParentsTable() {
       <NTable
         exportTitle={t('navigation.parents')}
         permissionResource="parents"
+        dataActions
+        toolbarActionDisplay="settings"
+        headerSlot={<TablePrintButton loading={isParentsLoading} />}
         data={filteredParents}
         isFilteredEmpty={filteredParents.length === 0 && !!parents?.length}
         getRowId={(parent) => parent.id}

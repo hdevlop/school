@@ -3,9 +3,13 @@ import { NAvatar } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { avatarVersion } from '@/lib/avatarVersion';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { birthplaceLabel } from '@sms/contracts/birthplace';
+import { compareClassNames } from '@sms/contracts';
 
 export const useStudentsTableColumns = () => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+  const { displayDateOnly } = useSchoolFormat();
 
   return useMemo<ColumnDef<any, any>[]>(() => [
     {
@@ -50,17 +54,38 @@ export const useStudentsTableColumns = () => {
       cell: ({ getValue }) => <span lang="ar" dir="rtl">{getValue() || ''}</span>,
     },
     {
-      accessorKey: 'email',
-      header: () => <span className="student-email-column">{t('students.table.email')}</span>,
-      meta: { exportHeader: t('students.table.email') },
-      enableSorting: false,
+      accessorKey: "gender",
+      header: () => <span className="student-gender-column">{t('students.table.gender')}</span>,
+      meta: { exportHeader: t('students.table.gender') },
+      enableSorting: true,
       cell: ({ getValue }) => {
-        const email = getValue();
-        return email || <span className="text-gray-400">{t('common.notAvailable')}</span>;
+        const gender = getValue();
+        if (!gender) return <span className="text-gray-400">{t('common.notSpecified')}</span>;
+        return gender === 'M' ? t('common.male') : gender === 'F' ? t('common.female') : gender;
+      },
+    },
+    {
+      accessorKey: 'dateOfBirth',
+      header: t('students.form.dateOfBirth'),
+      enableSorting: true,
+      cell: ({ getValue }) => {
+        const dateOfBirth = getValue();
+        return dateOfBirth ? displayDateOnly(dateOfBirth) : <span className="text-gray-400">{t('common.notAvailable')}</span>;
+      },
+    },
+    {
+      accessorKey: 'birthplace',
+      accessorFn: (student) => birthplaceLabel(student, language),
+      header: t('students.form.birthplace'),
+      enableSorting: true,
+      cell: ({ getValue }) => {
+        const birthplace = getValue();
+        return birthplace ? <span dir="auto">{birthplace}</span> : <span className="text-gray-400">{t('common.notAvailable')}</span>;
       },
     },
     {
       accessorKey: 'phone',
+      accessorFn: (student) => student.phone?.trim() || student.contactPhone || '',
       header: t('students.table.phone'),
       enableSorting: false,
       cell: ({ getValue }) => {
@@ -71,6 +96,7 @@ export const useStudentsTableColumns = () => {
     {
       accessorKey: 'class',
       accessorFn: (row) => row.class?.name || '',
+      sortingFn: (left, right, columnId) => compareClassNames(left.getValue<string>(columnId) ?? '', right.getValue<string>(columnId) ?? ''),
       header: () => <span className="student-class-column">{t('students.table.class')}</span>,
       meta: { exportHeader: t('students.table.class') },
       cell: ({ row }) => {
@@ -90,16 +116,5 @@ export const useStudentsTableColumns = () => {
       },
       enableColumnFilter: true,
     },
-    {
-      accessorKey: "gender",
-      header: () => <span className="student-gender-column">{t('students.table.gender')}</span>,
-      meta: { exportHeader: t('students.table.gender') },
-      enableSorting: true,
-      cell: ({ getValue }) => {
-        const gender = getValue();
-        if (!gender) return <span className="text-gray-400">{t('common.notSpecified')}</span>;
-        return gender === 'M' ? t('common.male') : gender === 'F' ? t('common.female') : gender;
-      },
-    },
-  ], [t]);
+  ], [t, language, displayDateOnly]);
 };

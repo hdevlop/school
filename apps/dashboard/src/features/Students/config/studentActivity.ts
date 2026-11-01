@@ -13,3 +13,17 @@ export const compareStudentActivity = (
   left: Parameters<typeof isStudentDisabled>[0],
   right: Parameters<typeof isStudentDisabled>[0],
 ) => Number(isStudentDisabled(left)) - Number(isStudentDisabled(right));
+
+type StudentListRow = Parameters<typeof isStudentDisabled>[0] & {
+  name?: string | null;
+  class?: { name?: string | null } | null;
+  section?: { name?: string | null } | null;
+};
+
+/** Current students first, then PS → MS → GS and the following levels. */
+export const compareStudentListRows = (left: StudentListRow, right: StudentListRow) =>
+  compareStudentActivity(left, right)
+  || compareClassNames(left.class?.name ?? '', right.class?.name ?? '')
+  || (left.section?.name ?? '').localeCompare(right.section?.name ?? '', 'fr', { numeric: true })
+  || (left.name ?? '').localeCompare(right.name ?? '', 'fr', { numeric: true });
+import { compareClassNames } from '@sms/contracts';

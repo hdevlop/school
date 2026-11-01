@@ -432,7 +432,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
             <span className="truncate font-bold tabular-nums text-foreground">{majorMoney(remainingAmount)}</span>
           </div>
           {overdueAmount > 0 && (
-            <div className="flex min-w-0 flex-1 flex-col rounded-lg border border-red-200 bg-red-50 px-3 py-2">
+            <div className="flex min-w-0 flex-1 flex-col rounded-lg border border-border bg-red-50 px-3 py-2">
               <span className="text-xs text-red-700">{t('fees.studentView.overdueAmount')}</span>
               <span className="truncate font-bold tabular-nums text-red-600">{majorMoney(overdueAmount)}</span>
             </div>
@@ -460,7 +460,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
       )}
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex min-h-0 flex-1 flex-col">
-        <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-gray-200">
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-border">
           <TabsList className="max-w-full overflow-x-auto bg-transparent rounded-none justify-start h-auto p-0 border-0">
             {tabConfig.map(({ value, label, icon: Icon }) => (
               <TabsTrigger key={value} value={value} className={TAB_STYLES}>

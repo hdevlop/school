@@ -1,6 +1,6 @@
 'use client'
 import { useMemo } from 'react';
-import type { Schedule } from '@sms/contracts';
+import type { Schedule, FeePaymentDateFilters } from '@sms/contracts';
 import { useTranslation } from 'najm-i18n/react';
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
@@ -10,7 +10,7 @@ import * as feeApi from '@/services/feeApi';
 import { getStudentFeesDisplayData } from '../utils/feeUtils';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 
-type UseFeesOptions = {
+type UseFeesOptions = FeePaymentDateFilters & {
   feeId?: string;
   studentId?: string;
   enabled?: boolean;
@@ -29,7 +29,7 @@ type UseFeesOptions = {
 export const useFees = (options?: UseFeesOptions) => {
   const { t, language } = useTranslation();
   const viewer = useViewerRole();
-  const { feeId, studentId, enabled = true, schedule, tuitionPayment, classId, sectionId, allYears = false, studentYear, studentAllYears = false } = options || {};
+  const { feeId, studentId, enabled = true, schedule, tuitionPayment, classId, sectionId, dateFrom, dateTo, allYears = false, studentYear, studentAllYears = false } = options || {};
   const { viewingYear } = useViewingAcademicYear();
   const mutationYear = studentYear ?? viewingYear;
 
@@ -53,8 +53,9 @@ export const useFees = (options?: UseFeesOptions) => {
       ...(tuitionPayment ? [{ tuitionPayment }] : []),
       ...(classId ? ['class', classId] : []),
       ...(sectionId ? ['section', sectionId] : []),
+      ...(dateFrom || dateTo ? [{ dateFrom, dateTo }] : []),
     ],
-    fetch: () => feeApi.getFeesApi({ schedule, tuitionPayment, classId, sectionId }),
+    fetch: () => feeApi.getFeesApi({ schedule, tuitionPayment, classId, sectionId, dateFrom, dateTo }),
     enabled: enabled && !allYears,
   });
   const allYearFees = crud.useGetByParam('scope', allYears ? 'outstanding' : undefined, enabled && allYears);

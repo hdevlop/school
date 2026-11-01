@@ -10,6 +10,7 @@ import { CalendarCheck, SearchX } from 'lucide-react';
 import RosterHeader from './RosterHeader';
 import RosterPrintMenu from './RosterPrintMenu';
 import RosterFilters from './RosterFilters';
+import { RosterPageHeaderSkeleton, ROSTER_LOADING_TABLE_HEADER } from './RosterLoading';
 import { filterRoster } from '../config/filterRoster';
 import { orderByCycle, type RosterPrintChoice } from '../config/rosterPrint';
 import RosterCard from './RosterCard';
@@ -27,7 +28,7 @@ import * as sectionApi from '@/services/sectionApi';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import { useViewingYearDate, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
-import { useSchoolToday } from '@/hooks/useSchoolFormat';
+import { useSchoolFormat, useSchoolToday } from '@/hooks/useSchoolFormat';
 
 type SectionTeacherAssignment = {
   id: string;
@@ -243,12 +244,14 @@ function StudentAttendanceTableForYear() {
   // whatever the search and status filters show. One section names its class
   // in the sheet's header, so only the whole school needs a class column.
   const print = useRosterPrint();
+  const { displayDateOnly } = useSchoolFormat();
   const genderLabel = (gender?: string | null) => gender === 'M' ? t('common.male') : gender === 'F' ? t('common.female') : gender ?? '';
   const printRoster = (choice: RosterPrintChoice) => print(choice, orderByCycle(filteredStudents).map((student: any) => ({
     cells: [
       student.studentCode ?? '',
       student.name ?? '',
       genderLabel(student.gender),
+      student.dateOfBirth ? displayDateOnly(student.dateOfBirth) : '—',
       student.phone?.trim() || student.contactPhone || '',
       ...(isAllClasses ? [student.class?.name ?? '', student.section?.name ?? ''] : []),
     ],
@@ -256,12 +259,13 @@ function StudentAttendanceTableForYear() {
   })), {
     title: t('attendance.roster.studentTitle'),
     date: roster.selectedDate,
+    orientation: isAllClasses ? 'landscape' : 'portrait',
     details: [
       { label: t('attendance.roster.class'), value: classOptions.find((option) => option.value === selectedClassId)?.label ?? '' },
       ...(isAllClasses ? [] : [{ label: t('attendance.roster.section'), value: sectionOptions.find((option) => option.value === selectedSectionId)?.label ?? '' }]),
       ...(selectedAssignment ? [{ label: t('attendance.roster.teacherSubject'), value: `${selectedAssignment.name} - ${selectedAssignment.subjectName}` }] : []),
     ],
-    columns: [t('attendance.roster.code'), t('students.table.name'), t('students.table.gender'), t('students.table.phone'), ...(isAllClasses ? [t('attendance.roster.class'), t('attendance.roster.section')] : [])],
+    columns: [t('attendance.roster.code'), t('students.table.name'), t('students.table.gender'), t('students.form.dateOfBirth'), t('students.table.phone'), ...(isAllClasses ? [t('attendance.roster.class'), t('attendance.roster.section')] : [])],
   });
 
   const filters = useMemo(
@@ -379,10 +383,11 @@ function StudentAttendanceTableForYear() {
       : selectedClassId
         ? t('attendance.roster.selectSection')
         : t('attendance.roster.selectClass');
+  const isRosterLoading = isStudentsLoading || isSectionsLoading || isClassesLoading || isAttendanceLoading;
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-2">
-      <NPageHeader
+      {isRosterLoading ? <RosterPageHeaderSkeleton /> : <NPageHeader
         icon={CalendarCheck}
         title={t('navigation.studentAttendance')}
         subtitle={isCountUnknown(studentsError, filteredStudents, isStudentsLoading || isSectionsLoading || isClassesLoading) ? undefined : t('attendance.subtitle.studentCount', { count: filteredStudents.length })}
@@ -390,14 +395,16 @@ function StudentAttendanceTableForYear() {
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
-      </NPageHeader>
+      </NPageHeader>}
 
       <RosterFilters
+        loading={isRosterLoading}
         filters={filters}
         onReset={resetFilters}
         canReset={!isAllClasses || !!search || !!status}
       >
         <RosterHeader
+          loading={isRosterLoading}
           print={(
             <RosterPrintMenu
               counts={roster.stats}
@@ -420,7 +427,8 @@ function StudentAttendanceTableForYear() {
         data={visibleStudents}
         isFilteredEmpty={filteredStudents.length > 0 && visibleStudents.length === 0}
         columns={columns}
-        loading={isStudentsLoading || isSectionsLoading || isClassesLoading || isAttendanceLoading}
+        loading={isRosterLoading}
+        classNames={{ tableHeader: isRosterLoading ? ROSTER_LOADING_TABLE_HEADER : undefined }}
         error={attendanceError || (hasFailedToLoad(studentsError, filteredStudents) ? studentsError : null)}
         renderError={(currentError) => (
           isAuthorizationError(currentError)

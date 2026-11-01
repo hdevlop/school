@@ -17,7 +17,7 @@ describe('dashboard fee navigation', () => {
     expect(resolveFeeEntryFilters(status)).toEqual({ statusFilter: '__all__', selection: null });
   });
 
-  it.each(['paid', 'paying'])('accepts the supported %s status', status => {
+  it.each(['paid', 'paying', 'left'])('accepts the supported %s status', status => {
     expect(resolveFeeEntryFilters(status)).toEqual({ statusFilter: status, selection: { classId: 'all', sectionId: '' } });
   });
 });

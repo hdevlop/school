@@ -6,7 +6,7 @@ export function resolveFeeEntryFilters(status: string | null): {
   statusFilter: string;
   selection: FeeRosterSelection | null;
 } {
-  const statusFilter = status && ['overdue', 'paying', 'paid'].includes(status) ? status : '__all__';
+  const statusFilter = status && ['overdue', 'paying', 'paid', 'left'].includes(status) ? status : '__all__';
   return {
     statusFilter,
     selection: statusFilter === '__all__' ? null : { classId: 'all', sectionId: '' },

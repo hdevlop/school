@@ -23,7 +23,7 @@ export function PlanningClearAction({ schoolYear, disabled, saving, onClear }: {
   };
 
   return <>
-    <NButton variant="outline" className="text-destructive" disabled={disabled || saving || !schoolYear} onClick={() => { setFailed(false); setOpen(true); }}><Trash2 aria-hidden="true" />{t('examPlanning.clear.label')}</NButton>
+    <NButton variant="outline" size="icon" className="text-destructive" aria-label={t('examPlanning.clear.label')} title={t('examPlanning.clear.label')} disabled={disabled || saving || !schoolYear} onClick={() => { setFailed(false); setOpen(true); }}><Trash2 aria-hidden="true" /></NButton>
     <NConfirmDialog open={open} onOpenChange={setOpen} title={t('examPlanning.clear.title')} description={t('examPlanning.clear.description', { year: schoolYear })} confirmLabel={t('examPlanning.clear.label')} cancelLabel={t('common.cancel')} variant="destructive" loading={saving} onConfirm={clear}>
       {failed && <p role="alert" className="text-sm text-destructive">{t('examPlanning.clear.failed')}</p>}
     </NConfirmDialog>

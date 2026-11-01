@@ -1701,6 +1701,7 @@
       "failed": "{{count}} student(s) could not be imported. Correct the reported rows and retry; successful rows will not be duplicated."
     },
     "stats": {
+      "collectedInPeriod": "Collected in period",
       "collected": "Collected to date",
       "paidToDate": "Paid so far",
       "totalFees": "Total fees",
@@ -1986,6 +1987,8 @@
       "feeTypes": "Fee Types"
     },
     "filters": {
+      "paymentDates": "Payment dates",
+      "clearPaymentDates": "Clear payment dates",
       "searchByStudent": "Search by student name...",
       "searchByStudentCode": "Search by student code...",
       "filterByFeeType": "Filter by fee type...",
@@ -2011,6 +2014,7 @@
       "occasional": "Occasional"
     },
     "status": {
+      "left": "Left",
       "pending": "Pending",
       "paid": "Paid",
       "partiallyPaid": "Partially Paid",

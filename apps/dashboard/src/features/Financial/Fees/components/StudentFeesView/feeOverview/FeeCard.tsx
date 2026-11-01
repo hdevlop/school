@@ -16,16 +16,16 @@ const FeeCard = ({ data }: { data: any }) => {
 
   const statusStyles = {
     paid: {
-      card: 'border-green-300 bg-gradient-to-br from-green-50 to-white',
+      card: 'bg-gradient-to-br from-green-50 to-card dark:from-green-950/20',
     },
     partial: {
-      card: 'border-blue-300 bg-gradient-to-br from-blue-50 to-white',
+      card: 'bg-gradient-to-br from-blue-50 to-card dark:from-blue-950/20',
     },
     pending: {
-      card: 'border-gray-200 bg-white',
+      card: 'bg-card',
     },
     overdue: {
-      card: 'border-red-300 bg-gradient-to-br from-red-50 to-white',
+      card: 'bg-gradient-to-br from-red-50 to-card dark:from-red-950/20',
     },
   };
 
@@ -41,7 +41,7 @@ const FeeCard = ({ data }: { data: any }) => {
   const progressPercentage = fee.netAmount > 0 ? (fee.paidAmount / fee.netAmount) * 100 : 0;
 
   const card = (
-    <div className={`flex h-full min-h-[132px] flex-col justify-between overflow-hidden rounded-lg border p-3 transition-colors ${style.card}`}>
+    <div className={`flex h-full min-h-[132px] flex-col justify-between overflow-hidden rounded-lg p-3 transition-colors ${style.card}`}>
       {/* Header */}
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center text-2xl">

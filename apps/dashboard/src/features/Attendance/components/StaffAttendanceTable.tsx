@@ -11,6 +11,7 @@ import RosterPrintMenu from './RosterPrintMenu';
 import { useRosterPrint } from '../hooks/useRosterPrint';
 import type { RosterPrintChoice } from '../config/rosterPrint';
 import RosterFilters from './RosterFilters';
+import { RosterPageHeaderSkeleton, ROSTER_LOADING_TABLE_HEADER } from './RosterLoading';
 import { filterRoster } from '../config/filterRoster';
 import RosterCard from './RosterCard';
 import { useStaffAttendance } from '../hooks/useAttendance';
@@ -119,9 +120,11 @@ function StaffAttendanceTable() {
     columns: [t('staff.table.name'), t('students.table.gender'), t('teachers.table.phone'), t('staff.table.role')],
   });
 
+  const isRosterLoading = isStaffLoading || isAttendanceLoading || isStaffRolesLoading;
+
   return (
     <div className="flex h-full min-h-0 flex-col gap-2">
-      <NPageHeader
+      {isRosterLoading ? <RosterPageHeaderSkeleton /> : <NPageHeader
         icon={CalendarCheck}
         title={t('navigation.staffAttendance')}
         subtitle={isCountUnknown(staffError, staffRows, isStaffLoading || isAttendanceLoading || isStaffRolesLoading) ? undefined : t('attendance.subtitle.staffCount', { count: total })}
@@ -129,14 +132,16 @@ function StaffAttendanceTable() {
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
-      </NPageHeader>
+      </NPageHeader>}
 
       <RosterFilters
+        loading={isRosterLoading}
         filters={filters}
         onReset={resetFilters}
         canReset={!!search || !!status || !!role}
       >
         <RosterHeader
+          loading={isRosterLoading}
           print={(
             <RosterPrintMenu
               counts={roster.stats}
@@ -159,7 +164,8 @@ function StaffAttendanceTable() {
         data={visibleStaff}
         isFilteredEmpty={total > 0 && visibleStaff.length === 0}
         columns={columns}
-        loading={isStaffLoading || isAttendanceLoading || isStaffRolesLoading}
+        loading={isRosterLoading}
+        classNames={{ tableHeader: isRosterLoading ? ROSTER_LOADING_TABLE_HEADER : undefined }}
         error={attendanceError || (hasFailedToLoad(staffError, staffRows) ? staffError : null)}
         renderError={(currentError) => (
           isAuthorizationError(currentError)

@@ -13,6 +13,7 @@ import AlertsTab from './Alerts';
 import AttendanceTab from './Attendance';
 import GradesTab from './Grades';
 import LeftSidebar from './LeftSidebar';
+import SectionTitle from './SectionTitle';
 import { useStudentProfile } from '@/features/Students/hooks/useStudentProfile';
 import { useTranslation } from 'najm-i18n/react';
 import TransportTab from './Transport';
@@ -88,15 +89,18 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
   const tabItems = [
     { value: 'overview', icon: User, label: t('students.profile.tabs.overview'), content: (
       <div className="grid min-w-0 gap-3 lg:grid-cols-[18rem_minmax(0,1fr)] xl:grid-cols-[20rem_minmax(0,1fr)]">
-        <div className="self-start overflow-hidden rounded-xl border border-border">
-          <LeftSidebar
-            student={student}
-            isLoading={isStudentLoading}
-            attendanceResponse={attendanceResponse}
-            reportResponse={reportResponse}
-            studentFees={studentFees}
-          />
-        </div>
+        <section className="flex min-w-0 flex-col">
+          <SectionTitle title={t('students.profile.tabs.overview')} />
+          <div className="flex flex-1 overflow-hidden rounded-xl border border-border">
+            <LeftSidebar
+              student={student}
+              isLoading={isStudentLoading}
+              attendanceResponse={attendanceResponse}
+              reportResponse={reportResponse}
+              studentFees={studentFees}
+            />
+          </div>
+        </section>
         <div className="flex min-w-0 flex-col gap-3">
           <OverviewTab {...sharedTabProps} />
         </div>

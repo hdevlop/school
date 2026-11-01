@@ -93,7 +93,11 @@ export function SchoolTable<T = any>({
       showImportButton={canCreate ? props.showImportButton : false}
       menu={guardedMenu}
       menuButton={defaultMenu ? true : props.menuButton}
-      classNames={{ ...props.classNames, pagination: `${props.classNames?.pagination ?? ''} pr-24` }}
+      classNames={{
+        ...props.classNames,
+        header: `${props.classNames?.header ?? ''} [&_.lucide-settings]:text-foreground`,
+        pagination: `${props.classNames?.pagination ?? ''} pr-24`,
+      }}
       renderToolbar={blockedCreate || (showDeleteSelection && props.onBulkDelete) ? state => <>
         {blockedCreate && <NButton data-school-create-action variant="outline" size="icon-lg" rounded="lg" disabled aria-label={props.addButtonText || t('common.create')}><Plus className="size-5" /></NButton>}
         {showDeleteSelection && props.onBulkDelete && <DeleteSelection onDelete={props.onBulkDelete} loading={props.loading} disabled={!canDelete} />}

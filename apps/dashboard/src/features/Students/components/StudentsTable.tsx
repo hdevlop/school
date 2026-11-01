@@ -3,10 +3,11 @@
 import { PermissionButton } from '@/components/PermissionButton';
 import { BulkDeleteDialog } from '@/components/BulkDeleteDialog';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, useTableStore, useResolvedToolbarLabels, type ContextMenuItem } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, useTableStore, useResolvedToolbarLabels, type ContextMenuItem } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Eye, Pencil, Trash2, LogOut, GraduationCap, Plus, Printer, SearchX, Upload } from 'lucide-react';
+import { TablePrintButton } from '@/components/TablePrintButton';
+import { Eye, Pencil, Trash2, LogOut, GraduationCap, Plus, SearchX, Upload } from 'lucide-react';
 import FullStudentForm from './FullStudentForm';
 import { useStudents } from '../hooks/useStudents';
 import { useTranslation } from 'najm-i18n/react';
@@ -22,7 +23,9 @@ import { useStudentsTableFilters } from '../hooks/useStudentsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useRouter } from 'next/navigation';
 import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
+import type { Table } from '@tanstack/react-table';
+import { useStudentsPrint } from '../hooks/useStudentsPrint';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
@@ -47,34 +50,6 @@ interface StudentImportProgress {
   processed: number;
   created: number;
   failed: number;
-}
-
-function StudentsPrintButton({ loading }: { loading: boolean }) {
-  const actions: ContextMenuItem[] = useTableStore.use.toolbarActions();
-  const labels = useResolvedToolbarLabels(useTableStore.use.toolbarLabels());
-  const printLabel = labels.print ?? 'Print';
-  const printAction = actions.find(action => action.label === printLabel);
-  if (loading) {
-    return (
-      <div aria-hidden="true" className="hidden h-10 w-10 items-center justify-center rounded-md border border-input md:inline-flex">
-        <span className="h-4 w-4 animate-pulse rounded-full bg-primary/5" />
-      </div>
-    );
-  }
-  if (!printAction) return null;
-
-  return (
-    <NButton
-      type="button"
-      variant="outline"
-      size="icon"
-      className="hidden h-10 w-10 border-primary/25 bg-primary/5 text-primary hover:border-primary/50 hover:bg-primary/10 hover:text-primary md:inline-flex"
-      aria-label={printAction.label}
-      title={printAction.label}
-      onClick={() => printAction.onSelect?.()}
-      leftIcon={<Printer className="h-4 w-4 text-primary" />}
-    />
-  );
 }
 
 function StudentsImportButton() {
@@ -135,6 +110,13 @@ function StudentsTable() {
     isDeleting,
   } = useStudents();
   const { filters, filteredStudents } = useStudentsTableFilters(students);
+  const printTable = useRef<Table<any> | null>(null);
+  const printDetails = filters.filter(filter => ['classScope', 'sectionScope'].includes(filter.name) && filter.value)
+    .map(filter => ({
+      label: filter.name === 'classScope' ? t('students.table.class') : t('students.table.section'),
+      value: ('options' in filter ? filter.options?.find(option => option.value === filter.value)?.label : '') ?? '',
+    }));
+  const printStudents = useStudentsPrint({ title, academicYear: viewingYear ?? activeYear, details: printDetails });
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
   const [importProgress, setImportProgress] = useState<StudentImportProgress | null>(null);
 
@@ -329,11 +311,11 @@ function StudentsTable() {
     }
   };
 
-  const total = filteredStudents.length;
+  const total = filteredStudents.filter(student => !isStudentDisabled(student)).length;
   const isStudentListEmpty = !isCountUnknown(error, students, isStudentsLoading) && students?.length === 0;
 
   return (
-    <div className='flex flex-col gap-2 w-full h-full min-h-0' onPointerDownCapture={focusTableForKeyboard}>
+    <div data-people-list-loading={isStudentsLoading || undefined} className='flex flex-col gap-2 w-full h-full min-h-0' onPointerDownCapture={focusTableForKeyboard}>
       <NPageHeader
         icon={GraduationCap}
         title={title}
@@ -346,6 +328,7 @@ function StudentsTable() {
 
       <NTable
         exportTitle={viewingYear ? `${title} ${viewingYear}` : title}
+        onPrint={() => printStudents(printTable.current)}
         permissionResource="students"
         className='min-h-0 flex-1'
         classNames={{
@@ -381,7 +364,7 @@ function StudentsTable() {
         onRowSelectionChange={setRowSelection}
         dataActions={true}
         toolbarActionDisplay='settings'
-        headerSlot={<StudentsPrintButton loading={isStudentsLoading} />}
+        headerSlot={<TablePrintButton loading={isStudentsLoading} tableRef={printTable} />}
         showImportButton={canCreate}
         onDataChange={canCreate ? handleImport : undefined}
         toolbarLabels={toolbarLabels}

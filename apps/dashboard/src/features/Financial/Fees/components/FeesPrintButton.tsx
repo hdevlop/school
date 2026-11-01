@@ -13,7 +13,6 @@ export function FeesPrintButton({ loading }: { loading: boolean }) {
       type="button"
       variant="outline"
       size="icon-lg"
-      className="border-primary/25 bg-primary/5 text-primary hover:border-primary/50 hover:bg-primary/10"
       aria-label={action.label}
       title={action.label}
       disabled={loading}

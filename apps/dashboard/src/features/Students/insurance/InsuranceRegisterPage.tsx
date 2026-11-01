@@ -91,7 +91,7 @@ function InsuranceContent() {
                   {toOfficialClassName(cls.name)}
                 </button>)}
               </div>
-              <NButton variant="default" className={styles.printButton} disabled={printDisabled} loading={isPrinting} onClick={print} leftIcon={<Printer className="size-4" />}>{t('insurance.print')}</NButton>
+              <NButton variant="outline" className={styles.printButton} disabled={printDisabled} loading={isPrinting} onClick={print} leftIcon={<Printer className="size-4" />}>{t('insurance.print')}</NButton>
             </div>
             <div className={styles.paperStage}><PlanningPreview html={buildInsuranceDocument(shownClasses, options)} title={t('insurance.preview')} /></div>
           </>}

@@ -1,5 +1,5 @@
 import { Repository } from '../../../najm';
-import { eq, desc, and, inArray, isNotNull, isNull, notInArray, or, sql, sum } from 'drizzle-orm';
+import { eq, desc, and, gte, lte, inArray, isNotNull, isNull, notInArray, or, sql, sum } from 'drizzle-orm';
 import { fees, feeInstallments, feeTypes, paymentAllocations, payments, students, classes, sections, users, studentEnrollments, studentEnrollmentPlacements } from '../../../database/schema';
 import { DB } from '../../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
@@ -8,7 +8,7 @@ import { formatDateOnly } from '../utils/dateOnly';
 import { Year } from '../../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 import type { ListFeesQueryDto } from './FeeDto';
-import type { FeeSummary } from '@sms/contracts';
+import type { FeeSummary, FeePaymentDateFilters } from '@sms/contracts';
 import {
   getAvgPaymentAmount,
   getCompletedPaymentCount,
@@ -108,12 +108,13 @@ export class FeeRepository {
   // ============================================
 
   /** Aggregate once for the year instead of loading every student's fee roster. */
-  async getSummary(): Promise<FeeSummary> {
+  async getSummary(filters: FeePaymentDateFilters = {}): Promise<FeeSummary> {
     const today = formatDateOnly(getBusinessDate());
     const allocations = this.db.$with('fee_summary_allocations').as(this.db.select({
       installmentId: paymentAllocations.installmentId,
       amount: paymentAllocations.amount,
       paymentMethod: payments.paymentMethod,
+      paymentDate: payments.paymentDate,
     }).from(paymentAllocations)
       .innerJoin(fees, eq(paymentAllocations.feeId, fees.id))
       .innerJoin(payments, eq(paymentAllocations.paymentId, payments.id))
@@ -134,7 +135,10 @@ export class FeeRepository {
       bankTransfer: collectedByMethod('bankTransfer').as('bank_transfer'),
       bankDeposit: collectedByMethod('bankDeposit').as('bank_deposit'),
       tpe: collectedByMethod('creditCard', 'debitCard').as('tpe'),
-    }).from(allocations));
+    }).from(allocations).where(and(
+      filters.dateFrom ? gte(allocations.paymentDate, filters.dateFrom) : undefined,
+      filters.dateTo ? lte(allocations.paymentDate, filters.dateTo) : undefined,
+    )));
 
     const paidInstallments = this.db.$with('fee_summary_paid_installments').as(this.db.select({
       installmentId: allocations.installmentId,
@@ -230,7 +234,7 @@ export class FeeRepository {
     }));
   }
 
-  async getAll(studentId?: string, schedule?: ListFeesQueryDto['schedule'], roster: Pick<ListFeesQueryDto, 'classId' | 'sectionId' | 'tuitionPayment'> = {}) {
+  async getAll(studentId?: string, schedule?: ListFeesQueryDto['schedule'], roster: Omit<ListFeesQueryDto, 'schedule'> = {}) {
     const { id: academicYearId, label: academicYear } = this.year;
     const tuitionPaidInFull = roster.tuitionPayment === 'paidInFull';
     const today = formatDateOnly(getBusinessDate());
@@ -325,6 +329,8 @@ export class FeeRepository {
         coalesce(json_agg(json_build_object('id', ${fees.id}, 'feeTypeName', ${feeTypes.name}))
           filter (where ${fees.id} is not null), '[]'::json)
       `.as('fees'),
+      enrollmentStatus: studentEnrollments.status,
+      enrollmentLeftOn: studentEnrollments.leftOn,
     }).from(students)
       .leftJoin(users, eq(students.userId, users.id))
       .leftJoin(studentEnrollments, and(
@@ -351,13 +357,21 @@ export class FeeRepository {
       ))
       .groupBy(
         students.id, students.name, students.studentCode, users.image,
-        studentEnrollments.id, lastPlacement.id,
+        studentEnrollments.id, studentEnrollments.status, studentEnrollments.leftOn, lastPlacement.id,
         classes.id, classes.name, sections.id, sections.name,
       )
-      .having(tuitionPaidInFull ? sql`
+      .having(and(tuitionPaidInFull ? sql`
         count(${fees.id}) > 0
         and coalesce(sum(${fees.netAmount}::numeric), 0) <= coalesce(sum(${collectedToDateForFee()}), 0)
-      ` : undefined)
+      ` : undefined, roster.dateFrom || roster.dateTo ? sql`bool_or(exists(
+        select 1 from ${paymentAllocations}
+        inner join ${payments} on ${paymentAllocations.paymentId} = ${payments.id}
+        where ${paymentAllocations.feeId} = ${fees.id}
+          and ${payments.status} = 'completed'
+          and coalesce(${payments.settledDate}, ${payments.paymentDate}) <= ${today}
+          ${roster.dateFrom ? sql`and ${payments.paymentDate} >= ${roster.dateFrom}` : sql``}
+          ${roster.dateTo ? sql`and ${payments.paymentDate} <= ${roster.dateTo}` : sql``}
+      ))` : undefined))
       .orderBy(sql`${getMaxCreatedAt()} desc nulls last`, students.name);
 
     return result.map((student) => ({
@@ -369,6 +383,11 @@ export class FeeRepository {
         image: student.studentImage,
       },
       enrollmentId: student.enrollmentId,
+      enrollment: student.enrollmentId ? {
+        id: student.enrollmentId,
+        status: student.enrollmentStatus,
+        leftOn: student.enrollmentLeftOn,
+      } : null,
       placementId: student.placementId,
       class: { id: student.classId, name: student.className },
       section: { id: student.sectionId, name: student.sectionName },

@@ -1959,6 +1959,7 @@
       "failed": "No se pudieron importar {{count}} alumnos. Corrija las filas indicadas y reintente; las filas correctas no se duplicarán."
     },
     "stats": {
+      "collectedInPeriod": "Cobrado en el período",
       "collected": "Cobrado hasta hoy",
       "paidToDate": "Pagado hasta hoy",
       "totalFees": "Total de cuotas",
@@ -2038,6 +2039,7 @@
       "netAmountForYear": "Total del período facturado (tras descuento)"
     },
     "status": {
+      "left": "Baja",
       "paying": "Pagando",
       "overdue": "Atrasado",
       "paid": "Pagado",
@@ -2047,6 +2049,8 @@
       "cancelled": "Cancelado"
     },
     "filters": {
+      "paymentDates": "Fechas de pago",
+      "clearPaymentDates": "Borrar fechas de pago",
       "class": "Clase",
       "section": "Sección",
       "noSections": "Sin secciones",

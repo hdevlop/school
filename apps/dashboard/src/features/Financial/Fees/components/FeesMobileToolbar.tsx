@@ -5,6 +5,8 @@ import { Filter, Plus } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { PermissionButton } from '@/components/PermissionButton';
 import { FeesPrintButton } from './FeesPrintButton';
+import { FeesDateFilter } from './FeesDateFilter';
+import type { FeePaymentDateRange } from '../config/feeListFilters';
 
 export type FeeTableFilter = {
   name: string;
@@ -19,15 +21,19 @@ export type FeeTableFilter = {
 };
 
 /** Class and section stay inline; the remaining filters share one popover. */
-export function FeesMobileToolbar({ filters, onCreate, loading }: {
+export function FeesMobileToolbar({ filters, onCreate, loading, paymentDateRange, onPaymentDateRangeChange }: {
   filters: FeeTableFilter[];
   onCreate: () => void;
   loading: boolean;
+  paymentDateRange?: FeePaymentDateRange;
+  onPaymentDateRangeChange: (range: FeePaymentDateRange | undefined) => void;
 }) {
   const { t } = useTranslation();
-  const [schoolClass, section, ...additional] = filters;
+  const schoolClass = filters[0];
+  const section = filters.find(filter => filter.name === 'section');
+  const additional = filters.filter(filter => filter.name !== 'class' && filter.name !== 'section');
   return (
-    <div className="grid w-full min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto_auto_auto] items-center gap-2 md:hidden">
+    <div className={`grid w-full min-w-0 items-center gap-2 md:hidden ${section ? 'grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto_auto_auto]' : 'grid-cols-[minmax(0,1fr)_auto_auto_auto]'}`}>
       <ComboboxInput
         value={schoolClass.value}
         onChange={schoolClass.onChange}
@@ -38,7 +44,7 @@ export function FeesMobileToolbar({ filters, onCreate, loading }: {
         disabled={loading}
         className="min-w-0 w-full"
       />
-      <SelectInput
+      {section && <SelectInput
         value={section.value}
         onChange={section.onChange}
         items={section.options ?? []}
@@ -47,7 +53,7 @@ export function FeesMobileToolbar({ filters, onCreate, loading }: {
         showIcon={false}
         disabled={loading || section.disabled}
         className="min-w-0 w-full"
-      />
+      />}
       <Popover>
         <PopoverTrigger asChild>
           <NButton variant="outline" size="icon" className="size-10 text-primary" aria-label={t('common.table.filters')} disabled={loading}>
@@ -58,6 +64,7 @@ export function FeesMobileToolbar({ filters, onCreate, loading }: {
           {additional.map((filter) => filter.type === 'text'
             ? <TextInput key={filter.name} value={filter.value} onChange={filter.onChange} placeholder={filter.placeholder} aria-label={filter.placeholder} className="w-full" />
             : <SelectInput key={filter.name} value={filter.value} onChange={filter.onChange} items={filter.options ?? []} placeholder={filter.placeholder} aria-label={filter.placeholder} showIcon={false} className="w-full" />)}
+          <FeesDateFilter value={paymentDateRange} onChange={onPaymentDateRangeChange} className="w-full" />
         </PopoverContent>
       </Popover>
       <FeesPrintButton loading={loading} />

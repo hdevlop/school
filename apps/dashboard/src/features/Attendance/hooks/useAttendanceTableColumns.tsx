@@ -8,7 +8,7 @@ import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { avatarVersion } from '@/lib/avatarVersion';
 
-const ROSTER_KEEP_COLUMNS = new Set(['select', 'studentCode', 'name', 'phone', 'class', 'section', 'gender']);
+const ROSTER_KEEP_COLUMNS = new Set(['select', 'studentCode', 'name', 'gender', 'dateOfBirth', 'phone', 'class', 'section']);
 
 
 interface RosterColumnsOptions {

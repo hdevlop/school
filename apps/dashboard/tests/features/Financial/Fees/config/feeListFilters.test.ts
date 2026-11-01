@@ -30,11 +30,12 @@ describe('fee list filters memory', () => {
     expect(feeListFiltersKey('u1', 'year:2026-2027')).not.toBe(feeListFiltersKey('u2', 'year:2026-2027'));
   });
 
-  it('restores what was written, from storage in a new page load', () => {
+  it.each(['paid', 'left'])('restores the %s filter from storage in a new page load', statusFilter => {
     const store = storage();
     const key = feeListFiltersKey('u1', 'year:2026-2027');
-    createFeeListFilterMemory(() => store).write(key, annuallyIn3ac);
-    expect(createFeeListFilterMemory(() => store).read(key)).toEqual(annuallyIn3ac);
+    const filters = { ...annuallyIn3ac, statusFilter };
+    createFeeListFilterMemory(() => store).write(key, filters);
+    expect(createFeeListFilterMemory(() => store).read(key)).toEqual(filters);
   });
 
   it('falls back to memory when storage is blocked', () => {
@@ -57,6 +58,25 @@ describe('fee list filters memory', () => {
 
   it('accepts the default roster and no frequency', () => {
     expect(parseFeeListFilters(JSON.stringify(DEFAULT_FEE_LIST_FILTERS))).toEqual(DEFAULT_FEE_LIST_FILTERS);
+  });
+
+  it('remembers a payment range and restores all dates after clearing it', () => {
+    const store = storage();
+    const filters = { ...annuallyIn3ac, paymentDateRange: { from: '2026-11-01', to: '2026-11-30' } };
+    const memory = createFeeListFilterMemory(() => store);
+    memory.write('range', filters);
+    expect(createFeeListFilterMemory(() => store).read('range')).toEqual(filters);
+    memory.write('range', annuallyIn3ac);
+    expect(createFeeListFilterMemory(() => store).read('range')).toEqual(annuallyIn3ac);
+  });
+
+  it.each([
+    { from: '2026-02-30', to: '2026-03-02' },
+    { from: '2026-11-30', to: '2026-11-01' },
+    { from: '2026-11-01' },
+    null,
+  ])('rejects an invalid stored payment range: %j', paymentDateRange => {
+    expect(parseFeeListFilters(JSON.stringify({ ...annuallyIn3ac, paymentDateRange }))).toBeUndefined();
   });
 });
 

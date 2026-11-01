@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { NButton, SimpleTooltip, inputBorderClasses } from 'najm-kit';
+import { NButton, NSkeleton, SimpleTooltip, inputBorderClasses } from 'najm-kit';
 
 import { Send, CheckCircle2, XCircle, Clock3 } from 'lucide-react';
 import { cn } from 'najm-kit';
@@ -19,6 +19,7 @@ interface Props {
   onMarkAllPresent?: () => void;
   canSubmit?: boolean;
   submitTitle?: string;
+  loading?: boolean;
 }
 
 function StatItem({
@@ -52,9 +53,23 @@ export default function RosterHeader({
   hasChanges, isSubmitting, stats,
   onSubmit, onMarkAllPresent, print,
   canSubmit = true, submitTitle,
+  loading = false,
 }: Props) {
   const { t } = useTranslation();
   const title = submitTitle ?? t('attendance.roster.submit');
+
+  if (loading) {
+    return (
+      <div aria-hidden="true" className="contents lg:order-3 lg:flex lg:items-center lg:gap-2">
+        {onMarkAllPresent && <NSkeleton data-roster-loading-action="mark-all" className="col-span-2 h-10 lg:w-36" />}
+        <div className="flex min-w-0 items-center justify-end gap-2">
+          <NSkeleton data-roster-loading-counts className="h-10 w-32 sm:w-36" />
+          {print && <NSkeleton data-roster-loading-action="print" className="size-10 shrink-0" />}
+          <NSkeleton data-roster-loading-action="submit" className="size-10 shrink-0" />
+        </div>
+      </div>
+    );
+  }
 
   // Below lg these are cells of RosterFilters' grid: the summary sits in the
   // second column beside the day, and "mark all present" takes a row of its own.

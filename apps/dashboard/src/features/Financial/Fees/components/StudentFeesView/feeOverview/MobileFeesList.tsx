@@ -132,10 +132,7 @@ function FeeRow({ fee, open, onToggle, menu, onPayInstallment }: {
 
   return (
     <div
-      className={cn(
-        'overflow-hidden rounded-lg border bg-card',
-        overdue > 0 ? 'border-red-200' : isPaid ? 'border-emerald-200' : 'border-border',
-      )}
+      className="overflow-hidden rounded-lg border border-border bg-card"
     >
       <div className="flex items-start gap-1 p-3 pe-1">
         <button
