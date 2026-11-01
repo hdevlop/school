@@ -1156,6 +1156,8 @@
       "actionsColumn": "Actions",
       "tableActions": "Table actions",
       "export": "Export",
+      "exportXlsx": "Excel (.xlsx)",
+      "exportCsv": "CSV (.csv)",
       "import": "Import",
       "print": "Print",
       "importDescription": "Choose an XLSX, CSV or JSON file. Excel uses the first worksheet, with headers in its first row.",

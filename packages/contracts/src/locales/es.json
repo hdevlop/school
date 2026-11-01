@@ -1256,6 +1256,8 @@
       "actionsColumn": "Acciones",
       "tableActions": "Acciones de la tabla",
       "export": "Exportar",
+      "exportXlsx": "Excel (.xlsx)",
+      "exportCsv": "CSV (.csv)",
       "import": "Importar",
       "print": "Imprimir",
       "importDescription": "Elija un archivo XLSX, CSV o JSON. Excel usa la primera hoja, con los encabezados en la primera fila.",

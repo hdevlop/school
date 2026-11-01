@@ -896,6 +896,8 @@
       "actionsColumn": "Actions",
       "tableActions": "Actions du tableau",
       "export": "Exporter",
+      "exportXlsx": "Excel (.xlsx)",
+      "exportCsv": "CSV (.csv)",
       "import": "Importer",
       "print": "Imprimer",
       "importDescription": "Choisissez un fichier XLSX, CSV ou JSON. Excel utilise la première feuille, avec les en-têtes sur la première ligne.",

@@ -21,6 +21,7 @@ export const useStudentsTableColumns = () => {
     {
       accessorKey: "name",
       header: () => <span className="student-name-column">{t('students.table.name')}</span>,
+      meta: { exportHeader: t('students.table.name') },
       cell: ({ row }) => {
         const student = row.original;
         return (
@@ -45,11 +46,13 @@ export const useStudentsTableColumns = () => {
     {
       accessorKey: 'arabicName',
       header: () => <span className="student-arabic-name-column">{t('students.form.arabicName')}</span>,
+      meta: { exportHeader: t('students.form.arabicName') },
       cell: ({ getValue }) => <span lang="ar" dir="rtl">{getValue() || ''}</span>,
     },
     {
       accessorKey: 'email',
       header: () => <span className="student-email-column">{t('students.table.email')}</span>,
+      meta: { exportHeader: t('students.table.email') },
       enableSorting: false,
       cell: ({ getValue }) => {
         const email = getValue();
@@ -69,6 +72,7 @@ export const useStudentsTableColumns = () => {
       accessorKey: 'class',
       accessorFn: (row) => row.class?.name || '',
       header: () => <span className="student-class-column">{t('students.table.class')}</span>,
+      meta: { exportHeader: t('students.table.class') },
       cell: ({ row }) => {
         const className = row.original.class?.name;
         return className || <span className="text-gray-400">{t('common.notAssigned')}</span>;
@@ -79,6 +83,7 @@ export const useStudentsTableColumns = () => {
       accessorKey: 'section',
       accessorFn: (row) => row.section?.name || '',
       header: () => <span className="student-section-column">{t('students.table.section')}</span>,
+      meta: { exportHeader: t('students.table.section') },
       cell: ({ row }) => {
         const sectionName = row.original.section?.name;
         return sectionName || <span className="text-gray-400">{t('common.notAssigned')}</span>;
@@ -88,6 +93,7 @@ export const useStudentsTableColumns = () => {
     {
       accessorKey: "gender",
       header: () => <span className="student-gender-column">{t('students.table.gender')}</span>,
+      meta: { exportHeader: t('students.table.gender') },
       enableSorting: true,
       cell: ({ getValue }) => {
         const gender = getValue();

@@ -1,20 +1,36 @@
 import { describe, expect, it } from 'bun:test';
-import { createTable, getCoreRowModel, getFilteredRowModel, getSortedRowModel, getPaginationRowModel } from '@tanstack/react-table';
-import { schoolTableCsv, schoolTableSnapshot } from '@/shared/tableExport';
+import { createTable, getCoreRowModel, getFilteredRowModel, getSortedRowModel, getPaginationRowModel, type ColumnDef, type Table } from '@tanstack/react-table';
+import type { NTableColumnMeta } from 'najm-kit';
+import { withOfficialClassExports } from '@/shared/tableExport';
 import { buildStudentImport } from '@/features/Students/config/studentImport';
 
+/** What Najm's CSV export writes: field names, and each column's exportValue over visible, filtered, sorted rows. */
+function exported<T>(table: Table<T>) {
+  const columns = table.getVisibleLeafColumns().filter(column => column.accessorFn);
+  return {
+    headers: columns.map(column => (column.columnDef as { accessorKey?: string }).accessorKey ?? column.id),
+    rows: table.getPrePaginationRowModel().rows.map(row => columns.map(column => {
+      const exportValue = (column.columnDef.meta as NTableColumnMeta | undefined)?.exportValue;
+      return exportValue ? exportValue(row.getValue(column.id), row.original) : row.getValue(column.id);
+    })),
+  };
+}
+
+type Student = { name: string; studentCode: string; class: { name: string }; section: string; gender: string; email: string };
+
 function studentTable() {
+  const columns: ColumnDef<Student, any>[] = [
+    { accessorKey: 'studentCode' }, { accessorKey: 'name' }, { accessorKey: 'email' },
+    { accessorKey: 'class', accessorFn: row => row.class.name },
+    { accessorKey: 'section' }, { accessorKey: 'gender' },
+  ];
   return createTable({
     data: [
       { name: 'Zineb', studentCode: 'S1', class: { name: 'CP' }, section: 'A', gender: 'F', email: '' },
       { name: 'Amine', studentCode: 'S2', class: { name: '1AC' }, section: 'B', gender: 'M', email: '' },
       { name: 'Excluded', studentCode: 'S3', class: { name: 'CP' }, section: 'A', gender: 'M', email: '' },
     ],
-    columns: [
-      { accessorKey: 'studentCode' }, { accessorKey: 'name' }, { accessorKey: 'email' },
-      { accessorKey: 'class', accessorFn: row => row.class.name },
-      { accessorKey: 'section' }, { accessorKey: 'gender' },
-    ],
+    columns: withOfficialClassExports(columns),
     state: {
       sorting: [{ id: 'name', desc: false }],
       columnFilters: [{ id: 'name', value: 'i' }],
@@ -28,10 +44,9 @@ function studentTable() {
 }
 
 describe('School file exports', () => {
-  it('exports official class codes using the visible, filtered and sorted rows across pages', () => {
+  it('class columns export official class codes, and the CSV still imports back', () => {
     const table = studentTable();
-    expect(table.getRowModel().rows).toHaveLength(1);
-    const snapshot = schoolTableSnapshot(table);
+    const snapshot = exported(table);
     expect(snapshot.headers).toEqual(['studentCode', 'name', 'class', 'section', 'gender']);
     expect(snapshot.rows).toEqual([
       ['S2', 'Amine', '1APIC', 'B', 'M'], ['S1', 'Zineb', '1APG', 'A', 'F'],
@@ -48,18 +63,25 @@ describe('School file exports', () => {
 
   it('converts only class columns, including objects and combined class/section labels', () => {
     const original = { name: 'CP', class: { id: 'c1', name: 'CP' }, className: 'Blue', 'class.name': 'CE2', classSection: 'CM1 / A' };
-    const table = createTable({
-      data: [original],
-      columns: Object.keys(original).map(key => ({ id: key, accessorFn: row => row[key as keyof typeof original] })),
+    const columns: ColumnDef<typeof original, any>[] = Object.keys(original).map(key => ({ id: key, accessorFn: row => row[key as keyof typeof original] }));
+    const table = (classNameColumns?: readonly string[]) => createTable({
+      data: [original], columns: withOfficialClassExports(columns, classNameColumns),
       state: {}, onStateChange: () => {}, renderFallbackValue: '', getCoreRowModel: getCoreRowModel(),
     });
-    expect(schoolTableSnapshot(table).rows[0]).toEqual(['CP', { id: 'c1', name: '1APG' }, 'Blue', '3APG', '4APG / A']);
+    expect(exported(table()).rows[0]).toEqual(['CP', { id: 'c1', name: '1APG' }, 'Blue', '3APG', '4APG / A']);
     expect(original.class.name).toBe('CP');
-    expect(schoolTableSnapshot(table, ['name']).rows[0][0]).toBe('1APG');
+    expect(exported(table(['name'])).rows[0][0]).toBe('1APG');
   });
 
-  it('writes UTF-8 CSV with quoted cells and escapes spreadsheet formulas', () => {
-    const csv = schoolTableCsv({ headers: ['name', 'class'], rows: [['اسم, "élève"', '1APG'], ['=1+1', null], [12, '+212600000000']] });
-    expect(csv).toBe('\uFEFF"name","class"\r\n"اسم, ""élève""","1APG"\r\n"\'=1+1",""\r\n"12","\'+212600000000"');
+  it("keeps a column's own exportValue, other metadata and grouped columns", () => {
+    const own = (value: unknown) => `own ${value}`;
+    const [kept, grouped] = withOfficialClassExports<{ class: string }>([
+      { accessorKey: 'class', meta: { exportValue: own } } as ColumnDef<{ class: string }, any>,
+      { id: 'group', columns: [{ accessorKey: 'class', meta: { hiddenBelow: 'md' } } as ColumnDef<{ class: string }, any>] },
+    ]) as Array<ColumnDef<{ class: string }, any> & { columns?: Array<ColumnDef<{ class: string }, any>> }>;
+    expect((kept.meta as NTableColumnMeta).exportValue).toBe(own);
+    const child = grouped.columns![0].meta as NTableColumnMeta;
+    expect(child.hiddenBelow).toBe('md');
+    expect(child.exportValue!('CP', {})).toBe('1APG');
   });
 });

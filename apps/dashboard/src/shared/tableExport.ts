@@ -1,4 +1,5 @@
-import type { Table } from '@tanstack/react-table';
+import type { ColumnDef } from '@tanstack/react-table';
+import type { NTableColumnMeta } from 'najm-kit';
 import { toOfficialClassName } from '@sms/contracts';
 
 const CLASS_COLUMNS = ['class', 'className', 'class.name', 'classSection'];
@@ -13,37 +14,22 @@ function officialClassValue(value: unknown, composite: boolean): unknown {
   return value;
 }
 
-/** Uses the live table model, preserving visible columns, filters and sorting across pages. */
-export function schoolTableSnapshot<T>(table: Table<T>, classNameColumns: readonly string[] = CLASS_COLUMNS) {
-  const columns = table.getVisibleLeafColumns().filter(column => column.accessorFn);
-  const headers = columns.map(column => (column.columnDef as { accessorKey?: string }).accessorKey ?? column.id);
-  return {
-    headers,
-    rows: table.getPrePaginationRowModel().rows.map(row => columns.map((column, index) => {
-      const value = row.getValue(column.id);
-      return classNameColumns.includes(headers[index]) ? officialClassValue(value, headers[index] === 'classSection') : value;
-    })),
-  };
-}
+type ExportColumn<T> = ColumnDef<T, any> & { accessorKey?: string; columns?: ExportColumn<T>[]; meta?: NTableColumnMeta<T> };
 
-/** UTF-8 CSV, with formula-like text escaped before a spreadsheet opens it. */
-export function schoolTableCsv(snapshot: { headers: string[]; rows: unknown[][] }): string {
-  const encode = (value: unknown) => {
-    let text = value == null ? '' : typeof value === 'object' ? JSON.stringify(value) : String(value);
-    if (typeof value !== 'number' && /^\s*[=+@-]/.test(text)) text = `'${text}`;
-    return `"${text.replaceAll('"', '""')}"`;
-  };
-  return '\uFEFF' + [snapshot.headers, ...snapshot.rows].map(row => row.map(encode).join(',')).join('\r\n');
-}
-
-export function downloadSchoolTable<T>(table: Table<T>, classNameColumns?: readonly string[]) {
-  const csv = schoolTableCsv(schoolTableSnapshot(table, classNameColumns));
-  const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = 'table.csv';
-  document.body.append(link);
-  link.click();
-  link.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 0);
+/**
+ * School's file-export policy, as Najm column metadata: class columns export
+ * official class codes in every format (Excel, CSV and print). A column that
+ * already sets `meta.exportValue` keeps its own.
+ */
+export function withOfficialClassExports<T>(
+  columns: ReadonlyArray<ColumnDef<T, any>>,
+  classNameColumns: readonly string[] = CLASS_COLUMNS,
+): ColumnDef<T, any>[] {
+  return (columns as ReadonlyArray<ExportColumn<T>>).map(column => {
+    if (column.columns) return { ...column, columns: withOfficialClassExports(column.columns, classNameColumns) };
+    const key = column.accessorKey ?? column.id;
+    if (!key || !classNameColumns.includes(key) || column.meta?.exportValue) return column;
+    const composite = key === 'classSection';
+    return { ...column, meta: { ...column.meta, exportValue: (value: unknown) => officialClassValue(value, composite) } };
+  });
 }

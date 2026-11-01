@@ -1270,6 +1270,8 @@
       "actionsColumn": "الإجراءات",
       "tableActions": "إجراءات الجدول",
       "export": "تصدير",
+      "exportXlsx": "Excel (.xlsx)",
+      "exportCsv": "CSV (.csv)",
       "import": "استيراد",
       "print": "طباعة",
       "importDescription": "اختر ملف XLSX أو CSV أو JSON. يستخدم Excel الورقة الأولى، مع العناوين في الصف الأول.",
