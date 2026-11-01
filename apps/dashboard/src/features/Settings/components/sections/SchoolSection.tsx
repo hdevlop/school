@@ -92,7 +92,7 @@ const SchoolSection: React.FC = () => {
         />
       </SettingsGroup>
 
-      <SettingsGroup title={t('settings.editor.groups.schoolDay.title')} description={t('settings.editor.groups.schoolDay.description')}>
+      <SettingsGroup title={t('settings.editor.groups.schoolDay.title')} description={t('settings.editor.groups.schoolDay.description')} className="sm:grid-cols-3 sm:items-end">
         <FormInput
           name="schoolStartTime"
           type="time"
