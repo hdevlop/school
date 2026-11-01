@@ -1093,6 +1093,10 @@
     },
     "invitation": {
       "sent": "E-mail d'invitation envoyé à {{email}}. Le membre du personnel active son compte depuis le lien.",
+      "pending": "Membre du personnel créé. L'invitation attend votre approbation ; aucun e-mail n'a été envoyé.",
+      "accessPending": "Accès en attente",
+      "approve": "Approuver et envoyer l'invitation",
+      "approveDescription": "Envoyez une invitation d'activation à ce membre du personnel. Il pourra choisir un mot de passe pour activer son compte.",
       "notSent": "Le membre du personnel a été créé, mais l'e-mail d'invitation n'a pas pu être envoyé. Renvoyez-le avec « Réinitialiser l'accès » sur la page Utilisateurs."
     },
     "shifts": {

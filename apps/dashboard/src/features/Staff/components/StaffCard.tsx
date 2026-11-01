@@ -45,6 +45,7 @@ const StaffCard = ({ data, details = false }) => {
           <NBadge className="inline-flex w-fit items-center rounded-full bg-primary/10 font-medium text-primary ring-1 ring-inset ring-primary/20">
             {resolveRoleLabel(staff, language, t)}
           </NBadge>
+          {staff?.loginStatus === 'pending' && <NBadge className="w-fit bg-muted text-muted-foreground">{t('staff.invitation.accessPending')}</NBadge>}
         </div>
 
         <div className="space-y-2">

@@ -8,7 +8,7 @@ import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { TablePrintButton } from '@/components/TablePrintButton';
 import { useTranslation } from 'najm-i18n/react';
-import { announceInvitation } from '@/shared/invitationNotice';
+import { toast } from 'sonner';
 import { useStaff } from '../hooks/useStaff';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useResetLogin } from '@/features/Users/hooks/useResetLogin';
@@ -78,20 +78,17 @@ const StaffTable = () => {
   const activeCount = rows.filter((row) => row?.status === 'active').length;
   const uniqueRoles = new Set(rows.map((row) => row?.role).filter(Boolean));
 
-  // Only a role with app access gets a login, and so an invitation.
-  const createAndInviteStaff = async (data) => {
+  // Creating the profile prepares access; sending its invitation is separate.
+  const createPendingStaff = async (data) => {
     const response = await createStaff(data);
-    announceInvitation(response?.data?.emailSent, data.email, {
-      sent: t('staff.invitation.sent', { email: data.email }),
-      notSent: t('staff.invitation.notSent'),
-    });
+    if (response?.data?.invitationPending) toast.info(t('staff.invitation.pending'));
     return response;
   };
 
   const handleAdd = () => {
     openDialog({
       title: t('staff.dialogs.createTitle'),
-      children: <StaffForm onSubmitStaff={createAndInviteStaff} />,
+      children: <StaffForm onSubmitStaff={createPendingStaff} />,
       width: '4xl',
       height: 'xxl',
       showButtons: false,
@@ -151,7 +148,7 @@ const StaffTable = () => {
   const rowMenu = (staffMember) => [
     { label: t('common.view'), icon: Eye, onSelect: () => handleView(staffMember) },
     { label: t('common.edit'), permission: 'update:staff', icon: Pencil, onSelect: () => handleEdit(staffMember) },
-    ...resetItems(staffMember.userId),
+    ...resetItems(staffMember.userId, { invitationApproval: staffMember.loginStatus === 'pending' }),
     { label: t('common.delete'), permission: 'delete:staff', icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(staffMember) },
   ];
 
@@ -186,13 +183,16 @@ const StaffTable = () => {
       cell: ({ row }) => {
         const staffMember = row.original;
         return (
-          <NAvatar
-            src={staffMember?.image}
-            fallbackSrc={getStaffAvatar(staffMember?.role, staffMember?.gender)}
-            title={staffMember?.name || '-'}
-            size="sm"
-            version={avatarVersion(staffMember?.image, staffMember?.updatedAt)}
-          />
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <NAvatar
+              src={staffMember?.image}
+              fallbackSrc={getStaffAvatar(staffMember?.role, staffMember?.gender)}
+              title={staffMember?.name || '-'}
+              size="sm"
+              version={avatarVersion(staffMember?.image, staffMember?.updatedAt)}
+            />
+            {staffMember.loginStatus === 'pending' && <Badge variant="secondary">{t('staff.invitation.accessPending')}</Badge>}
+          </div>
         );
       },
     },

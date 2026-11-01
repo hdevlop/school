@@ -32,6 +32,7 @@ const STAFF_LIST_EXCLUDED_ROLES = ['teacher'];
 const staffSelect = {
   id: staff.id,
   userId: staff.userId,
+  loginStatus: users.status,
   employeeCode: staff.employeeCode,
   name: staff.name,
   cin: staff.cin,

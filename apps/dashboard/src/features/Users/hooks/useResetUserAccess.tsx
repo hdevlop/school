@@ -43,10 +43,12 @@ export const useResetUserAccess = () => {
       const response = await resetUserAccessApi(userId, { reason, expectedMode });
       return (response?.data ?? response) as ResetAccessResult;
     },
-    onSettled: async () => {
+    onSettled: async (_result, _error, { userId }) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['users'] }),
         queryClient.invalidateQueries({ queryKey: ['operators'] }),
+        queryClient.invalidateQueries({ queryKey: ['staff'] }),
+        queryClient.invalidateQueries({ queryKey: ['access-reset-target', userId] }),
       ]);
     },
   });

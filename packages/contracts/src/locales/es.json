@@ -4112,6 +4112,10 @@
     },
     "invitation": {
       "sent": "Correo de invitación enviado a {{email}}. El miembro del personal activa la cuenta desde el enlace.",
+      "pending": "Miembro del personal creado. La invitación está pendiente de tu aprobación; no se ha enviado ningún correo.",
+      "accessPending": "Acceso pendiente",
+      "approve": "Aprobar y enviar invitación",
+      "approveDescription": "Envía una invitación de activación a este miembro del personal. Podrá elegir una contraseña para activar su cuenta.",
       "notSent": "El miembro del personal se creó, pero no se pudo enviar el correo de invitación. Vuelve a enviarlo con «Restablecer acceso» en la página Usuarios."
     },
     "shifts": {

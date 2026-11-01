@@ -46,8 +46,8 @@ export const resolveExpectedMode = (user: AccessResetRow): AccessResetMode | nul
   // temporary credential; other roles have no handover this dialog promises.
   if (!user.email?.trim()) return role === 'parent' ? 'parent_credential_setup' : null;
 
-  // A pending account has never chosen a password, so the invitation it was
-  // already sent is the only thing worth repeating — for a parent too.
+  // A pending account needs an activation invitation. Staff may be awaiting
+  // approval before the first send; other accounts may need it sent again.
   if (status === 'pending') {
     return role === 'parent' || MAIL_RECOVERABLE_ROLES.has(role) ? 'invitation_resent' : null;
   }

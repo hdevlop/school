@@ -16,7 +16,7 @@ import type { AccessResetRow } from '../config/accessResetModes';
  * staff member or a teacher. The account is read fresh so the confirmation
  * describes the login as it is now; the server decides again on submit.
  */
-const ResetLoginDialog = ({ userId }: { userId: string }) => {
+const ResetLoginDialog = ({ userId, invitationApproval = false }: { userId: string; invitationApproval?: boolean }) => {
   const { t } = useTranslation();
   const { pop } = useDialog();
   const { data, isLoading, isError } = useQuery({
@@ -46,7 +46,7 @@ const ResetLoginDialog = ({ userId }: { userId: string }) => {
     );
   }
 
-  return <ResetAccessDialog user={target} />;
+  return <ResetAccessDialog user={target} invitationApproval={invitationApproval} />;
 };
 
 export default ResetLoginDialog;

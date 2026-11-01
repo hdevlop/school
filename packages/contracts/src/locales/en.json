@@ -3030,6 +3030,10 @@
     },
     "invitation": {
       "sent": "Invitation email sent to {{email}}. The staff member activates the account from the link.",
+      "pending": "Staff member created. The invitation is pending your approval; no email has been sent.",
+      "accessPending": "Access pending",
+      "approve": "Approve & send invitation",
+      "approveDescription": "Send an activation invitation to this staff member. They can choose a password to activate their account.",
       "notSent": "The staff member was created, but the invitation email could not be sent. Send it again with \"Reset access\" on the Users page."
     },
     "validation": {

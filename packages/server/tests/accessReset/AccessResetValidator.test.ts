@@ -140,6 +140,14 @@ describe('AccessResetValidator — supported account classes', () => {
     expect((await validator.resolveTarget('user-1', ACTOR)).mode).toBe('reset_email_sent');
   });
 
+  it('sends an activation invitation when pending staff access is approved', async () => {
+    const validator = validatorWith({
+      account: account({ roleName: 'secretary', status: 'pending' }),
+      staff: { id: 'st1', userId: 'user-1', status: 'active', role: 'secretary', accessRoleId: 'role-1' },
+    });
+    expect((await validator.resolveTarget('user-1', ACTOR)).mode).toBe('invitation_resent');
+  });
+
   it('treats staff on leave as still holding a working login', async () => {
     const validator = validatorWith({
       account: account({ roleName: 'assistant', status: 'active' }),

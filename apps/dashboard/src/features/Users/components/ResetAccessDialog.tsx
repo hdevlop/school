@@ -19,7 +19,7 @@ const getErrorMessage = (error: unknown, fallback: string) => {
   return fallback;
 };
 
-const ResetAccessDialog = ({ user }: { user: AccessResetRow }) => {
+const ResetAccessDialog = ({ user, invitationApproval = false }: { user: AccessResetRow; invitationApproval?: boolean }) => {
   const { t } = useTranslation();
   const { pop } = useDialog();
   const { resetAccess, isResettingAccess } = useResetUserAccess();
@@ -51,7 +51,7 @@ const ResetAccessDialog = ({ user }: { user: AccessResetRow }) => {
     );
   }
 
-  if (!mode) {
+  if (!mode || (invitationApproval && mode !== 'invitation_resent')) {
     return (
       <div className='flex w-full flex-col gap-3 py-2'>
         <NAlert
@@ -74,7 +74,7 @@ const ResetAccessDialog = ({ user }: { user: AccessResetRow }) => {
       ? t('users.accessReset.modes.parentCredentialSetup')
       : mode === 'reset_email_sent'
         ? t('users.accessReset.modes.resetEmailSent')
-        : t('users.accessReset.modes.invitationResent');
+        : t(invitationApproval ? 'staff.invitation.approveDescription' : 'users.accessReset.modes.invitationResent');
 
   const handleSubmit = async ({ reason }: { reason: string }) => {
     setFailure(null);
@@ -148,13 +148,13 @@ const ResetAccessDialog = ({ user }: { user: AccessResetRow }) => {
         <NButton
           type='submit'
           form='reset-access-form'
-          variant='destructive'
+          variant={invitationApproval ? 'default' : 'destructive'}
           loading={isResettingAccess}
           disabled={isResettingAccess}
         >
           {isResettingAccess
             ? t('users.accessReset.pending')
-            : t('users.accessReset.confirmButton')}
+            : t(invitationApproval ? 'staff.invitation.approve' : 'users.accessReset.confirmButton')}
         </NButton>
       </div>
     </div>
