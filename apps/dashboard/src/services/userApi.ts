@@ -16,7 +16,7 @@ export const getUsersApi = async () => {
 
 /** Which logins belong to a student, a parent or a staff member; any other login has no person behind it. */
 export const getAccountLinksApi = async (): Promise<{ userId: string; kind: 'student' | 'parent' | 'staff' }[]> => {
-  const res = await api.get('/account-links');
+  const res = await api.get('/accounts/links');
   return res.data.data;
 };
 
@@ -37,8 +37,20 @@ export const inviteUserApi = async (data) => {
   return res.data;
 };
 
-export const updateUserApi = async (data) => {
-  const res = await formApi.put(`/users/${data.id}`, data);
+// najm-auth stores `image` as given, so a file sent with the account was saved
+// as the text "[object File]". A changed photo goes to School's own route.
+export const updateUserApi = async ({ image, ...data }) => {
+  const res = await api.put(`/users/${data.id}`, data);
+  if (image !== undefined) {
+    const photo = await updateUserImageApi(data.id, image);
+    return { ...res.data, data: { ...res.data?.data, ...photo.data } };
+  }
+  return res.data;
+};
+
+/** A new photo (a File), or null to remove it. */
+export const updateUserImageApi = async (id: string, image: Blob | null) => {
+  const res = await formApi.put(`/accounts/${id}/image`, { image });
   return res.data;
 };
 

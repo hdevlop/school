@@ -9,12 +9,15 @@ export type LinkedAccount = { id: string; email?: string | null; phone?: string 
 export const LINKED_TO_FILTER_VALUES = ['__all__', ...ACCOUNT_LINK_KINDS, 'none'] as const;
 export type LinkedToFilter = (typeof LINKED_TO_FILTER_VALUES)[number];
 
-export function withAccountLinks<T extends { id: string }>(
+/** The administrator's login is the school's own, not a person's: it is never marked unlinked. */
+const ADMIN_ROLE = 'admin';
+
+export function withAccountLinks<T extends { id: string; role?: string | null }>(
   users: T[] | undefined,
   links: Map<string, AccountLinkKind> | undefined,
 ): (T & Pick<LinkedAccount, 'linkedTo'>)[] | undefined {
   if (!users || !links) return users;
-  return users.map(user => ({ ...user, linkedTo: links.get(user.id) ?? null }));
+  return users.map(user => ({ ...user, linkedTo: links.get(user.id) ?? (user.role === ADMIN_ROLE ? undefined : null) }));
 }
 
 export function matchesLinkedTo(user: LinkedAccount, filter: LinkedToFilter) {

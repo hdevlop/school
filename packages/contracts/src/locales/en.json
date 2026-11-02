@@ -596,7 +596,8 @@
       "emailRequired": "Email is required",
       "passwordRequired": "Password is required",
       "invalidEmail": "Invalid email format",
-      "weakPassword": "Password is too weak"
+      "weakPassword": "Password is too weak",
+      "imageInvalid": "Choose an image file (PNG, JPG or WebP)."
     },
     "validation": {
       "nameMinLength": "Name must be at least 2 characters long",

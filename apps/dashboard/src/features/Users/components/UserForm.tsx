@@ -1,6 +1,6 @@
 'use client'
 
-import { NForm } from 'najm-kit'
+import { AvatarFormInput, NForm } from 'najm-kit'
 import { formatStatusLabel } from 'najm-kit/format'
 import { FormInput } from 'najm-kit';
 import React from 'react'
@@ -33,8 +33,10 @@ const UserForm = ({ user = null, mode = 'create' }) => {
       label: role.name
    })) || []
 
-   const handleSubmit = async (userData) => {
-      pop(userData);
+   // The photo is saved by its own request, so it is sent only when it changed.
+   const handleSubmit = async (values: Record<string, unknown>) => {
+      const { image, ...userData } = values;
+      pop(isUpdateMode && image !== defaultValues.image ? { ...userData, image } : userData);
    }
 
    return (
@@ -68,12 +70,11 @@ const UserForm = ({ user = null, mode = 'create' }) => {
                />
 
                {isUpdateMode && (
-                  <FormInput
+                  <AvatarFormInput
                      name='image'
-                     type='file'
                      formLabel={t('users.form.image')}
-                     variant='default'
-                     icon={User}
+                     radius='xl'
+                     allowClear
                   />
                )}
 

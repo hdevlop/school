@@ -24,6 +24,14 @@ describe('account links on the Users screen', () => {
     expect(withAccountLinks(accounts, undefined)).toBe(accounts);
   });
 
+  it('never marks the administrator\'s own login, which belongs to no person by design', () => {
+    const [admin] = withAccountLinks([{ id: 'admin-login', role: 'admin', email: 'admin@admin.com', phone: null }], links)!;
+    expect(admin.linkedTo).toBeUndefined();
+    expect(getUserRowClassName(admin)).toBeUndefined();
+    expect(matchesLinkedTo(admin, 'none')).toBe(false);
+    expect(matchesLinkedTo(admin, '__all__')).toBe(true);
+  });
+
   it('greys out an unlinked login like a student who left, and nothing while the links are unknown', () => {
     const [student, , unlinked] = withAccountLinks(accounts, links)!;
     expect(getUserRowClassName(unlinked)).toBe(INACTIVE_ROW_CLASS);

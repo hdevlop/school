@@ -41,7 +41,7 @@ export * from './transport/maintenance';
 export * from './search';
 export * from './profiles';
 export * from './accessReset';
-export * from './accountLinks';
+export * from './accounts';
 export * from './roleAccess';
 export * from './seed';
 export * from './landing';

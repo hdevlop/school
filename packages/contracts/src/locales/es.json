@@ -580,6 +580,7 @@
     },
     "success": {
       "retrieved": "Usuario recuperado exitosamente",
+      "allRetrieved": "Usuarios recuperados exitosamente",
       "created": "Usuario creado exitosamente",
       "updated": "Usuario actualizado exitosamente",
       "deleted": "Usuario eliminado exitosamente",
@@ -595,7 +596,8 @@
       "emailRequired": "El correo electrónico es obligatorio",
       "passwordRequired": "La contraseña es obligatoria",
       "invalidEmail": "Formato de correo electrónico no válido",
-      "weakPassword": "La contraseña es demasiado débil"
+      "weakPassword": "La contraseña es demasiado débil",
+      "imageInvalid": "Elija un archivo de imagen (PNG, JPG o WebP)."
     },
     "validation": {
       "nameMinLength": "El nombre debe tener al menos 2 caracteres",

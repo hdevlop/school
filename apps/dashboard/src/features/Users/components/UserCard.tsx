@@ -37,7 +37,7 @@ const UserCard = ({ data: user }) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-4 border-t px-3 py-2 text-xs text-muted-foreground">
+      <div className="flex items-center gap-4 border-t border-dashed border-border/50 px-3 py-2 text-xs text-muted-foreground">
         <span className="flex items-center gap-1.5">
           <LogIn className="size-3.5" />
           <span className="font-medium text-foreground">{user?.analytics?.totalLogins || 0}</span>
