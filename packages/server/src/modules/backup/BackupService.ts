@@ -111,7 +111,7 @@ export class BackupService {
     this.backupValidator.ensureComplete(archive, manifest);
     const tables = await this.backupRepository.tables();
     const migration = await this.backupRepository.latestMigration();
-    this.backupValidator.ensureSameVersion(manifest, migration, tables);
+    this.backupValidator.ensureCompatibleVersion(manifest, migration, tables);
 
     const staged = await this.stageFiles(archive);
     let signedIn: { userIds: string[]; families: string[] };
@@ -132,6 +132,10 @@ export class BackupService {
   @Transaction()
   async replaceDatabase(archive: BackupArchiveReader, manifest: BackupManifest, tables: BackupTable[], staged: string) {
     await this.backupRepository.lockRestore();
+    // Recheck under the restore lock, inside the transaction that repairs the
+    // restored data. The migration ledger itself stays at the installed version.
+    const migration = await this.backupRepository.latestMigration();
+    const upgrade = this.backupValidator.ensureCompatibleVersion(manifest, migration, tables);
     const before = await this.backupRepository.signedInState();
     await this.backupRepository.truncate(tables.map(({ name }) => name));
     for (const table of insertionOrder(tables, await this.backupRepository.references())) {
@@ -140,6 +144,7 @@ export class BackupService {
       this.backupValidator.ensureRows(rows, manifest.tables[table.name]);
       for (const batch of rowBatches(rows!)) await this.backupRepository.insertRows(table, batch);
     }
+    if (upgrade === 'backup-permissions') await this.backupRepository.restoreBackupPermissions();
     await this.backupRepository.resetSequences();
     const restoredUsers = await this.backupRepository.userIds();
     await this.swapFiles(staged);

@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 import { describe, expect, it, mock } from 'bun:test';
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { strToU8, zipSync } from 'fflate';
 import * as i18n from 'najm-i18n';
 import { backupFilePath, isBackupManifest, MAX_BACKUP_BYTES, type BackupManifest } from '@sms/contracts/backup';
@@ -19,6 +21,14 @@ const manifest: BackupManifest = {
   files: { count: 1, bytes: 3 },
 };
 const table = (name: string) => ({ name, columns: ['id'], identity: false });
+
+function migrationHash(name: string) {
+  const sql = readFileSync(new URL(`../../src/database/migrations/${name}.sql`, import.meta.url), 'utf8');
+  return createHash('sha256').update(sql.replace(/\r\n/g, '\n')).digest('hex');
+}
+
+const beforeBackupPermissions = migrationHash('0090_floor_manager_assignments');
+const withBackupPermissions = migrationHash('0091_backup_permissions');
 
 async function archiveOf(entries: Record<string, string | Uint8Array>) {
   const writer = new BackupArchiveWriter();
@@ -147,12 +157,29 @@ describe('backup validator', () => {
     expect(() => validator.ensureComplete(archive, read)).toThrow(refusal('backup.errors.damaged'));
   });
 
-  it('restores only into the same migration and the same tables, ignoring the session tables', () => {
+  it('accepts matching versions and tables while ignoring session tables', () => {
     const tables = ['students', 'users', 'tokens', 'credential_setup_sessions', 'offline_read_snapshots'].map(table);
-    expect(() => validator.ensureSameVersion(manifest, { hash: 'abc' }, tables)).not.toThrow();
-    expect(() => validator.ensureSameVersion(manifest, { hash: 'newer' }, tables)).toThrow(refusal('backup.errors.otherVersion'));
-    expect(() => validator.ensureSameVersion(manifest, null, tables)).toThrow(refusal('backup.errors.otherVersion'));
-    expect(() => validator.ensureSameVersion(manifest, { hash: 'abc' }, [...tables, table('grades')])).toThrow(refusal('backup.errors.otherVersion'));
+    expect(() => validator.ensureCompatibleVersion(manifest, { hash: 'abc' }, tables)).not.toThrow();
+    expect(() => validator.ensureCompatibleVersion(manifest, { hash: 'newer' }, tables)).toThrow(refusal('backup.errors.otherVersion'));
+    expect(() => validator.ensureCompatibleVersion(manifest, null, tables)).toThrow(refusal('backup.errors.otherVersion'));
+    expect(() => validator.ensureCompatibleVersion(manifest, { hash: 'abc' }, [...tables, table('grades')])).toThrow(refusal('backup.errors.otherVersion'));
+  });
+
+  it('accepts the reviewed permissions-only upgrade from migration 0090 to 0091', () => {
+    const older = { ...manifest, migration: { ...manifest.migration, hash: beforeBackupPermissions } };
+    expect(() => validator.ensureCompatibleVersion(older, { hash: withBackupPermissions }, ['students', 'users'].map(table))).not.toThrow();
+  });
+
+  it('still rejects schema differences, unreviewed versions and restoring newer data into an older database', () => {
+    const older = { ...manifest, migration: { ...manifest.migration, hash: beforeBackupPermissions } };
+    const newer = { ...manifest, migration: { ...manifest.migration, hash: withBackupPermissions } };
+    const tables = ['students', 'users'].map(table);
+    expect(() => validator.ensureCompatibleVersion(older, { hash: withBackupPermissions }, [...tables, table('grades')]))
+      .toThrow(refusal('backup.errors.otherVersion'));
+    expect(() => validator.ensureCompatibleVersion(older, { hash: 'unreviewed-migration' }, tables))
+      .toThrow(refusal('backup.errors.otherVersion'));
+    expect(() => validator.ensureCompatibleVersion(newer, { hash: beforeBackupPermissions }, tables))
+      .toThrow(refusal('backup.errors.otherVersion'));
   });
 
   it('refuses a table whose row count differs from the manifest', () => {

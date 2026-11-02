@@ -51,7 +51,7 @@ export class BackupRepository {
     return [...rows];
   }
 
-  /** The newest applied migration: a backup restores only into the same database version. */
+  /** The newest applied migration, used to check backup compatibility. */
   async latestMigration() {
     const [row] = await this.db.execute<{ hash: string; created_at: string | number }>(sql`
       SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at DESC, id DESC LIMIT 1`);
@@ -138,6 +138,15 @@ export class BackupRepository {
     await this.db.execute(sql`
       INSERT INTO ${table(name)} (${columnList(columns)}) ${identity ? sql`OVERRIDING SYSTEM VALUE ` : sql``}
       SELECT ${columnList(columns)} FROM json_populate_recordset(NULL::${table(name)}, ${rows}::json)`);
+  }
+
+  /** Reapplies migration 0091 after restoring 0090 data, without granting access to any role. */
+  async restoreBackupPermissions() {
+    await this.db.execute(sql`
+      INSERT INTO permissions (id, name, description, resource, action) VALUES
+        ('school-system-backup', 'backup:system', 'Download a full backup of the school''s data, accounts and files', 'system', 'backup'),
+        ('school-system-restore', 'restore:system', 'Replace all of the school''s data from a backup', 'system', 'restore')
+      ON CONFLICT (name) DO NOTHING`);
   }
 
   async countRows(name: string) {

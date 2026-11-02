@@ -1,7 +1,8 @@
 /**
  * A whole school in one ZIP: every table of the database, one JSON-lines file
- * each, and every uploaded file. It restores only into the same database
- * version, keeping every ID, so links between records survive unchanged.
+ * each, and every uploaded file. It restores into the same database version
+ * or through an explicitly reviewed data-only upgrade, keeping every ID so
+ * links between records survive unchanged.
  */
 export const BACKUP_FORMAT = 'school-backup';
 export const BACKUP_VERSION = 1;
