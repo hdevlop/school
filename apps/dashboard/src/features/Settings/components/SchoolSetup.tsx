@@ -6,8 +6,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Building2, CalendarRange, DollarSign, Globe, Languages, Loader2, LogOut, Mail, Phone, School } from 'lucide-react';
 import { Card, FormInput, NAJM_CURRENCY_OPTIONS, NButton, NForm } from 'najm-kit';
 import { FormLocationInput } from 'najm-kit/location';
-import { clearNajmUiPreferences } from 'najm-kit/server';
-import { SignOutButton } from 'najm-auth/client/react';
 import { useTranslation } from 'najm-i18n/react';
 import { schoolI18n } from '@sms/contracts/locales';
 
@@ -16,6 +14,7 @@ import { isConflictError } from '@/services/apiError';
 import { type SchoolSetupValues, createSettingsSchemas } from '../config/settingsSchemas';
 import { buildSetupAcademicYearOptions } from '../config/settingsOptions';
 import { useInstallSchool } from '../hooks/useSettings';
+import { useSchoolSignOut } from '@/providers/SignOutTransition';
 
 const languageLabels = { en: 'English', fr: 'Français', ar: 'العربية', es: 'Español' };
 
@@ -26,6 +25,7 @@ const languageLabels = { en: 'English', fr: 'Français', ar: 'العربية', e
  */
 const SchoolSetup: React.FC<{ canInstall: boolean }> = ({ canInstall }) => {
   const { t } = useTranslation();
+  const { signOut: logout, isSigningOut } = useSchoolSignOut();
   const schoolSetupSchema = useMemo(() => createSettingsSchemas(t).schoolSetup, [t]);
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -60,18 +60,10 @@ const SchoolSetup: React.FC<{ canInstall: boolean }> = ({ canInstall }) => {
   };
 
   const signOut = (
-    <SignOutButton
-      onSuccess={async () => {
-        await clearNajmUiPreferences();
-        // A document navigation, so Back cannot restore this signed-in screen.
-        window.location.replace('/login');
-      }}
-    >
-      <NButton type="button" variant="ghost">
-        <LogOut className="h-4 w-4 mr-2" />
-        {t('navigation.logout')}
-      </NButton>
-    </SignOutButton>
+    <NButton type="button" variant="ghost" onClick={logout} disabled={isSigningOut}>
+      <LogOut className="h-4 w-4 mr-2" />
+      {t('navigation.logout')}
+    </NButton>
   );
 
   return (

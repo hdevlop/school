@@ -19,7 +19,8 @@ import { BackupArchiveReader, BackupArchiveWriter, backupFileName, insertionOrde
 import { LandingRepository } from '../landing/LandingRepository';
 import { packagedLandingContent, packagedLandingPrograms } from '../landing/LandingDefaults';
 import { permissionsData, rolePermissionsData, rolesData } from '../seed-data/admin';
-import { BackupRepository, type BackupTable } from './BackupRepository';
+import { backupMigrationsPath, readBackupMigrations, type BackupMigration } from './backupMigrations';
+import { BackupRepository } from './BackupRepository';
 import { BackupValidator } from './BackupValidator';
 
 const excluded = new Set<string>(BACKUP_EXCLUDED_TABLES);
@@ -42,6 +43,8 @@ export class BackupService {
   @Inject(LandingRepository) private landing!: LandingRepository;
   /** The uploads folder; tests point it elsewhere. */
   storagePath = storageBasePath();
+  /** The migrations a deploy applies; a restore replays them. */
+  migrationsPath = backupMigrationsPath();
 
   constructor(
     private backupRepository: BackupRepository,
@@ -102,21 +105,22 @@ export class BackupService {
 
   /**
    * Replaces the whole school with the backup: files are unpacked beside the
-   * current ones first, then every table is emptied and refilled in one
-   * transaction that also swaps the files in. Anything refused leaves both as
-   * they were. Everyone is signed out afterwards.
+   * current ones first, then, in one transaction that also swaps the files in,
+   * the database is rebuilt as it was when the backup was made, refilled, and
+   * brought up to this version by the same migrations a deploy runs. A backup
+   * from any earlier version restores. Anything refused leaves both as they
+   * were. Everyone is signed out afterwards.
    */
   async restore(data: Uint8Array): Promise<BackupRestoreResult> {
     const { archive, manifest } = this.backupValidator.readArchive(data);
     this.backupValidator.ensureComplete(archive, manifest);
-    const tables = await this.backupRepository.tables();
-    const migration = await this.backupRepository.latestMigration();
-    this.backupValidator.ensureCompatibleVersion(manifest, migration, tables);
+    const migrations = readBackupMigrations(this.migrationsPath);
+    this.backupValidator.restorePlan(manifest, await this.backupRepository.latestMigration(), migrations);
 
     const staged = await this.stageFiles(archive);
     let signedIn: { userIds: string[]; families: string[] };
     try {
-      signedIn = await this.replaceDatabase(archive, manifest, tables, staged);
+      signedIn = await this.replaceDatabase(archive, manifest, migrations, staged);
     } finally {
       await rm(staged, { recursive: true, force: true });
     }
@@ -130,13 +134,17 @@ export class BackupService {
   }
 
   @Transaction()
-  async replaceDatabase(archive: BackupArchiveReader, manifest: BackupManifest, tables: BackupTable[], staged: string) {
+  async replaceDatabase(archive: BackupArchiveReader, manifest: BackupManifest, migrations: BackupMigration[], staged: string) {
     await this.backupRepository.lockRestore();
-    // Recheck under the restore lock, inside the transaction that repairs the
-    // restored data. The migration ledger itself stays at the installed version.
-    const migration = await this.backupRepository.latestMigration();
-    const upgrade = this.backupValidator.ensureCompatibleVersion(manifest, migration, tables);
+    // Recheck under the restore lock: a deploy may have migrated in between.
+    // The migration ledger stays as it is, at the installed version.
+    const plan = this.backupValidator.restorePlan(manifest, await this.backupRepository.latestMigration(), migrations);
     const before = await this.backupRepository.signedInState();
+    await this.backupRepository.dropSchema();
+    await this.backupRepository.runMigrations(plan.schema);
+    const tables = await this.backupRepository.tables();
+    this.backupValidator.ensureTables(manifest, tables);
+    // The migrations add rows of their own (roles, permissions, ...): the backup holds the ones that were there.
     await this.backupRepository.truncate(tables.map(({ name }) => name));
     for (const table of insertionOrder(tables, await this.backupRepository.references())) {
       if (excluded.has(table.name)) continue;
@@ -144,8 +152,9 @@ export class BackupService {
       this.backupValidator.ensureRows(rows, manifest.tables[table.name]);
       for (const batch of rowBatches(rows!)) await this.backupRepository.insertRows(table, batch);
     }
-    if (upgrade === 'backup-permissions') await this.backupRepository.restoreBackupPermissions();
+    await this.backupRepository.checkConstraintsNow();
     await this.backupRepository.resetSequences();
+    await this.backupRepository.runMigrations(plan.upgrade);
     const restoredUsers = await this.backupRepository.userIds();
     await this.swapFiles(staged);
     return { userIds: [...new Set([...before.userIds, ...restoredUsers])], families: before.families };

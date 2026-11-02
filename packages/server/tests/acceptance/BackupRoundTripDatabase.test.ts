@@ -19,6 +19,7 @@ const { BackupRepository } = await import('../../src/modules/backup/BackupReposi
 const { BackupValidator } = await import('../../src/modules/backup/BackupValidator');
 const { BackupService } = await import('../../src/modules/backup/BackupService');
 const { BackupArchiveReader, BackupArchiveWriter } = await import('../../src/modules/backup/backupArchive');
+const { backupMigrationsPath, readBackupMigrations } = await import('../../src/modules/backup/backupMigrations');
 const { LandingRepository } = await import('../../src/modules/landing/LandingRepository');
 const { rolesData, rolePermissionsData } = await import('../../src/modules/seed-data/admin');
 const rollback = Symbol('rollback');
@@ -66,10 +67,17 @@ function backupService(tx: Tx, storagePath: string) {
 
 const bytes = async (archive: Blob) => new Uint8Array(await archive.arrayBuffer());
 
-/** Every entry but the manifest, rows sorted so physical order does not matter. */
+// The fixture holds tables no migration creates (its own marker, older code's
+// leftovers): a restore rebuilds the schema from the migrations and leaves them out.
+const migrationSql = readBackupMigrations(backupMigrationsPath()).flatMap(({ sql }) => sql).join('\n');
+const createdByMigrations = (name: string) => new RegExp(`CREATE TABLE (IF NOT EXISTS )?("public"\\.)?"?${name}"?[ (]`).test(migrationSql);
+const schoolTables = (tables: Record<string, number>) => Object.fromEntries(Object.entries(tables).filter(([name]) => createdByMigrations(name)));
+const schoolEntry = (name: string) => !name.startsWith('database/') || createdByMigrations(name.slice('database/'.length, -'.jsonl'.length));
+
+/** Every entry but the manifest and the tables no migration creates, rows sorted so physical order does not matter. */
 async function contents(archive: Blob) {
   const reader = new BackupArchiveReader(await bytes(archive));
-  const entries = reader.read(reader.names.filter(name => name !== 'manifest.json'));
+  const entries = reader.read(reader.names.filter(name => name !== 'manifest.json' && schoolEntry(name)));
   return Object.fromEntries(Object.entries(entries).sort(([a], [b]) => a.localeCompare(b)).map(([name, data]) => [
     name,
     name.endsWith('.jsonl') ? new TextDecoder().decode(data).split('\n').filter(Boolean).sort() : Buffer.from(data).toString('base64'),
@@ -118,7 +126,8 @@ describe('a full backup', () => {
         await tx.execute(sql`SET CONSTRAINTS ALL IMMEDIATE`);
 
         const restored = await service.createBackup();
-        expect(restored.manifest.tables).toEqual(original.manifest.tables);
+        expect(restored.manifest.tables).toEqual(schoolTables(original.manifest.tables));
+        expect(Object.keys(restored.manifest.tables).length).toBeGreaterThan(50);
         expect(await contents(restored.archive)).toEqual(await contents(original.archive));
         expect(await storedFiles(root)).toEqual({
           'students/a.png': Buffer.from('photo a').toString('base64'),
@@ -153,6 +162,71 @@ describe('a full backup', () => {
           'students/b.png': Buffer.from('photo b').toString('base64'),
         });
         expect(await readdir(root)).toEqual(['students']);
+      });
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  }, 120_000);
+
+  it('restores a backup from an earlier version and brings it up to this one through the later migrations', async () => {
+    const root = await storage({ 'students/a.png': 'photo a' });
+    try {
+      await inRollback(async (tx) => {
+        const { service, settle } = backupService(tx, root);
+        const original = await service.createBackup();
+        // The same school as it was at 0090, before 0091_backup_permissions and
+        // 0092_ai_settings_memory_columns: no backup permissions, no memory settings.
+        const journal: { entries: { tag: string; when: number }[] } = JSON.parse(
+          await readFile(new URL('../../src/database/migrations/meta/_journal.json', import.meta.url), 'utf8'));
+        const before0091 = journal.entries.find(({ tag }) => tag === '0090_floor_manager_assignments')!.when;
+        const added = ['backup:system', 'restore:system'];
+        const reader = new BackupArchiveReader(await bytes(original.archive));
+        const entries = reader.read(reader.names);
+        const lines = (name: string) => new TextDecoder().decode(entries[name]).split('\n').filter(Boolean).map(line => JSON.parse(line));
+        const permissions = lines('database/permissions.jsonl');
+        const removed = new Set(permissions.filter(({ name }) => added.includes(name)).map(({ id }) => id));
+        expect(removed.size).toBe(2);
+        const memory = ['use_memory', 'max_stored_messages', 'max_prompt_messages'];
+        const older = {
+          'database/permissions.jsonl': permissions.filter(({ id }) => !removed.has(id)),
+          'database/role_permissions.jsonl': lines('database/role_permissions.jsonl').filter(({ permission_id }) => !removed.has(permission_id)),
+          'database/ai_settings.jsonl': lines('database/ai_settings.jsonl')
+            .map(row => Object.fromEntries(Object.entries(row).filter(([column]) => !memory.includes(column)))),
+        };
+        const writer = new BackupArchiveWriter();
+        for (const [name, data] of Object.entries(entries)) {
+          if (name === 'manifest.json') {
+            writer.text(name, JSON.stringify({
+              ...original.manifest,
+              migration: { hash: 'hash-from-another-checkout', createdAt: before0091 },
+              tables: { ...original.manifest.tables, permissions: older['database/permissions.jsonl'].length, role_permissions: older['database/role_permissions.jsonl'].length },
+            }));
+          } else if (name in older) {
+            writer.text(name, older[name as keyof typeof older].map(row => `${JSON.stringify(row)}\n`).join(''));
+          } else writer.file(name, data);
+        }
+
+        await service.restore(await bytes(writer.finish()));
+        await settle('commit');
+        await tx.execute(sql`SET CONSTRAINTS ALL IMMEDIATE`);
+
+        // 0091 ran again on the restored rows: both permissions are back, granted to no role.
+        const names = await tx.execute<{ name: string }>(sql`SELECT name FROM permissions ORDER BY name`);
+        expect(names.map(({ name }) => name)).toEqual(permissions.map(({ name }) => name).sort());
+        const granted = await tx.execute<{ count: string }>(sql`
+          SELECT count(*) AS count FROM role_permissions rp JOIN permissions p ON p.id = rp.permission_id WHERE p.name IN ('backup:system', 'restore:system')`);
+        expect(Number(granted[0].count)).toBe(0);
+        // 0092 ran too: the memory settings are its defaults.
+        const settings = await tx.execute<Record<string, unknown>>(sql`SELECT use_memory, max_stored_messages, max_prompt_messages FROM ai_settings`);
+        expect(settings.map(row => ({ ...row }))).toEqual(older['database/ai_settings.jsonl'].map(() => ({ use_memory: true, max_stored_messages: 100, max_prompt_messages: 10 })));
+        // Everything else is the backup's, row for row.
+        const restored = await contents((await service.createBackup()).archive);
+        const expected = await contents(original.archive);
+        for (const name of ['database/permissions.jsonl', 'database/role_permissions.jsonl', 'database/ai_settings.jsonl']) {
+          delete restored[name];
+          delete expected[name];
+        }
+        expect(restored).toEqual(expected);
       });
     } finally {
       await rm(root, { recursive: true, force: true });

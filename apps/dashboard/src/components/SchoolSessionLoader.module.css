@@ -1,0 +1,12 @@
+.screen {
+  animation: session-loader-enter 180ms ease-out both;
+}
+
+@keyframes session-loader-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen { animation: none; }
+}

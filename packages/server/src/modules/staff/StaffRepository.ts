@@ -8,6 +8,7 @@ import {
   cycles,
   drivers,
   floorManagerAssignments,
+  roles,
   sections,
   securityAssignments,
   staff,
@@ -24,7 +25,7 @@ import { payslips } from '../financial/payroll/payrollSchema';
 import { routineDuties } from '../classRoutines/ClassRoutineSchema';
 import { getBusinessDateOnly } from '../../shared/businessDate';
 import { isCurrentAssignment } from './StaffAssignmentRepository';
-import { and, count, desc, eq, gte, inArray, isNull, lte, notInArray, or, sql } from 'drizzle-orm';
+import { and, count, desc, eq, gte, inArray, isNull, lte, ne, notInArray, or, sql } from 'drizzle-orm';
 
 // Roles managed on their own dedicated page, excluded from the unified Staff list.
 const STAFF_LIST_EXCLUDED_ROLES = ['teacher'];
@@ -368,7 +369,19 @@ export class StaffRepository {
     return row;
   }
 
+  /**
+   * Every staff row and its login, as the student and parent resets do. The
+   * seed reset keeps the administrator, so an admin login linked to staff stays.
+   */
   async deleteAll() {
-    return await this.db.delete(staff).returning();
+    const logins = await this.db.select({ id: users.id }).from(staff)
+      .innerJoin(users, eq(users.id, staff.userId))
+      .leftJoin(roles, eq(roles.id, users.roleId))
+      .where(or(isNull(roles.name), ne(roles.name, 'admin')));
+    const deleted = await this.db.delete(staff).returning();
+    if (logins.length > 0) {
+      await this.db.delete(users).where(inArray(users.id, logins.map(({ id }) => id)));
+    }
+    return deleted;
   }
 }

@@ -9,6 +9,7 @@ import { backupFilePath, isBackupManifest, MAX_BACKUP_BYTES, type BackupManifest
 mock.module('najm-i18n', () => ({ ...i18n, t: (key: string) => key }));
 const { BackupArchiveReader, BackupArchiveWriter, backupFileName, insertionOrder, rowBatches } = await import('../../src/modules/backup/backupArchive');
 const { BackupValidator } = await import('../../src/modules/backup/BackupValidator');
+const { backupMigrationsPath, readBackupMigrations } = await import('../../src/modules/backup/backupMigrations');
 
 const manifest: BackupManifest = {
   format: 'school-backup',
@@ -21,12 +22,9 @@ const manifest: BackupManifest = {
 };
 const table = (name: string) => ({ name, columns: ['id'], identity: false });
 
-const journal: { entries: { tag: string; when: number }[] } = JSON.parse(
-  readFileSync(new URL('../../src/database/migrations/meta/_journal.json', import.meta.url), 'utf8'));
-const migrationTime = (tag: string) => journal.entries.find(entry => entry.tag === tag)!.when;
-
-const beforeBackupPermissions = migrationTime('0090_floor_manager_assignments');
-const withBackupPermissions = migrationTime('0091_backup_permissions');
+const migration = (folderMillis: number, hash = `hash-${folderMillis}`) => ({ sql: [], folderMillis, hash, bps: true });
+const migrations = [migration(100), migration(200), migration(300)];
+const at = (createdAt: number, hash = 'abc') => ({ ...manifest, migration: { hash, createdAt } });
 
 async function archiveOf(entries: Record<string, string | Uint8Array>) {
   const writer = new BackupArchiveWriter();
@@ -155,37 +153,46 @@ describe('backup validator', () => {
     expect(() => validator.ensureComplete(archive, read)).toThrow(refusal('backup.errors.damaged'));
   });
 
-  it('accepts matching versions and tables while ignoring session tables', () => {
-    const tables = ['students', 'users', 'tokens', 'credential_setup_sessions', 'offline_read_snapshots'].map(table);
-    const same = manifest.migration.createdAt;
-    expect(() => validator.ensureCompatibleVersion(manifest, { createdAt: same }, tables)).not.toThrow();
-    expect(() => validator.ensureCompatibleVersion(manifest, { createdAt: same + 1 }, tables)).toThrow(refusal('backup.errors.otherVersion'));
-    expect(() => validator.ensureCompatibleVersion(manifest, null, tables)).toThrow(refusal('backup.errors.otherVersion'));
-    expect(() => validator.ensureCompatibleVersion(manifest, { createdAt: same }, [...tables, table('grades')])).toThrow(refusal('backup.errors.otherVersion'));
+  it('rebuilds a same-version backup from every migration and upgrades nothing', () => {
+    expect(validator.restorePlan(at(300), { createdAt: 300 }, migrations)).toEqual({ schema: migrations, upgrade: [] });
+  });
+
+  it('rebuilds an older backup at its own version, then upgrades it through every later migration', () => {
+    expect(validator.restorePlan(at(100), { createdAt: 300 }, migrations)).toEqual({ schema: migrations.slice(0, 1), upgrade: migrations.slice(1) });
   });
 
   it('names a migration by its journal timestamp, so CRLF and LF checkouts of the same migration match', () => {
     // A CRLF checkout records another hash for the same file; the manifest's hash is never compared.
-    const lf = { ...manifest, migration: { hash: 'hash-of-lf-file', createdAt: withBackupPermissions } };
-    const crlf = { hash: 'hash-of-crlf-file', createdAt: withBackupPermissions };
-    expect(() => validator.ensureCompatibleVersion(lf, crlf, ['students', 'users'].map(table))).not.toThrow();
+    expect(validator.restorePlan(at(200, 'hash-of-lf-file'), { createdAt: 300 }, [migration(100), migration(200, 'hash-of-crlf-file'), migration(300)]).upgrade)
+      .toEqual([migration(300)]);
   });
 
-  it('accepts the reviewed permissions-only upgrade from migration 0090 to 0091', () => {
-    const older = { ...manifest, migration: { ...manifest.migration, createdAt: beforeBackupPermissions } };
-    expect(() => validator.ensureCompatibleVersion(older, { createdAt: withBackupPermissions }, ['students', 'users'].map(table))).not.toThrow();
+  it('refuses a backup from a newer or unknown version', () => {
+    expect(() => validator.restorePlan(at(400), { createdAt: 300 }, migrations)).toThrow(refusal('backup.errors.otherVersion'));
+    expect(() => validator.restorePlan(at(150), { createdAt: 300 }, migrations)).toThrow(refusal('backup.errors.otherVersion'));
   });
 
-  it('still rejects schema differences, unreviewed versions and restoring newer data into an older database', () => {
-    const older = { ...manifest, migration: { ...manifest.migration, createdAt: beforeBackupPermissions } };
-    const newer = { ...manifest, migration: { ...manifest.migration, createdAt: withBackupPermissions } };
-    const tables = ['students', 'users'].map(table);
-    expect(() => validator.ensureCompatibleVersion(older, { createdAt: withBackupPermissions }, [...tables, table('grades')]))
-      .toThrow(refusal('backup.errors.otherVersion'));
-    expect(() => validator.ensureCompatibleVersion(older, { createdAt: withBackupPermissions + 1 }, tables))
-      .toThrow(refusal('backup.errors.otherVersion'));
-    expect(() => validator.ensureCompatibleVersion(newer, { createdAt: beforeBackupPermissions }, tables))
-      .toThrow(refusal('backup.errors.otherVersion'));
+  it('refuses while the database is not at this version of the app', () => {
+    expect(() => validator.restorePlan(at(100), { createdAt: 200 }, migrations)).toThrow(refusal('backup.errors.databaseMismatch'));
+    expect(() => validator.restorePlan(at(100), { createdAt: 400 }, migrations)).toThrow(refusal('backup.errors.databaseMismatch'));
+    expect(() => validator.restorePlan(at(100), null, migrations)).toThrow(refusal('backup.errors.databaseMismatch'));
+    expect(() => validator.restorePlan(at(100), { createdAt: 300 }, [])).toThrow(refusal('backup.errors.databaseMismatch'));
+  });
+
+  it('needs every rebuilt table in the backup, ignoring session tables and backed-up tables no migration creates', () => {
+    const tables = ['students', 'users', 'tokens', 'credential_setup_sessions', 'offline_read_snapshots'].map(table);
+    expect(() => validator.ensureTables(manifest, tables)).not.toThrow();
+    expect(() => validator.ensureTables(manifest, [...tables, table('grades')])).toThrow(refusal('backup.errors.damaged'));
+    expect(() => validator.ensureTables(manifest, [...tables, table('constructor')])).toThrow(refusal('backup.errors.damaged'));
+    expect(() => validator.ensureTables(manifest, tables.slice(1))).not.toThrow();
+  });
+
+  it('reads the real migrations folder in journal order', () => {
+    const real = readBackupMigrations(backupMigrationsPath());
+    const journal: { entries: { when: number }[] } = JSON.parse(
+      readFileSync(new URL('../../src/database/migrations/meta/_journal.json', import.meta.url), 'utf8'));
+    expect(real.map(({ folderMillis }) => folderMillis)).toEqual(journal.entries.map(({ when }) => when));
+    expect(real.every(({ sql }) => sql.some(statement => statement.trim()))).toBe(true);
   });
 
   it('refuses a table whose row count differs from the manifest', () => {

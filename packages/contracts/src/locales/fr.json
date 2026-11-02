@@ -369,6 +369,8 @@
   },
   "auth": {
     "page": {
+      "logoutPending": "Déconnexion…",
+      "logoutFailed": "Impossible de vous déconnecter. Réessayez.",
       "loginTitle": "Bon retour !",
       "loginSubtitle": "Connectez-vous pour poursuivre votre parcours",
       "forgotPassword": "Mot de passe oublié ?",
@@ -2131,7 +2133,9 @@
     "errors": {
       "invalidFile": "Ce fichier n'est pas une sauvegarde de l'établissement.",
       "damaged": "Cette sauvegarde est incomplète ou endommagée. Rien n'a été modifié.",
-      "otherVersion": "Cette sauvegarde a été créée par une autre version de l'application et ne peut pas être restaurée ici. Rien n'a été modifié.",
+      "otherVersion": "Cette sauvegarde a été créée par une version plus récente de l'application. Mettez l'application à jour, puis restaurez-la. Rien n'a été modifié.",
+
+      "databaseMismatch": "La base de données ne correspond pas à cette version de l'application. Appliquez d'abord les mises à jour de la base de données. Rien n'a été modifié.",
       "tooLarge": "Cette sauvegarde dépasse 512 Mo.",
       "wrongPassword": "Ce mot de passe est incorrect. Rien n'a été modifié."
     }

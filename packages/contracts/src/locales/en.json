@@ -369,6 +369,8 @@
   },
   "auth": {
     "page": {
+      "logoutPending": "Signing out…",
+      "logoutFailed": "Could not sign out. Please try again.",
       "loginTitle": "Welcome back!",
       "loginSubtitle": "Sign in to continue your learning journey",
       "forgotPassword": "Forgot password?",
@@ -5270,7 +5272,9 @@
     "errors": {
       "invalidFile": "This file is not a school backup.",
       "damaged": "This backup is incomplete or damaged. Nothing was changed.",
-      "otherVersion": "This backup was made by a different version of the app and cannot be restored here. Nothing was changed.",
+      "otherVersion": "This backup was made by a newer version of the app. Update the app, then restore it. Nothing was changed.",
+
+      "databaseMismatch": "The database is not at this version of the app. Apply the app's database updates first. Nothing was changed.",
       "tooLarge": "This backup is larger than 512 MB.",
       "wrongPassword": "That password is not correct. Nothing was changed."
     }

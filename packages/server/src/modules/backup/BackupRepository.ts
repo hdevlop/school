@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 
 import { DB } from '../../database/db';
 import { Repository } from '../../najm';
+import type { BackupMigration } from './backupMigrations';
 
 export type BackupTable = { name: string; columns: string[]; identity: boolean };
 export type BackupReference = { table: string; references: string };
@@ -51,7 +52,7 @@ export class BackupRepository {
     return [...rows];
   }
 
-  /** The newest applied migration, used to check backup compatibility. */
+  /** The newest applied migration: a backup records it, a restore starts from it. */
   async latestMigration() {
     const [row] = await this.db.execute<{ hash: string; created_at: string | number }>(sql`
       SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at DESC, id DESC LIMIT 1`);
@@ -140,13 +141,67 @@ export class BackupRepository {
       SELECT ${columnList(columns)} FROM json_populate_recordset(NULL::${table(name)}, ${rows}::json)`);
   }
 
-  /** Reapplies migration 0091 after restoring 0090 data, without granting access to any role. */
-  async restoreBackupPermissions() {
+  /**
+   * Drops everything the migrations made in the public schema: tables (with
+   * their indexes, triggers and sequences), views, routines and types. What an
+   * extension owns, such as pgvector's type, stays; the migrations create
+   * extensions only if missing. The drizzle ledger is in its own schema.
+   */
+  async dropSchema() {
     await this.db.execute(sql`
-      INSERT INTO permissions (id, name, description, resource, action) VALUES
-        ('school-system-backup', 'backup:system', 'Download a full backup of the school''s data, accounts and files', 'system', 'backup'),
-        ('school-system-restore', 'restore:system', 'Replace all of the school''s data from a backup', 'system', 'restore')
-      ON CONFLICT (name) DO NOTHING`);
+      DO $$
+      DECLARE item record;
+      BEGIN
+        FOR item IN
+          SELECT format('DROP %s IF EXISTS public.%I CASCADE',
+            CASE c.relkind WHEN 'v' THEN 'VIEW' WHEN 'm' THEN 'MATERIALIZED VIEW' WHEN 'S' THEN 'SEQUENCE'
+              WHEN 'f' THEN 'FOREIGN TABLE' ELSE 'TABLE' END, c.relname) AS statement
+          FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
+          WHERE n.nspname = 'public' AND c.relkind IN ('r', 'p', 'f', 'v', 'm', 'S')
+            AND NOT EXISTS (SELECT 1 FROM pg_depend d WHERE d.classid = 'pg_class'::regclass AND d.objid = c.oid AND d.deptype = 'e')
+          ORDER BY c.relkind IN ('r', 'p', 'f') DESC
+        LOOP
+          EXECUTE item.statement;
+        END LOOP;
+        FOR item IN
+          SELECT format('DROP ROUTINE IF EXISTS %s CASCADE', p.oid::regprocedure) AS statement
+          FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
+          WHERE n.nspname = 'public' AND p.prokind IN ('f', 'p')
+            AND NOT EXISTS (SELECT 1 FROM pg_depend d WHERE d.classid = 'pg_proc'::regclass AND d.objid = p.oid AND d.deptype = 'e')
+        LOOP
+          EXECUTE item.statement;
+        END LOOP;
+        FOR item IN
+          SELECT format('DROP %s IF EXISTS public.%I CASCADE', CASE t.typtype WHEN 'd' THEN 'DOMAIN' ELSE 'TYPE' END, t.typname) AS statement
+          FROM pg_type t JOIN pg_namespace n ON n.oid = t.typnamespace
+          LEFT JOIN pg_class c ON c.oid = t.typrelid
+          WHERE n.nspname = 'public' AND t.typtype IN ('e', 'd', 'r', 'c') AND (t.typtype <> 'c' OR c.relkind = 'c')
+            AND NOT EXISTS (SELECT 1 FROM pg_depend d WHERE d.classid = 'pg_type'::regclass AND d.objid = t.oid AND d.deptype = 'e')
+        LOOP
+          EXECUTE item.statement;
+        END LOOP;
+      END $$`);
+  }
+
+  /**
+   * Runs these migrations' statements the way `drizzle-kit migrate` does,
+   * without recording them: the ledger already lists every one.
+   */
+  async runMigrations(migrations: BackupMigration[]) {
+    for (const migration of migrations) {
+      for (const statement of migration.sql) {
+        if (statement.trim()) await this.db.execute(sql.raw(statement));
+      }
+    }
+  }
+
+  /**
+   * Runs the integrity checks deferred to commit now, for the rows restored so
+   * far, and for every later change in this transaction as it happens. A table
+   * with checks still pending could not be altered by a migration.
+   */
+  async checkConstraintsNow() {
+    await this.db.execute(sql`SET CONSTRAINTS ALL IMMEDIATE`);
   }
 
   async countRows(name: string) {

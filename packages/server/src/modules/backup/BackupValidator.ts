@@ -10,19 +10,16 @@ import {
 import { UserService, UserValidator } from 'najm-auth';
 import { Err, Inject, Service, t } from '../../najm';
 import { BackupArchiveReader } from './backupArchive';
+import type { BackupMigration } from './backupMigrations';
 import type { BackupTable } from './BackupRepository';
 
 const excluded = new Set<string>(BACKUP_EXCLUDED_TABLES);
 
-// A migration is named by its journal timestamp (`created_at`), as drizzle
-// itself does. Its hash is of the file's bytes, so a CRLF checkout records
-// another hash for the same migration than an LF one.
-// 0090_floor_manager_assignments -> 0091_backup_permissions changes only two
-// permission rows. Keep this directional and explicit: matching table names
-// alone does not prove that columns, constraints or stored values are compatible.
-const BACKUP_PERMISSIONS_UPGRADE = {
-  from: 1793456117420,
-  to: 1793544559272,
+export type RestorePlan = {
+  /** Rebuild the database as it was when the backup was made. */
+  schema: BackupMigration[];
+  /** Then bring the restored rows up to this version, as a deploy did for the live ones. */
+  upgrade: BackupMigration[];
 };
 
 @Service()
@@ -62,16 +59,26 @@ export class BackupValidator {
     }
   }
 
-  /** Same tables and migration, or a reviewed upgrade reapplied after restoring the rows. */
-  ensureCompatibleVersion(manifest: BackupManifest, migration: { createdAt: number } | null, tables: BackupTable[]): 'backup-permissions' | null {
-    const current = tables.map(({ name }) => name).filter(name => !excluded.has(name)).sort();
-    const backedUp = Object.keys(manifest.tables).sort();
-    const permissionsUpgrade = manifest.migration.createdAt === BACKUP_PERMISSIONS_UPGRADE.from
-      && migration?.createdAt === BACKUP_PERMISSIONS_UPGRADE.to;
-    if (!migration || (manifest.migration.createdAt !== migration.createdAt && !permissionsUpgrade) || current.join() !== backedUp.join()) {
-      Err(409, t('backup.errors.otherVersion'));
-    }
-    return permissionsUpgrade ? 'backup-permissions' : null;
+  /**
+   * A migration is named by its journal timestamp (`created_at`), as drizzle
+   * does: its hash is of the file's bytes, which differ between CRLF and LF
+   * checkouts. The database must be at this app's newest migration, and the
+   * backup at one of them; a newer or unknown backup is refused.
+   */
+  restorePlan(manifest: BackupManifest, installed: { createdAt: number } | null, migrations: BackupMigration[]): RestorePlan {
+    if (!installed || installed.createdAt !== migrations.at(-1)?.folderMillis) Err(409, t('backup.errors.databaseMismatch'));
+    const made = migrations.findIndex(({ folderMillis }) => folderMillis === manifest.migration.createdAt);
+    if (made < 0) Err(409, t('backup.errors.otherVersion'));
+    return { schema: migrations.slice(0, made + 1), upgrade: migrations.slice(made + 1) };
+  }
+
+  /**
+   * Every table the rebuilt database has is in the backup. A backed-up table
+   * no migration creates (left by older code, a test marker, a plugin's own
+   * scratch table) is not the school's data and is left out.
+   */
+  ensureTables(manifest: BackupManifest, tables: BackupTable[]) {
+    if (tables.some(({ name }) => !excluded.has(name) && !Object.hasOwn(manifest.tables, name))) Err(400, t('backup.errors.damaged'));
   }
 
   ensureRows(rows: string[] | null, expected: number) {

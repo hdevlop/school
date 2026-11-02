@@ -2,14 +2,13 @@
 
 import React, { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { Loader2, LogOut, Settings } from 'lucide-react';
+import { LogOut, Settings } from 'lucide-react';
 import { YearScopedChatbot } from '@/features/Chat/components/YearScopedChatbot';
-import { SignOutButton, useAuth, usePermissions } from 'najm-auth/client/react';
+import { useAuth, usePermissions } from 'najm-auth/client/react';
 import { useSignInOnSessionExpired } from 'najm-offline/react';
 import { lockRefusedSession } from '@/offline/runtime';
 import { cn, isNavItemActiveOrNested, NSidebar, NSidebarProvider, useCardViewport, useMediaQuery, useNSidebar, type NavItem } from 'najm-kit';
 import { NSidebarNextLink } from 'najm-kit/next';
-import { clearNajmUiPreferences } from 'najm-kit/server';
 import { NThemeImage } from 'najm-theme/react';
 import { useTranslation } from 'najm-i18n/react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
@@ -23,6 +22,8 @@ import { ViewingYearBanner } from '@/features/AcademicYears/components/ViewingYe
 import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
 import { PushPromptBanner } from '@/features/Notifications/PushPromptBanner';
 import { NavigationActionsProvider } from './NavigationActions';
+import { SchoolSessionLoader } from '@/components/SchoolSessionLoader';
+import { useSchoolSignOut } from '@/providers/SignOutTransition';
 
 const STUDENT_FEES_PATH = /^\/students\/[^/]+\/fees(?:\/|$)/;
 
@@ -45,6 +46,7 @@ function SidebarFooterContent({ collapsed, onOpenSettings }: Readonly<{ collapse
   const { user } = useAuth();
   const { can } = usePermissions();
   const { t } = useTranslation();
+  const { signOut, isSigningOut } = useSchoolSignOut();
   const isExpanded = !collapsed;
   const role = (user as any)?.role;
   const canManageSettings = PAGE_ACCESS.settings({ role, can });
@@ -57,23 +59,10 @@ function SidebarFooterContent({ collapsed, onOpenSettings }: Readonly<{ collapse
           <Settings className="h-4 w-4 shrink-0" />
           {isExpanded && <span>{t('navigation.settings')}</span>}
       </button>}
-      <SignOutButton
-        onSuccess={async () => {
-          // The UI preference cookies outrank the signed-in user's stored
-          // preferences, so they must not survive into the next person's
-          // session on a shared machine.
-          await clearNajmUiPreferences();
-          // A document navigation, not router.push: the client router would
-          // keep this page in its cache and history, and Back would restore a
-          // dashboard whose requests are now refused, stuck on its loader.
-          window.location.replace('/login');
-        }}
-      >
-        <button type="button" aria-label={t('navigation.logout')} title={collapsed ? t('navigation.logout') : undefined} className={itemClassName}>
-          <LogOut className="h-4 w-4 shrink-0" />
-          {isExpanded && <span>{t('navigation.logout')}</span>}
-        </button>
-      </SignOutButton>
+      <button type="button" onClick={signOut} disabled={isSigningOut} aria-label={t('navigation.logout')} title={collapsed ? t('navigation.logout') : undefined} className={itemClassName}>
+        <LogOut className="h-4 w-4 shrink-0" />
+        {isExpanded && <span>{t('navigation.logout')}</span>}
+      </button>
     </div>
   );
 }
@@ -118,11 +107,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
   // without one, the shell would flash a permissionless sidebar and widgets
   // stuck loading on requests that are now blocked.
   if (!user) {
-    return (
-      <div role="status" aria-label={t('common.loading')} className="flex h-dvh w-full items-center justify-center bg-background">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <SchoolSessionLoader label={t('common.loading')} />;
   }
 
   return (

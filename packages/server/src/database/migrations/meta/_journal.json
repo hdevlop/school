@@ -645,6 +645,13 @@
       "when": 1793544559272,
       "tag": "0091_backup_permissions",
       "breakpoints": true
+    },
+    {
+      "idx": 92,
+      "version": "7",
+      "when": 1793619403381,
+      "tag": "0092_ai_settings_memory_columns",
+      "breakpoints": true
     }
   ]
 }

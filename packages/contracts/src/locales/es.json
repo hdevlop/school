@@ -369,6 +369,8 @@
   },
   "auth": {
     "page": {
+      "logoutPending": "Cerrando sesión…",
+      "logoutFailed": "No se pudo cerrar la sesión. Inténtalo de nuevo.",
       "loginTitle": "¡Bienvenido de nuevo!",
       "loginSubtitle": "Inicia sesión para continuar tu aprendizaje",
       "forgotPassword": "¿Olvidaste tu contraseña?",
@@ -1497,7 +1499,9 @@
     "errors": {
       "invalidFile": "Este archivo no es una copia de seguridad del centro.",
       "damaged": "Esta copia de seguridad está incompleta o dañada. No se cambió nada.",
-      "otherVersion": "Esta copia de seguridad se creó con otra versión de la aplicación y no se puede restaurar aquí. No se cambió nada.",
+      "otherVersion": "Esta copia de seguridad se creó con una versión más reciente de la aplicación. Actualice la aplicación y vuelva a restaurarla. No se cambió nada.",
+
+      "databaseMismatch": "La base de datos no corresponde a esta versión de la aplicación. Aplique primero las actualizaciones de la base de datos. No se cambió nada.",
       "tooLarge": "Esta copia de seguridad supera los 512 MB.",
       "wrongPassword": "Esa contraseña no es correcta. No se ha cambiado nada."
     }
