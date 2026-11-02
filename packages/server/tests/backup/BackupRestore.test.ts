@@ -9,21 +9,22 @@ mock.module('najm-i18n', () => ({ ...i18n, t: (key: string) => key }));
 const { BackupService } = await import('../../src/modules/backup/BackupService');
 const { BackupValidator } = await import('../../src/modules/backup/BackupValidator');
 
-const previousHash = 'b53954d2a384920599800d69b54fcc56a00dfdf33e7f8c224d7a78e5ca16baa9';
-const currentHash = 'fdcf37503f5b145a51049e4d463b85664c9460c70a347b2094ebdc5794303e24';
+// Journal timestamps of 0090_floor_manager_assignments and 0091_backup_permissions.
+const previousMigration = 1793456117420;
+const currentMigration = 1793544559272;
 const manifest: BackupManifest = {
   format: 'school-backup', version: 1, createdAt: '2026-11-01T21:45:21.164Z', schoolName: null,
-  migration: { hash: previousHash, createdAt: 1793456117420 },
+  migration: { hash: 'b53954d2a384920599800d69b54fcc56a00dfdf33e7f8c224d7a78e5ca16baa9', createdAt: previousMigration },
   tables: { users: 1, permissions: 1 }, files: { count: 0, bytes: 0 },
 };
 const tables = ['users', 'permissions'].map(name => ({ name, columns: ['id'], identity: false }));
 
-function restoreHarness(hash = currentHash, upgradeFailure?: Error) {
+function restoreHarness(createdAt = currentMigration, upgradeFailure?: Error) {
   const effects: string[] = [];
   const restored: Record<string, unknown[]> = {};
   const repository = {
     lockRestore: async () => { effects.push('lock'); },
-    latestMigration: async () => ({ hash }),
+    latestMigration: async () => ({ hash: 'installed', createdAt }),
     signedInState: async () => ({ userIds: ['current-user'], families: [] }),
     truncate: async () => { effects.push('truncate'); },
     references: async () => [],
@@ -60,14 +61,14 @@ describe('backup restore upgrades', () => {
   });
 
   it('keeps a same-version restore exact without reapplying any migration', async () => {
-    const h = restoreHarness(previousHash);
+    const h = restoreHarness(previousMigration);
     await h.service.replaceDatabase(h.archive, manifest, tables, 'staged');
     expect(h.effects).not.toContain('upgrade');
     expect(h.effects.at(-1)).toBe('files');
   });
 
   it('refuses an unreviewed migration under the lock before deleting any rows', async () => {
-    const h = restoreHarness('unknown');
+    const h = restoreHarness(1);
     const refusal = await h.service.replaceDatabase(h.archive, manifest, tables, 'staged').catch(error => error);
     expect(refusal).toMatchObject({ status: 409 });
     expect(h.effects).toEqual(['lock']);
@@ -76,7 +77,7 @@ describe('backup restore upgrades', () => {
 
   it('propagates an upgrade failure before files are swapped so the transaction can roll back', async () => {
     const failure = new Error('permission insert failed');
-    const h = restoreHarness(currentHash, failure);
+    const h = restoreHarness(currentMigration, failure);
     await expect(h.service.replaceDatabase(h.archive, manifest, tables, 'staged')).rejects.toBe(failure);
     expect(h.effects).not.toContain('files');
     expect(h.effects).not.toContain('sequences');

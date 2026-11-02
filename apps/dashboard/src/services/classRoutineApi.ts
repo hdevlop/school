@@ -16,6 +16,7 @@ export const deleteClassRoutineApi = async (id) => (await api.delete(`/class-rou
 export const publishClassRoutineApi = async (id) => (await api.post(`/class-routines/${id}/publish`)).data;
 export const archiveClassRoutineApi = async (id) => (await api.post(`/class-routines/${id}/archive`)).data;
 
+export const getRoutineClassSectionsApi = async () => (await api.get('/class-routines/sections')).data;
 export const getRoutineAssignmentsApi = async (sectionId) =>
   (await api.get(`/class-routines/assignments/${sectionId}`)).data;
 export const getRoutineSubjectsApi = async () =>

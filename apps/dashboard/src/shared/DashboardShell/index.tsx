@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { LogOut, Settings } from 'lucide-react';
+import { Loader2, LogOut, Settings } from 'lucide-react';
 import { YearScopedChatbot } from '@/features/Chat/components/YearScopedChatbot';
 import { SignOutButton, useAuth, usePermissions } from 'najm-auth/client/react';
 import { useSignInOnSessionExpired } from 'najm-offline/react';
@@ -111,6 +111,19 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
   const [activeThemeSheet, setActiveThemeSheet] = useState<ThemeSettingsSheet | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const canManageSettings = PAGE_ACCESS.settings({ role: (user as any)?.role, can });
+
+  // The server layout only renders the shell for a session, so no user here
+  // means it just ended: sign-out, a school reset or restore, or expiry. The
+  // auth client clears the user before the page navigates to /login; drawn
+  // without one, the shell would flash a permissionless sidebar and widgets
+  // stuck loading on requests that are now blocked.
+  if (!user) {
+    return (
+      <div role="status" aria-label={t('common.loading')} className="flex h-dvh w-full items-center justify-center bg-background">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   return (
     <NavigationActionsProvider value={{ openThemeSettings: (sheet) => { sidebar?.closeMobile(); setActiveThemeSheet(sheet); } }}>

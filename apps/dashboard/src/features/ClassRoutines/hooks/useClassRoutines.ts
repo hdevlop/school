@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import * as routineApi from '@/services/classRoutineApi';
 import { useTranslation } from 'najm-i18n/react';
-import type { RoutineSchedule, RoutineScheduleSummary } from '../types';
+import type { RoutineClassSections, RoutineSchedule, RoutineScheduleSummary } from '../types';
 
 const payload = (response: any, fallback: any) => response?.data ?? fallback;
 const errorMessage = (error: any, fallback: string) => error?.response?.data?.message || error?.message || fallback;
@@ -16,7 +16,16 @@ export const useRoutinePeriods = () => useQuery({
   select: (response) => payload(response, []),
 });
 
-export const useRoutineAssignments = (sectionId?: string) => useQuery({
+// Every class and section of the year, not only the viewer's own: the filters
+// name what the school-wide timetables cover.
+export const useRoutineClassSections = (academicYear?: string) => useQuery({
+  queryKey: ['class-routines', 'sections', academicYear],
+  queryFn: () => withAcademicYear(academicYear, routineApi.getRoutineClassSectionsApi),
+  select: (response): RoutineClassSections => payload(response, { classes: [], sections: [] }),
+  enabled: Boolean(academicYear),
+});
+
+export const useRoutineAssignments =(sectionId?: string) => useQuery({
   queryKey: ['class-routines', 'assignments', sectionId],
   queryFn: () => routineApi.getRoutineAssignmentsApi(sectionId),
   select: (response) => payload(response, []),

@@ -845,6 +845,56 @@
     }
   },
   "dashboard": {
+    "floorManager": {
+      "title": "Floor Manager Dashboard",
+      "subtitle": "Here's your floor's day at a glance.",
+      "kpis": {
+        "totalStudents": "Total Students",
+        "sections": "Sections",
+        "absentToday": "Absent Today",
+        "lateToday": "Late Today"
+      },
+      "info": {
+        "grades": "Grades: {{grades}}",
+        "noGrades": "No grades assigned"
+      },
+      "registers": {
+        "title": "Today's Registers",
+        "viewAll": "View All",
+        "taken": "Taken",
+        "pending": "Pending",
+        "counts": "{{absent}} absent · {{late}} late",
+        "empty": "No sections in your grades this year"
+      },
+      "attention": {
+        "missingRegisters": "Missing Registers",
+        "absentToday": "Absent Students",
+        "openIncidents": "Open Incidents"
+      },
+      "absences": {
+        "title": "Today's Absences",
+        "viewAll": "View All",
+        "empty": "No absences or late arrivals today",
+        "noSchool": "No school today"
+      },
+      "incidents": {
+        "title": "Open Incidents",
+        "viewAll": "View All",
+        "empty": "No open incidents"
+      },
+      "quickActions": {
+        "takeAttendance": "Take attendance",
+        "takeAttendanceHint": "Record today’s register for a section",
+        "reportIncident": "Report an incident",
+        "reportIncidentHint": "Log a student behaviour concern",
+        "recordReward": "Record a reward",
+        "recordRewardHint": "Recognise good behaviour",
+        "viewTimetable": "View timetable",
+        "viewTimetableHint": "Weekly routines of every class",
+        "viewStudents": "View students",
+        "viewStudentsHint": "Students in your grades"
+      }
+    },
     "teacher": {
       "title": "Teacher Dashboard",
       "kpis": {

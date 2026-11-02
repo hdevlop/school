@@ -73,6 +73,17 @@ export class ClassRoutineService {
     return { ...schedule, periods, entries, duties };
   }
 
+  // Timetables are readable school-wide, so their page names every class and
+  // section of the year to every reader. The owned classes list would leave a
+  // floor manager with no current grade, say, an empty page.
+  async getClassSections() {
+    const [classRows, sectionRows] = await Promise.all([
+      this.repository.getClassesInSelectedYear(),
+      this.repository.getClassSectionsInSelectedYear(),
+    ]);
+    return { classes: classRows, sections: sectionRows };
+  }
+
   async getAssignments(sectionId: string) {
     await this.validator.ensureSectionInSelectedYear(sectionId);
     return this.repository.getAssignmentsForSection(sectionId);

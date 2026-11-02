@@ -85,3 +85,9 @@ export interface RoutineSchedule {
 
 export type RoutineScheduleSummary = Omit<RoutineSchedule, 'periods' | 'entries' | 'duties'>;
 import type { RoutineContentGroup } from '@sms/contracts/routines';
+
+/** Every class and section of a year, as the routine page's filters list them. */
+export interface RoutineClassSections {
+  classes: { id: string; name: string; academicYear: string }[];
+  sections: { id: string; classId: string; name: string }[];
+}

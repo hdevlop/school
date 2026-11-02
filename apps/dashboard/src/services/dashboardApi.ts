@@ -1,5 +1,6 @@
 import { api } from './http';
 import type { TeacherDashboardOverview } from '@sms/contracts/teacher-dashboard';
+import type { FloorManagerDashboardOverview } from '@sms/contracts/floor-manager-dashboard';
 
 type ApiEnvelope<T> = { data: T; message?: string; status?: string };
 
@@ -32,6 +33,12 @@ const teacherDashboardPath = (teacherId?: string) =>
 
 export const getTeacherDashboardOverviewApi = async (teacherId?: string): Promise<ApiEnvelope<TeacherDashboardOverview>> => {
   const res = await api.get(`${teacherDashboardPath(teacherId)}/overview`);
+  return res.data;
+};
+
+// The signed-in floor manager's own home page; the server resolves their grades.
+export const getFloorManagerDashboardOverviewApi = async (): Promise<ApiEnvelope<FloorManagerDashboardOverview>> => {
+  const res = await api.get('/dashboard/floor-manager/overview');
   return res.data;
 };
 

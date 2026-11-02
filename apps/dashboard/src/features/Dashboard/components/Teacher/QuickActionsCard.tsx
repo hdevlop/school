@@ -7,23 +7,34 @@ import { useTranslation } from 'najm-i18n/react';
 import { TEACHER_DASHBOARD_LINKS } from '../../config/teacherDashboardLinks';
 import { SCROLL_CARD, SCROLL_LIST } from './shared';
 
-type QuickAction = {
+export type QuickAction = {
+  // `label` and `hint` are catalog keys.
   key: string;
+  label: string;
+  hint: string;
   icon: LucideIcon;
   href: string;
 };
 
+const teacherAction = (key: string, icon: LucideIcon, href: string): QuickAction => ({
+  key,
+  label: `dashboard.teacher.quickActions.${key}`,
+  hint: `dashboard.teacher.quickActions.${key}Hint`,
+  icon,
+  href,
+});
+
 // The teacher's everyday tasks, each one click from the overview. Every
 // destination is a route the teacher's sidebar already offers.
-const ACTIONS: QuickAction[] = [
-  { key: 'takeAttendance', icon: ClipboardCheck, href: TEACHER_DASHBOARD_LINKS.attendance },
-  { key: 'enterGrades', icon: PenLine, href: TEACHER_DASHBOARD_LINKS.grades },
-  { key: 'planAssessment', icon: ClipboardPlus, href: TEACHER_DASHBOARD_LINKS.assessments },
-  { key: 'reportIncident', icon: ShieldAlert, href: TEACHER_DASHBOARD_LINKS.discipline },
-  { key: 'viewTimetable', icon: CalendarDays, href: TEACHER_DASHBOARD_LINKS.timetable },
+const TEACHER_ACTIONS: QuickAction[] = [
+  teacherAction('takeAttendance', ClipboardCheck, TEACHER_DASHBOARD_LINKS.attendance),
+  teacherAction('enterGrades', PenLine, TEACHER_DASHBOARD_LINKS.grades),
+  teacherAction('planAssessment', ClipboardPlus, TEACHER_DASHBOARD_LINKS.assessments),
+  teacherAction('reportIncident', ShieldAlert, TEACHER_DASHBOARD_LINKS.discipline),
+  teacherAction('viewTimetable', CalendarDays, TEACHER_DASHBOARD_LINKS.timetable),
 ];
 
-const QuickActionsCard = ({ className }: { className?: string }) => {
+const QuickActionsCard = ({ actions = TEACHER_ACTIONS, className }: { actions?: QuickAction[]; className?: string }) => {
   const { t } = useTranslation();
 
   return (
@@ -35,7 +46,7 @@ const QuickActionsCard = ({ className }: { className?: string }) => {
     >
       <NajmScroll axis="y" className={SCROLL_LIST}>
         <ul className="flex flex-col gap-2 fit:pe-3">
-          {ACTIONS.map(({ key, icon: Icon, href }) => (
+          {actions.map(({ key, label, hint, icon: Icon, href }) => (
             <li key={key}>
               <NButton asChild variant="outline" className="h-auto min-h-12 w-full justify-start gap-3 px-3 py-1.5 text-start">
                 <Link href={href} prefetch={false}>
@@ -43,10 +54,8 @@ const QuickActionsCard = ({ className }: { className?: string }) => {
                     <Icon className="size-5 text-primary" aria-hidden="true" />
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm/5 font-semibold">{t(`dashboard.teacher.quickActions.${key}`)}</span>
-                    <span className="block truncate text-xs/4 font-normal text-muted-foreground">
-                      {t(`dashboard.teacher.quickActions.${key}Hint`)}
-                    </span>
+                    <span className="block truncate text-sm/5 font-semibold">{t(label)}</span>
+                    <span className="block truncate text-xs/4 font-normal text-muted-foreground">{t(hint)}</span>
                   </span>
                   <ArrowRight className="size-4 shrink-0 rtl:rotate-180" aria-hidden="true" />
                 </Link>

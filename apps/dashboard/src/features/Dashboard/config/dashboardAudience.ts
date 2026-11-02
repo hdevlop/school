@@ -14,3 +14,9 @@ export function canReadFinanceDashboard(role: string | null | undefined): boolea
 export function usesTeacherDashboard(role: string | null | undefined): boolean {
   return role?.toLowerCase() === 'teacher';
 }
+
+// The role the server's floor manager dashboard (`isFloorManager`) admits:
+// the grades they run today rather than the school-wide charts.
+export function usesFloorManagerDashboard(role: string | null | undefined): boolean {
+  return role?.toLowerCase() === 'floor_manager';
+}

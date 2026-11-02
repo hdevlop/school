@@ -15,6 +15,8 @@ type PageRule = (viewer: PageViewer) => boolean;
 const ADMIN = ['admin'];
 const STAFF = ['admin', 'principal', 'accounting', 'teacher', 'secretary', 'assistant', 'supervisor'];
 const SCHOOL_WIDE = ['admin', 'principal', 'accounting', 'secretary', 'driver', 'assistant', 'supervisor'];
+// A floor manager's dashboard is their own grades', not the school-wide one.
+const DASHBOARD = [...STAFF, 'floor_manager'];
 
 /** A role whose reads are school-wide, as `SCHOOL_WIDE_ROLES` on the server. */
 export const isSchoolWideRole = (role: string | null | undefined) => !!role && SCHOOL_WIDE.includes(role.toLowerCase());
@@ -24,7 +26,7 @@ const can = (permission: string): PageRule => (viewer) => viewer.can(permission)
 const schoolWide = (permission: string): PageRule => (viewer) => isSchoolWideRole(viewer.role) && viewer.can(permission);
 
 export const PAGE_ACCESS = {
-  dashboard: inRoles(STAFF),
+  dashboard: inRoles(DASHBOARD),
   students: can('read:students'),
   insurance: schoolWide('read:students'),
   parents: can('read:parents'),
@@ -72,11 +74,10 @@ export function pageViewer(session: {
 
 /**
  * A usable home for every signed-in account, including non-staff roles. A
- * floor manager reads only their classes, so the school-wide dashboard is not
- * theirs; they start, like a family, from their students.
+ * floor manager lands on their own dashboard, over the grades they run.
  */
 export function dashboardLandingPath(viewer: PageViewer): string {
-  if (viewer.role === 'parent' || viewer.role === 'student' || viewer.role === 'floor_manager') {
+  if (viewer.role === 'parent' || viewer.role === 'student') {
     return PAGE_ACCESS.students(viewer) ? '/students' : '/notifications';
   }
   return PAGE_ACCESS.dashboard(viewer) ? '/dashboard' : '/notifications';

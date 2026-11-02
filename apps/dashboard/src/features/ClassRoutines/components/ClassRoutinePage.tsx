@@ -8,8 +8,6 @@ import { toast } from 'sonner';
 import { ComboboxInput, NajmScroll, NButton, NEmptyState, NFilterBar, NPageHeader, NPageHeaderActions, NSheet, NSkeleton, SelectInput } from 'najm-kit';
 import { useAuth } from 'najm-auth/client/react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
-import { useClasses } from '@/features/Classes/hooks/useClasses';
-import { useSections } from '@/features/Sections/hooks/useSections';
 import { useActiveAcademicYear, usePublicSettings } from '@/features/Settings/hooks/useSettings';
 import { useViewingAcademicYear, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useTranslation } from 'najm-i18n/react';
@@ -26,6 +24,7 @@ import {
   useRoutine,
   useRoutineDetails,
   useRoutineAssignments,
+  useRoutineClassSections,
   useRoutineList,
   useRoutineMutations,
   useRoutineSubjects,
@@ -46,17 +45,17 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
   const canCreate = can('create:class-routines');
   const canEdit = can('update:class-routines');
   const canDelete = can('delete:class-routines');
-  const { classes, isClassesLoading } = useClasses();
   const { academicYear, isAcademicYearLoading } = useActiveAcademicYear();
   const { publicSettings } = usePublicSettings();
   // The viewing year when whole-school history is on; otherwise the active one.
   const { viewingYear } = useViewingAcademicYear();
   const listedYear = viewingYear ?? academicYear;
+  const { data: yearClasses, isPending: classSectionsPending, isError: classSectionsError, refetch: refetchClassSections } = useRoutineClassSections(listedYear);
   const activeClasses = useMemo(
-    () => (classes || []).filter((schoolClass) => schoolClass.academicYear === listedYear),
-    [classes, listedYear],
+    () => (yearClasses?.classes || []).filter((schoolClass) => schoolClass.academicYear === listedYear),
+    [yearClasses, listedYear],
   );
-  const { sections, isSectionsLoading } = useSections();
+  const sections = yearClasses?.sections;
   const mutations = useRoutineMutations();
 
   const [classId, setClassId] = useState('');
@@ -236,7 +235,7 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
     try { await printRoutineDocument(html); } catch { toast.error(t('classRoutines.ui.print.failed')); }
   };
 
-  const busy = !filterReady || isClassesLoading || isSectionsLoading || isAcademicYearLoading;
+  const busy = !filterReady || (Boolean(listedYear) && classSectionsPending) || isAcademicYearLoading;
   const customClasses = visibleClasses.length !== activeClasses.length;
   const openClassSettings = () => setClassSelection((allClasses
     ? visibleClasses
@@ -328,10 +327,10 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
         <NajmScroll axis="y" autoHide="scroll" className="flex-1">
           <ClassRoutineSkeleton />
         </NajmScroll>
-      ) : schedulesError ? (
+      ) : classSectionsError || schedulesError ? (
         <div role="alert" className="rounded-xl border p-6 text-center">
           <p>{t('classRoutines.ui.messages.loadError')}</p>
-          <NButton variant="outline" className="mt-3" onClick={() => refetchSchedules()}>{t('classRoutines.ui.actions.retry')}</NButton>
+          <NButton variant="outline" className="mt-3" onClick={() => classSectionsError ? refetchClassSections() : refetchSchedules()}>{t('classRoutines.ui.actions.retry')}</NButton>
         </div>
       ) : allClasses && !visibleClasses.length ? (
         <NEmptyState surface="panel" icon={FEATURE_ICONS.classRoutines} className="flex-1"

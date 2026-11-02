@@ -1714,6 +1714,56 @@
     }
   },
   "dashboard": {
+    "floorManager": {
+      "title": "Tableau de bord du responsable d'étage",
+      "subtitle": "Voici la journée de votre étage en un coup d’œil.",
+      "kpis": {
+        "totalStudents": "Total des élèves",
+        "sections": "Sections",
+        "absentToday": "Absents aujourd'hui",
+        "lateToday": "Retards aujourd'hui"
+      },
+      "info": {
+        "grades": "Niveaux : {{grades}}",
+        "noGrades": "Aucun niveau attribué"
+      },
+      "registers": {
+        "title": "Appels du jour",
+        "viewAll": "Tout voir",
+        "taken": "Fait",
+        "pending": "En attente",
+        "counts": "{{absent}} absents · {{late}} retards",
+        "empty": "Aucune section dans vos niveaux cette année"
+      },
+      "attention": {
+        "missingRegisters": "Appels manquants",
+        "absentToday": "Élèves absents",
+        "openIncidents": "Incidents ouverts"
+      },
+      "absences": {
+        "title": "Absences du jour",
+        "viewAll": "Tout voir",
+        "empty": "Aucune absence ni retard aujourd'hui",
+        "noSchool": "Pas d'école aujourd'hui"
+      },
+      "incidents": {
+        "title": "Incidents ouverts",
+        "viewAll": "Tout voir",
+        "empty": "Aucun incident ouvert"
+      },
+      "quickActions": {
+        "takeAttendance": "Faire l'appel",
+        "takeAttendanceHint": "Enregistrer l'appel du jour d'une section",
+        "reportIncident": "Signaler un incident",
+        "reportIncidentHint": "Consigner un problème de comportement d'un élève",
+        "recordReward": "Enregistrer une récompense",
+        "recordRewardHint": "Valoriser un bon comportement",
+        "viewTimetable": "Voir l'emploi du temps",
+        "viewTimetableHint": "Emplois du temps hebdomadaires de toutes les classes",
+        "viewStudents": "Voir les élèves",
+        "viewStudentsHint": "Les élèves de vos niveaux"
+      }
+    },
     "teacher": {
       "title": "Tableau de bord enseignant",
       "kpis": {

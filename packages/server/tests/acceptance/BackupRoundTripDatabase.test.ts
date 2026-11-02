@@ -170,7 +170,7 @@ describe('a full backup', () => {
         for (const [name, data] of Object.entries(reader.read(reader.names))) {
           if (name === 'manifest.json') {
             const manifest = JSON.parse(new TextDecoder().decode(data));
-            writer.text(name, JSON.stringify({ ...manifest, migration: { ...manifest.migration, hash: 'another-version' } }));
+            writer.text(name, JSON.stringify({ ...manifest, migration: { ...manifest.migration, createdAt: manifest.migration.createdAt + 1 } }));
           } else writer.file(name, data);
         }
         const students = await count(tx, 'students');

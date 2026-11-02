@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 import { describe, expect, it, mock } from 'bun:test';
-import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { strToU8, zipSync } from 'fflate';
 import * as i18n from 'najm-i18n';
@@ -22,13 +21,12 @@ const manifest: BackupManifest = {
 };
 const table = (name: string) => ({ name, columns: ['id'], identity: false });
 
-function migrationHash(name: string) {
-  const sql = readFileSync(new URL(`../../src/database/migrations/${name}.sql`, import.meta.url), 'utf8');
-  return createHash('sha256').update(sql.replace(/\r\n/g, '\n')).digest('hex');
-}
+const journal: { entries: { tag: string; when: number }[] } = JSON.parse(
+  readFileSync(new URL('../../src/database/migrations/meta/_journal.json', import.meta.url), 'utf8'));
+const migrationTime = (tag: string) => journal.entries.find(entry => entry.tag === tag)!.when;
 
-const beforeBackupPermissions = migrationHash('0090_floor_manager_assignments');
-const withBackupPermissions = migrationHash('0091_backup_permissions');
+const beforeBackupPermissions = migrationTime('0090_floor_manager_assignments');
+const withBackupPermissions = migrationTime('0091_backup_permissions');
 
 async function archiveOf(entries: Record<string, string | Uint8Array>) {
   const writer = new BackupArchiveWriter();
@@ -159,26 +157,34 @@ describe('backup validator', () => {
 
   it('accepts matching versions and tables while ignoring session tables', () => {
     const tables = ['students', 'users', 'tokens', 'credential_setup_sessions', 'offline_read_snapshots'].map(table);
-    expect(() => validator.ensureCompatibleVersion(manifest, { hash: 'abc' }, tables)).not.toThrow();
-    expect(() => validator.ensureCompatibleVersion(manifest, { hash: 'newer' }, tables)).toThrow(refusal('backup.errors.otherVersion'));
+    const same = manifest.migration.createdAt;
+    expect(() => validator.ensureCompatibleVersion(manifest, { createdAt: same }, tables)).not.toThrow();
+    expect(() => validator.ensureCompatibleVersion(manifest, { createdAt: same + 1 }, tables)).toThrow(refusal('backup.errors.otherVersion'));
     expect(() => validator.ensureCompatibleVersion(manifest, null, tables)).toThrow(refusal('backup.errors.otherVersion'));
-    expect(() => validator.ensureCompatibleVersion(manifest, { hash: 'abc' }, [...tables, table('grades')])).toThrow(refusal('backup.errors.otherVersion'));
+    expect(() => validator.ensureCompatibleVersion(manifest, { createdAt: same }, [...tables, table('grades')])).toThrow(refusal('backup.errors.otherVersion'));
+  });
+
+  it('names a migration by its journal timestamp, so CRLF and LF checkouts of the same migration match', () => {
+    // A CRLF checkout records another hash for the same file; the manifest's hash is never compared.
+    const lf = { ...manifest, migration: { hash: 'hash-of-lf-file', createdAt: withBackupPermissions } };
+    const crlf = { hash: 'hash-of-crlf-file', createdAt: withBackupPermissions };
+    expect(() => validator.ensureCompatibleVersion(lf, crlf, ['students', 'users'].map(table))).not.toThrow();
   });
 
   it('accepts the reviewed permissions-only upgrade from migration 0090 to 0091', () => {
-    const older = { ...manifest, migration: { ...manifest.migration, hash: beforeBackupPermissions } };
-    expect(() => validator.ensureCompatibleVersion(older, { hash: withBackupPermissions }, ['students', 'users'].map(table))).not.toThrow();
+    const older = { ...manifest, migration: { ...manifest.migration, createdAt: beforeBackupPermissions } };
+    expect(() => validator.ensureCompatibleVersion(older, { createdAt: withBackupPermissions }, ['students', 'users'].map(table))).not.toThrow();
   });
 
   it('still rejects schema differences, unreviewed versions and restoring newer data into an older database', () => {
-    const older = { ...manifest, migration: { ...manifest.migration, hash: beforeBackupPermissions } };
-    const newer = { ...manifest, migration: { ...manifest.migration, hash: withBackupPermissions } };
+    const older = { ...manifest, migration: { ...manifest.migration, createdAt: beforeBackupPermissions } };
+    const newer = { ...manifest, migration: { ...manifest.migration, createdAt: withBackupPermissions } };
     const tables = ['students', 'users'].map(table);
-    expect(() => validator.ensureCompatibleVersion(older, { hash: withBackupPermissions }, [...tables, table('grades')]))
+    expect(() => validator.ensureCompatibleVersion(older, { createdAt: withBackupPermissions }, [...tables, table('grades')]))
       .toThrow(refusal('backup.errors.otherVersion'));
-    expect(() => validator.ensureCompatibleVersion(older, { hash: 'unreviewed-migration' }, tables))
+    expect(() => validator.ensureCompatibleVersion(older, { createdAt: withBackupPermissions + 1 }, tables))
       .toThrow(refusal('backup.errors.otherVersion'));
-    expect(() => validator.ensureCompatibleVersion(newer, { hash: beforeBackupPermissions }, tables))
+    expect(() => validator.ensureCompatibleVersion(newer, { createdAt: beforeBackupPermissions }, tables))
       .toThrow(refusal('backup.errors.otherVersion'));
   });
 

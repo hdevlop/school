@@ -65,6 +65,13 @@ export class ClassRoutineController {
     return this.service.updatePeriod(id, body);
   }
 
+  @Get('/sections')
+  @Can('read:classes')
+  @ResMsg('classRoutines.success.retrieved')
+  async getClassSections() {
+    return this.service.getClassSections();
+  }
+
   @Get('/assignments/:id')
   @Can('read:classes')
   @Validate({ params: routineIdParam })

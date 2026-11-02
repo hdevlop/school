@@ -14,14 +14,17 @@ import TeachersAttendance from './components/TeachersAttendance';
 import ExpenseBreakdownChart from '@/features/Reports/components/ExpenseBreakdownChart';
 import OverdueFees from './components/OverdueFees';
 import TeacherDashboard from './components/Teacher';
-import { canReadFinanceDashboard, usesTeacherDashboard } from './config/dashboardAudience';
+import FloorManagerDashboard from './components/FloorManager';
+import { canReadFinanceDashboard, usesFloorManagerDashboard, usesTeacherDashboard } from './config/dashboardAudience';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const role = (user as { role?: string } | null)?.role;
-  return usesTeacherDashboard(role) ? <TeacherDashboard /> : <SchoolDashboard role={role} />;
+  if (usesTeacherDashboard(role)) return <TeacherDashboard />;
+  if (usesFloorManagerDashboard(role)) return <FloorManagerDashboard />;
+  return <SchoolDashboard role={role} />;
 };
 
 const SchoolDashboard = ({ role }: { role: string | undefined }) => {

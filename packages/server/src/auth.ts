@@ -87,6 +87,8 @@ const ADMINISTRATOR_ROLE_KEYS = ['PRINCIPAL', 'ADMIN'] as const;
 export const isAdministrator = createGroupGuard([...ADMINISTRATOR_ROLE_KEYS]);
 export const isAdministratorRole = (role?: string | null) => hasRole(role, ...ADMINISTRATOR_ROLE_KEYS);
 export const isFinancial = createGroupGuard(['ACCOUNTING', 'PRINCIPAL', 'ADMIN']);
+// defineRoles would name it `isFloor_manager`.
+export const isFloorManager = createGroupGuard(['FLOOR_MANAGER']);
 export const isStaff = createGroupGuard([
   'ADMIN', 'PRINCIPAL', 'ACCOUNTING', 'TEACHER',
   'SECRETARY', 'ASSISTANT', 'SUPERVISOR',

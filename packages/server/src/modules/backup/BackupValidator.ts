@@ -14,12 +14,15 @@ import type { BackupTable } from './BackupRepository';
 
 const excluded = new Set<string>(BACKUP_EXCLUDED_TABLES);
 
+// A migration is named by its journal timestamp (`created_at`), as drizzle
+// itself does. Its hash is of the file's bytes, so a CRLF checkout records
+// another hash for the same migration than an LF one.
 // 0090_floor_manager_assignments -> 0091_backup_permissions changes only two
 // permission rows. Keep this directional and explicit: matching table names
 // alone does not prove that columns, constraints or stored values are compatible.
 const BACKUP_PERMISSIONS_UPGRADE = {
-  from: 'b53954d2a384920599800d69b54fcc56a00dfdf33e7f8c224d7a78e5ca16baa9',
-  to: 'fdcf37503f5b145a51049e4d463b85664c9460c70a347b2094ebdc5794303e24',
+  from: 1793456117420,
+  to: 1793544559272,
 };
 
 @Service()
@@ -60,12 +63,12 @@ export class BackupValidator {
   }
 
   /** Same tables and migration, or a reviewed upgrade reapplied after restoring the rows. */
-  ensureCompatibleVersion(manifest: BackupManifest, migration: { hash: string } | null, tables: BackupTable[]): 'backup-permissions' | null {
+  ensureCompatibleVersion(manifest: BackupManifest, migration: { createdAt: number } | null, tables: BackupTable[]): 'backup-permissions' | null {
     const current = tables.map(({ name }) => name).filter(name => !excluded.has(name)).sort();
     const backedUp = Object.keys(manifest.tables).sort();
-    const permissionsUpgrade = manifest.migration.hash === BACKUP_PERMISSIONS_UPGRADE.from
-      && migration?.hash === BACKUP_PERMISSIONS_UPGRADE.to;
-    if (!migration || (manifest.migration.hash !== migration.hash && !permissionsUpgrade) || current.join() !== backedUp.join()) {
+    const permissionsUpgrade = manifest.migration.createdAt === BACKUP_PERMISSIONS_UPGRADE.from
+      && migration?.createdAt === BACKUP_PERMISSIONS_UPGRADE.to;
+    if (!migration || (manifest.migration.createdAt !== migration.createdAt && !permissionsUpgrade) || current.join() !== backedUp.join()) {
       Err(409, t('backup.errors.otherVersion'));
     }
     return permissionsUpgrade ? 'backup-permissions' : null;

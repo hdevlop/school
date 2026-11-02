@@ -2,7 +2,7 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 
-import { CalendarDays } from 'lucide-react';
+import { BookOpen, CalendarDays } from 'lucide-react';
 import { NButton, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { isAuthorizationError, isNotFoundError } from '@/services/apiError';
@@ -67,7 +67,17 @@ const TeacherOverview = ({ teacherId, onViewDetails }: TeacherOverviewProps) => 
       {/* The two rows share the height left under the figures, with long
           lists in NajmScroll. Shorter screens scroll the page. */}
       <div className={ROW}>
-        <TeacherInfoCard overview={overview} onViewDetails={onViewDetails} {...cardState} />
+        <TeacherInfoCard
+          person={overview?.teacher}
+          subtitle={overview?.teacher.specialization ? (
+            <p className="flex max-w-full items-center gap-1.5 text-sm text-muted-foreground">
+              <BookOpen className="size-4 shrink-0" aria-hidden="true" />
+              <span className="truncate">{overview.teacher.specialization}</span>
+            </p>
+          ) : null}
+          onViewDetails={onViewDetails}
+          {...cardState}
+        />
         <TodayScheduleCard
           sessions={overview?.todaySessions}
           nextSession={overview?.nextSession}

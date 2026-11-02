@@ -948,6 +948,56 @@
     }
   },
   "dashboard": {
+    "floorManager": {
+      "title": "لوحة تحكم مسؤول الطابق",
+      "subtitle": "إليك نظرة سريعة على يوم طابقك.",
+      "kpis": {
+        "totalStudents": "إجمالي التلاميذ",
+        "sections": "الأقسام",
+        "absentToday": "الغائبون اليوم",
+        "lateToday": "المتأخرون اليوم"
+      },
+      "info": {
+        "grades": "المستويات: {{grades}}",
+        "noGrades": "لا توجد مستويات مسندة"
+      },
+      "registers": {
+        "title": "سجلات الحضور اليوم",
+        "viewAll": "عرض الكل",
+        "taken": "تم",
+        "pending": "قيد الانتظار",
+        "counts": "{{absent}} غائب · {{late}} متأخر",
+        "empty": "لا توجد أقسام في مستوياتك هذه السنة"
+      },
+      "attention": {
+        "missingRegisters": "سجلات حضور ناقصة",
+        "absentToday": "التلاميذ الغائبون",
+        "openIncidents": "حوادث مفتوحة"
+      },
+      "absences": {
+        "title": "غيابات اليوم",
+        "viewAll": "عرض الكل",
+        "empty": "لا غياب ولا تأخر اليوم",
+        "noSchool": "لا دراسة اليوم"
+      },
+      "incidents": {
+        "title": "حوادث مفتوحة",
+        "viewAll": "عرض الكل",
+        "empty": "لا توجد حوادث مفتوحة"
+      },
+      "quickActions": {
+        "takeAttendance": "تسجيل الحضور",
+        "takeAttendanceHint": "تسجيل حضور اليوم لقسم",
+        "reportIncident": "الإبلاغ عن حادثة",
+        "reportIncidentHint": "تسجيل مشكلة سلوكية لتلميذ",
+        "recordReward": "تسجيل مكافأة",
+        "recordRewardHint": "تثمين سلوك جيد",
+        "viewTimetable": "عرض جدول الحصص",
+        "viewTimetableHint": "الجداول الأسبوعية لجميع الأقسام",
+        "viewStudents": "عرض التلاميذ",
+        "viewStudentsHint": "تلاميذ مستوياتك"
+      }
+    },
     "teacher": {
       "title": "لوحة تحكم الأستاذ",
       "kpis": {

@@ -10,6 +10,7 @@
     "tests/academicYears/fixtures/**/*.ts",
     "tests/acceptance/**/*.test.ts",
     "tests/backup/**/*.test.ts",
+    "tests/email/**/*.test.ts",
     "tests/teacherDashboard/**/*.test.ts"
   ],
   "exclude": ["node_modules"]

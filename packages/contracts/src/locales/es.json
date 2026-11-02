@@ -937,6 +937,56 @@
     }
   },
   "dashboard": {
+    "floorManager": {
+      "title": "Panel del responsable de planta",
+      "subtitle": "Este es el día de tu planta de un vistazo.",
+      "kpis": {
+        "totalStudents": "Total de estudiantes",
+        "sections": "Secciones",
+        "absentToday": "Ausentes hoy",
+        "lateToday": "Retrasos hoy"
+      },
+      "info": {
+        "grades": "Niveles: {{grades}}",
+        "noGrades": "Sin niveles asignados"
+      },
+      "registers": {
+        "title": "Registros de hoy",
+        "viewAll": "Ver todo",
+        "taken": "Hecho",
+        "pending": "Pendiente",
+        "counts": "{{absent}} ausentes · {{late}} retrasos",
+        "empty": "No hay secciones en tus niveles este año"
+      },
+      "attention": {
+        "missingRegisters": "Registros pendientes",
+        "absentToday": "Estudiantes ausentes",
+        "openIncidents": "Incidentes abiertos"
+      },
+      "absences": {
+        "title": "Ausencias de hoy",
+        "viewAll": "Ver todo",
+        "empty": "Sin ausencias ni retrasos hoy",
+        "noSchool": "Hoy no hay clases"
+      },
+      "incidents": {
+        "title": "Incidentes abiertos",
+        "viewAll": "Ver todo",
+        "empty": "No hay incidentes abiertos"
+      },
+      "quickActions": {
+        "takeAttendance": "Pasar lista",
+        "takeAttendanceHint": "Registrar la asistencia de hoy de una sección",
+        "reportIncident": "Reportar un incidente",
+        "reportIncidentHint": "Registrar un problema de conducta de un estudiante",
+        "recordReward": "Registrar un reconocimiento",
+        "recordRewardHint": "Reconocer una buena conducta",
+        "viewTimetable": "Ver horario",
+        "viewTimetableHint": "Horarios semanales de todas las clases",
+        "viewStudents": "Ver estudiantes",
+        "viewStudentsHint": "Los estudiantes de tus niveles"
+      }
+    },
     "teacher": {
       "title": "Panel del docente",
       "kpis": {

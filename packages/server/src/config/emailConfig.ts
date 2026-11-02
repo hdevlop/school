@@ -1,4 +1,10 @@
-import { email, emailConfigFromEnv } from 'najm-email';
+import { plugin } from 'najm-core';
+import { email, emailConfigFromEnv, type EmailPluginConfig } from 'najm-email';
+import { AccountEmailBranding } from '../email/AccountEmailBranding';
+
+/** One transport, with School's presentation hook installed for every account email. */
+export const schoolEmail = (config: EmailPluginConfig) =>
+  plugin('school-email').depends(email(config)).services(AccountEmailBranding).build();
 
 /**
  * Outgoing mail. Without EMAIL_PROVIDER, mail goes to the console, so local
@@ -22,7 +28,7 @@ import { email, emailConfigFromEnv } from 'najm-email';
  * Each variable is read literally here so Next's production bundler keeps it.
  */
 export const emailConfig = () =>
-  email(emailConfigFromEnv({
+  schoolEmail(emailConfigFromEnv({
     EMAIL_PROVIDER: process.env.EMAIL_PROVIDER,
     EMAIL_LOG_LEVEL: process.env.EMAIL_LOG_LEVEL,
     RESEND_API_KEY: process.env.RESEND_API_KEY,

@@ -4,3 +4,4 @@ export * from './finance';
 export * from './academic';
 export * from './operations';
 export * from './teacher';
+export * from './floorManager';

@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { useAuth } from 'najm-auth/client/react';
 import { useTranslation } from 'najm-i18n/react';
 import { NCard, NSkeleton, NSkeletonCalendar, NSkeletonChart, NSkeletonDonut, NSkeletonEventList, NStatCardSkeleton } from 'najm-kit';
-import { canReadFinanceDashboard, usesTeacherDashboard } from '../config/dashboardAudience';
+import { canReadFinanceDashboard, usesFloorManagerDashboard, usesTeacherDashboard } from '../config/dashboardAudience';
 
 function SkeletonCard({ className, children }: { className?: string; children: ReactNode }) {
   return (
@@ -23,7 +23,8 @@ function SkeletonCard({ className, children }: { className?: string; children: R
 export default function DashboardSkeleton() {
   const { user } = useAuth();
   const { t } = useTranslation();
-  const isTeacher = usesTeacherDashboard(user?.role);
+  // A floor manager's home page is laid out like the teacher's.
+  const isTeacher = usesTeacherDashboard(user?.role) || usesFloorManagerDashboard(user?.role);
   const showFinance = canReadFinanceDashboard(user?.role);
 
   return (

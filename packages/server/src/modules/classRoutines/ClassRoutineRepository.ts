@@ -283,6 +283,22 @@ export class ClassRoutineRepository {
       .orderBy(asc(subjects.name), asc(staff.name));
   }
 
+  // The page's class and section filters, in the classes list's order.
+  async getClassesInSelectedYear() {
+    return this.db.select({ id: classes.id, name: classes.name, academicYear: classes.academicYear })
+      .from(classes)
+      .where(eq(classes.academicYear, this.year.label))
+      .orderBy(classes.createdAt, classes.name);
+  }
+
+  async getClassSectionsInSelectedYear() {
+    return this.db.select({ id: sections.id, classId: sections.classId, name: sections.name })
+      .from(sections)
+      .innerJoin(classes, eq(sections.classId, classes.id))
+      .where(eq(classes.academicYear, this.year.label))
+      .orderBy(sections.name);
+  }
+
   // Import matches a file's class and section names against the selected year's.
   async getSectionsInSelectedYear() {
     return this.db.select({ id: sections.id, name: sections.name, className: classes.name })

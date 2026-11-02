@@ -1,12 +1,23 @@
 'use client';
 
-import { BookOpen, Mail, MapPin, MessageCircle, Phone, UserRound, type LucideIcon } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { Mail, MapPin, MessageCircle, Phone, UserRound, type LucideIcon } from 'lucide-react';
 import { NAvatar, NButton, NCard, NCardAction, NSkeleton, SimpleTooltip, cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import type { TeacherDashboardOverview } from '@sms/contracts/teacher-dashboard';
+
+type ProfilePerson = {
+  name: string;
+  image: string | null;
+  email: string | null;
+  phone: string | null;
+  address: string | null;
+};
 
 type TeacherInfoCardProps = {
-  overview: TeacherDashboardOverview | undefined;
+  // The staff member the home page belongs to: a teacher, or a floor manager.
+  person: ProfilePerson | undefined;
+  // What they do, under their name.
+  subtitle?: ReactNode;
   // Set when the page has a Details tab to open.
   onViewDetails?: () => void;
   loading: boolean;
@@ -65,9 +76,8 @@ const Portrait = ({ src, name }: { src: string | null; name: string }) => (
   </div>
 );
 
-const TeacherInfoCard = ({ overview, onViewDetails, loading, error, onRetry, className }: TeacherInfoCardProps) => {
+const TeacherInfoCard = ({ person: teacher, subtitle, onViewDetails, loading, error, onRetry, className }: TeacherInfoCardProps) => {
   const { t } = useTranslation();
-  const teacher = overview?.teacher;
 
   const actions: ContactAction[] = teacher ? [
     { key: 'email', icon: Mail, href: teacher.email ? `mailto:${teacher.email}` : null },
@@ -113,12 +123,7 @@ const TeacherInfoCard = ({ overview, onViewDetails, loading, error, onRetry, cla
           <div className="flex flex-1 flex-col items-center justify-center gap-1 text-center">
             <Portrait src={teacher.image} name={teacher.name} />
             <p className="mt-2 max-w-full truncate font-semibold text-foreground">{teacher.name}</p>
-            {teacher.specialization ? (
-              <p className="flex max-w-full items-center gap-1.5 text-sm text-muted-foreground">
-                <BookOpen className="size-4 shrink-0" aria-hidden="true" />
-                <span className="truncate">{teacher.specialization}</span>
-              </p>
-            ) : null}
+            {subtitle}
           </div>
 
           <div className="mx-auto mt-4 flex w-4/5 justify-center gap-4 border-t border-border/70 pt-4">

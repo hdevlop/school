@@ -65,6 +65,7 @@
   },
   "dependencies": {
     "@sms/contracts": "workspace:*",
+    "cheerio": "1.2.0",
     "diject": "0.1.11",
     "drizzle-orm": "0.45.2",
     "drizzle-zod": "^0.8.3",

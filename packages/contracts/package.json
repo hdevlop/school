@@ -47,6 +47,10 @@
       "types": "./src/teacherDashboard.ts",
       "default": "./src/teacherDashboard.ts"
     },
+    "./floor-manager-dashboard": {
+      "types": "./src/floorManagerDashboard.ts",
+      "default": "./src/floorManagerDashboard.ts"
+    },
     "./subjects": {
       "types": "./src/subjects.ts",
       "default": "./src/subjects.ts"
