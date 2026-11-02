@@ -6312,6 +6312,7 @@
     "durationMustBeAtLeast1Minute": "La duración debe ser de al menos 1 minuto",
     "employeeCodeIsRequired": "El código de empleado es obligatorio",
     "employeeCodeTooLong": "El código de empleado es demasiado largo",
+    "endDateMustBeOnOrAfterStartDate": "La fecha de fin debe ser igual o posterior a la fecha de inicio",
     "endTimeMustBeAfterStartTime": "La hora de fin debe ser posterior a la hora de inicio",
     "examDurationCannotExceed480Minutes": "La duración del examen no puede superar los 480 minutos",
     "examDurationMustBeAtLeast15Minutes": "La duración del examen debe ser de al menos 15 minutos",

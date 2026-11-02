@@ -6326,6 +6326,7 @@
     "durationMustBeAtLeast1Minute": "يجب ألا تقل المدة عن دقيقة واحدة",
     "employeeCodeIsRequired": "رقم الموظف مطلوب",
     "employeeCodeTooLong": "رقم الموظف طويل جدًا",
+    "endDateMustBeOnOrAfterStartDate": "يجب أن يكون تاريخ الانتهاء في تاريخ البدء أو بعده",
     "endTimeMustBeAfterStartTime": "يجب أن يكون وقت الانتهاء بعد وقت البدء",
     "examDurationCannotExceed480Minutes": "لا يمكن أن تتجاوز مدة الامتحان 480 دقيقة",
     "examDurationMustBeAtLeast15Minutes": "يجب ألا تقل مدة الامتحان عن 15 دقيقة",

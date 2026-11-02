@@ -6416,6 +6416,7 @@
     "durationMustBeAtLeast1Minute": "La durée doit être d'au moins 1 minute",
     "employeeCodeIsRequired": "Le matricule est obligatoire",
     "employeeCodeTooLong": "Le matricule est trop long",
+    "endDateMustBeOnOrAfterStartDate": "La date de fin doit être égale ou postérieure à la date de début",
     "endTimeMustBeAfterStartTime": "L'heure de fin doit être postérieure à l'heure de début",
     "examDurationCannotExceed480Minutes": "La durée de l'examen ne peut pas dépasser 480 minutes",
     "examDurationMustBeAtLeast15Minutes": "La durée de l'examen doit être d'au moins 15 minutes",

@@ -7021,6 +7021,7 @@
     "durationMustBeAtLeast1Minute": "Duration must be at least 1 minute",
     "employeeCodeIsRequired": "Employee code is required",
     "employeeCodeTooLong": "Employee code too long",
+    "endDateMustBeOnOrAfterStartDate": "End date must be on or after start date",
     "endTimeMustBeAfterStartTime": "End time must be after start time",
     "examDurationCannotExceed480Minutes": "Exam duration cannot exceed 480 minutes",
     "examDurationMustBeAtLeast15Minutes": "Exam duration must be at least 15 minutes",
