@@ -19,11 +19,11 @@ function generateScenario(args: readonly string[]) {
 }
 
 it.each([
-  { label: 'one occupied class', args: ['--students=12', '--classes=CP'], count: 7 },
+  { label: 'one occupied class', args: ['--students=12', '--classes=CP'], count: 8 },
   { label: 'multiple sections per class', args: ['--students=500'], count: undefined },
   { label: 'all school levels', args: ['--students=900', '--classes=ALL'], count: undefined },
   { label: 'an explicit larger staff', args: ['--students=100', '--classes=CP', '--teachers=12'], count: 12 },
-  { label: 'one teacher per assignment', args: ['--students=100', '--classes=CP', '--teachers=14'], count: 14 },
+  { label: 'one teacher per assignment', args: ['--students=100', '--classes=CP', '--teachers=16'], count: 16 },
   { label: 'no students', args: ['--students=0'], count: 0 },
 ])('keeps teacher assignments valid for $label', ({ args, count }) => {
   const result = generateScenario(args);
@@ -64,7 +64,7 @@ it.each([
 
 it.each([
   { label: 'too few teachers', args: ['--teachers=1'] },
-  { label: 'too many teachers', args: ['--classes=CP', '--teachers=15'] },
+  { label: 'too many teachers', args: ['--classes=CP', '--teachers=17'] },
 ])('rejects $label before generating seed data', ({ args }) => {
   const result = generateScenario(['--students=100', ...args]);
   expect(result.exitCode).not.toBe(0);

@@ -6,6 +6,11 @@ import { Repository } from '../../najm';
 export type BackupTable = { name: string; columns: string[]; identity: boolean };
 export type BackupReference = { table: string; references: string };
 export type BackupRowPage = { rows: string[]; last: string | null };
+export type AccessDefaults = {
+  roles: { id: string; name: string; description: string }[];
+  permissions: { id: string; name: string; description: string; resource: string; action: string }[];
+  grants: { role: string; permission: string }[];
+};
 
 const table = (name: string) => sql.identifier(name);
 const columnList = (columns: string[]) => sql.join(columns.map(column => sql.identifier(column)), sql`, `);
@@ -88,6 +93,44 @@ export class BackupRepository {
   /** Empties every table at once; one statement, so references between them never block it. */
   async truncate(names: string[]) {
     await this.db.execute(sql`TRUNCATE TABLE ${sql.join(names.map(table), sql`, `)} RESTART IDENTITY`);
+  }
+
+  /** The periods no timetable owns, as a JSON array `insertRows` accepts: new timetables copy them. */
+  async routinePeriodTemplates() {
+    const [row] = await this.db.execute<{ rows: string }>(sql`
+      SELECT coalesce(json_agg(t), '[]')::text AS rows FROM routine_periods t WHERE t.schedule_id IS NULL`);
+    return row.rows;
+  }
+
+  /** Every account but this one goes; its photo went with the uploaded files. */
+  async keepOnlyUser(userId: string) {
+    await this.db.execute(sql`DELETE FROM users WHERE id <> ${userId}`);
+    await this.db.execute(sql`UPDATE users SET image = NULL WHERE id = ${userId}`);
+  }
+
+  /**
+   * Puts the default roles and grants back, dropping every other role and grant.
+   * The catalog goes in as JSON text: see `tables` on arrays inside a transaction.
+   */
+  async restoreAccessDefaults({ roles, permissions, grants }: AccessDefaults) {
+    await this.db.execute(sql`DELETE FROM role_permissions`);
+    await this.db.execute(sql`
+      DELETE FROM roles WHERE name NOT IN (SELECT name FROM json_to_recordset(${JSON.stringify(roles)}::json) AS d(name text))`);
+    await this.db.execute(sql`
+      INSERT INTO roles (id, name, description)
+      SELECT id, name, description FROM json_to_recordset(${JSON.stringify(roles)}::json) AS d(id text, name text, description text)
+      ON CONFLICT (name) DO UPDATE SET description = EXCLUDED.description`);
+    await this.db.execute(sql`
+      INSERT INTO permissions (id, name, description, resource, action)
+      SELECT id, name, description, resource, action
+      FROM json_to_recordset(${JSON.stringify(permissions)}::json) AS d(id text, name text, description text, resource text, action text)
+      ON CONFLICT (name) DO NOTHING`);
+    await this.db.execute(sql`
+      INSERT INTO role_permissions (role_id, permission_id)
+      SELECT r.id, p.id
+      FROM json_to_recordset(${JSON.stringify(grants)}::json) AS d(role text, permission text)
+      JOIN roles r ON r.name = d.role
+      JOIN permissions p ON p.name = d.permission`);
   }
 
   /** `rows` is a JSON array of the objects `readRows` produced. */

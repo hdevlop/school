@@ -7,7 +7,8 @@ import {
   MAX_BACKUP_BYTES,
   type BackupManifest,
 } from '@sms/contracts/backup';
-import { Err, Service, t } from '../../najm';
+import { UserService, UserValidator } from 'najm-auth';
+import { Err, Inject, Service, t } from '../../najm';
 import { BackupArchiveReader } from './backupArchive';
 import type { BackupTable } from './BackupRepository';
 
@@ -15,6 +16,16 @@ const excluded = new Set<string>(BACKUP_EXCLUDED_TABLES);
 
 @Service()
 export class BackupValidator {
+  @Inject(UserService) private users!: UserService;
+  @Inject(UserValidator) private passwords!: UserValidator;
+
+  /** The signed-in account's own password, asked again before everything is deleted. */
+  async ensurePassword(userId: string, password: string) {
+    const account = await this.users.getAuthRecordById(userId);
+    const valid = account?.password ? await this.passwords.comparePassword(password, account.password) : false;
+    if (!valid) Err(400, t('backup.errors.wrongPassword'));
+  }
+
   /** The archive and its manifest, or a refusal before anything is written. */
   readArchive(data: Uint8Array): { archive: BackupArchiveReader; manifest: BackupManifest } {
     if (data.byteLength > MAX_BACKUP_BYTES) Err(413, t('backup.errors.tooLarge'));

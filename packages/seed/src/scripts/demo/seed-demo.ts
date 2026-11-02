@@ -38,7 +38,7 @@ import {
   BehaviorRewardService,
   ClassRoutineService,
 } from '@sms/server/modules/seed';
-import rolesData from '../admin/data/roles.json';
+import { rolesData } from '@sms/server/seed-data/admin';
 import { runSeedTask } from '../shared/run-seed';
 import { schoolSeedData, seedAcademicYear } from '../shared/school-seed-data';
 import { prepareDemoYear } from '../shared/demo-year';

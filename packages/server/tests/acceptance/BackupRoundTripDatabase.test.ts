@@ -19,6 +19,8 @@ const { BackupRepository } = await import('../../src/modules/backup/BackupReposi
 const { BackupValidator } = await import('../../src/modules/backup/BackupValidator');
 const { BackupService } = await import('../../src/modules/backup/BackupService');
 const { BackupArchiveReader, BackupArchiveWriter } = await import('../../src/modules/backup/backupArchive');
+const { LandingRepository } = await import('../../src/modules/landing/LandingRepository');
+const { rolesData, rolePermissionsData } = await import('../../src/modules/seed-data/admin');
 const rollback = Symbol('rollback');
 
 type Tx = typeof db;
@@ -178,6 +180,111 @@ describe('a full backup', () => {
         expect(await count(tx, 'students')).toBe(students);
         expect(await storedFiles(root)).toEqual({ 'students/a.png': Buffer.from('photo a').toString('base64') });
         expect(await readdir(root)).toEqual(['students']);
+      });
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  }, 120_000);
+});
+
+describe('a full reset', () => {
+  const passwordFor = (service: InstanceType<typeof BackupService>, tx: Tx, accepted: string) => {
+    const landing = new LandingRepository();
+    landing.db = tx;
+    Object.assign(service, { landing });
+    Object.assign((service as unknown as { backupValidator: object }).backupValidator, {
+      users: { getAuthRecordById: async () => ({ password: 'stored-hash' }) },
+      passwords: { comparePassword: async (password: string) => password === accepted },
+    });
+  };
+  const adminId = async (tx: Tx) => {
+    const [row] = await tx.execute<{ id: string }>(sql`SELECT u.id FROM users u JOIN roles r ON r.id = u.role_id WHERE r.name = 'admin' LIMIT 1`);
+    if (row) return row.id;
+    const [role] = await tx.execute<{ id: string }>(sql`SELECT id FROM roles WHERE name = 'admin'`);
+    await tx.execute(sql`INSERT INTO users (id, email, password, role_id) VALUES ('reset-admin', 'reset-admin@school.test', 'stored-hash', ${role.id})`);
+    return 'reset-admin';
+  };
+
+  it('leaves a new installation with only the administrator, and ends every session', async () => {
+    const root = await storage({ 'students/a.png': 'photo a', 'notes.txt': 'gone' });
+    try {
+      await inRollback(async (tx) => {
+        const { service, ended, settle } = backupService(tx, root);
+        passwordFor(service, tx, 'right');
+        const admin = await adminId(tx);
+        const usersBefore = await count(tx, 'users');
+        await tx.execute(sql`INSERT INTO roles (id, name) VALUES ('custom-role', 'custom_role')`);
+        const periodsBefore = await tx.execute<{ id: string }>(sql`SELECT id FROM routine_periods WHERE schedule_id IS NULL ORDER BY id`);
+        await tx.execute(sql`DELETE FROM role_permissions WHERE role_id IN (SELECT id FROM roles WHERE name = 'teacher')`);
+
+        expect(await service.reset('right', admin)).toEqual({ reset: true });
+        await settle('commit');
+        await tx.execute(sql`SET CONSTRAINTS ALL IMMEDIATE`);
+
+        for (const table of ['students', 'parents', 'staff', 'teachers', 'fees', 'payments', 'attendance', 'grades', 'settings', 'academic_years', 'classes', 'files', 'tokens', 'audit_logs']) {
+          expect(await count(tx, table), table).toBe(0);
+        }
+        const users = await tx.execute<{ id: string; image: string | null }>(sql`SELECT id, image FROM users`);
+        expect(users.map(({ id, image }) => ({ id, image }))).toEqual([{ id: admin, image: null }]);
+
+        const roles = await tx.execute<{ name: string }>(sql`SELECT name FROM roles ORDER BY name`);
+        expect(roles.map(({ name }) => name)).toEqual(rolesData.map(({ name }) => name).sort());
+        const grants = await tx.execute<{ role: string; permission: string }>(sql`
+          SELECT r.name AS role, p.name AS permission FROM role_permissions rp
+          JOIN roles r ON r.id = rp.role_id JOIN permissions p ON p.id = rp.permission_id`);
+        // Every default grant is back, the administrator's *:* above all: without it no one could sign in and repair this.
+        const granted = new Set(grants.map(({ role, permission }) => `${role} ${permission}`));
+        const expected = rolePermissionsData.flatMap(({ roleName, permissions }) => permissions.map(permission => `${roleName} ${permission}`));
+        expect(granted.has('admin *:*')).toBe(true);
+        expect(expected.filter(grant => !granted.has(grant))).toEqual([]);
+        expect(granted.size).toBe(new Set(expected).size);
+
+        const periods = await tx.execute<{ id: string }>(sql`SELECT id FROM routine_periods ORDER BY id`);
+        expect(periods.map(({ id }) => id)).toEqual(periodsBefore.map(({ id }) => id));
+        expect(await count(tx, 'school_landing')).toBe(1);
+        expect(await count(tx, 'cycles')).toBeGreaterThan(0);
+        expect(await count(tx, 'staff_roles')).toBeGreaterThan(0);
+
+        expect(await storedFiles(root)).toEqual({});
+        expect(await readdir(root)).toEqual([]);
+        expect(new Set(ended.users).size).toBe(usersBefore);
+      });
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  }, 120_000);
+
+  it('refuses a wrong password and changes nothing', async () => {
+    const root = await storage({ 'students/a.png': 'photo a' });
+    try {
+      await inRollback(async (tx) => {
+        const { service, ended } = backupService(tx, root);
+        passwordFor(service, tx, 'right');
+        const admin = await adminId(tx);
+        const users = await count(tx, 'users');
+        const students = await count(tx, 'students');
+        const refusal = await service.reset('wrong', admin).then(() => null, (error: unknown) => error);
+        expect(refusal).toMatchObject({ status: 400, message: 'backup.errors.wrongPassword' });
+        expect(await count(tx, 'users')).toBe(users);
+        expect(await count(tx, 'students')).toBe(students);
+        expect(await readdir(root)).toEqual(['students']);
+        expect(ended.users).toEqual([]);
+      });
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  }, 120_000);
+
+  it('puts the files back when the reset is rolled back', async () => {
+    const root = await storage({ 'students/a.png': 'photo a' });
+    try {
+      await inRollback(async (tx) => {
+        const { service, settle } = backupService(tx, root);
+        passwordFor(service, tx, 'right');
+        await service.reset('right', await adminId(tx));
+        expect(Object.keys(await storedFiles(root)).filter(path => !path.startsWith('.'))).toEqual([]);
+        await settle('rollback');
+        expect(await storedFiles(root)).toEqual({ 'students/a.png': Buffer.from('photo a').toString('base64') });
       });
     } finally {
       await rm(root, { recursive: true, force: true });

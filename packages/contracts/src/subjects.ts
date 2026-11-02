@@ -9,7 +9,7 @@ type SchoolCycle = NonNullable<ReturnType<typeof schoolCycleForLevel>>['name'];
 
 const subjectCodesByCycle: Record<SchoolCycle, readonly string[]> = {
   Maternelle: ['PRELANG', 'PREMATH', 'PREDECO', 'PREMOT', 'PREART', 'PREVIE'],
-  Primaire: ['AR', 'FR', 'MATH', 'EI', 'SCI', 'HG', 'ART', 'PE'],
+  Primaire: ['AR', 'FR', 'MATH', 'EI', 'SCI', 'HG', 'ART', 'PE', 'COM'],
   Collège: ['AR', 'FR', 'MATH', 'EI', 'HG', 'PHY', 'SVT', 'ENG', 'PE', 'INFO', 'ART'],
   // Common secondary catalogue only; filière-specific subjects remain school-owned.
   Lycée: ['AR', 'FR', 'MATH', 'EI', 'HG', 'PHY', 'SVT', 'ENG', 'PE', 'INFO'],

@@ -304,7 +304,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
         subtitle={text('subtitle')}
       >
         <NPageHeaderActions className="gap-2">
-          <FamilyLinkButton target={{ parentId }} linkedIds={children.map(child => child.id)} />
+          <FamilyLinkButton target={{ parentId }} linkedIds={children.map(child => child.id)} compact />
           <NButton
             type="button"
             variant="outline"

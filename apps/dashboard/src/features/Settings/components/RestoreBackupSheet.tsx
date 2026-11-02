@@ -1,14 +1,18 @@
 'use client';
 
-import { useState, type ChangeEvent } from 'react';
-import { Check, Download, TriangleAlert, Upload } from 'lucide-react';
-import { Input, NAlert, NButton, NSheet, useNajmFormat } from 'najm-kit';
+import { useState } from 'react';
+import { Check, Download, FileArchive, TriangleAlert } from 'lucide-react';
+import { Input, NAlert, NButton, useNajmFormat } from 'najm-kit';
+import { FileImportDialog } from '@/components/FileImportDialog';
 import { useTranslation } from 'najm-i18n/react';
 import { toast } from 'sonner';
 import type { BackupManifest } from '@sms/contracts/backup';
 import { auth } from '@/najm.auth';
-import { downloadBackupApi, restoreBackupApi } from '@/services/backupApi';
-import { BACKUP_CONTENT_TABLES, readBackupManifest, saveBackupFile } from '../utils/backupFiles';
+import { restoreBackupApi, type BackupTransferProgress } from '@/services/backupApi';
+import { useBackupDownload } from '../hooks/useBackupDownload';
+import { BACKUP_CONTENT_TABLES, readBackupManifest } from '../utils/backupFiles';
+import { BackupDownloadStatus, BackupRestoreStatus } from './BackupDownloadStatus';
+import { BackupStep, BackupSteps } from './BackupSteps';
 
 /**
  * Replaces the whole school with a backup. The file is checked and described
@@ -26,55 +30,49 @@ export function RestoreBackupSheet({ open, onOpenChange, canDownload }: {
   const [manifest, setManifest] = useState<BackupManifest | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [reading, setReading] = useState(false);
-  const [savingCurrent, setSavingCurrent] = useState(false);
+  const backup = useBackupDownload();
+  const savingCurrent = backup.downloading;
   const [currentSaved, setCurrentSaved] = useState(false);
   const [typed, setTyped] = useState('');
   const [restoring, setRestoring] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<BackupTransferProgress | null>(null);
+  const busy = reading || savingCurrent || restoring;
   const word = t('settings.backup.restore.confirmWord');
   const confirmed = typed.trim().toLocaleUpperCase() === word.toLocaleUpperCase();
-  const ready = Boolean(file && manifest) && (currentSaved || !canDownload) && confirmed && !restoring;
+  const [confirmBefore, confirmAfter] = t('settings.backup.restore.confirm', { word: '|' }).split('|');
+  const ready = Boolean(file && manifest) && (currentSaved || !canDownload) && confirmed && !busy;
 
   const reset = () => {
     setFile(null); setManifest(null); setError(null); setCurrentSaved(false); setTyped('');
   };
   const close = () => {
-    if (restoring) return;
+    if (busy) return;
     reset();
     onOpenChange(false);
   };
 
-  const choose = async (event: ChangeEvent<HTMLInputElement>) => {
-    // The input keeps its file, so the chosen name stays on screen.
-    const chosen = event.target.files?.[0] ?? null;
-    setManifest(null); setError(null); setFile(null);
+  const choose = async (chosen: File | null) => {
+    if (busy) return;
+    setManifest(null); setError(null); setFile(chosen); setTyped('');
     if (!chosen) return;
     setReading(true);
     const check = await readBackupManifest(chosen);
     setReading(false);
     if ('error' in check) { setError(t(check.error)); return; }
-    setFile(chosen);
     setManifest(check.manifest);
   };
 
   const saveCurrent = async () => {
-    setSavingCurrent(true);
-    try {
-      const { file: current, name } = await downloadBackupApi();
-      saveBackupFile(current, name);
-      setCurrentSaved(true);
-    } catch (failure) {
-      toast.error((failure as Error)?.message || t('settings.backup.download.failed'));
-    } finally {
-      setSavingCurrent(false);
-    }
+    if (await backup.download()) setCurrentSaved(true);
   };
 
   const restore = async () => {
     if (!file || !ready) return;
     setRestoring(true);
+    setUploadProgress({ loaded: 0, total: file.size });
     setError(null);
     try {
-      await restoreBackupApi(file);
+      await restoreBackupApi(file, setUploadProgress);
     } catch (failure) {
       // The server names the reason: another version, a damaged file, ...
       setError((failure as Error)?.message || t('settings.backup.restore.failed'));
@@ -88,34 +86,18 @@ export function RestoreBackupSheet({ open, onOpenChange, canDownload }: {
   };
 
   return (
-    <NSheet
+    <FileImportDialog
       open={open}
-      onOpenChange={(next) => { if (!next) close(); }}
-      icon={Upload}
+      onClose={close}
       title={t('settings.backup.restore.title')}
-      description={t('settings.backup.restore.description')}
-      footer={<div className="flex justify-end gap-2">
-        <NButton type="button" variant="outline" disabled={restoring} onClick={close}>{t('common.cancel')}</NButton>
-        <NButton type="button" variant="destructive" loading={restoring} disabled={!ready} onClick={restore}>
-          {t('settings.backup.restore.submit')}
-        </NButton>
-      </div>}
+      fileLabel={t('settings.backup.restore.file')}
+      accept=".zip,application/zip" fileIcon={FileArchive}
+      file={file} onFile={choose} busy={busy} reading={reading} saving={restoring} disabled={false}
+      canSubmit={ready} onSubmit={restore} error={error}
+      submitLabel={t('settings.backup.restore.submit')} destructive hideFooter hideUploadWhenSelected
+      notice={<NAlert tone="warning" icon={TriangleAlert} description={t('settings.backup.restore.warning')} />}
     >
       <div className="flex flex-col gap-5 text-sm">
-        <NAlert tone="warning" icon={TriangleAlert} description={t('settings.backup.restore.warning')} />
-
-        <div className="flex flex-col gap-2">
-          <label className="font-medium" htmlFor="backup-file">{t('settings.backup.restore.file')}</label>
-          <input
-            id="backup-file"
-            type="file"
-            accept=".zip,application/zip"
-            disabled={restoring || reading}
-            onChange={choose}
-            className="w-full min-w-0 rounded-md border p-3 text-sm file:me-3 file:rounded file:border-0 file:bg-muted file:px-3 file:py-1"
-          />
-        </div>
-
         {manifest && (
           <div className="flex flex-col gap-3 rounded-md border p-3">
             <div>
@@ -137,29 +119,33 @@ export function RestoreBackupSheet({ open, onOpenChange, canDownload }: {
           </div>
         )}
 
-        {manifest && canDownload && (
-          <div className="flex flex-col gap-2">
-            <p className="font-medium">{t('settings.backup.restore.safetyTitle')}</p>
-            <p className="text-muted-foreground">{t('settings.backup.restore.safetyDescription')}</p>
-            <div>
-              <NButton type="button" variant="outline" loading={savingCurrent} disabled={restoring} onClick={saveCurrent}>
-                {currentSaved ? <Check className="h-4 w-4" aria-hidden /> : <Download className="h-4 w-4" aria-hidden />}
-                {currentSaved ? t('settings.backup.restore.safetyDone') : t('settings.backup.download.action')}
-              </NButton>
+        {manifest && <BackupSteps>
+          {canDownload && (
+            <BackupStep number={1} done={currentSaved} title={t('settings.backup.restore.safetyTitle')} hint={t('settings.backup.restore.safetyDescription')}>
+              <div>
+                <NButton type="button" variant="outline" loading={savingCurrent} disabled={restoring} onClick={saveCurrent}
+                  leftIcon={currentSaved ? <Check className="h-4 w-4" aria-hidden /> : <Download className="h-4 w-4" aria-hidden />}>
+                  {currentSaved ? t('settings.backup.restore.safetyDone') : t('settings.backup.download.action')}
+                </NButton>
+              </div>
+              {savingCurrent && <div className="col-span-2"><BackupDownloadStatus progress={backup.progress} /></div>}
+            </BackupStep>
+          )}
+
+          <BackupStep number={canDownload ? 2 : 1} done={confirmed} htmlFor="backup-confirm" hint={t('settings.backup.restore.confirmHint')}
+            title={<>{confirmBefore}<code className="rounded bg-destructive/10 px-1.5 py-0.5 font-mono text-xs font-semibold text-destructive"><bdi>{word}</bdi></code>{confirmAfter}</>}>
+            <Input className={canDownload ? 'w-0 min-w-full' : 'w-44 max-w-full'} id="backup-confirm" value={typed} disabled={restoring} autoComplete="off" spellCheck={false} placeholder={word} onChange={(event) => setTyped(event.target.value)} />
+          </BackupStep>
+
+          <BackupStep number={canDownload ? 3 : 2} done={false} last>
+            <div className="w-0 min-w-full">
+              <NButton className="w-full" type="button" variant="destructive" loading={restoring} disabled={!ready} onClick={restore}>{t('settings.backup.restore.submit')}</NButton>
             </div>
-          </div>
-        )}
+          </BackupStep>
+        </BackupSteps>}
 
-        {manifest && (
-          <div className="flex flex-col gap-2">
-            <label className="font-medium" htmlFor="backup-confirm">{t('settings.backup.restore.confirm', { word })}</label>
-            <Input id="backup-confirm" value={typed} disabled={restoring} autoComplete="off" onChange={(event) => setTyped(event.target.value)} />
-          </div>
-        )}
-
-        {restoring && <p role="status" className="text-muted-foreground">{t('settings.backup.restore.restoring')}</p>}
-        {error && <NAlert tone="error" description={error} />}
+        {restoring && <BackupRestoreStatus progress={uploadProgress} />}
       </div>
-    </NSheet>
+    </FileImportDialog>
   );
 }

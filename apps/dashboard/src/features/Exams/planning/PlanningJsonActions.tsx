@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, type ChangeEvent } from 'react';
+import { useState } from 'react';
 import { Download, Upload } from 'lucide-react';
-import { NButton, NSheet } from 'najm-kit';
+import { NButton } from 'najm-kit';
+import { FileImportDialog } from '@/components/FileImportDialog';
 import { useTranslation } from 'najm-i18n/react';
 import { toast } from 'sonner';
 import { parseExamPlanningJson, resolveExamPlanningClasses, MAX_EXAM_PLANNING_JSON_BYTES, type ExamPlanningClass, type ExamPlanningJson } from '@sms/contracts';
@@ -15,9 +16,10 @@ export function PlanningJsonActions({ classes, schoolYear, canEdit, disabled, sa
   const [open, setOpen] = useState(false);
   const [reading, setReading] = useState(false);
   const [pendingDocument, setDocument] = useState<ExamPlanningJson | null>(null);
+  const [selectedFile, setFile] = useState<File | null>(null);
   const [fileError, setError] = useState<string | null>(null);
   const busy = reading || saving;
-  const close = () => { if (!busy) { setOpen(false); setDocument(null); setError(null); } };
+  const close = () => { if (!busy) { setOpen(false); setDocument(null); setFile(null); setError(null); } };
 
   const exportJson = () => {
     const result = parseExamPlanningJson({ format: 'school-exam-planning', version: 1, schoolYear, exportedAt: new Date().toISOString(), classes });
@@ -31,9 +33,9 @@ export function PlanningJsonActions({ classes, schoolYear, canEdit, disabled, sa
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
-  const readFile = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    event.target.value = '';
+  const readFile = async (file: File | null) => {
+    if (busy || disabled) return;
+    setFile(file);
     setDocument(null); setError(null);
     if (!file) return;
     if (file.size > MAX_EXAM_PLANNING_JSON_BYTES) { setError(t('examPlanning.json.fileTooLarge')); return; }
@@ -54,7 +56,7 @@ export function PlanningJsonActions({ classes, schoolYear, canEdit, disabled, sa
     setError(null);
     try {
       await onImport(pendingDocument);
-      setOpen(false); setDocument(null);
+      setOpen(false); setDocument(null); setFile(null);
       toast.success(t('examPlanning.json.imported'));
     } catch { setError(t('examPlanning.json.importFailed')); }
   };
@@ -66,16 +68,14 @@ export function PlanningJsonActions({ classes, schoolYear, canEdit, disabled, sa
     <NButton variant="outline" size="icon" aria-label={t('examPlanning.json.export')} title={t('examPlanning.json.export')} disabled={disabled || !classes.length || !schoolYear} onClick={exportJson}><Download aria-hidden="true" /></NButton>
     {canEdit && <>
       <NButton variant="outline" size="icon" aria-label={t('examPlanning.json.import')} title={t('examPlanning.json.import')} disabled={disabled || !classes.length || !schoolYear} onClick={() => setOpen(true)}><Upload aria-hidden="true" /></NButton>
-      <NSheet open={open} onOpenChange={value => { if (!value) close(); }} icon={Upload} title={t('examPlanning.json.import')} description={schoolYear} footer={<div className="flex justify-end gap-2"><NButton variant="outline" disabled={busy} onClick={close}>{t('common.cancel')}</NButton><NButton loading={saving} disabled={!pendingDocument || busy || disabled} onClick={importJson}>{t('examPlanning.json.import')}</NButton></div>}>
-        <p className="mb-4 text-sm text-muted-foreground">{t('examPlanning.json.description')}</p>
-        <label className="mb-2 block text-sm font-medium" htmlFor="planning-json-file">{t('examPlanning.json.file')}</label>
-        <input id="planning-json-file" type="file" accept=".json,application/json" disabled={busy || disabled} onChange={readFile} className="w-full min-w-0 rounded-md border p-3 text-sm file:me-3 file:rounded file:border-0 file:bg-muted file:px-3 file:py-1" />
-        {fileError && <p role="alert" className="mt-4 text-sm text-destructive">{fileError}</p>}
+      <FileImportDialog open={open} title={t('examPlanning.json.import')} description={`${schoolYear} · ${t('examPlanning.json.description')}`}
+        fileLabel={t('examPlanning.json.file')} file={selectedFile} busy={busy} reading={reading} saving={saving} disabled={disabled}
+        canSubmit={Boolean(pendingDocument)} error={fileError} onClose={close} onFile={readFile} onSubmit={importJson}>
         {pendingDocument && <div className="mt-4 space-y-3 text-sm">
           <p>{t('examPlanning.json.summary', { classes: pendingDocument.classes.length, months, entries })}</p>
           <ul className="space-y-2">{pendingDocument.classes.map(cls => <li key={cls.name} className="rounded-md border p-3">{cls.name}</li>)}</ul>
         </div>}
-      </NSheet>
+      </FileImportDialog>
     </>}
   </>;
 }

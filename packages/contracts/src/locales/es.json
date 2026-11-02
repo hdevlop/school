@@ -1441,13 +1441,15 @@
   },
   "backup": {
     "success": {
-      "restored": "El centro se restauró a partir de la copia de seguridad."
+      "restored": "El centro se restauró a partir de la copia de seguridad.",
+      "reset": "La escuela se ha restablecido a sus valores predeterminados."
     },
     "errors": {
       "invalidFile": "Este archivo no es una copia de seguridad del centro.",
       "damaged": "Esta copia de seguridad está incompleta o dañada. No se cambió nada.",
       "otherVersion": "Esta copia de seguridad se creó con otra versión de la aplicación y no se puede restaurar aquí. No se cambió nada.",
-      "tooLarge": "Esta copia de seguridad supera los 512 MB."
+      "tooLarge": "Esta copia de seguridad supera los 512 MB.",
+      "wrongPassword": "Esa contraseña no es correcta. No se ha cambiado nada."
     }
   },
   "classRoutines": {
@@ -4222,7 +4224,10 @@
       "download": {
         "action": "Descargar copia de seguridad",
         "done": "Copia de seguridad descargada.",
-        "failed": "No se pudo crear la copia de seguridad. Inténtalo de nuevo."
+        "failed": "No se pudo crear la copia de seguridad. Inténtalo de nuevo.",
+        "preparing": "Preparando la copia de seguridad. Puede tardar unos minutos; mantén esta página abierta.",
+        "downloading": "Descargando: {{percent}} %",
+        "downloadingSize": "Descargando: {{size}} MB"
       },
       "restore": {
         "title": "Restaurar una copia de seguridad",
@@ -4231,15 +4236,38 @@
         "warning": "Todo lo que contiene el centro ahora (cada registro, cuenta y archivo subido) se reemplaza por la copia. Se pierden los cambios hechos después de crearla.",
         "file": "Archivo de copia de seguridad (.zip)",
         "madeOn": "Creada el {{date}}",
-        "safetyTitle": "1. Descargar los datos actuales",
+        "safetyTitle": "Descargar los datos actuales",
         "safetyDescription": "Guarda una copia del centro tal como está ahora, por si necesitas volver atrás.",
         "safetyDone": "Datos actuales descargados.",
-        "confirm": "2. Escribe {{word}} para confirmar",
+        "confirm": "Escribe {{word}} para confirmar",
         "confirmWord": "RESTAURAR",
+        "confirmHint": "Esto confirma que quieres reemplazar los datos actuales con esta copia de seguridad.",
         "submit": "Reemplazar todos los datos",
         "restoring": "Restaurando. Puede tardar unos minutos; mantén esta página abierta.",
+        "uploading": "Subiendo la copia de seguridad: {{percent}} %",
         "done": "El centro se restauró. Vuelve a iniciar sesión.",
         "failed": "La restauración falló. No se cambió nada."
+      },
+      "reset": {
+        "title": "Restablecer la escuela",
+        "description": "Elimina todos los datos de la escuela y vuelve a la configuración predeterminada, como en una instalación nueva. Tu cuenta de administrador se conserva.",
+        "action": "Restablecer la escuela",
+        "subtitle": "Solo se conserva tu cuenta de administrador.",
+        "warningTitle": "Esta acción no se puede deshacer",
+        "warning": "Se eliminan todos los alumnos, padres, empleados, cuotas, pagos, asistencias, notas, ajustes y archivos subidos, junto con todas las demás cuentas. Vuelven los roles y permisos predeterminados y se cierra la sesión de todos.",
+        "stepDownload": "Descarga los datos actuales",
+        "stepDownloadHint": "Guarda una copia por si necesitas volver atrás.",
+        "password": "Introduce tu contraseña",
+        "passwordHint": "Se comprueba de nuevo antes de eliminar nada.",
+        "confirmHint": "Esto confirma que quieres restablecer el centro.",
+        "confirm": "Escribe {{word}} para confirmar",
+        "showPassword": "Mostrar contraseña",
+        "hidePassword": "Ocultar contraseña",
+        "confirmWord": "RESTABLECER",
+        "submit": "Eliminar todo y restablecer",
+        "resetting": "Restableciendo. Mantén esta página abierta.",
+        "done": "La escuela se ha restablecido. Inicia sesión de nuevo.",
+        "failed": "El restablecimiento ha fallado. No se ha cambiado nada."
       },
       "contents": {
         "students": "Alumnos",

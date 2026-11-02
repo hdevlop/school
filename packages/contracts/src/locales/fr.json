@@ -1199,7 +1199,10 @@
       "download": {
         "action": "Télécharger la sauvegarde",
         "done": "Sauvegarde téléchargée.",
-        "failed": "La sauvegarde n'a pas pu être créée. Réessayez."
+        "failed": "La sauvegarde n'a pas pu être créée. Réessayez.",
+        "preparing": "Préparation de la sauvegarde. Cela peut prendre quelques minutes ; gardez cette page ouverte.",
+        "downloading": "Téléchargement : {{percent}} %",
+        "downloadingSize": "Téléchargement : {{size}} Mo"
       },
       "restore": {
         "title": "Restaurer une sauvegarde",
@@ -1208,15 +1211,38 @@
         "warning": "Tout ce que contient l'établissement aujourd'hui (chaque fiche, compte et fichier déposé) est remplacé par la sauvegarde. Les modifications faites après la sauvegarde sont perdues.",
         "file": "Fichier de sauvegarde (.zip)",
         "madeOn": "Créée le {{date}}",
-        "safetyTitle": "1. Télécharger les données actuelles",
+        "safetyTitle": "Télécharger les données actuelles",
         "safetyDescription": "Gardez une sauvegarde de l'établissement tel qu'il est maintenant, au cas où il faudrait revenir en arrière.",
         "safetyDone": "Données actuelles téléchargées.",
-        "confirm": "2. Tapez {{word}} pour confirmer",
+        "confirm": "Tapez {{word}} pour confirmer",
         "confirmWord": "RESTAURER",
+        "confirmHint": "Cela confirme que vous souhaitez remplacer les données actuelles par cette sauvegarde.",
         "submit": "Remplacer toutes les données",
         "restoring": "Restauration en cours. Cela peut prendre quelques minutes ; gardez cette page ouverte.",
+        "uploading": "Envoi de la sauvegarde : {{percent}} %",
         "done": "L'établissement a été restauré. Reconnectez-vous.",
         "failed": "La restauration a échoué. Rien n'a été modifié."
+      },
+      "reset": {
+        "title": "Réinitialiser l'école",
+        "description": "Supprimez toutes les données de l'école et revenez à la configuration par défaut, comme sur une nouvelle installation. Votre compte administrateur est conservé.",
+        "action": "Réinitialiser l'école",
+        "subtitle": "Seul votre compte administrateur est conservé.",
+        "warningTitle": "Cette action est irréversible",
+        "warning": "Tous les élèves, parents, membres du personnel, frais, paiements, présences, notes, paramètres et fichiers sont supprimés, ainsi que tous les autres comptes. Les rôles et permissions par défaut sont rétablis et tout le monde est déconnecté.",
+        "stepDownload": "Téléchargez les données actuelles",
+        "stepDownloadHint": "Gardez une copie au cas où il faudrait revenir en arrière.",
+        "password": "Saisissez votre mot de passe",
+        "passwordHint": "Il est vérifié à nouveau avant toute suppression.",
+        "confirmHint": "Cela confirme que vous souhaitez réinitialiser l'établissement.",
+        "confirm": "Saisissez {{word}} pour confirmer",
+        "showPassword": "Afficher le mot de passe",
+        "hidePassword": "Masquer le mot de passe",
+        "confirmWord": "REINITIALISER",
+        "submit": "Tout supprimer et réinitialiser",
+        "resetting": "Réinitialisation en cours. Gardez cette page ouverte.",
+        "done": "L'école a été réinitialisée. Reconnectez-vous.",
+        "failed": "La réinitialisation a échoué. Rien n'a été modifié."
       },
       "contents": {
         "students": "Élèves",
@@ -2049,13 +2075,15 @@
   },
   "backup": {
     "success": {
-      "restored": "L'établissement a été restauré à partir de la sauvegarde."
+      "restored": "L'établissement a été restauré à partir de la sauvegarde.",
+      "reset": "L'école a été réinitialisée avec ses valeurs par défaut."
     },
     "errors": {
       "invalidFile": "Ce fichier n'est pas une sauvegarde de l'établissement.",
       "damaged": "Cette sauvegarde est incomplète ou endommagée. Rien n'a été modifié.",
       "otherVersion": "Cette sauvegarde a été créée par une autre version de l'application et ne peut pas être restaurée ici. Rien n'a été modifié.",
-      "tooLarge": "Cette sauvegarde dépasse 512 Mo."
+      "tooLarge": "Cette sauvegarde dépasse 512 Mo.",
+      "wrongPassword": "Ce mot de passe est incorrect. Rien n'a été modifié."
     }
   },
   "classRoutines": {

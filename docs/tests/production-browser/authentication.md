@@ -13,8 +13,8 @@ Dedicated accounts for each role and a controlled recovery mailbox. Use an ident
 ### Current role inventory
 
 Resolve roles and effective grants from the serving release's
-[role catalog](../../../packages/seed/src/scripts/admin/data/roles.json) and
-[role permissions](../../../packages/seed/src/scripts/admin/data/rolePermissions.json).
+[role catalog](../../../packages/server/src/modules/seed-data/admin/roles.json) and
+[role permissions](../../../packages/server/src/modules/seed-data/admin/rolePermissions.json).
 The 2026-10-15 source catalog contains ten roles: admin, principal, accounting,
 teacher, student, parent, secretary, driver, assistant and supervisor. Include
 supervisor in allowed/denied page and record-ownership checks. Counselor, nurse

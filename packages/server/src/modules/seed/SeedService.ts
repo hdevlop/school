@@ -42,7 +42,7 @@ import { AcademicYearTransitionRepository } from '../academicYearTransitions/Aca
 import { AcademicYearMigrationIssueRepository } from '../academicYearMigrationIssues/AcademicYearMigrationIssueRepository';
 
 // ─── static seed data ────────────────────────────────────────────────────────
-import rolesData from '../seed-data/admin/roles.json';
+import { rolesData } from '../seed-data/admin';
 import driversData from '../seed-data/demo/drivers.json';
 import feesData from '../seed-data/demo/fees.json';
 import parentsData from '../seed-data/demo/parents.json';

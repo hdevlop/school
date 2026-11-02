@@ -2,9 +2,7 @@
 
 import { PermissionService, RoleService } from 'najm-auth';
 import { runSeedTask } from '../shared/run-seed';
-import permissionsData from './data/permissions.json';
-import rolePermissionsData from './data/rolePermissions.json';
-import rolesData from './data/roles.json';
+import { permissionsData, rolePermissionsData, rolesData } from '@sms/server/seed-data/admin';
 
 // Bring an existing database up to the default roles and grants. Additive only:
 // missing roles, permissions and grants are created, nothing is removed, and no

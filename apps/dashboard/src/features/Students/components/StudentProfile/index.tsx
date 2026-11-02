@@ -6,7 +6,6 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { NajmScroll, NButton, NEmptyState, NErrorState, NForbiddenState, NLoadingState, NPageHeader, NPageHeaderActions, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
 import { AlertTriangle, ArrowLeft, Bus, CalendarCheck, DollarSign, GraduationCap, Pencil, User } from 'lucide-react';
-import { useAuth } from 'najm-auth/client/react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { StudentProfileProps } from './types';
 import OverviewTab from './Overview';
@@ -19,7 +18,6 @@ import SectionTitle from './SectionTitle';
 import { useStudentProfile } from '@/features/Students/hooks/useStudentProfile';
 import { useTranslation } from 'najm-i18n/react';
 import TransportTab from './Transport';
-import EnrollmentActions from './Enrollment';
 import { isAuthorizationError, isNotFoundError } from '@/services/apiError';
 import { useAlerts } from '@/features/Alerts/hooks/useAlerts';
 import { useDialog } from '@/shared/useDialog';
@@ -40,10 +38,6 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
   const [activeTab, setActiveTab] = useState<string>('overview');
   const { student, isStudentLoading, studentError, refetchStudent, parents, isParentsLoading } = useStudentProfile(studentId);
   const { t } = useTranslation();
-  const { user } = useAuth();
-  // Placement commands remain administrator/principal routes.
-  const role = (user as { role?: string } | null)?.role;
-  const canManageEnrollment = role === 'admin' || role === 'principal';
   // The fees and transport tabs read finance and transport routes.
   const { isSchoolWide, isFamily, can } = useViewerRole();
   const canEdit = !isFamily && can('update:students');
@@ -138,14 +132,14 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
         title={student?.name ?? t('students.profile.detailsTitle')}
         subtitle={t('students.profile.detailsSubtitle')}
       >
-        <NPageHeaderActions>
+        <NPageHeaderActions className="gap-2">
           {student && !isStudentLoading && (
             <>
-              {canManageEnrollment && <EnrollmentActions studentId={studentId} showHistory={false} />}
               {canEdit && (
-                <NButton type="button" variant="outline" size="sm" className="gap-2" onClick={handleEdit}>
+                <NButton type="button" variant="outline" size="sm" className="gap-2 max-sm:w-8 max-sm:gap-0 max-sm:px-0!" onClick={handleEdit}
+                  aria-label={t('common.edit')} title={t('common.edit')}>
                   <Pencil className="size-4" aria-hidden="true" />
-                  {t('common.edit')}
+                  <span className="max-sm:hidden">{t('common.edit')}</span>
                 </NButton>
               )}
             </>
@@ -154,8 +148,9 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
             type="button"
             variant="outline"
             size="sm"
-            className="gap-2"
+            className="gap-2 max-sm:w-8 max-sm:gap-0 max-sm:px-0!"
             aria-label={t('students.profile.backToStudents')}
+            title={t('students.profile.backToStudents')}
             onClick={() => router.push('/students')}
           >
             <ArrowLeft className="size-4 rtl:rotate-180" />

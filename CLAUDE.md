@@ -27,7 +27,7 @@ All read `apps/dashboard/.env.local`, the monorepo's only env file.
 - `bun run db:drop` - Drop database tables (destructive)
 - `bun run db:check` - Validate database schema consistency
 - `bun run seed:role-permissions` - Add the default roles, permissions and
-  grants from `packages/seed/src/scripts/admin/data` that a database lacks.
+  grants from `packages/server/src/modules/seed-data/admin` that a database lacks.
   Additive, touches no account; run it once when adopting new defaults, never
   on every deploy (it would restore grants removed in the dashboard)
 
@@ -154,7 +154,7 @@ states that drift — so do not add one without changing the plan first.
   `principal`. The dashboard asks the same question: `PAGE_ACCESS` in
   `apps/dashboard/src/shared/pageAccess.ts` for pages, `useViewerRole().can()`
   and `.isSchoolWide` for actions. Declare a new permission in
-  `packages/seed/src/scripts/admin/data/permissions.json`;
+  `packages/server/src/modules/seed-data/admin/permissions.json`;
   `tests/security/RolePermissions.test.ts` fails on a guard naming one that is
   not. A login made, re-addressed or removed through a staff record is limited
   to a role whose every permission its user holds

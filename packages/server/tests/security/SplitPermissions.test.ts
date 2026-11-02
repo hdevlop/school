@@ -59,8 +59,8 @@ describe('split action guards', () => {
   });
 
   it('has no manage action in fresh-install permissions or role defaults', () => {
-    const catalog = JSON.parse(readFileSync(new URL('../../../seed/src/scripts/admin/data/permissions.json', import.meta.url), 'utf8'));
-    const grants = JSON.parse(readFileSync(new URL('../../../seed/src/scripts/admin/data/rolePermissions.json', import.meta.url), 'utf8'));
+    const catalog = JSON.parse(readFileSync(new URL('../../src/modules/seed-data/admin/permissions.json', import.meta.url), 'utf8'));
+    const grants = JSON.parse(readFileSync(new URL('../../src/modules/seed-data/admin/rolePermissions.json', import.meta.url), 'utf8'));
     expect(catalog.filter((p: any) => ['manage', 'rollover', 'resolve', 'publish'].includes(p.action))).toEqual([]);
     expect(grants.flatMap((role: any) => role.permissions).filter((name: string) => name.startsWith('manage:'))).toEqual([]);
     const migration = ['0073_split_manage_permissions', '0074_edit_workflow_permissions', '0075_publish_is_edit'].map((name) => readFileSync(new URL(`../../src/database/migrations/${name}.sql`, import.meta.url), 'utf8')).join('\n');

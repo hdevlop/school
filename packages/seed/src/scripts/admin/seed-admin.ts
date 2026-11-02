@@ -1,8 +1,6 @@
 #!/usr/bin/env bun
 
-import permissionsData from './data/permissions.json';
-import rolePermissionsData from './data/rolePermissions.json';
-import rolesData from './data/roles.json';
+import { permissionsData, rolePermissionsData, rolesData } from '@sms/server/seed-data/admin';
 import { readAdminSeedCredentials } from './adminSeedPrompt';
 
 // Validate before initializing the server or writing any roles or permissions.

@@ -118,5 +118,11 @@
     "code": "PREVIE",
     "name": "Valeurs et règles de vie commune",
     "description": "Préscolaire : valeurs religieuses et citoyennes, autonomie et vie en groupe"
+  },
+  {
+    "id": "SB20",
+    "code": "COM",
+    "name": "Communication",
+    "description": "Expression orale, écoute, prise de parole et communication en groupe"
   }
 ]

@@ -50,7 +50,7 @@ function byPermission(controller: any) {
 }
 
 const seedData = (name: string) => JSON.parse(readFileSync(
-  new URL(`../../../seed/src/scripts/admin/data/${name}.json`, import.meta.url), 'utf8',
+  new URL(`../../src/modules/seed-data/admin/${name}.json`, import.meta.url), 'utf8',
 ));
 
 describe('routes that were admin-only ask for a permission', () => {
@@ -274,7 +274,7 @@ describe('staff attendance', () => {
 // through *:*, holds these by default, and the principal does not.
 describe('backup routes', () => {
   it('download with backup:system and restore with restore:system', () => {
-    expect(byPermission(BackupController)).toEqual({ 'backup:system': ['download'], 'restore:system': ['restore'] });
+    expect(byPermission(BackupController)).toEqual({ 'backup:system': ['download'], 'restore:system': ['restore'], admin: ['reset'] });
     const grants = Object.fromEntries(seedData('rolePermissions').map((row: { roleName: string; permissions: string[] }) => [row.roleName, row.permissions]));
     for (const [role, permissions] of Object.entries(grants)) {
       if (role === 'admin') continue;

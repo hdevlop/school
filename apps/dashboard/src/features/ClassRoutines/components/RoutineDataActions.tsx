@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, type ChangeEvent } from 'react';
+import { useState } from 'react';
 import { Download, FileJson, FileSpreadsheet, Upload } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, NButton, NSheet } from 'najm-kit';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, NButton } from 'najm-kit';
+import { FileImportDialog } from '@/components/FileImportDialog';
 import { useTranslation } from 'najm-i18n/react';
 import { toast } from 'sonner';
 import { MAX_ROUTINE_JSON_BYTES, parseRoutineJson, type RoutineJson } from '@sms/contracts';
@@ -26,9 +27,10 @@ export function RoutineDataActions({ routines, schoolYear, disabled, canImport, 
   const [reading, setReading] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [pendingDocument, setDocument] = useState<RoutineJson | null>(null);
+  const [selectedFile, setFile] = useState<File | null>(null);
   const [fileError, setError] = useState<string | null>(null);
   const busy = reading || importing;
-  const close = () => { if (!busy) { setOpen(false); setDocument(null); setError(null); } };
+  const close = () => { if (!busy) { setOpen(false); setDocument(null); setFile(null); setError(null); } };
   const title = [t('classRoutines.ui.print.title'),
     routines.length === 1 ? [routines[0].className, routines[0].sectionName].filter(Boolean).join(' ') : '', schoolYear]
     .filter(Boolean).join(' ');
@@ -59,9 +61,9 @@ export function RoutineDataActions({ routines, schoolYear, disabled, canImport, 
     }
   };
 
-  const readFile = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    event.target.value = '';
+  const readFile = async (file: File | null) => {
+    if (busy || disabled) return;
+    setFile(file);
     setDocument(null); setError(null);
     if (!file) return;
     if (file.size > MAX_ROUTINE_JSON_BYTES) { setError(t('classRoutines.data.fileTooLarge')); return; }
@@ -80,7 +82,7 @@ export function RoutineDataActions({ routines, schoolYear, disabled, canImport, 
     setError(null);
     try {
       const result = await onImport(pendingDocument);
-      setOpen(false); setDocument(null);
+      setOpen(false); setDocument(null); setFile(null);
       toast.success(t('classRoutines.data.imported', { count: result.routines }));
       if (result.teachersNotAssigned) toast.warning(t('classRoutines.data.teachersNotAssigned', { count: result.teachersNotAssigned }));
     } catch (error: any) {
@@ -95,9 +97,9 @@ export function RoutineDataActions({ routines, schoolYear, disabled, canImport, 
   return <>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <NButton variant="outline" className="h-10 w-10 p-0" disabled={disabled || exporting || !routines.length || !schoolYear}
+        <NButton variant="outline" className="h-10 w-10 border-border p-0 text-foreground" disabled={disabled || exporting || !routines.length || !schoolYear}
           aria-label={t('classRoutines.data.export')} title={t('classRoutines.data.export')}>
-          <Download className="h-4 w-4" aria-hidden="true" />
+          <Download className="h-4 w-4 text-foreground" aria-hidden="true" />
         </NButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-44 bg-card">
@@ -110,27 +112,20 @@ export function RoutineDataActions({ routines, schoolYear, disabled, canImport, 
       </DropdownMenuContent>
     </DropdownMenu>
     {canImport && <>
-      <NButton variant="outline" className="h-10 w-10 p-0" disabled={disabled || !schoolYear} onClick={() => setOpen(true)}
+      <NButton variant="outline" className="h-10 w-10 border-border p-0 text-foreground" disabled={disabled || !schoolYear} onClick={() => setOpen(true)}
         aria-label={t('classRoutines.data.import')} title={t('classRoutines.data.import')}>
-        <Upload className="h-4 w-4" aria-hidden="true" />
+        <Upload className="h-4 w-4 text-foreground" aria-hidden="true" />
       </NButton>
-      <NSheet open={open} onOpenChange={value => { if (!value) close(); }} icon={Upload} title={t('classRoutines.data.import')} description={schoolYear}
-        footer={<div className="flex justify-end gap-2">
-          <NButton variant="outline" disabled={busy} onClick={close}>{t('common.cancel')}</NButton>
-          <NButton loading={importing} disabled={!pendingDocument || busy || disabled} onClick={importJson}>{t('classRoutines.data.import')}</NButton>
-        </div>}>
-        <p className="mb-4 text-sm text-muted-foreground">{t('classRoutines.data.description')}</p>
-        <label className="mb-2 block text-sm font-medium" htmlFor="routine-json-file">{t('classRoutines.data.file')}</label>
-        <input id="routine-json-file" type="file" accept=".json,application/json" disabled={busy || disabled} onChange={readFile}
-          className="w-full min-w-0 rounded-md border p-3 text-sm file:me-3 file:rounded file:border-0 file:bg-muted file:px-3 file:py-1" />
-        {fileError && <p role="alert" className="mt-4 text-sm text-destructive">{fileError}</p>}
+      <FileImportDialog open={open} title={t('classRoutines.data.import')} description={`${schoolYear} · ${t('classRoutines.data.description')}`}
+        fileLabel={t('classRoutines.data.file')} file={selectedFile} busy={busy} reading={reading} saving={importing} disabled={disabled}
+        canSubmit={Boolean(pendingDocument)} error={fileError} onClose={close} onFile={readFile} onSubmit={importJson}>
         {pendingDocument && <div className="mt-4 space-y-3 text-sm">
           <p>{t('classRoutines.data.summary', { routines: pendingDocument.routines.length, lessons, duties })}</p>
           <ul className="space-y-2">{pendingDocument.routines.map(routine => (
             <li key={`${routine.className}:${routine.sectionName}`} className="rounded-md border p-3"><bdi>{routine.className} {routine.sectionName}</bdi></li>
           ))}</ul>
         </div>}
-      </NSheet>
+      </FileImportDialog>
     </>}
   </>;
 }

@@ -178,3 +178,37 @@ export async function fileRequest(method: 'GET' | 'POST', url: string, body?: Bl
   if (method !== 'GET') onlineMutationComplete(url);
   return response;
 }
+
+/**
+ * Posts a file and reports the bytes sent, which fetch cannot do. Answers and
+ * refuses like `fileRequest`, and resolves to the parsed JSON reply.
+ */
+export async function fileUpload(url: string, body: Blob, onProgress: (sent: { loaded: number; total: number }) => void) {
+  const scoped = headersFor(url);
+  await ensureAccessToken(url);
+  const send = () => new Promise<{ status: number; statusText: string; text: string }>((resolve, reject) => {
+    const request = new XMLHttpRequest();
+    request.open('POST', `/api${url}`);
+    for (const [name, value] of Object.entries(scoped ?? {})) request.setRequestHeader(name, value);
+    request.setRequestHeader('Content-Type', body.type || 'application/octet-stream');
+    const token = auth.client.getAccessToken();
+    if (token) request.setRequestHeader('Authorization', `Bearer ${token}`);
+    request.upload.onprogress = (event) => {
+      if (event.lengthComputable) onProgress({ loaded: event.loaded, total: event.total });
+    };
+    request.onload = () => resolve({ status: request.status, statusText: request.statusText, text: request.responseText });
+    request.onerror = () => reject(new TypeError('Network request failed'));
+    request.send(body);
+  });
+  let response = await send();
+  if (response.status === 401) {
+    await auth.client.refresh();
+    response = await send();
+  }
+  const parsed = (() => { try { return JSON.parse(response.text); } catch { return {}; } })();
+  if (response.status < 200 || response.status >= 300) {
+    throw new AuthError(response.status, parsed.message || response.statusText, parsed);
+  }
+  onlineMutationComplete(url);
+  return parsed;
+}

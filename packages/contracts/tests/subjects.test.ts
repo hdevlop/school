@@ -17,7 +17,7 @@ describe('Moroccan subject defaults', () => {
     expect(preschool).toHaveLength(6);
     expect(preschool.every(subject => subject.code.startsWith('PRE'))).toBe(true);
     const primaryCodes = schoolSubjectsForLevels(['Primaire']).map(subject => subject.code);
-    expect(primaryCodes).toEqual(expect.arrayContaining(['AR', 'FR', 'MATH', 'EI', 'SCI', 'HG', 'ART', 'PE']));
+    expect(primaryCodes).toEqual(expect.arrayContaining(['AR', 'FR', 'MATH', 'EI', 'SCI', 'HG', 'ART', 'PE', 'COM']));
     for (const code of ['PHY', 'SVT', 'ENG', 'INFO']) expect(primaryCodes).not.toContain(code);
     const collegeCodes = schoolSubjectsForLevels(['Collège']).map(subject => subject.code);
     expect(collegeCodes).toEqual(expect.arrayContaining(['PHY', 'SVT', 'ENG', 'EI', 'HG']));

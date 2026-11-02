@@ -1,6 +1,6 @@
 import { PermissionService, RoleService } from 'najm-auth';
 import { runSeedTask } from '../shared/run-seed';
-import permissions from './data/permissions.json';
+import { permissionsData as permissions } from '@sms/server/seed-data/admin';
 
 // Add only this feature's grants. No account/password updates or grant removal.
 await runSeedTask('visit request permissions', async server => {

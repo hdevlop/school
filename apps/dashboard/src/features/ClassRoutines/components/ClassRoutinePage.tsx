@@ -300,8 +300,8 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
           </>
         )}
         <div className="flex shrink-0 justify-end gap-2 empty:hidden md:ms-auto">
-          <NButton variant="outline" className="h-10 w-10 p-0" disabled={busy || printBusy || !printableRoutines.length} onClick={() => printRoutines(printableRoutines)} aria-label={t('classRoutines.ui.actions.print')} title={t('classRoutines.ui.actions.print')}>
-            <Printer className="h-4 w-4" />
+          <NButton variant="outline" className="h-10 w-10 border-border p-0 text-foreground" disabled={busy || printBusy || !printableRoutines.length} onClick={() => printRoutines(printableRoutines)} aria-label={t('classRoutines.ui.actions.print')} title={t('classRoutines.ui.actions.print')}>
+            <Printer className="h-4 w-4 text-foreground" />
           </NButton>
           <RoutineDataActions
             routines={printableRoutines}
@@ -312,12 +312,12 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
             onImport={async (document) => (await mutations.importRoutines.mutateAsync(document))?.data}
           />
           {canEdit ? (
-            <NButton variant="secondary" className="h-10 w-10 p-0" disabled={busy || !activeClasses.length} onClick={openPeriodsForm} aria-label={t('classRoutines.ui.actions.periods')} title={t('classRoutines.ui.actions.periods')}>
-              <Clock3 className="h-4 w-4" />
+            <NButton variant="outline" className="h-10 w-10 border-border p-0 text-foreground" disabled={busy || !activeClasses.length} onClick={openPeriodsForm} aria-label={t('classRoutines.ui.actions.periods')} title={t('classRoutines.ui.actions.periods')}>
+              <Clock3 className="h-4 w-4 text-foreground" />
             </NButton>
           ) : null}
-          <NButton variant="outline" className="h-10 w-10 p-0" disabled={busy} onClick={openClassSettings} aria-label={t('classRoutines.ui.classSelection.title')} title={t('classRoutines.ui.classSelection.title')} aria-haspopup="dialog" aria-expanded={classSelection !== null}>
-            <Settings className="h-4 w-4" />
+          <NButton variant="outline" className="h-10 w-10 border-border p-0 text-foreground" disabled={busy} onClick={openClassSettings} aria-label={t('classRoutines.ui.classSelection.title')} title={t('classRoutines.ui.classSelection.title')} aria-haspopup="dialog" aria-expanded={classSelection !== null}>
+            <Settings className="h-4 w-4 text-foreground" />
           </NButton>
         </div>
       </NFilterBar>

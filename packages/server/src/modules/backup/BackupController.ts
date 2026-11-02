@@ -1,10 +1,14 @@
-import { ArrayBufferBody, Controller, Get, Post, ResMsg } from '../../najm';
-import { Can } from '../../auth';
+import { RateLimit } from 'najm-rate';
+import { ArrayBufferBody, Body, Controller, Get, Post, ResMsg, User, Validate } from '../../najm';
+import { Can, isAdmin } from '../../auth';
+import { resetSchoolDto, type ResetSchoolDto } from './BackupDto';
 import { BackupService } from './BackupService';
 
 /**
- * A full backup holds every account and its password hash, so both routes ask
+ * A full backup holds every account and its password hash, so these routes ask
  * for system permissions the administrator holds and the principal does not.
+ * The reset deletes everything, roles included, so it is the administrator's
+ * alone and also asks for their password.
  */
 @Controller('/backup')
 export class BackupController {
@@ -22,5 +26,14 @@ export class BackupController {
   @ResMsg('backup.success.restored')
   async restore(@ArrayBufferBody() body: ArrayBuffer) {
     return this.service.restore(new Uint8Array(body));
+  }
+
+  @Post('/reset')
+  @isAdmin()
+  @RateLimit({ limit: 5, window: '10m', key: 'user' })
+  @Validate(resetSchoolDto)
+  @ResMsg('backup.success.reset')
+  async reset(@Body() { password }: ResetSchoolDto, @User('id') userId: string) {
+    return this.service.reset(password, userId);
   }
 }

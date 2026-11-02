@@ -101,8 +101,8 @@ const StudentFact = ({
         <Icon className="h-5 w-5" />
       </div>
       <div className="min-w-0 flex-1">
-        <div className="text-sm font-semibold uppercase tracking-wide text-slate-400">{label}</div>
-        <div className={`truncate text-sm font-bold ${muted ? 'italic text-slate-400' : 'text-slate-800'}`}>
+        <div className="text-sm font-semibold uppercase tracking-wide text-slate-400 [overflow-wrap:anywhere]">{label}</div>
+        <div className={`text-sm font-bold [overflow-wrap:anywhere] md:truncate ${muted ? 'italic text-slate-400' : 'text-slate-800'}`}>
           {value || '—'}
         </div>
       </div>
@@ -501,7 +501,7 @@ function ReadOnlyOverview({
       <section>
         <SectionTitle title={t('students.form.studentInformation')} />
         <InfoCard>
-          <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+          <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
             <StudentFact icon={User} label={t('students.form.fullName')} value={student.name} tone="blue" />
             {student.arabicName?.trim() && <StudentFact icon={User} label={t('students.form.arabicName')} value={<span lang="ar" dir="rtl">{student.arabicName}</span>} tone="blue" />}
             <StudentFact icon={IdCard} label={t('students.form.studentCode')} value={student.studentCode} tone="violet" />

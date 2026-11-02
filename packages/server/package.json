@@ -38,6 +38,10 @@
       "types": "./src/modules/index.ts",
       "default": "./src/modules/index.ts"
     },
+    "./seed-data/admin": {
+      "types": "./src/modules/seed-data/admin/index.ts",
+      "default": "./src/modules/seed-data/admin/index.ts"
+    },
     "./modules/seed": {
       "types": "./src/modules/seed/SeedContainer.ts",
       "default": "./src/modules/seed/SeedContainer.ts"

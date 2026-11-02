@@ -66,21 +66,23 @@ function FamilyLinkPicker({ target, linkedIds }: { target: LinkTarget; linkedIds
   );
 }
 
-export function FamilyLinkButton({ target, linkedIds = [] }: { target: LinkTarget; linkedIds?: string[] }) {
+export function FamilyLinkButton({ target, linkedIds = [], compact = false }: { target: LinkTarget; linkedIds?: string[]; compact?: boolean }) {
   const { can } = usePermissions();
   const { t } = useTranslation();
   const { openDialog } = useDialog();
   if (!can('create:parents') || !can(target.parentId ? 'read:students' : 'read:parents')) return null;
   const label = t(target.parentId ? 'parents.profile.linkStudent' : 'parents.family.linkParent');
   return (
-    <NButton type="button" variant="outline" size="sm" onClick={() => openDialog({
+    <NButton type="button" variant="outline" size="sm"
+      className={compact ? 'max-sm:w-8 max-sm:gap-0 max-sm:px-0!' : undefined}
+      aria-label={label} title={label} onClick={() => openDialog({
       title: label,
       children: <FamilyLinkPicker target={target} linkedIds={linkedIds} />,
       width: 'md',
       showButtons: false,
     })}>
       <Link2 aria-hidden="true" className="size-4" />
-      {label}
+      <span className={compact ? 'max-sm:hidden' : undefined}>{label}</span>
     </NButton>
   );
 }

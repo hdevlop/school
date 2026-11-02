@@ -125,9 +125,12 @@ export default function EnrollmentPanel({ studentId, showHistory = true }: { stu
           )}
           {openPlacement && (
             <>
-              <NButton type="button" size="sm" variant="outline" className="gap-2" onClick={() => openEnd(openPlacement)}>
-                <LogOut className="h-4 w-4" />
-                {t('students.enrollment.disable')}
+              <NButton type="button" size="sm" variant="outline"
+                className={showHistory ? 'gap-2' : 'gap-2 max-sm:w-8 max-sm:gap-0 max-sm:px-0!'}
+                aria-label={t('students.enrollment.disable')} title={t('students.enrollment.disable')}
+                onClick={() => openEnd(openPlacement)}>
+                <LogOut className="h-4 w-4" aria-hidden="true" />
+                <span className={showHistory ? undefined : 'max-sm:hidden'}>{t('students.enrollment.disable')}</span>
               </NButton>
             </>
           )}

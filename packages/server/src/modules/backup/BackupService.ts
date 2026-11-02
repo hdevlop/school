@@ -16,6 +16,9 @@ import {
 import { storageBasePath } from '../../config/storageConfig';
 import { Inject, Service, Transaction, TransactionService } from '../../najm';
 import { BackupArchiveReader, BackupArchiveWriter, backupFileName, insertionOrder, rowBatches } from './backupArchive';
+import { LandingRepository } from '../landing/LandingRepository';
+import { packagedLandingContent, packagedLandingPrograms } from '../landing/LandingDefaults';
+import { permissionsData, rolePermissionsData, rolesData } from '../seed-data/admin';
 import { BackupRepository, type BackupTable } from './BackupRepository';
 import { BackupValidator } from './BackupValidator';
 
@@ -23,11 +26,20 @@ const excluded = new Set<string>(BACKUP_EXCLUDED_TABLES);
 const PAGE_ROWS = 2000;
 const SESSION_BATCH = 50;
 
+/**
+ * What a reset does not empty: the account that ran it, the role tables it puts
+ * back to their defaults, the lists a new database gets from its migrations, and
+ * the tool index built from the code. A table not named here is emptied, so a
+ * new table is cleared by default.
+ */
+const RESET_KEPT_TABLES = new Set(['users', 'roles', 'permissions', 'role_permissions', 'staff_roles', 'cycles', 'chatbot_tool_embeddings']);
+
 export type BackupRestoreResult = { tables: number; rows: number; files: number; createdAt: string };
 
 @Service()
 export class BackupService {
   @Inject(TransactionService) private transactions!: TransactionService;
+  @Inject(LandingRepository) private landing!: LandingRepository;
   /** The uploads folder; tests point it elsewhere. */
   storagePath = storageBasePath();
 
@@ -43,6 +55,8 @@ export class BackupService {
       headers: {
         'Content-Type': 'application/zip',
         'Content-Disposition': `attachment; filename="${backupFileName(manifest.createdAt)}"`,
+        // Survives a proxy that compresses the reply and drops Content-Length: the download's percentage reads it.
+        'X-Backup-Bytes': String(archive.size),
         'Cache-Control': 'private, no-store',
         'X-Content-Type-Options': 'nosniff',
       },
@@ -130,6 +144,45 @@ export class BackupService {
     const restoredUsers = await this.backupRepository.userIds();
     await this.swapFiles(staged);
     return { userIds: [...new Set([...before.userIds, ...restoredUsers])], families: before.families };
+  }
+
+  /**
+   * Returns the school to a new installation: every record and uploaded file is
+   * deleted and the default roles and public page come back. Only the
+   * administrator's account stays, with its password, so they can sign in and
+   * create the school's settings again. Everyone is signed out afterwards.
+   */
+  async reset(password: string, userId: string) {
+    await this.backupValidator.ensurePassword(userId, password);
+    const empty = join(this.storageRoot, `.reset-${nanoid(8)}`);
+    await mkdir(empty, { recursive: true });
+    let signedIn: { userIds: string[]; families: string[] };
+    try {
+      signedIn = await this.clearSchool(userId, empty);
+    } finally {
+      await rm(empty, { recursive: true, force: true });
+    }
+    await this.endSessions(signedIn);
+    return { reset: true };
+  }
+
+  @Transaction()
+  async clearSchool(userId: string, empty: string) {
+    await this.backupRepository.lockRestore();
+    const before = await this.backupRepository.signedInState();
+    const tables = await this.backupRepository.tables();
+    const periods = await this.backupRepository.routinePeriodTemplates();
+    await this.backupRepository.truncate(tables.map(({ name }) => name).filter(name => !RESET_KEPT_TABLES.has(name)));
+    await this.backupRepository.keepOnlyUser(userId);
+    await this.backupRepository.restoreAccessDefaults({
+      roles: rolesData.map(role => ({ ...role, id: nanoid(5) })),
+      permissions: permissionsData.map(permission => ({ ...permission, id: nanoid(5) })),
+      grants: rolePermissionsData.flatMap(({ roleName, permissions }) => permissions.map(permission => ({ role: roleName, permission }))),
+    });
+    await this.backupRepository.insertRows(tables.find(({ name }) => name === 'routine_periods')!, periods);
+    await this.landing.seedDefaults(packagedLandingContent, packagedLandingPrograms);
+    await this.swapFiles(empty);
+    return before;
   }
 
   private get storageRoot() {

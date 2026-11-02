@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { matchPermission } from 'najm-auth/client';
 import { canPerformAction, protectMenuItems } from '@/shared/actionPermissions';
-const rolePermissions: Array<{ roleName: string; permissions: string[] }> = JSON.parse(readFileSync(new URL('../../../../packages/seed/src/scripts/admin/data/rolePermissions.json', import.meta.url), 'utf8'));
+const rolePermissions: Array<{ roleName: string; permissions: string[] }> = JSON.parse(readFileSync(new URL('../../../../packages/server/src/modules/seed-data/admin/rolePermissions.json', import.meta.url), 'utf8'));
 
 const viewer = (role: string, permissions: string[]) => ({ role, can: (name: string) => matchPermission(permissions, name) });
 

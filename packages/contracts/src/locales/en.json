@@ -1250,7 +1250,10 @@
       "download": {
         "action": "Download backup",
         "done": "Backup downloaded.",
-        "failed": "The backup could not be made. Try again."
+        "failed": "The backup could not be made. Try again.",
+        "preparing": "Preparing the backup. This can take a few minutes; keep this page open.",
+        "downloading": "Downloading: {{percent}}%",
+        "downloadingSize": "Downloading: {{size}} MB"
       },
       "restore": {
         "title": "Restore from a backup",
@@ -1259,15 +1262,38 @@
         "warning": "Everything in the school now (every record, account and uploaded file) is replaced by the backup. Changes made after the backup was taken are lost.",
         "file": "Backup file (.zip)",
         "madeOn": "Made on {{date}}",
-        "safetyTitle": "1. Download the current data",
+        "safetyTitle": "Download the current data",
         "safetyDescription": "Keep a backup of the school as it is now, in case you need to go back.",
         "safetyDone": "Current data downloaded.",
-        "confirm": "2. Type {{word}} to confirm",
+        "confirm": "Type {{word}} to confirm",
         "confirmWord": "RESTORE",
+        "confirmHint": "This confirms you want to replace the current data with this backup.",
         "submit": "Replace all data",
         "restoring": "Restoring. This can take a few minutes; keep this page open.",
+        "uploading": "Uploading the backup: {{percent}}%",
         "done": "The school was restored. Sign in again.",
         "failed": "The restore failed. Nothing was changed."
+      },
+      "reset": {
+        "title": "Reset the school",
+        "description": "Delete all of the school's data and go back to the default setup, as on a new installation. Your administrator account stays.",
+        "action": "Reset the school",
+        "subtitle": "Only your administrator account stays.",
+        "warningTitle": "This cannot be undone",
+        "warning": "Every student, parent, staff member, fee, payment, attendance record, grade, setting and uploaded file is deleted, along with all other accounts. The default roles and permissions come back, and everyone is signed out.",
+        "stepDownload": "Download the current data",
+        "stepDownloadHint": "Keep a copy in case you need to go back.",
+        "password": "Enter your password",
+        "passwordHint": "It is checked again before anything is deleted.",
+        "confirmHint": "This confirms you want to reset the school.",
+        "confirm": "Type {{word}} to confirm",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "confirmWord": "RESET",
+        "submit": "Delete everything and reset",
+        "resetting": "Resetting. Keep this page open.",
+        "done": "The school was reset. Sign in again.",
+        "failed": "The reset failed. Nothing was changed."
       },
       "contents": {
         "students": "Students",
@@ -5188,13 +5214,15 @@
   },
   "backup": {
     "success": {
-      "restored": "The school was restored from the backup."
+      "restored": "The school was restored from the backup.",
+      "reset": "The school was reset to its defaults."
     },
     "errors": {
       "invalidFile": "This file is not a school backup.",
       "damaged": "This backup is incomplete or damaged. Nothing was changed.",
       "otherVersion": "This backup was made by a different version of the app and cannot be restored here. Nothing was changed.",
-      "tooLarge": "This backup is larger than 512 MB."
+      "tooLarge": "This backup is larger than 512 MB.",
+      "wrongPassword": "That password is not correct. Nothing was changed."
     }
   },
   "classRoutines": {
