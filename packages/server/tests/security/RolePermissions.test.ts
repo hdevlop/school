@@ -6,6 +6,7 @@ import { getRoutes } from 'najm-core';
 import { getGuardMetadata } from 'najm-guard';
 import { themeConfig } from '../../src/config/themeConfig';
 import { AccessResetController } from '../../src/modules/accessReset/AccessResetController';
+import { AccountLinkController } from '../../src/modules/accountLinks/AccountLinkController';
 import { AttendanceController } from '../../src/modules/attendance/AttendanceController';
 import { AttendanceValidator } from '../../src/modules/attendance/AttendanceValidator';
 import { BackupController } from '../../src/modules/backup/BackupController';
@@ -108,6 +109,8 @@ describe('routes that were admin-only ask for a permission', () => {
     expect(guards(ClassRoutineController, 'publish')).toEqual(can('update:class-routines'));
     expect(guards(StudentRouteController, 'assign')).toEqual(schoolWide('create:student-routes'));
     expect(guards(AccessResetController)).toEqual(can('reset:users'));
+    // Every person's login, past ownership: a teacher granted read:users still cannot list them.
+    expect(guards(AccountLinkController, 'getAll')).toEqual(schoolWide('read:users'));
   });
 
   it('keeps appearance and branding with the administrator alone', () => {

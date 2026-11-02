@@ -1,8 +1,11 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'najm-i18n/react';
 import { useRoles } from '@/features/Roles/hooks/useRoles';
+import type { LinkedToFilter } from '../config/accountLinks';
+import { buildLinkedToOptions } from '../config/userOptions';
 
-export const useUsersTableFilters = () => {
+/** `linkedTo` is absent while the account links are unknown: the filter then has nothing to filter on. */
+export const useUsersTableFilters = (linkedTo?: { value: LinkedToFilter; onChange: (value: LinkedToFilter) => void }) => {
   const { t } = useTranslation();
   const { roles } = useRoles();
 
@@ -15,7 +18,7 @@ export const useUsersTableFilters = () => {
     {
       type: "text",
       name: "email",
-      placeholder: t('users.filters.searchByEmail'),
+      placeholder: t('users.filters.searchByEmailOrPhone'),
     },
     {
       // Each row's `role` column holds the role's name, so the options are the
@@ -26,5 +29,14 @@ export const useUsersTableFilters = () => {
       placeholder: t('users.filters.filterByRole'),
       options: (roles ?? []).map((role) => ({ value: role.name, label: role.name })),
     },
-  ], [t, roles]);
+    ...(linkedTo ? [{
+      type: "select",
+      showIcon: false,
+      name: "linkedTo",
+      placeholder: t('users.filters.linkedTo'),
+      value: linkedTo.value,
+      onChange: (value: string) => linkedTo.onChange((value || '__all__') as LinkedToFilter),
+      options: buildLinkedToOptions(t),
+    }] : []),
+  ], [t, roles, linkedTo]);
 };

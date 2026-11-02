@@ -630,7 +630,9 @@
       "viewTitle": "تفاصيل المستخدم",
       "editTitle": "تعديل المستخدم",
       "updateButton": "تحديث المستخدم",
-      "deleteButton": "حذف المستخدم"
+      "deleteButton": "حذف المستخدم",
+      "bulkDeleteItemName": "{{count}} حساب مستخدم",
+      "currentAccountKept": "سيتم الاحتفاظ بحسابك الحالي."
     },
     "table": {
       "selectAll": "تحديد الكل",
@@ -644,7 +646,18 @@
     "filters": {
       "searchByName": "البحث بالاسم...",
       "searchByEmail": "البحث بالبريد الإلكتروني...",
-      "filterByRole": "تصفية حسب الدور..."
+      "filterByRole": "تصفية حسب الدور...",
+      "searchByEmailOrPhone": "ابحث بالبريد الإلكتروني أو الهاتف...",
+      "linkedTo": "مرتبط بـ...",
+      "linkedToAll": "جميع الحسابات",
+      "linkedToStudent": "تلميذ",
+      "linkedToParent": "ولي أمر",
+      "linkedToStaff": "موظف",
+      "linkedToNone": "لا يوجد شخص مرتبط"
+    },
+    "card": {
+      "logins": "تسجيلات الدخول",
+      "sessions": "الجلسات"
     }
   },
   "roles": {
@@ -6005,7 +6018,7 @@
       "programs": "البرامج",
       "parents": "الأسر",
       "contact": "تواصل معنا",
-      "portal": "فضاء الآباء",
+      "portal": "بوابة لوحة التحكم",
       "dashboard": "فتح لوحة التحكم",
       "website": "موقع المدرسة",
       "label": "التنقل في موقع المدرسة",

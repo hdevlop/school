@@ -1,12 +1,13 @@
 "use client"
 
 import { PermissionButton } from '@/components/PermissionButton';
+import { BulkDeleteDialog } from '@/components/BulkDeleteDialog';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Eye, KeyRound, Pencil, Trash2, Plus } from 'lucide-react';
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import UserForm from './UserForm';
 import UserView from './UserView';
 import ResetAccessDialog from './ResetAccessDialog';
@@ -15,17 +16,37 @@ import { useTranslation } from 'najm-i18n/react';
 import UserCard from './UserCard';
 import { useUsersTableColumns } from '../hooks/useUsersTableColumns';
 import { useUsersTableFilters } from '../hooks/useUsersTableFilters';
+import { useAccountLinks } from '../hooks/useAccountLinks';
+import { useViewerRole } from '../hooks/useViewerRole';
+import { getUserRowClassName, matchesLinkedTo, withAccountLinks, type LinkedToFilter } from '../config/accountLinks';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
+import { useAuth } from 'najm-auth/client/react';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { deleteUserApi } from '@/services/userApi';
+import { deleteSelection, type DeleteSelectionProgress } from '@/shared/deleteSelection';
+import { focusTableForKeyboard } from '@/shared/focusTableForKeyboard';
+import { removableUserIds } from '../config/bulkRemoval';
 
 function UsersTable() {
 
   const { t } = useTranslation();
+  const { user: currentUser } = useAuth();
+  const queryClient = useQueryClient();
+  const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
   const columns = useUsersTableColumns();
-  const rawFilters = useUsersTableFilters();
+  const { isSchoolWide } = useViewerRole();
+  const links = useAccountLinks(isSchoolWide);
+  const [linkedToFilter, setLinkedToFilter] = useState<LinkedToFilter>('__all__');
+  const linkedTo = useMemo(
+    () => links ? { value: linkedToFilter, onChange: setLinkedToFilter } : undefined,
+    [links, linkedToFilter],
+  );
+  const rawFilters = useUsersTableFilters(linkedTo);
 
   const {
-    users,
+    users: accounts,
     createUser,
     updateUser,
     deleteUser,
@@ -35,6 +56,12 @@ function UsersTable() {
     isCreating,
     isDeleting
   } = useUsers();
+
+  // Each account carries who it belongs to; the 'Linked to' filter narrows the list here.
+  const users = useMemo(() => {
+    const linked = withAccountLinks(accounts, links);
+    return links ? linked?.filter(user => matchesLinkedTo(user, linkedToFilter)) : linked;
+  }, [accounts, links, linkedToFilter]);
 
   const { openDialog, confirmDelete } = useDialog();
 
@@ -100,6 +127,48 @@ function UsersTable() {
     });
   };
 
+  const handleBulkDelete = (ids: string[]) => {
+    if (!currentUser?.id) return;
+    const selectedIds = removableUserIds(ids, currentUser.id);
+    if (!selectedIds.length) {
+      toast.info(t('users.dialogs.currentAccountKept'));
+      return;
+    }
+    let warningText = t('common.deleteConfirm');
+    if (ids.includes(currentUser.id)) warningText += ` ${t('users.dialogs.currentAccountKept')}`;
+    openDialog({
+      title: t('common.delete'),
+      size: 'sm',
+      render: ({ dialog, zIndex, confirm, cancel, onOpenChange }) => (
+        <BulkDeleteDialog
+          title={dialog.title}
+          total={selectedIds.length}
+          itemName={t('users.dialogs.bulkDeleteItemName', { count: selectedIds.length })}
+          warningText={warningText}
+          confirmText={t('common.delete')}
+          cancelText={t('common.cancel')}
+          loading={dialog.primaryButton?.loading}
+          zIndex={zIndex}
+          onOpenChange={onOpenChange}
+          onCancel={() => cancel()}
+          onConfirm={onProgress => confirm(onProgress)}
+        />
+      ),
+      primaryButton: {
+        onClick: async (onProgress: (progress: DeleteSelectionProgress) => void) => {
+          const result = await deleteSelection(selectedIds, deleteUserApi, onProgress);
+          setRowSelection(Object.fromEntries(result.failed.map(({ id }) => [id, true])));
+          await Promise.all(['users', 'operators', 'students', 'parents', 'staff', 'teachers'].map(key =>
+            queryClient.invalidateQueries({ queryKey: [key] })));
+          if (result.deleted.length) toast.success(t('common.deletedCount', { count: result.deleted.length }));
+          if (result.failed.length) toast.error(t('common.deleteFailedCount', { count: result.failed.length }), {
+            description: [...new Set(result.failed.map(item => item.message))].join(' · '),
+          });
+        },
+      },
+    });
+  };
+
   // NTable's built-in View/Edit/Delete items exist only while no `menu.row` is
   // supplied — providing one replaces them — so they are restated here, which
   // also gets them translated. One menu now serves the desktop row button, the
@@ -122,14 +191,24 @@ function UsersTable() {
     },
   ];
 
-  const total = users?.length ?? 0;
+  // The header counts every account, like the other filters leave it.
+  const total = accounts?.length ?? 0;
+
+  const filteredEmpty = (
+    <NEmptyState
+      surface="panel"
+      icon={FEATURE_ICONS.users}
+      title={t('emptyStates.filtered.title')}
+      description={t('emptyStates.filtered.description')}
+    />
+  );
 
   return (
-    <div className='flex flex-col gap-2 w-full h-full'>
+    <div className='flex flex-col gap-2 w-full h-full' onPointerDownCapture={focusTableForKeyboard}>
       <NPageHeader
         icon={FEATURE_ICONS.users}
         title={t('navigation.users')}
-        subtitle={isCountUnknown(error, users, isUsersLoading) ? undefined : t('users.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, accounts, isUsersLoading) ? undefined : t('users.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -140,23 +219,33 @@ function UsersTable() {
         exportTitle={t('navigation.users')}
         permissionResource="users"
         data={users}
+        getRowId={(user) => user.id}
         columns={columns}
         filters={rawFilters}
         onCreate={handleAddClick}
         onView={handleView}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        onBulkDelete={handleBulkDelete}
+        showDeleteSelection
+        rowSelection={rowSelection}
+        onRowSelectionChange={setRowSelection}
         menu={{ row: rowMenu }}
+        getRowClassName={getUserRowClassName}
         loading={isUsersLoading}
-        error={hasFailedToLoad(error, users) ? error : null}
+        error={hasFailedToLoad(error, accounts) ? error : null}
         renderError={(currentError) => (
           isAuthorizationError(currentError)
             ? <NForbiddenState surface="panel" />
             : <NErrorState surface="panel" />
         )}
         renderCard={UserCard}
+        // The cards are compact, so a wide screen fits five per row.
+        classNames={{ cards: 'grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5' }}
         addButtonText={t('users.dialogs.createButton')}
-        renderEmpty={() => (
+        // The 'Linked to' filter narrows the rows before the table sees them, so
+        // an empty result there is a filtered one, not a school without users.
+        renderEmpty={() => linkedToFilter !== '__all__' && accounts?.length ? filteredEmpty : (
           <NEmptyState
             surface="panel"
             icon={FEATURE_ICONS.users}
@@ -170,14 +259,7 @@ function UsersTable() {
             )}
           />
         )}
-        renderFilteredEmpty={() => (
-          <NEmptyState
-            surface="panel"
-            icon={FEATURE_ICONS.users}
-            title={t('emptyStates.filtered.title')}
-            description={t('emptyStates.filtered.description')}
-          />
-        )}
+        renderFilteredEmpty={() => filteredEmpty}
         defaultMode='cards'
       />
     </div>

@@ -14,6 +14,12 @@ export const getUsersApi = async () => {
   }
 };
 
+/** Which logins belong to a student, a parent or a staff member; any other login has no person behind it. */
+export const getAccountLinksApi = async (): Promise<{ userId: string; kind: 'student' | 'parent' | 'staff' }[]> => {
+  const res = await api.get('/account-links');
+  return res.data.data;
+};
+
 export const getUserByIdApi = async (id) => {
   const res = await api.get(`/users/${id}`);
   return res.data;

@@ -631,7 +631,9 @@
       "viewTitle": "User Details",
       "editTitle": "Edit User",
       "updateButton": "Update User",
-      "deleteButton": "Delete User"
+      "deleteButton": "Delete User",
+      "bulkDeleteItemName": "{{count}} user account(s)",
+      "currentAccountKept": "Your current account will be kept."
     },
     "table": {
       "selectAll": "Select all",
@@ -645,7 +647,18 @@
     "filters": {
       "searchByName": "Search by name...",
       "searchByEmail": "Search by email...",
-      "filterByRole": "Filter by role..."
+      "filterByRole": "Filter by role...",
+      "searchByEmailOrPhone": "Search by email or phone...",
+      "linkedTo": "Linked to...",
+      "linkedToAll": "All accounts",
+      "linkedToStudent": "Student",
+      "linkedToParent": "Parent",
+      "linkedToStaff": "Staff",
+      "linkedToNone": "No linked person"
+    },
+    "card": {
+      "logins": "Logins",
+      "sessions": "Sessions"
     }
   },
   "roles": {
@@ -6700,7 +6713,7 @@
       "programs": "Programs",
       "parents": "Parents",
       "contact": "Contact",
-      "portal": "Parent portal",
+      "portal": "Dashboard portal",
       "dashboard": "Open dashboard",
       "website": "School website",
       "label": "School navigation",

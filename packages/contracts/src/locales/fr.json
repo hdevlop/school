@@ -631,7 +631,9 @@
       "viewTitle": "Détails de l'Utilisateur",
       "editTitle": "Modifier l'Utilisateur",
       "updateButton": "Mettre à Jour l'Utilisateur",
-      "deleteButton": "Supprimer l'Utilisateur"
+      "deleteButton": "Supprimer l'Utilisateur",
+      "bulkDeleteItemName": "{{count}} compte(s) utilisateur",
+      "currentAccountKept": "Votre compte actuel sera conservé."
     },
     "table": {
       "selectAll": "Tout sélectionner",
@@ -645,7 +647,18 @@
     "filters": {
       "searchByName": "Rechercher par nom...",
       "searchByEmail": "Rechercher par email...",
-      "filterByRole": "Filtrer par rôle..."
+      "filterByRole": "Filtrer par rôle...",
+      "searchByEmailOrPhone": "Rechercher par e-mail ou téléphone...",
+      "linkedTo": "Lié à...",
+      "linkedToAll": "Tous les comptes",
+      "linkedToStudent": "Élève",
+      "linkedToParent": "Parent",
+      "linkedToStaff": "Personnel",
+      "linkedToNone": "Aucune personne liée"
+    },
+    "card": {
+      "logins": "Connexions",
+      "sessions": "Sessions"
     }
   },
   "roles": {
@@ -6095,7 +6108,7 @@
       "programs": "Programmes",
       "parents": "Parents",
       "contact": "Contact",
-      "portal": "Espace parents",
+      "portal": "Portail du tableau de bord",
       "dashboard": "Ouvrir le tableau de bord",
       "website": "Site de l’école",
       "label": "Navigation de l’école",

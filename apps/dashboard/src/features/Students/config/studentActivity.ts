@@ -4,9 +4,7 @@ export function isStudentDisabled(student: { enrollment?: { leftOn?: string | nu
 }
 
 export const getStudentRowClassName = (student: Parameters<typeof isStudentDisabled>[0]) =>
-  isStudentDisabled(student)
-    ? 'bg-muted/60 text-muted-foreground opacity-80 grayscale hover:bg-muted/80'
-    : undefined;
+  isStudentDisabled(student) ? INACTIVE_ROW_CLASS : undefined;
 
 /** Keep active enrollments first, preserving the existing order within each group. */
 export const compareStudentActivity = (
@@ -27,3 +25,4 @@ export const compareStudentListRows = (left: StudentListRow, right: StudentListR
   || (left.section?.name ?? '').localeCompare(right.section?.name ?? '', 'fr', { numeric: true })
   || (left.name ?? '').localeCompare(right.name ?? '', 'fr', { numeric: true });
 import { compareClassNames } from '@sms/contracts';
+import { INACTIVE_ROW_CLASS } from '@/shared/inactiveRow';

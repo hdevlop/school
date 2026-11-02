@@ -630,7 +630,9 @@
       "viewTitle": "Detalles del Usuario",
       "editTitle": "Editar Usuario",
       "updateButton": "Actualizar Usuario",
-      "deleteButton": "Eliminar Usuario"
+      "deleteButton": "Eliminar Usuario",
+      "bulkDeleteItemName": "{{count}} cuenta(s) de usuario",
+      "currentAccountKept": "Se conservará tu cuenta actual."
     },
     "table": {
       "selectAll": "Seleccionar todo",
@@ -644,7 +646,18 @@
     "filters": {
       "searchByName": "Buscar por nombre...",
       "searchByEmail": "Buscar por correo electrónico...",
-      "filterByRole": "Filtrar por rol..."
+      "filterByRole": "Filtrar por rol...",
+      "searchByEmailOrPhone": "Buscar por correo o teléfono...",
+      "linkedTo": "Vinculado a...",
+      "linkedToAll": "Todas las cuentas",
+      "linkedToStudent": "Alumno",
+      "linkedToParent": "Padre/Madre",
+      "linkedToStaff": "Personal",
+      "linkedToNone": "Sin persona vinculada"
+    },
+    "card": {
+      "logins": "Inicios de sesión",
+      "sessions": "Sesiones"
     }
   },
   "roles": {
@@ -5991,7 +6004,7 @@
       "programs": "Programas",
       "parents": "Familias",
       "contact": "Contacto",
-      "portal": "Portal de familias",
+      "portal": "Portal del panel de control",
       "dashboard": "Abrir el panel",
       "website": "Sitio del colegio",
       "label": "Navegación del colegio",

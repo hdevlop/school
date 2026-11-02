@@ -4,6 +4,7 @@ import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { avatarVersion } from '@/lib/avatarVersion';
 import { exportStatus } from '@/shared/tableExport';
+import { matchesEmailOrPhone } from '../config/accountLinks';
 
 export const useUsersTableColumns = () => {
   const { t } = useTranslation();
@@ -34,6 +35,10 @@ export const useUsersTableColumns = () => {
       accessorKey: 'email',
       header: t('users.table.email'),
       enableSorting: false,
+      // Most accounts sign in by phone and have no email, so the email search
+      // matches either. Left on 'auto', TanStack picked the filter from the
+      // first row's value, and a null there made it an exact match.
+      filterFn: (row, _columnId, search) => matchesEmailOrPhone(row.original, search),
     },
     {
       accessorKey: 'role',

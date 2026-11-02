@@ -1,94 +1,54 @@
 "use client";
 
-import { User, Mail, Shield, Hash, Phone, Calendar } from 'lucide-react';
-import { NAvatar, NStatCard, NBadge } from 'najm-kit';
-import { NSection, NSectionInfo } from 'najm-kit';
-import { Label } from 'najm-kit';
+import { Clock, LogIn, Mail, Phone } from 'lucide-react';
+import { NAvatar, NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { avatarVersion } from '@/lib/avatarVersion';
 
-const UserHeader = ({ user }) => {
-  return (
-    <div className="flex flex-col items-center border-none md:flex-row md:gap-4">
-      <NAvatar src={user.image} fallback={user.name} size="lg" version={avatarVersion(user.image, user?.updatedAt)} />
-      <div className="flex flex-col justify-center items-center md:items-start">
-        <Label className="text-md font-bold">{user.name}</Label>
-        <Label className="text-sm ">{user.email}</Label>
-        <NBadge status={user.status} look="minimal" />
-      </div>
-    </div>
-  );
-};
-
-const UserCard = ({ data }) => {
+/**
+ * Compact enough for five per row: who the account is, how it signs in, and
+ * how often it has. The account id is in the View dialog.
+ */
+const UserCard = ({ data: user }) => {
   const { t } = useTranslation();
-  const user = data;
-
-  const totalLogins = user?.analytics?.totalLogins || 0;
-  const totalSessions = user?.analytics?.totalSessions || 0;
+  // An account signs in with its email, or with its phone when it has none.
+  const contact = user.email || user.phone;
+  const ContactIcon = user.email ? Mail : Phone;
 
   return (
-    <div className="flex flex-col gap-4 p-4">
-
-      <UserHeader user={user} />
-
-      <div className="grid grid-cols-2 gap-4">
-        <NStatCard
-          variant="compact"
-          icon={User}
-          label="Total Logins"
-          value={totalLogins}
-          iconColor="text-blue-500"
-        />
-        <NStatCard
-          variant="compact"
-          icon={Calendar}
-          label="Sessions"
-          value={totalSessions}
-          iconColor="text-green-500"
-        />
+    <div className="flex flex-col">
+      {/* End padding keeps the name clear of the card's menu button. */}
+      <div className="flex items-center gap-3 p-3 pe-10">
+        <NAvatar src={user.image} fallback={user.name} size="md" version={avatarVersion(user.image, user?.updatedAt)} />
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
+          <p className="truncate text-sm font-semibold" title={user.name}>{user.name}</p>
+          <div className="flex min-w-0 items-center gap-2">
+            {user.role && (
+              <span className="truncate rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">{user.role}</span>
+            )}
+            <NBadge status={user.status} look="minimal" />
+          </div>
+          {contact && (
+            <p className="flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground" title={contact}>
+              <ContactIcon className="size-3.5 shrink-0" />
+              <bdi dir="ltr" className="truncate">{contact}</bdi>
+            </p>
+          )}
+        </div>
       </div>
 
-      {/* Account Information */}
-      <NSection
-        icon={User}
-        title={t('users.view.accountInformation')}
-        iconColor="text-blue-400"
-        background="bg-foreground/10"
-      >
-        <NSectionInfo
-          icon={Hash}
-          label={t('users.table.id')}
-          value={user.id}
-          valueColor="text-muted-foreground"
-          iconColor="text-muted-foreground/60"
-        />
-
-        <NSectionInfo
-          icon={Mail}
-          label={t('users.table.email')}
-          value={user.email}
-          valueColor="text-muted-foreground"
-          iconColor="text-muted-foreground/60"
-        />
-
-        <NSectionInfo
-          icon={Phone}
-          label="Phone"
-          value={user.phone}
-          valueColor="text-muted-foreground"
-          iconColor="text-muted-foreground/60"
-        />
-
-        <NSectionInfo
-          icon={Shield}
-          label={t('users.table.role')}
-          value={user.role}
-          valueColor="text-primary font-medium"
-          iconColor="text-muted-foreground/60"
-        />
-
-      </NSection>
+      <div className="flex items-center gap-4 border-t px-3 py-2 text-xs text-muted-foreground">
+        <span className="flex items-center gap-1.5">
+          <LogIn className="size-3.5" />
+          <span className="font-medium text-foreground">{user?.analytics?.totalLogins || 0}</span>
+          {t('users.card.logins')}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <Clock className="size-3.5" />
+          <span className="font-medium text-foreground">{user?.analytics?.totalSessions || 0}</span>
+          {t('users.card.sessions')}
+        </span>
+      </div>
     </div>
   );
 };
