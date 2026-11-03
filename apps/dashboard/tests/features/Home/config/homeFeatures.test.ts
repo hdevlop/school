@@ -115,3 +115,69 @@ describe('Home cards', () => {
     expect(principalCards.some((card) => card.action)).toBe(false);
   });
 });
+
+describe('Home card order', () => {
+  type Entry = { id: string; children?: Entry[] };
+  const leafIds = (items: readonly Entry[]): string[] => items.flatMap((item) => item.children?.length ? leafIds(item.children) : [item.id]);
+  const admin = viewer('admin', ['*:*']);
+
+  it('follows the default sidebar order, with settings last as in its footer', () => {
+    const ids = createHomeCards(t, admin, ['*:*']).map((card) => card.id);
+    expect(ids).toEqual([...leafIds(createSidebarItems(t, admin)), '/settings']);
+  });
+
+  it('follows the order saved in the roles screen, opening a group in place', () => {
+    const order = ['academic', '/dashboard', '/subjects', '/classes'];
+    const ids = createHomeCards(t, admin, ['*:*'], order).map((card) => card.id);
+    expect(ids.slice(0, 5)).toEqual(['/subjects', '/classes', '/sections', '/cycles', '/dashboard']);
+    expect(ids).toEqual([...leafIds(createSidebarItems(t, admin, order)), '/settings']);
+  });
+
+  it("puts a family role's sidebar pages first, in that sidebar's order", () => {
+    const permissions = ['read:students', 'read:alerts', 'read:grades', 'read:discipline', 'read:behavior-rewards', 'read:events'];
+    const parent = viewer('parent', permissions);
+    const order = ['/calendar', 'student-conduct', '/discipline', '/students'];
+    const ids = createHomeCards(t, parent, permissions, order).map((card) => card.id);
+    const sidebar = leafIds(createSidebarItems(t, parent, order));
+    expect(sidebar.slice(0, 4)).toEqual(['/calendar', '/discipline', '/behavior-rewards', '/students']);
+    expect(ids.slice(0, sidebar.length)).toEqual(sidebar);
+    // Grades lives in the child's profile, not the family sidebar.
+    expect(ids.indexOf('/grades')).toBeGreaterThanOrEqual(sidebar.length);
+  });
+});
+
+describe('Home cards and sidebar ticks', () => {
+  const ticked = (...keys: string[]) => ['sidebar:configured', ...keys.map((key) => `sidebar:${key}`)];
+
+  it('hides a page unticked in the Sidebar tab, as the sidebar does', () => {
+    const permissions = ['read:students', 'read:parents', 'read:fees', 'read:expenses', ...ticked('students', 'fees', 'notifications')];
+    const secretary = viewer('secretary', permissions);
+    const ids = createHomeCards(t, secretary, permissions).map((card) => card.id);
+    expect(ids).toEqual(['/students', '/fees', '/notifications']);
+    const sidebar = createSidebarItems(t, secretary).flatMap((item) => item.children?.length ? item.children : [item]);
+    expect(sidebar.map((item) => item.id)).toEqual(ids);
+  });
+
+  it('follows the footer tick for the Settings card', () => {
+    const settingsCard = (permissions: string[]) => createHomeCards(t, viewer('principal', permissions), permissions).some((card) => card.id === '/settings');
+    expect(settingsCard(['read:settings', ...ticked()])).toBe(false);
+    expect(settingsCard(['read:settings', ...ticked('settings')])).toBe(true);
+  });
+
+  it('keeps a locked card, which the Sidebar tab cannot tick', () => {
+    const permissions = ['create:payments', ...ticked()];
+    expect(createHomeCards(t, viewer('accounting', permissions), permissions).find((card) => card.id === '/fees')).toMatchObject({ accessible: false });
+  });
+
+  it("keeps a family card the role's sidebar never lists", () => {
+    const permissions = ['read:students', 'read:grades', ...ticked('students')];
+    const ids = createHomeCards(t, viewer('parent', permissions), permissions).map((card) => card.id);
+    expect(ids).toEqual(expect.arrayContaining(['/students', '/grades']));
+  });
+
+  it('shows every page to a role never saved in the Sidebar tab', () => {
+    const permissions = ['read:students', 'read:parents'];
+    expect(createHomeCards(t, viewer('secretary', permissions), permissions).map((card) => card.id))
+      .toEqual(expect.arrayContaining(['/dashboard', '/students', '/parents', '/notifications']));
+  });
+});

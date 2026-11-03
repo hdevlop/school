@@ -10,7 +10,8 @@ import { NotificationsMenu } from '@/features/Notifications';
 import LanguageSwitcher from '@/features/Settings/components/LanguageSwitcher';
 import { PAGE_ACCESS } from '@/shared/pageAccess';
 import { useNavigationActions } from '@/shared/DashboardShell/NavigationActions';
-import { HOME_SECTIONS, createHomeCards, type HomeCard } from '../config/homeFeatures';
+import { useSidebarOrder } from '@/features/Roles/hooks/useSidebarOrder';
+import { createHomeCards, type HomeCard } from '../config/homeFeatures';
 import { HOME_ICON_ATLAS, HOME_ICON_INDEX } from '../config/homeIllustrations';
 import { accountAvatar } from '../config/accountAvatar';
 import { avatarVersion } from '@/lib/avatarVersion';
@@ -59,10 +60,10 @@ export default function MobileHome() {
   const sidebar = useNSidebar();
   const [greeting, setGreeting] = useState('mobileHome.welcome');
   const [profileOpen, setProfileOpen] = useState(false);
+  // Shared with the shell's sidebar query; the tiles wait for it rather than reshuffle.
+  const { data: sidebarOrder = [], isLoading: isOrderLoading } = useSidebarOrder();
   const viewer = { role: user?.role, can };
-  const cards = createHomeCards(t, viewer, permissions)
-    .sort((a, b) => HOME_SECTIONS.indexOf(a.section) - HOME_SECTIONS.indexOf(b.section)
-      || (HOME_ICON_INDEX[a.id] ?? 99) - (HOME_ICON_INDEX[b.id] ?? 99));
+  const cards = isOrderLoading ? [] : createHomeCards(t, viewer, permissions, sidebarOrder);
   const name = user?.name || user?.email || '';
   const initials = name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => Array.from(part)[0]).join('').toLocaleUpperCase();
   const role = user?.role ?? '';
