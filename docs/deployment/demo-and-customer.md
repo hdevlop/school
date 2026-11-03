@@ -1,8 +1,9 @@
 # Demo and customer installations
 
 One repository and one reusable image, deployed as two independent Dokploy
-Compose projects. Customer promotion is manual in Dokploy; GitHub receives no
-customer deployment credential or webhook.
+Compose projects. Customer promotion is an operator's decision, in Dokploy or
+from a local terminal; GitHub receives no customer deployment credential or
+webhook.
 
 | Installation | Public origin | Image selection | Deployment |
 | --- | --- | --- | --- |
@@ -212,6 +213,29 @@ publication state and landing edits always retain their values.
    revision only proves the web service. Test essential school workflows and
    real mail delivery. Record the image/configuration ref, backup, operator,
    verification time and results in the release record.
+
+### From a local terminal
+
+`bun run deploy:jhl <commit>` does steps 1, 4 and the public checks of step 6
+from the operator's machine. It reads `DOKPLOY_URL`, `DOKPLOY_API_KEY` and
+`DOKPLOY_JHL_COMPOSE_ID` from `apps/dashboard/.env.local`, so GitHub still holds
+no customer credential. Create the key in Dokploy under **Settings → Profile**;
+it opens every project on that Dokploy, so keep it off shared machines. It builds
+nothing and needs an image CI already published.
+
+It refuses a commit whose demo deploy job did not succeed, a compose whose
+`FRONTEND_URL` is not `https://jhlschool.com`, and a compose with Auto Deploy on.
+It then shows the images, pending migrations and Compose comparison, asks you to
+confirm the backup and the deployment, changes only the `SCHOOL_IMAGE` line and
+deploys. Add `--dry-run` to see all of this without changing anything. `--yes`
+answers both questions in advance, so it is for an operator who has already
+reviewed the release and decided about the backup; the refusals still apply.
+
+Demo testing, the backup, and reviewing what it shows stay with the operator, as
+do the worker image and heartbeat, an essential workflow and mail delivery. It
+has been tested against a fake Dokploy; run `--dry-run` first on a new Dokploy
+version, and recheck the API after an upgrade: on 0.30.8 `compose.update` writes
+only the fields it receives, and `compose.one` returns the decrypted environment.
 
 Ordinary demo pushes never change customer `SCHOOL_IMAGE`. A selected digest
 remains available for manual promotion even after demo moves ahead. GitHub
