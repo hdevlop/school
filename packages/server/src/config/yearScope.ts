@@ -33,6 +33,7 @@ import { MaintenanceController } from '../modules/transport/maintenance/Maintena
 import { RefuelController } from '../modules/transport/refuels/RefuelController';
 import { StudentRouteController } from '../modules/transport/studentRoutes/StudentRouteController';
 import { StudentController } from '../modules/students/StudentController';
+import { InsuranceController } from '../modules/insurance/InsuranceController';
 import { TeacherController } from '../modules/teachers/TeacherController';
 import { StudentEnrollmentController } from '../modules/studentEnrollments/StudentEnrollmentController';
 import { VehicleAssignmentController } from '../modules/transport/vehicleAssignments/VehicleAssignmentController';
@@ -58,6 +59,7 @@ export const yearScopedModules = {
   'student-routes': StudentRouteController,
   'vehicle-assignments': VehicleAssignmentController,
   students: StudentController,
+  insurance: InsuranceController,
   teachers: TeacherController,
   'student-enrollments': StudentEnrollmentController,
   alerts: AlertController,

@@ -838,5 +838,17 @@
     "description": "Read previously downloaded authorized data offline",
     "resource": "offline",
     "action": "read"
+  },
+  {
+    "name": "read:insurance",
+    "description": "Permission to view and print the student insurance register",
+    "resource": "insurance",
+    "action": "read"
+  },
+  {
+    "name": "read:class-routines",
+    "description": "Permission to view class timetables",
+    "resource": "class-routines",
+    "action": "read"
   }
 ]

@@ -12,7 +12,7 @@ type FeatureDetails = { resources: readonly string[]; tone: HomeTone };
 // A feature can contain several resources: payments and installments belong to Fees.
 const FEATURE_DETAILS: Partial<Record<PageAccess, FeatureDetails>> = {
   students: { resources: ['students', 'enrollments'], tone: 'blue' },
-  insurance: { resources: ['students'], tone: 'green' },
+  insurance: { resources: ['insurance'], tone: 'green' },
   parents: { resources: ['parents'], tone: 'teal' },
   teachers: { resources: ['teachers'], tone: 'rose' },
   staff: { resources: ['staff', 'staff-roles', 'zones'], tone: 'violet' },
@@ -20,7 +20,7 @@ const FEATURE_DETAILS: Partial<Record<PageAccess, FeatureDetails>> = {
   classes: { resources: ['classes'], tone: 'blue' },
   sections: { resources: ['sections'], tone: 'teal' },
   cycles: { resources: ['cycles'], tone: 'violet' },
-  classRoutines: { resources: ['classes', 'class-routines'], tone: 'blue' },
+  classRoutines: { resources: ['class-routines'], tone: 'blue' },
   studentAttendance: { resources: ['attendance'], tone: 'teal' },
   staffAttendance: { resources: ['staff-attendance'], tone: 'rose' },
   discipline: { resources: ['discipline'], tone: 'rose' },

@@ -28,7 +28,7 @@ const schoolWide = (permission: string): PageRule => (viewer) => isSchoolWideRol
 export const PAGE_ACCESS = {
   dashboard: inRoles(DASHBOARD),
   students: can('read:students'),
-  insurance: schoolWide('read:students'),
+  insurance: schoolWide('read:insurance'),
   parents: can('read:parents'),
   teachers: can('read:teachers'),
   staff: schoolWide('read:staff'),
@@ -48,7 +48,7 @@ export const PAGE_ACCESS = {
   exams: can('read:exams'),
   grades: can('read:grades'),
   calendar: can('read:events'),
-  classRoutines: can('read:classes'),
+  classRoutines: can('read:class-routines'),
   classes: can('read:classes'),
   sections: can('read:sections'),
   cycles: can('read:cycles'),

@@ -31,10 +31,11 @@ describe('independent sidebar visibility', () => {
     expect(assessmentsOnly).not.toContain('/exam-planning');
     expect(assessmentsOnly).not.toContain('/exams');
   });
-  it('shows insurance to school-wide student readers through its own sidebar choice', () => {
-    expect(ids(createSidebarItems((key) => key, viewer('secretary', ['read:students'])))).toContain('/insurance');
-    expect(ids(createSidebarItems((key) => key, viewer('teacher', ['read:students'])))).not.toContain('/insurance');
-    const base = ['read:students', 'read:parents', SIDEBAR_CONFIGURED_PERMISSION];
+  it('shows insurance through its own permission and sidebar choice', () => {
+    expect(ids(createSidebarItems((key) => key, viewer('secretary', ['read:students'])))).not.toContain('/insurance');
+    expect(ids(createSidebarItems((key) => key, viewer('secretary', ['read:insurance'])))).toContain('/insurance');
+    expect(ids(createSidebarItems((key) => key, viewer('teacher', ['read:insurance'])))).not.toContain('/insurance');
+    const base = ['read:insurance', 'read:students', 'read:parents', SIDEBAR_CONFIGURED_PERMISSION];
     expect(ids(createSidebarItems((key) => key, viewer('secretary', [...base, 'sidebar:insurance'])))).toContain('/insurance');
     expect(ids(createSidebarItems((key) => key, viewer('secretary', [...base, 'sidebar:students'])))).not.toContain('/insurance');
   });

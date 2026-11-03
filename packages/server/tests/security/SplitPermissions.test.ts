@@ -13,6 +13,11 @@ const permission = (controller: any, method: string) => getGuardMetadata(control
   .filter((guard) => guard.guardClass.name === 'PermissionGuard').map((guard) => guard.params);
 
 describe('split action guards', () => {
+  it('reads timetables independently of classes', () => {
+    for (const method of ['getPeriods', 'getClassSections', 'getAssignments', 'getSubjects', 'getTeacherRoutine', 'getPublished', 'list', 'getById']) {
+      expect(permission(ClassRoutineController, method)).toEqual(['read:class-routines']);
+    }
+  });
   it('treats rollover and discipline resolution/reopening as edits', () => {
     expect(permission(RolloverController, 'commit')).toEqual(['update:financial-operations']);
     for (const method of ['update', 'resolve', 'reopen']) {

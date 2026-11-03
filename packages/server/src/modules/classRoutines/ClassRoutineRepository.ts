@@ -19,6 +19,9 @@ import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import type { RoutineListQuery } from './ClassRoutineDto';
 import { DEFAULT_TEACHING_DAYS } from '@sms/contracts/routines';
+import { managesGrade } from '../staff/floorManagerScope';
+
+export type RoutineReader = { id: string; role: string };
 
 @Repository()
 export class ClassRoutineRepository {
@@ -284,19 +287,23 @@ export class ClassRoutineRepository {
   }
 
   // The page's class and section filters, in the classes list's order.
-  async getClassesInSelectedYear() {
+  async getClassesInSelectedYear(reader?: RoutineReader) {
     return this.db.select({ id: classes.id, name: classes.name, academicYear: classes.academicYear })
       .from(classes)
-      .where(eq(classes.academicYear, this.year.label))
+      .where(and(eq(classes.academicYear, this.year.label), this.managedGrade(reader)))
       .orderBy(classes.createdAt, classes.name);
   }
 
-  async getClassSectionsInSelectedYear() {
+  async getClassSectionsInSelectedYear(reader?: RoutineReader) {
     return this.db.select({ id: sections.id, classId: sections.classId, name: sections.name })
       .from(sections)
       .innerJoin(classes, eq(sections.classId, classes.id))
-      .where(eq(classes.academicYear, this.year.label))
+      .where(and(eq(classes.academicYear, this.year.label), this.managedGrade(reader)))
       .orderBy(sections.name);
+  }
+
+  private managedGrade(reader?: RoutineReader) {
+    return reader?.role === 'floor_manager' ? managesGrade(classes.name, reader.id) : undefined;
   }
 
   // Import matches a file's class and section names against the selected year's.

@@ -41,11 +41,18 @@ describe('Home cards', () => {
   it('uses permissions for a new role without adding it to a role list', () => {
     const permissions = ['read:students', 'update:alerts'];
     const cards = createHomeCards(t, viewer('custom-role', permissions), permissions);
-    expect(cards.map((card) => card.id).sort()).toEqual(['/alerts', '/insurance', '/notifications', '/students']);
+    expect(cards.map((card) => card.id).sort()).toEqual(['/alerts', '/notifications', '/students']);
     expect(cards.find((card) => card.id === '/students')?.accessible).toBe(true);
     expect(cards.find((card) => card.id === '/alerts')?.accessible).toBe(false);
-    // The register lists the whole school, so a role outside SCHOOL_WIDE sees it locked.
-    expect(cards.find((card) => card.id === '/insurance')?.accessible).toBe(false);
+    expect(cards.find((card) => card.id === '/insurance')).toBeUndefined();
+  });
+
+  it('shows insurance and timetables independently of students and classes', () => {
+    const permissions = ['read:insurance', 'read:class-routines'];
+    const cards = createHomeCards(t, viewer('secretary', permissions), permissions);
+    expect(cards.find((card) => card.id === '/insurance')?.accessible).toBe(true);
+    expect(cards.find((card) => card.id === '/class-routines')?.accessible).toBe(true);
+    expect(cards.some((card) => ['/students', '/classes'].includes(card.id))).toBe(false);
   });
 
   it('keeps a create-only card visible without opening a page its guard denies', () => {

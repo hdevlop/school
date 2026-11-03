@@ -1,5 +1,5 @@
 import { Service, Transaction } from '../../najm';
-import { ClassRoutineRepository } from './ClassRoutineRepository';
+import { ClassRoutineRepository, type RoutineReader } from './ClassRoutineRepository';
 import { ClassRoutineValidator } from './ClassRoutineValidator';
 import { schoolDayPeriods } from '@sms/contracts/routines';
 import { routineNameKey, type RoutineJson, type RoutineJsonLesson } from '@sms/contracts';
@@ -73,13 +73,12 @@ export class ClassRoutineService {
     return { ...schedule, periods, entries, duties };
   }
 
-  // Timetables are readable school-wide, so their page names every class and
-  // section of the year to every reader. The owned classes list would leave a
-  // floor manager with no current grade, say, an empty page.
-  async getClassSections() {
+  // Resolve filters under timetable access, without a second classes grant.
+  // Floor managers retain the same assigned-grade selection as their roster.
+  async getClassSections(reader?: RoutineReader) {
     const [classRows, sectionRows] = await Promise.all([
-      this.repository.getClassesInSelectedYear(),
-      this.repository.getClassSectionsInSelectedYear(),
+      this.repository.getClassesInSelectedYear(reader),
+      this.repository.getClassSectionsInSelectedYear(reader),
     ]);
     return { classes: classRows, sections: sectionRows };
   }

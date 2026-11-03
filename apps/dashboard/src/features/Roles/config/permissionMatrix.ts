@@ -10,8 +10,6 @@ export type PermissionRow = {
   resource: string;
   permissions: AccessPermission[];
   standard: Partial<Record<StandardAction, AccessPermission>>;
-  /** Pages that read another module share its existing read permission. */
-  readDependency?: AccessPermission;
   special: AccessPermission[];
   sidebar?: typeof SIDEBAR_ENTRIES[number];
 };
@@ -53,8 +51,6 @@ export function buildPermissionRows(catalog: AccessPermission[]): PermissionRow[
     const standardIds = new Set(Object.values(standard).filter(Boolean).map((permission) => permission!.id));
     return {
       resource, permissions, standard,
-      readDependency: resource === 'class-routines' ? catalog.find((p) => p.name === 'read:classes')
-        : resource === 'insurance' ? catalog.find((p) => p.name === 'read:students') : undefined,
       special: permissions.filter((permission) => !standardIds.has(permission.id)),
       sidebar: SIDEBAR_ENTRIES.find((entry) => entry[0] === resource),
     };

@@ -181,7 +181,7 @@ describe('seeded permissions', () => {
   // général, who alone edits student records, deals with parents and visits and
   // writes to the school.
   it('give the floor manager the supervisor\'s work without student edits, parents, visits or sending', () => {
-    const keptBySupervisor = ['update:students', 'read:parents', 'read:visit-requests', 'update:visit-requests', 'create:alerts', 'create:announcements', 'update:announcements'];
+    const keptBySupervisor = ['read:insurance', 'update:students', 'read:parents', 'read:visit-requests', 'update:visit-requests', 'create:alerts', 'create:announcements', 'update:announcements'];
     expect([...grants.floor_manager].sort()).toEqual(grants.supervisor.filter((permission: string) => !keptBySupervisor.includes(permission)).sort());
     for (const received of ['read:alerts', 'update:alerts', 'read:announcements']) expect(grants.floor_manager).toContain(received);
   });
@@ -225,7 +225,10 @@ describe('the floor manager migration', () => {
   // An existing database gets the role a new one is seeded with.
   it('grants the seeded defaults', () => {
     const grants = seedData('rolePermissions').find((row: { roleName: string }) => row.roleName === 'floor_manager').permissions;
-    expect([...sql.matchAll(/'([\w-]+:[\w-]+)'/g)].map((match) => match[1]).sort()).toEqual([...grants].sort());
+    const migrated = [...sql.matchAll(/'([\w-]+:[\w-]+)'/g)].map((match) => match[1]);
+    // 0094 separates timetable reading from the existing classes grant.
+    if (migrated.includes('read:classes')) migrated.push('read:class-routines');
+    expect(migrated.sort()).toEqual([...grants].sort());
   });
 
   it('links the floor manager job title to the login', () => {

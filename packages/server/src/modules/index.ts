@@ -8,6 +8,7 @@ export * from './financial';
 export * from './notifications';
 
 export * from './students';
+export * from './insurance';
 export * from './studentEnrollments';
 export * from './parents';
 export * from './staff';

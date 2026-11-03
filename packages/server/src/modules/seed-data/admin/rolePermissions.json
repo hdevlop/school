@@ -13,6 +13,7 @@
     "permissions": [
       "create:students",
       "read:students",
+      "read:insurance",
       "update:students",
       "delete:students",
       "create:teachers",
@@ -25,6 +26,7 @@
       "delete:parents",
       "create:classes",
       "read:classes",
+      "read:class-routines",
       "update:classes",
       "delete:classes",
       "create:sections",
@@ -146,6 +148,7 @@
     "permissions": [
       "create:students",
       "read:students",
+      "read:insurance",
       "update:students",
       "create:parents",
       "read:parents",
@@ -154,6 +157,7 @@
       "read:teachers",
       "update:teachers",
       "read:classes",
+      "read:class-routines",
       "read:sections",
       "read:subjects",
       "view:reports",
@@ -214,6 +218,7 @@
       "update:students",
       "read:parents",
       "read:classes",
+      "read:class-routines",
       "read:sections",
       "read:subjects",
       "create:grades",
@@ -243,6 +248,7 @@
       "read:students",
       "read:parents",
       "read:classes",
+      "read:class-routines",
       "read:subjects",
       "read:grades",
       "read:alerts",
@@ -264,6 +270,7 @@
       "read:parents",
       "read:students",
       "read:classes",
+      "read:class-routines",
       "read:subjects",
       "read:grades",
       "read:alerts",
@@ -284,12 +291,14 @@
     "permissions": [
       "create:students",
       "read:students",
+      "read:insurance",
       "update:students",
       "create:parents",
       "read:parents",
       "update:parents",
       "read:teachers",
       "read:classes",
+      "read:class-routines",
       "read:sections",
       "read:subjects",
       "read:attendance",
@@ -310,10 +319,12 @@
     "roleName": "supervisor",
     "permissions": [
       "read:students",
+      "read:insurance",
       "update:students",
       "read:parents",
       "read:teachers",
       "read:classes",
+      "read:class-routines",
       "read:sections",
       "read:subjects",
       "create:attendance",
@@ -346,6 +357,7 @@
       "read:students",
       "read:teachers",
       "read:classes",
+      "read:class-routines",
       "read:sections",
       "read:subjects",
       "create:attendance",
@@ -371,6 +383,7 @@
     "roleName": "driver",
     "permissions": [
       "read:students",
+      "read:insurance",
       "read:offline"
     ]
   },
@@ -378,7 +391,9 @@
     "roleName": "assistant",
     "permissions": [
       "read:students",
+      "read:insurance",
       "read:classes",
+      "read:class-routines",
       "read:teachers",
       "read:offline"
     ]

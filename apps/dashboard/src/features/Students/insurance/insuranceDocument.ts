@@ -2,7 +2,7 @@ import { compareClassNames, toAppClassName, toOfficialClassName } from '@sms/con
 import { ar } from '@sms/contracts/locales';
 import { birthplaceLabel } from '@sms/contracts/birthplace';
 
-/** One row of the year's student list, as `GET /students` returns it. */
+/** One row of the selected year's register, as `GET /insurance` returns it. */
 export type InsuranceStudent = {
   id: string;
   studentCode?: string | null;

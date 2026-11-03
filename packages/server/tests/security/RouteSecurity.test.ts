@@ -49,9 +49,9 @@ describe('storage routes', () => {
 const TIMETABLE_READS = ['getAssignments', 'getById', 'getPeriods', 'getPublished', 'getTeacherRoutine', 'list'];
 
 describe('class routine routes', () => {
-  it('ask for read:classes to read a timetable, and never stop at sign-in', () => {
+  it('asks for its own read permission to read a timetable, and never stops at sign-in', () => {
     for (const method of TIMETABLE_READS) {
-      expect(guards(ClassRoutineController, method), method).toEqual([signIn, ['PermissionGuard', 'read:classes']]);
+      expect(guards(ClassRoutineController, method), method).toEqual([signIn, ['PermissionGuard', 'read:class-routines']]);
     }
     const routes = getRoutes(ClassRoutineController).map((route) => route.methodName);
     expect(routes).toEqual(expect.arrayContaining(TIMETABLE_READS));

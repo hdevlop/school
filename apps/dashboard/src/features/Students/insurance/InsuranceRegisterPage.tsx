@@ -14,7 +14,8 @@ import { printPlanningDocument } from '@/features/Assessments/planning/planningD
 import { CLASS_DOCUMENT_COLORS } from '@/features/Assessments/planning/planningModel';
 import { useCycles } from '@/features/Cycles/hooks/useCycles';
 import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
-import { useStudents } from '@/features/Students/hooks/useStudents';
+import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { getInsuranceRegisterApi } from '@/services/insuranceApi';
 import { isAuthorizationError } from '@/services/apiError';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
@@ -35,7 +36,9 @@ type Cycle = { name: string; labels?: Record<string, string> | null; sortOrder?:
 function InsuranceContent() {
   const { t } = useTranslation();
   const { viewingYear } = useViewingAcademicYear();
-  const { students, isStudentsLoading, error } = useStudents();
+  const { data: students, isLoading: isStudentsLoading, error } = useYearScopedList({
+    resource: 'insurance', fetch: getInsuranceRegisterApi,
+  });
   // The licensed cycles are a header detail: a role that cannot read cycles still prints the list.
   const { cycles } = useCycles({ activeOnly: true });
   const { publicSettings, isSettingsLoading, error: settingsError } = usePublicSettings();

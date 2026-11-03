@@ -7,12 +7,19 @@ const permission = (name: string, resource = name.split(':')[1], action = name.s
 });
 
 describe('role permission matrix', () => {
-  it('shows report viewing in the read column and timetable viewing through the actual classes grant', () => {
-    const catalog = ['read:classes', 'view:reports', 'create:class-routines', 'update:class-routines', 'delete:class-routines', 'read:participants'].map((name) => permission(name));
+  it('gives insurance and timetables independent read controls', () => {
+    const catalog = ['read:students', 'read:insurance', 'read:classes', 'read:class-routines', 'view:reports', 'create:class-routines', 'update:class-routines', 'delete:class-routines', 'read:participants'].map((name) => permission(name));
     const rows = buildPermissionRows(catalog);
     const routine = rows.find((row) => row.resource === 'class-routines')!;
-    expect(routine.readDependency?.name).toBe('read:classes');
-    expect(routine.standard.read).toBeUndefined();
+    expect(routine.standard.read?.name).toBe('read:class-routines');
+    expect(rows.find((row) => row.resource === 'insurance')?.standard.read?.name).toBe('read:insurance');
+    const controls = rows.flatMap((row) => Object.values(row.standard).filter(Boolean).map((p) => p!.id));
+    expect(new Set(controls).size).toBe(controls.length);
+    const selected = new Set(catalog.map((p) => p.id));
+    selected.delete(rows.find((row) => row.resource === 'insurance')!.standard.read!.id);
+    selected.delete(routine.standard.read!.id);
+    expect(selected.has('read:students')).toBe(true);
+    expect(selected.has('read:classes')).toBe(true);
     expect(routine.special.map((p) => p.name)).toEqual([]);
     expect(routine.standard.create?.name).toBe('create:class-routines');
     expect(routine.standard.update?.name).toBe('update:class-routines');

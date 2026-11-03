@@ -5,7 +5,6 @@ import { useAuth } from 'najm-auth/client/react';
 import { toast } from 'sonner';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import * as routineApi from '@/services/classRoutineApi';
-import { getClassesApi } from '@/services/classApi';
 import { useTranslation } from 'najm-i18n/react';
 import type { RoutineClassSections, RoutineSchedule, RoutineScheduleSummary } from '../types';
 
@@ -18,28 +17,14 @@ export const useRoutinePeriods = () => useQuery({
   select: (response) => payload(response, []),
 });
 
-// Floor managers choose among the classes the server says they manage.
-// Other readers retain the routine page's school-wide class list.
+// The timetable endpoint supplies each reader's allowed class selection.
 export const useRoutineClassSections = (academicYear?: string) => {
   const { user } = useAuth();
   const actor = user as { id?: string; role?: string } | null;
-  const managedOnly = actor?.role === 'floor_manager';
   return useQuery({
     queryKey: ['class-routines', 'sections', academicYear, actor?.id, actor?.role],
-    queryFn: () => withAcademicYear(academicYear, async (): Promise<RoutineClassSections> => {
-      const [response, assigned] = await Promise.all([
-        routineApi.getRoutineClassSectionsApi(),
-        managedOnly ? getClassesApi() : Promise.resolve(null),
-      ]);
-      const data: RoutineClassSections = payload(response, { classes: [], sections: [] });
-      if (!managedOnly) return data;
-      const assignedClasses: { id: string }[] = payload(assigned, []);
-      const ids = new Set(assignedClasses.map((schoolClass) => schoolClass.id));
-      return {
-        classes: data.classes.filter((schoolClass) => ids.has(schoolClass.id)),
-        sections: data.sections.filter((section) => ids.has(section.classId)),
-      };
-    }),
+    queryFn: () => withAcademicYear(academicYear, () => routineApi.getRoutineClassSectionsApi()),
+    select: (response): RoutineClassSections => payload(response, { classes: [], sections: [] }),
     enabled: Boolean(academicYear && actor?.id),
   });
 };

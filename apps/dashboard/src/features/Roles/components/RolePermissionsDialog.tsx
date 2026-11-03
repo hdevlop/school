@@ -144,14 +144,13 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
       setFailure(error instanceof Error ? error.message : t('roleAccess.failed'));
     }
   };
-  const renderPermission = (permission: AccessPermission | undefined, module: string, dependency = false) => {
+  const renderPermission = (permission: AccessPermission | undefined, module: string) => {
     if (!permission) return <span className="text-muted-foreground" aria-label={t('roleAccess.unavailable')}>—</span>;
     const explicit = draft.has(permission.id);
     const inherited = !explicit && viewer.can(permission.name);
     return (
       <Checkbox checked={explicit || inherited} disabled={locked || isSaving || inherited}
-        title={dependency ? permissionLabel(permission) : undefined}
-        aria-label={`${module}: ${t(`roleAccess.actions.${dependency ? 'read' : permission.action}`)}`}
+        aria-label={`${module}: ${t(`roleAccess.actions.${permission.action}`)}`}
         onCheckedChange={(checked) => toggle([permission], checked === true)} />
     );
   };
@@ -170,7 +169,7 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
     setFailure(null);
   };
   const term = search.trim().toLowerCase();
-  const filtered = rows.filter((row) => (row.permissions.length > 0 || row.readDependency)
+  const filtered = rows.filter((row) => row.permissions.length > 0
     && (!term || [label(row), row.resource, ...row.permissions.map((p) => p.name)].some((text) => text.toLowerCase().includes(term))));
   const reviewLine = (id: string) => {
     const permission = baseline.catalog.find((p) => p.id === id);
@@ -246,7 +245,6 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
                 </tr></thead>
                 <tbody>{categoryRows.map((row, rowIndex) => {
                   const standard = Object.values(row.standard).filter((p): p is AccessPermission => !!p);
-                  if (!row.standard.read && row.readDependency) standard.unshift(row.readDependency);
                   const count = standard.filter((p) => viewer.can(p.name)).length;
                   return <tr key={row.resource} className={surfaceBorderClasses(rowIndex < categoryRows.length - 1, 'bottom')}>
                     <th scope="row" className="px-3 py-2 text-start font-medium">
@@ -257,7 +255,7 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
                         <span className="break-words">{label(row)}</span>
                       </label>
                     </th>
-                    {STANDARD_ACTIONS.map((action) => <td key={action} className="px-1 py-2 text-center">{renderPermission(row.standard[action] ?? (action === 'read' ? row.readDependency : undefined), label(row), action === 'read' && !row.standard.read && !!row.readDependency)}</td>)}
+                    {STANDARD_ACTIONS.map((action) => <td key={action} className="px-1 py-2 text-center">{renderPermission(row.standard[action], label(row))}</td>)}
                     {extraActions.map((action) => {
                       const permissions = row.special.filter((permission) => permission.action === action);
                       return <td key={`extra-${action}`} className="px-1 py-2 text-center">
@@ -273,8 +271,8 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
             <div className="md:hidden">{categoryRows.map((row, rowIndex) => (
               <div key={row.resource} className={cn('space-y-3 p-4', surfaceBorderClasses(rowIndex < categoryRows.length - 1, 'bottom'))}>
                 <div className="font-medium">{label(row)}</div>
-                <div className="grid grid-cols-2 gap-2">{STANDARD_ACTIONS.filter((action) => row.standard[action] || (action === 'read' && row.readDependency)).map((action) => (
-                  <label key={action} className="flex min-h-10 items-center gap-2 text-sm">{renderPermission(row.standard[action] ?? row.readDependency, label(row), action === 'read' && !row.standard.read && !!row.readDependency)}{t(`roleAccess.actions.${action}`)}</label>
+                <div className="grid grid-cols-2 gap-2">{STANDARD_ACTIONS.filter((action) => row.standard[action]).map((action) => (
+                  <label key={action} className="flex min-h-10 items-center gap-2 text-sm">{renderPermission(row.standard[action], label(row))}{t(`roleAccess.actions.${action}`)}</label>
                 ))}
                   {row.special.map((permission) => (
                     <label key={permission.id} className="flex min-h-10 items-center gap-2 text-sm">
