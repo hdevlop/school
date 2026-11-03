@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'bun:test';
-import { classNameAliases, compareClassNames, findClassByName, SCHOOL_CLASS_NAMES, toAppClassName, toOfficialClassName } from '../src/classNames';
+import {
+  classNameAliases, compareClassNames, findClassByName, SCHOOL_CLASS_ARABIC_NAMES, SCHOOL_CLASS_NAMES,
+  toAppClassName, toArabicClassName, toOfficialClassName,
+} from '../src/classNames';
 
 describe('School class names', () => {
   it('orders classes by academic progression regardless of creation order or naming convention', () => {
@@ -34,6 +37,19 @@ describe('School class names', () => {
       expect(classNameAliases(name)).toEqual([name]);
     }
     expect(findClassByName([{ name: 'CP Academy' }], 'CP')).toBeUndefined();
+  });
+
+  it('names every recognized level in Arabic, from either name, and keeps custom names', () => {
+    expect(Object.keys(SCHOOL_CLASS_ARABIC_NAMES).sort(compareClassNames))
+      .toEqual(['PS', 'MS', 'GS', ...SCHOOL_CLASS_NAMES.map(item => item.app), 'TC', '1BAC', '2BAC']);
+    // PS is before the official two-year preschool, so it has no ministry name.
+    expect(toArabicClassName('PS')).toBe('الأولى روض');
+    expect(toArabicClassName('MS')).toBe('الأولى أولي');
+    expect(toArabicClassName('GS')).toBe('الثانية أولي');
+    expect(toArabicClassName('CP')).toBe('الأولى ابتدائي');
+    expect(toArabicClassName(' 1apic ')).toBe('الأولى إعدادي');
+    expect(toArabicClassName('2bac')).toBe('الثانية بكالوريا');
+    expect(toArabicClassName('Atelier')).toBe('Atelier');
   });
 
   it('prefers the exact name over an alias and does not substitute an unrelated class', () => {

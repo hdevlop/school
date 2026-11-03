@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import {
-  arabicLevelName, buildInsuranceDocument, insuranceClasses, levelYearLabels, INSURANCE_ROWS_PER_PAGE,
+  buildInsuranceDocument, insuranceClasses, levelYearLabels, INSURANCE_ROWS_PER_PAGE,
   type InsuranceDocumentOptions, type InsuranceStudent,
 } from '@/features/Students/insurance/insuranceDocument';
 
@@ -37,10 +37,7 @@ describe('insurance register', () => {
     expect(classes[0].students.map(row => row.id)).toEqual(['a', 'b']);
   });
 
-  it('names known levels the ministry way and keeps custom class names', () => {
-    expect(arabicLevelName('CP')).toBe('الأول ابتدائي');
-    expect(arabicLevelName('1APIC')).toBe('الأولى إعدادي');
-    expect(arabicLevelName('Atelier')).toBe('Atelier');
+  it('labels the levels columns with the two previous school years', () => {
     expect(levelYearLabels('2025-2026')).toEqual(['24', '25']);
   });
 
@@ -56,7 +53,7 @@ describe('insurance register', () => {
     expect(html).toContain('<th colspan="2">المستويات التي درس بها</th>');
     expect(html).toContain('<th dir="ltr">24</th><th dir="ltr">25</th>');
     expect(html).toContain('<bdi dir="ltr">2025/2026</bdi>');
-    expect(html).toContain('القسم: الأول ابتدائي');
+    expect(html).toContain('القسم: الأولى ابتدائي');
     expect(html).toContain('size:A4 landscape');
   });
 

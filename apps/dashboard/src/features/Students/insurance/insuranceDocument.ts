@@ -1,4 +1,4 @@
-import { compareClassNames, toAppClassName, toOfficialClassName } from '@sms/contracts';
+import { compareClassNames, toArabicClassName } from '@sms/contracts';
 import { ar } from '@sms/contracts/locales';
 import { birthplaceLabel } from '@sms/contracts/birthplace';
 
@@ -64,13 +64,6 @@ export function insuranceClasses(students: readonly InsuranceStudent[]): Insuran
     .map(cls => ({ ...cls, students: cls.students.sort((a, b) => displayName(a).localeCompare(displayName(b), 'ar')) }));
 }
 
-/** The level as the ministry writes it; a custom class keeps its own name. */
-export function arabicLevelName(name: string): string {
-  const levels: Record<string, string> = ar.insurance.document.levelNames;
-  const key = toAppClassName(name).toUpperCase();
-  return Object.hasOwn(levels, key) ? levels[key] : toOfficialClassName(name);
-}
-
 /** "2025-2026" → the two-digit years over the levels columns: 24 and 25. */
 export function levelYearLabels(academicYear: string): [string, string] {
   const start = Number(/^\d{4}/.exec(academicYear)?.[0]);
@@ -125,7 +118,7 @@ export function buildInsuranceDocument(classes: readonly InsuranceClass[], optio
   </thead>`;
   const cols = [3.5, 9, 19, 7.5, 7.5, 9, 6.5, 7, 7.5, 7.5, 3.5, 3.5, 9.5].map(width => `<col style="width:${width}%">`).join('');
   const sheets = classes.flatMap(cls => {
-    const level = arabicLevelName(cls.name);
+    const level = toArabicClassName(cls.name);
     const pageCount = Math.max(1, Math.ceil(cls.students.length / INSURANCE_ROWS_PER_PAGE));
     return Array.from({ length: pageCount }, (_, page) => {
       const rows = Array.from({ length: INSURANCE_ROWS_PER_PAGE }, (_, line) => {

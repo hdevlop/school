@@ -19,6 +19,37 @@ function knownClass(name: string) {
 export const toAppClassName = (name: string): string => knownClass(name)?.app ?? name.trim();
 export const toOfficialClassName = (name: string): string => knownClass(name)?.official ?? name.trim();
 
+/**
+ * The level in Arabic as Massar and ministry documents write it, by app name.
+ * The official preschool has two years, MS and GS; PS comes before it, so
+ * «الأولى روض» is the name schools use for it, not a ministry one.
+ */
+export const SCHOOL_CLASS_ARABIC_NAMES = {
+  PS: 'الأولى روض',
+  MS: 'الأولى أولي',
+  GS: 'الثانية أولي',
+  CP: 'الأولى ابتدائي',
+  CE1: 'الثانية ابتدائي',
+  CE2: 'الثالثة ابتدائي',
+  CM1: 'الرابعة ابتدائي',
+  CM2: 'الخامسة ابتدائي',
+  CE6: 'السادسة ابتدائي',
+  '1AC': 'الأولى إعدادي',
+  '2AC': 'الثانية إعدادي',
+  '3AC': 'الثالثة إعدادي',
+  TC: 'الجذع المشترك',
+  '1BAC': 'الأولى بكالوريا',
+  '2BAC': 'الثانية بكالوريا',
+} as const satisfies Record<string, string>;
+
+/** A custom class keeps its own name. */
+export function toArabicClassName(name: string): string {
+  const key = toAppClassName(name).toUpperCase();
+  return Object.hasOwn(SCHOOL_CLASS_ARABIC_NAMES, key)
+    ? SCHOOL_CLASS_ARABIC_NAMES[key as keyof typeof SCHOOL_CLASS_ARABIC_NAMES]
+    : toOfficialClassName(name);
+}
+
 const academicClassOrder: readonly string[] = [
   'PS', 'MS', 'GS', ...SCHOOL_CLASS_NAMES.map(item => item.app), 'TC', '1BAC', '2BAC',
 ];
