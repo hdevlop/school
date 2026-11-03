@@ -2,6 +2,7 @@ import { Err, I18n, Service } from '../../najm';
 import { SCHOOL_WIDE_ROLES } from '../../auth';
 import { DisciplineRepository } from './DisciplineRepository';
 import { FloorManagerScopeRepository } from '../staff/floorManagerScope';
+import { SupervisorScopeRepository } from '../staff/supervisorScope';
 
 export type DisciplineUser = { id: string; role?: string };
 
@@ -12,6 +13,7 @@ export class DisciplineValidator {
   constructor(
     private repository: DisciplineRepository,
     private floorManagers: FloorManagerScopeRepository,
+    private supervisors: SupervisorScopeRepository,
   ) {}
 
   async ensureExists(id: string) {
@@ -38,6 +40,7 @@ export class DisciplineValidator {
   async ensureTeacherMayReport(user: DisciplineUser, sectionId: string) {
     const reaches = user.role === 'teacher' ? await this.repository.isTeacherAssignedToSection(user.id, sectionId)
       : user.role === 'floor_manager' ? await this.floorManagers.managesSection(user.id, sectionId)
+      : user.role === 'supervisor' ? await this.supervisors.managesSection(user.id, sectionId)
       : true;
     if (!reaches) Err(403, this.t('teacherStudentForbidden'));
   }
@@ -57,7 +60,7 @@ export class DisciplineValidator {
 
   // Reopening and deleting are never a teacher's, whatever they are granted.
   ensureAdministrator(user: DisciplineUser) {
-    if (!SCHOOL_WIDE_ROLES.includes(user.role ?? '')) Err(403, this.t('adminRequired'));
+    if (user.role !== 'supervisor' && !SCHOOL_WIDE_ROLES.includes(user.role ?? '')) Err(403, this.t('adminRequired'));
   }
 
   ensureIncidentDate(value: string) {

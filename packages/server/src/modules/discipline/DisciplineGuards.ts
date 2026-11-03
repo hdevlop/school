@@ -3,6 +3,7 @@ import { Can, own, join, where, when } from '../../auth';
 import { composeGuards } from 'najm-guard';
 import { disciplineIncidents, parents, studentParents, students } from '../../database/schema';
 import { managesClass } from '../staff/floorManagerScope';
+import { supervisesClass } from '../staff/supervisorScope';
 
 /**
  * Teachers see the incidents they reported; floor managers those in their
@@ -21,7 +22,8 @@ export const Discipline = own(disciplineIncidents)
     where(students.userId),
   )
   .for('floor_manager', when((userId: string) => sql`(${disciplineIncidents.reportedBy} = ${userId}
-    or ${managesClass(disciplineIncidents.classId, userId)})`));
+    or ${managesClass(disciplineIncidents.classId, userId)})`))
+  .for('supervisor', when((userId: string) => supervisesClass(disciplineIncidents.classId, userId)));
 
 export const canReadDiscipline = composeGuards(Can('read:discipline'));
 export const canCreateDiscipline = composeGuards(Can('create:discipline'));

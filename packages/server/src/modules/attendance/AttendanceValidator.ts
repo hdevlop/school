@@ -9,6 +9,7 @@ import { SectionValidator } from '../sections/SectionValidator';
 import { SubjectValidator } from '../subjects/SubjectValidator';
 import { StudentEnrollmentRepository } from '../studentEnrollments/StudentEnrollmentRepository';
 import { FloorManagerScopeRepository } from '../staff/floorManagerScope';
+import { SupervisorScopeRepository } from '../staff/supervisorScope';
 import { getBusinessDate } from '../../shared/businessDate';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
@@ -55,6 +56,7 @@ export class AttendanceValidator {
     private subjectValidator: SubjectValidator,
     private enrollments: StudentEnrollmentRepository,
     private floorManagers: FloorManagerScopeRepository,
+    private supervisors: SupervisorScopeRepository,
   ) { }
 
   async ensureExists(id: string) {
@@ -109,12 +111,19 @@ export class AttendanceValidator {
     }
   }
 
-  // A floor manager marks and corrects only the sections of their classes.
-  async ensureFloorManagerSection(user: { id: string; role?: string }, sectionId: string | null | undefined) {
-    if (user.role !== 'floor_manager') return;
-    if (!sectionId || !await this.floorManagers.managesSection(user.id, sectionId)) {
+  // Class-scoped staff mark and correct only the sections assigned to them.
+  async ensureAssignedSection(user: { id: string; role?: string }, sectionId: string | null | undefined) {
+    const assignments = this.classAssignments(user.role);
+    if (!assignments) return;
+    if (!sectionId || !await assignments.managesSection(user.id, sectionId)) {
       Err(403, this.at('notAuthorizedForSection'));
     }
+  }
+
+  private classAssignments(role?: string) {
+    if (role === 'floor_manager') return this.floorManagers;
+    if (role === 'supervisor') return this.supervisors;
+    return undefined;
   }
 
   async ensureNoDuplicateDailyAttendance(studentId: string, sectionId: string, date: string) {
@@ -138,9 +147,9 @@ export class AttendanceValidator {
     // their own sections, a school-wide role any section and any transition,
     // and a floor manager any transition in the sections of their classes.
     const isSchoolWide = SCHOOL_WIDE_ROLES.includes(user.role ?? '');
-    const isFloorManagerOfSection = user.role === 'floor_manager' && !!user.id
-      && await this.floorManagers.managesSection(user.id, sectionId);
-    const correctsAny = isSchoolWide || isFloorManagerOfSection;
+    const assignments = this.classAssignments(user.role);
+    const isAssignedStaff = !!assignments && !!user.id && await assignments.managesSection(user.id, sectionId);
+    const correctsAny = isSchoolWide || isAssignedStaff;
     const isTeacherOfSection = await this.attendanceRepository.isTeacherInSection(user.teacherId ?? '', sectionId);
     if (!isTeacherOfSection && !correctsAny) Err(403, this.at('notAuthorizedForSection'));
 

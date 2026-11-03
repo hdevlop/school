@@ -132,11 +132,11 @@ export class AnnouncementController {
   @Validate(createAnnouncementDto)
   @McpTool({ description: 'Create a new announcement', confirm: { level: 'warning', message: 'confirm.announcements.create' } })
   @ResMsg('announcements.success.created')
-  async create(@Body() body: CreateAnnouncementDto, @User() user: { id: string }) {
+  async create(@Body() body: CreateAnnouncementDto, @User() user: AnnouncementActor) {
     return this.announcementService.create({
       ...body,
       authorId: user.id,
-    });
+    }, user);
   }
 
   @Post('/seed')

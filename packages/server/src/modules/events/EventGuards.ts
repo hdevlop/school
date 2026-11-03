@@ -3,6 +3,7 @@ import { Can, own, when } from '../../auth';
 import { composeGuards } from 'najm-guard';
 import { events } from '../../database/schema';
 import { managesClass, managesSection } from '../staff/floorManagerScope';
+import { supervisesClass, supervisesSection } from '../staff/supervisorScope';
 
 export const canAccessEvent        = composeGuards(Can('read:events'));
 export const canUpdateEvent        = composeGuards(Can('update:events'));
@@ -40,10 +41,10 @@ const placedInTarget = (userId: string, parent: boolean) => sql`exists (
 )`;
 
 // A class or section event of one of a floor manager's classes.
-const targetsManagedClass = (userId: string) => sql`(${managesClass(events.classId, userId)}
-  or ${managesSection(events.sectionId, userId)}
+const targetsManagedClass = (userId: string, classScope = managesClass, sectionScope = managesSection) => sql`(${classScope(events.classId, userId)}
+  or ${sectionScope(events.sectionId, userId)}
   or exists (select 1 from jsonb_array_elements_text(coalesce(${events.classIds}, '[]'::jsonb)) as target(class_id)
-    where ${managesClass(sql`target.class_id`, userId)}))`;
+    where ${classScope(sql`target.class_id`, userId)}))`;
 
 /**
  * Who sees an event besides the school-wide roles. `visibility` names the
@@ -62,4 +63,7 @@ export const Event = own(events)
     and (${untargeted} or ${placedInTarget(userId, true)}))`))
   .for('floor_manager', when((userId: string) => sql`(${audience} in ('public', 'teachers', 'staff')
     or ${events.organizerId} = ${userId}
-    or (${audience} <> 'private' and ${targetsManagedClass(userId)}))`));
+    or (${audience} <> 'private' and ${targetsManagedClass(userId)}))`))
+  .for('supervisor', when((userId: string) => sql`(${audience} <> 'private'
+    and ((${untargeted} and ${audience} in ('public', 'teachers', 'staff'))
+      or ${targetsManagedClass(userId, supervisesClass, supervisesSection)}))`));

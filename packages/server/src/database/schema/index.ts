@@ -83,6 +83,7 @@ export {
   staffCredentials,
   cleanerAssignments,
   assistantAssignments,
+  supervisorAssignments,
   accountantAssignments,
   floorManagerAssignments,
   securityAssignments,

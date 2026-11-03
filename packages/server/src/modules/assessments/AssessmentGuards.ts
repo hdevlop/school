@@ -1,6 +1,7 @@
 import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where, when } from '../../auth';
 import { assessments, teachers, staff, teacherAssignments } from '../../database/schema';
 import { placedOnSourceDate, targetsManagedSection } from '../academicSources/placedOnSourceDate';
+import { supervisesSection } from '../staff/supervisorScope';
 
 export const Assessment = own(assessments)
   .for('teacher',
@@ -9,7 +10,8 @@ export const Assessment = own(assessments)
     join(teachers.staffId, staff.id),
     where(staff.userId),
   )
-  .for('floor_manager', when((userId: string) => targetsManagedSection(assessments, userId)));
+  .for('floor_manager', when((userId: string) => targetsManagedSection(assessments, userId)))
+  .for('supervisor', when((userId: string) => targetsManagedSection(assessments, userId, supervisesSection)));
 
 // The student must have occupied a target section on the assessment date.
 const placedOnAssessmentDate = (userId: string, parent: boolean) => placedOnSourceDate(assessments, userId, parent);

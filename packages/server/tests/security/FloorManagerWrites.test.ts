@@ -20,16 +20,17 @@ describe('a floor manager marks attendance', () => {
     { isTeacherInSection: async () => false } as any,
     {} as any, {} as any, {} as any, {} as any, {} as any, {} as any,
     floorManagers,
+    {} as any,
   ));
 
   it('in the sections of their classes only', async () => {
-    await expect(validator.ensureFloorManagerSection(manager, 'managed')).resolves.toBeUndefined();
-    await expect(validator.ensureFloorManagerSection(manager, 'elsewhere')).rejects.toMatchObject(forbidden);
-    await expect(validator.ensureFloorManagerSection(manager, null)).rejects.toMatchObject(forbidden);
+    await expect(validator.ensureAssignedSection(manager, 'managed')).resolves.toBeUndefined();
+    await expect(validator.ensureAssignedSection(manager, 'elsewhere')).rejects.toMatchObject(forbidden);
+    await expect(validator.ensureAssignedSection(manager, null)).rejects.toMatchObject(forbidden);
   });
 
   it('leaves other roles to their own checks', async () => {
-    await expect(validator.ensureFloorManagerSection({ id: 'teacher', role: 'teacher' }, 'elsewhere')).resolves.toBeUndefined();
+    await expect(validator.ensureAssignedSection({ id: 'teacher', role: 'teacher' }, 'elsewhere')).resolves.toBeUndefined();
   });
 
   it('corrects any transition in their sections, and nothing elsewhere', async () => {
@@ -42,6 +43,7 @@ describe('a floor manager reports discipline', () => {
   const validator = withEnglishMessages(new DisciplineValidator(
     { isTeacherAssignedToSection: async () => false } as any,
     floorManagers,
+    {} as any,
   ));
 
   it('for students of their classes only', async () => {
@@ -59,6 +61,7 @@ describe('a floor manager recognizes behavior', () => {
   const placedIn = (classId: string) => withEnglishMessages(new BehaviorRewardValidator(
     { getStudentPlacementOn: async () => ({ inSelectedYear: true, classId, sectionId: 'section' }) } as any,
     floorManagers,
+    {} as any,
   ));
 
   it('of students placed in their classes on the day', async () => {

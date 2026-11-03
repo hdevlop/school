@@ -11,6 +11,7 @@
   {
     "roleName": "principal",
     "permissions": [
+      "read:dashboard",
       "create:students",
       "read:students",
       "read:insurance",
@@ -146,6 +147,7 @@
   {
     "roleName": "accounting",
     "permissions": [
+      "read:dashboard",
       "create:students",
       "read:students",
       "read:insurance",
@@ -213,6 +215,7 @@
   {
     "roleName": "teacher",
     "permissions": [
+      "read:dashboard",
       "read:teachers",
       "read:students",
       "update:students",
@@ -289,6 +292,7 @@
   {
     "roleName": "secretary",
     "permissions": [
+      "read:dashboard",
       "create:students",
       "read:students",
       "read:insurance",
@@ -318,6 +322,7 @@
   {
     "roleName": "supervisor",
     "permissions": [
+      "read:dashboard",
       "read:students",
       "read:insurance",
       "update:students",
@@ -354,6 +359,7 @@
   {
     "roleName": "floor_manager",
     "permissions": [
+      "read:dashboard",
       "read:students",
       "read:teachers",
       "read:classes",
@@ -390,6 +396,7 @@
   {
     "roleName": "assistant",
     "permissions": [
+      "read:dashboard",
       "read:students",
       "read:insurance",
       "read:classes",

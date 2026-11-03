@@ -2,6 +2,7 @@ import { and, isNull, sql } from 'drizzle-orm';
 import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where, when } from '../../auth';
 import { alerts, students, sections, teachers, staff, parents, teacherAssignments, studentParents } from '../../database/schema';
 import { managesClass } from '../staff/floorManagerScope';
+import { supervisesClass } from '../staff/supervisorScope';
 
 // An alert without an audience: a reminder is for the family (the fee job
 // writes those), a system notice is for staff alone, and anything else is for
@@ -37,7 +38,9 @@ export const Alert = own(alerts)
   )
   // A student now in one of their classes, as the teacher's current section.
   .for('floor_manager', when((userId: string) => sql`exists (select 1 from students subject
-    where subject.id = ${alerts.studentId} and ${managesClass(sql`subject.class_id`, userId)})`, reaches('teachers')));
+    where subject.id = ${alerts.studentId} and ${managesClass(sql`subject.class_id`, userId)})`, reaches('teachers')))
+  .for('supervisor', when((userId: string) => sql`exists (select 1 from students subject
+    where subject.id = ${alerts.studentId} and ${supervisesClass(sql`subject.class_id`, userId)})`));
 
 // A najm rule is one join chain, so a teacher's other alerts are alternative
 // tokens the repository ORs with the rule above: alerts that name the teacher,
@@ -81,14 +84,16 @@ export const AlertForClass = own(alerts)
     where(staff.userId),
     when(aboutNobody, reaches('teachers')),
   )
-  .for('floor_manager', when(aboutNobody, (userId: string) => managesClass(alerts.classId, userId), reaches('teachers')));
+  .for('floor_manager', when(aboutNobody, (userId: string) => managesClass(alerts.classId, userId), reaches('teachers')))
+  .for('supervisor', when(aboutNobody, (userId: string) => supervisesClass(alerts.classId, userId)));
 
 /** A school notice (no person, no class) reaches its whole audience. */
 export const AlertForAudience = own(alerts)
   .for('student', when(aboutNobody, isNull(alerts.classId), reaches('students')))
   .for('parent', when(aboutNobody, isNull(alerts.classId), reaches('parents')))
   .for('teacher', when(aboutNobody, isNull(alerts.classId), reaches('teachers')))
-  .for('floor_manager', when(aboutNobody, isNull(alerts.classId), reaches('teachers')));
+  .for('floor_manager', when(aboutNobody, isNull(alerts.classId), reaches('teachers')))
+  .for('supervisor', when(aboutNobody, isNull(alerts.classId), reaches('teachers')));
 
 /**
  * Whether an alert names a student, teacher or assignment: the opposite of

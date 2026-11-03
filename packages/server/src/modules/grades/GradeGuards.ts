@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where, when } from '../../auth';
 import { grades, students, parents, studentParents } from '../../database/schema';
 import { managesClass } from '../staff/floorManagerScope';
+import { supervisesClass } from '../staff/supervisorScope';
 
 export const Grade = own(grades)
   .for('parent',
@@ -15,6 +16,7 @@ export const Grade = own(grades)
     where(students.userId),
   )
   .for('floor_manager', when((userId: string) => placedInManagedClass(userId)))
+  .for('supervisor', when((userId: string) => placedInManagedClass(userId, supervisesClass)))
   .writeBy(grades.studentId);
 
 // A grade has exactly one source; its date and assignment come from it.
@@ -59,14 +61,14 @@ const taughtByReader = (userId: string) => sql`exists (
 
 // A floor manager reads a grade earned while the student sat in one of their
 // classes, by the same dated placement the teacher rule reads.
-function placedInManagedClass(userId: string) {
+function placedInManagedClass(userId: string, classScope = managesClass) {
   return sql`exists (
     select 1 from student_enrollments enrollment
     join student_enrollment_placements placement on placement.enrollment_id = enrollment.id
     where enrollment.student_id = ${grades.studentId}
       and placement.valid_from <= ${sourceDate}
       and (placement.valid_to is null or placement.valid_to > ${sourceDate})
-      and ${managesClass(sql`placement.class_id`, userId)}
+      and ${classScope(sql`placement.class_id`, userId)}
   )`;
 }
 

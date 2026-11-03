@@ -56,6 +56,13 @@ export const assistantAssignments = pgTable('assistant_assignments', {
   sectionId: sectionRef('set null'),
 });
 
+export const supervisorAssignments = pgTable('supervisor_assignments', {
+  ...staffAssignmentFields(),
+  classId: classRef('restrict'),
+}, (table) => [
+  index('supervisor_assignments_staff_class_idx').on(table.staffId, table.classId),
+]);
+
 export const accountantAssignments = pgTable('accountant_assignments', {
   ...staffAssignmentFields(),
   cycleId: cycleRef('restrict'),
@@ -84,6 +91,7 @@ export type Zone = typeof zones.$inferSelect;
 export type StaffCredential = typeof staffCredentials.$inferSelect;
 export type CleanerAssignment = typeof cleanerAssignments.$inferSelect;
 export type AssistantAssignment = typeof assistantAssignments.$inferSelect;
+export type SupervisorAssignment = typeof supervisorAssignments.$inferSelect;
 export type AccountantAssignment = typeof accountantAssignments.$inferSelect;
 export type FloorManagerAssignment = typeof floorManagerAssignments.$inferSelect;
 export type SecurityAssignment = typeof securityAssignments.$inferSelect;

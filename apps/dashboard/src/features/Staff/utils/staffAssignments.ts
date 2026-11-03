@@ -5,7 +5,7 @@ export const formatAssignment = (assignment: any, language = 'en') => {
     return [assignment.zoneName, assignment.zoneBuilding, assignment.zoneFloor].filter(Boolean).join(' · ') || assignment.zoneId || '-';
   }
 
-  if (assignment.type === 'assistant') {
+  if (assignment.type === 'assistant' || assignment.type === 'supervisor') {
     return [assignment.className, assignment.sectionName].filter(Boolean).join(' / ') || assignment.classId || '-';
   }
 

@@ -13,6 +13,7 @@ import {
   securityAssignments,
   staff,
   staffRoles,
+  supervisorAssignments,
   teachers,
   users,
   vehicleAssignments,
@@ -131,6 +132,21 @@ export class StaffRepository {
       .leftJoin(sections, eq(assistantAssignments.sectionId, sections.id))
       .where(inArray(assistantAssignments.staffId, staffIds));
 
+    const supervisorRows = await this.db
+      .select({
+        id: supervisorAssignments.id,
+        staffId: supervisorAssignments.staffId,
+        status: supervisorAssignments.status,
+        startDate: supervisorAssignments.startDate,
+        endDate: supervisorAssignments.endDate,
+        notes: supervisorAssignments.notes,
+        classId: supervisorAssignments.classId,
+        className: classes.name,
+      })
+      .from(supervisorAssignments)
+      .leftJoin(classes, eq(supervisorAssignments.classId, classes.id))
+      .where(inArray(supervisorAssignments.staffId, staffIds));
+
     const accountantRows = await this.db
       .select({
         id: accountantAssignments.id,
@@ -215,6 +231,7 @@ export class StaffRepository {
 
     cleanerRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'cleaner' }));
     assistantRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'assistant' }));
+    supervisorRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'supervisor' }));
     accountantRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'accountant' }));
     floorManagerRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'floorManager' }));
     securityRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'security' }));

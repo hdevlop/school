@@ -89,23 +89,19 @@ export const isAdministratorRole = (role?: string | null) => hasRole(role, ...AD
 export const isFinancial = createGroupGuard(['ACCOUNTING', 'PRINCIPAL', 'ADMIN']);
 // defineRoles would name it `isFloor_manager`.
 export const isFloorManager = createGroupGuard(['FLOOR_MANAGER']);
-export const isStaff = createGroupGuard([
-  'ADMIN', 'PRINCIPAL', 'ACCOUNTING', 'TEACHER',
-  'SECRETARY', 'ASSISTANT', 'SUPERVISOR',
-]);
 
 // ============================================================================
 // Ownership (repository reads)
 // ============================================================================
 
 const SCHOOL_WIDE_ROLE_KEYS = [
-  'ADMIN', 'PRINCIPAL', 'ACCOUNTING', 'SECRETARY', 'DRIVER', 'ASSISTANT', 'SUPERVISOR',
+  'ADMIN', 'PRINCIPAL', 'ACCOUNTING', 'SECRETARY', 'DRIVER', 'ASSISTANT',
 ] as const;
 
 /**
  * Roles whose reads of an owned resource are school-wide. Their route
  * permissions (`read:students`, …) still decide what they can reach.
- * Teacher, floor manager, parent and student reads are limited by each
+ * Teacher, supervisor, floor manager, parent and student reads are limited by each
  * resource's `.for()` rules, and any other role — including one created later in the roles
  * screen — sees no owned rows until it is listed here or given a rule.
  */

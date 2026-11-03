@@ -1,6 +1,7 @@
 import { api } from './http';
 import type { TeacherDashboardOverview } from '@sms/contracts/teacher-dashboard';
 import type { FloorManagerDashboardOverview } from '@sms/contracts/floor-manager-dashboard';
+import type { SupervisorDashboardOverview } from '@sms/contracts/supervisor-dashboard';
 
 type ApiEnvelope<T> = { data: T; message?: string; status?: string };
 
@@ -39,6 +40,12 @@ export const getTeacherDashboardOverviewApi = async (teacherId?: string): Promis
 // The signed-in floor manager's own home page; the server resolves their grades.
 export const getFloorManagerDashboardOverviewApi = async (): Promise<ApiEnvelope<FloorManagerDashboardOverview>> => {
   const res = await api.get('/dashboard/floor-manager/overview');
+  return res.data;
+};
+
+// The signed-in supervisor's own home page; the server resolves their classes.
+export const getSupervisorDashboardOverviewApi = async (): Promise<ApiEnvelope<SupervisorDashboardOverview>> => {
+  const res = await api.get('/dashboard/supervisor/overview');
   return res.data;
 };
 

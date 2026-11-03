@@ -869,6 +869,7 @@
       "attendanceAlertsGenerated": "تم إنشاء تنبيهات الحضور بنجاح"
     },
     "errors": {
+      "supervisorClassesOnly": "يمكن للمشرفين إرسال الإشعارات إلى الأقسام أو التلاميذ المعينين لهم فقط.",
       "notFound": "التنبيه غير موجود",
       "invalidType": "نوع تنبيه غير صالح محدد",
       "invalidStatus": "حالة تنبيه غير صالحة محددة",
@@ -976,6 +977,45 @@
     }
   },
   "dashboard": {
+    "supervisor": {
+      "title": "لوحة تحكم المشرف",
+      "subtitle": "إليك نظرة سريعة على يوم أقسامك.",
+      "kpis": {
+        "newVisitRequests": "طلبات زيارة جديدة"
+      },
+      "info": {
+        "classes": "الأقسام: {{classes}}",
+        "noClasses": "لا توجد أقسام مسندة"
+      },
+      "registers": {
+        "empty": "لا توجد شعب في أقسامك هذه السنة"
+      },
+      "grades": {
+        "title": "النقط حسب القسم",
+        "average": "المعدل",
+        "passRate": "نسبة النجاح",
+        "graded": "{{count}} نقطة",
+        "empty": "لا توجد نقط مسجلة في أقسامك بعد"
+      },
+      "incidentsTrend": {
+        "title": "الحوادث حسب الشهر",
+        "empty": "لم يتم الإبلاغ عن أي حادثة هذه السنة"
+      },
+      "quickActions": {
+        "takeAttendance": "تسجيل الحضور",
+        "takeAttendanceHint": "تسجيل حضور اليوم لقسم",
+        "reportIncident": "الإبلاغ عن حادثة",
+        "reportIncidentHint": "تسجيل مشكلة سلوكية لتلميذ",
+        "recordReward": "تسجيل مكافأة",
+        "recordRewardHint": "تثمين سلوك جيد",
+        "visitRequests": "طلبات الزيارة",
+        "visitRequestsHint": "التواصل مع الأسر التي طلبت الزيارة",
+        "sendAnnouncement": "نشر إعلان",
+        "sendAnnouncementHint": "الكتابة إلى أقسامك وأسرها",
+        "viewStudents": "عرض التلاميذ",
+        "viewStudentsHint": "تلاميذ أقسامك"
+      }
+    },
     "floorManager": {
       "title": "لوحة تحكم المراقب",
       "subtitle": "إليك نظرة سريعة على يوم أقسامك.",
@@ -2682,6 +2722,8 @@
       "unpublish": "إلغاء النشر"
     },
     "errors": {
+      "supervisorClassesOnly": "يمكن للمشرفين إرسال الإشعارات إلى الأقسام أو التلاميذ المعينين لهم فقط.",
+      "supervisorClassRequired": "يتطلب تعيين المشرف اختيار قسم",
       "authorOnly": "يمكن للموظفين أو لكاتب الإعلان فقط تعديله",
       "classesNotInYear": "يجب أن تنتمي فصول الإعلان إلى السنة الدراسية المحددة",
       "notFound": "الإعلان غير موجود",
@@ -4079,6 +4121,7 @@
       "bulkDeleted": "تم حذف الموظفين بنجاح"
     },
     "errors": {
+      "supervisorClassRequired": "يتطلب إسناد المشرف قسمًا",
       "driverLicenseExpiryInvalid": "أدخل تاريخ انتهاء صلاحية صحيحاً للرخصة (YYYY-MM-DD).",
       "driverLicenseExpired": "انتهت صلاحية رخصة القيادة.",
       "notFound": "الموظف غير موجود",
@@ -4510,6 +4553,7 @@
       "invalidSchoolDay": "يجب أن تتسع أوقات المدرسة لاستراحة الغداء وست حصص لا تقل مدة كل منها عن خمس دقائق."
     },
     "academic": {
+    "supervisorAssignmentHint": "يقتصر الوصول على الأقسام المختارة وتلاميذها وحضورهم وانضباطهم ونقطهم. دون تعيين أقسام، لا يمكن الوصول إلى بيانات الأقسام.",
       "semesterPlaceholder": "الفصل الدراسي",
       "attendanceMode": "نمط الحضور",
       "attendanceModeDaily": "يومي",
@@ -6740,24 +6784,7 @@
       "notes": "ملاحظات",
       "directorSignature": "توقيع المديرة التربوية",
       "provincialDirectorate": "المديرية الإقليمية",
-      "insurance": "التأمين",
-      "levelNames": {
-        "PS": "القسم الصغير",
-        "MS": "القسم المتوسط",
-        "GS": "القسم الكبير",
-        "CP": "الأول ابتدائي",
-        "CE1": "الثاني ابتدائي",
-        "CE2": "الثالث ابتدائي",
-        "CM1": "الرابع ابتدائي",
-        "CM2": "الخامس ابتدائي",
-        "CE6": "السادس ابتدائي",
-        "1AC": "الأولى إعدادي",
-        "2AC": "الثانية إعدادي",
-        "3AC": "الثالثة إعدادي",
-        "TC": "الجذع المشترك",
-        "1BAC": "الأولى باكالوريا",
-        "2BAC": "الثانية باكالوريا"
-      }
+      "insurance": "التأمين"
     }
   }
 }

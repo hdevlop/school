@@ -6,11 +6,10 @@ import { InsuranceService } from '../../src/modules/insurance/InsuranceService';
 import { yearScopedModules } from '../../src/config/yearScope';
 
 describe('independent insurance access', () => {
-  it('requires its own permission and keeps the school-wide role boundary', () => {
+  it('requires its own permission and relies on the student repository for class scope', () => {
     const guards = getGuardMetadata(InsuranceController, 'getRegister').map((guard) => [guard.guardClass.name, guard.params ?? null]);
     expect(guards).toEqual([
       ['AuthGuard', null],
-      ['RoleGuard', ['admin', 'principal', 'accounting', 'secretary', 'driver', 'assistant', 'supervisor']],
       ['PermissionGuard', 'read:insurance'],
     ]);
     expect(yearScopedModules.insurance).toBe(InsuranceController);

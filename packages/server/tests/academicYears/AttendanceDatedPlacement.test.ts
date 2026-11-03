@@ -14,6 +14,7 @@ function validator(hasEnrollment: boolean, isPlaced: boolean, legacyCalls: strin
       isPlacedInSectionOnDate: async () => isPlaced,
     } as any,
     {} as any,
+    {} as any,
   ));
 }
 

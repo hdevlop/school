@@ -75,8 +75,9 @@ export class AnnouncementService {
     };
   }
 
-  async create(data: CreateAnnouncementDto) {
+  async create(data: CreateAnnouncementDto, actor?: AnnouncementActor) {
     const normalizedData = this.normalizeClassTargets(data);
+    this.announcementValidator.ensureSupervisorAudience(actor, normalizedData.targetAudience);
     const ANNOUNCEMENT_CREATE_KEYS = [
       'title', 'content', 'authorId', 'targetAudience', 'classId', 'classIds',
       'publishDate', 'expiryDate'
@@ -101,6 +102,7 @@ export class AnnouncementService {
   async update(id: string, data: UpdateAnnouncementDto, actor: AnnouncementActor) {
     const existing = await this.announcementValidator.ensureChangeable(id, actor);
     const targetAudience = (data.targetAudience ?? existing.targetAudience) as CreateAnnouncementDto['targetAudience'];
+    this.announcementValidator.ensureSupervisorAudience(actor, targetAudience);
     const currentClassIds = existing.classIds?.length
       ? existing.classIds
       : existing.classId

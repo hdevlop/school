@@ -20,17 +20,25 @@ import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidato
 import type { RoutineListQuery } from './ClassRoutineDto';
 import { DEFAULT_TEACHING_DAYS } from '@sms/contracts/routines';
 import { managesGrade } from '../staff/floorManagerScope';
+import { ScopeContext } from '../../auth';
+import { supervisesClass } from '../staff/supervisorScope';
 
 export type RoutineReader = { id: string; role: string };
 
 @Repository()
 export class ClassRoutineRepository {
   declare db: DB;
+  declare _scopeCtx: ScopeContext;
   @Year() private readonly year!: ResolvedAcademicYear;
 
   // A timetable belongs to the year stored on it, its class's year.
   private inSelectedYear() {
     return eq(routineSchedules.academicYear, this.year.label);
+  }
+
+  private supervisorClassScope() {
+    const reader = this._scopeCtx?.getUser();
+    return reader?.role === 'supervisor' ? supervisesClass(classes.id, reader.id) : undefined;
   }
 
   async clearForSeedReset() {
@@ -90,7 +98,7 @@ export class ClassRoutineRepository {
   }
 
   async list(filters: RoutineListQuery = {}, includeArchived = false) {
-    const conditions = [this.inSelectedYear()];
+    const conditions = [this.inSelectedYear(), this.supervisorClassScope()];
     if (filters.sectionId) conditions.push(eq(routineSchedules.sectionId, filters.sectionId));
     if (filters.status) conditions.push(eq(routineSchedules.status, filters.status));
     else if (!includeArchived) conditions.push(inArray(routineSchedules.status, ['draft', 'published']));
@@ -141,7 +149,7 @@ export class ClassRoutineRepository {
       .from(routineSchedules)
       .innerJoin(sections, eq(routineSchedules.sectionId, sections.id))
       .innerJoin(classes, eq(sections.classId, classes.id))
-      .where(and(eq(routineSchedules.id, id), this.inSelectedYear()))
+      .where(and(eq(routineSchedules.id, id), this.inSelectedYear(), this.supervisorClassScope()))
       .limit(1);
     return schedule;
   }
@@ -235,7 +243,7 @@ export class ClassRoutineRepository {
       roomNumber: sections.roomNumber,
       classAcademicYear: classes.academicYear,
     }).from(sections).innerJoin(classes, eq(sections.classId, classes.id))
-      .where(eq(sections.id, sectionId)).limit(1);
+      .where(and(eq(sections.id, sectionId), this.supervisorClassScope())).limit(1);
     return section;
   }
 
@@ -303,6 +311,7 @@ export class ClassRoutineRepository {
   }
 
   private managedGrade(reader?: RoutineReader) {
+    if (reader?.role === 'supervisor') return supervisesClass(classes.id, reader.id);
     return reader?.role === 'floor_manager' ? managesGrade(classes.name, reader.id) : undefined;
   }
 

@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { DB } from '../../database/db';
-import { accountantAssignments, assistantAssignments, busAssistantAssignments, cleanerAssignments, floorManagerAssignments, securityAssignments, staffCredentials } from '../../database/schema';
+import { accountantAssignments, assistantAssignments, busAssistantAssignments, cleanerAssignments, floorManagerAssignments, securityAssignments, staffCredentials, supervisorAssignments } from '../../database/schema';
 import { Repository } from '../../najm';
 
 export type StaffAssignmentInput = {
@@ -31,6 +31,7 @@ const ROLE_ASSIGNMENTS: Record<string, { table: unknown; target: (item: StaffAss
   cleaner: { table: cleanerAssignments, target: (item) => ({ zoneId: item.zoneId! }) },
   security: { table: securityAssignments, target: (item) => ({ zoneId: item.zoneId! }) },
   assistant: { table: assistantAssignments, target: (item) => ({ classId: item.classId!, sectionId: item.sectionId ?? null }) },
+  supervisor: { table: supervisorAssignments, target: (item) => ({ classId: item.classId! }) },
   accountant: { table: accountantAssignments, target: (item) => ({ cycleId: item.cycleId! }) },
   floorManager: { table: floorManagerAssignments, target: (item) => ({ className: item.className! }) },
   busAssistant: { table: busAssistantAssignments, target: (item) => ({ vehicleId: item.vehicleId! }) },

@@ -5,3 +5,4 @@ export * from './academic';
 export * from './operations';
 export * from './teacher';
 export * from './floorManager';
+export * from './supervisor';

@@ -190,8 +190,8 @@ export class AlertController {
   @Validate(createAlertDto)
   @McpTool({ description: 'Create a new alert', confirm: { level: 'warning', message: 'confirm.alerts.create' } })
   @ResMsg('alerts.success.created')
-  async create(@Body() alertData: CreateAlertDto) {
-    return this.alertService.create(alertData);
+  async create(@Body() alertData: CreateAlertDto, @User() actor: AlertActor) {
+    return this.alertService.create(alertData, actor);
   }
 
   @Put('/:id')

@@ -14,7 +14,9 @@ describe('page access', () => {
     expect(PAGE_ACCESS.insurance(viewer('secretary', ['read:insurance']))).toBe(true);
     expect(PAGE_ACCESS.students(viewer('secretary', ['read:insurance']))).toBe(false);
     expect(PAGE_ACCESS.students(viewer('floor_manager', ['read:students']))).toBe(true);
-    expect(PAGE_ACCESS.insurance(viewer('floor_manager', ['read:insurance']))).toBe(false);
+    // The register reads students through their ownership rules, so a
+    // class-scoped role granted it sees its own classes' register.
+    expect(PAGE_ACCESS.insurance(viewer('supervisor', ['read:insurance']))).toBe(true);
     expect(PAGE_ACCESS.classRoutines(viewer('floor_manager', ['read:classes']))).toBe(false);
     expect(PAGE_ACCESS.classRoutines(viewer('floor_manager', ['read:class-routines']))).toBe(true);
     expect(PAGE_ACCESS.classes(viewer('floor_manager', ['read:class-routines']))).toBe(false);
@@ -22,13 +24,16 @@ describe('page access', () => {
   it('opens a page from the permission its routes ask for, for any school-wide role', () => {
     const accountant = viewer('accounting', ['read:staff', 'read:payroll', 'read:financial-operations', 'read:staff-attendance', 'read:vehicles']);
     expect(pages(accountant)).toEqual(expect.arrayContaining(['staff', 'payroll', 'financialOperations', 'staffAttendance', 'vehicles']));
-    expect(pages(viewer('supervisor', ['read:fees']))).toContain('fees');
+    expect(pages(viewer('secretary', ['read:fees']))).toContain('fees');
   });
 
-  // Their routes read the whole school, so the server asks for a school-wide role too.
-  it('keeps finance, staff and transport pages from a teacher granted their permission', () => {
-    const teacher = viewer('teacher', ['read:fees', 'read:staff', 'read:payroll', 'read:vehicles']);
-    for (const page of ['fees', 'staff', 'payroll', 'vehicles'] as const) expect(PAGE_ACCESS[page](teacher), page).toBe(false);
+  // Their routes read the whole school, so the server asks for a school-wide
+  // role too. A supervisor works over their assigned classes.
+  it('keeps finance, staff and transport pages from a class-scoped role granted their permission', () => {
+    for (const role of ['teacher', 'supervisor', 'floor_manager']) {
+      const scoped = viewer(role, ['read:fees', 'read:staff', 'read:payroll', 'read:vehicles']);
+      for (const page of ['fees', 'staff', 'payroll', 'vehicles'] as const) expect(PAGE_ACCESS[page](scoped), `${role} ${page}`).toBe(false);
+    }
   });
 
   it('gives the principal everything but access control and appearance', () => {
@@ -40,22 +45,27 @@ describe('page access', () => {
     expect(PAGE_ACCESS.accessControl(viewer('principal', ['*:*']))).toBe(false);
   });
 
-  it('opens the dashboard home to the supervisor', () => {
-    expect(PAGE_ACCESS.dashboard(viewer('supervisor', []))).toBe(true);
+  // The roles screen grants the dashboard; the role only picks its layout.
+  it('opens the dashboard with read:dashboard, for any role', () => {
+    for (const role of ['admin', 'principal', 'supervisor', 'floor_manager', 'driver', 'custom-role']) {
+      expect(PAGE_ACCESS.dashboard(viewer(role, ['read:dashboard'])), role).toBe(true);
+      expect(PAGE_ACCESS.dashboard(viewer(role, ['read:students'])), role).toBe(false);
+    }
+    expect(PAGE_ACCESS.dashboard(viewer('admin', ['*:*']))).toBe(true);
   });
 
   it('keeps authenticated landing destinations inside the protected app', () => {
-    for (const role of ['admin', 'principal', 'accounting', 'teacher', 'secretary', 'assistant', 'supervisor']) {
-      expect(dashboardLandingPath(viewer(role, []))).toBe('/dashboard');
+    for (const role of ['admin', 'principal', 'accounting', 'teacher', 'secretary', 'assistant', 'supervisor', 'floor_manager']) {
+      expect(dashboardLandingPath(viewer(role, ['read:dashboard']))).toBe('/dashboard');
+      // Revoked in the roles screen: the inbox is still a usable home.
+      expect(dashboardLandingPath(viewer(role, []))).toBe('/notifications');
     }
     for (const role of ['parent', 'student']) {
       expect(dashboardLandingPath(viewer(role, ['read:students']))).toBe('/students');
       expect(dashboardLandingPath(viewer(role, []))).toBe('/notifications');
     }
     expect(dashboardLandingPath(viewer('driver', ['read:students']))).toBe('/notifications');
-    // A floor manager has their own dashboard, over the grades they run.
-    expect(PAGE_ACCESS.dashboard(viewer('floor_manager', []))).toBe(true);
-    expect(dashboardLandingPath(viewer('floor_manager', ['read:students']))).toBe('/dashboard');
+    expect(dashboardLandingPath(viewer('custom-role', ['read:dashboard']))).toBe('/dashboard');
     expect(dashboardLandingPath(viewer('custom-role', []))).toBe('/notifications');
   });
 });

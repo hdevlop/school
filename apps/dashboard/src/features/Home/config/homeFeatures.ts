@@ -99,8 +99,8 @@ export function createHomeCards(t: (key: string) => string, viewer: PageViewer, 
       const details = (item.access === 'accessControl' || action) && featureDetails
         ? { ...featureDetails, resources: [action ?? item.id.slice(1)] }
         : featureDetails;
-      // Dashboard and the personal inbox are account capabilities; they have no
-      // resource permissions in School's catalog. Keep their existing guards.
+      // A page without feature details (the dashboard, read:dashboard; the
+      // personal inbox, every account) shows only when its page guard admits it.
       if (details ? !hasFeaturePermission(permissions, details.resources) : !accessible) continue;
       const label = item.access === 'studentAttendance' ? t('mobileHome.studentAttendance')
         : item.access === 'staffAttendance' ? t('mobileHome.staffAttendance')

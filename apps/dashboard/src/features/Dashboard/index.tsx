@@ -15,23 +15,34 @@ import ExpenseBreakdownChart from '@/features/Reports/components/ExpenseBreakdow
 import OverdueFees from './components/OverdueFees';
 import TeacherDashboard from './components/Teacher';
 import FloorManagerDashboard from './components/FloorManager';
-import { canReadFinanceDashboard, usesFloorManagerDashboard, usesTeacherDashboard } from './config/dashboardAudience';
+import SupervisorDashboard from './components/Supervisor';
+import {
+  canReadFinanceDashboard, rowSpans, schoolDashboardCards,
+  usesFloorManagerDashboard, usesSupervisorDashboard, usesTeacherDashboard,
+} from './config/dashboardAudience';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const role = (user as { role?: string } | null)?.role;
   if (usesTeacherDashboard(role)) return <TeacherDashboard />;
   if (usesFloorManagerDashboard(role)) return <FloorManagerDashboard />;
+  if (usesSupervisorDashboard(role)) return <SupervisorDashboard />;
   return <SchoolDashboard role={role} />;
 };
 
 const SchoolDashboard = ({ role }: { role: string | undefined }) => {
   const { t } = useTranslation();
-  // Finance widgets are for the roles the finance dashboard admits; for
-  // everyone else the school charts widen to fill their rows.
+  const viewer = useViewerRole();
+  // Finance widgets are for the roles the finance dashboard admits, and each
+  // school chart for the permission its route asks for; the cards shown
+  // widen to fill their rows.
   const showFinance = canReadFinanceDashboard(role);
+  const cards = schoolDashboardCards(viewer);
+  const top = rowSpans({ gender: cards.studentsByGender && 2, attendance: cards.studentAttendance && 4, trend: showFinance && 6 });
+  const bottom = rowSpans({ expenses: showFinance && 2, staff: cards.staffAttendance && 4, overdue: showFinance && 4, calendar: 2 });
 
   return (
     <div className='flex flex-col w-full h-full min-h-0 gap-2 max-md:overflow-y-auto'>
@@ -46,18 +57,20 @@ const SchoolDashboard = ({ role }: { role: string | undefined }) => {
 
       {showFinance && <FinanceKpis />}
 
-      <div className='grid grid-cols-1 md:grid-cols-12 gap-3 md:flex-1 md:min-h-0 max-md:shrink-0 max-md:auto-rows-[320px] [&>*]:min-h-0 [&>*]:min-w-0 [&>*]:overflow-hidden'>
-        <StudentsGenderChart className={showFinance ? 'md:col-span-2' : 'md:col-span-4'} />
-        <StudentAttendanceChart className={showFinance ? 'md:col-span-4' : 'md:col-span-8'} />
-        {showFinance && <IncomeExpensesTrend className="md:col-span-6" />}
-      </div>
+      {(top.gender || top.attendance || top.trend) && (
+        <div className='grid grid-cols-1 md:grid-cols-12 gap-3 md:flex-1 md:min-h-0 max-md:shrink-0 max-md:auto-rows-[320px] [&>*]:min-h-0 [&>*]:min-w-0 [&>*]:overflow-hidden'>
+          {top.gender && <StudentsGenderChart className={top.gender} />}
+          {top.attendance && <StudentAttendanceChart className={top.attendance} />}
+          {top.trend && <IncomeExpensesTrend className={top.trend} />}
+        </div>
+      )}
 
       <div className='grid grid-cols-1 md:grid-cols-12 gap-3 md:flex-1 md:min-h-0 max-md:shrink-0 max-md:*:h-[320px] [&>*]:min-h-0 [&>*]:min-w-0 [&>*]:overflow-hidden'>
-        {showFinance && <ExpenseBreakdownChart className="md:col-span-2" />}
-        <TeachersAttendance className={showFinance ? 'md:col-span-4' : 'md:col-span-8'} />
-        {showFinance && <OverdueFees className="md:col-span-4" />}
+        {bottom.expenses && <ExpenseBreakdownChart className={bottom.expenses} />}
+        {bottom.staff && <TeachersAttendance className={bottom.staff} />}
+        {bottom.overdue && <OverdueFees className={bottom.overdue} />}
         {/* Every other card is 320px on a phone; a month needs more, so the calendar takes its own height. */}
-        <CalendarCard className={cn('max-md:h-auto!', showFinance ? 'md:col-span-2' : 'md:col-span-4')} />
+        <CalendarCard className={cn('max-md:h-auto!', bottom.calendar)} />
       </div>
     </div>
   );

@@ -33,9 +33,10 @@ describe('ownership SQL baseline', () => {
     expect([...actual.keys()].sort()).toEqual(Object.keys(baseline.cases).sort());
   });
 
-  it('sends byte-identical SQL with exactly the recorded parameters in every case', () => {
+  it('preserves the recorded SQL outside the deliberately scoped supervisor role', () => {
     const differences: string[] = [];
     for (const [name, outcome] of actual) {
+      if (name.endsWith('|role:supervisor')) continue;
       const expected = baseline.outcomes[baseline.cases[name]!];
       if (JSON.stringify(outcome) !== JSON.stringify(expected)) {
         differences.push(`${name}\n  expected: ${JSON.stringify(expected)}\n  actual:   ${JSON.stringify(outcome)}`);
@@ -43,6 +44,34 @@ describe('ownership SQL baseline', () => {
     }
     expect(differences.slice(0, 5).join('\n\n')).toBe('');
     expect(differences.length).toBe(0);
+  });
+
+  // Keep the original baseline as evidence of the former school-wide access.
+  // The new contract deliberately changes those cases: each changed statement
+  // must now require a class assignment, or deny a resource with no supervisor rule.
+  it('replaces supervisor bypasses with assignment checks or a denied read', () => {
+    let restricted = 0;
+    for (const [name, outcome] of actual) {
+      if (!name.endsWith('|role:supervisor')) continue;
+      const previous = baseline.outcomes[baseline.cases[name]!]!;
+      for (const [index, statement] of outcome.statements.entries()) {
+        if (JSON.stringify(statement) === JSON.stringify(previous.statements[index])) continue;
+        if (name.includes('AlertGuards.AlertForAudience')) {
+          for (const column of ['student_id', 'teacher_id', 'teacher_assignment_id', 'class_id']) {
+            expect(statement.sql, name).toContain(`"alerts"."${column}" is null`);
+          }
+          expect(statement.params, name).toContain('teachers');
+        } else if (/AnnouncementGuards\.Announcement\|/.test(name)) {
+          expect(statement.sql, name).toContain('"announcements"."is_published"');
+          expect(statement.sql, name).toContain('"announcements"."target_audience" in');
+          expect(statement.params, name).toContain('teachers');
+        } else {
+          expect(statement.sql, name).toMatch(/supervisor_assignments|1 = 0/);
+        }
+        restricted++;
+      }
+    }
+    expect(restricted).toBeGreaterThan(100);
   });
 
   it('exercises the ownership paths it claims to: scoped roles reach owned subqueries', () => {

@@ -99,7 +99,7 @@ export class AttendanceService {
     await this.years.resolveRecord(academicYearId, data.date, user.role);
     const teacherId = await this.teacherIdForUser(user);
     await this.attendanceValidator.ensureTeacherCanMark(data, teacherId, user.role);
-    await this.attendanceValidator.ensureFloorManagerSection(user, data.sectionId);
+    await this.attendanceValidator.ensureAssignedSection(user, data.sectionId);
     const mode = await this.attendanceRepository.getAttendanceMode();
 
     if (mode === 'daily') {
@@ -223,7 +223,7 @@ export class AttendanceService {
     const record = await this.getById(id, user.role);
     const teacherId = await this.teacherIdForUser(user);
     await this.attendanceValidator.ensureTeacherCanUpdate(record, teacherId, user.role);
-    await this.attendanceValidator.ensureFloorManagerSection(user, record.sectionId);
+    await this.attendanceValidator.ensureAssignedSection(user, record.sectionId);
     return await this.attendanceRepository.update(id, attendanceData);
   }
 

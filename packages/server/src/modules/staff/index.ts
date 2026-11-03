@@ -4,6 +4,7 @@ export * from './StaffService';
 export * from './StaffRepository';
 export * from './StaffAssignmentRepository';
 export * from './StaffValidator';
+export * from './supervisorScope';
 export * from './staffRoleSchema';
 export * from './staffAssignmentSchema';
 export * from './roles';

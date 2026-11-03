@@ -14,7 +14,9 @@ import {
 import { managesClass } from '../../staff/floorManagerScope';
 
 // Every read takes the floor manager's user id, or section ids already
-// derived from it, so a floor manager only counts the grades they run.
+// derived from it, so a floor manager only counts the grades they run. The
+// supervisor's dashboard passes the sections of their assigned classes to
+// the section-id reads.
 @Repository()
 export class FloorManagerDashboardRepository {
   declare db: DB;

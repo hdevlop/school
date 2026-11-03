@@ -28,7 +28,7 @@ import { StudentRouteController } from '../../src/modules/transport/studentRoute
 import { withEnglishMessages } from '../support/englishMessages';
 
 /** Pinned here, not read from the code under test. */
-const SCHOOL_WIDE = ['admin', 'principal', 'accounting', 'secretary', 'driver', 'assistant', 'supervisor'];
+const SCHOOL_WIDE = ['admin', 'principal', 'accounting', 'secretary', 'driver', 'assistant'];
 const admin = [['AuthGuard', null], ['RoleGuard', 'admin']];
 const can = (permission: string) => [['AuthGuard', null], ['PermissionGuard', permission]];
 const schoolWide = (permission: string) => [['AuthGuard', null], ['RoleGuard', SCHOOL_WIDE], ['PermissionGuard', permission]];
@@ -228,12 +228,37 @@ describe('the floor manager migration', () => {
     const migrated = [...sql.matchAll(/'([\w-]+:[\w-]+)'/g)].map((match) => match[1]);
     // 0094 separates timetable reading from the existing classes grant.
     if (migrated.includes('read:classes')) migrated.push('read:class-routines');
+    // 0096 grants the dashboard to every role that opened it by role.
+    migrated.push('read:dashboard');
     expect(migrated.sort()).toEqual([...grants].sort());
   });
 
   it('links the floor manager job title to the login', () => {
     expect(sql).toContain(`SELECT 'floorManager', 'Floor Manager'`);
     expect(sql).toContain(`WHERE "roles"."name" = 'floor_manager'`);
+  });
+});
+
+describe('the dashboard permission migration', () => {
+  const sql = readFileSync(new URL('../../src/database/migrations/0096_dashboard_permission.sql', import.meta.url), 'utf8');
+  /** Pinned here: the roles the dashboard page admitted by role before. */
+  const OPENED_BY_ROLE = ['principal', 'accounting', 'teacher', 'secretary', 'assistant', 'supervisor', 'floor_manager'];
+  const migratedRoles = [...(sql.match(/"name" IN \(([^)]*)\)/)?.[1] ?? '').matchAll(/'([\w-]+)'/g)].map((match) => match[1]);
+
+  // The administrator holds *:*, which already matches it.
+  it('keeps the dashboard for every role that opened it, and grants no other', () => {
+    expect(migratedRoles.sort()).toEqual([...OPENED_BY_ROLE].sort());
+  });
+
+  it('seeds a new database with the same grants', () => {
+    const grants = seedData('rolePermissions') as { roleName: string; permissions: string[] }[];
+    const holders = grants.filter((row) => row.permissions.includes('read:dashboard')).map((row) => row.roleName);
+    expect(holders.sort()).toEqual([...OPENED_BY_ROLE].sort());
+    expect(seedData('permissions').some((permission: { name: string }) => permission.name === 'read:dashboard')).toBe(true);
+  });
+
+  it('revokes the sessions whose claims lack the new grant', () => {
+    expect(sql).toContain(`UPDATE "tokens" SET "status" = 'revoked'`);
   });
 });
 

@@ -1,6 +1,7 @@
 import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where, when } from '../../auth';
 import { classes, students, teachers, staff, parents, sections, teacherAssignments, studentParents } from '../../database/schema';
 import { managesGrade } from '../staff/floorManagerScope';
+import { supervisesClass } from '../staff/supervisorScope';
 
 export const Class = own(classes)
   .for('teacher',
@@ -21,6 +22,7 @@ export const Class = own(classes)
     where(students.userId),
   )
   // Every year's classes of the grades they run.
-  .for('floor_manager', when((userId: string) => managesGrade(classes.name, userId)));
+  .for('floor_manager', when((userId: string) => managesGrade(classes.name, userId)))
+  .for('supervisor', when((userId: string) => supervisesClass(classes.id, userId)));
 
 export { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete };

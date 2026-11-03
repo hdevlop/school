@@ -1,7 +1,7 @@
 import { Controller, Get, t, ResMsg } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { DashboardService } from './DashboardService';
-import { isAuth, isFinancial, isStaff, isAdministrator } from '../../auth';
+import { isAuth, isFinancial, isAdministrator, CanSchoolWide } from '../../auth';
 
 @ToolGroup('dashboard')
 @Controller('/dashboard')
@@ -29,9 +29,11 @@ export class DashboardController {
     };
   }
 
-  // School-wide counts and attendance are for staff, not parents or students.
+  // Each school-wide chart asks for the permission of the records it counts,
+  // so the roles screen decides who sees it. A teacher, parent or student
+  // granted that permission still reads only their own rows elsewhere.
   @Get('/students-by-gender')
-  @isStaff()
+  @CanSchoolWide('read:students')
   async getStudentsByGender() {
     const data = await this.dashboardService.getStudentsByGender();
     return {
@@ -42,14 +44,14 @@ export class DashboardController {
   }
 
   @Get('/attendance/students-monthly')
-  @isStaff()
+  @CanSchoolWide('read:attendance')
   async getStudentAttendanceMonthly() {
     const data = await this.dashboardService.getAttendanceMonthly('student');
     return { data, message: t('dashboards.success.retrieved'), status: 'success' };
   }
 
   @Get('/attendance/staff-monthly')
-  @isStaff()
+  @CanSchoolWide('read:staff-attendance')
   async getStaffAttendanceMonthly() {
     const data = await this.dashboardService.getAttendanceMonthly('staff');
     return { data, message: t('dashboards.success.retrieved'), status: 'success' };

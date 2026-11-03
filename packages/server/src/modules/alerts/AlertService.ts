@@ -82,7 +82,8 @@ export class AlertService {
     return await this.alertRepository.getTypeCounts();
   }
 
-  async create(data: CreateAlertDto) {
+  async create(data: CreateAlertDto, actor?: AlertActor) {
+    this.alertValidator.ensureSupervisorTarget(data, actor);
     const academicYearId = await this.alertValidator.ensureYearScope(data);
     await this.alertValidator.ensureNoDuplicateActiveAlertInScope(
       data.type,
@@ -116,6 +117,7 @@ export class AlertService {
   async update(id: string, data: UpdateAlertDto, actor: AlertActor) {
     this.alertValidator.ensureCanEdit(actor);
     const existing = await this.alertValidator.ensureAlertExists(id);
+    this.alertValidator.ensureSupervisorTarget({ ...existing, ...data }, actor);
     const changesTarget = (['type', 'studentId', 'teacherId', 'classId', 'subjectId'] as const)
       .some((field) => data[field] !== undefined && data[field] !== existing![field]);
     if (changesTarget) {

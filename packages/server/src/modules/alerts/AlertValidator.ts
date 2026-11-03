@@ -17,7 +17,7 @@ export type AlertActor = {
   role?: string | null;
 };
 
-const isStaff = (actor: AlertActor) => SCHOOL_WIDE_ROLES.includes(actor.role ?? '');
+const isStaff = (actor: AlertActor) => actor.role === 'supervisor' || SCHOOL_WIDE_ROLES.includes(actor.role ?? '');
 
 @Service()
 export class AlertValidator {
@@ -59,6 +59,12 @@ export class AlertValidator {
   /** Teachers, parents and students handle an alert's status; its content is staff's. */
   ensureCanEdit(actor: AlertActor) {
     if (!isStaff(actor)) Err(403, this.at('editStaffOnly'));
+  }
+
+  ensureSupervisorTarget(data: Pick<CreateAlertDto, 'studentId' | 'classId'>, actor?: AlertActor) {
+    if (actor?.role === 'supervisor' && !data.studentId && !data.classId) {
+      Err(403, this.at('supervisorClassesOnly'));
+    }
   }
 
   async ensureStudentExists(studentId: string) {

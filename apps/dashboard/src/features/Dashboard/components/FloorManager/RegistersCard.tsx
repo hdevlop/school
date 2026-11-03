@@ -18,6 +18,8 @@ type RegistersCardProps = {
   loading: boolean;
   error: unknown;
   onRetry: () => void;
+  // What a staff member with no sections sees; the floor manager's grades by default.
+  emptyText?: string;
   className?: string;
 };
 
@@ -29,7 +31,7 @@ const RegistersSkeleton = () => (
 
 // Each section of the floor manager's grades, with today's register: taken,
 // with its absences and late arrivals, or still to take.
-const RegistersCard = ({ sections, loading, error, onRetry, className }: RegistersCardProps) => {
+const RegistersCard = ({ sections, loading, error, onRetry, emptyText, className }: RegistersCardProps) => {
   const { t } = useTranslation();
   const { number } = useSchoolFormat();
   const rows = sections ?? [];
@@ -96,7 +98,7 @@ const RegistersCard = ({ sections, loading, error, onRetry, className }: Registe
           </ul>
         </NajmScroll>
       ) : (
-        <NEmptyState icon={FEATURE_ICONS.sections} title={t('dashboard.floorManager.registers.empty')} className="py-4" />
+        <NEmptyState icon={FEATURE_ICONS.sections} title={emptyText ?? t('dashboard.floorManager.registers.empty')} className="py-4" />
       )}
     </NCard>
   );

@@ -666,6 +666,20 @@
       "when": 1793700000000,
       "tag": "0094_independent_page_permissions",
       "breakpoints": true
+    },
+    {
+      "idx": 95,
+      "version": "7",
+      "when": 1793703144618,
+      "tag": "0095_supervisor_class_assignments",
+      "breakpoints": true
+    },
+    {
+      "idx": 96,
+      "version": "7",
+      "when": 1793710000000,
+      "tag": "0096_dashboard_permission",
+      "breakpoints": true
     }
   ]
 }

@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where, when } from '../../auth';
 import { attendance, students, staff, parents, studentParents, teachers, teacherAssignments } from '../../database/schema';
 import { managesSection, managesStudent } from '../staff/floorManagerScope';
+import { supervisesSection, supervisesStudent } from '../staff/supervisorScope';
 
 export const Attendance = own(attendance)
   .for('teacher',
@@ -23,6 +24,9 @@ export const Attendance = own(attendance)
   .for('floor_manager', when((userId: string) => sql`(${attendance.studentId} is not null and (
     ${managesSection(attendance.sectionId, userId)}
     or (${attendance.sectionId} is null and ${managesStudent(attendance.studentId, userId)})))`))
+  .for('supervisor', when((userId: string) => sql`(${attendance.studentId} is not null and (
+    ${supervisesSection(attendance.sectionId, userId)}
+    or (${attendance.sectionId} is null and ${supervisesStudent(attendance.studentId, userId)})))`))
   .writeBy(attendance.studentId);
 
 // A najm rule is one join chain, so a teacher's other readable rows are

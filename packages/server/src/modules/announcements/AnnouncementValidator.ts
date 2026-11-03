@@ -33,10 +33,16 @@ export class AnnouncementValidator {
   /** Staff change any announcement they can read; anyone else only the ones they wrote. */
   async ensureChangeable(id: string, actor: AnnouncementActor) {
     const announcement = await this.ensureExists(id);
-    if (!SCHOOL_WIDE_ROLES.includes(actor.role ?? '') && announcement.authorId !== actor.id) {
+    if (actor.role !== 'supervisor' && !SCHOOL_WIDE_ROLES.includes(actor.role ?? '') && announcement.authorId !== actor.id) {
       Err(403, this.at('authorOnly'));
     }
     return announcement;
+  }
+
+  ensureSupervisorAudience(actor: AnnouncementActor | undefined, targetAudience: string) {
+    if (actor?.role === 'supervisor' && targetAudience !== 'class') {
+      Err(403, this.at('supervisorClassesOnly'));
+    }
   }
 
   // ========================================

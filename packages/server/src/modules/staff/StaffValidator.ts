@@ -64,6 +64,7 @@ export class StaffValidator {
     for (const assignment of assignments) {
       if (role === 'cleaner' && !assignment.zoneId) Err(400, this.t('cleanerZoneRequired'));
       if (role === 'assistant' && !assignment.classId) Err(400, this.t('assistantClassRequired'));
+      if (role === 'supervisor' && !assignment.classId) Err(400, this.t('supervisorClassRequired'));
       if (role === 'busAssistant' && !assignment.vehicleId) Err(400, this.t('busAssistantVehicleRequired'));
       if (role === 'accountant' && !assignment.cycleId) Err(400, this.t('accountantCycleRequired'));
       if (role === 'floorManager' && !assignment.className) Err(400, this.t('floorManagerGradeRequired'));

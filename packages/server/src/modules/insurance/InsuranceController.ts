@@ -1,5 +1,5 @@
 import { Controller, Get, ResMsg } from '../../najm';
-import { CanSchoolWide } from '../../auth';
+import { Can } from '../../auth';
 import { ToolGroup } from 'najm-mcp';
 import { InsuranceService } from './InsuranceService';
 
@@ -9,7 +9,7 @@ export class InsuranceController {
   constructor(private service: InsuranceService) {}
 
   @Get()
-  @CanSchoolWide('read:insurance')
+  @Can('read:insurance')
   @ResMsg('students.success.retrieved')
   async getRegister() {
     return this.service.getRegister();

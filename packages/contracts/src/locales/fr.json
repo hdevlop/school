@@ -968,6 +968,7 @@
       "bulkDeleted": "Membres du personnel supprimés avec succès"
     },
     "errors": {
+      "supervisorClassRequired": "L’affectation d’un surveillant nécessite une classe",
       "driverLicenseExpiryInvalid": "Saisissez une date d’expiration du permis valide (AAAA-MM-JJ).",
       "driverLicenseExpired": "Le permis de conduire a expiré.",
       "notFound": "Membre du personnel introuvable",
@@ -1529,6 +1530,7 @@
       "success": "Données de l’école effacées. Le compte administrateur, les classes, les sections, les matières et les types de frais ont été conservés."
     },
     "academic": {
+    "supervisorAssignmentHint": "L’accès est limité aux classes choisies, à leurs élèves, à l’assiduité, à la discipline et aux notes. Sans affectation, aucune donnée de classe n’est accessible.",
       "semesterPlaceholder": "Semestre",
       "attendanceMode": "Mode de présence",
       "attendanceModeDaily": "Quotidien",
@@ -1627,6 +1629,7 @@
       "attendanceAlertsGenerated": "Alertes de présence générées avec succès"
     },
     "errors": {
+      "supervisorClassesOnly": "Les surveillants peuvent envoyer des messages uniquement à leurs classes ou élèves affectés.",
       "notFound": "Alerte non trouvée",
       "invalidType": "Type d'alerte invalide spécifié",
       "invalidStatus": "Statut d'alerte invalide spécifié",
@@ -1743,6 +1746,45 @@
     }
   },
   "dashboard": {
+    "supervisor": {
+      "title": "Tableau de bord du surveillant",
+      "subtitle": "Voici la journée de vos classes en un coup d’œil.",
+      "kpis": {
+        "newVisitRequests": "Nouvelles demandes de visite"
+      },
+      "info": {
+        "classes": "Classes : {{classes}}",
+        "noClasses": "Aucune classe attribuée"
+      },
+      "registers": {
+        "empty": "Aucune section dans vos classes cette année"
+      },
+      "grades": {
+        "title": "Notes par classe",
+        "average": "Moyenne",
+        "passRate": "Taux de réussite",
+        "graded": "{{count}} notes",
+        "empty": "Aucune note saisie dans vos classes pour le moment"
+      },
+      "incidentsTrend": {
+        "title": "Incidents par mois",
+        "empty": "Aucun incident signalé cette année"
+      },
+      "quickActions": {
+        "takeAttendance": "Faire l'appel",
+        "takeAttendanceHint": "Enregistrer l'appel du jour d'une section",
+        "reportIncident": "Signaler un incident",
+        "reportIncidentHint": "Consigner un problème de comportement d'un élève",
+        "recordReward": "Enregistrer une récompense",
+        "recordRewardHint": "Valoriser un bon comportement",
+        "visitRequests": "Demandes de visite",
+        "visitRequestsHint": "Contacter les familles qui souhaitent visiter",
+        "sendAnnouncement": "Publier une annonce",
+        "sendAnnouncementHint": "Écrire à vos classes et à leurs familles",
+        "viewStudents": "Voir les élèves",
+        "viewStudentsHint": "Les élèves de vos classes"
+      }
+    },
     "floorManager": {
       "title": "Tableau de bord du moniteur",
       "subtitle": "Voici la journée de vos classes en un coup d’œil.",
@@ -3494,6 +3536,7 @@
       "unpublish": "Dépublier"
     },
     "errors": {
+      "supervisorClassesOnly": "Les surveillants peuvent envoyer des messages uniquement à leurs classes ou élèves affectés.",
       "authorOnly": "Seuls le personnel ou l'auteur de l'annonce peuvent la modifier",
       "classesNotInYear": "Les classes de l'annonce doivent appartenir à l'année scolaire sélectionnée",
       "notFound": "Annonce introuvable",
@@ -6829,24 +6872,7 @@
       "notes": "Observations",
       "directorSignature": "Signature de la directrice pédagogique",
       "provincialDirectorate": "Direction provinciale",
-      "insurance": "Assurance",
-      "levelNames": {
-        "PS": "Petite section",
-        "MS": "Moyenne section",
-        "GS": "Grande section",
-        "CP": "1re année primaire",
-        "CE1": "2e année primaire",
-        "CE2": "3e année primaire",
-        "CM1": "4e année primaire",
-        "CM2": "5e année primaire",
-        "CE6": "6e année primaire",
-        "1AC": "1re année collège",
-        "2AC": "2e année collège",
-        "3AC": "3e année collège",
-        "TC": "Tronc commun",
-        "1BAC": "1re année bac",
-        "2BAC": "2e année bac"
-      }
+      "insurance": "Assurance"
     }
   }
 }

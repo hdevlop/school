@@ -872,6 +872,45 @@
     }
   },
   "dashboard": {
+    "supervisor": {
+      "title": "Supervisor Dashboard",
+      "subtitle": "Here's your classes' day at a glance.",
+      "kpis": {
+        "newVisitRequests": "New Visit Requests"
+      },
+      "info": {
+        "classes": "Classes: {{classes}}",
+        "noClasses": "No classes assigned"
+      },
+      "registers": {
+        "empty": "No sections in your classes this year"
+      },
+      "grades": {
+        "title": "Grades by Class",
+        "average": "Average",
+        "passRate": "Pass rate",
+        "graded": "{{count}} marks",
+        "empty": "No graded marks in your classes yet"
+      },
+      "incidentsTrend": {
+        "title": "Incidents by Month",
+        "empty": "No incidents reported this year"
+      },
+      "quickActions": {
+        "takeAttendance": "Take attendance",
+        "takeAttendanceHint": "Record today’s register for a section",
+        "reportIncident": "Report an incident",
+        "reportIncidentHint": "Log a student behaviour concern",
+        "recordReward": "Record a reward",
+        "recordRewardHint": "Recognise good behaviour",
+        "visitRequests": "Visit requests",
+        "visitRequestsHint": "Contact families who asked to visit",
+        "sendAnnouncement": "Send an announcement",
+        "sendAnnouncementHint": "Write to your classes and their families",
+        "viewStudents": "View students",
+        "viewStudentsHint": "Students in your classes"
+      }
+    },
     "floorManager": {
       "title": "Monitor Dashboard",
       "subtitle": "Here's your classes' day at a glance.",
@@ -1568,6 +1607,7 @@
       "licenseDate": "License date"
     },
     "academic": {
+    "supervisorAssignmentHint": "Access is limited to the selected classes and their students, attendance, discipline and grades. Without assignments, no class data is accessible.",
       "semesterPlaceholder": "Semester",
       "title": "Academic settings",
       "attendanceRequirement": "Attendance Requirement (%)",
@@ -2981,6 +3021,7 @@
       "bulkDeleted": "Staff members deleted successfully"
     },
     "errors": {
+      "supervisorClassRequired": "Supervisor assignment requires a class",
       "driverLicenseExpiryInvalid": "Enter a valid license expiry date (YYYY-MM-DD).",
       "driverLicenseExpired": "The driver's license has expired.",
       "notFound": "Staff member not found",
@@ -4538,6 +4579,7 @@
       "seeded": "Announcements seeded successfully"
     },
     "errors": {
+      "supervisorClassesOnly": "Supervisors can send notices only to their assigned classes or students.",
       "notFound": "Announcement not found",
       "allAudienceNoClassSection": "Announcements for everyone cannot be limited to a class or section",
       "classRequired": "Please select a class for class announcements",
@@ -6250,6 +6292,7 @@
       "updated": "Event updated successfully"
     },
     "errors": {
+      "supervisorClassesOnly": "Supervisors can send notices only to their assigned classes or students.",
       "notFound": "Event not found",
       "capacityFull": "The event is full ({{current}} of {{capacity}} places taken)",
       "registrationClosed": "Registration for this event is closed",
@@ -6313,6 +6356,7 @@
       }
     },
     "errors": {
+      "supervisorClassesOnly": "Supervisors can send notices only to their assigned classes or students.",
       "notFound": "Alert not found",
       "duplicateActiveAlert": "An active alert of this type already exists for this target",
       "sharedNoticeStaffOnly": "Only staff can change the status of a class or school-wide alert",
@@ -7434,24 +7478,7 @@
       "notes": "Notes",
       "directorSignature": "Head of school signature",
       "provincialDirectorate": "Provincial directorate",
-      "insurance": "Insurance",
-      "levelNames": {
-        "PS": "Nursery, small section",
-        "MS": "Nursery, middle section",
-        "GS": "Nursery, senior section",
-        "CP": "1st year primary",
-        "CE1": "2nd year primary",
-        "CE2": "3rd year primary",
-        "CM1": "4th year primary",
-        "CM2": "5th year primary",
-        "CE6": "6th year primary",
-        "1AC": "1st year middle school",
-        "2AC": "2nd year middle school",
-        "3AC": "3rd year middle school",
-        "TC": "Common core",
-        "1BAC": "1st year baccalaureate",
-        "2BAC": "2nd year baccalaureate"
-      }
+      "insurance": "Insurance"
     }
   }
 }

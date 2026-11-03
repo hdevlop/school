@@ -38,9 +38,9 @@ export const studentPlacedOnSourceDate = (source: DatedAcademicSource, studentId
   placedOn(source, sql`student.id = ${studentId}`, false);
 
 /** A section the source targets is in one of a floor manager's classes. */
-export const targetsManagedSection = (source: DatedAcademicSource, userId: string) => sql`exists (
+export const targetsManagedSection = (source: DatedAcademicSource, userId: string, sectionScope = managesSection) => sql`exists (
   select 1 from jsonb_array_elements_text(coalesce(${source.sectionIds}, jsonb_build_array(
     (select section_id from teacher_assignments where id = ${source.teacherAssignmentId})
   ))) as target(section_id)
-  where ${managesSection(sql`target.section_id`, userId)}
+  where ${sectionScope(sql`target.section_id`, userId)}
 )`;

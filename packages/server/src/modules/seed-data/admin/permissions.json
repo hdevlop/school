@@ -850,5 +850,11 @@
     "description": "Permission to view class timetables",
     "resource": "class-routines",
     "action": "read"
+  },
+  {
+    "name": "read:dashboard",
+    "description": "Permission to open the dashboard home page",
+    "resource": "dashboard",
+    "action": "read"
   }
 ]

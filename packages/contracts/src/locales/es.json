@@ -858,6 +858,7 @@
       "attendanceAlertsGenerated": "Alertas de asistencia generadas correctamente"
     },
     "errors": {
+      "supervisorClassesOnly": "Los supervisores solo pueden enviar avisos a sus clases o alumnos asignados.",
       "notFound": "Alerta no encontrada",
       "invalidType": "Tipo de alerta inválido especificado",
       "invalidStatus": "Estado de alerta inválido especificado",
@@ -965,6 +966,45 @@
     }
   },
   "dashboard": {
+    "supervisor": {
+      "title": "Panel del supervisor",
+      "subtitle": "Este es el día de tus clases de un vistazo.",
+      "kpis": {
+        "newVisitRequests": "Nuevas solicitudes de visita"
+      },
+      "info": {
+        "classes": "Clases: {{classes}}",
+        "noClasses": "Sin clases asignadas"
+      },
+      "registers": {
+        "empty": "No hay secciones en tus clases este año"
+      },
+      "grades": {
+        "title": "Notas por clase",
+        "average": "Promedio",
+        "passRate": "Tasa de aprobación",
+        "graded": "{{count}} notas",
+        "empty": "Aún no hay notas registradas en tus clases"
+      },
+      "incidentsTrend": {
+        "title": "Incidentes por mes",
+        "empty": "No se han reportado incidentes este año"
+      },
+      "quickActions": {
+        "takeAttendance": "Pasar lista",
+        "takeAttendanceHint": "Registrar la asistencia de hoy de una sección",
+        "reportIncident": "Reportar un incidente",
+        "reportIncidentHint": "Registrar un problema de conducta de un estudiante",
+        "recordReward": "Registrar un reconocimiento",
+        "recordRewardHint": "Reconocer una buena conducta",
+        "visitRequests": "Solicitudes de visita",
+        "visitRequestsHint": "Contactar a las familias que pidieron visitar",
+        "sendAnnouncement": "Publicar un anuncio",
+        "sendAnnouncementHint": "Escribir a tus clases y sus familias",
+        "viewStudents": "Ver estudiantes",
+        "viewStudentsHint": "Los estudiantes de tus clases"
+      }
+    },
     "floorManager": {
       "title": "Panel del monitor",
       "subtitle": "Este es el día de tus clases de un vistazo.",
@@ -2668,6 +2708,8 @@
       "unpublish": "Retirar publicación"
     },
     "errors": {
+      "supervisorClassesOnly": "Los supervisores solo pueden enviar avisos a sus clases o alumnos asignados.",
+      "supervisorClassRequired": "La asignación de un supervisor requiere una clase",
       "authorOnly": "Solo el personal o el autor del anuncio pueden modificarlo",
       "classesNotInYear": "Las clases del anuncio deben pertenecer al año escolar seleccionado",
       "notFound": "Anuncio no encontrado",
@@ -4065,6 +4107,7 @@
       "bulkDeleted": "Miembros del personal eliminados con éxito"
     },
     "errors": {
+      "supervisorClassRequired": "La asignación de un supervisor requiere una clase",
       "driverLicenseExpiryInvalid": "Introduzca una fecha de vencimiento válida (AAAA-MM-DD).",
       "driverLicenseExpired": "El permiso de conducir ha caducado.",
       "notFound": "Miembro del personal no encontrado",
@@ -4496,6 +4539,7 @@
       "invalidSchoolDay": "El horario debe permitir el almuerzo y al menos seis clases de cinco minutos."
     },
     "academic": {
+    "supervisorAssignmentHint": "El acceso se limita a las clases seleccionadas, sus alumnos, asistencia, disciplina y notas. Sin asignaciones, no se puede acceder a datos de clases.",
       "semesterPlaceholder": "Semestre",
       "attendanceMode": "Modo de asistencia",
       "attendanceModeDaily": "Diario",
@@ -6726,24 +6770,7 @@
       "notes": "Observaciones",
       "directorSignature": "Firma de la directora pedagógica",
       "provincialDirectorate": "Dirección provincial",
-      "insurance": "Seguro",
-      "levelNames": {
-        "PS": "Sección pequeña",
-        "MS": "Sección mediana",
-        "GS": "Sección grande",
-        "CP": "1.º de primaria",
-        "CE1": "2.º de primaria",
-        "CE2": "3.º de primaria",
-        "CM1": "4.º de primaria",
-        "CM2": "5.º de primaria",
-        "CE6": "6.º de primaria",
-        "1AC": "1.º de secundaria",
-        "2AC": "2.º de secundaria",
-        "3AC": "3.º de secundaria",
-        "TC": "Tronco común",
-        "1BAC": "1.º de bachillerato",
-        "2BAC": "2.º de bachillerato"
-      }
+      "insurance": "Seguro"
     }
   }
 }

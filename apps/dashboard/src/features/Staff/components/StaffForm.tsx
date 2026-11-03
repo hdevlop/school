@@ -49,7 +49,7 @@ type StaffWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLabel
 const StaffWizardForm = WizardForm as ComponentType<StaffWizardFormProps>;
 
 const STAFF_FORM_EXCLUDED_ROLES = new Set(['teacher']);
-const STAFF_ASSIGNMENT_ROLES = new Set(['assistant', 'floorManager', 'cleaner', 'accountant', 'security', 'driver', 'busAssistant']);
+const STAFF_ASSIGNMENT_ROLES = new Set(['assistant', 'supervisor', 'floorManager', 'cleaner', 'accountant', 'security', 'driver', 'busAssistant']);
 
 const staffRoleHasAssignments = (role?: string) => !role || STAFF_ASSIGNMENT_ROLES.has(role);
 
@@ -91,8 +91,8 @@ const toStaffPayload = (data) => {
     if (payload[field] === '' || payload[field] === undefined) delete payload[field];
   }
 
-  // Assistant picks many classes in one multiselect; expand to one assignment row per class.
-  if (data.role === 'assistant') {
+  // Each selected class becomes one dated assignment.
+  if (data.role === 'assistant' || data.role === 'supervisor') {
     payload.assignments = (data.classIds || []).map((classId) => ({ classId }));
   }
   // Floor manager picks grades by class name, one assignment row per grade.
@@ -119,7 +119,7 @@ const toStaffPayload = (data) => {
         ))
       ))
       .filter((assignment) => Object.keys(assignment).length > 0);
-    if (payload.assignments.length === 0 && !(payload.id && (data.role === 'assistant' || data.role === 'accountant' || data.role === 'floorManager'))) delete payload.assignments;
+    if (payload.assignments.length === 0 && !(payload.id && ['assistant', 'supervisor', 'accountant', 'floorManager'].includes(data.role))) delete payload.assignments;
   }
 
   return payload;
@@ -410,7 +410,7 @@ const AssignmentsStep = ({ form }) => {
   const { push } = useDialog();
   const { can } = useViewerRole();
   const role = form.watch('role');
-  const { classes } = useClasses({ enabled: role === 'assistant' || role === 'floorManager' });
+  const { classes } = useClasses({ enabled: role === 'assistant' || role === 'supervisor' || role === 'floorManager' });
   const { cycles } = useCycles({ activeOnly: true, enabled: role === 'accountant' });
   const { zones } = useZones({ enabled: role === 'cleaner' || role === 'security' });
   const { vehicles, isVehiclesLoading, isError: vehicleError, refetch: refetchVehicles, createVehicle, isCreating } = useManageVehicles({ enabled: role === 'driver' || role === 'busAssistant' });
@@ -460,11 +460,11 @@ const AssignmentsStep = ({ form }) => {
 
   return (
     <div className="space-y-4">
-      {role === 'assistant' && (
+      {(role === 'assistant' || role === 'supervisor') && (
         <>
           <FormSectionHeader icon={Briefcase} title={t('staff.form.assignments')} />
           <FormInput name="classIds" type="multiselect" formLabel={t('staff.form.class')} placeholder={t('staff.form.class')} items={classOptions} icon={Briefcase} />
-          <p className="text-sm text-muted-foreground">{t('academic.staffAssignmentOptional')}</p>
+          <p className="text-sm text-muted-foreground">{t(role === 'supervisor' ? 'academic.supervisorAssignmentHint' : 'academic.staffAssignmentOptional')}</p>
         </>
       )}
 

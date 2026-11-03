@@ -38,9 +38,9 @@ beforeAll(() => {
 afterAll(() => setSystemTime());
 
 describe('floor manager ownership', () => {
-  it('is not school-wide, unlike the surveillant général', () => {
+  it('is class-scoped, as the supervisor is', () => {
     expect(SCHOOL_WIDE_ROLES).not.toContain('floor_manager');
-    expect(SCHOOL_WIDE_ROLES).toContain('supervisor');
+    expect(SCHOOL_WIDE_ROLES).not.toContain('supervisor');
   });
 
   it('reads every resource it is granted only through its own current grade assignments', () => {
@@ -109,7 +109,7 @@ describe('floor manager ownership', () => {
     expect(roster.sql).toContain('e.academic_year_id = $');
     expect(roster.sql).toContain('managed_class.id = p.class_id');
     expect(roster.params).toContain('year-1');
-    expect(studentReachedInYear('year-1', signedIn('supervisor'))).toBeUndefined();
+    expect(studentReachedInYear('year-1', signedIn('supervisor'))).toBeDefined();
     expect(render(Student.table, studentReachedInYear('year-1', signedIn('teacher'))).sql).toContain('teacher_assignments');
   });
 });

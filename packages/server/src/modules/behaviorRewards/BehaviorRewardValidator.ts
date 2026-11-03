@@ -2,6 +2,7 @@ import { Err, I18n, Service } from '../../najm';
 import { SCHOOL_WIDE_ROLES } from '../../auth';
 import { BehaviorRewardRepository } from './BehaviorRewardRepository';
 import { FloorManagerScopeRepository } from '../staff/floorManagerScope';
+import { SupervisorScopeRepository } from '../staff/supervisorScope';
 
 export type BehaviorRewardActor = {
   id: string;
@@ -20,6 +21,7 @@ export class BehaviorRewardValidator {
   constructor(
     private behaviorRewardRepository: BehaviorRewardRepository,
     private floorManagers: FloorManagerScopeRepository,
+    private supervisors: SupervisorScopeRepository,
   ) {}
 
   async ensureExists(id: string) {
@@ -32,7 +34,7 @@ export class BehaviorRewardValidator {
   // own sections, a floor manager for their classes, a school-wide role for
   // any student.
   ensureSupportedActor(actor: BehaviorRewardActor) {
-    if (actor.role !== 'teacher' && actor.role !== 'floor_manager' && !SCHOOL_WIDE_ROLES.includes(actor.role ?? '')) {
+    if (!['teacher', 'floor_manager', 'supervisor'].includes(actor.role ?? '') && !SCHOOL_WIDE_ROLES.includes(actor.role ?? '')) {
       Err(403, this.bt('forbidden'));
     }
   }
@@ -55,6 +57,9 @@ export class BehaviorRewardValidator {
       if (!assigned) Err(403, this.bt('studentNotAssigned'));
     }
     if (actor.role === 'floor_manager' && !await this.floorManagers.managesClass(actor.id, placement.classId)) {
+      Err(403, this.bt('studentNotAssigned'));
+    }
+    if (actor.role === 'supervisor' && !await this.supervisors.managesClass(actor.id, placement.classId)) {
       Err(403, this.bt('studentNotAssigned'));
     }
 

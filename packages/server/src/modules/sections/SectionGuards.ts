@@ -1,6 +1,7 @@
 import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where, when } from '../../auth';
 import { sections, students, teachers, staff, parents, teacherAssignments, studentParents } from '../../database/schema';
 import { managesClass } from '../staff/floorManagerScope';
+import { supervisesClass } from '../staff/supervisorScope';
 
 export const Section = own(sections)
   .for('teacher',
@@ -19,6 +20,7 @@ export const Section = own(sections)
     join(sections.id, students.sectionId),
     where(students.userId),
   )
-  .for('floor_manager', when((userId: string) => managesClass(sections.classId, userId)));
+  .for('floor_manager', when((userId: string) => managesClass(sections.classId, userId)))
+  .for('supervisor', when((userId: string) => supervisesClass(sections.classId, userId)));
 
 export { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete };

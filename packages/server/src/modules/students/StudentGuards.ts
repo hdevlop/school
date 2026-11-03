@@ -3,6 +3,7 @@ import { students, teachers, staff, parents, teacherAssignments, studentParents,
 import { sql, type SQLWrapper } from 'drizzle-orm';
 import type { ScopeContext } from '../../auth';
 import { managesStudent, managesStudentInYear } from '../staff/floorManagerScope';
+import { supervisesStudent, supervisesStudentInYear } from '../staff/supervisorScope';
 
 export const Student = own(students)
   .for('student',
@@ -21,7 +22,8 @@ export const Student = own(students)
     join(studentParents.parentId, parents.id),
     where(parents.userId),
   )
-  .for('floor_manager', when((userId: string) => managesStudent(students.id, userId)));
+  .for('floor_manager', when((userId: string) => managesStudent(students.id, userId)))
+  .for('supervisor', when((userId: string) => supervisesStudent(students.id, userId)));
 
 export { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete };
 
@@ -31,6 +33,7 @@ export { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete };
 export function studentReachedInYear(yearId: string, context?: ScopeContext, placementId?: SQLWrapper) {
   const actor = context?.getUser();
   if (actor?.role === 'floor_manager') return managesStudentInYear(students.id, yearId, actor.id, placementId);
+  if (actor?.role === 'supervisor') return supervisesStudentInYear(students.id, yearId, actor.id, placementId);
   if (actor?.role !== 'teacher') return undefined;
   return sql`EXISTS (SELECT 1 FROM student_enrollments e
     JOIN student_enrollment_placements p ON p.enrollment_id = e.id

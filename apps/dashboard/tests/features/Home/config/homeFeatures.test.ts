@@ -183,8 +183,15 @@ describe('Home cards and sidebar ticks', () => {
   });
 
   it('shows every page to a role never saved in the Sidebar tab', () => {
-    const permissions = ['read:students', 'read:parents'];
+    const permissions = ['read:dashboard', 'read:students', 'read:parents'];
     expect(createHomeCards(t, viewer('secretary', permissions), permissions).map((card) => card.id))
       .toEqual(expect.arrayContaining(['/dashboard', '/students', '/parents', '/notifications']));
+  });
+
+  // The dashboard is granted in the roles screen like any other page.
+  it('shows the dashboard card only with read:dashboard', () => {
+    const permissions = ['read:students'];
+    expect(createHomeCards(t, viewer('secretary', permissions), permissions).find((card) => card.id === '/dashboard'))
+      .toBeUndefined();
   });
 });

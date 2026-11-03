@@ -34,7 +34,10 @@ describe('independent sidebar visibility', () => {
   it('shows insurance through its own permission and sidebar choice', () => {
     expect(ids(createSidebarItems((key) => key, viewer('secretary', ['read:students'])))).not.toContain('/insurance');
     expect(ids(createSidebarItems((key) => key, viewer('secretary', ['read:insurance'])))).toContain('/insurance');
-    expect(ids(createSidebarItems((key) => key, viewer('teacher', ['read:insurance'])))).not.toContain('/insurance');
+    // The register reads students through their ownership rules, so a
+    // teacher granted it in the roles screen sees their own classes'.
+    expect(ids(createSidebarItems((key) => key, viewer('teacher', ['read:insurance'])))).toContain('/insurance');
+    expect(ids(createSidebarItems((key) => key, viewer('teacher', ['read:students'])))).not.toContain('/insurance');
     const base = ['read:insurance', 'read:students', 'read:parents', SIDEBAR_CONFIGURED_PERMISSION];
     expect(ids(createSidebarItems((key) => key, viewer('secretary', [...base, 'sidebar:insurance'])))).toContain('/insurance');
     expect(ids(createSidebarItems((key) => key, viewer('secretary', [...base, 'sidebar:students'])))).not.toContain('/insurance');
