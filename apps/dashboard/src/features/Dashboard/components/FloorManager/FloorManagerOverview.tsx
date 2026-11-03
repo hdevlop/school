@@ -17,9 +17,7 @@ import TodayRoutineCard from './TodayRoutineCard';
 import CalendarCard from '../CalendarCard';
 import { StudentsGenderChartCard } from '../StudentsGenderChart';
 import { StudentAttendanceChartCard } from '../StudentAttendanceChart';
-
-// Two balanced rows on a large screen; smaller screens let the page scroll.
-const ROW = 'grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4 [&>*]:min-w-0 xl:fit:[&>*]:min-h-0';
+import DashboardOverviewRow from '../DashboardOverviewRow';
 
 const action = (key: string, icon: QuickAction['icon'], href: string): QuickAction => ({
   key,
@@ -78,9 +76,10 @@ const FloorManagerOverview = () => {
     <div className="flex min-h-full flex-col gap-3 pb-1 xl:fit:h-full">
       <FloorManagerKpis kpis={overview?.kpis} loading={isLoading} />
 
-      <div className={`${ROW} xl:min-h-[23rem] xl:fit:flex-1 xl:fit:basis-0`}>
+      <DashboardOverviewRow>
         <TeacherInfoCard
           person={overview?.manager}
+          jobTitle={t('staff.roles.floorManager')}
           subtitle={(
             <p className="flex max-w-full items-center gap-1.5 text-sm text-muted-foreground">
               <Layers3 className="size-4 shrink-0" aria-hidden="true" />
@@ -93,7 +92,7 @@ const FloorManagerOverview = () => {
           )}
           {...cardState}
         />
-        <TodayRoutineCard overview={overview} {...cardState} />
+        <RegistersCard sections={overview?.sections} {...cardState} />
         <StudentAttendanceChartCard
           payload={overview?.attendanceMonthly}
           businessDate={overview?.date}
@@ -108,14 +107,14 @@ const FloorManagerOverview = () => {
           className="min-h-[23rem] xl:min-h-0"
           {...cardState}
         />
-      </div>
+      </DashboardOverviewRow>
 
-      <div className={`${ROW} xl:min-h-[23rem] xl:fit:flex-1 xl:fit:basis-0`}>
-        <RegistersCard sections={overview?.sections} {...cardState} />
+      <DashboardOverviewRow>
+        <TodayRoutineCard overview={overview} {...cardState} />
         <AttentionCard rows={attentionRows} {...cardState} />
-        <QuickActionsCard actions={ACTIONS} />
-        <CalendarCard className="min-h-[23rem] xl:min-h-0" />
-      </div>
+        <QuickActionsCard actions={ACTIONS} dense />
+        <CalendarCard dense className="min-h-[23rem] xl:min-h-0" />
+      </DashboardOverviewRow>
     </div>
   );
 };

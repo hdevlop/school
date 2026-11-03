@@ -4,9 +4,11 @@ import { useTranslation } from 'najm-i18n/react';
 import { avatarVersion } from '@/lib/avatarVersion';
 
 import { exportLabel } from '@/shared/tableExport';
+import { isParentDisabled, isParentOrphaned } from '../config/parentActivity';
 export const useParentsTableColumns = () => {
   const { t } = useTranslation();
   const orphanMessage = t('parents.tooltips.orphaned');
+  const leftSchoolMessage = t('parents.tooltips.leftSchool');
 
   return useMemo(() => [
     {
@@ -14,21 +16,21 @@ export const useParentsTableColumns = () => {
       header: t('parents.table.name'),
       cell: ({ row }) => {
         const parent = row.original;
-        const isOrphaned = parent.isOrphaned === true || Number(parent.totalChildren) === 0;
+        const isDisabled = isParentDisabled(parent);
         const avatar = (
           <NAvatar
             src={parent?.image}
             title={parent.name}
             size='sm'
             version={avatarVersion(parent?.image, parent?.updatedAt)}
-            className={isOrphaned ? 'opacity-70 grayscale' : undefined}
+            className={isDisabled ? 'opacity-70 grayscale' : undefined}
           />
         );
 
-        if (!isOrphaned) return avatar;
+        if (!isDisabled) return avatar;
 
         return (
-          <SimpleTooltip content={orphanMessage} side="top">
+          <SimpleTooltip content={isParentOrphaned(parent) ? orphanMessage : leftSchoolMessage} side="top">
             {avatar}
           </SimpleTooltip>
         );
@@ -100,5 +102,5 @@ export const useParentsTableColumns = () => {
         return occupation || <span className="text-gray-400">{t('common.notAvailable')}</span>;
       },
     },
-  ], [t, orphanMessage]);
+  ], [t, orphanMessage, leftSchoolMessage]);
 };

@@ -200,6 +200,26 @@ export class StaffService {
     return (await this.userService.getAuthRecordById(userId))?.roleId ?? null;
   }
 
+  /**
+   * A job title decides the login role, so changing the title moves the login
+   * with it to the new title's role. A title that grants none is refused until
+   * the login is removed. A staff member with no login gets a pending one, as
+   * on create.
+   */
+  private async moveLogin(existing: { id: string; userId: string | null; email: string | null }, data: UpdateStaffDto) {
+    const { accessRoleId } = await this.staffValidator.ensureRoleExists(data.role!);
+    if (!existing.userId) {
+      const email = data.email || existing.email;
+      if (!accessRoleId || !email) return {};
+      return this.provisionUser({ ...existing, ...data, email } as CreateStaffDto, existing.id);
+    }
+
+    this.staffValidator.ensureNoLoginForTitle(accessRoleId);
+    const currentRoleId = await this.loginRoleId(existing.userId);
+    if (accessRoleId !== currentRoleId) await this.userService.update(existing.userId, { roleId: accessRoleId });
+    return {};
+  }
+
   @Transaction()
   async create(data: CreateStaffDto, actor?: StaffActor) {
     await this.staffValidator.ensureCinUnique(data.cin);
@@ -290,6 +310,7 @@ export class StaffService {
       this.staffValidator.ensureAssignments(data.role ?? existing.role, data.assignments);
     }
     const roleChanged = data.role !== undefined && data.role !== existing.role;
+    if (roleChanged) this.staffValidator.ensureCanChangeJobTitle(actor, existing.userId);
 
     const update: Record<string, any> = {};
     if (data.userId !== undefined) update.userId = data.userId || null;
@@ -327,6 +348,10 @@ export class StaffService {
         await this.staffAssignmentRepository.endCurrentForRole(existing.role, id, today);
       }
     }
+    const login: { userId?: string; invitationPending?: boolean } = roleChanged
+      ? await this.moveLogin(existing, data)
+      : {};
+    if (login.userId) update.userId = login.userId;
 
     if (existing.userId && data.email && data.email !== existing.email) {
       // A new email is where that account's password reset is sent.
@@ -355,7 +380,7 @@ export class StaffService {
       }
     }
 
-    return row;
+    return { ...row, ...login };
   }
 
   @Transaction()

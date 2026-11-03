@@ -5,6 +5,7 @@ import { FLOOR_MANAGER_DASHBOARD_LINKS } from './floorManagerDashboardLinks';
 export const SUPERVISOR_DASHBOARD_LINKS = {
   ...FLOOR_MANAGER_DASHBOARD_LINKS,
   grades: '/grades',
+  teachers: '/teachers',
   visitRequests: '/visit-requests',
   announcements: '/announcements',
 } as const;

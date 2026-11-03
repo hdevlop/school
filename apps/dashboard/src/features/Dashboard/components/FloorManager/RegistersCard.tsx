@@ -53,7 +53,7 @@ const RegistersCard = ({ sections, loading, error, onRetry, emptyText, className
       </NCardAction>
 
       {rows.length ? (
-        <NajmScroll axis="y" className={SCROLL_LIST}>
+        <NajmScroll axis="y" autoHide="scroll" className={SCROLL_LIST}>
           <ul className="flex flex-col gap-2 fit:pe-3">
             {rows.map((row, index) => (
               <li key={row.sectionId} className={index >= VISIBLE_SECTIONS ? 'max-lg:hidden' : undefined}>

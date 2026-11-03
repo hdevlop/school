@@ -156,7 +156,9 @@ states that drift — so do not add one without changing the plan first.
   and `.isSchoolWide` for actions. Declare a new permission in
   `packages/server/src/modules/seed-data/admin/permissions.json`;
   `tests/security/RolePermissions.test.ts` fails on a guard naming one that is
-  not. A login made, re-addressed or removed through a staff record is limited
+  not. Changing a staff member's job title moves its login, so it is admin-only
+  and never on the admin's own record (`StaffValidator.ensureCanChangeJobTitle`);
+  a title with no app access is refused while a login exists. A login made, re-addressed or removed through a staff record is limited
   to a role whose every permission its user holds
   (`StaffValidator.ensureCanManageLogin`), and staff bodies never carry a
   `userId`.

@@ -977,6 +977,9 @@
       "emailRequiredForLogin": "Un e-mail est requis pour créer un accès",
       "roleHasNoAppAccess": "Ce poste ne donne pas accès à l'application",
       "loginBeyondActor": "Vous ne pouvez attribuer, modifier ou supprimer qu'un compte dont vous détenez vous-même les accès",
+      "jobTitleAdminOnly": "Seul un administrateur peut modifier le poste d'un membre du personnel",
+      "ownJobTitle": "Vous ne pouvez pas modifier votre propre poste",
+      "removeLoginFirst": "Ce poste ne donne pas accès à l'application. Supprimez d'abord le compte de ce membre du personnel sur la page Utilisateurs",
       "driverLicenseRequired": "Le profil de permis de conduire est requis",
       "driverFieldRequired": "Le champ {{field}} du chauffeur est requis",
       "cleanerZoneRequired": "L'affectation d'un agent d'entretien exige une zone",
@@ -1123,6 +1126,7 @@
     "invitation": {
       "sent": "E-mail d'invitation envoyé à {{email}}. Le membre du personnel active son compte depuis le lien.",
       "pending": "Membre du personnel créé. L'invitation attend votre approbation ; aucun e-mail n'a été envoyé.",
+      "pendingAfterRoleChange": "Poste modifié. Un compte est prêt pour ce membre du personnel ; l'invitation attend votre approbation et aucun e-mail n'a été envoyé.",
       "accessPending": "Accès en attente",
       "approve": "Envoyer l'invitation",
       "sending": "Envoi de l’invitation…",
@@ -1752,7 +1756,10 @@
       "kpis": {
         "students": "Élèves actifs",
         "parents": "Dossiers des parents",
-        "newRequests": "Nouvelles demandes de visite"
+        "newRequests": "Nouvelles demandes de visite",
+        "monthlyAttendance": "Présence du personnel",
+        "monthlyStudentAttendance": "Présences des élèves",
+        "incidents": "Incidents"
       },
       "dailyWork": {
         "title": "Travail quotidien",
@@ -1780,7 +1787,8 @@
       "title": "Tableau de bord du surveillant",
       "subtitle": "Voici la journée de vos classes en un coup d’œil.",
       "kpis": {
-        "newVisitRequests": "Nouvelles demandes de visite"
+        "newVisitRequests": "Nouvelles demandes de visite",
+        "absentTeachers": "Enseignants absents"
       },
       "info": {
         "classes": "Classes : {{classes}}",
@@ -4418,7 +4426,8 @@
       "invalidMaritalStatus": "Veuillez sélectionner un état civil valide"
     },
     "tooltips": {
-      "orphaned": "Parent orphelin : aucun enfant ni élève lié."
+      "orphaned": "Parent orphelin : aucun enfant ni élève lié.",
+      "leftSchool": "Aucun enfant actif pour l’année scolaire sélectionnée."
     },
     "dialogs": {
       "bulkDeleteItemName": "élément",

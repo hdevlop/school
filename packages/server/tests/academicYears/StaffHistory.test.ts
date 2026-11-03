@@ -94,6 +94,97 @@ describe('staff: shared identity with dated assignments', () => {
     expect(driverCalls).toEqual([]);
   });
 
+  describe('a job title change moves the login', () => {
+    const titles: Record<string, string | null> = { secretary: 'role-secretary', supervisor: 'role-supervisor', cleaner: null, accountant: 'role-secretary' };
+
+    function loginService(calls: Calls, options: { userId?: string | null; held?: string[] } = {}) {
+      const staffRepository = {
+        getById: async () => ({ id: 'staff-1', role: 'secretary', userId: options.userId === undefined ? 'user-1' : options.userId, email: 'a@school.test', name: 'A', gender: 'F' }),
+        update: async (_id: string, data: object) => ({ id: 'staff-1', userId: options.userId === undefined ? 'user-1' : options.userId, role: 'secretary', ...data }),
+      };
+      const roleRepository = {
+        getByCode: async (code: string) => ({ code, active: true, accessRoleId: titles[code] ?? null }),
+      };
+      const permissionService = {
+        getPermissionsByRole: async (roleId: string) => [{ name: `read:${roleId}` }],
+      };
+      const validator = withEnglishMessages(new StaffValidator(staffRepository as any, roleRepository as any, permissionService as any));
+      return new StaffService(
+        staffRepository as any,
+        validator,
+        {
+          getAuthRecordById: async () => ({ roleId: 'role-secretary' }),
+          update: async (_id: string, data: object) => { calls.push(`user ${JSON.stringify(data)}`); },
+        } as any,
+        {
+          provisionUser: async (account: { roleId: string; status: string }) => {
+            calls.push(`provision ${account.roleId} ${account.status}`);
+            return { id: 'user-new' };
+          },
+        } as any,
+        { processFile: async () => '/images/a.png' } as any,
+        {} as any,
+        { endCurrentForRole: async () => undefined, syncCurrentForRole: async () => undefined } as any,
+        {} as any,
+        {} as any,
+      );
+    }
+    const allAccess = { permissions: ['read:role-secretary', 'read:role-supervisor'], role: 'admin' };
+
+    it("gives the login the new title's role, and leaves it alone when both titles grant the same one", async () => {
+      const calls: Calls = [];
+      await loginService(calls).update('staff-1', { role: 'supervisor' } as any, allAccess);
+      expect(calls).toEqual(['user {"roleId":"role-supervisor"}']);
+
+      const same: Calls = [];
+      await loginService(same).update('staff-1', { role: 'accountant' } as any, allAccess);
+      expect(same).toEqual([]);
+    });
+
+    it('refuses a title with no app access until the login is removed', async () => {
+      const calls: Calls = [];
+      await expect(loginService(calls).update('staff-1', { role: 'cleaner' } as any, allAccess))
+        .rejects.toThrow('does not grant app access');
+      expect(calls).toEqual([]);
+
+      await loginService(calls, { userId: null }).update('staff-1', { role: 'cleaner' } as any, allAccess);
+      expect(calls).toEqual([]);
+    });
+
+    it("refuses an admin changing their own title, and only their own", async () => {
+      const calls: Calls = [];
+      await expect(loginService(calls).update('staff-1', { role: 'supervisor' } as any, { ...allAccess, id: 'user-1' }))
+        .rejects.toThrow('You cannot change your own job title');
+      expect(calls).toEqual([]);
+
+      await loginService(calls).update('staff-1', { role: 'supervisor' } as any, { ...allAccess, id: 'user-2' });
+      expect(calls).toEqual(['user {"roleId":"role-supervisor"}']);
+    });
+
+    it('prepares a pending login for a staff member who had none, as on create', async () => {
+      const calls: Calls = [];
+      const saved = await loginService(calls, { userId: null }).update('staff-1', { role: 'supervisor' } as any, allAccess);
+      expect(calls).toEqual(['provision role-supervisor pending']);
+      expect(saved).toMatchObject({ userId: 'user-new', invitationPending: true });
+    });
+
+    // Holding every permission is not enough: the title stays with the admin.
+    it('refuses anyone but the admin, before changing anything', async () => {
+      const calls: Calls = [];
+      for (const role of ['principal', 'secretary', undefined]) {
+        await expect(loginService(calls).update('staff-1', { role: 'supervisor' } as any, { ...allAccess, role }))
+          .rejects.toThrow('Only an administrator');
+      }
+      expect(calls).toEqual([]);
+    });
+
+    it('lets anyone who can edit staff save the record with its title unchanged', async () => {
+      const calls: Calls = [];
+      await loginService(calls).update('staff-1', { role: 'secretary', phone: '212600000000' } as any, { permissions: [], role: 'principal' });
+      expect(calls).toEqual([]);
+    });
+  });
+
   it('refuses to delete a staff member other modules hold records of, before deleting anything', async () => {
     for (const history of [{ payslips: 1 }, { attendance: 3 }, { duties: 1 }]) {
       const calls: Calls = [];

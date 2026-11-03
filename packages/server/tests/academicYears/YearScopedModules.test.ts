@@ -54,7 +54,7 @@ describe('controllers registered for the request year', () => {
   it('includes assessment and attendance consumers so their failures are visible', () => {
     expect(Object.keys(yearScopedModules)).toEqual(expect.arrayContaining([
       'assessments', 'attendance', 'student-profile', 'teacher-profile',
-      'grades', 'dashboard', 'academic-dashboard',
+      'grades', 'dashboard', 'academic-dashboard', 'supervisor-dashboard',
     ]));
   });
 

@@ -26,13 +26,7 @@ import { toast } from 'sonner';
 import { deleteParentApi } from '@/services/parentApi';
 import { deleteSelection } from '@/shared/deleteSelection';
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
-
-const getParentRowClassName = (parent) => {
-  const isOrphaned = parent?.isOrphaned === true || Number(parent?.totalChildren) === 0;
-  return isOrphaned
-    ? 'bg-muted/60 text-muted-foreground opacity-80 hover:bg-muted/80'
-    : undefined;
-};
+import { compareParentActivity, getParentRowClassName } from '../config/parentActivity';
 
 function ParentsTable() {
 
@@ -64,7 +58,7 @@ function ParentsTable() {
   } = useParents();
   const filteredParents = useMemo(() => (parents || []).filter((parent) =>
     matchesAnyChild(parent.childPlacements, scope.classId, scope.sectionId)
-      && parentFilters.matches(parent)),
+      && parentFilters.matches(parent)).sort(compareParentActivity),
   [parents, scope.classId, scope.sectionId, parentFilters.matches]);
 
   const { openDialog, confirmDelete } = useDialog();

@@ -3,7 +3,6 @@ import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
 const STAFF_ROLES: Record<string, string> = {
   accounting: 'accountant',
   floor_manager: 'floorManager',
-  supervisor: 'security',
 };
 
 const ROLE_LABEL_KEYS: Record<string, string> = {

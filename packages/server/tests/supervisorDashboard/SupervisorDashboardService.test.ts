@@ -25,7 +25,7 @@ const marked = (studentId: string, sectionId: string, status: 'absent' | 'late')
   status,
 });
 
-const ALL = ['read:attendance', 'read:students', 'read:discipline', 'read:grades', 'read:visit-requests'];
+const ALL = ['read:attendance', 'read:students', 'read:discipline', 'read:grades', 'read:visit-requests', 'read:teachers'];
 
 type Calls = Record<string, unknown[][]>;
 
@@ -56,6 +56,7 @@ function build(options: { supervisor?: unknown } = {}) {
       ];
     },
     getNewVisitRequestCount: async (...args: unknown[]) => { record('getNewVisitRequestCount', args); return 4; },
+    getAbsentTeacherCount: async (...args: unknown[]) => { record('getAbsentTeacherCount', args); return 2; },
   };
   const sectionReads = {
     getAttendanceByDay: async (...args: unknown[]) => {
@@ -122,6 +123,8 @@ describe('supervisor dashboard overview', () => {
     expect(calls.getGradesByClass).toEqual([['year-1', ['s1', 's2', 's3']]]);
     expect(calls.getIncidentsByMonth).toEqual([[['s1', 's2', 's3'], '2026-09-01', MONDAY, 'Africa/Casablanca']]);
     expect(calls.unreadCount).toEqual([['user-9']]);
+    expect(calls.getAbsentTeacherCount).toEqual([[MONDAY]]);
+    expect(overview.absentTeachers).toBe(2);
     expect(overview.supervisor).toMatchObject({ id: 'staff-9', classes: ['2AC', '1AC'] });
   });
 
@@ -161,8 +164,9 @@ describe('supervisor dashboard overview', () => {
     expect(overview.students).toBeNull();
     expect(overview.grades).toBeNull();
     expect(overview.visitRequests).toBeNull();
+    expect(overview.absentTeachers).toBeNull();
     expect(overview.discipline?.openIncidents).toBe(6);
-    for (const read of ['getAttendanceByDay', 'getMarkedStudents', 'getRegisteredSectionIds', 'getStudentsByGender', 'getGradesByClass', 'getNewVisitRequestCount']) {
+    for (const read of ['getAttendanceByDay', 'getMarkedStudents', 'getRegisteredSectionIds', 'getStudentsByGender', 'getGradesByClass', 'getNewVisitRequestCount', 'getAbsentTeacherCount']) {
       expect(calls[read], read).toBeUndefined();
     }
     expect(overview.unreadNotifications).toBe(3);

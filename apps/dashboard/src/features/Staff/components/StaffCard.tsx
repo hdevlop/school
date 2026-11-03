@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { Phone, Mail, Wallet, MapPinned } from 'lucide-react';
-import { NBadge, NAvatar, NSectionInfo } from 'najm-kit';
+import { NBadge, NAvatar, NSectionInfo, SimpleTooltip } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { getStaffAvatar } from '../utils/staffAvatar';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
-import { formatAssignments } from '../utils/staffAssignments';
+import { currentAssignmentLabels, formatAssignments } from '../utils/staffAssignments';
 import { avatarVersion } from '@/lib/avatarVersion';
 import { PersonCard } from '@/shared/PersonCard';
 
@@ -18,6 +18,28 @@ const resolveRoleLabel = (staff, language, t) => {
   if (staff?.roleLabel) return staff.roleLabel;
   const key = `staff.roles.${staff.role}`;
   return t(key) === key ? staff.role : t(key);
+};
+
+const VISIBLE_ASSIGNMENTS = 6;
+
+// One row on the card: the first few and a count of the rest, the whole list on hover or focus.
+const AssignmentsSummary = ({ staff, language }) => {
+  const labels = currentAssignmentLabels(staff, language);
+  if (!labels.length) return '-';
+  const hidden = labels.length - VISIBLE_ASSIGNMENTS;
+  const all = labels.join(', ');
+  return (
+    <SimpleTooltip content={all}>
+      <button type="button" aria-label={all} className="flex max-w-full min-w-0 cursor-help items-center gap-1">
+        <span className="min-w-0 truncate">{labels.slice(0, VISIBLE_ASSIGNMENTS).join(', ')}</span>
+        {hidden > 0 && (
+          <NBadge className="shrink-0 rounded-full bg-primary/10 font-medium text-primary ring-1 ring-inset ring-primary/20">
+            <bdi dir="ltr">+{hidden}</bdi>
+          </NBadge>
+        )}
+      </button>
+    </SimpleTooltip>
+  );
 };
 
 const StaffCard = ({ data, details = false }) => {
@@ -55,8 +77,10 @@ const StaffCard = ({ data, details = false }) => {
         icon={MapPinned}
         iconColor="text-muted-foreground"
         label={t('staff.table.assignments')}
-        value={<span className="whitespace-normal break-words">{formatAssignments(staff, language)}</span>}
-        className="flex-wrap items-start"
+        value={details
+          ? <span className="whitespace-normal break-words">{formatAssignments(staff, language)}</span>
+          : <AssignmentsSummary staff={staff} language={language} />}
+        {...(details ? { className: 'flex-wrap items-start' } : contactRow)}
       />
 
       <NSectionInfo

@@ -1,6 +1,20 @@
 'use client'
+import { useQuery } from '@tanstack/react-query';
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as staffApi from '@/services/staffApi';
+
+// Never reused from cache: a code shown to an earlier form may since have been saved.
+export const useNextEmployeeCode = (enabled: boolean) => {
+  const { data } = useQuery({
+    queryKey: ['next-employee-code'],
+    queryFn: staffApi.getNextEmployeeCodeApi,
+    enabled,
+    gcTime: 0,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+  return data;
+};
 
 export const useStaff = (options?) => {
   const { staffId, role, enabled = true, attendanceRoster = false, attendanceDate } = options || {};

@@ -972,7 +972,10 @@
       "kpis": {
         "students": "Alumnos activos",
         "parents": "Expedientes de padres",
-        "newRequests": "Nuevas solicitudes de visita"
+        "newRequests": "Nuevas solicitudes de visita",
+        "monthlyAttendance": "Asistencia del personal",
+        "monthlyStudentAttendance": "Asistencias de alumnos",
+        "incidents": "Incidentes"
       },
       "dailyWork": {
         "title": "Trabajo diario",
@@ -1000,7 +1003,8 @@
       "title": "Panel del supervisor",
       "subtitle": "Este es el día de tus clases de un vistazo.",
       "kpis": {
-        "newVisitRequests": "Nuevas solicitudes de visita"
+        "newVisitRequests": "Nuevas solicitudes de visita",
+        "absentTeachers": "Profesores ausentes"
       },
       "info": {
         "classes": "Clases: {{classes}}",
@@ -3671,7 +3675,8 @@
       "invalidMaritalStatus": "Seleccione un estado civil válido"
     },
     "tooltips": {
-      "orphaned": "Padre o madre sin vínculo: no tiene niños ni estudiantes vinculados."
+      "orphaned": "Padre o madre sin vínculo: no tiene niños ni estudiantes vinculados.",
+      "leftSchool": "No hay hijos activos en el curso seleccionado."
     },
     "dialogs": {
       "bulkDeleteItemName": "elemento",
@@ -4146,6 +4151,9 @@
       "emailRequiredForLogin": "Se requiere un correo electrónico para crear un acceso",
       "roleHasNoAppAccess": "Este puesto no da acceso a la aplicación",
       "loginBeyondActor": "Solo puede otorgar, cambiar o eliminar un acceso cuyos permisos usted mismo tiene",
+      "jobTitleAdminOnly": "Solo un administrador puede cambiar el puesto de un miembro del personal",
+      "ownJobTitle": "No puede cambiar su propio puesto",
+      "removeLoginFirst": "Este puesto no da acceso a la aplicación. Elimine primero la cuenta de este miembro del personal en la página Usuarios",
       "driverLicenseRequired": "Se requiere el perfil del permiso de conducir",
       "driverFieldRequired": "El campo {{field}} del conductor es obligatorio",
       "cleanerZoneRequired": "La asignación de un limpiador requiere una zona",
@@ -4292,6 +4300,7 @@
     "invitation": {
       "sent": "Correo de invitación enviado a {{email}}. El miembro del personal activa la cuenta desde el enlace.",
       "pending": "Miembro del personal creado. La invitación está pendiente de tu aprobación; no se ha enviado ningún correo.",
+      "pendingAfterRoleChange": "Puesto cambiado. La cuenta de este miembro del personal está lista; la invitación está pendiente de tu aprobación y no se ha enviado ningún correo.",
       "accessPending": "Acceso pendiente",
       "approve": "Enviar invitación",
       "sending": "Enviando invitación…",

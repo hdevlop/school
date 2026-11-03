@@ -49,12 +49,13 @@ export class SupervisorDashboardService {
     const sectionIds = sections.map((section) => section.sectionId);
     const classNames = [...new Set(sections.map((section) => section.className))];
 
-    const [attendance, students, discipline, grades, newRequests, unreadNotifications] = await Promise.all([
+    const [attendance, students, discipline, grades, newRequests, absentTeachers, unreadNotifications] = await Promise.all([
       can('read:attendance') ? this.readAttendance(sections, sectionIds, settings, clock, year, yearEnd) : null,
       can('read:students') ? this.sectionReads.getStudentsByGender(sectionIds) : null,
       can('read:discipline') ? this.readDiscipline(sectionIds, year.reportingStartsOn, yearEnd, settings?.timeZone ?? 'UTC', year) : null,
       can('read:grades') ? this.repository.getGradesByClass(year.id, sectionIds) : null,
       can('read:visit-requests') ? this.repository.getNewVisitRequestCount() : null,
+      can('read:teachers') ? this.repository.getAbsentTeacherCount(today) : null,
       this.notifications.unreadCount(user.id),
     ]);
 
@@ -64,6 +65,7 @@ export class SupervisorDashboardService {
       schoolDay: isSchoolDay(settings, clock.weekday),
       supervisor: { ...supervisor, classes: classNames },
       unreadNotifications,
+      absentTeachers,
       attendance: attendance && {
         sections: attendance.sectionRows,
         absences: attendance.marked,

@@ -3,6 +3,7 @@ import { Repository } from '../../../najm';
 import { DB } from '../../../database/db';
 import {
   assessments,
+  attendance,
   classes,
   disciplineIncidents,
   exams,
@@ -29,6 +30,7 @@ export class SupervisorDashboardRepository {
         id: sql<string>`COALESCE(${staff.id}, ${users.id})`,
         name: sql<string>`COALESCE(${staff.name}, ${users.name}, '')`,
         image: users.image,
+        gender: staff.gender,
         email: sql<string | null>`COALESCE(${staff.email}, ${users.email})`,
         phone: sql<string | null>`COALESCE(${staff.phone}, ${users.phone})`,
         address: staff.address,
@@ -111,6 +113,21 @@ export class SupervisorDashboardRepository {
       // By position: the month repeats the time zone parameter, which a
       // second copy of the expression would bind as a different one.
       .groupBy(sql`1`, disciplineIncidents.severity);
+  }
+
+  /** Teachers marked absent on a day in the staff register, across the school. */
+  async getAbsentTeacherCount(date: string) {
+    const [row] = await this.db
+      .select({ count: sql<number>`COUNT(*)`.mapWith(Number) })
+      .from(attendance)
+      .innerJoin(staff, eq(attendance.staffId, staff.id))
+      .where(and(
+        eq(attendance.type, 'staff'),
+        eq(attendance.date, date),
+        eq(attendance.status, 'absent'),
+        eq(staff.role, 'teacher'),
+      ));
+    return row?.count ?? 0;
   }
 
   /** Visit requests no one has contacted yet. */

@@ -58,8 +58,7 @@ const IncidentsTooltip = ({ active, payload, label }: { active?: boolean; label?
   );
 };
 
-// Incidents reported each month of the year in the assigned classes, stacked
-// from least to most severe.
+// Incidents each month in the caller's scope, stacked from least to most severe.
 const IncidentsTrendChart = ({ monthly, businessDate, loading, error, onRetry, className }: IncidentsTrendChartProps) => {
   const { t } = useTranslation();
 

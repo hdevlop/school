@@ -45,7 +45,7 @@ export class ParentChildrenRepository {
     );
   }
 
-  /** Minimal filter context for a readable parent list, one latest placement per child and parent. */
+  /** Filter and activity context in the viewed year, one latest placement per readable child and parent. */
   async getListPlacements(parentIds: string[]) {
     if (!parentIds.length) return [];
     return this.db
@@ -54,6 +54,10 @@ export class ParentChildrenRepository {
         studentId: students.id,
         classId: studentEnrollmentPlacements.classId,
         sectionId: studentEnrollmentPlacements.sectionId,
+        enrollment: {
+          status: studentEnrollments.status,
+          leftOn: studentEnrollments.leftOn,
+        },
       })
       .from(studentParents)
       .innerJoin(students, eq(studentParents.studentId, students.id))

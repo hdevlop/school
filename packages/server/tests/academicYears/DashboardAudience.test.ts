@@ -62,6 +62,7 @@ describe('dashboard audience', () => {
       [TeacherDashboardController, 'getAttendanceTrend', ['teacher']],
       [FloorManagerDashboardController, 'getOverview', ['floor_manager']],
       [SupervisorDashboardController, 'getOverview', ['supervisor']],
+      [SupervisorDashboardController, 'getStaffAttendanceMonthly', ['supervisor']],
     ];
     for (const [controller, route, roles] of own) {
       // The role guard is the controller's; the permission each route's.

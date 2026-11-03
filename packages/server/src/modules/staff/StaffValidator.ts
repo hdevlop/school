@@ -1,5 +1,6 @@
 import { PermissionService } from 'najm-auth';
 import { matchPermission } from 'najm-auth/client';
+import { hasRole } from '../../auth';
 import { Err, I18n, Service } from '../../najm';
 import { StaffRepository } from './StaffRepository';
 import { StaffRoleRepository } from './roles/StaffRoleRepository';
@@ -8,7 +9,7 @@ import { isSidebarPermission } from '@sms/contracts/access-control';
 import { getBusinessDateOnly } from '../../shared/businessDate';
 
 /** The signed-in user behind a staff request. In-process callers pass none. */
-export type StaffActor = { permissions: string[] };
+export type StaffActor = { permissions: string[]; role?: string; id?: string };
 
 @Service()
 export class StaffValidator {
@@ -40,6 +41,22 @@ export class StaffValidator {
     if (granted.some(({ name }) => !isSidebarPermission(name) && !matchPermission(actor.permissions, name))) {
       Err(403, this.t('loginBeyondActor'));
     }
+  }
+
+  /**
+   * A job title decides the login role, so changing one stays with the admin,
+   * like the titles themselves, and never on their own record: it would take
+   * away the access they are using.
+   */
+  ensureCanChangeJobTitle(actor: StaffActor | undefined, staffUserId: string | null) {
+    if (!actor) return;
+    if (!hasRole(actor.role, 'ADMIN')) Err(403, this.t('jobTitleAdminOnly'));
+    if (staffUserId && staffUserId === actor.id) Err(403, this.t('ownJobTitle'));
+  }
+
+  /** A title with no app access cannot keep a login; the admin removes it first, on purpose. */
+  ensureNoLoginForTitle(accessRoleId: string | null) {
+    if (!accessRoleId) Err(409, this.t('removeLoginFirst'));
   }
 
   ensureDriverProfile(profile?: Record<string, any>, partial = false) {

@@ -19,6 +19,7 @@ const LATE_COLOR = '#F1B814';
 
 interface TeachersAttendanceProps {
   className?: string;
+  audience?: 'school' | 'secretary' | 'supervisor';
 }
 
 const CustomTooltip = ({ active = null, payload = null, todayAbsent = null, todayLate = null, t }: any) => {
@@ -54,9 +55,9 @@ const CustomTooltip = ({ active = null, payload = null, todayAbsent = null, toda
   return null;
 };
 
-const TeachersAttendance: React.FC<TeachersAttendanceProps> = ({ className }) => {
+const TeachersAttendance: React.FC<TeachersAttendanceProps> = ({ className, audience = 'school' }) => {
   const { t } = useTranslation();
-  const { data: payload, isLoading, error, refetch } = useStaffAttendanceMonthly();
+  const { data: payload, isLoading, error, refetch } = useStaffAttendanceMonthly(audience);
   const { businessDate } = useBusinessDate();
 
   const data = useMemo(() => {

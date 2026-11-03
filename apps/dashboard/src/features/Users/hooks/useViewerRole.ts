@@ -15,5 +15,5 @@ export function useViewerRole() {
   const { user } = useAuth();
   const { can } = usePermissions();
   const role = (user as { role?: string } | null)?.role;
-  return { role, isFamily: role === 'parent' || role === 'student', isSchoolWide: isSchoolWideRole(role), can };
+  return { userId: (user as { id?: string } | null)?.id, role, isFamily: role === 'parent' || role === 'student', isSchoolWide: isSchoolWideRole(role), can };
 }

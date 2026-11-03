@@ -12,6 +12,7 @@ import type { StepConfig } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { COMPENSATION_MODE_VALUES, EMPLOYMENT_TYPE_VALUES, SHIFT_VALUES, STAFF_STATUS_VALUES } from '@sms/contracts';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
+import { useNextEmployeeCode } from '../hooks/useStaff';
 import { useStaffRoles } from '../hooks/useStaffRoles';
 import { useCycles } from '@/features/Cycles/hooks/useCycles';
 import { useZones } from '../hooks/useZones';
@@ -190,7 +191,7 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
         title: t('staff.form.personalInformation'),
         schema: schemas.personal,
         fields: [...Object.keys(schemas.personal.shape)],
-        render: ({ form }) => <PersonalStep form={form} lockedRole={Boolean(staff?.id)} onRoleChange={setSelectedRole} />,
+        render: ({ form }) => <PersonalStep form={form} isEditing={Boolean(staff?.id)} staffUserId={staff?.userId} onRoleChange={setSelectedRole} />,
       },
       {
         id: 'details',
@@ -214,7 +215,7 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
     }
 
     return visibleSteps;
-  }, [schemas, showAssignmentsStep, staff?.id, t]);
+  }, [schemas, showAssignmentsStep, staff?.id, staff?.userId, t]);
 
   useEffect(() => {
     setCurrentStep((step) => Math.min(step, steps.length));
@@ -270,16 +271,37 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
   );
 };
 
-const PersonalStep = ({ form, lockedRole, onRoleChange }) => {
+const PersonalStep = ({ form, isEditing, staffUserId, onRoleChange }) => {
   const { t, language } = useTranslation();
   const { activeStaffRoles } = useStaffRoles({ activeOnly: true });
+  const { role: viewerRole, userId: viewerId } = useViewerRole();
+  // The server refuses the same: only the admin, and not on their own record.
+  const jobTitleLocked = isEditing && (viewerRole?.toLowerCase() !== 'admin' || (Boolean(staffUserId) && staffUserId === viewerId));
   const role = form.watch('role');
   const needsVehicle = role === 'driver' || role === 'busAssistant';
   const { vehicles, isVehiclesLoading, isError: vehicleError } = useVehicles({ enabled: needsVehicle });
 
+  const nextEmployeeCode = useNextEmployeeCode(!isEditing);
+
   useEffect(() => {
     onRoleChange?.(role);
   }, [onRoleChange, role]);
+
+  // Only an empty field takes it, so coming back to this step keeps the code already
+  // shown. If the request fails the field stays empty and the server generates on save.
+  useEffect(() => {
+    if (nextEmployeeCode && !form.getValues('employeeCode')) form.setValue('employeeCode', nextEmployeeCode);
+  }, [form, nextEmployeeCode]);
+
+  // One role's zone, class or vehicle means nothing to another, so a new role
+  // starts empty; going back to the stored role brings its assignments back.
+  const resetAssignments = (nextRole) => {
+    const stored = form.formState.defaultValues;
+    const isStoredRole = nextRole === stored?.role;
+    form.setValue('assignments', isStoredRole ? stored.assignments : [{}]);
+    form.setValue('classIds', isStoredRole ? stored.classIds : []);
+    form.setValue('classNames', isStoredRole ? stored.classNames : []);
+  };
 
   const roleOptions = useMemo(() => {
     return (activeStaffRoles || [])
@@ -320,13 +342,13 @@ const PersonalStep = ({ form, lockedRole, onRoleChange }) => {
             name="employeeCode"
             type="text"
             formLabel={t('staff.table.employeeCode')}
-            placeholder={t(lockedRole ? 'staff.form.employeeCodePlaceholder' : 'staff.form.employeeCodeAutomatic')}
-            readOnly={!lockedRole}
+            placeholder={t(isEditing ? 'staff.form.employeeCodePlaceholder' : 'staff.form.employeeCodeAutomatic')}
+            readOnly={!isEditing}
             icon={Hash}
           />
           <FormInput name="cin" type="text" formLabel={t('staff.table.cin')} placeholder={t('staff.form.cinPlaceholder')} icon={IdCard} required />
           <FormInput name="gender" type="select" formLabel={t('staff.form.gender')} placeholder={t('staff.form.genderPlaceholder')} items={genderOptions} icon={UserRound} />
-          <FormInput name="role" type="combobox" formLabel={t('staff.table.role')} placeholder={t('staff.form.rolePlaceholder')} items={roleOptions} icon={Briefcase} required disabled={lockedRole}
+          <FormInput name="role" type="combobox" formLabel={t('staff.table.role')} placeholder={t('staff.form.rolePlaceholder')} items={roleOptions} icon={Briefcase} required disabled={jobTitleLocked} onChange={resetAssignments}
             searchPlaceholder={t('staff.form.jobTitleSearchPlaceholder')}
             emptyMessage={t('staff.form.noJobTitlesFound')}
           />
@@ -453,9 +475,10 @@ const AssignmentsStep = ({ form }) => {
     ...storedGrades,
   ])].filter(Boolean).map((name) => ({ value: name, label: name })), [classes, storedGrades]);
 
+  // Every listed class is in the selected year, and names are unique within a year.
   const classOptions = useMemo(() => (classes || []).map((classItem) => ({
     value: classItem.id,
-    label: `${classItem.name}${classItem.academicYear ? ` (${classItem.academicYear})` : ''}`,
+    label: classItem.name,
   })), [classes]);
 
   return (
@@ -463,7 +486,7 @@ const AssignmentsStep = ({ form }) => {
       {(role === 'assistant' || role === 'supervisor') && (
         <>
           <FormSectionHeader icon={Briefcase} title={t('staff.form.assignments')} />
-          <FormInput name="classIds" type="multiselect" formLabel={t('staff.form.class')} placeholder={t('staff.form.class')} items={classOptions} icon={Briefcase} />
+          <FormInput name="classIds" type="multiselect" formLabel={t('staff.form.class')} placeholder={t('staff.form.class')} items={classOptions} icon={Briefcase} maxDisplay={Infinity} />
           <p className="text-sm text-muted-foreground">{t(role === 'supervisor' ? 'academic.supervisorAssignmentHint' : 'academic.staffAssignmentOptional')}</p>
         </>
       )}
@@ -471,7 +494,7 @@ const AssignmentsStep = ({ form }) => {
       {role === 'floorManager' && (
         <>
           <FormSectionHeader icon={Briefcase} title={t('staff.form.assignments')} />
-          <FormInput name="classNames" type="multiselect" formLabel={t('staff.form.grades')} placeholder={t('staff.form.grades')} items={gradeOptions} icon={Briefcase} />
+          <FormInput name="classNames" type="multiselect" formLabel={t('staff.form.grades')} placeholder={t('staff.form.grades')} items={gradeOptions} icon={Briefcase} maxDisplay={Infinity} />
           <p className="text-sm text-muted-foreground">{t('academic.floorManagerAssignmentHint')}</p>
         </>
       )}

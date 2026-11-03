@@ -65,6 +65,15 @@ export class StaffController {
     return this.staffService.getByRole(role);
   }
 
+  // A free code for the create form to show. It is only a proposal: nothing is
+  // reserved, and create checks the code it receives is still unique.
+  @Get('/next-employee-code')
+  @CanSchoolWide('create:staff')
+  @ResMsg('staff.success.retrieved')
+  async getNextEmployeeCode() {
+    return this.staffService.generateEmployeeCode().then((employeeCode) => ({ employeeCode }));
+  }
+
   @Get('/employee-code/:employeeCode')
   @CanSchoolWide('read:staff')
   @Validate({ params: staffEmployeeCodeParam })
@@ -105,8 +114,8 @@ export class StaffController {
   @Validate({ params: staffIdParam, body: updateStaffDto })
   @McpTool({ description: 'Update a staff member by ID', confirm: { level: 'warning', message: 'confirm.staff.update' } })
   @ResMsg('staff.success.updated')
-  async update(@Params('id') id: string, @Body() body: UpdateStaffDto, @User('permissions') permissions?: string[]) {
-    return this.staffService.update(id, body, { permissions: permissions ?? [] });
+  async update(@Params('id') id: string, @Body() body: UpdateStaffDto, @User('permissions') permissions?: string[], @User('role') role?: string, @User('id') actorId?: string) {
+    return this.staffService.update(id, body, { permissions: permissions ?? [], role, id: actorId });
   }
 
   @Delete('/bulk')

@@ -7,7 +7,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useSupervisorOverview } from '../../hooks/useSupervisorDashboard';
 import SupervisorOverview, { SupervisorOverviewDate } from './SupervisorOverview';
 
-/** The signed-in supervisor's home page, laid out like the floor manager's. */
+/** The signed-in supervisor's home page. */
 const SupervisorDashboard = () => {
   const { t } = useTranslation();
   const { data: overview } = useSupervisorOverview();

@@ -85,6 +85,13 @@ const StaffTable = () => {
     return response;
   };
 
+  // A new job title can give a staff member with no login a pending one.
+  const saveStaff = async (data) => {
+    const response = await updateStaff(data);
+    if (response?.data?.invitationPending) toast.info(t('staff.invitation.pendingAfterRoleChange'));
+    return response;
+  };
+
   const handleAdd = () => {
     openDialog({
       title: t('staff.dialogs.createTitle'),
@@ -98,7 +105,7 @@ const StaffTable = () => {
   const handleEdit = (staffMember) => {
     openDialog({
       title: `${t('staff.dialogs.editTitle')} - ${staffMember.name}`,
-      children: <StaffForm staff={staffMember} onSubmitStaff={updateStaff} />,
+      children: <StaffForm staff={staffMember} onSubmitStaff={saveStaff} />,
       width: '4xl',
       height: 'xxl',
       showButtons: false,

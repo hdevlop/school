@@ -35,7 +35,15 @@ const calendarClassNames = {
   today: '[&:not([data-selected])>button]:bg-accent [&:not([data-selected])>button]:text-accent-foreground',
 };
 
-const CalendarCard = ({ className = '' }) => {
+// Smaller days, so a six-week month fits a row that shares the screen's height.
+const denseCalendarClassNames = {
+  ...calendarClassNames,
+  months: 'relative flex flex-col gap-2',
+  week: 'mt-1 flex w-full',
+  day_button: 'aspect-square w-full max-w-7 cursor-pointer rounded-md p-0 font-normal hover:bg-accent disabled:cursor-not-allowed',
+};
+
+const CalendarCard = ({ className = '', dense = false }) => {
   const { t, language } = useTranslation();
   const calendarLocale = { ar, en: enUS, es, fr }[language] ?? enUS;
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
@@ -52,7 +60,7 @@ const CalendarCard = ({ className = '' }) => {
         locale={calendarLocale}
         selected={selectedDate}
         onSelect={setSelectedDate}
-        classNames={calendarClassNames}
+        classNames={dense ? denseCalendarClassNames : calendarClassNames}
         // Two-letter weekdays fit the narrowest dashboard column; "lun." does not.
         formatters={{ formatWeekdayName: (weekday) => format(weekday, 'EEEEEE', { locale: calendarLocale }) }}
         className="mx-auto w-full max-w-sm rounded-md p-1"

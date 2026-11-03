@@ -10,12 +10,13 @@ import {
   teachers,
   users,
 } from '../../database/schema';
-import { and, desc, eq, sql, type SQL } from 'drizzle-orm';
+import { and, desc, eq, lte, sql, type SQL } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 import { Owned, type OwnedWhere } from '../../auth';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
-import { occurredInReportingInterval } from '../academicYears/academicRecordYear';
+import { occurredInReportingInterval, schoolLocalDay } from '../academicYears/academicRecordYear';
+import { getBusinessDateOverride } from '../../shared/businessDate';
 import { studentPlacementOn } from '../studentEnrollments/placementOnDay';
 import { Discipline } from './DisciplineGuards';
 
@@ -106,6 +107,21 @@ export class DisciplineRepository {
   async list() {
     return this.buildJoinedQuery()
       .orderBy(desc(disciplineIncidents.incidentAt), desc(disciplineIncidents.createdAt));
+  }
+
+  /** Dashboard counts only, by school-local month in the selected year. */
+  async getMonthlyCounts() {
+    const localDay = schoolLocalDay(disciplineIncidents.incidentAt);
+    const businessDate = getBusinessDateOverride();
+    const today = businessDate ? sql`${businessDate}::date` : schoolLocalDay(sql`now()`);
+    return this.db.select({
+      month: sql<string>`TO_CHAR(${localDay}, 'YYYY-MM')`,
+      severity: disciplineIncidents.severity,
+      count: sql<number>`COUNT(*)`.mapWith(Number),
+    })
+      .from(disciplineIncidents)
+      .where(this.readCondition(lte(localDay, today)))
+      .groupBy(sql`1`, disciplineIncidents.severity);
   }
 
   async getById(id: string) {

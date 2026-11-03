@@ -34,7 +34,7 @@ const TEACHER_ACTIONS: QuickAction[] = [
   teacherAction('viewTimetable', CalendarDays, TEACHER_DASHBOARD_LINKS.timetable),
 ];
 
-const QuickActionsCard = ({ actions = TEACHER_ACTIONS, className }: { actions?: QuickAction[]; className?: string }) => {
+const QuickActionsCard = ({ actions = TEACHER_ACTIONS, dense, className }: { actions?: QuickAction[]; dense?: boolean; className?: string }) => {
   const { t } = useTranslation();
 
   return (
@@ -45,10 +45,10 @@ const QuickActionsCard = ({ actions = TEACHER_ACTIONS, className }: { actions?: 
       classNames={SCROLL_CARD}
     >
       <NajmScroll axis="y" className={SCROLL_LIST}>
-        <ul className="flex flex-col gap-2 fit:pe-3">
+        <ul className={cn('flex flex-col fit:pe-3', dense ? 'gap-1' : 'gap-2')}>
           {actions.map(({ key, label, hint, icon: Icon, href }) => (
             <li key={key}>
-              <NButton asChild variant="outline" className="h-auto min-h-12 w-full justify-start gap-3 px-3 py-1.5 text-start">
+              <NButton asChild variant="outline" className={cn('h-auto w-full justify-start gap-3 px-3 text-start', dense ? 'min-h-11 py-1' : 'min-h-12 py-1.5')}>
                 <Link href={href} prefetch={false}>
                   <span className="flex shrink-0 items-center justify-center rounded-lg bg-primary/10 p-1.5">
                     <Icon className="size-5 text-primary" aria-hidden="true" />

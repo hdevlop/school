@@ -22,13 +22,17 @@ export const getStudentsByGenderApi = async () => {
   return res.data;
 };
 
-export const getStudentAttendanceMonthlyApi = async () => {
-  const res = await api.get('/dashboard/attendance/students-monthly');
+export const getStudentAttendanceMonthlyApi = async (audience: 'school' | 'secretary' = 'school') => {
+  const res = await api.get(audience === 'secretary'
+    ? '/dashboard/secretary/attendance/students-monthly'
+    : '/dashboard/attendance/students-monthly');
   return res.data;
 };
 
-export const getStaffAttendanceMonthlyApi = async () => {
-  const res = await api.get('/dashboard/attendance/staff-monthly');
+export const getStaffAttendanceMonthlyApi = async (audience: 'school' | 'secretary' | 'supervisor' = 'school') => {
+  const res = await api.get(audience === 'school'
+    ? '/dashboard/attendance/staff-monthly'
+    : `/dashboard/${audience}/attendance/staff-monthly`);
   return res.data;
 };
 

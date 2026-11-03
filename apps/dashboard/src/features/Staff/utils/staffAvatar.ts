@@ -13,11 +13,13 @@ const ROLES_WITH_AVATAR = new Set([
   'security',
   'assistant',
   'floorManager',
+  'supervisor',
   'cleaner',
 ]);
 
 export const getStaffAvatar = (role?: string | null, gender?: string | null) => {
   if (!role || !ROLES_WITH_AVATAR.has(role)) return undefined;
   const suffix = gender === 'F' ? 'female' : 'male';
+  if (role === 'supervisor') return `/images/supervisor_${suffix}_v2.png`;
   return `/images/${role}_${suffix}.png`;
 };

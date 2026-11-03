@@ -36,6 +36,11 @@ export const getStaffByEmployeeCodeApi = async (employeeCode) => {
   return res.data
 }
 
+export const getNextEmployeeCodeApi = async () => {
+  const res = await api.get('/staff/next-employee-code')
+  return res.data?.data?.employeeCode ?? null
+}
+
 export const getStaffByCinApi = async (cin) => {
   const res = await api.get(`/staff/cin/${cin}`)
   return res.data

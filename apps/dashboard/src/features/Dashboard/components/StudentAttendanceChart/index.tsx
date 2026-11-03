@@ -64,8 +64,8 @@ const Legend = ({ t }: { t: (k: string) => string }) => (
   </div>
 );
 
-const StudentAttendanceChart = ({ className }: { className?: string }) => {
-  const { data: payload, isLoading, error, refetch } = useStudentAttendanceMonthly();
+const StudentAttendanceChart = ({ className, audience = 'school' }: { className?: string; audience?: 'school' | 'secretary' }) => {
+  const { data: payload, isLoading, error, refetch } = useStudentAttendanceMonthly(audience);
   const { businessDate } = useBusinessDate();
   return <StudentAttendanceChartCard className={className} payload={payload} businessDate={businessDate} loading={isLoading} error={error} onRetry={() => { void refetch(); }} />;
 };

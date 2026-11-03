@@ -69,6 +69,7 @@ const TeacherOverview = ({ teacherId, onViewDetails }: TeacherOverviewProps) => 
       <div className={ROW}>
         <TeacherInfoCard
           person={overview?.teacher}
+          jobTitle={t('staff.roles.teacher')}
           subtitle={overview?.teacher.specialization ? (
             <p className="flex max-w-full items-center gap-1.5 text-sm text-muted-foreground">
               <BookOpen className="size-4 shrink-0" aria-hidden="true" />

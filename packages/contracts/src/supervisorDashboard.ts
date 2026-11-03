@@ -48,6 +48,7 @@ export interface SupervisorDashboardOverview {
     id: string;
     name: string;
     image: string | null;
+    gender: string | null;
     email: string | null;
     phone: string | null;
     address: string | null;
@@ -55,6 +56,8 @@ export interface SupervisorDashboardOverview {
     classes: string[];
   };
   unreadNotifications: number;
+  /** `read:teachers`: teachers marked absent today, across the school. */
+  absentTeachers: number | null;
   /** `read:attendance`: today's registers and the year's student marks. */
   attendance: {
     sections: SupervisorDashboardSection[];

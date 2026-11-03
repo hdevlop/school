@@ -8,6 +8,7 @@ import { cn } from 'najm-kit';
 import { useRouter } from 'next/navigation';
 import { avatarVersion } from '@/lib/avatarVersion';
 import { PersonCard } from '@/shared/PersonCard';
+import { isParentDisabled, isParentOrphaned } from '../config/parentActivity';
 
 const ParentInfoRow = ({ icon: Icon, label, value, muted }) => (
   <div className="flex min-w-0 items-center gap-2 text-sm">
@@ -35,9 +36,10 @@ const ParentCard = ({ data }) => {
   };
 
   const relationshipDisplay = relationshipLabels[parent.relationshipType] || parent.relationshipType;
-  const isOrphaned = parent.isOrphaned === true || Number(parent.totalChildren) === 0;
-  const orphanMessage = t('parents.tooltips.orphaned');
-  const mutedValueColor = isOrphaned ? 'text-muted-foreground' : 'text-foreground';
+  const isOrphaned = isParentOrphaned(parent);
+  const isDisabled = isParentDisabled(parent);
+  const inactiveMessage = t(isOrphaned ? 'parents.tooltips.orphaned' : 'parents.tooltips.leftSchool');
+  const mutedValueColor = isDisabled ? 'text-muted-foreground' : 'text-foreground';
 
   const card = (
     <PersonCard
@@ -52,10 +54,11 @@ const ParentCard = ({ data }) => {
         }
       }}
       className={cn(
-        'cursor-pointer overflow-hidden transition-all hover:bg-primary/[0.035] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
-        isOrphaned && 'bg-muted/60 text-muted-foreground [&_label]:text-muted-foreground'
+        'cursor-pointer overflow-hidden transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
+        isDisabled ? 'bg-muted/60 text-muted-foreground hover:bg-muted/80 [&_label]:text-muted-foreground' : 'hover:bg-primary/[0.035]'
       )}
       data-parent-orphan-card={isOrphaned ? 'true' : undefined}
+      data-parent-inactive-card={isDisabled ? 'true' : undefined}
       avatar={(
         <NAvatar
           src={data?.image}
@@ -67,7 +70,7 @@ const ParentCard = ({ data }) => {
       )}
       name={parent.name}
       meta={(
-        <NBadge look="dash" className={cn(isOrphaned && 'border-muted-foreground/30 bg-muted text-muted-foreground')}>
+        <NBadge look="dash" className={cn(isDisabled && 'border-muted-foreground/30 bg-muted text-muted-foreground')}>
           {relationshipDisplay}
         </NBadge>
       )}
@@ -88,10 +91,10 @@ const ParentCard = ({ data }) => {
     </PersonCard>
   );
 
-  if (!isOrphaned) return card;
+  if (!isDisabled) return card;
 
   return (
-    <SimpleTooltip content={orphanMessage} side="top">
+    <SimpleTooltip content={inactiveMessage} side="top">
       {card}
     </SimpleTooltip>
   );

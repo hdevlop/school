@@ -65,7 +65,7 @@ describe('routes that were admin-only ask for a permission', () => {
     expect(byPermission(StaffController)).toEqual({
       'read:staff': ['getByCin', 'getByEmployeeCode', 'getStaffByRole', 'getStaffCount', 'getStaffMember', 'listStaff'],
       'read:staff-attendance': ['getAttendanceRoster'],
-      'create:staff': ['create'],
+      'create:staff': ['create', 'getNextEmployeeCode'],
       'update:staff': ['update'],
       'delete:staff': ['deleteBulk', 'deleteById'],
       // Reads only the caller's own record, so it asks for no permission.

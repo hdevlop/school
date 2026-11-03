@@ -149,11 +149,13 @@ export const useFinanceCollectionByClass = (academicYear?: string) => {
   }));
 };
 
-export const useStudentAttendanceMonthly = () => {
+export const useStudentAttendanceMonthly = (audience: 'school' | 'secretary' = 'school') => {
   const { viewingYear, isReady } = useViewedYear();
   return untilYear(!isReady, useQuery({
-    queryKey: ['dashboard', 'attendance', 'students-monthly', viewingYear ?? null],
-    queryFn: () => withAcademicYear(viewingYear, getStudentAttendanceMonthlyApi),
+    queryKey: audience === 'school'
+      ? ['dashboard', 'attendance', 'students-monthly', viewingYear ?? null]
+      : ['dashboard', audience, 'attendance', 'students-monthly', viewingYear ?? null],
+    queryFn: () => withAcademicYear(viewingYear, () => getStudentAttendanceMonthlyApi(audience)),
     enabled: isReady,
     staleTime: 2 * 60 * 1000,
     refetchOnWindowFocus: false,
@@ -161,11 +163,11 @@ export const useStudentAttendanceMonthly = () => {
   }));
 };
 
-export const useStaffAttendanceMonthly = () => {
+export const useStaffAttendanceMonthly = (audience: 'school' | 'secretary' | 'supervisor' = 'school') => {
   const { viewingYear, isReady } = useViewedYear();
   return untilYear(!isReady, useQuery({
-    queryKey: ['dashboard', 'attendance', 'staff-monthly', viewingYear ?? null],
-    queryFn: () => withAcademicYear(viewingYear, getStaffAttendanceMonthlyApi),
+    queryKey: ['dashboard', audience, 'attendance', 'staff-monthly', viewingYear ?? null],
+    queryFn: () => withAcademicYear(viewingYear, () => getStaffAttendanceMonthlyApi(audience)),
     enabled: isReady,
     staleTime: 2 * 60 * 1000,
     refetchOnWindowFocus: false,

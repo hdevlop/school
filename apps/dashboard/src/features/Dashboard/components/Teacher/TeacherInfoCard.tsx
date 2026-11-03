@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { Mail, MapPin, MessageCircle, Phone, UserRound, type LucideIcon } from 'lucide-react';
+import { Briefcase, Mail, MapPin, MessageCircle, Phone, UserRound, type LucideIcon } from 'lucide-react';
 import { NAvatar, NButton, NCard, NCardAction, NSkeleton, SimpleTooltip, cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 
@@ -18,6 +18,9 @@ type TeacherInfoCardProps = {
   person: ProfilePerson | undefined;
   // What they do, under their name.
   subtitle?: ReactNode;
+  // The bundled portrait for an account with no photo.
+  fallbackSrc?: string;
+  jobTitle?: string;
   // Set when the page has a Details tab to open.
   onViewDetails?: () => void;
   loading: boolean;
@@ -29,6 +32,7 @@ type TeacherInfoCardProps = {
 type ContactAction = {
   key: string;
   icon: LucideIcon;
+  value: string | null;
   // Missing when the record has nothing to reach the teacher by.
   href: string | null;
   external?: boolean;
@@ -55,7 +59,7 @@ const InfoSkeleton = () => (
 const digits = (value: string) => value.replace(/\D/g, '');
 
 /** The portrait inside a broken primary ring. */
-const Portrait = ({ src, name }: { src: string | null; name: string }) => (
+const Portrait = ({ src, fallbackSrc, name }: { src: string | null; fallbackSrc?: string; name: string }) => (
   <div className="relative grid size-32 shrink-0 place-items-center">
     <svg viewBox="0 0 100 100" className="absolute inset-0 size-full -rotate-90 text-primary" aria-hidden="true">
       <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" strokeOpacity="0.15" strokeWidth="2" />
@@ -72,27 +76,29 @@ const Portrait = ({ src, name }: { src: string | null; name: string }) => (
       />
     </svg>
     {/* The photo fills the ring, a few pixels inside it. */}
-    <NAvatar src={src} fallback={name} size="xl" classNames={{ avatar: 'size-[6.5rem] h-[6.5rem] w-[6.5rem] text-2xl' }} />
+    <NAvatar src={src} fallbackSrc={fallbackSrc} fallback={name} size="xl" classNames={{ avatar: 'size-[6.5rem] h-[6.5rem] w-[6.5rem] text-2xl' }} />
   </div>
 );
 
-const TeacherInfoCard = ({ person: teacher, subtitle, onViewDetails, loading, error, onRetry, className }: TeacherInfoCardProps) => {
+const TeacherInfoCard = ({ person: teacher, subtitle, fallbackSrc, jobTitle, onViewDetails, loading, error, onRetry, className }: TeacherInfoCardProps) => {
   const { t } = useTranslation();
 
   const actions: ContactAction[] = teacher ? [
-    { key: 'email', icon: Mail, href: teacher.email ? `mailto:${teacher.email}` : null },
+    { key: 'email', icon: Mail, value: teacher.email, href: teacher.email ? `mailto:${teacher.email}` : null },
     {
       key: 'map',
       icon: MapPin,
+      value: teacher.address,
       href: teacher.address
         ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(teacher.address)}`
         : null,
       external: true,
     },
-    { key: 'call', icon: Phone, href: teacher.phone ? `tel:+${digits(teacher.phone)}` : null },
+    { key: 'call', icon: Phone, value: teacher.phone, href: teacher.phone ? `tel:+${digits(teacher.phone)}` : null },
     {
       key: 'whatsapp',
       icon: MessageCircle,
+      value: teacher.phone,
       href: teacher.phone ? `https://wa.me/${digits(teacher.phone)}` : null,
       external: true,
     },
@@ -121,17 +127,23 @@ const TeacherInfoCard = ({ person: teacher, subtitle, onViewDetails, loading, er
       {teacher ? (
         <>
           <div className="flex flex-1 flex-col items-center justify-center gap-1 text-center">
-            <Portrait src={teacher.image} name={teacher.name} />
+            <Portrait src={teacher.image} fallbackSrc={fallbackSrc} name={teacher.name} />
             <p className="mt-2 max-w-full truncate font-semibold text-foreground">{teacher.name}</p>
             {subtitle}
+            {jobTitle ? (
+              <p className="flex max-w-full items-center gap-1.5 text-sm text-muted-foreground">
+                <Briefcase className="size-4 shrink-0" aria-hidden="true" />
+                <span className="truncate">{t('staff.table.role')}: {jobTitle}</span>
+              </p>
+            ) : null}
           </div>
 
           <div className="mx-auto mt-4 flex w-4/5 justify-center gap-4 border-t border-border/70 pt-4">
-            {actions.map(({ key, icon: Icon, href, external }) => {
+            {actions.map(({ key, icon: Icon, value, href, external }) => {
               const label = t(`dashboard.teacher.info.actions.${key}`);
               const className = 'size-11 rounded-full bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary';
               return (
-                <SimpleTooltip key={key} content={href ? label : t('dashboard.teacher.info.actions.unavailable')}>
+                <SimpleTooltip key={key} content={href ? `${label}: ${value}` : t('dashboard.teacher.info.actions.unavailable')}>
                   {href ? (
                     <NButton asChild variant="ghost" size="icon" className={className}>
                       <a href={href} aria-label={label} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>

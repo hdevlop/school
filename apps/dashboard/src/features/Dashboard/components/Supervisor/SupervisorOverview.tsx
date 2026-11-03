@@ -1,8 +1,7 @@
 'use client';
 
-import type { ReactNode } from 'react';
 import { Bell, CalendarDays, CalendarX2, ClipboardCheck, DoorOpen, Layers3, Megaphone, ShieldAlert, Star, UserX, UsersRound } from 'lucide-react';
-import { NButton, NErrorState, NForbiddenState, cn } from 'najm-kit';
+import { NButton, NErrorState, NForbiddenState } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { compareClassNames } from '@sms/contracts';
 import { isAuthorizationError } from '@/services/apiError';
@@ -13,28 +12,15 @@ import { SUPERVISOR_DASHBOARD_LINKS } from '../../config/supervisorDashboardLink
 import TeacherInfoCard from '../Teacher/TeacherInfoCard';
 import { AttentionCard, type AttentionRow } from '../Teacher/NeedsAttentionCard';
 import QuickActionsCard, { type QuickAction } from '../Teacher/QuickActionsCard';
-import RegistersCard from '../FloorManager/RegistersCard';
-import AbsencesCard from '../FloorManager/AbsencesCard';
-import IncidentsCard from '../FloorManager/IncidentsCard';
 import CalendarCard from '../CalendarCard';
+import TeachersAttendance from '../TeachersAttendance';
 import { StudentsGenderChartCard } from '../StudentsGenderChart';
 import { StudentAttendanceChartCard } from '../StudentAttendanceChart';
+import { accountAvatar } from '@/features/Home/config/accountAvatar';
+import { useOwnJobTitle } from '../../hooks/useOwnJobTitle';
 import SupervisorKpis from './SupervisorKpis';
-import GradesByClassChart from './GradesByClassChart';
 import IncidentsTrendChart from './IncidentsTrendChart';
-
-// Each row spreads its cards over the columns they need on a large screen, so
-// a card left out for a missing permission leaves no hole; the page scrolls.
-const COLUMNS: Record<number, string> = { 1: 'xl:grid-cols-1', 2: 'xl:grid-cols-2', 3: 'xl:grid-cols-3', 4: 'xl:grid-cols-4' };
-const Row = ({ children }: { children: ReactNode[] }) => {
-  const cards = children.filter(Boolean);
-  if (!cards.length) return null;
-  return (
-    <div className={cn('grid grid-cols-1 gap-3 md:grid-cols-2 [&>*]:min-w-0 xl:min-h-[23rem]', COLUMNS[cards.length])}>
-      {cards}
-    </div>
-  );
-};
+import DashboardOverviewRow from '../DashboardOverviewRow';
 
 const action = (key: string, icon: QuickAction['icon'], href: string): QuickAction => ({
   key,
@@ -71,6 +57,7 @@ const SupervisorOverview = () => {
   const { t } = useTranslation();
   const { can } = useViewerRole();
   const { data: overview, isLoading, error, refetch } = useSupervisorOverview();
+  const jobTitle = useOwnJobTitle(t('staff.roles.supervisor'));
   // A background refresh that fails keeps the figures already on screen.
   const loadError = overview ? null : error;
   const retry = () => { void refetch(); };
@@ -84,13 +71,18 @@ const SupervisorOverview = () => {
 
   // While loading, every card shows its skeleton; once loaded, a part the
   // server left out (no permission) takes its cards with it.
-  const shows = (part: 'attendance' | 'students' | 'discipline' | 'grades' | 'visitRequests') => isLoading || !!overview?.[part];
+  const shows = (part: 'attendance' | 'students' | 'discipline' | 'visitRequests') => isLoading || !!overview?.[part];
   const { attendance, discipline, visitRequests } = overview ?? {};
 
   const attentionRows: AttentionRow[] = [
     ...(shows('attendance') ? [
       { key: 'missingRegisters', label: t('dashboard.floorManager.attention.missingRegisters'), icon: CalendarX2, dot: 'bg-rose-500', href: SUPERVISOR_DASHBOARD_LINKS.attendance, count: attendance?.missingRegisters },
       { key: 'absentToday', label: t('dashboard.floorManager.attention.absentToday'), icon: UserX, dot: 'bg-amber-500', href: SUPERVISOR_DASHBOARD_LINKS.attendance, count: attendance?.absentToday },
+    ] : []),
+    // The school-wide staff register is not a supervisor's page; this count is
+    // the read:teachers figure, so it opens the teachers list.
+    ...(isLoading || overview?.absentTeachers != null ? [
+      { key: 'absentTeachers', label: t('dashboard.supervisor.kpis.absentTeachers'), icon: UserX, dot: 'bg-orange-500', href: SUPERVISOR_DASHBOARD_LINKS.teachers, count: overview?.absentTeachers ?? undefined },
     ] : []),
     ...(shows('discipline') ? [
       { key: 'openIncidents', label: t('dashboard.floorManager.attention.openIncidents'), icon: ShieldAlert, dot: 'bg-violet-500', href: SUPERVISOR_DASHBOARD_LINKS.discipline, count: discipline?.openIncidents },
@@ -104,16 +96,18 @@ const SupervisorOverview = () => {
   const classes = [...(overview?.supervisor.classes ?? [])].sort(compareClassNames);
 
   return (
-    <div className="flex min-h-full flex-col gap-3 pb-1">
+    <div className="flex min-h-full flex-col gap-3 pb-1 xl:fit:h-full">
       <SupervisorKpis overview={overview} loading={isLoading} />
 
-      <Row>
+      <DashboardOverviewRow>
         <TeacherInfoCard
           person={overview?.supervisor}
+          jobTitle={jobTitle}
+          fallbackSrc={accountAvatar('supervisor', overview?.supervisor.gender)}
           subtitle={(
-            <p className="flex max-w-full items-center gap-1.5 text-sm text-muted-foreground">
-              <Layers3 className="size-4 shrink-0" aria-hidden="true" />
-              <span className="truncate">
+            <p className="flex max-w-full items-start gap-1.5 text-sm text-muted-foreground">
+              <Layers3 className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+              <span className="line-clamp-2">
                 {classes.length
                   ? t('dashboard.supervisor.info.classes', { classes: classes.join(', ') })
                   : t('dashboard.supervisor.info.noClasses')}
@@ -122,43 +116,35 @@ const SupervisorOverview = () => {
           )}
           {...cardState}
         />
-        {shows('attendance') && (
-          <RegistersCard sections={attendance?.sections} emptyText={t('dashboard.supervisor.registers.empty')} {...cardState} />
-        )}
-        {shows('attendance') && <AbsencesCard absences={attendance?.absences} schoolDay={overview?.schoolDay} {...cardState} />}
-        <AttentionCard rows={attentionRows} {...cardState} />
-      </Row>
-
-      <Row>
-        {shows('attendance') && (
-          <StudentAttendanceChartCard
-            payload={attendance ? { monthly: attendance.monthly, todayAbsent: attendance.absentToday, todayLate: attendance.lateToday } : undefined}
-            businessDate={overview?.date}
-            className="min-h-[20rem]"
-            {...cardState}
-          />
-        )}
-        {shows('grades') && <GradesByClassChart rows={overview?.grades?.byClass} className="min-h-[20rem]" {...cardState} />}
-        {shows('discipline') && (
-          <IncidentsTrendChart monthly={discipline?.monthly} businessDate={overview?.date} className="min-h-[20rem]" {...cardState} />
-        )}
-      </Row>
-
-      <Row>
         {shows('students') && (
           <StudentsGenderChartCard
             rows={overview?.students?.byGender.map((row) => ({
               ...row,
               name: t(row.gender === 'M' ? 'common.male' : 'common.female'),
             }))}
-            className="min-h-[23rem]"
+            className="min-h-[23rem] xl:min-h-0"
             {...cardState}
           />
         )}
-        {shows('discipline') && <IncidentsCard incidents={discipline?.incidents} {...cardState} />}
-        {actions.length > 0 && <QuickActionsCard actions={actions} />}
-        <CalendarCard className="min-h-[23rem]" />
-      </Row>
+        {shows('attendance') && (
+          <StudentAttendanceChartCard
+            payload={attendance ? { monthly: attendance.monthly, todayAbsent: attendance.absentToday, todayLate: attendance.lateToday } : undefined}
+            businessDate={overview?.date}
+            className="min-h-[20rem] xl:min-h-0"
+            {...cardState}
+          />
+        )}
+        <TeachersAttendance audience="supervisor" className="min-h-[20rem] xl:min-h-0" />
+      </DashboardOverviewRow>
+
+      <DashboardOverviewRow>
+        {shows('discipline') && (
+          <IncidentsTrendChart monthly={discipline?.monthly} businessDate={overview?.date} className="min-h-[20rem] xl:min-h-0" {...cardState} />
+        )}
+        <AttentionCard rows={attentionRows} {...cardState} />
+        {actions.length > 0 && <QuickActionsCard actions={actions} dense />}
+        <CalendarCard dense className="min-h-[23rem] xl:min-h-0" />
+      </DashboardOverviewRow>
     </div>
   );
 };

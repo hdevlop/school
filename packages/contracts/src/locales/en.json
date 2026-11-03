@@ -878,7 +878,10 @@
       "kpis": {
         "students": "Active Students",
         "parents": "Parent Records",
-        "newRequests": "New Visit Requests"
+        "newRequests": "New Visit Requests",
+        "monthlyAttendance": "Staff attendance",
+        "monthlyStudentAttendance": "Student attendance",
+        "incidents": "Incidents"
       },
       "dailyWork": {
         "title": "Daily Work",
@@ -906,7 +909,8 @@
       "title": "Supervisor Dashboard",
       "subtitle": "Here's your classes' day at a glance.",
       "kpis": {
-        "newVisitRequests": "New Visit Requests"
+        "newVisitRequests": "New Visit Requests",
+        "absentTeachers": "Absent Teachers"
       },
       "info": {
         "classes": "Classes: {{classes}}",
@@ -2843,7 +2847,8 @@
       "invalidMaritalStatus": "Please select a valid marital status"
     },
     "tooltips": {
-      "orphaned": "Orphaned parent: no kids, no students linked."
+      "orphaned": "Orphaned parent: no kids, no students linked.",
+      "leftSchool": "No active children in the selected academic year."
     },
     "subtitle": {
       "count": "Total: {{count}}"
@@ -3060,6 +3065,9 @@
       "emailRequiredForLogin": "Email is required to create a staff login",
       "roleHasNoAppAccess": "This job title does not grant app access",
       "loginBeyondActor": "You can only give, change or remove a login whose access you hold yourself",
+      "jobTitleAdminOnly": "Only an administrator can change a staff member's job title",
+      "ownJobTitle": "You cannot change your own job title",
+      "removeLoginFirst": "This job title does not grant app access. Delete this staff member's login on the Users page first",
       "driverLicenseRequired": "Driver license profile is required",
       "driverFieldRequired": "Driver {{field}} is required",
       "cleanerZoneRequired": "Cleaner assignment requires a zone",
@@ -3218,6 +3226,7 @@
     "invitation": {
       "sent": "Invitation email sent to {{email}}. The staff member activates the account from the link.",
       "pending": "Staff member created. The invitation is pending your approval; no email has been sent.",
+      "pendingAfterRoleChange": "Job title changed. A login is ready for this staff member; the invitation is pending your approval and no email has been sent.",
       "accessPending": "Access pending",
       "approve": "Send invitation",
       "sending": "Sending invitation…",
