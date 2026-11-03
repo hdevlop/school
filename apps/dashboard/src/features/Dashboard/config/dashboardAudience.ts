@@ -27,6 +27,10 @@ export function usesSupervisorDashboard(role: string | null | undefined): boolea
   return role?.toLowerCase() === 'supervisor';
 }
 
+export function usesSecretaryDashboard(role: string | null | undefined): boolean {
+  return role?.toLowerCase() === 'secretary';
+}
+
 // The school-wide charts ask for a school-wide role and the permission of the
 // records they count, as the server's `CanSchoolWide` does.
 export const SCHOOL_DASHBOARD_CARD_PERMISSIONS = {

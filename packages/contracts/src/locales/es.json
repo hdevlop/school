@@ -966,6 +966,36 @@
     }
   },
   "dashboard": {
+    "secretary": {
+      "title": "Panel de secretaría",
+      "subtitle": "Inscripciones, expedientes familiares y seguimiento administrativo de un vistazo.",
+      "kpis": {
+        "students": "Alumnos activos",
+        "parents": "Expedientes de padres",
+        "newRequests": "Nuevas solicitudes de visita"
+      },
+      "dailyWork": {
+        "title": "Trabajo diario",
+        "followUp": "Familias por contactar",
+        "counts": "{{new}} nuevas · {{contacted}} contactadas, pendientes de seguimiento",
+        "empty": "No hay solicitudes de visita pendientes de seguimiento",
+        "shared": "Las solicitudes de visita abarcan todos los cursos escolares. Las nuevas aparecen primero, empezando por las más antiguas."
+      },
+      "quickActions": {
+        "students": "Inscripción de alumnos",
+        "studentsHint": "Inscribir alumnos y actualizar sus expedientes",
+        "parents": "Expedientes de padres",
+        "parentsHint": "Consultar y actualizar los datos de contacto familiar",
+        "visitRequests": "Solicitudes de visita",
+        "visitRequestsHint": "Revisar solicitudes y actualizar su seguimiento",
+        "insurance": "Seguro de alumnos",
+        "insuranceHint": "Consultar el registro de seguros y los documentos",
+        "timetable": "Ver horario",
+        "timetableHint": "Consultar los horarios de las clases",
+        "notifications": "Notificaciones",
+        "notificationsHint": "Leer los últimos mensajes y avisos"
+      }
+    },
     "supervisor": {
       "title": "Panel del supervisor",
       "subtitle": "Este es el día de tus clases de un vistazo.",

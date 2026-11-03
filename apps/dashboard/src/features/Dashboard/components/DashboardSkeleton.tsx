@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { useAuth } from 'najm-auth/client/react';
 import { useTranslation } from 'najm-i18n/react';
 import { NCard, NSkeleton, NSkeletonCalendar, NSkeletonChart, NSkeletonDonut, NSkeletonEventList, NStatCardSkeleton } from 'najm-kit';
-import { canReadFinanceDashboard, usesFloorManagerDashboard, usesSupervisorDashboard, usesTeacherDashboard } from '../config/dashboardAudience';
+import { canReadFinanceDashboard, usesFloorManagerDashboard, usesSecretaryDashboard, usesSupervisorDashboard, usesTeacherDashboard } from '../config/dashboardAudience';
 
 function SkeletonCard({ className, children }: { className?: string; children: ReactNode }) {
   return (
@@ -23,7 +23,8 @@ function SkeletonCard({ className, children }: { className?: string; children: R
 export default function DashboardSkeleton() {
   const { user } = useAuth();
   const { t } = useTranslation();
-  // Floor manager and supervisor home pages are laid out like the teacher's.
+  // Role dashboards have summary figures and cards for everyday work.
+  const isSecretary = usesSecretaryDashboard(user?.role);
   const isTeacher = usesTeacherDashboard(user?.role) || usesFloorManagerDashboard(user?.role)
     || usesSupervisorDashboard(user?.role);
   const showFinance = canReadFinanceDashboard(user?.role);
@@ -35,13 +36,13 @@ export default function DashboardSkeleton() {
         <NSkeleton className="h-10 w-64 max-sm:hidden" />
       </div>
 
-      {(isTeacher || showFinance) && (
-        <div className="grid shrink-0 grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
-          {Array.from({ length: 6 }, (_, index) => <NStatCardSkeleton key={index} />)}
+      {(isTeacher || isSecretary || showFinance) && (
+        <div className={isSecretary ? 'grid shrink-0 grid-cols-2 gap-3 xl:grid-cols-4' : 'grid shrink-0 grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6'}>
+          {Array.from({ length: isSecretary ? 4 : 6 }, (_, index) => <NStatCardSkeleton key={index} />)}
         </div>
       )}
 
-      {isTeacher ? (
+      {(isTeacher || isSecretary) ? (
         <div className="grid flex-1 grid-cols-1 gap-3 lg:grid-cols-3 lg:grid-rows-2 [&>*]:min-h-64">
           {Array.from({ length: 6 }, (_, index) => (
             <SkeletonCard key={index}><NSkeletonEventList /></SkeletonCard>

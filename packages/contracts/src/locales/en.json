@@ -872,6 +872,36 @@
     }
   },
   "dashboard": {
+    "secretary": {
+      "title": "Secretary Dashboard",
+      "subtitle": "Enrollment, family records and office follow-up at a glance.",
+      "kpis": {
+        "students": "Active Students",
+        "parents": "Parent Records",
+        "newRequests": "New Visit Requests"
+      },
+      "dailyWork": {
+        "title": "Daily Work",
+        "followUp": "Families to contact",
+        "counts": "{{new}} new · {{contacted}} contacted, awaiting follow-up",
+        "empty": "No visit requests awaiting follow-up",
+        "shared": "Visit requests cover all academic years. New enquiries are shown first, oldest first."
+      },
+      "quickActions": {
+        "students": "Student enrollment",
+        "studentsHint": "Register students and update their records",
+        "parents": "Parent records",
+        "parentsHint": "Find and update family contact details",
+        "visitRequests": "Visit requests",
+        "visitRequestsHint": "Review enquiries and update follow-up status",
+        "insurance": "Student insurance",
+        "insuranceHint": "Review the insurance register and documents",
+        "timetable": "View timetable",
+        "timetableHint": "Check class schedules",
+        "notifications": "Notifications",
+        "notificationsHint": "Read your latest messages and alerts"
+      }
+    },
     "supervisor": {
       "title": "Supervisor Dashboard",
       "subtitle": "Here's your classes' day at a glance.",

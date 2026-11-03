@@ -6,3 +6,4 @@ export * from './operations';
 export * from './teacher';
 export * from './floorManager';
 export * from './supervisor';
+export * from './secretary';

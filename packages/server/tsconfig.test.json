@@ -12,7 +12,8 @@
     "tests/backup/**/*.test.ts",
     "tests/email/**/*.test.ts",
     "tests/teacherDashboard/**/*.test.ts",
-    "tests/supervisorDashboard/**/*.test.ts"
+    "tests/supervisorDashboard/**/*.test.ts",
+    "tests/secretaryDashboard/**/*.test.ts"
   ],
   "exclude": ["node_modules"]
 }

@@ -3,7 +3,7 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useMemo } from 'react';
 import { Banknote, Briefcase, BriefcaseBusiness, Calendar, Eye, Hash, IdCard, MapPinned, Pencil, Phone, Trash2, UserRound, Wallet, Plus } from 'lucide-react';
-import { Badge, NAvatar, NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { Badge, NAvatar, NFullscreenToggle, NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { TablePrintButton } from '@/components/TablePrintButton';
@@ -13,7 +13,6 @@ import { useStaff } from '../hooks/useStaff';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useResetLogin } from '@/features/Users/hooks/useResetLogin';
 import { useStaffRoles } from '../hooks/useStaffRoles';
-import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import StaffForm from './StaffForm';
 import StaffCard from './StaffCard';
@@ -363,7 +362,7 @@ const StaffTable = () => {
               <span className="max-sm:hidden">{t('staff.actions.manageJobTitles')}</span>
             </NButton>
           )}
-          <PageHeaderGlobalActions />
+          <NFullscreenToggle label={t('common.toggleFullscreen')} />
         </NPageHeaderActions>
       </NPageHeader>
 

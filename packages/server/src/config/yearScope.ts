@@ -17,6 +17,7 @@ import { StudentProfileController } from '../modules/profiles/StudentProfileCont
 import { TeacherProfileController } from '../modules/profiles/TeacherProfileController';
 import { AttendanceController } from '../modules/attendance/AttendanceController';
 import { DashboardController } from '../modules/dashboard/DashboardController';
+import { SecretaryDashboardController } from '../modules/dashboard/secretary/SecretaryDashboardController';
 import { AcademicDashboardController } from '../modules/dashboard/academic/AcademicDashboardController';
 import { FinanceDashboardController } from '../modules/dashboard/finance/FinanceDashboardController';
 import { ParentController } from '../modules/parents/ParentController';
@@ -80,6 +81,7 @@ export const yearScopedModules = {
   'teacher-profile': TeacherProfileController,
   attendance: AttendanceController,
   dashboard: DashboardController,
+  'secretary-dashboard': SecretaryDashboardController,
   'academic-dashboard': AcademicDashboardController,
   'finance-dashboard': FinanceDashboardController,
   grades: GradeController,

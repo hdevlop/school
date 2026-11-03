@@ -55,6 +55,10 @@
       "types": "./src/supervisorDashboard.ts",
       "default": "./src/supervisorDashboard.ts"
     },
+    "./secretary-dashboard": {
+      "types": "./src/secretaryDashboard.ts",
+      "default": "./src/secretaryDashboard.ts"
+    },
     "./subjects": {
       "types": "./src/subjects.ts",
       "default": "./src/subjects.ts"

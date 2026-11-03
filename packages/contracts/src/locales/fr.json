@@ -1746,6 +1746,36 @@
     }
   },
   "dashboard": {
+    "secretary": {
+      "title": "Tableau de bord du secrétariat",
+      "subtitle": "Inscriptions, dossiers des familles et suivi administratif en un coup d’œil.",
+      "kpis": {
+        "students": "Élèves actifs",
+        "parents": "Dossiers des parents",
+        "newRequests": "Nouvelles demandes de visite"
+      },
+      "dailyWork": {
+        "title": "Travail quotidien",
+        "followUp": "Familles à contacter",
+        "counts": "{{new}} nouvelles · {{contacted}} contactées, à suivre",
+        "empty": "Aucune demande de visite en attente de suivi",
+        "shared": "Les demandes de visite couvrent toutes les années scolaires. Les nouvelles demandes sont affichées en premier, de la plus ancienne à la plus récente."
+      },
+      "quickActions": {
+        "students": "Inscription des élèves",
+        "studentsHint": "Inscrire les élèves et mettre à jour leurs dossiers",
+        "parents": "Dossiers des parents",
+        "parentsHint": "Consulter et mettre à jour les coordonnées des familles",
+        "visitRequests": "Demandes de visite",
+        "visitRequestsHint": "Consulter les demandes et mettre à jour leur suivi",
+        "insurance": "Assurance des élèves",
+        "insuranceHint": "Consulter le registre et les documents d’assurance",
+        "timetable": "Voir l’emploi du temps",
+        "timetableHint": "Consulter les horaires des classes",
+        "notifications": "Notifications",
+        "notificationsHint": "Lire vos derniers messages et alertes"
+      }
+    },
     "supervisor": {
       "title": "Tableau de bord du surveillant",
       "subtitle": "Voici la journée de vos classes en un coup d’œil.",

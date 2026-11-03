@@ -2,8 +2,14 @@ import { api } from './http';
 import type { TeacherDashboardOverview } from '@sms/contracts/teacher-dashboard';
 import type { FloorManagerDashboardOverview } from '@sms/contracts/floor-manager-dashboard';
 import type { SupervisorDashboardOverview } from '@sms/contracts/supervisor-dashboard';
+import type { SecretaryDashboardOverview } from '@sms/contracts/secretary-dashboard';
 
 type ApiEnvelope<T> = { data: T; message?: string; status?: string };
+
+export const getSecretaryDashboardOverviewApi = async (): Promise<ApiEnvelope<SecretaryDashboardOverview>> => {
+  const res = await api.get('/dashboard/secretary/overview');
+  return res.data;
+};
 
 // Every read covers the year its request sends as X-Academic-Year.
 export const getWidgetsApi = async () => {
