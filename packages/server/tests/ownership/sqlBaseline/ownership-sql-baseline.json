@@ -12258,87 +12258,10 @@
     }
    ]
   },
-  "6a3e5c272cef9b8d": {
-   "statements": [
-    {
-     "sql": "select distinct on (\"student_parents\".\"parent_id\", \"students\".\"id\") \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"class_id\", \"student_enrollment_placements\".\"section_id\" from \"student_parents\" inner join \"students\" on \"student_parents\".\"student_id\" = \"students\".\"id\" inner join \"student_enrollments\" on (\"student_enrollments\".\"student_id\" = \"students\".\"id\" and \"student_enrollments\".\"academic_year_id\" = $1) left join \"student_enrollment_placements\" on \"student_enrollment_placements\".\"enrollment_id\" = \"student_enrollments\".\"id\" where (\"students\".\"id\" in (select \"students\".\"id\" from \"students\" inner join \"student_enrollments\" \"_sc_student_enrollments_1\" on \"students\".\"id\" = \"_sc_student_enrollments_1\".\"student_id\" inner join \"student_enrollment_placements\" \"_sc_student_enrollment_placements_2\" on \"_sc_student_enrollments_1\".\"id\" = \"_sc_student_enrollment_placements_2\".\"enrollment_id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_3\" on \"_sc_student_enrollment_placements_2\".\"section_id\" = \"_sc_teacher_assignments_3\".\"section_id\" inner join \"teachers\" \"_sc_teachers_4\" on \"_sc_teacher_assignments_3\".\"teacher_id\" = \"_sc_teachers_4\".\"id\" inner join \"staff\" \"_sc_staff_5\" on \"_sc_teachers_4\".\"staff_id\" = \"_sc_staff_5\".\"id\" where \"_sc_staff_5\".\"user_id\" = $2) and EXISTS (SELECT 1 FROM student_enrollments e\n    JOIN student_enrollment_placements p ON p.enrollment_id = e.id\n    JOIN teacher_assignments ta ON ta.section_id = p.section_id\n    JOIN teachers t ON t.id = ta.teacher_id JOIN staff s ON s.id = t.staff_id\n    WHERE e.student_id = \"students\".\"id\" AND e.academic_year_id = $3 AND s.user_id = $4\n    AND NOT EXISTS (\n      SELECT 1 FROM student_enrollment_placements later\n      WHERE later.enrollment_id = e.id AND later.valid_from > p.valid_from\n    )) and \"student_parents\".\"parent_id\" in ($5, $6)) order by \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"valid_from\" desc",
-     "params": [
-      "year-old",
-      "user-1",
-      "year-old",
-      "user-1",
-      "parent-1",
-      "parent-2"
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "5f387dbd9f377732": {
-   "statements": [
-    {
-     "sql": "select distinct on (\"student_parents\".\"parent_id\", \"students\".\"id\") \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"class_id\", \"student_enrollment_placements\".\"section_id\" from \"student_parents\" inner join \"students\" on \"student_parents\".\"student_id\" = \"students\".\"id\" inner join \"student_enrollments\" on (\"student_enrollments\".\"student_id\" = \"students\".\"id\" and \"student_enrollments\".\"academic_year_id\" = $1) left join \"student_enrollment_placements\" on \"student_enrollment_placements\".\"enrollment_id\" = \"student_enrollments\".\"id\" where (\"students\".\"id\" in (select \"id\" from \"students\" where exists (select 1 from student_enrollments managed_enrollment\n    join student_enrollment_placements managed_placement on managed_placement.enrollment_id = managed_enrollment.id\n    where managed_enrollment.student_id = \"students\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_placement.class_id and exists (select 1 from floor_manager_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $2\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $3)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $4))))) and exists (select 1 from student_enrollments e\n    join student_enrollment_placements p on p.enrollment_id = e.id\n    where e.student_id = \"students\".\"id\" and e.academic_year_id = $5\n      and exists (select 1 from classes managed_class\n    where managed_class.id = p.class_id and exists (select 1 from floor_manager_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $6\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $7)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $8)))\n      and not exists (\n        select 1 from student_enrollment_placements later\n        where later.enrollment_id = e.id and later.valid_from > p.valid_from\n      )) and \"student_parents\".\"parent_id\" in ($9, $10)) order by \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"valid_from\" desc",
-     "params": [
-      "year-old",
-      "user-1",
-      "2026-03-15",
-      "2026-03-15",
-      "year-old",
-      "user-1",
-      "2026-03-15",
-      "2026-03-15",
-      "parent-1",
-      "parent-2"
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "53a4577b65886e6f": {
-   "statements": [
-    {
-     "sql": "select distinct on (\"student_parents\".\"parent_id\", \"students\".\"id\") \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"class_id\", \"student_enrollment_placements\".\"section_id\" from \"student_parents\" inner join \"students\" on \"student_parents\".\"student_id\" = \"students\".\"id\" inner join \"student_enrollments\" on (\"student_enrollments\".\"student_id\" = \"students\".\"id\" and \"student_enrollments\".\"academic_year_id\" = $1) left join \"student_enrollment_placements\" on \"student_enrollment_placements\".\"enrollment_id\" = \"student_enrollments\".\"id\" where (\"students\".\"id\" in (select \"students\".\"id\" from \"students\" inner join \"student_parents\" \"_sc_student_parents_1\" on \"students\".\"id\" = \"_sc_student_parents_1\".\"student_id\" inner join \"parents\" \"_sc_parents_2\" on \"_sc_student_parents_1\".\"parent_id\" = \"_sc_parents_2\".\"id\" where \"_sc_parents_2\".\"user_id\" = $2) and \"student_parents\".\"parent_id\" in ($3, $4)) order by \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"valid_from\" desc",
-     "params": [
-      "year-old",
-      "user-1",
-      "parent-1",
-      "parent-2"
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "3ef80f0fd4dcff3e": {
-   "statements": [
-    {
-     "sql": "select distinct on (\"student_parents\".\"parent_id\", \"students\".\"id\") \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"class_id\", \"student_enrollment_placements\".\"section_id\" from \"student_parents\" inner join \"students\" on \"student_parents\".\"student_id\" = \"students\".\"id\" inner join \"student_enrollments\" on (\"student_enrollments\".\"student_id\" = \"students\".\"id\" and \"student_enrollments\".\"academic_year_id\" = $1) left join \"student_enrollment_placements\" on \"student_enrollment_placements\".\"enrollment_id\" = \"student_enrollments\".\"id\" where (\"students\".\"id\" in (select \"id\" from \"students\" where \"students\".\"user_id\" = $2) and \"student_parents\".\"parent_id\" in ($3, $4)) order by \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"valid_from\" desc",
-     "params": [
-      "year-old",
-      "user-1",
-      "parent-1",
-      "parent-2"
-     ],
-     "method": "all"
-    }
-   ]
-  },
   "91bda130e326c5de": {
    "statements": [
     {
      "sql": "select distinct on (\"student_parents\".\"parent_id\", \"students\".\"id\") \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"class_id\", \"student_enrollment_placements\".\"section_id\" from \"student_parents\" inner join \"students\" on \"student_parents\".\"student_id\" = \"students\".\"id\" inner join \"student_enrollments\" on (\"student_enrollments\".\"student_id\" = \"students\".\"id\" and \"student_enrollments\".\"academic_year_id\" = $1) left join \"student_enrollment_placements\" on \"student_enrollment_placements\".\"enrollment_id\" = \"student_enrollments\".\"id\" where \"student_parents\".\"parent_id\" in ($2, $3) order by \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"valid_from\" desc",
-     "params": [
-      "year-old",
-      "parent-1",
-      "parent-2"
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "2784b3f907737b20": {
-   "statements": [
-    {
-     "sql": "select distinct on (\"student_parents\".\"parent_id\", \"students\".\"id\") \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"class_id\", \"student_enrollment_placements\".\"section_id\" from \"student_parents\" inner join \"students\" on \"student_parents\".\"student_id\" = \"students\".\"id\" inner join \"student_enrollments\" on (\"student_enrollments\".\"student_id\" = \"students\".\"id\" and \"student_enrollments\".\"academic_year_id\" = $1) left join \"student_enrollment_placements\" on \"student_enrollment_placements\".\"enrollment_id\" = \"student_enrollments\".\"id\" where (1 = 0 and \"student_parents\".\"parent_id\" in ($2, $3)) order by \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"valid_from\" desc",
      "params": [
       "year-old",
       "parent-1",
@@ -16155,6 +16078,96 @@
      "method": "subquery"
     }
    ]
+  },
+  "7a57fec1ef4cc72b": {
+   "statements": [
+    {
+     "sql": "select distinct on (\"student_parents\".\"parent_id\", \"students\".\"id\") \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"class_id\", \"student_enrollment_placements\".\"section_id\", \"student_enrollments\".\"status\", \"student_enrollments\".\"left_on\" from \"student_parents\" inner join \"students\" on \"student_parents\".\"student_id\" = \"students\".\"id\" inner join \"student_enrollments\" on (\"student_enrollments\".\"student_id\" = \"students\".\"id\" and \"student_enrollments\".\"academic_year_id\" = $1) left join \"student_enrollment_placements\" on \"student_enrollment_placements\".\"enrollment_id\" = \"student_enrollments\".\"id\" where (\"students\".\"id\" in (select \"students\".\"id\" from \"students\" inner join \"student_enrollments\" \"_sc_student_enrollments_1\" on \"students\".\"id\" = \"_sc_student_enrollments_1\".\"student_id\" inner join \"student_enrollment_placements\" \"_sc_student_enrollment_placements_2\" on \"_sc_student_enrollments_1\".\"id\" = \"_sc_student_enrollment_placements_2\".\"enrollment_id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_3\" on \"_sc_student_enrollment_placements_2\".\"section_id\" = \"_sc_teacher_assignments_3\".\"section_id\" inner join \"teachers\" \"_sc_teachers_4\" on \"_sc_teacher_assignments_3\".\"teacher_id\" = \"_sc_teachers_4\".\"id\" inner join \"staff\" \"_sc_staff_5\" on \"_sc_teachers_4\".\"staff_id\" = \"_sc_staff_5\".\"id\" where \"_sc_staff_5\".\"user_id\" = $2) and EXISTS (SELECT 1 FROM student_enrollments e\n    JOIN student_enrollment_placements p ON p.enrollment_id = e.id\n    JOIN teacher_assignments ta ON ta.section_id = p.section_id\n    JOIN teachers t ON t.id = ta.teacher_id JOIN staff s ON s.id = t.staff_id\n    WHERE e.student_id = \"students\".\"id\" AND e.academic_year_id = $3 AND s.user_id = $4\n    AND NOT EXISTS (\n      SELECT 1 FROM student_enrollment_placements later\n      WHERE later.enrollment_id = e.id AND later.valid_from > p.valid_from\n    )) and \"student_parents\".\"parent_id\" in ($5, $6)) order by \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"valid_from\" desc",
+     "params": [
+      "year-old",
+      "user-1",
+      "year-old",
+      "user-1",
+      "parent-1",
+      "parent-2"
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "0f250237e793f0dd": {
+   "statements": [
+    {
+     "sql": "select distinct on (\"student_parents\".\"parent_id\", \"students\".\"id\") \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"class_id\", \"student_enrollment_placements\".\"section_id\", \"student_enrollments\".\"status\", \"student_enrollments\".\"left_on\" from \"student_parents\" inner join \"students\" on \"student_parents\".\"student_id\" = \"students\".\"id\" inner join \"student_enrollments\" on (\"student_enrollments\".\"student_id\" = \"students\".\"id\" and \"student_enrollments\".\"academic_year_id\" = $1) left join \"student_enrollment_placements\" on \"student_enrollment_placements\".\"enrollment_id\" = \"student_enrollments\".\"id\" where (\"students\".\"id\" in (select \"id\" from \"students\" where exists (select 1 from student_enrollments managed_enrollment\n    join student_enrollment_placements managed_placement on managed_placement.enrollment_id = managed_enrollment.id\n    where managed_enrollment.student_id = \"students\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_placement.class_id and exists (select 1 from floor_manager_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $2\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $3)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $4))))) and exists (select 1 from student_enrollments e\n    join student_enrollment_placements p on p.enrollment_id = e.id\n    where e.student_id = \"students\".\"id\" and e.academic_year_id = $5\n      and exists (select 1 from classes managed_class\n    where managed_class.id = p.class_id and exists (select 1 from floor_manager_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $6\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $7)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $8)))\n      and not exists (\n        select 1 from student_enrollment_placements later\n        where later.enrollment_id = e.id and later.valid_from > p.valid_from\n      )) and \"student_parents\".\"parent_id\" in ($9, $10)) order by \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"valid_from\" desc",
+     "params": [
+      "year-old",
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
+      "year-old",
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
+      "parent-1",
+      "parent-2"
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "93ccdaf8c28bdf12": {
+   "statements": [
+    {
+     "sql": "select distinct on (\"student_parents\".\"parent_id\", \"students\".\"id\") \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"class_id\", \"student_enrollment_placements\".\"section_id\", \"student_enrollments\".\"status\", \"student_enrollments\".\"left_on\" from \"student_parents\" inner join \"students\" on \"student_parents\".\"student_id\" = \"students\".\"id\" inner join \"student_enrollments\" on (\"student_enrollments\".\"student_id\" = \"students\".\"id\" and \"student_enrollments\".\"academic_year_id\" = $1) left join \"student_enrollment_placements\" on \"student_enrollment_placements\".\"enrollment_id\" = \"student_enrollments\".\"id\" where (\"students\".\"id\" in (select \"students\".\"id\" from \"students\" inner join \"student_parents\" \"_sc_student_parents_1\" on \"students\".\"id\" = \"_sc_student_parents_1\".\"student_id\" inner join \"parents\" \"_sc_parents_2\" on \"_sc_student_parents_1\".\"parent_id\" = \"_sc_parents_2\".\"id\" where \"_sc_parents_2\".\"user_id\" = $2) and \"student_parents\".\"parent_id\" in ($3, $4)) order by \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"valid_from\" desc",
+     "params": [
+      "year-old",
+      "user-1",
+      "parent-1",
+      "parent-2"
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "d1b653b454dd4647": {
+   "statements": [
+    {
+     "sql": "select distinct on (\"student_parents\".\"parent_id\", \"students\".\"id\") \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"class_id\", \"student_enrollment_placements\".\"section_id\", \"student_enrollments\".\"status\", \"student_enrollments\".\"left_on\" from \"student_parents\" inner join \"students\" on \"student_parents\".\"student_id\" = \"students\".\"id\" inner join \"student_enrollments\" on (\"student_enrollments\".\"student_id\" = \"students\".\"id\" and \"student_enrollments\".\"academic_year_id\" = $1) left join \"student_enrollment_placements\" on \"student_enrollment_placements\".\"enrollment_id\" = \"student_enrollments\".\"id\" where (\"students\".\"id\" in (select \"id\" from \"students\" where \"students\".\"user_id\" = $2) and \"student_parents\".\"parent_id\" in ($3, $4)) order by \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"valid_from\" desc",
+     "params": [
+      "year-old",
+      "user-1",
+      "parent-1",
+      "parent-2"
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "e99a982f133de20a": {
+   "statements": [
+    {
+     "sql": "select distinct on (\"student_parents\".\"parent_id\", \"students\".\"id\") \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"class_id\", \"student_enrollment_placements\".\"section_id\", \"student_enrollments\".\"status\", \"student_enrollments\".\"left_on\" from \"student_parents\" inner join \"students\" on \"student_parents\".\"student_id\" = \"students\".\"id\" inner join \"student_enrollments\" on (\"student_enrollments\".\"student_id\" = \"students\".\"id\" and \"student_enrollments\".\"academic_year_id\" = $1) left join \"student_enrollment_placements\" on \"student_enrollment_placements\".\"enrollment_id\" = \"student_enrollments\".\"id\" where \"student_parents\".\"parent_id\" in ($2, $3) order by \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"valid_from\" desc",
+     "params": [
+      "year-old",
+      "parent-1",
+      "parent-2"
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "2d7dfa088db05b5f": {
+   "statements": [
+    {
+     "sql": "select distinct on (\"student_parents\".\"parent_id\", \"students\".\"id\") \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"class_id\", \"student_enrollment_placements\".\"section_id\", \"student_enrollments\".\"status\", \"student_enrollments\".\"left_on\" from \"student_parents\" inner join \"students\" on \"student_parents\".\"student_id\" = \"students\".\"id\" inner join \"student_enrollments\" on (\"student_enrollments\".\"student_id\" = \"students\".\"id\" and \"student_enrollments\".\"academic_year_id\" = $1) left join \"student_enrollment_placements\" on \"student_enrollment_placements\".\"enrollment_id\" = \"student_enrollments\".\"id\" where (1 = 0 and \"student_parents\".\"parent_id\" in ($2, $3)) order by \"student_parents\".\"parent_id\", \"students\".\"id\", \"student_enrollment_placements\".\"valid_from\" desc",
+     "params": [
+      "year-old",
+      "parent-1",
+      "parent-2"
+     ],
+     "method": "all"
+    }
+   ]
   }
  },
  "cases": {
@@ -17866,20 +17879,20 @@
   "repository:parent children linked now|role:custom-role": "eb7a6a72c13d25e3",
   "repository:parent children linked now|anonymous": "eb7a6a72c13d25e3",
   "repository:parent children linked now|outside-request": "68c51d174a944b73",
-  "repository:parent children list placements|role:teacher": "6a3e5c272cef9b8d",
-  "repository:parent children list placements|role:floor_manager": "5f387dbd9f377732",
-  "repository:parent children list placements|role:parent": "53a4577b65886e6f",
-  "repository:parent children list placements|role:student": "3ef80f0fd4dcff3e",
-  "repository:parent children list placements|role:admin": "91bda130e326c5de",
-  "repository:parent children list placements|role:principal": "91bda130e326c5de",
-  "repository:parent children list placements|role:accounting": "91bda130e326c5de",
-  "repository:parent children list placements|role:secretary": "91bda130e326c5de",
-  "repository:parent children list placements|role:driver": "91bda130e326c5de",
-  "repository:parent children list placements|role:assistant": "91bda130e326c5de",
+  "repository:parent children list placements|role:teacher": "7a57fec1ef4cc72b",
+  "repository:parent children list placements|role:floor_manager": "0f250237e793f0dd",
+  "repository:parent children list placements|role:parent": "93ccdaf8c28bdf12",
+  "repository:parent children list placements|role:student": "d1b653b454dd4647",
+  "repository:parent children list placements|role:admin": "e99a982f133de20a",
+  "repository:parent children list placements|role:principal": "e99a982f133de20a",
+  "repository:parent children list placements|role:accounting": "e99a982f133de20a",
+  "repository:parent children list placements|role:secretary": "e99a982f133de20a",
+  "repository:parent children list placements|role:driver": "e99a982f133de20a",
+  "repository:parent children list placements|role:assistant": "e99a982f133de20a",
   "repository:parent children list placements|role:supervisor": "91bda130e326c5de",
-  "repository:parent children list placements|role:custom-role": "2784b3f907737b20",
-  "repository:parent children list placements|anonymous": "2784b3f907737b20",
-  "repository:parent children list placements|outside-request": "91bda130e326c5de",
+  "repository:parent children list placements|role:custom-role": "2d7dfa088db05b5f",
+  "repository:parent children list placements|anonymous": "2d7dfa088db05b5f",
+  "repository:parent children list placements|outside-request": "e99a982f133de20a",
   "repository:search students|role:teacher": "77b906fea5d76207",
   "repository:search students|role:floor_manager": "1d77d73ba88af550",
   "repository:search students|role:parent": "ad368b0fb80d8ccf",
