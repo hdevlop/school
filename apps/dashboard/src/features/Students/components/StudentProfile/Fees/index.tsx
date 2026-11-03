@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AlertTriangle, CalendarClock, CheckCircle2, CircleDollarSign, Clock, CreditCard, FileText } from 'lucide-react';
 import { useCallback, useMemo } from 'react';
-import { NBadge, NCard, NStatCard, NEmptyState } from 'najm-kit';
+import { NBadge, NCard, NStatCard, NEmptyState, NSkeleton } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useFees } from '@/features/Financial/Fees/hooks/useFees';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
@@ -77,10 +77,10 @@ const LoadingSkeleton = () => (
   <div className="space-y-4">
     <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
       {Array.from({ length: 4 }).map((_, index) => (
-        <div key={index} className="h-28 animate-pulse rounded-lg border border-slate-200 bg-white" />
+        <NSkeleton key={index} className="h-28 rounded-lg border border-border" />
       ))}
     </div>
-    <div className="h-72 animate-pulse rounded-lg border border-slate-200 bg-white" />
+    <NSkeleton className="h-72 rounded-lg border border-border" />
   </div>
 );
 

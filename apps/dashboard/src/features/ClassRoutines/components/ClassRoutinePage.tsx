@@ -41,7 +41,7 @@ const ALL_CLASSES = 'all';
 
 function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
   const { t, language } = useTranslation();
-  const { can } = useViewerRole();
+  const { can, role } = useViewerRole();
   const canCreate = can('create:class-routines');
   const canEdit = can('update:class-routines');
   const canDelete = can('delete:class-routines');
@@ -51,11 +51,17 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
   const { viewingYear } = useViewingAcademicYear();
   const listedYear = viewingYear ?? academicYear;
   const { data: yearClasses, isPending: classSectionsPending, isError: classSectionsError, refetch: refetchClassSections } = useRoutineClassSections(listedYear);
-  const activeClasses = useMemo(
-    () => (yearClasses?.classes || []).filter((schoolClass) => schoolClass.academicYear === listedYear),
-    [yearClasses, listedYear],
+  const { data: yearSchedules = [], isPending: schedulesPending, isFetching: schedulesFetching, isError: schedulesError, refetch: refetchSchedules } = useRoutineList(
+    { academicYear: listedYear },
+    Boolean(listedYear),
   );
-  const sections = yearClasses?.sections;
+  const routineClassIds = useMemo(() => new Set(yearSchedules.map((schedule) => schedule.classId)), [yearSchedules]);
+  const routineSectionIds = useMemo(() => new Set(yearSchedules.map((schedule) => schedule.sectionId)), [yearSchedules]);
+  const activeClasses = useMemo(
+    () => (yearClasses?.classes || []).filter((schoolClass) => schoolClass.academicYear === listedYear && routineClassIds.has(schoolClass.id)),
+    [yearClasses, listedYear, routineClassIds],
+  );
+  const sections = useMemo(() => (yearClasses?.sections || []).filter((section) => routineSectionIds.has(section.id)), [yearClasses, routineSectionIds]);
   const mutations = useRoutineMutations();
 
   const [classId, setClassId] = useState('');
@@ -64,9 +70,15 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
   const { visibleClassIds, ready: filterReady, hasSavedFilter, save: saveClassFilter } = useRoutineClassFilter(accountId, listedYear);
   const [classSelection, setClassSelection] = useState<string[] | null>(null);
   const [periodsEditor, setPeriodsEditor] = useState<{ classIds: string[]; sourceId?: string } | null>(null);
-  const visibleClasses = useMemo(() => visibleClassIds === null
-    ? activeClasses
-    : activeClasses.filter((item) => visibleClassIds.includes(item.id)), [activeClasses, visibleClassIds]);
+  const visibleClasses = useMemo(() => {
+    if (visibleClassIds === null) return activeClasses;
+    const selected = activeClasses.filter((item) => visibleClassIds.includes(item.id));
+    // A saved selection from before an assignment change must not hide the
+    // manager's whole floor. An explicitly empty checklist still stays empty.
+    return role === 'floor_manager' && visibleClassIds.length > 0 && selected.length === 0
+      ? activeClasses
+      : selected;
+  }, [activeClasses, visibleClassIds, role]);
   const allClasses = classId === ALL_CLASSES;
   const [selectedLesson, setSelectedLesson] = useState<{
     routine: RoutineSchedule;
@@ -90,11 +102,8 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
   const sectionRows = useMemo(() => visibleClasses.flatMap((schoolClass) => (sections || [])
     .filter((section) => section.classId === schoolClass.id)
     .map((section) => ({ sectionId: section.id, className: schoolClass.name, sectionName: section.name }))), [visibleClasses, sections]);
-  const { data: schedules = [], isPending: schedulesPending, isFetching: schedulesFetching, isError: schedulesError, refetch: refetchSchedules } = useRoutineList(
-    { sectionId: allClasses ? undefined : sectionId, academicYear: listedYear },
-    Boolean(filterReady && listedYear && (allClasses || sectionId)),
-  );
-  const schedulesLoading = Boolean(listedYear && (allClasses || sectionId)) && schedulesPending;
+  const schedules = useMemo(() => allClasses ? yearSchedules : yearSchedules.filter((schedule) => schedule.sectionId === sectionId), [allClasses, yearSchedules, sectionId]);
+  const schedulesLoading = Boolean(listedYear) && schedulesPending;
   const { data: loadedRoutine, isPending: routinePending, isFetching: routineFetching, isError: routineError } = useRoutine(allClasses ? undefined : scheduleId);
   const routine = !allClasses && loadedRoutine?.sectionId === sectionId ? loadedRoutine : null;
   const routineLoading = !allClasses && Boolean(scheduleId) && routinePending;
@@ -117,11 +126,11 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
   }, [routine, publicSettings, academicYear]);
 
   useEffect(() => {
-    if (!filterReady) return;
+    if (!filterReady || schedulesPending || classSectionsPending) return;
     setClassId((current) => current === ALL_CLASSES || activeClasses.some((item) => item.id === current)
       ? current
-      : hasSavedFilter ? ALL_CLASSES : (activeClasses[0]?.id || ''));
-  }, [activeClasses, filterReady, hasSavedFilter]);
+      : hasSavedFilter || role === 'floor_manager' ? ALL_CLASSES : (activeClasses[0]?.id || ''));
+  }, [activeClasses, filterReady, hasSavedFilter, role, schedulesPending, classSectionsPending]);
 
   useEffect(() => {
     setSectionId((current) => classSections.some((section) => section.id === current)
@@ -235,7 +244,7 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
     try { await printRoutineDocument(html); } catch { toast.error(t('classRoutines.ui.print.failed')); }
   };
 
-  const busy = !filterReady || (Boolean(listedYear) && classSectionsPending) || isAcademicYearLoading;
+  const busy = !filterReady || (Boolean(listedYear) && (classSectionsPending || schedulesPending)) || isAcademicYearLoading;
   const customClasses = visibleClasses.length !== activeClasses.length;
   const openClassSettings = () => setClassSelection((allClasses
     ? visibleClasses
@@ -332,6 +341,9 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
           <p>{t('classRoutines.ui.messages.loadError')}</p>
           <NButton variant="outline" className="mt-3" onClick={() => classSectionsError ? refetchClassSections() : refetchSchedules()}>{t('classRoutines.ui.actions.retry')}</NButton>
         </div>
+      ) : !activeClasses.length ? (
+        <NEmptyState surface="panel" icon={FEATURE_ICONS.classRoutines} className="flex-1"
+          title={t('common.feedback.emptyTitle')} />
       ) : allClasses && !visibleClasses.length ? (
         <NEmptyState surface="panel" icon={FEATURE_ICONS.classRoutines} className="flex-1"
           title={t('classRoutines.ui.classSelection.emptyTitle')} description={t('classRoutines.ui.classSelection.emptyDescription')} />
@@ -340,6 +352,7 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
           <div className="flex min-w-0 flex-col gap-8 pb-6 pe-1">
             {sectionRows.map((row, index) => {
               const summary = allSchedules[index];
+              if (!summary) return null;
               const detail = summary ? detailsById.get(summary.id) : undefined;
               const week = detail?.data;
               const heading = `${row.className} · ${row.sectionName}`;
@@ -367,12 +380,7 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
                       onCellClick={(day, period, entry) => openEntry(week, day, period, entry)}
                       onDutyClick={(day, period, duty) => openDuty(week, day, period, duty)}
                     />
-                  ) : summary ? <ClassRoutineSkeleton /> : (
-                    <div className="rounded-xl border border-dashed bg-card/50 p-6">
-                      <NEmptyState icon={FEATURE_ICONS.classRoutines} title={t('classRoutines.ui.empty.title')} />
-                      {canCreate && <NButton size="sm" className="mt-3" disabled={mutations.createSchedule.isPending} onClick={() => createRoutine(row.sectionId)} leftIcon={<Plus className="h-4 w-4" />}>{t('classRoutines.ui.actions.createRoutine')}</NButton>}
-                    </div>
-                  )}
+                  ) : <ClassRoutineSkeleton />}
                 </section>
               );
             })}

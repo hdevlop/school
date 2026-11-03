@@ -3,6 +3,7 @@
 import React from 'react';
 import { Shield, Tag, FileText, Hash } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
+import { roleLabel } from '@/shared/roleLabel';
 
 const RoleCard = ({ data }) => {
   const { t } = useTranslation();
@@ -13,7 +14,7 @@ const RoleCard = ({ data }) => {
       {/* Header with Role Icon and Name */}
       <div className="flex items-center gap-2">
         <Shield className="h-5 w-5 text-primary" />
-        <h3 className="font-semibold text-foreground">{role.name || t('common.notAvailable')}</h3>
+        <h3 className="font-semibold text-foreground">{roleLabel(role.name, t) || t('common.notAvailable')}</h3>
       </div>
 
       {/* Role Basic Information */}
@@ -27,7 +28,7 @@ const RoleCard = ({ data }) => {
         <div className="flex items-center text-sm text-muted-foreground">
           <Tag className="h-4 w-4 mr-2" />
           <span className="text-xs mr-2">{t('roles.table.roleName')}:</span>
-          <span className="font-medium text-primary">{role.name}</span>
+          <span className="font-medium text-primary">{roleLabel(role.name, t)}</span>
         </div>
       </div>
 
@@ -38,7 +39,7 @@ const RoleCard = ({ data }) => {
           <div className="flex-1">
             <span className="text-xs text-muted-foreground block">{t('roles.form.description')}:</span>
             <span className="text-sm text-foreground mt-1 block">
-              {role.description || t('roles.table.noDescription')}
+              {role.name === 'floor_manager' ? t('roleAccess.scope.floor_manager') : role.description || t('roles.table.noDescription')}
             </span>
           </div>
         </div>

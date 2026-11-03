@@ -8,6 +8,7 @@ import { Badge, NForm, NSkeleton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useStudentRoutes } from '../hooks/useStudentRoutes'
 import { useStudents } from '@/features/Students/hooks/useStudents'
+import { FormStudentCombobox } from '@/features/Students/components/StudentCombobox'
 import { FormInput } from 'najm-kit';
 import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location';
 import { z } from 'zod'
@@ -49,21 +50,14 @@ const AssignStudentFields = ({ students }) => {
     form.setValue('pickupPlaceId', selectedStudent.addressPlaceId || null)
   }, [form, selectedStudent])
 
-  const studentOptions = (students || []).map((s: any) => ({
-    value: s.id,
-    label: `${s.name} (${s.studentCode})`,
-  }))
-
   return (
     <>
-      <FormInput
-        name="studentId"
-        type="combobox"
+      <FormStudentCombobox
         formLabel={t('transport.panel.student')}
         placeholder={t('transport.panel.selectStudent')}
         searchPlaceholder={t('transport.panel.searchStudents')}
         emptyMessage={t('transport.panel.noStudent')}
-        items={studentOptions}
+        students={students}
         required
       />
       <FormInput name="assignmentDate" type="date" formLabel={t('transport.form.startDate')}

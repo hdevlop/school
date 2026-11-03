@@ -201,7 +201,7 @@ function TeachersTable() {
             surface="panel"
             icon={FEATURE_ICONS.teachers}
             title={t('emptyStates.teachers.title')}
-            description={t('emptyStates.teachers.description')}
+            description={canCreate ? t('emptyStates.teachers.description') : undefined}
             action={canCreate ? (
               <PermissionButton permission="create:teachers" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />

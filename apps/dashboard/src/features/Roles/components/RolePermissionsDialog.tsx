@@ -1,17 +1,19 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { Badge, Button, Checkbox, Input, NAlert, NErrorState, NForbiddenState, Popover, PopoverContent, PopoverTrigger, cn, surfaceBorderClasses } from 'najm-kit';
-import { Eye, Info, Loader2, LockKeyhole, RotateCcw, Save, Search } from 'lucide-react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import dynamic from 'next/dynamic';
+import { Badge, Button, Checkbox, Input, NAlert, NDialog, NErrorState, NForbiddenState, NSkeleton, Popover, PopoverContent, PopoverTrigger, Tabs, TabsContent, TabsList, TabsTrigger, cn, surfaceBorderClasses } from 'najm-kit';
+import { ArrowUpDown, Eye, EyeOff, Info, Loader2, LockKeyhole, Minus, PanelLeft, Plus, RotateCcw, Save, Search, ShieldCheck } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { matchPermission } from 'najm-auth/client';
 import { toast } from 'sonner';
 import {
-  SIDEBAR_ENTRIES, isSidebarPermission, sidebarPermission, type AccessPermission, type AccessRole,
-  type RoleAccessSnapshot, type SidebarKey,
+  SIDEBAR_ENTRIES, isSidebarPermission, orderSidebarItems, sidebarItemIds, type AccessPermission, type AccessRole,
+  type RoleAccessSnapshot, type SidebarKey, type SidebarOrderId,
 } from '@sms/contracts/access-control';
 import { createNavigationItems } from '@/shared/schoolNavigation';
 import { PAGE_ACCESS, isSchoolWideRole } from '@/shared/pageAccess';
+import { roleLabel } from '@/shared/roleLabel';
 import { isAuthorizationError } from '@/services/apiError';
 import { useRoleAccess } from '../hooks/useRoleAccess';
 import {
@@ -20,6 +22,7 @@ import {
 } from '../config/permissionMatrix';
 
 type Props = { role: AccessRole; onDirtyChange?: (dirty: boolean) => void; actions?: ReactNode };
+const RoleSidebarEditor = dynamic(() => import('./RoleSidebarEditor'), { loading: () => <NSkeleton className="h-64 w-full" /> });
 
 export default function RolePermissionsDialog({ role, onDirtyChange, actions }: Props) {
   const access = useRoleAccess(role.id);
@@ -56,14 +59,16 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
   const [baseline, setBaseline] = useState(initialSnapshot);
   const [draft, setDraft] = useState(() => new Set(initialSnapshot.permissions.filter((p) => !isSidebarPermission(p.name)).map((p) => p.id)));
   const [sidebarKeys, setSidebarKeys] = useState(() => new Set(sidebarKeysFromPermissions(initialSnapshot.permissions)));
+  const [sidebarOrder, setSidebarOrder] = useState<SidebarOrderId[]>(initialSnapshot.sidebarOrder ?? []);
+  const [tab, setTab] = useState('permissions');
   const [search, setSearch] = useState('');
   const [review, setReview] = useState(false);
   const [failure, setFailure] = useState<string | null>(null);
-  const reviewRef = useRef<HTMLElement>(null);
   const locked = role.name.toLowerCase() === 'admin';
   const rows = useMemo(() => buildPermissionRows(baseline.catalog), [baseline.catalog]);
   const selectedNames = baseline.catalog.filter((p) => draft.has(p.id)).map((p) => p.name);
   const viewer = { role: role.name, can: (name: string) => matchPermission(selectedNames, name) };
+  const navigationItems = createNavigationItems(t, viewer);
   const sidebarEligibility = new Map<string, boolean>();
   const visit = (items: ReturnType<typeof createNavigationItems>) => {
     for (const item of items) {
@@ -71,17 +76,20 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
       if (item.children) visit(item.children);
     }
   };
-  visit(createNavigationItems(t, viewer));
+  visit(navigationItems);
   // The footer opens personal preferences even without school-settings access.
   sidebarEligibility.set('settings:preferences', true);
   const permissionsChanged = changedValues(baseline.permissions.filter((p) => !isSidebarPermission(p.name)).map((p) => p.id), draft);
   const navigationChanged = changedValues(sidebarKeysFromPermissions(baseline.permissions), sidebarKeys);
-  const changeCount = permissionsChanged.added.length + permissionsChanged.removed.length + navigationChanged.added.length + navigationChanged.removed.length;
+  const orderChanged = JSON.stringify(sidebarItemIds(orderSidebarItems(navigationItems, sidebarOrder)))
+    !== JSON.stringify(sidebarItemIds(orderSidebarItems(navigationItems, baseline.sidebarOrder ?? [])));
+  const visibilityChanged = navigationChanged.added.length + navigationChanged.removed.length > 0;
+  const grantsChanged = permissionsChanged.added.length + permissionsChanged.removed.length > 0;
+  const changeCount = permissionsChanged.added.length + permissionsChanged.removed.length + navigationChanged.added.length + navigationChanged.removed.length + Number(orderChanged);
   const dirty = changeCount > 0;
   const wildcard = selectedNames.some((name) => name.includes('*'));
 
   useEffect(() => { onDirtyChange?.(dirty || isSaving); }, [dirty, isSaving, onDirtyChange]);
-  useEffect(() => { if (review) reviewRef.current?.scrollIntoView({ block: 'nearest' }); }, [review]);
   useEffect(() => {
     if (!dirty) return;
     const preventUnload = (event: BeforeUnloadEvent) => { event.preventDefault(); };
@@ -118,13 +126,18 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
     setBaseline(snapshot);
     setDraft(new Set(snapshot.permissions.filter((p) => !isSidebarPermission(p.name)).map((p) => p.id)));
     setSidebarKeys(new Set(sidebarKeysFromPermissions(snapshot.permissions)));
+    setSidebarOrder(snapshot.sidebarOrder ?? []);
     setReview(false);
     setFailure(null);
   };
   const apply = async () => {
     setFailure(null);
     try {
-      const snapshot = await save({ permissionIds: [...draft], expectedPermissionIds: baseline.permissions.map((p) => p.id), sidebarKeys: [...sidebarKeys] });
+      const snapshot = await save({
+        permissionIds: [...draft], expectedPermissionIds: baseline.permissions.map((p) => p.id),
+        ...(visibilityChanged && { sidebarKeys: [...sidebarKeys] }),
+        ...(orderChanged && { sidebarOrder, expectedSidebarOrder: baseline.sidebarOrder ?? [] }),
+      });
       replace(snapshot);
       toast.success(t('roleAccess.saved'));
     } catch (error) {
@@ -136,7 +149,7 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
     const explicit = draft.has(permission.id);
     const inherited = !explicit && viewer.can(permission.name);
     return (
-      <Checkbox checked={explicit || inherited} disabled={locked || isSaving || inherited || dependency}
+      <Checkbox checked={explicit || inherited} disabled={locked || isSaving || inherited}
         title={dependency ? permissionLabel(permission) : undefined}
         aria-label={`${module}: ${t(`roleAccess.actions.${dependency ? 'read' : permission.action}`)}`}
         onCheckedChange={(checked) => toggle([permission], checked === true)} />
@@ -147,55 +160,56 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
     const translated = t(key);
     return translated === key ? action : translated;
   };
-  const renderSidebar = (row: PermissionRow) => {
-    if (!row.sidebar) return <span className="text-muted-foreground" aria-label={t('roleAccess.noSidebar')}>—</span>;
-    const key: SidebarKey = row.sidebar[0];
-    const eligible = sidebarEligibility.get(row.sidebar[1]) === true;
-    const inherited = viewer.can(sidebarPermission(key));
-    return (
-      <label className="flex min-h-10 items-center justify-center gap-2">
-        <Checkbox checked={(inherited || sidebarKeys.has(key)) && eligible} disabled={locked || isSaving || !eligible || inherited}
-          aria-label={`${label(row)}: ${t('roleAccess.sidebar')}`}
-          onCheckedChange={(checked) => {
-            setSidebarKeys((previous) => {
-              const next = new Set(previous);
-              if (checked === true) next.add(key);
-              else next.delete(key);
-              return next;
-            });
-            setReview(false);
-          }} />
-        <span className="text-xs text-muted-foreground md:hidden">{t('roleAccess.sidebar')}</span>
-      </label>
-    );
+  const updateVisibility = (keys: SidebarKey[], visible: boolean) => {
+    setSidebarKeys((previous) => {
+      const next = new Set(previous);
+      for (const key of keys) { if (visible) next.add(key); else next.delete(key); }
+      return next;
+    });
+    setReview(false);
+    setFailure(null);
   };
   const term = search.trim().toLowerCase();
-  const filtered = rows.filter((row) => !term || [label(row), row.resource, ...row.permissions.map((p) => p.name)].some((text) => text.toLowerCase().includes(term)));
+  const filtered = rows.filter((row) => (row.permissions.length > 0 || row.readDependency)
+    && (!term || [label(row), row.resource, ...row.permissions.map((p) => p.name)].some((text) => text.toLowerCase().includes(term))));
   const reviewLine = (id: string) => {
     const permission = baseline.catalog.find((p) => p.id === id);
     return permission ? permissionLabel(permission) : id;
   };
+  const reviewChanges = [
+    ...permissionsChanged.added.map((id) => ({ id: `add-${id}`, action: t('roleAccess.allow'), label: reviewLine(id), icon: Plus, removed: false })),
+    ...permissionsChanged.removed.map((id) => ({ id: `remove-${id}`, action: t('roleAccess.remove'), label: reviewLine(id), icon: Minus, removed: true })),
+    ...navigationChanged.added.map((key) => ({ id: `show-${key}`, action: t('roleAccess.show'), label: t(SIDEBAR_ENTRIES.find((entry) => entry[0] === key)![2]), icon: Eye, removed: false })),
+    ...navigationChanged.removed.map((key) => ({ id: `hide-${key}`, action: t('roleAccess.hide'), label: t(SIDEBAR_ENTRIES.find((entry) => entry[0] === key)![2]), icon: EyeOff, removed: true })),
+    ...(orderChanged ? [{ id: 'sidebar-order', action: t('roleAccess.sidebar'), label: t('roleAccess.layout.orderChanged'), icon: ArrowUpDown, removed: false }] : []),
+  ];
   const scope = isSchoolWideRole(role.name) ? 'schoolWide' : ['teacher', 'floor_manager', 'parent', 'student'].includes(role.name) ? role.name : 'unconfigured';
+  const failureFeedback = failure && (
+    <div role="alert" className="space-y-2">
+      <NAlert tone="error" description={failure} />
+      <Button variant="outline" disabled={isSaving} onClick={async () => { const snapshot = await reload(); if (snapshot) replace(snapshot); }}>{t('roleAccess.reload')}</Button>
+    </div>
+  );
 
   return (
     <div className="flex min-w-0 flex-col gap-3" aria-busy={isSaving}>
       <header className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex min-w-0 flex-wrap items-center gap-2">
-            <h2 className="break-words text-xl font-semibold capitalize">{role.name}</h2>
+            <h2 className="break-words text-xl font-semibold capitalize">{roleLabel(role.name, t)}</h2>
             <Badge variant="outline">{draft.size} {t('roleAccess.assigned')}</Badge>
             {locked && <Badge variant="outline" title={t('roleAccess.adminLocked')}><LockKeyhole className="size-3 shrink-0" />{t('roleAccess.locked')}</Badge>}
           </div>
       <div className="flex w-full min-w-0 items-center gap-2 sm:ms-auto sm:w-auto">
-        <div className="relative min-w-0 flex-1 sm:w-44 sm:flex-none">
+        {tab === 'permissions' && <div className="relative min-w-0 flex-1 sm:w-44 sm:flex-none">
           <Search aria-hidden className="pointer-events-none absolute start-3 top-3 size-4 text-muted-foreground" />
           <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t('roleAccess.search')} aria-label={t('roleAccess.search')} className="ps-9" />
-        </div>
+        </div>}
         <p className="sr-only" aria-live="polite">{dirty ? t('roleAccess.unsaved', { count: changeCount }) : t('roleAccess.noChanges')}</p>
         {dirty && <Badge variant="outline" className="hidden shrink-0 sm:inline-flex">{t('roleAccess.unsaved', { count: changeCount })}</Badge>}
         <div className="flex shrink-0 items-center gap-1">
           {actions}
           <Button size="icon" variant="outline" className="size-10" aria-label={t('roleAccess.discard')} title={t('roleAccess.discard')} disabled={!dirty || isSaving} onClick={() => replace(latestSnapshot)}><RotateCcw className="size-4" /></Button>
-          <Button size="icon" className="size-10" aria-label={t('roleAccess.save')} title={t('roleAccess.save')} disabled={!dirty || locked || isSaving} onClick={() => setReview(true)}><Save className="size-4" /></Button>
+          <Button size="icon" className="size-10" aria-label={t('roleAccess.save')} title={t('roleAccess.save')} disabled={!dirty || (locked && !orderChanged) || isSaving} onClick={() => setReview(true)}><Save className="size-4" /></Button>
           <Popover>
             <PopoverTrigger asChild><Button size="icon" variant="outline" className="size-10" aria-label={t('roleAccess.sidebarHelp')} title={t('roleAccess.sidebarHelp')}><Info className="size-4" /></Button></PopoverTrigger>
             <PopoverContent className="max-w-[calc(100vw-2rem)] space-y-2 text-sm">
@@ -207,6 +221,12 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
         </div>
       </div>
       </header>
+      <Tabs value={tab} onValueChange={setTab}>
+      <TabsList>
+        <TabsTrigger value="permissions"><ShieldCheck className="size-4" />{t('navigation.permissions')}</TabsTrigger>
+        <TabsTrigger value="sidebar"><PanelLeft className="size-4" />{t('roleAccess.sidebar')}</TabsTrigger>
+      </TabsList>
+      <TabsContent value="permissions" className="space-y-3">
       {scope === 'unconfigured' && <NAlert tone="warning" icon={Eye} title={t('roleAccess.scopeTitle')} description={t(`roleAccess.scope.${scope}`)} />}
       {!locked && wildcard && <NAlert tone="warning" description={t('roleAccess.wildcardHint')} />}
       {filtered.length === 0 && <p className="py-6 text-center text-muted-foreground">{t('roleAccess.noPermissions')}</p>}
@@ -223,10 +243,10 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
                   <th scope="col" className="w-[28%] px-3 py-3 text-start font-medium">{t('roleAccess.module')}</th>
                   {STANDARD_ACTIONS.map((action) => <th scope="col" key={action} className="px-1 py-3 text-center font-medium">{t(`roleAccess.actions.${action}`)}</th>)}
                   {extraActions.map((action) => <th scope="col" key={`extra-${action}`} className="break-words px-1 py-3 text-center font-medium">{actionLabel(action)}</th>)}
-                  <th scope="col" className="w-[18%] px-1 py-3 text-center font-medium">{t('roleAccess.sidebar')}</th>
                 </tr></thead>
                 <tbody>{categoryRows.map((row, rowIndex) => {
                   const standard = Object.values(row.standard).filter((p): p is AccessPermission => !!p);
+                  if (!row.standard.read && row.readDependency) standard.unshift(row.readDependency);
                   const count = standard.filter((p) => viewer.can(p.name)).length;
                   return <tr key={row.resource} className={surfaceBorderClasses(rowIndex < categoryRows.length - 1, 'bottom')}>
                     <th scope="row" className="px-3 py-2 text-start font-medium">
@@ -246,14 +266,13 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
                         ))}</div> : <span className="text-muted-foreground" aria-label={t('roleAccess.unavailable')}>—</span>}
                       </td>;
                     })}
-                    <td className="px-1 py-2">{renderSidebar(row)}</td>
                   </tr>;
                 })}</tbody>
               </table>
             </div>
             <div className="md:hidden">{categoryRows.map((row, rowIndex) => (
               <div key={row.resource} className={cn('space-y-3 p-4', surfaceBorderClasses(rowIndex < categoryRows.length - 1, 'bottom'))}>
-                <div className="flex items-center justify-between gap-3"><span className="font-medium">{label(row)}</span>{renderSidebar(row)}</div>
+                <div className="font-medium">{label(row)}</div>
                 <div className="grid grid-cols-2 gap-2">{STANDARD_ACTIONS.filter((action) => row.standard[action] || (action === 'read' && row.readDependency)).map((action) => (
                   <label key={action} className="flex min-h-10 items-center gap-2 text-sm">{renderPermission(row.standard[action] ?? row.readDependency, label(row), action === 'read' && !row.standard.read && !!row.readDependency)}{t(`roleAccess.actions.${action}`)}</label>
                 ))}
@@ -268,24 +287,59 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
           </section>
         );
       })}
-      {failure && <div role="alert" className="space-y-2">
-        <NAlert tone="error" description={failure} />
-        <Button variant="outline" disabled={isSaving} onClick={async () => { const snapshot = await reload(); if (snapshot) replace(snapshot); }}>{t('roleAccess.reload')}</Button>
-      </div>}
-      {review && <section ref={reviewRef} className={cn('space-y-3 rounded-lg p-4', surfaceBorderClasses())} aria-label={t('roleAccess.review')}>
-        <h3 className="font-medium">{t('roleAccess.review')}</h3>
-        <ul className="space-y-1 text-sm">
-          {permissionsChanged.added.map((id) => <li key={`add-${id}`}>+ {t('roleAccess.allow')}: {reviewLine(id)}</li>)}
-          {permissionsChanged.removed.map((id) => <li key={`remove-${id}`}>− {t('roleAccess.remove')}: {reviewLine(id)}</li>)}
-          {navigationChanged.added.map((key) => <li key={`show-${key}`}>+ {t('roleAccess.show')}: {t(SIDEBAR_ENTRIES.find((entry) => entry[0] === key)![2])}</li>)}
-          {navigationChanged.removed.map((key) => <li key={`hide-${key}`}>− {t('roleAccess.hide')}: {t(SIDEBAR_ENTRIES.find((entry) => entry[0] === key)![2])}</li>)}
-        </ul>
-        <p className="text-xs text-muted-foreground">{t('roleAccess.sessionsHint')}</p>
-        <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={() => setReview(false)} disabled={isSaving}>{t('common.cancel')}</Button>
-          <Button onClick={apply} disabled={isSaving} loading={isSaving}>{t('roleAccess.apply')}</Button>
+      </TabsContent>
+      <TabsContent value="sidebar">
+        <RoleSidebarEditor items={navigationItems} order={sidebarOrder} visibleKeys={sidebarKeys} eligibility={sidebarEligibility}
+          viewer={viewer} locked={locked} saving={isSaving} dirty={dirty}
+          onOrderChange={(order) => { setSidebarOrder(order); setReview(false); setFailure(null); }}
+          onVisibilityChange={updateVisibility} onSave={() => setReview(true)} />
+      </TabsContent>
+      </Tabs>
+      {!review && failureFeedback}
+      <NDialog
+        open={review}
+        onOpenChange={(open) => { if (!isSaving) setReview(open); }}
+        title={t('roleAccess.review')}
+        showButtons={false}
+        size="md"
+        width="lg"
+        className="h-auto max-h-[90dvh] w-[calc(100vw-2rem)] rounded-xl"
+        headerClassName="pe-6 text-start"
+      >
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-3">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <ShieldCheck aria-hidden="true" className="size-5" />
+            </span>
+            <div className="min-w-0">
+              <p className="break-words text-sm font-semibold capitalize">{roleLabel(role.name, t)}</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">{t('roleAccess.unsaved', { count: changeCount })}</p>
+            </div>
+          </div>
+          <ul className="max-h-[40dvh] space-y-2 overflow-y-auto overscroll-contain text-sm">
+            {reviewChanges.map(({ id, action, label, icon: Icon, removed }) => (
+              <li key={id} className={cn('flex items-center gap-3 rounded-lg p-3', surfaceBorderClasses(), removed ? 'bg-destructive/5' : 'bg-emerald-500/5')}>
+                <span className={cn('flex size-8 shrink-0 items-center justify-center rounded-full', removed ? 'bg-destructive/10 text-destructive' : 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400')}>
+                  <Icon aria-hidden="true" className="size-4" />
+                </span>
+                <div className="min-w-0 space-y-0.5">
+                  <p className={cn('text-xs', removed ? 'text-destructive' : 'text-emerald-700 dark:text-emerald-400')}>{action}</p>
+                  <p className="break-words font-medium">{label}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3 text-xs leading-relaxed text-muted-foreground">
+            <Info aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+            <p>{t(grantsChanged || visibilityChanged ? 'roleAccess.sessionsHint' : 'roleAccess.layout.sharedHint')}</p>
+          </div>
+          {failureFeedback}
+          <div className={cn('flex justify-end gap-2 pt-4', surfaceBorderClasses(true, 'top'))}>
+            <Button variant="outline" className="flex-1 sm:flex-none" onClick={() => setReview(false)} disabled={isSaving}>{t('common.cancel')}</Button>
+            <Button className="flex-1 sm:flex-none" leftIcon={Save} onClick={apply} disabled={isSaving} loading={isSaving}>{t('roleAccess.apply')}</Button>
+          </div>
         </div>
-      </section>}
+      </NDialog>
     </div>
   );
 }

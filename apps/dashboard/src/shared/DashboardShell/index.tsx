@@ -23,6 +23,7 @@ import { ViewingYearSelector } from '@/features/AcademicYears/components/Viewing
 import { PushPromptBanner } from '@/features/Notifications/PushPromptBanner';
 import { NavigationActionsProvider } from './NavigationActions';
 import { SchoolSessionLoader } from '@/components/SchoolSessionLoader';
+import { useSidebarOrder } from '@/features/Roles/hooks/useSidebarOrder';
 import { useSchoolSignOut } from '@/providers/SignOutTransition';
 
 const STUDENT_FEES_PATH = /^\/students\/[^/]+\/fees(?:\/|$)/;
@@ -93,9 +94,10 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
   useSignInOnSessionExpired(schoolApp.auth.loginRoute, lockRefusedSession);
 
   const { can } = usePermissions();
+  const { data: sidebarOrder = [] } = useSidebarOrder();
   const navItems: NavItem[] = [
     ...(isMobile ? [{ id: '/home', href: '/home', label: t('mobileHome.title'), icon: FEATURE_ICONS.home }] : []),
-    ...createSidebarItems(t, { role: (user as any)?.role, can }),
+    ...createSidebarItems(t, { role: (user as any)?.role, can }, sidebarOrder),
   ];
   const [activeThemeSheet, setActiveThemeSheet] = useState<ThemeSettingsSheet | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);

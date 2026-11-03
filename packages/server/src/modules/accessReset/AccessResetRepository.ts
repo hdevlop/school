@@ -25,7 +25,7 @@ export type AccessResetAuditEntry = {
   actorId: string;
   actorRole: string;
   targetUserId: string;
-  reason: string;
+  reason?: string;
   mode: string;
   status: 'success' | 'failure';
   outcome: string;
@@ -159,7 +159,7 @@ export class AccessResetRepository {
   }
 
   /**
-   * The security record for this command. It carries who acted, on whom, why,
+   * The security record for this command. It carries who acted, on whom,
    * what the server decided and what actually happened — and no credential,
    * CIN, token, link or email body.
    */
@@ -174,7 +174,7 @@ export class AccessResetRepository {
       ipAddress: null,
       metadata: {
         mode: entry.mode,
-        reason: entry.reason,
+        ...(entry.reason === undefined ? {} : { reason: entry.reason }),
         outcome: entry.outcome,
         ...(entry.undeliveredLinkLive === undefined
           ? {}

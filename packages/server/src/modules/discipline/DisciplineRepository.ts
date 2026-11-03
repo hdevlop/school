@@ -10,7 +10,7 @@ import {
   teachers,
   users,
 } from '../../database/schema';
-import { and, desc, eq, type SQL } from 'drizzle-orm';
+import { and, desc, eq, sql, type SQL } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 import { Owned, type OwnedWhere } from '../../auth';
 import { Year } from '../academicYears/requestYear';
@@ -68,7 +68,13 @@ export class DisciplineRepository {
         name: students.name,
         studentCode: students.studentCode,
         status: students.status,
-        image: studentUsers.image,
+        image: sql<string | null>`COALESCE(
+          NULLIF(${studentUsers.image}, ''),
+          NULLIF(${students.image}, ''),
+          CASE WHEN ${students.gender} = 'F' THEN '/images/student_female.png'
+            WHEN ${students.gender} = 'M' THEN '/images/student_male.png' END
+        )`,
+        updatedAt: students.updatedAt,
       },
       class: { id: classes.id, name: classes.name },
       section: { id: sections.id, name: sections.name },

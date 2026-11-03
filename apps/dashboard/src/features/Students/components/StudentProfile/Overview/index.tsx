@@ -21,7 +21,7 @@ import {
   User,
   Users,
 } from 'lucide-react';
-import { Checkbox, ImageInput, Input, NAvatar, NCard, NIcon, Textarea } from 'najm-kit';
+import { Checkbox, ImageInput, Input, NAvatar, NCard, NIcon, NSkeleton, Textarea } from 'najm-kit';
 import { NativeProfileSelect } from '../NativeProfileSelect';
 import { Parent, Student } from '../types';
 import { useTranslation } from 'najm-i18n/react';
@@ -66,7 +66,7 @@ const formatDate = (value: string | null | undefined, language: string) => {
 };
 
 const InfoCard = ({ children }: { children: React.ReactNode }) => (
-  <NCard className="w-full p-3 transition-shadow hover:shadow-md">
+  <NCard className="w-full p-2 transition-shadow hover:shadow-md sm:p-3">
     {children}
   </NCard>
 );
@@ -96,13 +96,13 @@ const StudentFact = ({
   };
 
   return (
-    <div className="flex min-w-0 items-center gap-2 rounded-lg border border-slate-100 bg-slate-50/60 px-2.5 py-2">
-      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${tones[tone]}`}>
-        <Icon className="h-5 w-5" />
+    <div className="flex min-w-0 items-start gap-1.5 rounded-lg border border-slate-100 bg-slate-50/60 px-2 py-2 sm:items-center sm:gap-2 sm:px-2.5">
+      <div className={`flex size-7 shrink-0 items-center justify-center rounded-lg sm:size-9 ${tones[tone]}`}>
+        <Icon className="size-4 sm:size-5" aria-hidden="true" />
       </div>
       <div className="min-w-0 flex-1">
-        <div className="text-sm font-semibold uppercase tracking-wide text-slate-400 [overflow-wrap:anywhere]">{label}</div>
-        <div className={`text-sm font-bold [overflow-wrap:anywhere] md:truncate ${muted ? 'italic text-slate-400' : 'text-slate-800'}`}>
+        <div className="text-[10px]/[1.35] font-medium text-slate-500 [overflow-wrap:anywhere] sm:text-sm sm:font-semibold sm:uppercase sm:tracking-wide sm:text-slate-400">{label}</div>
+        <div className={`mt-0.5 text-xs/4 font-semibold [overflow-wrap:anywhere] sm:mt-0 sm:text-sm sm:font-bold md:truncate ${muted ? 'italic text-slate-400' : 'text-slate-800'}`}>
           {value || '—'}
         </div>
       </div>
@@ -202,17 +202,17 @@ const ParentsOverviewSkeleton = () => (
   <InfoCard>
     <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
       {Array.from({ length: 2 }).map((_, index) => (
-        <div key={index} className="rounded-lg border border-slate-200 p-3">
-          <div className="flex animate-pulse gap-3">
-            <div className="h-12 w-12 rounded-lg bg-muted" />
+        <div key={index} className="rounded-lg border border-border p-3">
+          <div className="flex gap-3">
+            <NSkeleton className="h-12 w-12 rounded-lg" />
             <div className="flex-1 space-y-2">
-              <div className="h-4 w-32 rounded bg-muted" />
-              <div className="h-3 w-24 rounded bg-muted/70" />
+              <NSkeleton className="h-4 w-32 rounded" />
+              <NSkeleton className="h-3 w-24 rounded" />
             </div>
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2">
             {Array.from({ length: 4 }).map((__, detailIndex) => (
-              <div key={detailIndex} className="h-3 rounded bg-muted/70" />
+              <NSkeleton key={detailIndex} className="h-3 rounded" />
             ))}
           </div>
         </div>
@@ -258,14 +258,14 @@ const ParentsOverview = ({
 
 const FieldSkeleton = () => (
   <div className="flex flex-col gap-1.5">
-    <div className="h-4 w-24 animate-pulse rounded bg-muted" />
-    <div className="h-9 w-full animate-pulse rounded-md bg-muted/60" />
+    <NSkeleton className="h-4 w-24 rounded" />
+    <NSkeleton className="h-9 w-full rounded-md" />
   </div>
 );
 
 const SkeletonSection = ({ count, cols = 'grid-cols-3' }: { count: number; cols?: string }) => (
   <div className="flex flex-col">
-    <div className="mb-3 h-4 w-36 animate-pulse rounded bg-muted" />
+    <NSkeleton className="mb-3 h-4 w-36 rounded" />
     <div className={`grid ${cols} gap-x-4 gap-y-3`}>
       {Array.from({ length: count }).map((_, i) => <FieldSkeleton key={i} />)}
     </div>
@@ -479,6 +479,7 @@ interface OverviewTabProps {
   classes?: any[];
   isEditing?: boolean;
   onDraftChange?: (field: string, value: any) => void;
+  canReadParents?: boolean;
   parents?: Parent[];
   isParentsLoading?: boolean;
   parentDrafts?: Record<string, any>;
@@ -487,10 +488,12 @@ interface OverviewTabProps {
 
 function ReadOnlyOverview({
   student,
+  canReadParents,
   parents,
   isParentsLoading,
 }: {
   student: Student;
+  canReadParents: boolean;
   parents?: Parent[];
   isParentsLoading?: boolean;
 }) {
@@ -501,7 +504,7 @@ function ReadOnlyOverview({
       <section>
         <SectionTitle title={t('students.form.studentInformation')} />
         <InfoCard>
-          <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
+          <div className="grid grid-cols-2 gap-1.5 sm:gap-2 md:grid-cols-3">
             <StudentFact icon={User} label={t('students.form.fullName')} value={student.name} tone="blue" />
             {student.arabicName?.trim() && <StudentFact icon={User} label={t('students.form.arabicName')} value={<span lang="ar" dir="rtl">{student.arabicName}</span>} tone="blue" />}
             <StudentFact icon={IdCard} label={t('students.form.studentCode')} value={student.studentCode} tone="violet" />
@@ -512,7 +515,7 @@ function ReadOnlyOverview({
               value={
                 <>
                   {formatDate(student.dateOfBirth, language)}
-                  {student.age ? <span className="ml-2 text-sm font-medium text-slate-400">({t('students.profile.yearsShort', { count: student.age })})</span> : null}
+                  {student.age ? <span className="ms-1 whitespace-nowrap text-[10px] font-medium text-slate-400 sm:ms-2 sm:text-sm">({t('students.profile.yearsShort', { count: student.age })})</span> : null}
                 </>
               }
               tone="pink"
@@ -547,10 +550,11 @@ function ReadOnlyOverview({
         </InfoCard>
       </section>
 
-      <section>
+      {/* Without the permission the section is absent: "no parents linked" would be untrue. */}
+      {canReadParents && <section>
         <SectionTitle title={t('students.profile.familyContacts')} />
         <ParentsOverview parents={parents} isParentsLoading={isParentsLoading} />
-      </section>
+      </section>}
     </div>
   );
 }
@@ -627,6 +631,7 @@ export default function OverviewTab({
   classes = [],
   isEditing = false,
   onDraftChange,
+  canReadParents = true,
   parents = [],
   isParentsLoading,
   parentDrafts = {},
@@ -660,5 +665,5 @@ export default function OverviewTab({
     );
   }
 
-  return <ReadOnlyOverview student={student} parents={parents} isParentsLoading={isParentsLoading} />;
+  return <ReadOnlyOverview student={student} canReadParents={canReadParents} parents={parents} isParentsLoading={isParentsLoading} />;
 }

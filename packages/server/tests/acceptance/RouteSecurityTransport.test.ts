@@ -60,8 +60,9 @@ const PUBLIC_ROUTES = [
 ];
 
 // Reviewed routes any signed-in account may call: its own chat, notifications,
-// language, password and OAuth links; the stored files it is shown; the year
-// list; the public settings and AI settings; and counts that ownership narrows.
+// language, password, staff record and OAuth links; the stored files it is shown;
+// the year list; the public settings and AI settings; and counts that ownership narrows.
+// Sidebar layout reads use only the authenticated user's own role, with no role input.
 const SIGN_IN_ROUTES = [
   'DELETE /api/chat/sessions/:key',
   'DELETE /api/notifications/push-subscriptions',
@@ -73,10 +74,12 @@ const SIGN_IN_ROUTES = [
   'GET /api/chat/sessions',
   'GET /api/chat/sessions/:key',
   'GET /api/dashboard/operations/kpis',
+  'GET /api/navigation/sidebar',
   'GET /api/notifications',
   'GET /api/notifications/push-config',
   'GET /api/notifications/unread-count',
   'GET /api/settings/public',
+  'GET /api/staff/me',
   'GET /api/users/lang',
   'PATCH /api/chat/sessions/:key',
   'PATCH /api/notifications/:id/read',
@@ -99,6 +102,9 @@ const mailbox = (name: string) => `${name}-${suffix}@security.example.test`;
 const roleless = { id: `security-roleless-${suffix}`, email: mailbox('roleless') };
 const reader = { id: `security-reader-${suffix}`, email: mailbox('reader'), roleId: `security-reader-${suffix}` };
 const notifier = { id: `security-notifier-${suffix}`, email: mailbox('notifier'), roleId: `security-notifier-${suffix}` };
+// One role may add students but not edit them; the other may do both.
+const studentAdder = { id: `security-adder-${suffix}`, email: mailbox('adder'), roleId: `security-adder-${suffix}` };
+const studentEditor = { id: `security-editor-${suffix}`, email: mailbox('editor'), roleId: `security-editor-${suffix}` };
 const namespace = `security-probe-${suffix}`;
 // A one-pixel PNG, which the storage plugin accepts.
 const png = Uint8Array.from(
@@ -109,8 +115,11 @@ const png = Uint8Array.from(
 let adminToken: string;
 let rolelessToken: string;
 let readerToken: string;
+let studentAdderToken: string;
+let studentEditorToken: string;
 let addedPermission: string | undefined;
 let addedVisitPermission: string | undefined;
+const addedStudentPermissions: string[] = [];
 let usersBefore: number;
 
 type Init = { method?: string; token?: string | null; json?: unknown; body?: Uint8Array<ArrayBuffer>; type?: string };
@@ -158,18 +167,42 @@ beforeAll(async () => {
   }
   await db.insert(roles).values({ id: notifier.roleId, name: `security-notifier-${suffix}` });
   await db.insert(rolePermissions).values({ roleId: notifier.roleId, permissionId: visitPermission.id });
+  const studentPermission = async (action: 'create' | 'update') => {
+    const name = `${action}:students`;
+    const [found] = await db.select({ id: permissions.id }).from(permissions).where(eq(permissions.name, name));
+    if (found) return found.id;
+    const id = `security-${action}-students-${suffix}`;
+    await db.insert(permissions).values({ id, name, resource: 'students', action });
+    addedStudentPermissions.push(id);
+    return id;
+  };
+  const createStudents = await studentPermission('create');
+  const updateStudents = await studentPermission('update');
+  await db.insert(roles).values([
+    { id: studentAdder.roleId, name: `security-adder-${suffix}` },
+    { id: studentEditor.roleId, name: `security-editor-${suffix}` },
+  ]);
+  await db.insert(rolePermissions).values([
+    { roleId: studentAdder.roleId, permissionId: createStudents },
+    { roleId: studentEditor.roleId, permissionId: createStudents },
+    { roleId: studentEditor.roleId, permissionId: updateStudents },
+  ]);
   const hash = await Bun.password.hash(password, { algorithm: 'bcrypt', cost: 10 });
   await db.insert(users).values([
     { id: notifier.id, name: 'Security notification recipient', email: notifier.email, password: hash, roleId: notifier.roleId, status: 'active', emailVerified: true },
     { id: roleless.id, name: 'Security role-less', email: roleless.email, password: hash, status: 'active', emailVerified: true },
     { id: reader.id, name: 'Security reader', email: reader.email, password: hash, roleId: reader.roleId,
       status: 'active', emailVerified: true },
+    { id: studentAdder.id, name: 'Security student adder', email: studentAdder.email, password: hash, roleId: studentAdder.roleId, status: 'active', emailVerified: true },
+    { id: studentEditor.id, name: 'Security student editor', email: studentEditor.email, password: hash, roleId: studentEditor.roleId, status: 'active', emailVerified: true },
   ]);
   await server.listen(port);
   if (process.env.REDIS_URL?.trim()) expect(server.container.get(CacheService).type).toBe('redis');
   adminToken = await login('admin@history.example.test', adminPassword);
   rolelessToken = await login(roleless.email, password);
   readerToken = await login(reader.email, password);
+  studentAdderToken = await login(studentAdder.email, password);
+  studentEditorToken = await login(studentEditor.email, password);
 });
 
 afterAll(async () => {
@@ -181,13 +214,23 @@ afterAll(async () => {
   await db.delete(visitRequests).where(eq(visitRequests.parentName, `Security visit ${suffix}`));
   await db.delete(roles).where(eq(roles.id, reader.roleId));
   await db.delete(roles).where(eq(roles.id, notifier.roleId));
+  await db.delete(roles).where(eq(roles.id, studentAdder.roleId));
+  await db.delete(roles).where(eq(roles.id, studentEditor.roleId));
   if (addedPermission) await db.delete(permissions).where(eq(permissions.id, addedPermission));
   if (addedVisitPermission) await db.delete(permissions).where(eq(permissions.id, addedVisitPermission));
+  for (const id of addedStudentPermissions) await db.delete(permissions).where(eq(permissions.id, id));
   const [after] = await db.select({ count: count() }).from(users);
   expect(after.count).toBe(usersBefore);
 });
 
 describe('route security over the history fixture', () => {
+  it('refuses a student import to a role that may add students but not edit them', async () => {
+    const request = { method: 'POST', json: {} };
+    expect(await status('/students/import', { ...request, token: studentAdderToken })).toBe(403);
+    // An empty body is invalid, so passing the guards creates nobody.
+    expect(await status('/students/import', { ...request, token: studentEditorToken })).toBe(400);
+  });
+
   it('accepts public visits, silently drops honeypots, notifies staff and limits the sixth submission', async () => {
     const input = { parentName: `Security visit ${suffix}`, phone: '+212612345678' };
     const before = await db.select({ count: count() }).from(visitRequests);

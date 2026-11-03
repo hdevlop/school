@@ -1,5 +1,6 @@
-import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where } from '../../auth';
+import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where, when } from '../../auth';
 import { parents, students, teachers, staff, teacherAssignments, studentParents } from '../../database/schema';
+import { managesParent } from '../staff/floorManagerScope';
 
 export const Parent = own(parents)
   .for('parent',
@@ -17,6 +18,7 @@ export const Parent = own(parents)
     join(teacherAssignments.teacherId, teachers.id),
     join(teachers.staffId, staff.id),
     where(staff.userId),
-  );
+  )
+  .for('floor_manager', when((userId: string) => managesParent(parents.id, userId)));
 
 export { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete };

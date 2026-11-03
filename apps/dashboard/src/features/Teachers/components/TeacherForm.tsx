@@ -135,6 +135,7 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
             schema={teacherSchemas.full}
             defaultValues={defaultValues}
             onSubmit={handleSubmit}
+            freeNavigation={Boolean(teacher)}
             className={isSubmitting ? 'pointer-events-none select-none' : undefined}
             classNames={{
                root: 'h-full min-h-0',

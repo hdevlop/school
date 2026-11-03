@@ -7,6 +7,7 @@ import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
 import { createBehaviorRewardSchema } from '../config/behaviorRewardSchemas';
 import { useStudents } from '@/features/Students/hooks/useStudents';
+import { FormStudentCombobox } from '@/features/Students/components/StudentCombobox';
 import { toLocalDateTimeInput } from '../behaviorRewardConstants';
 import { useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYear';
@@ -22,12 +23,7 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
   const { pop } = useDialog();
   const { students, isStudentsLoading } = useStudents();
 
-  const studentOptions = (students || [])
-    .filter((student) => student.status === 'active')
-    .map((student) => ({
-      value: student.id,
-      label: `${student.name} · ${student.studentCode}`,
-    }));
+  const activeStudents = useMemo(() => (students || []).filter((student) => student.status === 'active'), [students]);
 
   const yearCalendar = useViewingYearCalendar();
   const storedDate = toLocalDateTimeInput(behaviorReward?.behaviorAt).slice(0, 10);
@@ -62,20 +58,18 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
       <div className="space-y-5">
         <NFormSectionHeader icon={Star} title={t('behaviorRewards.form.behaviorSection')} />
 
-        <FormInput
-          name="studentId"
-          type="combobox"
+        <FormStudentCombobox
           icon={UserRound}
           formLabel={t('behaviorRewards.form.student')}
           placeholder={t('behaviorRewards.form.studentPlaceholder')}
           searchPlaceholder={t('behaviorRewards.form.studentSearch')}
           emptyMessage={t('behaviorRewards.form.noStudents')}
-          items={studentOptions}
+          students={activeStudents}
           required
           disabled={isStudentsLoading}
         />
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 [&>*]:min-w-0">
           <FormInput
             name="behaviorDate"
             type="date"
@@ -90,6 +84,9 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
             formLabel={t('behaviorRewards.form.behaviorTime')}
             required
           />
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <FormInput
             name="category"
             type="select"

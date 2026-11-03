@@ -1,10 +1,11 @@
 import { plugin } from 'najm-core';
 import { email, emailConfigFromEnv, type EmailPluginConfig } from 'najm-email';
 import { AccountEmailBranding } from '../email/AccountEmailBranding';
+import { AccountEmailRepository } from '../email/AccountEmailRepository';
 
 /** One transport, with School's presentation hook installed for every account email. */
 export const schoolEmail = (config: EmailPluginConfig) =>
-  plugin('school-email').depends(email(config)).services(AccountEmailBranding).build();
+  plugin('school-email').depends(email(config)).services(AccountEmailRepository, AccountEmailBranding).build();
 
 /**
  * Outgoing mail. Without EMAIL_PROVIDER, mail goes to the console, so local

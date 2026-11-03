@@ -71,7 +71,7 @@ export const getResetTargetApi = async (userId: string) => {
 // confirmation explained, so a stale dialog is refused rather than acted on.
 export const resetUserAccessApi = async (
   userId: string,
-  data: { reason: string; expectedMode: string },
+  data: { reason?: string; expectedMode: string },
 ) => {
   const res = await api.post(`/admin/access/users/${userId}/reset-access`, data);
   return res.data;

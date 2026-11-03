@@ -477,7 +477,10 @@ function GradesTableForYear() {
         filters={rawFilters}
         // On a phone the stats and Save take their own full-width row under
         // the picker instead of hugging the right edge.
-        classNames={{ header: 'max-md:gap-y-2 max-md:[&>div:has(>.grades-stats)]:w-full' }}
+        classNames={{
+          header: 'max-md:gap-y-2 max-md:[&>div:has(>.grades-stats)]:w-full',
+          tableHeader: '[&_th:has(.grade-student-name-column)]:w-[28%]',
+        }}
         // Highest, lowest and pass rate describe one assessment or exam; with
         // none chosen they would only read as dashes and 0%.
         headerSlot={(phoneContext || sourceId) ? (

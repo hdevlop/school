@@ -18,7 +18,7 @@ export class StudentProfileController {
   @Get('/:studentId/overview')
   @Can('read:students')
   @Validate({ params: studentIdParam })
-  @McpTool({ description: 'Get student overview — bio, class and section in the academic year, parents', readOnly: true })
+  @McpTool({ description: 'Get student overview — bio, class and section in the academic year, and parents when this account may read them. No parents field means access was not granted, not that the student has none.', readOnly: true })
   @ResMsg('students.success.retrieved')
   async getOverview(@Params('studentId') studentId: string) {
     return this.studentProfileService.getOverview(studentId);

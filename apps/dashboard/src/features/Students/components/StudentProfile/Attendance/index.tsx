@@ -135,6 +135,14 @@ export default function AttendanceTab({ studentId, student }: { studentId?: stri
         />
       </div>
 
+      {!isLoading && visibleRows.length === 0 ? (
+        <NEmptyState
+          surface="panel"
+          icon={FEATURE_ICONS.studentAttendance}
+          title={t('students.profile.attendanceDetails.noExceptions')}
+          className="min-h-64"
+        />
+      ) : (
       <NTable
         exportTitle={[student?.name, t('students.profile.tabs.attendance')].filter(Boolean).join(' - ')}
         data={visibleRows}
@@ -149,15 +157,8 @@ export default function AttendanceTab({ studentId, student }: { studentId?: stri
         pagination={{ pageIndex: 0, pageSize: Math.max(visibleRows.length, 1) }}
         showPagination={false}
         dynamicHeight={false}
-        renderEmpty={() => (
-          <NEmptyState
-            surface="panel"
-            icon={FEATURE_ICONS.studentAttendance}
-            title={t('students.profile.attendanceDetails.noExceptions')}
-            className="min-h-64"
-          />
-        )}
       />
+      )}
     </div>
   );
 }

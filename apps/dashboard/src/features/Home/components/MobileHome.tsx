@@ -12,6 +12,9 @@ import { PAGE_ACCESS } from '@/shared/pageAccess';
 import { useNavigationActions } from '@/shared/DashboardShell/NavigationActions';
 import { HOME_SECTIONS, createHomeCards, type HomeCard } from '../config/homeFeatures';
 import { HOME_ICON_ATLAS, HOME_ICON_INDEX } from '../config/homeIllustrations';
+import { accountAvatar } from '../config/accountAvatar';
+import { avatarVersion } from '@/lib/avatarVersion';
+import HomeProfileSheet from './HomeProfileSheet';
 import styles from './MobileHome.module.css';
 
 function FeatureIllustration({ card }: { card: HomeCard }) {
@@ -55,6 +58,7 @@ export default function MobileHome() {
   const { timeZone } = useNajmFormat();
   const sidebar = useNSidebar();
   const [greeting, setGreeting] = useState('mobileHome.welcome');
+  const [profileOpen, setProfileOpen] = useState(false);
   const viewer = { role: user?.role, can };
   const cards = createHomeCards(t, viewer, permissions)
     .sort((a, b) => HOME_SECTIONS.indexOf(a.section) - HOME_SECTIONS.indexOf(b.section)
@@ -62,6 +66,27 @@ export default function MobileHome() {
   const name = user?.name || user?.email || '';
   const initials = name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => Array.from(part)[0]).join('').toLocaleUpperCase();
   const role = user?.role ?? '';
+  const person = user as typeof user & { gender?: string | null; updatedAt?: string | null };
+  const image = typeof user?.image === 'string' ? user.image : undefined;
+  const familyProfile = (role === 'parent' || role === 'student') && PAGE_ACCESS.students(viewer);
+  const profileContent = (
+    <>
+      <NAvatar
+        src={image}
+        fallbackSrc={accountAvatar(role, person?.gender)}
+        fallback={initials}
+        alt={name}
+        size="lg"
+        version={avatarVersion(image, person?.updatedAt)}
+        classNames={{ avatar: styles.profileAvatar, fallback: styles.avatarFallback }}
+      />
+      <div className={styles.profileText}>
+        <p className={styles.name}>{name}</p>
+        <p className={styles.email}>{user?.email}</p>
+      </div>
+      <ChevronRight className={styles.chevron} aria-hidden />
+    </>
+  );
 
   useEffect(() => {
     const updateGreeting = () => {
@@ -88,19 +113,19 @@ export default function MobileHome() {
           <div className={styles.headerActions}><LanguageSwitcher /><NotificationsMenu /></div>
         </header>
 
-        <Link href={(role === 'parent' || role === 'student') && PAGE_ACCESS.students(viewer) ? '/students' : '/preferences'} prefetch={false} className={styles.profile}>
-          <NAvatar src={typeof user?.image === 'string' ? user.image : undefined} fallbackSrc={role === 'admin' ? '/images/admin.png' : undefined} fallback={initials} alt={name} size="lg" classNames={{ avatar: styles.profileAvatar, fallback: styles.avatarFallback }} />
-          <div className={styles.profileText}>
-            <p className={styles.name}>{name}</p>
-            <p className={styles.email}>{user?.email}</p>
-          </div>
-          <ChevronRight className={styles.chevron} aria-hidden />
-        </Link>
+        {familyProfile ? (
+          <Link href="/students" prefetch={false} className={styles.profile}>{profileContent}</Link>
+        ) : (
+          <button type="button" onClick={() => setProfileOpen(true)} className={cn(styles.profile, 'w-full text-start')} aria-haspopup="dialog" aria-expanded={profileOpen}>
+            {profileContent}
+          </button>
+        )}
 
         <div className={styles.grid}>
           {cards.map((card) => <FeatureCard key={card.id} card={card} />)}
         </div>
       </div>
+      <HomeProfileSheet open={profileOpen} onOpenChange={setProfileOpen} />
     </main>
   );
 }

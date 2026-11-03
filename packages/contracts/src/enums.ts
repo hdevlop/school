@@ -209,6 +209,25 @@ export const DISCIPLINE_ACTION_VALUES = [
 ] as const;
 export type DisciplineAction = (typeof DISCIPLINE_ACTION_VALUES)[number];
 
+/** Places the incident form offers. The column stays free text, so a place outside this list is valid. */
+export const DISCIPLINE_LOCATION_VALUES = [
+  'classroom',
+  'schoolyard',
+  'corridor',
+  'stairs',
+  'canteen',
+  'library',
+  'laboratory',
+  'computer_room',
+  'sports_area',
+  'restrooms',
+  'school_entrance',
+  'school_surroundings',
+  'school_bus',
+  'online',
+] as const;
+export type DisciplineLocation = (typeof DISCIPLINE_LOCATION_VALUES)[number];
+
 export const FEE_TYPE_STATUS_VALUES = ['active', 'inactive', 'archived'] as const;
 export type FeeTypeStatus = (typeof FEE_TYPE_STATUS_VALUES)[number];
 

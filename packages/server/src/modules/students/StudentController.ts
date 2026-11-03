@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, 
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { StudentService } from './StudentService';
 import { Student, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './StudentGuards';
-import { isAdmin, isAdministrator } from '../../auth';
+import { Can, isAdmin, isAdministrator } from '../../auth';
 import {
   createStudentDto,
   studentAdmissionDto,
@@ -64,6 +64,7 @@ export class StudentController {
 
   @Get('/:id/parents')
   @CanRead()
+  @Can('read:parents')
   @Validate({ params: studentIdParam })
   @McpTool({ description: 'Get parents linked to a student. Parents d’un élève et leur téléphone. أولياء أمور التلميذ، الأب والأم، ورقم الهاتف.', readOnly: true })
   @ResMsg('students.success.retrieved')
@@ -96,8 +97,10 @@ export class StudentController {
   }
 
   // File imports may omit guardian contacts; ordinary REST/MCP creation stays strict.
+  // Importing asks for edit as well as add: a role without edit imports nothing.
   @Post('/import')
   @CanCreate()
+  @Can('update:students')
   @Validate(importStudentDto)
   @ResMsg('students.success.created')
   async importStudent(@Body() body: ImportStudentDto, @User() user: { id: string; role: string }) {

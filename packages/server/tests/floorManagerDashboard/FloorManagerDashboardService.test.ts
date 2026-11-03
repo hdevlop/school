@@ -28,7 +28,7 @@ const marked = (studentId: string, sectionId: string, status: 'absent' | 'late')
 
 type Calls = Record<string, unknown[][]>;
 
-function build(options: { manager?: unknown; at?: string; startTime?: string | null } = {}) {
+function build(options: { manager?: unknown; at?: string; startTime?: string | null; empty?: boolean } = {}) {
   const calls: Calls = {};
   const record = (name: string, args: unknown[]) => { (calls[name] ??= []).push(args); };
 
@@ -41,15 +41,23 @@ function build(options: { manager?: unknown; at?: string; startTime?: string | n
     // s3 has no students, so it owes no register.
     getSections: async (...args: unknown[]) => {
       record('getSections', args);
-      return [section('s1', 'CE1', 30), section('s2', 'CE2', 28), section('s3', 'CE2', 0)];
+      return options.empty ? [] : [section('s1', 'CE1', 30), section('s2', 'CE2', 28), section('s3', 'CE2', 0)];
     },
     getAttendanceByDay: async (...args: unknown[]) => {
       record('getAttendanceByDay', args);
-      return [{ date: '2026-09-25', total: 50, attended: 45 }, { date: MONDAY, total: 30, attended: 27 }];
+      return options.empty ? [] : [
+        { date: '2026-09-02', total: 40, attended: 20, absent: 20, late: 4 },
+        { date: '2026-09-25', total: 50, attended: 45, absent: 5, late: 2 },
+        { date: MONDAY, total: 30, attended: 27, absent: 3, late: 1 },
+      ];
+    },
+    getStudentsByGender: async (...args: unknown[]) => {
+      record('getStudentsByGender', args);
+      return options.empty ? [] : [{ gender: 'F', value: 28 }, { gender: 'M', value: 30 }];
     },
     getMarkedStudents: async (...args: unknown[]) => {
       record('getMarkedStudents', args);
-      return [marked('st1', 's1', 'absent'), marked('st2', 's1', 'absent'), marked('st3', 's1', 'late')];
+      return options.empty ? [] : [marked('st1', 's1', 'absent'), marked('st2', 's1', 'absent'), marked('st3', 's1', 'late')];
     },
     getRegisteredSectionIds: async (...args: unknown[]) => { record('getRegisteredSectionIds', args); return ['s1']; },
     getOpenIncidents: async (...args: unknown[]) => { record('getOpenIncidents', args); return { total: 7, rows: [] }; },
@@ -62,7 +70,10 @@ function build(options: { manager?: unknown; at?: string; startTime?: string | n
     }),
   };
   const academicYears = {
-    resolve: async (...args: unknown[]) => { record('resolve', args); return { id: 'year-1', label: '2026-2027' }; },
+    resolve: async (...args: unknown[]) => {
+      record('resolve', args);
+      return { id: 'year-1', label: '2026-2027', reportingStartsOn: '2026-09-01', reportingEndsOn: '2027-08-31' };
+    },
   };
   const notifications = {
     unreadCount: async (...args: unknown[]) => { record('unreadCount', args); return 2; },
@@ -97,7 +108,8 @@ describe('floor manager dashboard overview', () => {
     expect(calls.getGrades).toEqual([['staff-1', MONDAY]]);
     expect(calls.getSections).toEqual([['user-1', '2026-2027']]);
     expect(calls.getMarkedStudents).toEqual([[['s1', 's2', 's3'], MONDAY]]);
-    expect(calls.getAttendanceByDay).toEqual([[['s1', 's2', 's3'], '2026-09-22', MONDAY]]);
+    expect(calls.getAttendanceByDay).toEqual([[['s1', 's2', 's3'], '2026-09-01', MONDAY]]);
+    expect(calls.getStudentsByGender).toEqual([[['s1', 's2', 's3']]]);
     expect(calls.unreadCount).toEqual([['user-1']]);
     expect(overview.manager).toMatchObject({ id: 'staff-1', grades: ['CE1', 'CE2'] });
   });
@@ -130,6 +142,34 @@ describe('floor manager dashboard overview', () => {
     const sunday = await build({ at: `${SUNDAY}T10:00:00Z` }).service.getOverview(user);
     expect(sunday.schoolDay).toBe(false);
     expect(sunday.attention.missingRegisters).toBe(0);
+  });
+
+  it('returns gender totals and a full year of monthly marks without changing the seven-day rate', async () => {
+    const { service } = build();
+    const overview = await service.getOverview(user);
+    expect(overview.studentsByGender).toEqual([
+      { gender: 'F', value: 28 },
+      { gender: 'M', value: 30 },
+    ]);
+    expect(overview.studentsByGender.reduce((sum, row) => sum + row.value, 0)).toBe(overview.kpis.totalStudents);
+    expect(overview.attendanceMonthly.monthly).toHaveLength(12);
+    expect(overview.attendanceMonthly.monthly[0]).toEqual({ month: '2026-09', absent: 28, late: 7 });
+    expect(overview.attendanceMonthly.monthly[1]).toEqual({ month: '2026-10', absent: 0, late: 0 });
+    expect(overview.attendanceMonthly.monthly.at(-1)?.month).toBe('2027-08');
+    expect(overview.attendanceMonthly.todayAbsent).toBe(2);
+    expect(overview.attendanceMonthly.todayLate).toBe(1);
+    expect(overview.kpis.attendanceRate).toBe(90);
+  });
+
+  it('returns empty chart figures when no grades are assigned', async () => {
+    const { service, calls } = build({ empty: true });
+    const overview = await service.getOverview(user);
+    expect(calls.getStudentsByGender).toEqual([[[]]]);
+    expect(calls.getAttendanceByDay).toEqual([[[], '2026-09-01', MONDAY]]);
+    expect(overview.studentsByGender).toEqual([]);
+    expect(overview.kpis.totalStudents).toBe(0);
+    expect(overview.kpis.attendanceRate).toBeNull();
+    expect(overview.attendanceMonthly.monthly.every((row) => row.absent === 0 && row.late === 0)).toBe(true);
   });
 
   it('refuses an account without a staff record', async () => {

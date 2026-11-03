@@ -1,6 +1,6 @@
 'use client';
 
-import { NButton, useResolvedToolbarLabels, useTableStore, type ContextMenuItem } from 'najm-kit';
+import { NButton, NSkeleton, useResolvedToolbarLabels, useTableStore, type ContextMenuItem } from 'najm-kit';
 import { Printer } from 'lucide-react';
 import { useEffect, type RefObject } from 'react';
 import type { Table } from '@tanstack/react-table';
@@ -19,7 +19,7 @@ export function TablePrintButton({ loading, tableRef }: { loading: boolean; tabl
   if (loading) {
     return (
       <div aria-hidden="true" className="hidden h-10 w-10 items-center justify-center rounded-md border border-input md:inline-flex">
-        <span className="h-4 w-4 animate-pulse rounded-full bg-muted" />
+        <NSkeleton className="h-4 w-4 rounded-full" />
       </div>
     );
   }

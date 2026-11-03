@@ -8,17 +8,17 @@ const routes = ['/home', '/students', '/attendance/students', '/fees'].map(href 
 
 test('the shell draws the online sidebar groups, icons and current labels for prepared pages only', () => {
   const items = createShellNavItems(t, 'admin', routes);
-  expect(items.map(item => item.id)).toEqual(['/home', '/students', 'financial', 'attendance']);
+  expect(items.map(item => item.id)).toEqual(['/home', '/students', '/fees', '/attendance/students']);
   expect(items[0]).toMatchObject({ href: '/home', label: 'Accueil', icon: FEATURE_ICONS.home });
   expect(items[1]).toMatchObject({ href: '/students', label: 'Élèves', icon: FEATURE_ICONS.students });
-  // Student attendance keeps its group, so the two "Élèves" entries stay distinct.
-  const attendance = items.find(item => item.id === 'attendance');
+  // Single destinations keep the group's label and icon as a direct link.
+  const attendance = items.find(item => item.href === '/attendance/students');
   expect(attendance).toMatchObject({ label: 'Présences', icon: FEATURE_ICONS.attendance });
-  expect(attendance?.children?.map(item => item.href)).toEqual(['/attendance/students']);
-  expect(items.find(item => item.id === 'financial')?.children?.map(item => item.href)).toEqual(['/fees']);
+  expect(attendance?.children).toBeUndefined();
+  expect(items.find(item => item.href === '/fees')).toMatchObject({ label: t('navigation.financial'), icon: FEATURE_ICONS.financial });
   // Appearance sheets and pages that were not prepared never appear.
   expect(items.flatMap(item => [item.id, ...(item.children ?? []).map(child => child.id)])).not.toContain('settings:theme');
-  expect(navLabel(items, '/attendance/students')).toBe('Élèves');
+  expect(navLabel(items, '/attendance/students')).toBe('Présences');
   expect(navLabel(items, '/classes')).toBeUndefined();
 });
 

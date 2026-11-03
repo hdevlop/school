@@ -45,6 +45,17 @@ export function managesStudent(studentId: SQLWrapper, userId: string) {
 }
 
 /**
+ * A parent of a student now in such a class. A past placement does not count,
+ * unlike `managesStudent`: a family's contact details leave with the child.
+ */
+export function managesParent(parentId: SQLWrapper, userId: string) {
+  return sql`exists (select 1 from student_parents managed_link
+    join students managed_student on managed_student.id = managed_link.student_id
+    where managed_link.parent_id = ${parentId}
+      and ${managesClass(sql`managed_student.class_id`, userId)})`;
+}
+
+/**
  * The student's placement in `yearId` is in one of the user's classes: the
  * placement given, or else the year's latest.
  */

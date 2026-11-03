@@ -8,6 +8,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { avatarVersion } from '@/lib/avatarVersion';
+import { PersonCard } from '@/shared/PersonCard';
 
 const DriverCard = ({ data }) => {
    const { t } = useTranslation();
@@ -15,58 +16,43 @@ const DriverCard = ({ data }) => {
    const driver = data;
 
    return (
-      <div className="flex items-start gap-4 p-4">
-         <div className="shrink-0">
-            <NAvatar src={driver?.image} fallback={driver.name} size="lg" version={avatarVersion(driver?.image, driver?.updatedAt)} />
-         </div>
+      <PersonCard
+         avatar={<NAvatar src={driver?.image} fallback={driver.name} size="lg" version={avatarVersion(driver?.image, driver?.updatedAt)} />}
+         name={driver.name}
+         meta={(
+            <Label className="text-sm font-medium text-primary">
+               {driver.licenseNumber}
+            </Label>
+         )}
+      >
+         <NSectionInfo
+            icon={Phone}
+            iconColor="text-muted-foreground"
+            label={t('drivers.table.phone')}
+            value={driver.phone}
+         />
 
-         <div className="min-w-0 flex-1 flex flex-col gap-2">
+         <NSectionInfo
+            icon={CreditCard}
+            iconColor="text-muted-foreground"
+            label={t('drivers.table.licenseType')}
+            value={driver.licenseType}
+         />
 
-            <div className='flex flex-col'>
-               <Label className="text-md font-bold">
-                  {driver.name}
-               </Label>
+         <NSectionInfo
+            icon={Shield}
+            iconColor="text-muted-foreground"
+            label={t('drivers.table.licenseExpiry')}
+            value={displayDateOnly(driver.licenseExpiry)}
+         />
 
-               <Label className="text-sm font-medium text-primary">
-                  {driver.licenseNumber}
-               </Label>
-            </div>
-
-            <div className="space-y-2">
-
-               <NSectionInfo
-                  icon={Phone}
-                  iconColor="text-muted-foreground"
-                  label={t('drivers.table.phone')}
-                  value={driver.phone}
-               />
-
-               <NSectionInfo
-                  icon={CreditCard}
-                  iconColor="text-muted-foreground"
-                  label={t('drivers.table.licenseType')}
-                  value={driver.licenseType}
-               />
-
-               <NSectionInfo
-                  icon={Shield}
-                  iconColor="text-muted-foreground"
-                  label={t('drivers.table.licenseExpiry')}
-                  value={displayDateOnly(driver.licenseExpiry)}
-               />
-
-               <NSectionInfo
-                  icon={Calendar}
-                  iconColor="text-muted-foreground"
-                  label={t('drivers.table.hireDate')}
-                  value={displayDateOnly(driver.hireDate)}
-               />
-
-
-
-            </div>
-         </div>
-      </div>
+         <NSectionInfo
+            icon={Calendar}
+            iconColor="text-muted-foreground"
+            label={t('drivers.table.hireDate')}
+            value={displayDateOnly(driver.hireDate)}
+         />
+      </PersonCard>
    );
 };
 

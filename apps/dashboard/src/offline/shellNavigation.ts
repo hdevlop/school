@@ -1,7 +1,8 @@
 import { filterNavItems, type NavItem } from 'najm-kit';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { createNavigationItems } from '@/shared/schoolNavigation';
+import { createNavigationItems, simplifySidebarGroups } from '@/shared/schoolNavigation';
 import type { ShellRoute } from './bootstrap';
+import { orderSidebarItems } from '@sms/contracts/access-control';
 
 /**
  * The online sidebar for the prepared pages: its groups, icons and labels in
@@ -9,11 +10,11 @@ import type { ShellRoute } from './bootstrap';
  * prepared; the shell only draws them, so a page that was not prepared stays
  * hidden.
  */
-export function createShellNavItems(t: (key: string) => string, role: string | undefined, routes: readonly ShellRoute[]): NavItem[] {
+export function createShellNavItems(t: (key: string) => string, role: string | undefined, routes: readonly ShellRoute[], order: readonly string[] = []): NavItem[] {
   const prepared = new Set(routes.map(route => route.href));
   const home: NavItem[] = prepared.has('/home') ? [{ id: '/home', href: '/home', label: t('mobileHome.title'), icon: FEATURE_ICONS.home }] : [];
-  return [...home, ...filterNavItems(createNavigationItems(t, { role, can: () => false }),
-    item => !!item.children || (!!item.href && prepared.has(item.href)), ['access'])];
+  return [...home, ...simplifySidebarGroups(orderSidebarItems(filterNavItems(createNavigationItems(t, { role, can: () => false }),
+    item => !!item.children || (!!item.href && prepared.has(item.href)), ['access']), order))];
 }
 
 /** The label a nav item shows for a page, searched through its groups. */

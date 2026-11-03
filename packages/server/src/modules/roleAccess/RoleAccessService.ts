@@ -62,11 +62,15 @@ export class RoleAccessService {
   }
 
   async get(roleId: string): Promise<RoleAccessSnapshot> {
-    const [role, permissions, catalog] = await Promise.all([
-      this.repository.getRole(roleId), this.permissions.getPermissionsByRole(roleId), this.permissions.getAll(),
+    const [role, permissions, catalog, sidebarOrder] = await Promise.all([
+      this.repository.getRole(roleId), this.permissions.getPermissionsByRole(roleId), this.permissions.getAll(), this.repository.getSidebarOrder(roleId),
     ]);
     this.validator.ensureRole(role);
-    return { role, permissions, catalog };
+    return { role, permissions, catalog, sidebarOrder };
+  }
+
+  async getOwnSidebarOrder(userId: string) {
+    return { order: await this.repository.getOwnSidebarOrder(userId) };
   }
 
   /** One transaction, stale-editor detection, and Najm's session invalidation. */
@@ -74,10 +78,17 @@ export class RoleAccessService {
   async save(roleId: string, body: SaveRoleAccessDto, actorId: string): Promise<RoleAccessSnapshot> {
     const role = await this.repository.getRole(roleId, true);
     this.validator.ensureRole(role);
-    this.validator.ensureEditable(role);
     const current = await this.permissions.getPermissionsByRole(roleId);
+    const currentPermissions = current.filter((permission) => !isSidebarPermission(permission.name));
+    const samePermissions = currentPermissions.length === body.permissionIds.length
+      && currentPermissions.every((permission) => body.permissionIds.includes(permission.id));
+    // Protected administrators can arrange their menu, but cannot change grants
+    // or hide access through this command.
+    if (body.sidebarOrder === undefined || body.sidebarKeys !== undefined || !samePermissions) this.validator.ensureEditable(role);
     this.validator.ensureFresh(current, body.expectedPermissionIds);
     this.validator.ensurePermissions(body.permissionIds, await this.permissions.getAll());
+    const previousOrder = body.sidebarOrder !== undefined ? await this.repository.getSidebarOrder(roleId) : undefined;
+    if (previousOrder) this.validator.ensureSidebarOrderFresh(previousOrder, body.expectedSidebarOrder ?? []);
 
     // Permission-only changes must preserve both explicit sidebar choices and
     // the legacy unconfigured state; do not silently configure navigation.
@@ -97,7 +108,10 @@ export class RoleAccessService {
     // held by existing sessions and participates in the caller's transaction.
     for (const id of removed) await this.permissions.removePermissionFromRole(roleId, id);
     for (const id of added) await this.permissions.assignPermissionToRole(roleId, id);
-    if (added.length || removed.length) await this.repository.audit(roleId, actorId, added, removed);
+    const orderChanged = body.sidebarOrder !== undefined && JSON.stringify(previousOrder) !== JSON.stringify(body.sidebarOrder);
+    if (orderChanged) await this.repository.saveSidebarOrder(roleId, body.sidebarOrder!);
+    if (added.length || removed.length || orderChanged) await this.repository.audit(roleId, actorId, added, removed,
+      orderChanged ? { before: previousOrder!, after: body.sidebarOrder! } : undefined);
     return this.get(roleId);
   }
 }

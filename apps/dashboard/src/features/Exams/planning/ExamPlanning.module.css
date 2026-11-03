@@ -42,6 +42,8 @@
 .dateFilters { display: flex; flex-wrap: wrap; gap: 16px; min-width: 0; margin: 0; padding: 0; border: 0; }
 .dateField { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .classRow { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+.toolbar > .classRow { flex: 1; min-width: 0; margin-bottom: 0; }
+.toolbarControls[data-preview-only='true'] { flex-shrink: 0; }
 .classButton { display: inline-flex; align-items: center; gap: 7px; padding: 7px 11px; border: var(--border-width, 1px) solid var(--planning-line); border-radius: var(--radius); background: var(--planning-panel); color: var(--planning-muted); font-size: 12px; line-height: 18px; }
 .classButton:hover:not(:disabled) { border-color: var(--planning-accent); }
 .classButton[aria-pressed='true'] { border-color: var(--planning-accent); color: var(--planning-accent); box-shadow: inset 0 0 0 .5px var(--planning-accent); }
@@ -108,10 +110,14 @@
   .page .lessonsInput { min-height: 150px; }
 }
 @media (max-width: 620px) {
+  .toolbar > .classRow { flex-basis: 100%; }
   .toolbarControls { width: 100%; }
   .toolbarActions { margin-inline-start: auto; }
   .dateFilters { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; gap: 12px; }
   .dateField { flex-direction: column; align-items: stretch; gap: 5px; }
+  .toolbarControls[data-preview-only='true'] { flex-wrap: nowrap; gap: 8px; }
+  .toolbarControls[data-preview-only='true'] .dateFilters { flex: 1; width: auto; }
+  .toolbarControls[data-preview-only='true'] .toolbarActions { flex-shrink: 0; }
   .classButton { padding: 7px 9px; }
   .paperStage { padding: 5px; }
 }

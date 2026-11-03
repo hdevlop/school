@@ -13,6 +13,7 @@ import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { getParentsApi, linkStudentApi, unlinkStudentApi } from '@/services/parentApi';
 import { getStudentsApi } from '@/services/studentApi';
+import { StudentComboboxInput } from '@/features/Students/components/StudentCombobox';
 
 type LinkTarget = { parentId: string; studentId?: never } | { studentId: string; parentId?: never };
 
@@ -42,24 +43,37 @@ function FamilyLinkPicker({ target, linkedIds }: { target: LinkTarget; linkedIds
     },
     onError: (error: Error) => toast.error(error.message),
   });
-  const options = records.filter(record => !linkedIds.includes(record.id)).map(record => ({
-    value: record.id,
-    label: `${record.name}${record.studentCode || record.cin || record.phone ? ` (${record.studentCode || record.cin || record.phone})` : ''}`,
-  }));
+  const available = records.filter(record => !linkedIds.includes(record.id));
+  const pickerLabel = t(selectingStudent ? 'parents.profile.selectStudent' : 'parents.family.selectParent');
   if (isLoading) return <NLoadingState surface="panel" label={t('common.loading')} />;
   if (isError) return <NErrorState surface="panel" />;
   return (
     <div className="flex flex-col gap-4">
-      <ComboboxInput
-        value={selectedId}
-        onChange={setSelectedId}
-        items={options}
-        ariaLabel={t(selectingStudent ? 'parents.profile.selectStudent' : 'parents.family.selectParent')}
-        placeholder={t(selectingStudent ? 'parents.profile.selectStudent' : 'parents.family.selectParent')}
-        disabled={isPending}
-        className="w-full"
-      />
-      <NButton type="button" loading={isPending} disabled={!options.some(option => option.value === selectedId)} onClick={() => mutateAsync()} leftIcon={<Link2 className="size-4" />}>
+      {selectingStudent ? (
+        <StudentComboboxInput
+          value={selectedId}
+          onChange={setSelectedId}
+          students={available}
+          ariaLabel={pickerLabel}
+          placeholder={pickerLabel}
+          disabled={isPending}
+          className="w-full"
+        />
+      ) : (
+        <ComboboxInput
+          value={selectedId}
+          onChange={setSelectedId}
+          items={available.map(record => ({
+            value: record.id,
+            label: `${record.name}${record.cin || record.phone ? ` (${record.cin || record.phone})` : ''}`,
+          }))}
+          ariaLabel={pickerLabel}
+          placeholder={pickerLabel}
+          disabled={isPending}
+          className="w-full"
+        />
+      )}
+      <NButton type="button" loading={isPending} disabled={!available.some(record => record.id === selectedId)} onClick={() => mutateAsync()} leftIcon={<Link2 className="size-4" />}>
         {t(selectingStudent ? 'parents.profile.linkStudent' : 'parents.family.linkParent')}
       </NButton>
     </div>

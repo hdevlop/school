@@ -68,6 +68,8 @@ describe('routes that were admin-only ask for a permission', () => {
       'create:staff': ['create'],
       'update:staff': ['update'],
       'delete:staff': ['deleteBulk', 'deleteById'],
+      // Reads only the caller's own record, so it asks for no permission.
+      [JSON.stringify([['AuthGuard', null]])]: ['getOwnProfile'],
     });
     expect(byPermission(RolloverController)).toEqual({
       'read:financial-operations': ['getRun', 'preview'],

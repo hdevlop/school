@@ -2,7 +2,7 @@ import { Controller, Get, Post, Put, Delete, Params, Body, Validate, ResMsg } fr
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { ClassService } from './ClassService';
 import { Class, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './ClassGuards';
-import { isAdmin } from '../../auth';
+import { Can, isAdmin } from '../../auth';
 import { classIdParam, createClassDto, createClassesBulkDto, updateClassDto, type CreateClassDto, type CreateClassesBulkDto, type UpdateClassDto } from './ClassDto';
 
 @ToolGroup('classes')
@@ -77,6 +77,7 @@ export class ClassController {
 
   @Get('/:id/parents')
   @CanRead()
+  @Can('read:parents')
   @Validate({ params: classIdParam })
   @McpTool({ description: 'Get parents of students in a class', readOnly: true })
   @ResMsg('classes.success.retrieved')

@@ -121,6 +121,7 @@ function UsersTable() {
     openDialog({
       title: t('users.accessReset.title'),
       children: <ResetAccessDialog user={user} />,
+      width: 'lg',
       // The dialog owns its own confirm: it has to stay open and explain itself
       // when a send fails or the account moved under the confirmation.
       showButtons: false,

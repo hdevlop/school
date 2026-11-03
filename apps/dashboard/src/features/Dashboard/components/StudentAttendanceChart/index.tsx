@@ -12,19 +12,18 @@ import { hasNoFigures, monthValue } from '../../config/monthTrend';
 
 const MONTH_KEYS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 const EXCLUDED_MONTH_KEYS = new Set(['jul', 'aug']);
-const CURRENT_MONTH_KEY = MONTH_KEYS[new Date().getMonth()];
 
 const ABSENT_COLOR = '#E11D48';
 const LATE_COLOR = '#F1B814';
 
-type Row = { month: string; absent: number | null; late: number | null };
+type Row = { month: string; monthId: string; absent: number | null; late: number | null };
 
-const CustomTooltip = ({ active = null, payload = null, todayAbsent = null, todayLate = null, t }: any) => {
+const CustomTooltip = ({ active = null, payload = null, todayAbsent = null, todayLate = null, businessDate, t }: any) => {
   // A month that has not happened has no figures to show.
   if (active && payload && payload.length && payload[0].value != null) {
     const month = payload[0].payload.month;
     // Another school year has no today: the server sends no figures for it.
-    const isCurrent = month === CURRENT_MONTH_KEY && todayAbsent != null;
+    const isCurrent = payload[0].payload.monthId === businessDate?.slice(0, 7) && todayAbsent != null;
     return (
       <div className="bg-white px-3 py-2 rounded shadow-lg border border-gray-200">
         <p className="text-sm font-semibold text-gray-800">{month}</p>
@@ -66,9 +65,26 @@ const Legend = ({ t }: { t: (k: string) => string }) => (
 );
 
 const StudentAttendanceChart = ({ className }: { className?: string }) => {
-  const { t } = useTranslation();
   const { data: payload, isLoading, error, refetch } = useStudentAttendanceMonthly();
   const { businessDate } = useBusinessDate();
+  return <StudentAttendanceChartCard className={className} payload={payload} businessDate={businessDate} loading={isLoading} error={error} onRetry={() => { void refetch(); }} />;
+};
+
+type StudentAttendanceChartCardProps = {
+  className?: string;
+  payload?: {
+    monthly: { month: string; absent?: number; late?: number }[];
+    todayAbsent?: number | null;
+    todayLate?: number | null;
+  };
+  businessDate?: string;
+  loading: boolean;
+  error?: unknown;
+  onRetry: () => void;
+};
+
+export const StudentAttendanceChartCard = ({ className, payload, businessDate, loading, error, onRetry }: StudentAttendanceChartCardProps) => {
+  const { t } = useTranslation();
 
   const data = useMemo<Row[]>(() => {
     const monthly: { month: string; absent?: number; late?: number }[] = payload?.monthly ?? [];
@@ -77,6 +93,7 @@ const StudentAttendanceChart = ({ className }: { className?: string }) => {
         const idx = Number(m.month.split('-')[1]) - 1;
         const monthKey = MONTH_KEYS[idx] ?? null;
         return {
+          monthId: m.month,
           month: monthKey ? t(`common.monthsShort.${monthKey}`) : m.month,
           absent: monthValue(m.absent, m.month, businessDate),
           late: monthValue(m.late, m.month, businessDate),
@@ -96,9 +113,9 @@ const StudentAttendanceChart = ({ className }: { className?: string }) => {
       title={t('dashboard.attendance.studentsTitle')}
       className={cn('flex w-full h-full', className)}
       icon={ClipboardCheck}
-      loading={isLoading}
+      loading={loading}
       error={error}
-      onRetry={() => refetch()}
+      onRetry={onRetry}
       skeleton={<NSkeletonChart />}
       classNames={{ content: 'flex-1 min-h-0' }}
     >
@@ -124,7 +141,7 @@ const StudentAttendanceChart = ({ className }: { className?: string }) => {
                   tick={{ fill: '#6b7280', fontSize: 12 }}
                   dx={-10}
                 />
-                <Tooltip content={<CustomTooltip todayAbsent={todayAbsent} todayLate={payload?.todayLate ?? null} t={t} />} />
+                <Tooltip content={<CustomTooltip todayAbsent={todayAbsent} todayLate={payload?.todayLate ?? null} businessDate={businessDate} t={t} />} />
                 <Line
                   type="monotone"
                   dataKey="absent"

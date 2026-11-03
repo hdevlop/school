@@ -51,6 +51,17 @@
     "failed": "Could not save role permissions.",
     "module": "Module",
     "sidebar": "Sidebar",
+    "layout": {
+      "help": "Drag pages and groups, or use the arrows, to change their order. Check the pages to show for this role. Pages require View access first.",
+      "drag": "Reorder {{name}}",
+      "moveUp": "Move {{name}} up",
+      "moveDown": "Move {{name}} down",
+      "requiresView": "Enable View access first",
+      "reset": "Reset order",
+      "orderChanged": "Sidebar order updated",
+      "sharedHint": "The saved order applies to everyone with this role on desktop and mobile.",
+      "footer": "Settings stays at the bottom of the sidebar."
+    },
     "sidebarHelp": "Sidebar visibility only changes the menu. Enable the page's View permission first. Existing role and record access rules still apply.",
     "search": "Search modules or permissions…",
     "searchRoles": "Search roles…",
@@ -82,7 +93,7 @@
       "teacher": "Assigned records only. Permissions do not expand teacher ownership.",
       "parent": "Linked children only. Permissions do not expand parent ownership.",
       "student": "Own records only. Permissions do not expand student ownership.",
-      "floor_manager": "Classes of the grades assigned in their staff record only. Permissions do not expand floor manager ownership.",
+      "floor_manager": "Classes of the grades assigned in their staff record only. Permissions do not expand monitor ownership.",
       "unconfigured": "This custom role has no record scope configured. Permissions alone do not grant access to owned school records."
     },
     "categories": {
@@ -529,12 +540,12 @@
         "eyebrow": "Secure account invitation",
         "heading": "Activate your {{accountLabel}}",
         "greeting": "Hello {{name}},",
-        "intro": "An administrator created a {{accountLabel}} for you on {{appName}}. Confirm your email and choose a private password to activate your access.",
+        "intro": "An administrator created an account for you in your school’s app. Confirm your email and choose a private password to activate your access.",
         "stepsTitle": "Email confirmation + password setup",
         "stepsBody": "The secure button completes both steps with one single-use link.",
         "button": "Activate my {{accountLabel}}",
         "expiry": "This invitation expires in 3 days.",
-        "expiryNote": "It can be used only once. {{appName}} will never ask you to email this link or your password to anyone.",
+        "expiryNote": "It can be used only once. The app will never ask you to email this link or your password to anyone.",
         "fallbackPrefix": "Button not working?",
         "fallbackLink": "Open the secure account setup page",
         "footerIgnore": "If you did not expect this invitation, no action is needed.",
@@ -558,9 +569,9 @@
       "unsupported": "This account cannot have its access reset from here.",
       "unsupportedHint": "Reload the list and check the account status, role and profile.",
       "modes": {
-        "parentCredentialSetup": "Reset access replaces the parent password with a temporary credential: the CIN on file, or a generated password if no CIN is recorded. The parent must choose a new password at sign-in. Active sessions end immediately.",
-        "resetEmailSent": "A one-time password reset link is emailed to this account's current address. Existing sessions stay valid until the new password is saved.",
-        "invitationResent": "The existing invitation is emailed again to this account's current address. No second account or profile is created."
+        "parentCredentialSetup": "Reset access for {{recipient}} replaces the password with a temporary credential: the CIN on file, or a generated password if no CIN is recorded. The parent must choose a new password at sign-in. Active sessions end immediately.",
+        "resetEmailSent": "Send a one-time password reset link to {{recipient}}. Existing sessions stay valid until the new password is saved.",
+        "invitationResent": "Resend the activation invitation to {{recipient}}. No second account or profile is created."
       },
       "delivery": {
         "sent": "A recovery email was sent.",
@@ -862,8 +873,8 @@
   },
   "dashboard": {
     "floorManager": {
-      "title": "Floor Manager Dashboard",
-      "subtitle": "Here's your floor's day at a glance.",
+      "title": "Monitor Dashboard",
+      "subtitle": "Here's your classes' day at a glance.",
       "kpis": {
         "totalStudents": "Total Students",
         "sections": "Sections",
@@ -2232,6 +2243,10 @@
     }
   },
   "students": {
+    "picker": {
+      "search": "Search by name, class or code...",
+      "noResults": "No student found."
+    },
     "correction": {
       "placement": "Placement to correct",
       "status": "Yearly enrollment status",
@@ -2980,7 +2995,7 @@
       "assistantClassRequired": "Assistant assignment requires a class",
       "busAssistantVehicleRequired": "Bus assistant assignment requires a vehicle",
       "accountantCycleRequired": "Accountant assignment requires a cycle",
-      "floorManagerGradeRequired": "Floor manager assignment requires a grade",
+      "floorManagerGradeRequired": "Monitor assignment requires a grade",
       "securityZoneRequired": "Security assignment requires a zone",
       "driverVehicleRequired": "Driver assignment requires a vehicle",
       "staffNotFound": "Staff not found",
@@ -3024,7 +3039,7 @@
       "receptionist": "Receptionist",
       "accountant": "Accountant",
       "supervisor": "Supervisor",
-      "floorManager": "Floor Manager",
+      "floorManager": "Monitor",
       "librarian": "Librarian",
       "itSupport": "IT Support",
       "assistant": "Assistant",
@@ -3079,6 +3094,7 @@
       "genderPlaceholder": "Select gender",
       "cinPlaceholder": "Enter CIN",
       "employeeCodePlaceholder": "Enter employee code",
+      "employeeCodeAutomatic": "Generated on save (EMP + 6 digits)",
       "namePlaceholder": "Enter full name",
       "personalInformation": "Personal Information",
       "employmentInformation": "Employment Information",
@@ -3132,8 +3148,9 @@
       "sent": "Invitation email sent to {{email}}. The staff member activates the account from the link.",
       "pending": "Staff member created. The invitation is pending your approval; no email has been sent.",
       "accessPending": "Access pending",
-      "approve": "Approve & send invitation",
-      "approveDescription": "Send an activation invitation to this staff member. They can choose a password to activate their account.",
+      "approve": "Send invitation",
+      "sending": "Sending invitation…",
+      "approveDescription": "Send an activation invitation to {{recipient}}. They can choose a password to activate their account.",
       "notSent": "The staff member was created, but the invitation email could not be sent. Send it again with \"Reset access\" on the Users page."
     },
     "validation": {
@@ -4566,6 +4583,24 @@
       "severity": "Severity",
       "location": "Location",
       "locationPlaceholder": "Where did it happen?",
+      "locationOther": "Other place",
+      "locationOtherPlaceholder": "Describe the place...",
+      "locations": {
+        "classroom": "Classroom",
+        "schoolyard": "Schoolyard",
+        "corridor": "Corridor",
+        "stairs": "Stairs",
+        "canteen": "Canteen",
+        "library": "Library",
+        "laboratory": "Laboratory",
+        "computer_room": "Computer room",
+        "sports_area": "Gym or sports field",
+        "restrooms": "Restrooms",
+        "school_entrance": "School entrance",
+        "school_surroundings": "Around the school",
+        "school_bus": "School bus",
+        "online": "Online"
+      },
       "description": "Description",
       "descriptionPlaceholder": "Describe the facts clearly...",
       "actionType": "Disciplinary action",
@@ -5200,6 +5235,7 @@
     "search": "Search features",
     "noResults": "No features match your search.",
     "viewUnavailable": "Viewing this feature is not enabled for your account.",
+    "profileLoadFailed": "Your school record could not be loaded.",
     "visitRequests": "Visit requests",
     "publicPage": "School website",
     "studentAttendance": "Attendance",

@@ -15,6 +15,12 @@ export const getStaffMemberApi = async (id) => {
   return res.data
 }
 
+export const getOwnStaffProfileApi = async () => {
+  const res = await api.get('/staff/me')
+  // An account with no staff record answers with no content.
+  return res.data?.data ?? null
+}
+
 export const getStaffCountApi = async () => {
   const res = await api.get('/staff/count')
   return res.data

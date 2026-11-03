@@ -45,7 +45,7 @@ describe('floor manager ownership', () => {
 
   it('reads every resource it is granted only through its own current grade assignments', () => {
     const tokens = [
-      Class, Section, Student, Attendance, Discipline, BehaviorReward, Grade, Exam, Assessment,
+      Class, Section, Student, Parent, Attendance, Discipline, BehaviorReward, Grade, Exam, Assessment,
       Teacher, Event, Alert, AlertForClass, AnnouncementForClass,
     ];
     for (const token of tokens) {
@@ -96,8 +96,12 @@ describe('floor manager ownership', () => {
     expect(read(AlertForTeacher).sql).toContain('1 = 0');
   });
 
-  it('has no parent records', () => {
-    expect(read(Parent).sql).toContain('1 = 0');
+  it('reads a parent only through a child now in one of their classes', () => {
+    const { sql } = read(Parent);
+    expect(sql).not.toContain('1 = 0');
+    expect(sql).toContain('managed_link.parent_id = "parents"."id"');
+    expect(sql).toContain('managed_class.id = managed_student.class_id');
+    expect(sql).not.toContain('student_enrollment_placements');
   });
 
   it('narrows a year\'s roster to placements in their classes that year', () => {

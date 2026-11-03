@@ -1,4 +1,4 @@
-import type { RoleAccessSnapshot, SaveRoleAccess } from '@sms/contracts/access-control';
+import type { RoleAccessSnapshot, SaveRoleAccess, SidebarOrderId } from '@sms/contracts/access-control';
 import { api } from './http';
 
 function snapshot(body: RoleAccessSnapshot | { data: RoleAccessSnapshot }): RoleAccessSnapshot {
@@ -9,4 +9,8 @@ export async function getRoleAccessApi(roleId: string): Promise<RoleAccessSnapsh
 }
 export async function saveRoleAccessApi(roleId: string, body: SaveRoleAccess): Promise<RoleAccessSnapshot> {
   return snapshot((await api.put(`/admin/access/roles/${encodeURIComponent(roleId)}`, body)).data);
+}
+export async function getOwnSidebarOrderApi(): Promise<SidebarOrderId[]> {
+  const body = (await api.get('/navigation/sidebar')).data;
+  return (body.data ?? body).order;
 }

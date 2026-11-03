@@ -1,9 +1,8 @@
 'use client'
 
 import React, { useState } from 'react';
-import { z } from 'zod';
-import { FileText, KeyRound, Mail, ShieldAlert } from 'lucide-react';
-import { NAlert, NButton, NForm, FormInput, Label } from 'najm-kit';
+import { KeyRound, Mail, ShieldAlert } from 'lucide-react';
+import { NAlert, NButton, Label } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
 import { toast } from 'sonner';
@@ -27,14 +26,6 @@ const ResetAccessDialog = ({ user, invitationApproval = false }: { user: AccessR
   const [temporaryCredential, setTemporaryCredential] = useState<string | null>(null);
 
   const mode = resolveExpectedMode(user);
-
-  const reasonSchema = z.object({
-    reason: z
-      .string()
-      .trim()
-      .min(3, { message: t('users.accessReset.reasonTooShort') })
-      .max(500, { message: t('users.accessReset.reasonTooLong') }),
-  });
 
   if (temporaryCredential) {
     return (
@@ -69,17 +60,18 @@ const ResetAccessDialog = ({ user, invitationApproval = false }: { user: AccessR
     );
   }
 
+  const recipient = '{recipient}';
   const consequence =
     mode === 'parent_credential_setup'
-      ? t('users.accessReset.modes.parentCredentialSetup')
+      ? t('users.accessReset.modes.parentCredentialSetup', { recipient })
       : mode === 'reset_email_sent'
-        ? t('users.accessReset.modes.resetEmailSent')
-        : t(invitationApproval ? 'staff.invitation.approveDescription' : 'users.accessReset.modes.invitationResent');
+        ? t('users.accessReset.modes.resetEmailSent', { recipient })
+        : t(invitationApproval ? 'staff.invitation.approveDescription' : 'users.accessReset.modes.invitationResent', { recipient });
 
-  const handleSubmit = async ({ reason }: { reason: string }) => {
+  const handleSubmit = async () => {
     setFailure(null);
     try {
-      const result = await resetAccess({ userId: user.id, reason, expectedMode: mode });
+      const result = await resetAccess({ userId: user.id, expectedMode: mode });
 
       // A provider that accepted nothing is a failure the administrator has to
       // retry, so the dialog stays open and says so rather than closing on a
@@ -109,51 +101,40 @@ const ResetAccessDialog = ({ user, invitationApproval = false }: { user: AccessR
 
   return (
     <div className='flex w-full flex-col gap-4'>
-      <div className='flex flex-col gap-0.5'>
-        <Label className='text-sm font-semibold'>{user.name}</Label>
-        <Label className='text-sm text-muted-foreground'>{user.email}</Label>
-      </div>
-
       <NAlert
         tone={mode === 'parent_credential_setup' ? 'warning' : 'info'}
         look='soft'
         icon={mode === 'parent_credential_setup' ? KeyRound : Mail}
-        description={consequence}
+        className='[overflow-wrap:anywhere] [&_p]:opacity-100'
+        description={consequence.split(recipient).map((text, index) => (
+          <React.Fragment key={index}>
+            {index > 0 && (
+              <strong className='font-semibold text-foreground'>
+                {user.name && <bdi>{user.name}</bdi>}
+                {user.name && user.email && ' '}
+                {user.email && <bdi dir='ltr'>({user.email})</bdi>}
+              </strong>
+            )}
+            {text}
+          </React.Fragment>
+        ))}
       />
-
-      <NForm
-        id='reset-access-form'
-        schema={reasonSchema}
-        defaultValues={{ reason: '' }}
-        onSubmit={handleSubmit}
-      >
-        <FormInput
-          name='reason'
-          type='textarea'
-          formLabel={t('users.accessReset.reasonLabel')}
-          placeholder={t('users.accessReset.reasonPlaceholder')}
-          variant='default'
-          icon={FileText}
-          required={true}
-          autoFocus
-        />
-      </NForm>
 
       {failure && <NAlert tone='error' look='soft' description={failure} />}
 
-      <div className='flex justify-end gap-2'>
+      <div className='flex flex-wrap justify-end gap-2'>
         <NButton variant='outline' onClick={() => pop()} disabled={isResettingAccess}>
           {t('common.cancel')}
         </NButton>
         <NButton
-          type='submit'
-          form='reset-access-form'
+          type='button'
+          onClick={handleSubmit}
           variant={invitationApproval ? 'default' : 'destructive'}
           loading={isResettingAccess}
           disabled={isResettingAccess}
         >
           {isResettingAccess
-            ? t('users.accessReset.pending')
+            ? t(mode === 'invitation_resent' ? 'staff.invitation.sending' : 'users.accessReset.pending')
             : t(invitationApproval ? 'staff.invitation.approve' : 'users.accessReset.confirmButton')}
         </NButton>
       </div>

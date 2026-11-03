@@ -6,6 +6,7 @@ import { Hash, Mail, Phone, Shield, User, UserCheck } from 'lucide-react';
 import { Card, NAvatar, NBadge, NEmptyState, NSection, NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { avatarVersion } from '@/lib/avatarVersion';
+import { roleLabel } from '@/shared/roleLabel';
 
 const UserView = ({ user }) => {
   const { t } = useTranslation();
@@ -32,7 +33,7 @@ const UserView = ({ user }) => {
         <NSectionInfo icon={Hash} label={t('users.table.id')} value={user.id} />
         {user.email && <NSectionInfo icon={Mail} label={t('users.table.email')} value={user.email} />}
         {user.phone && <NSectionInfo icon={Phone} label={t('teachers.form.phone')} value={user.phone} />}
-        <NSectionInfo icon={Shield} label={t('users.table.role')} value={user.role || t('common.notAssigned')} />
+        <NSectionInfo icon={Shield} label={t('users.table.role')} value={roleLabel(user.role, t) || t('common.notAssigned')} />
         <NSectionInfo icon={UserCheck} label={t('users.table.status')} value={<NBadge status={user.status} />} />
       </NSection>
     </div>

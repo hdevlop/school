@@ -78,6 +78,8 @@ export class FloorManagerDashboardRepository {
         date: attendance.date,
         total: count(),
         attended: sql<number>`COUNT(*) FILTER (WHERE ${attendance.status} <> 'absent')`.mapWith(Number),
+        absent: sql<number>`COUNT(*) FILTER (WHERE ${attendance.status} = 'absent')`.mapWith(Number),
+        late: sql<number>`COUNT(*) FILTER (WHERE ${attendance.status} = 'late')`.mapWith(Number),
       })
       .from(attendance)
       .where(and(
@@ -88,6 +90,16 @@ export class FloorManagerDashboardRepository {
       ))
       .groupBy(attendance.date)
       .orderBy(asc(attendance.date));
+  }
+
+  /** The same active roster used by getSections' student counts. */
+  async getStudentsByGender(sectionIds: string[]) {
+    if (!sectionIds.length) return [];
+    return this.db
+      .select({ gender: students.gender, value: count() })
+      .from(students)
+      .where(and(inArray(students.sectionId, sectionIds), eq(students.status, 'active')))
+      .groupBy(students.gender);
   }
 
   /**

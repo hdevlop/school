@@ -1,4 +1,6 @@
-import { Injectable } from '../../najm';
+import { matchPermission } from 'najm-auth/client';
+import { Inject, Injectable } from '../../najm';
+import { ScopeContext } from '../../auth';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { Year } from '../academicYears/requestYear';
 import { StudentService } from '../students/StudentService';
@@ -14,6 +16,7 @@ export class StudentProfileService {
   // Students still take the year as an argument (row 35); the other tabs'
   // modules read it themselves.
   @Year() private readonly year!: ResolvedAcademicYear;
+  @Inject(ScopeContext) private scope!: ScopeContext;
 
   constructor(
     private studentService: StudentService,
@@ -26,9 +29,13 @@ export class StudentProfileService {
   ) {}
 
   // The student with the selected year's class and section, or none when not
-  // enrolled that year, and the parents linked now.
+  // enrolled that year, and the parents linked now. Parents ask for their own
+  // permission, as their route does; without it the field is absent, because an
+  // empty list would say the student has none.
   async getOverview(studentId: string) {
     const student = await this.studentService.getById(studentId);
+    const user = this.scope.getUser() as { permissions?: string[] } | undefined;
+    if (!matchPermission(user?.permissions ?? [], 'read:parents')) return { student };
     const parentsList = await this.studentService.getParents(studentId);
     return { student, parents: parentsList };
   }

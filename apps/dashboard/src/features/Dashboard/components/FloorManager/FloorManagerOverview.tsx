@@ -3,6 +3,7 @@
 import { CalendarDays, CalendarX2, Bell, ClipboardCheck, Layers3, ShieldAlert, Star, UserX, UsersRound } from 'lucide-react';
 import { NButton, NErrorState, NForbiddenState } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { compareClassNames } from '@sms/contracts';
 import { isAuthorizationError } from '@/services/apiError';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useFloorManagerOverview } from '../../hooks/useFloorManagerDashboard';
@@ -12,11 +13,13 @@ import { AttentionCard, type AttentionRow } from '../Teacher/NeedsAttentionCard'
 import QuickActionsCard, { type QuickAction } from '../Teacher/QuickActionsCard';
 import FloorManagerKpis from './FloorManagerKpis';
 import RegistersCard from './RegistersCard';
-import AbsencesCard from './AbsencesCard';
-import IncidentsCard from './IncidentsCard';
+import TodayRoutineCard from './TodayRoutineCard';
+import CalendarCard from '../CalendarCard';
+import { StudentsGenderChartCard } from '../StudentsGenderChart';
+import { StudentAttendanceChartCard } from '../StudentAttendanceChart';
 
-// The teacher overview's rows of three cards (the `fit` variant in globals.css).
-const ROW = 'grid grid-cols-1 gap-3 lg:grid-cols-3 fit:min-h-[17rem] fit:flex-1 fit:basis-0 [&>*]:min-w-0 fit:[&>*]:min-h-0';
+// Two balanced rows on a large screen; smaller screens let the page scroll.
+const ROW = 'grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4 [&>*]:min-w-0 xl:fit:[&>*]:min-h-0';
 
 const action = (key: string, icon: QuickAction['icon'], href: string): QuickAction => ({
   key,
@@ -67,16 +70,15 @@ const FloorManagerOverview = () => {
   const attentionRows: AttentionRow[] = [
     { key: 'missingRegisters', label: t('dashboard.floorManager.attention.missingRegisters'), icon: CalendarX2, dot: 'bg-rose-500', href: FLOOR_MANAGER_DASHBOARD_LINKS.attendance, count: attention?.missingRegisters },
     { key: 'absentToday', label: t('dashboard.floorManager.attention.absentToday'), icon: UserX, dot: 'bg-amber-500', href: FLOOR_MANAGER_DASHBOARD_LINKS.attendance, count: attention?.absentToday },
-    { key: 'openIncidents', label: t('dashboard.floorManager.attention.openIncidents'), icon: ShieldAlert, dot: 'bg-violet-500', href: FLOOR_MANAGER_DASHBOARD_LINKS.discipline, count: attention?.openIncidents },
     { key: 'unreadNotifications', label: t('dashboard.teacher.attention.notifications'), icon: Bell, dot: 'bg-sky-500', href: FLOOR_MANAGER_DASHBOARD_LINKS.notifications, count: attention?.unreadNotifications },
   ];
-  const grades = overview?.manager.grades ?? [];
+  const grades = [...(overview?.manager.grades ?? [])].sort(compareClassNames);
 
   return (
-    <div className="flex min-h-full flex-col gap-3 pb-1 fit:h-full">
+    <div className="flex min-h-full flex-col gap-3 pb-1 xl:fit:h-full">
       <FloorManagerKpis kpis={overview?.kpis} loading={isLoading} />
 
-      <div className={ROW}>
+      <div className={`${ROW} xl:min-h-[23rem] xl:fit:flex-1 xl:fit:basis-0`}>
         <TeacherInfoCard
           person={overview?.manager}
           subtitle={(
@@ -91,14 +93,28 @@ const FloorManagerOverview = () => {
           )}
           {...cardState}
         />
-        <RegistersCard sections={overview?.sections} {...cardState} />
-        <AttentionCard rows={attentionRows} {...cardState} />
+        <TodayRoutineCard overview={overview} {...cardState} />
+        <StudentAttendanceChartCard
+          payload={overview?.attendanceMonthly}
+          businessDate={overview?.date}
+          className="min-h-[20rem] xl:min-h-0"
+          {...cardState}
+        />
+        <StudentsGenderChartCard
+          rows={overview?.studentsByGender.map((row) => ({
+            ...row,
+            name: t(row.gender === 'M' ? 'common.male' : 'common.female'),
+          }))}
+          className="min-h-[23rem] xl:min-h-0"
+          {...cardState}
+        />
       </div>
 
-      <div className={ROW}>
-        <AbsencesCard absences={overview?.absences} schoolDay={overview?.schoolDay} {...cardState} />
-        <IncidentsCard incidents={overview?.incidents} {...cardState} />
+      <div className={`${ROW} xl:min-h-[23rem] xl:fit:flex-1 xl:fit:basis-0`}>
+        <RegistersCard sections={overview?.sections} {...cardState} />
+        <AttentionCard rows={attentionRows} {...cardState} />
         <QuickActionsCard actions={ACTIONS} />
+        <CalendarCard className="min-h-[23rem] xl:min-h-0" />
       </div>
     </div>
   );

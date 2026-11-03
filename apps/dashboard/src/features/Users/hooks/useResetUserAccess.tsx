@@ -12,7 +12,7 @@ export type AccessResetDelivery = 'sent' | 'simulated' | 'not_sent' | 'not_appli
 
 export type ResetAccessVariables = {
   userId: string;
-  reason: string;
+  reason?: string;
   expectedMode: AccessResetMode;
 };
 

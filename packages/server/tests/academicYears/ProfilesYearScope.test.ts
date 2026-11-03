@@ -75,6 +75,11 @@ describe('profile routes', () => {
 });
 
 describe('student profile in the selected year', () => {
+  const signedIn = (profile: StudentProfileService, permissions: string[] | undefined) => {
+    Object.defineProperty(profile, 'scope', { configurable: true, value: { getUser: () => ({ permissions }) } });
+    return profile;
+  };
+
   function service(overrides: Record<string, object> = {}) {
     const deps = {
       students: { ensureReadable: async () => ({}), getById: async () => ({}), getParents: async () => [] },
@@ -96,8 +101,20 @@ describe('student profile in the selected year', () => {
       getById: async (...args: unknown[]) => { years.push(args); return { id: 'student-1' }; },
       getParents: async () => [{ id: 'parent-1' }],
     } });
-    expect<unknown>(await profile.getOverview('student-1')).toEqual({ student: { id: 'student-1' }, parents: [{ id: 'parent-1' }] });
+    expect<unknown>(await signedIn(profile, ['read:parents']).getOverview('student-1')).toEqual({ student: { id: 'student-1' }, parents: [{ id: 'parent-1' }] });
     expect(years).toEqual([['student-1']]);
+  });
+
+  it('leaves parents out of the overview for a reader without read:parents', async () => {
+    let parentsRead = false;
+    const profile = service({ students: {
+      getById: async () => ({ id: 'student-1' }),
+      getParents: async () => { parentsRead = true; return [{ id: 'parent-1' }]; },
+    } });
+    expect<unknown>(await signedIn(profile, ['read:students']).getOverview('student-1')).toEqual({ student: { id: 'student-1' } });
+    expect<unknown>(await signedIn(profile, undefined).getOverview('student-1')).toEqual({ student: { id: 'student-1' } });
+    expect(parentsRead).toBe(false);
+    expect<unknown>(await signedIn(profile, ['*:*']).getOverview('student-1')).toEqual({ student: { id: 'student-1' }, parents: [{ id: 'parent-1' }] });
   });
 
   it('gives no attendance rate without marks, instead of 0%', async () => {

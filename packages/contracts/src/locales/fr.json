@@ -51,6 +51,17 @@
     "failed": "Impossible d’enregistrer les permissions.",
     "module": "Module",
     "sidebar": "Menu",
+    "layout": {
+      "help": "Glissez les pages et les groupes, ou utilisez les flèches, pour modifier leur ordre. Cochez les pages à afficher pour ce rôle. Activez d’abord la permission Voir.",
+      "drag": "Réorganiser {{name}}",
+      "moveUp": "Monter {{name}}",
+      "moveDown": "Descendre {{name}}",
+      "requiresView": "Activez d’abord la permission Voir",
+      "reset": "Réinitialiser l’ordre",
+      "orderChanged": "Ordre du menu modifié",
+      "sharedHint": "L’ordre enregistré s’applique à tous les utilisateurs de ce rôle, sur ordinateur et mobile.",
+      "footer": "Les paramètres restent en bas du menu."
+    },
     "sidebarHelp": "La visibilité modifie uniquement le menu. Activez d’abord la permission Voir. Les règles d’accès au rôle et aux données restent applicables.",
     "search": "Rechercher un module ou une permission…",
     "searchRoles": "Rechercher un rôle…",
@@ -82,7 +93,7 @@
       "teacher": "Données affectées uniquement. Les permissions n’élargissent pas le périmètre de l’enseignant.",
       "parent": "Enfants liés uniquement. Les permissions n’élargissent pas le périmètre du parent.",
       "student": "Données personnelles uniquement. Les permissions n’élargissent pas le périmètre de l’élève.",
-      "floor_manager": "Classes des niveaux affectés dans sa fiche personnel uniquement. Les permissions n’élargissent pas le périmètre du responsable d’étage.",
+      "floor_manager": "Classes des niveaux affectés dans sa fiche personnel uniquement. Les permissions n’élargissent pas le périmètre du moniteur.",
       "unconfigured": "Ce rôle personnalisé n’a pas de périmètre de données configuré. Les permissions seules ne donnent pas accès aux données protégées de l’école."
     },
     "categories": {
@@ -529,12 +540,12 @@
         "eyebrow": "Invitation sécurisée",
         "heading": "Activez votre compte",
         "greeting": "Bonjour {{name}},",
-        "intro": "Un administrateur vous a créé un compte sur {{appName}}. Confirmez votre e-mail et choisissez un mot de passe personnel pour activer votre accès.",
+        "intro": "Un administrateur vous a créé un compte dans l’application de votre établissement. Confirmez votre e-mail et choisissez un mot de passe personnel pour activer votre accès.",
         "stepsTitle": "Confirmation de l’e-mail et choix du mot de passe",
         "stepsBody": "Le bouton sécurisé réalise les deux étapes avec un lien à usage unique.",
         "button": "Activer mon compte",
         "expiry": "Cette invitation expire dans 3 jours.",
-        "expiryNote": "Elle ne peut être utilisée qu’une seule fois. {{appName}} ne vous demandera jamais d’envoyer ce lien ou votre mot de passe à qui que ce soit.",
+        "expiryNote": "Elle ne peut être utilisée qu’une seule fois. L’application ne vous demandera jamais d’envoyer ce lien ou votre mot de passe à qui que ce soit.",
         "fallbackPrefix": "Le bouton ne fonctionne pas ?",
         "fallbackLink": "Ouvrir la page sécurisée de création du compte",
         "footerIgnore": "Si vous n’attendiez pas cette invitation, aucune action n’est nécessaire.",
@@ -558,9 +569,9 @@
       "unsupported": "L'accès de ce compte ne peut pas être réinitialisé ici.",
       "unsupportedHint": "Rechargez la liste et vérifiez le statut, le rôle et le profil du compte.",
       "modes": {
-        "parentCredentialSetup": "La réinitialisation remplace le mot de passe du parent par un identifiant temporaire : la CIN enregistrée, ou un mot de passe généré en l'absence de CIN. Le parent doit choisir un nouveau mot de passe à la connexion. Les sessions actives sont fermées.",
-        "resetEmailSent": "Un lien de réinitialisation à usage unique est envoyé à l'adresse actuelle de ce compte. Les sessions existantes restent valides jusqu'à l'enregistrement du nouveau mot de passe.",
-        "invitationResent": "L'invitation existante est renvoyée à l'adresse actuelle de ce compte. Aucun second compte ni profil n'est créé."
+        "parentCredentialSetup": "La réinitialisation de l'accès de {{recipient}} remplace le mot de passe par un identifiant temporaire : la CIN enregistrée, ou un mot de passe généré en l'absence de CIN. Le parent doit choisir un nouveau mot de passe à la connexion. Les sessions actives sont fermées.",
+        "resetEmailSent": "Envoyez un lien de réinitialisation à usage unique à {{recipient}}. Les sessions existantes restent valides jusqu'à l'enregistrement du nouveau mot de passe.",
+        "invitationResent": "Renvoyez l'invitation d'activation à {{recipient}}. Aucun second compte ni profil n'est créé."
       },
       "delivery": {
         "sent": "Un e-mail de récupération a été envoyé.",
@@ -971,7 +982,7 @@
       "assistantClassRequired": "L'affectation d'un assistant exige une classe",
       "busAssistantVehicleRequired": "L'affectation d'un accompagnateur de bus exige un véhicule",
       "accountantCycleRequired": "L'affectation d'un comptable exige un cycle",
-      "floorManagerGradeRequired": "L'affectation d'un responsable d'étage exige un niveau",
+      "floorManagerGradeRequired": "L'affectation d'un moniteur exige un niveau",
       "securityZoneRequired": "L'affectation d'un agent de sécurité exige une zone",
       "driverVehicleRequired": "L'affectation d'un chauffeur exige un véhicule",
       "staffNotFound": "Membre du personnel introuvable",
@@ -1014,7 +1025,7 @@
       "receptionist": "Réceptionniste",
       "accountant": "Comptable",
       "supervisor": "Surveillant",
-      "floorManager": "Responsable d'étage",
+      "floorManager": "Moniteur",
       "librarian": "Bibliothécaire",
       "itSupport": "Support IT",
       "assistant": "Assistant",
@@ -1063,6 +1074,7 @@
       "genderPlaceholder": "Sélectionner le genre",
       "cinPlaceholder": "Saisir la CIN",
       "employeeCodePlaceholder": "Saisir le code de l'employé",
+      "employeeCodeAutomatic": "Généré à l’enregistrement (EMP + 6 chiffres)",
       "namePlaceholder": "Saisir le nom complet",
       "personalInformation": "Informations personnelles",
       "employmentInformation": "Informations d'emploi",
@@ -1111,8 +1123,9 @@
       "sent": "E-mail d'invitation envoyé à {{email}}. Le membre du personnel active son compte depuis le lien.",
       "pending": "Membre du personnel créé. L'invitation attend votre approbation ; aucun e-mail n'a été envoyé.",
       "accessPending": "Accès en attente",
-      "approve": "Approuver et envoyer l'invitation",
-      "approveDescription": "Envoyez une invitation d'activation à ce membre du personnel. Il pourra choisir un mot de passe pour activer son compte.",
+      "approve": "Envoyer l'invitation",
+      "sending": "Envoi de l’invitation…",
+      "approveDescription": "Envoyez une invitation d'activation à {{recipient}}. Il pourra choisir un mot de passe pour activer son compte.",
       "notSent": "Le membre du personnel a été créé, mais l'e-mail d'invitation n'a pas pu être envoyé. Renvoyez-le avec « Réinitialiser l'accès » sur la page Utilisateurs."
     },
     "shifts": {
@@ -1731,8 +1744,8 @@
   },
   "dashboard": {
     "floorManager": {
-      "title": "Tableau de bord du responsable d'étage",
-      "subtitle": "Voici la journée de votre étage en un coup d’œil.",
+      "title": "Tableau de bord du moniteur",
+      "subtitle": "Voici la journée de vos classes en un coup d’œil.",
       "kpis": {
         "totalStudents": "Total des élèves",
         "sections": "Sections",
@@ -2056,6 +2069,7 @@
     "search": "Rechercher une fonctionnalité",
     "noResults": "Aucune fonctionnalité ne correspond à votre recherche.",
     "viewUnavailable": "La consultation de cette fonctionnalité n’est pas activée pour votre compte.",
+    "profileLoadFailed": "Votre dossier scolaire n’a pas pu être chargé.",
     "visitRequests": "Demandes de visite",
     "publicPage": "Site de l’école",
     "studentAttendance": "Présences",
@@ -3693,6 +3707,24 @@
       "severity": "Gravité",
       "location": "Lieu",
       "locationPlaceholder": "Où cela s'est-il produit ?",
+      "locationOther": "Autre lieu",
+      "locationOtherPlaceholder": "Précisez le lieu...",
+      "locations": {
+        "classroom": "Salle de classe",
+        "schoolyard": "Cour de récréation",
+        "corridor": "Couloir",
+        "stairs": "Escaliers",
+        "canteen": "Cantine",
+        "library": "Bibliothèque",
+        "laboratory": "Laboratoire",
+        "computer_room": "Salle informatique",
+        "sports_area": "Gymnase ou terrain de sport",
+        "restrooms": "Toilettes",
+        "school_entrance": "Entrée de l'école",
+        "school_surroundings": "Abords de l'école",
+        "school_bus": "Bus scolaire",
+        "online": "En ligne"
+      },
       "description": "Description",
       "descriptionPlaceholder": "Décrivez clairement les faits...",
       "actionType": "Mesure disciplinaire",
@@ -4727,6 +4759,10 @@
     }
   },
   "students": {
+    "picker": {
+      "search": "Rechercher par nom, classe ou code...",
+      "noResults": "Aucun élève trouvé."
+    },
     "correction": {
       "placement": "Affectation à corriger",
       "status": "Statut de l’inscription annuelle",

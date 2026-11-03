@@ -1,11 +1,12 @@
 import { eq } from 'drizzle-orm';
 import {
-  SIDEBAR_CONFIGURED_PERMISSION, SIDEBAR_ENTRIES, sidebarPermission,
+  SIDEBAR_CONFIGURED_PERMISSION, SIDEBAR_ENTRIES, sidebarPermission, type SidebarOrderId,
 } from '@sms/contracts/access-control';
-import { permissionsTable, rolesTable } from '../../auth';
+import { permissionsTable, rolesTable, usersTable } from '../../auth';
 import { auditLogs } from '../../database/schema/coreSchema';
 import type { DB } from '../../database/db';
 import { Repository } from '../../najm';
+import { roleSidebarLayouts } from './RoleSidebarSchema';
 
 @Repository()
 export class RoleAccessRepository {
@@ -21,6 +22,24 @@ export class RoleAccessRepository {
     return role;
   }
 
+  async getSidebarOrder(roleId: string): Promise<SidebarOrderId[]> {
+    const [layout] = await this.db.select().from(roleSidebarLayouts).where(eq(roleSidebarLayouts.roleId, roleId));
+    return layout?.itemOrder ?? [];
+  }
+
+  /** The caller supplies only its authenticated user id, never a requested role. */
+  async getOwnSidebarOrder(userId: string): Promise<SidebarOrderId[]> {
+    const [layout] = await this.db.select({ itemOrder: roleSidebarLayouts.itemOrder })
+      .from(usersTable).leftJoin(roleSidebarLayouts, eq(usersTable.roleId, roleSidebarLayouts.roleId))
+      .where(eq(usersTable.id, userId));
+    return layout?.itemOrder ?? [];
+  }
+
+  async saveSidebarOrder(roleId: string, itemOrder: SidebarOrderId[]) {
+    await this.db.insert(roleSidebarLayouts).values({ roleId, itemOrder })
+      .onConflictDoUpdate({ target: roleSidebarLayouts.roleId, set: { itemOrder, updatedAt: new Date().toISOString() } });
+  }
+
   /** On save only; no seeding/reset of existing role grants or navigation. */
   async ensureSidebarCatalog() {
     await this.db.insert(permissionsTable).values([
@@ -31,10 +50,10 @@ export class RoleAccessRepository {
     ]).onConflictDoNothing({ target: permissionsTable.name });
   }
 
-  async audit(roleId: string, actorId: string, added: string[], removed: string[]) {
+  async audit(roleId: string, actorId: string, added: string[], removed: string[], sidebarOrder?: { before: SidebarOrderId[]; after: SidebarOrderId[] }) {
     await this.db.insert(auditLogs).values({
       userId: actorId, userRole: 'admin', action: 'role.permissions.update', resource: 'roles',
-      resourceId: roleId, status: 'success', metadata: { added, removed },
+      resourceId: roleId, status: 'success', metadata: { added, removed, ...(sidebarOrder && { sidebarOrder }) },
     });
   }
 }

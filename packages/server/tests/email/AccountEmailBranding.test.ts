@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import { describe, expect, it } from 'bun:test';
 import { load } from 'cheerio/slim';
-import { EmailService, accountInviteTemplate, emailVerificationTemplate, passwordResetTemplate, welcomeEmailTemplate, type EmailMessage } from 'najm-email';
+import { email as emailPlugin, EmailService, accountInviteTemplate, emailVerificationTemplate, passwordResetTemplate, welcomeEmailTemplate, type EmailMessage } from 'najm-email';
 import { Server } from 'najm-core';
 import { brandAccountEmail } from '../../src/email/brandAccountEmail';
-import { schoolEmail } from '../../src/config/emailConfig';
+import { AccountEmailBranding } from '../../src/email/AccountEmailBranding';
 import { accountEmailTheme } from '../../src/email/accountEmailBrand';
 import { translations } from '@sms/contracts/locales';
 
@@ -12,6 +12,36 @@ const link = 'https://school.example/reset-password?token=private-token&purpose=
 const message = (html: string): EmailMessage => ({ to: 'recipient@example.test', subject: 'Account access', html });
 
 describe('one School layout for account emails', () => {
+  it('defaults outgoing invitations to French with the saved school name and a compact header', () => {
+    const context = { appName: 'École Al Amal & Avenir', userName: 'Hicham <Jebara>' };
+    const original = message(accountInviteTemplate({ inviteLink: link, userName: 'Hicham', accountType: 'floor_manager', appName: 'MyScolAI', lang: 'en' }));
+    const branded = brandAccountEmail(original, context);
+    const $ = load(branded.html!);
+    expect($('html').attr('lang')).toBe('fr');
+    expect($('h1').text()).toBe(translations.fr.auth.emails.accountInvite.heading);
+    expect($('.school-email-header').text()).toContain(context.appName);
+    expect($('.school-email-logo').attr('height')).toBe('40');
+    expect($('.school-email-button').attr('href')).toBe(link);
+    expect($('.school-email-button').text()).toBe(translations.fr.auth.emails.accountInvite.button);
+    expect($('body').text()).toContain(context.userName);
+    expect($('body').text()).not.toContain('floor_manager');
+    expect($('body').text()).not.toContain('MyScolAI');
+    expect($('jebara')).toHaveLength(0);
+    expect(branded.subject).toBe(`${context.appName} : activez votre compte`);
+    expect(original.html).toContain('MyScolAI');
+  });
+
+  it('uses French password-reset copy and the school name without changing its token', () => {
+    const branded = brandAccountEmail(message(passwordResetTemplate({ resetLink: link, userName: 'Fatima', lang: 'en' })),
+      { appName: 'École Al Amal', userName: 'Fatima' });
+    const $ = load(branded.html!);
+    expect($('html').attr('lang')).toBe('fr');
+    expect($('h1').text()).toBe(translations.fr.auth.emails.passwordReset.heading);
+    expect(branded.subject).toContain('École Al Amal');
+    expect($('.school-email-button').attr('href')).toBe(link);
+    expect($('body').text()).toContain(translations.fr.auth.emails.passwordReset.expiry);
+  });
+
   it.each([
     ['invitation', () => accountInviteTemplate({ inviteLink: link, userName: 'Fatima', lang: 'fr', theme: accountEmailTheme })],
     ['password reset', () => passwordResetTemplate({ resetLink: link, userName: 'Fatima', lang: 'fr' })],
@@ -90,17 +120,23 @@ describe('one School layout for account emails', () => {
     }
   });
 
-  it('installs the branding hook in the real email pipeline using only the memory provider', async () => {
-    const server = new Server().use(schoolEmail({ provider: { provider: 'memory' } }));
+  it('uses the branding hook in the real email pipeline with the memory provider', async () => {
+    const server = new Server().use(emailPlugin({ provider: { provider: 'memory' } }));
     await server.init();
+    const email = await server.container.resolve(EmailService);
+    const branding = new AccountEmailBranding(email, {
+      getContext: async () => ({ appName: 'École Al Amal', userName: 'Fatima' }),
+    } as never);
+    branding.configure();
     try {
-      const email = await server.container.resolve(EmailService);
       const delivered: EmailMessage[] = [];
       email.on('email:sent', ({ message }) => { delivered.push(message); });
       const result = await email.send(message(passwordResetTemplate({ resetLink: link, userName: 'Fatima' })));
       expect(result.success).toBe(true);
       expect(delivered).toHaveLength(1);
       expect(load(delivered[0].html!)('.school-account-email')).toHaveLength(1);
-    } finally { await server.stop(); }
+      expect(load(delivered[0].html!)('html').attr('lang')).toBe('fr');
+      expect(delivered[0].subject).toContain('École Al Amal');
+    } finally { branding.deactivate(); await server.stop(); }
   });
 });

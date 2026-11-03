@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'najm-i18n/react';
+import { roleLabel } from '@/shared/roleLabel';
 import { useRoles } from '@/features/Roles/hooks/useRoles';
 import type { LinkedToFilter } from '../config/accountLinks';
 import { buildLinkedToOptions } from '../config/userOptions';
@@ -27,7 +28,7 @@ export const useUsersTableFilters = (linkedTo?: { value: LinkedToFilter; onChang
       showIcon: false,
       name: "role",
       placeholder: t('users.filters.filterByRole'),
-      options: (roles ?? []).map((role) => ({ value: role.name, label: role.name })),
+      options: (roles ?? []).map((role) => ({ value: role.name, label: roleLabel(role.name, t) })),
     },
     ...(linkedTo ? [{
       type: "select",

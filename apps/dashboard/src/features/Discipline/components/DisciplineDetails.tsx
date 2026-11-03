@@ -11,6 +11,7 @@ import {
   severityClassName,
   type DisciplineIncident,
 } from '../disciplineConstants';
+import { disciplineLocationLabel } from '../config/disciplineOptions';
 
 const DetailItem = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <div className="space-y-1 rounded-lg border bg-muted/20 p-3">
@@ -65,7 +66,7 @@ export default function DisciplineDetails({
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <DetailItem label={t('discipline.table.violation')}>{t(`discipline.categories.${incident.category}`)}</DetailItem>
         <DetailItem label={t('discipline.table.incidentAt')}><CalendarClock className="me-1 inline h-4 w-4" />{displayDateTime(incident.incidentAt)}</DetailItem>
-        <DetailItem label={t('discipline.form.location')}><MapPin className="me-1 inline h-4 w-4" />{incident.location || '—'}</DetailItem>
+        <DetailItem label={t('discipline.form.location')}><MapPin className="me-1 inline h-4 w-4" />{disciplineLocationLabel(t, incident.location) || '—'}</DetailItem>
         <DetailItem label={t('discipline.table.reportedBy')}><UserRound className="me-1 inline h-4 w-4" />{incident.reporter?.name || incident.reporter?.email || '—'}</DetailItem>
       </div>
 

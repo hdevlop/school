@@ -79,13 +79,15 @@ export class OfflineService {
         // owned query, so the list supplies each detail. Parents and enrollment
         // history are read for every listed student at once, in the shapes their
         // endpoints return; test:offline:transport compares each with the live route.
+        // Like those routes, parents ask for their own permission.
         const details = new Map<string, (typeof students)[number]>();
         for (const student of students) if (!details.has(student.id)) details.set(student.id, student);
-        const parents = await this.repository.parentsByStudents([...details.keys()]);
+        const parents = this.permission.canActivate('read:parents', actor.permissions)
+          ? await this.repository.parentsByStudents([...details.keys()]) : null;
         const histories = isAdministratorRole(actor.role) ? await this.enrollments.listByStudents([...details.keys()]) : null;
         for (const [studentId, student] of details) {
           add('/students/' + studentId, envelope(student, 'students.success.retrieved'));
-          add('/students/' + studentId + '/parents', envelope(parents.get(studentId) ?? [], 'students.success.retrieved'));
+          if (parents) add('/students/' + studentId + '/parents', envelope(parents.get(studentId) ?? [], 'students.success.retrieved'));
           if (histories) add('/students/' + studentId + '/enrollments', envelope(histories.get(studentId) ?? [], 'students.success.retrieved'));
         }
         // Reuse the exact permission guard and owned/year-scoped repository reached by ClassService.

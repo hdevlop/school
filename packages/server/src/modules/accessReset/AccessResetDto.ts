@@ -35,7 +35,8 @@ export const resetAccessDto = z.object({
     .string()
     .trim()
     .min(3, 'An administrative reason of at least 3 characters is required')
-    .max(500, 'The administrative reason may not exceed 500 characters'),
+    .max(500, 'The administrative reason may not exceed 500 characters')
+    .optional(),
   expectedMode: z.enum(ACCESS_RESET_MODES),
 });
 

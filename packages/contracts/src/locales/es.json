@@ -51,6 +51,17 @@
     "failed": "No se pudieron guardar los permisos.",
     "module": "Módulo",
     "sidebar": "Menú",
+    "layout": {
+      "help": "Arrastra las páginas y los grupos, o usa las flechas, para cambiar su orden. Marca las páginas que se mostrarán para este rol. Activa primero el permiso Ver.",
+      "drag": "Reordenar {{name}}",
+      "moveUp": "Subir {{name}}",
+      "moveDown": "Bajar {{name}}",
+      "requiresView": "Activa primero el permiso Ver",
+      "reset": "Restablecer orden",
+      "orderChanged": "Orden del menú actualizado",
+      "sharedHint": "El orden guardado se aplica a todos los usuarios de este rol en escritorio y móvil.",
+      "footer": "Los ajustes permanecen al final del menú."
+    },
     "sidebarHelp": "La visibilidad solo cambia el menú. Active primero el permiso Ver. Se mantienen las reglas de acceso del rol y de los registros.",
     "search": "Buscar módulos o permisos…",
     "searchRoles": "Buscar roles…",
@@ -82,7 +93,7 @@
       "teacher": "Solo registros asignados. Los permisos no amplían el alcance del docente.",
       "parent": "Solo hijos vinculados. Los permisos no amplían el alcance del familiar.",
       "student": "Solo registros propios. Los permisos no amplían el alcance del alumno.",
-      "floor_manager": "Solo las clases de los niveles asignados en su ficha de personal. Los permisos no amplían el alcance del responsable de planta.",
+      "floor_manager": "Solo las clases de los niveles asignados en su ficha de personal. Los permisos no amplían el alcance del monitor.",
       "unconfigured": "Este rol personalizado no tiene un alcance de registros configurado. Los permisos por sí solos no dan acceso a los registros protegidos."
     },
     "categories": {
@@ -529,12 +540,12 @@
         "eyebrow": "Invitación segura",
         "heading": "Activa tu cuenta",
         "greeting": "Hola, {{name}}:",
-        "intro": "Un administrador te ha creado una cuenta en {{appName}}. Confirma tu correo y elige una contraseña personal para activar tu acceso.",
+        "intro": "Un administrador te ha creado una cuenta en la aplicación de tu centro educativo. Confirma tu correo y elige una contraseña personal para activar tu acceso.",
         "stepsTitle": "Confirmación del correo y elección de contraseña",
         "stepsBody": "El botón seguro completa ambos pasos con un enlace de un solo uso.",
         "button": "Activar mi cuenta",
         "expiry": "Esta invitación caduca en 3 días.",
-        "expiryNote": "Solo puede usarse una vez. {{appName}} nunca te pedirá que envíes este enlace ni tu contraseña a nadie.",
+        "expiryNote": "Solo puede usarse una vez. La aplicación nunca te pedirá que envíes este enlace ni tu contraseña a nadie.",
         "fallbackPrefix": "¿El botón no funciona?",
         "fallbackLink": "Abrir la página segura de creación de la cuenta",
         "footerIgnore": "Si no esperabas esta invitación, no tienes que hacer nada.",
@@ -558,9 +569,9 @@
       "unsupported": "El acceso de esta cuenta no se puede restablecer desde aquí.",
       "unsupportedHint": "Recarga la lista y comprueba el estado, el rol y el perfil de la cuenta.",
       "modes": {
-        "parentCredentialSetup": "Restablecer el acceso sustituye la contraseña por una credencial temporal: el CIN registrado o una contraseña generada si no hay CIN. El padre debe elegir una nueva contraseña al iniciar sesión. Se cierran las sesiones activas.",
-        "resetEmailSent": "Se envía un enlace de restablecimiento de un solo uso a la dirección actual de esta cuenta. Las sesiones existentes siguen siendo válidas hasta que se guarde la nueva contraseña.",
-        "invitationResent": "La invitación existente se vuelve a enviar a la dirección actual de esta cuenta. No se crea una segunda cuenta ni un segundo perfil."
+        "parentCredentialSetup": "Restablecer el acceso de {{recipient}} sustituye la contraseña por una credencial temporal: el CIN registrado o una contraseña generada si no hay CIN. El padre debe elegir una nueva contraseña al iniciar sesión. Se cierran las sesiones activas.",
+        "resetEmailSent": "Envía un enlace de restablecimiento de un solo uso a {{recipient}}. Las sesiones existentes siguen siendo válidas hasta que se guarde la nueva contraseña.",
+        "invitationResent": "Reenvía la invitación de activación a {{recipient}}. No se crea una segunda cuenta ni un segundo perfil."
       },
       "delivery": {
         "sent": "Se envió un correo de recuperación.",
@@ -955,8 +966,8 @@
   },
   "dashboard": {
     "floorManager": {
-      "title": "Panel del responsable de planta",
-      "subtitle": "Este es el día de tu planta de un vistazo.",
+      "title": "Panel del monitor",
+      "subtitle": "Este es el día de tus clases de un vistazo.",
       "kpis": {
         "totalStudents": "Total de estudiantes",
         "sections": "Secciones",
@@ -1426,6 +1437,7 @@
     "search": "Buscar funciones",
     "noResults": "Ninguna función coincide con tu búsqueda.",
     "viewUnavailable": "La consulta de esta función no está habilitada para tu cuenta.",
+    "profileLoadFailed": "No se pudo cargar tu registro escolar.",
     "visitRequests": "Solicitudes de visita",
     "publicPage": "Sitio web escolar",
     "studentAttendance": "Asistencia",
@@ -2869,6 +2881,24 @@
       "severity": "Gravedad",
       "location": "Lugar",
       "locationPlaceholder": "¿Dónde ocurrió?",
+      "locationOther": "Otro lugar",
+      "locationOtherPlaceholder": "Indica el lugar...",
+      "locations": {
+        "classroom": "Aula",
+        "schoolyard": "Patio",
+        "corridor": "Pasillo",
+        "stairs": "Escaleras",
+        "canteen": "Comedor",
+        "library": "Biblioteca",
+        "laboratory": "Laboratorio",
+        "computer_room": "Sala de informática",
+        "sports_area": "Gimnasio o campo de deporte",
+        "restrooms": "Aseos",
+        "school_entrance": "Entrada de la escuela",
+        "school_surroundings": "Alrededores de la escuela",
+        "school_bus": "Autobús escolar",
+        "online": "En línea"
+      },
       "description": "Descripción",
       "descriptionPlaceholder": "Describe los hechos claramente...",
       "actionType": "Medida disciplinaria",
@@ -4049,7 +4079,7 @@
       "assistantClassRequired": "La asignación de un asistente requiere una clase",
       "busAssistantVehicleRequired": "La asignación de un acompañante de autobús requiere un vehículo",
       "accountantCycleRequired": "La asignación de un contable requiere un ciclo",
-      "floorManagerGradeRequired": "La asignación de un responsable de planta requiere un nivel",
+      "floorManagerGradeRequired": "La asignación de un monitor requiere un nivel",
       "securityZoneRequired": "La asignación de un agente de seguridad requiere una zona",
       "driverVehicleRequired": "La asignación de un conductor requiere un vehículo",
       "staffNotFound": "Miembro del personal no encontrado",
@@ -4092,7 +4122,7 @@
       "receptionist": "Recepcionista",
       "accountant": "Contador",
       "supervisor": "Supervisor",
-      "floorManager": "Responsable de planta",
+      "floorManager": "Monitor",
       "librarian": "Bibliotecario",
       "itSupport": "Soporte IT",
       "assistant": "Asistente",
@@ -4141,6 +4171,7 @@
       "genderPlaceholder": "Selecciona el género",
       "cinPlaceholder": "Introduce el CIN",
       "employeeCodePlaceholder": "Introduce el código de empleado",
+      "employeeCodeAutomatic": "Generado al guardar (EMP + 6 dígitos)",
       "namePlaceholder": "Introduce el nombre completo",
       "personalInformation": "Información personal",
       "employmentInformation": "Información laboral",
@@ -4189,8 +4220,9 @@
       "sent": "Correo de invitación enviado a {{email}}. El miembro del personal activa la cuenta desde el enlace.",
       "pending": "Miembro del personal creado. La invitación está pendiente de tu aprobación; no se ha enviado ningún correo.",
       "accessPending": "Acceso pendiente",
-      "approve": "Aprobar y enviar invitación",
-      "approveDescription": "Envía una invitación de activación a este miembro del personal. Podrá elegir una contraseña para activar su cuenta.",
+      "approve": "Enviar invitación",
+      "sending": "Enviando invitación…",
+      "approveDescription": "Envía una invitación de activación a {{recipient}}. Podrá elegir una contraseña para activar su cuenta.",
       "notSent": "El miembro del personal se creó, pero no se pudo enviar el correo de invitación. Vuelve a enviarlo con «Restablecer acceso» en la página Usuarios."
     },
     "shifts": {
@@ -4576,6 +4608,10 @@
     "saveSettings": "Guardar ajustes"
   },
   "students": {
+    "picker": {
+      "search": "Buscar por nombre, clase o código...",
+      "noResults": "No se encontró ningún estudiante."
+    },
     "correction": {
       "placement": "Asignación que corregir",
       "status": "Estado de la matrícula anual",

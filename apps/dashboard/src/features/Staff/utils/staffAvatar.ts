@@ -1,5 +1,5 @@
 // Roles that have a dedicated role/gender illustration in /public/images.
-// `other` (and `teacher`, managed elsewhere) intentionally fall back to initials.
+// `other` and custom roles without illustrations fall back to initials.
 const ROLES_WITH_AVATAR = new Set([
   'teacher',
   'driver',
@@ -12,6 +12,7 @@ const ROLES_WITH_AVATAR = new Set([
   'itSupport',
   'security',
   'assistant',
+  'floorManager',
   'cleaner',
 ]);
 

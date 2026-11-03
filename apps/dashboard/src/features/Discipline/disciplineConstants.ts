@@ -44,7 +44,7 @@ export type DisciplineIncident = {
   resolvedAt?: string | null;
   createdAt?: string | null;
   updatedAt?: string | null;
-  student?: { id: string; name: string; studentCode: string; image?: string | null };
+  student?: { id: string; name: string; studentCode: string; image?: string | null; updatedAt?: string | null };
   class?: { id: string; name: string };
   section?: { id: string; name: string };
   reporter?: { id: string; name?: string | null; email?: string | null; image?: string | null };

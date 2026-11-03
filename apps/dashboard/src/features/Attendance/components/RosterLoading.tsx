@@ -21,4 +21,4 @@ export function RosterPageHeaderSkeleton() {
 
 // NTable's loading header only renders string labels. Replace every label
 // with the same placeholder so string and component headers load uniformly.
-export const ROSTER_LOADING_TABLE_HEADER = "[&_th]:relative [&_th]:text-transparent! [&_th>*]:invisible [&_th]:after:absolute [&_th]:after:inset-x-3 [&_th]:after:top-1/2 [&_th]:after:h-3 [&_th]:after:-translate-y-1/2 [&_th]:after:rounded [&_th]:after:bg-primary-foreground/25 [&_th]:after:animate-pulse [&_th]:after:content-[''] motion-reduce:[&_th]:after:animate-none";
+export const ROSTER_LOADING_TABLE_HEADER = "[&_th]:relative [&_th]:text-transparent! [&_th>*]:invisible [&_th]:after:absolute [&_th]:after:inset-x-3 [&_th]:after:top-1/2 [&_th]:after:h-3 [&_th]:after:-translate-y-1/2 [&_th]:after:rounded [&_th]:after:bg-primary-foreground/40 [&_th]:after:animate-[school-skeleton-pulse_2s_ease-in-out_infinite] [&_th]:after:content-[''] motion-reduce:[&_th]:after:animate-none";

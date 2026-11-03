@@ -1,5 +1,6 @@
 import { Injectable } from '../../../najm';
 import { DEFAULT_TEACHING_DAYS } from '@sms/contracts/routines';
+import { monthsBetween } from '@sms/contracts/academic-years';
 import type { FloorManagerDashboardOverview } from '@sms/contracts/floor-manager-dashboard';
 import { SettingsRepository } from '../../settings/SettingsRepository';
 import { AcademicYearValidator } from '../../academicYears/AcademicYearValidator';
@@ -44,8 +45,9 @@ export class FloorManagerDashboardService {
     ]);
     const sectionIds = sections.map((section) => section.sectionId);
 
-    const [attendanceDays, marked, registered, incidents, unreadNotifications] = await Promise.all([
-      this.repository.getAttendanceByDay(sectionIds, addDays(today, 1 - KPI_ATTENDANCE_DAYS), today),
+    const [attendanceDays, genders, marked, registered, incidents, unreadNotifications] = await Promise.all([
+      this.repository.getAttendanceByDay(sectionIds, year.reportingStartsOn, year.reportingEndsOn < today ? year.reportingEndsOn : today),
+      this.repository.getStudentsByGender(sectionIds),
       this.repository.getMarkedStudents(sectionIds, today),
       this.repository.getRegisteredSectionIds(sectionIds, today),
       this.repository.getOpenIncidents(sectionIds, INCIDENT_LIMIT),
@@ -78,8 +80,19 @@ export class FloorManagerDashboardService {
     const absentToday = marked.filter((row) => row.status === 'absent').length;
     const lateToday = marked.length - absentToday;
 
-    const attended = attendanceDays.reduce((sum, day) => sum + day.attended, 0);
-    const total = attendanceDays.reduce((sum, day) => sum + day.total, 0);
+    const weekStart = addDays(today, 1 - KPI_ATTENDANCE_DAYS);
+    const recentDays = attendanceDays.filter((day) => day.date >= weekStart);
+    const attended = recentDays.reduce((sum, day) => sum + day.attended, 0);
+    const total = recentDays.reduce((sum, day) => sum + day.total, 0);
+    const monthly = monthsBetween(year.reportingStartsOn, year.reportingEndsOn).map((month) => ({ month, absent: 0, late: 0 }));
+    const byMonth = new Map(monthly.map((row) => [row.month, row]));
+    for (const day of attendanceDays) {
+      const row = byMonth.get(day.date.slice(0, 7));
+      if (row) {
+        row.absent += day.absent;
+        row.late += day.late;
+      }
+    }
 
     return {
       date: today,
@@ -94,6 +107,11 @@ export class FloorManagerDashboardService {
         attendanceRate: ratePercent(attended, total),
         unreadNotifications,
       },
+      studentsByGender: genders.map(({ gender, value }) => ({
+        gender,
+        value: Number(value),
+      })),
+      attendanceMonthly: { monthly, todayAbsent: absentToday, todayLate: lateToday },
       sections: sectionRows,
       absences: marked,
       incidents: incidents.rows,

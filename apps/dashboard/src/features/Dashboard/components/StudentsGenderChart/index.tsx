@@ -12,9 +12,20 @@ import { useTranslation } from 'najm-i18n/react';
 import DashboardEmptyState from '../DashboardEmptyState';
 
 const StudentsChart = ({className=''}) => {
-   const { t } = useTranslation();
    const { data: studentData, isLoading, error, refetch } = useStudentsByGender();
-   const rows = studentData || [];
+   return <StudentsGenderChartCard className={className} rows={studentData} loading={isLoading} error={error} onRetry={() => { void refetch(); }} />;
+};
+
+type StudentsGenderChartCardProps = {
+   className?: string;
+   rows?: Array<{ gender?: string; name: string; value: number }>;
+   loading: boolean;
+   error?: unknown;
+   onRetry: () => void;
+};
+
+export const StudentsGenderChartCard = ({ className, rows = [], loading, error, onRetry }: StudentsGenderChartCardProps) => {
+   const { t } = useTranslation();
    const noData = rows.length === 0 || rows.every((row: { value?: number }) => Number(row.value ?? 0) === 0);
 
    return (
@@ -22,9 +33,9 @@ const StudentsChart = ({className=''}) => {
           title={t('dashboard.students.title')}
          icon={UsersIcon}
           className={cn('flex flex-col h-full',className)}
-         loading={isLoading}
+         loading={loading}
          error={error}
-         onRetry={() => refetch()}
+         onRetry={onRetry}
          skeleton={<NSkeletonDonut />}
          classNames={{ content: 'flex-1 min-h-0' }}
       >

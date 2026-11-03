@@ -21,6 +21,7 @@ export function useResetLogin() {
   const openReset = (userId: string, invitationApproval = false) => openDialog({
     title: t(invitationApproval ? 'staff.invitation.approve' : 'users.accessReset.title'),
     children: <ResetLoginDialog userId={userId} invitationApproval={invitationApproval} />,
+    width: 'lg',
     // The dialog owns its own confirm, as on the Users page.
     showButtons: false,
   });

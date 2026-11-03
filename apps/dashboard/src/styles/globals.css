@@ -36,6 +36,11 @@ body {
   color: var(--primary-foreground);
 }
 
+/* Dropdown icon styling must not mute a selected checkbox's checkmark. */
+[cmdk-item] [data-slot="checkbox"][data-state="checked"] svg {
+  color: var(--primary-foreground);
+}
+
 /* Table action buttons use the same outline as neighboring app controls. */
 .dashboard-content [data-ntable-header] [data-ntable-action-skeleton][data-bordered="true"],
 .dashboard-content [data-ntable-header] button[data-bordered="true"]:has(> svg.lucide-plus) {
@@ -43,23 +48,24 @@ body {
   border-width: var(--border-width, 1px);
 }
 
-/* Primary-tinted placeholders stay visible throughout the pulse in either theme. */
-[data-list-loading="true"] :is(.animate-pulse, [data-slot="skeleton"]) {
+/* Shared by every feature, table/card view, route and dialog. Najm's NSkeleton
+   emits aria-hidden + animate-pulse; its primitive uses data-slot="skeleton". */
+:is([data-slot="skeleton"], .animate-pulse[aria-hidden="true"]) {
   background-color: color-mix(in oklab, var(--primary) 30%, var(--card));
-  animation: list-skeleton-pulse 2s ease-in-out infinite;
+  animation: school-skeleton-pulse 2s ease-in-out infinite;
 }
 
-.dark [data-list-loading="true"] :is(.animate-pulse, [data-slot="skeleton"]) {
+.dark :is([data-slot="skeleton"], .animate-pulse[aria-hidden="true"]) {
   background-color: color-mix(in oklab, var(--primary) 40%, var(--card));
 }
 
-@keyframes list-skeleton-pulse {
+@keyframes school-skeleton-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.75; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-list-loading="true"] :is(.animate-pulse, [data-slot="skeleton"]) {
+  :is([data-slot="skeleton"], .animate-pulse[aria-hidden="true"]) {
     animation: none;
   }
 }

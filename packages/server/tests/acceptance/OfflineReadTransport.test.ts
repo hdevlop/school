@@ -48,7 +48,7 @@ beforeAll(async () => {
     roleId = 'offline-role-' + suffix;
     await sql`insert into roles (id,name) values (${roleId}, 'parent')`; createdRole = true;
   } else roleId = role[0].id;
-  for (const name of ['read:offline', 'read:students']) {
+  for (const name of ['read:offline', 'read:students', 'read:parents']) {
     const [permission] = await sql`select id from permissions where name = ${name}`;
     if (!permission) throw new Error('Fixture missing ' + name);
     const inserted = await sql`insert into role_permissions(role_id,permission_id) values(${roleId},${permission.id}) on conflict do nothing returning permission_id`;
@@ -115,6 +115,51 @@ test('restricted ownership, year refusal and cross-account page access remain en
   const other = await download(admin);
   const params = new URLSearchParams({ ...installation, authorizationGeneration: grant.authorizationGeneration });
   expect((await request(`/offline/snapshots/${other.manifest.generation}/pages/0?${params}`, restricted)).status).toBe(404);
+}, 30_000);
+
+test('a reader without read:parents downloads their students and no parent records', async () => {
+  const overview = '/profiles/students/history-student-02/overview';
+  const allowed = await request(overview, restricted);
+  expect(allowed.status).toBe(200);
+  expect(allowed.body.data.parents.length).toBeGreaterThan(0);
+  expect((await request('/students/history-student-02/parents', restricted)).status).toBe(200);
+
+  // Role permissions are cached once read, so this role never holds the grant
+  // in this process: a school-wide role reads every student, and none of their parents.
+  const id = 'offline-driver-' + suffix;
+  const driverPassword = crypto.randomUUID();
+  let driverRole = (await sql`select id from roles where name = 'driver'`)[0]?.id as string | undefined;
+  const createdDriverRole = !driverRole;
+  if (!driverRole) {
+    driverRole = 'offline-driver-role-' + suffix;
+    await sql`insert into roles (id,name) values (${driverRole}, 'driver')`;
+  }
+  const [readParents] = await sql`select id from permissions where name = 'read:parents'`;
+  const revoked = await sql`delete from role_permissions where role_id = ${driverRole} and permission_id = ${readParents.id} returning permission_id`;
+  const granted: string[] = [];
+  try {
+    for (const name of ['read:offline', 'read:students']) {
+      const [permission] = await sql`select id from permissions where name = ${name}`;
+      const inserted = await sql`insert into role_permissions(role_id,permission_id) values(${driverRole},${permission.id}) on conflict do nothing returning permission_id`;
+      if (inserted.length) granted.push(permission.id);
+    }
+    const hash = await Bun.password.hash(driverPassword, { algorithm: 'bcrypt', cost: 4 });
+    await sql`insert into users(id,name,email,password,status,role_id) values(${id}, 'Offline fixture driver', ${id + '@history.example.test'}, ${hash}, 'active', ${driverRole})`;
+    const token = await login(id + '@history.example.test', driverPassword);
+    const { records } = await download(token);
+    expect(records.some(row => row.value.path === '/students/history-student-02')).toBe(true);
+    expect(records.filter(row => row.value.path.endsWith('/parents'))).toEqual([]);
+    expect((await request('/students/history-student-02/parents', token)).status).toBe(403);
+    const refused = await request(overview, token);
+    expect(refused.status).toBe(200);
+    expect(refused.body.data.student.id).toBe('history-student-02');
+    expect(refused.body.data).not.toHaveProperty('parents');
+  } finally {
+    await sql`delete from users where id = ${id}`;
+    for (const permission of granted) await sql`delete from role_permissions where role_id = ${driverRole} and permission_id = ${permission}`;
+    if (revoked.length) await sql`insert into role_permissions(role_id,permission_id) values(${driverRole},${readParents.id}) on conflict do nothing`;
+    if (createdDriverRole) await sql`delete from roles where id = ${driverRole}`;
+  }
 }, 30_000);
 
 test('shared projections match their actual HTTP contracts and no arbitrary operation can be requested', async () => {

@@ -1,5 +1,5 @@
 import { Events, EventService, Service, Transaction } from '../../najm';
-import { nanoid } from 'nanoid';
+import { customAlphabet, nanoid } from 'nanoid';
 
 import { AuthService, UserService } from '../../auth';
 import { StorageService } from 'najm-storage';
@@ -12,6 +12,8 @@ import { StaffAssignmentRepository } from './StaffAssignmentRepository';
 import { StaffRepository } from './StaffRepository';
 import { StaffValidator, type StaffActor } from './StaffValidator';
 import type { CreateStaffDto, DeleteBulkStaffDto, UpdateStaffDto } from './StaffDto';
+
+const employeeCodeId = customAlphabet('0123456789', 6);
 
 // role -> support sub-resource handler (plan §7). Driver is the only structured
 // support table in v1; new roles register a handler here, never a new module.
@@ -160,8 +162,36 @@ export class StaffService {
     return await this.staffRepository.getByUserId(userId);
   }
 
+  /**
+   * What a staff member sees of their own record, or null for an account with
+   * none. Listed field by field: pay, bank, medical and emergency details and
+   * the notes written about them stay behind `read:staff`.
+   */
+  async getOwnProfile(userId: string) {
+    const row = await this.staffRepository.getByUserId(userId);
+    if (!row) return null;
+    return {
+      employeeCode: row.employeeCode,
+      phone: row.phone,
+      roleLabel: row.roleLabel,
+      roleLabels: row.roleLabels,
+      department: row.department,
+      shift: row.shift,
+      employmentType: row.employmentType,
+      hireDate: row.hireDate,
+      status: row.status,
+      assignments: row.assignments
+        .filter((assignment) => assignment.current)
+        .map(({ notes: _notes, ...assignment }) => assignment),
+    };
+  }
+
   async generateEmployeeCode() {
-    return `EMP-${nanoid(6).toUpperCase()}`;
+    for (let attempt = 0; attempt < 20; attempt++) {
+      const code = `EMP-${employeeCodeId()}`;
+      if (!await this.staffRepository.getByEmployeeCode(code)) return code;
+    }
+    throw new Error('Unable to generate a unique employee code');
   }
 
   /** The login role of an account a staff row points at, if it still exists. */

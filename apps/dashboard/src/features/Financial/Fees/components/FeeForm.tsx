@@ -2,10 +2,10 @@
 
 import React, { useMemo } from 'react'
 import { NForm } from 'najm-kit';
-import { FormInput } from 'najm-kit';
 import { User } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
 import { useDialog } from '@/shared/useDialog'
+import { FormStudentCombobox } from '@/features/Students/components/StudentCombobox'
 import { createFeeSchemas } from '../config/feeSchemas'
 import { BulkFeeFormContent } from './BulkFeeForm'
 import { injectStudentIdToFees } from '../utils/feeUtils'
@@ -19,11 +19,6 @@ const FeeForm = ({ fee = null, students = [], feeTypes = [] }) => {
    if (fee) {
       return <SimpleFeeForm fee={fee} feeTypes={feeTypes} />
    }
-
-   const studentOptions = students.map((student) => ({
-      value: student.id,
-      label: `${student.name} - ${student.studentCode}`
-   }))
 
    const handleSubmit = async (formData) => {
       const processedData = {
@@ -39,15 +34,13 @@ const FeeForm = ({ fee = null, students = [], feeTypes = [] }) => {
          defaultValues={{ studentId: null, fees: [] }}
          onSubmit={handleSubmit}
       >
-         <FormInput
-            name='studentId'
-            type='combobox'
+         <FormStudentCombobox
             icon={User}
             formLabel={t('fees.form.student')}
             placeholder={t('fees.form.studentPlaceholder')}
             searchPlaceholder={t('fees.form.searchStudent') || 'Search student...'}
             emptyMessage={t('fees.form.noStudentFound') || 'No student found.'}
-            items={studentOptions}
+            students={students}
             required={true}
          />
          <BulkFeeFormContent feeTypes={feeTypes} students={students} />

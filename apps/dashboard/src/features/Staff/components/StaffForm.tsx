@@ -250,6 +250,7 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
         onSubmit={handleSubmit}
         currentStep={currentStep}
         onCurrentStepChange={setCurrentStep}
+        freeNavigation={Boolean(staff?.id)}
         className={isSubmitting ? 'pointer-events-none select-none' : undefined}
         classNames={{
           root: 'h-full min-h-0',
@@ -315,7 +316,14 @@ const PersonalStep = ({ form, lockedRole, onRoleChange }) => {
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4">
           <FormInput name="name" type="text" formLabel={t('staff.table.name')} placeholder={t('staff.form.namePlaceholder')} icon={User} required />
-          <FormInput name="employeeCode" type="text" formLabel={t('staff.table.employeeCode')} placeholder={t('staff.form.employeeCodePlaceholder')} icon={Hash} />
+          <FormInput
+            name="employeeCode"
+            type="text"
+            formLabel={t('staff.table.employeeCode')}
+            placeholder={t(lockedRole ? 'staff.form.employeeCodePlaceholder' : 'staff.form.employeeCodeAutomatic')}
+            readOnly={!lockedRole}
+            icon={Hash}
+          />
           <FormInput name="cin" type="text" formLabel={t('staff.table.cin')} placeholder={t('staff.form.cinPlaceholder')} icon={IdCard} required />
           <FormInput name="gender" type="select" formLabel={t('staff.form.gender')} placeholder={t('staff.form.genderPlaceholder')} items={genderOptions} icon={UserRound} />
           <FormInput name="role" type="combobox" formLabel={t('staff.table.role')} placeholder={t('staff.form.rolePlaceholder')} items={roleOptions} icon={Briefcase} required disabled={lockedRole}
@@ -332,7 +340,7 @@ const PersonalStep = ({ form, lockedRole, onRoleChange }) => {
 
       <FormSectionHeader icon={Mail} title={t('parents.form.contactInformation')} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4">
-        <FormInput name="email" type="text" formLabel={t('staff.form.email')} placeholder={t('staff.form.emailPlaceholder')} icon={Mail} />
+        <FormInput name="email" type="text" formLabel={t('staff.form.email')} placeholder={t('staff.form.emailPlaceholder')} icon={Mail} required />
         <FormInput name="phone" type="phone" formLabel={t('staff.table.phone')} placeholder={t('staff.form.phonePlaceholder')} icon={Phone} required />
         <FormInput name="emergencyContact" type="text" formLabel={t('staff.form.emergencyContactName')} placeholder={t('staff.form.emergencyContactNamePlaceholder')} icon={User} />
         <FormInput name="emergencyPhone" type="phone" formLabel={t('staff.form.emergencyPhone')} placeholder={t('staff.form.emergencyPhonePlaceholder')} icon={Phone} />

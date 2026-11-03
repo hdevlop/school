@@ -4,6 +4,7 @@ import { Clock, LogIn, Mail, Phone } from 'lucide-react';
 import { NAvatar, NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { avatarVersion } from '@/lib/avatarVersion';
+import { roleLabel } from '@/shared/roleLabel';
 
 /**
  * Compact enough for five per row: who the account is, how it signs in, and
@@ -24,30 +25,33 @@ const UserCard = ({ data: user }) => {
           <p className="truncate text-sm font-semibold" title={user.name}>{user.name}</p>
           <div className="flex min-w-0 items-center gap-2">
             {user.role && (
-              <span className="truncate rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">{user.role}</span>
+              <span className="truncate rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">{roleLabel(user.role, t)}</span>
             )}
             <NBadge status={user.status} look="minimal" />
           </div>
-          {contact && (
-            <p className="flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground" title={contact}>
-              <ContactIcon className="size-3.5 shrink-0" />
-              <bdi dir="ltr" className="truncate">{contact}</bdi>
-            </p>
-          )}
         </div>
       </div>
 
-      <div className="flex items-center gap-4 border-t border-dashed border-border/50 px-3 py-2 text-xs text-muted-foreground">
-        <span className="flex items-center gap-1.5">
-          <LogIn className="size-3.5" />
-          <span className="font-medium text-foreground">{user?.analytics?.totalLogins || 0}</span>
-          {t('users.card.logins')}
-        </span>
-        <span className="flex items-center gap-1.5">
-          <Clock className="size-3.5" />
-          <span className="font-medium text-foreground">{user?.analytics?.totalSessions || 0}</span>
-          {t('users.card.sessions')}
-        </span>
+      <div className="flex flex-col gap-1.5 border-t border-dashed border-border/50 px-3 py-2 text-xs text-muted-foreground">
+        {contact && (
+          <p className="flex min-w-0 items-center gap-1.5" title={contact}>
+            <ContactIcon className="size-3.5 shrink-0" />
+            <bdi dir="ltr" className="truncate">{contact}</bdi>
+          </p>
+        )}
+
+        <div className="flex items-center gap-4">
+          <span className="flex items-center gap-1.5">
+            <LogIn className="size-3.5" />
+            <span className="font-medium text-foreground">{user?.analytics?.totalLogins || 0}</span>
+            {t('users.card.logins')}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Clock className="size-3.5" />
+            <span className="font-medium text-foreground">{user?.analytics?.totalSessions || 0}</span>
+            {t('users.card.sessions')}
+          </span>
+        </div>
       </div>
     </div>
   );

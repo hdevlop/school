@@ -204,6 +204,14 @@ export default function GradesTab({ studentId, student }: { studentId?: string; 
         />
       </div>
 
+      {!isLoading && rows.length === 0 ? (
+        <NEmptyState
+          surface="panel"
+          icon={FEATURE_ICONS.grades}
+          title={t('students.profile.gradeDetails.noneRecorded')}
+          className="min-h-64"
+        />
+      ) : (
       <NTable
         exportTitle={[student?.name, t('students.profile.tabs.grades')].filter(Boolean).join(' - ')}
         className="min-h-0 flex-1"
@@ -221,16 +229,9 @@ export default function GradesTab({ studentId, student }: { studentId?: string; 
         pagination={{ pageIndex: 0, pageSize: Math.max(rows.length, 1) }}
         showPagination={false}
         dynamicHeight={false}
-        renderEmpty={() => (
-          <NEmptyState
-            surface="panel"
-            icon={FEATURE_ICONS.grades}
-            title={t('students.profile.gradeDetails.noneRecorded')}
-            className="min-h-64"
-          />
-        )}
       />
-      {canEdit && (
+      )}
+      {canEdit && rows.length > 0 && (
         <div className="flex shrink-0 justify-end border-t border-slate-200 bg-white pt-3">
           <NButton type="button" onClick={handleSaveAll} disabled={isSaving || !changedGrades.length} loading={isSaving} leftIcon={<Save className="h-4 w-4" />}>
             {t('common.save')}

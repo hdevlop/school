@@ -86,7 +86,7 @@ export class StaffRepository {
   }
 
   private async withAssignments<T extends { id: string }>(rows: T[]) {
-    if (!rows.length) return rows;
+    if (!rows.length) return [];
 
     const staffIds = rows.map((row) => row.id);
     const assignmentMap = new Map<string, any[]>();

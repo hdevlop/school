@@ -96,7 +96,12 @@ const BehaviorRewardsTable = () => {
     <div className="flex h-full min-h-0 w-full flex-col gap-2">
       <NPageHeader
         icon={FEATURE_ICONS.behaviorRewards}
-        title={t('navigation.behaviorRewards')}
+        title={(
+          <>
+            <span className="md:hidden">{t('navigation.behaviorRewardsShort')}</span>
+            <span className="hidden md:inline">{t('navigation.behaviorRewards')}</span>
+          </>
+        )}
         subtitle={isCountUnknown(error, tableData, isBehaviorRewardsLoading) ? undefined : t('behaviorRewards.table.recordCount', { count: total })}
       >
         <NPageHeaderActions>

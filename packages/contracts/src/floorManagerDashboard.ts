@@ -80,6 +80,14 @@ export interface FloorManagerDashboardOverview {
     attendanceRate: number | null;
     unreadNotifications: number;
   };
+  /** Active students in the managed sections, using the same roster as the total. */
+  studentsByGender: { gender: string; value: number }[];
+  /** Monthly student marks in the managed sections of the active academic year. */
+  attendanceMonthly: {
+    monthly: { month: string; absent: number; late: number }[];
+    todayAbsent: number;
+    todayLate: number;
+  };
   sections: FloorManagerDashboardSection[];
   absences: FloorManagerDashboardAbsence[];
   incidents: FloorManagerDashboardIncident[];

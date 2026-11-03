@@ -2,7 +2,7 @@ import { ImageIcon, Palette } from 'lucide-react';
 import { filterNavItems, type GatedNavItem as KitGatedNavItem, type NavItem } from 'najm-kit';
 import { FEATURE_ICONS } from './featureIcons';
 import { PAGE_ACCESS, type PageAccess, type PageViewer } from './pageAccess';
-import { sidebarEntryVisible } from '@sms/contracts/access-control';
+import { orderSidebarItems, sidebarEntryVisible } from '@sms/contracts/access-control';
 
 export const THEME_SETTINGS_NAV_ID = 'settings:theme';
 export const BRANDING_SETTINGS_NAV_ID = 'settings:branding';
@@ -150,7 +150,27 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
   ];
 };
 
-export const createSidebarItems = (t: (key: string) => string, viewer: PageViewer): NavItem[] =>
-  filterNavItems(createNavigationItems(t, viewer), (item) =>
-    (!item.access || PAGE_ACCESS[item.access](viewer)) && sidebarEntryVisible(viewer.can, item.id), ['access']);
+/** After visibility filtering, a single destination needs no extra dropdown. */
+export function simplifySidebarGroups(items: readonly NavItem[]): NavItem[] {
+  return items.map((item) => {
+    if (!item.children?.length) return item;
+    const { children: nested, ...parent } = item;
+    const children = simplifySidebarGroups(nested);
+    const child = children[0];
+    if (children.length === 1 && child && !child.children?.length) {
+      return {
+        ...parent,
+        ...child,
+        label: parent.label,
+        icon: parent.icon ?? child.icon,
+        disabled: parent.disabled || child.disabled,
+      };
+    }
+    return { ...parent, children };
+  });
+}
+
+export const createSidebarItems = (t: (key: string) => string, viewer: PageViewer, order: readonly string[] = []): NavItem[] =>
+  simplifySidebarGroups(orderSidebarItems(filterNavItems(createNavigationItems(t, viewer), (item) =>
+    (!item.access || PAGE_ACCESS[item.access](viewer)) && sidebarEntryVisible(viewer.can, item.id), ['access']), order));
 

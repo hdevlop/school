@@ -16,6 +16,7 @@ export function useRoleAccess(roleId: string) {
         client.invalidateQueries({ queryKey: ['permissions'] }),
         client.invalidateQueries({ queryKey: ['role-permissions'] }),
         client.invalidateQueries({ queryKey: ['roles'] }),
+        client.invalidateQueries({ queryKey: ['sidebar-layout'] }),
       ]);
     },
   });

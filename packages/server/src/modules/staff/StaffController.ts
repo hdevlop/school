@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { CanSchoolWide } from '../../auth';
+import { CanSchoolWide, isAuth } from '../../auth';
 
 import { StaffService } from './StaffService';
 import {
@@ -45,6 +45,15 @@ export class StaffController {
   @ResMsg('staff.success.retrieved')
   async getAttendanceRoster(@Query() query: StaffAttendanceRosterQueryDto) {
     return this.staffService.getAttendanceRoster(query?.date);
+  }
+
+  // The caller's own record, whichever role they hold: it reads by their id, so
+  // sign-in is the whole guard, and the service leaves out pay, bank and medical details.
+  @Get('/me')
+  @isAuth()
+  @ResMsg('staff.success.retrieved')
+  async getOwnProfile(@User('id') userId: string) {
+    return this.staffService.getOwnProfile(userId);
   }
 
   @Get('/role/:role')

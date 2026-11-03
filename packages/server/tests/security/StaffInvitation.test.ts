@@ -26,7 +26,7 @@ function harness(accessRoleId: string | null = 'secretary-role') {
   const repository = {
     getByCin: async () => null,
     getByEmail: async () => null,
-    getByEmployeeCode: async () => null,
+    getByEmployeeCode: async (_code: string): Promise<{ id: string } | null> => null,
     create: async (row: Record<string, any>) => { profiles.push(row); return row; },
   };
   const validator = withEnglishMessages(new StaffValidator(
@@ -48,8 +48,52 @@ function harness(accessRoleId: string | null = 'secretary-role') {
     { processFile: async () => '/images/secretary_female.png' } as never,
     {} as never, {} as never, {} as never, {} as never,
   );
-  return { service, accounts, profiles, invitationCalls: () => invitationCalls };
+  return { service, repository, accounts, profiles, invitationCalls: () => invitationCalls };
 }
+
+describe('staff employee codes', () => {
+  it('assigns an EMP prefix and six digits when creation omits the code', async () => {
+    const { service, profiles } = harness();
+    const result = await service.create(input);
+    expect(result.employeeCode).toMatch(/^EMP-\d{6}$/);
+    expect(profiles[0].employeeCode).toBe(result.employeeCode);
+  });
+
+  it('retries occupied codes before saving a new staff member', async () => {
+    const { service, repository, profiles } = harness();
+    const candidates: string[] = [];
+    repository.getByEmployeeCode = async (code: string) => {
+      candidates.push(code);
+      return candidates.length < 3 ? { id: 'existing-staff' } : null;
+    };
+    const result = await service.create(input);
+    expect(candidates).toHaveLength(3);
+    expect(candidates.every((code) => /^EMP-\d{6}$/.test(code))).toBe(true);
+    expect(result.employeeCode).toBe(candidates[2]);
+    expect(profiles).toHaveLength(1);
+  });
+
+  it('preserves supplied codes, including leading zeros and legacy formats', async () => {
+    for (const employeeCode of ['001234', 'EMP-001234', 'EMP-LEGACY']) {
+      const { service } = harness();
+      const result = await service.create({ ...input, employeeCode });
+      expect(result.employeeCode).toBe(employeeCode);
+    }
+  });
+
+  it('stops after repeated collisions without creating a staff member or login', async () => {
+    const { service, repository, accounts, profiles } = harness();
+    let attempts = 0;
+    repository.getByEmployeeCode = async () => {
+      attempts++;
+      return { id: 'existing-staff' };
+    };
+    await expect(service.create(input)).rejects.toThrow('Unable to generate a unique employee code');
+    expect(attempts).toBe(20);
+    expect(profiles).toHaveLength(0);
+    expect(accounts).toHaveLength(0);
+  });
+});
 
 describe('staff invitations wait for approval', () => {
   it('saves a pending login without sending mail or exposing its random password', async () => {

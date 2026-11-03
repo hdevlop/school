@@ -37,7 +37,7 @@ function PlanningContent() {
   const { publicSettings, isSettingsLoading, error: settingsError } = usePublicSettings();
   const settings = Array.isArray(publicSettings) ? publicSettings[0] : publicSettings;
   const logo = useNThemeBrandingSlot('authLogo');
-  const [view, setView] = useState<'planning' | 'preview'>('planning');
+  const [pickedView, setView] = useState<'planning' | 'preview'>('planning');
   const [pickedRange, setRange] = useState<PlanningDateRange | null>(null);
   const [pickedClass, setClass] = useState<string | null>(null);
   const [selected, setSelected] = useState<PlanningEntrySelection | null>(null);
@@ -60,6 +60,8 @@ function PlanningContent() {
     ? pickedClass : visibleClasses.find(cls => entriesFor(cls).length)?.id ?? visibleClasses[0]?.id ?? '';
   const shownClasses = visibleClasses.filter(cls => !classId || cls.id === classId);
   const canEdit = viewer.isSchoolWide && viewer.can('update:exams');
+  // The planning tab is the editor; whoever cannot edit reads the printed calendar.
+  const view = canEdit ? pickedView : 'preview';
   const defaultClass = shownClasses.find(cls => entriesFor(cls).length);
   const pickedEntryClass = selected ? shownClasses.find(cls => cls.id === selected.classId && monthEntriesFor(cls, selected.month).some(entry => entry.id === selected.entryId)) : undefined;
   const selectedClass = pickedEntryClass ?? defaultClass;
@@ -124,22 +126,29 @@ function PlanningContent() {
   const applyAndPreview = async () => {
     if (!dirty || await saveDrafts()) setView('preview');
   };
+  const classPicker = !error && !isLoading && (
+    <div className={styles.classRow} role="group" aria-label={t('assessments.form.class')}>
+      <button className={styles.classButton} type="button" aria-pressed={!classId} disabled={dirty || saving} onClick={() => { setClass(''); setSelected(null); }}>{t('assessmentPlanning.allClasses')}</button>
+      {visibleClasses.map(cls => <button className={styles.classButton} key={cls.id} type="button" title={cls.name} aria-pressed={classId === cls.id} disabled={dirty || saving} onClick={() => { setClass(cls.id); setSelected(null); }}><span className={styles.dot} style={{ background: classDocumentColors(cls.name)[0] }} aria-hidden="true" />{toOfficialClassName(cls.name)}</button>)}
+    </div>
+  );
 
   return <div className={styles.page} data-exam-planning>
-    <NPageHeader icon={FEATURE_ICONS.assessmentPlanning} title={t('examPlanning.title')} subtitle={t('examPlanning.subtitle')}>
+    <NPageHeader icon={FEATURE_ICONS.assessmentPlanning} title={t('examPlanning.title')} subtitle={canEdit ? t('examPlanning.subtitle') : undefined}>
       <NPageHeaderActions>
         <PageHeaderGlobalActions />
       </NPageHeaderActions>
     </NPageHeader>
     <NajmScroll axis="y" autoHide="scroll" className={styles.scrollArea}>
       <main className={styles.main}>
-        <Tabs value={view} onValueChange={value => setView(value as 'planning' | 'preview')} className="gap-0">
+        <Tabs value={view} onValueChange={value => { if (canEdit) setView(value as 'planning' | 'preview'); }} className="gap-0">
         <div className={styles.toolbar}>
-          <TabsList variant="underline" aria-label={t('examPlanning.viewLabel')} className="w-auto shrink-0 border-0">
+          {!canEdit && classPicker}
+          {canEdit && <TabsList variant="underline" aria-label={t('examPlanning.viewLabel')} className="w-auto shrink-0 border-0">
             <TabsTrigger value="planning" variant="underline" className="w-auto flex-none data-[state=active]:border-primary data-[state=active]:text-primary"><List aria-hidden="true" />{t('assessmentPlanning.planningTab')}</TabsTrigger>
             <TabsTrigger value="preview" variant="underline" className="w-auto flex-none data-[state=active]:border-primary data-[state=active]:text-primary"><FileText aria-hidden="true" />{t('assessmentPlanning.previewTab')}</TabsTrigger>
-          </TabsList>
-          <div className={styles.toolbarControls}>
+          </TabsList>}
+          <div className={styles.toolbarControls} data-preview-only={!canEdit}>
           <fieldset className={styles.dateFilters} disabled={dirty || saving || isLoading}>
             <div className={styles.dateField}>
               <DateRangeInput ariaLabel={t('assessmentPlanning.period')} className="w-64 max-sm:w-full" value={range} min={yearFrom} max={yearTo} onChange={({ from, to }) => { if (from && to) { setRange({ from, to }); setClass(classId); setSelected(null); } }} />
@@ -147,7 +156,7 @@ function PlanningContent() {
           </fieldset>
           <div className={styles.toolbarActions}>
             {canEdit && <PlanningClearAction schoolYear={viewingYear ?? ''} disabled={isLoading || !!error || (!dirty && !classes.some(cls => Object.values(cls.months).some(entries => entries.length)))} saving={saving} onClear={async () => { await save({ clear: true }); discard(); setView('planning'); }} />}
-            <PlanningJsonActions classes={classes} schoolYear={viewingYear ?? ''} canEdit={canEdit} disabled={dirty || saving || isLoading || !!error} saving={saving} onImport={async document => { await save({ document }); setSelected(null); }} />
+            {canEdit && <PlanningJsonActions classes={classes} schoolYear={viewingYear ?? ''} disabled={dirty || saving || isLoading || !!error} saving={saving} onImport={async document => { await save({ document }); setSelected(null); }} />}
             {canEdit && <NButton variant="outline" size="icon" aria-label={t('examPlanning.classSettings')} title={t('examPlanning.classSettings')} disabled={isLoading || !!error || dirty || saving} onClick={() => setClassSettings(visibleClasses.map(cls => cls.id))}><Settings className="size-4" aria-hidden="true" /></NButton>}
             <NButton variant="outline" size="icon" aria-label={t('assessmentPlanning.print')} title={t('assessmentPlanning.print')} disabled={outputDisabled} onClick={print} leftIcon={<Printer className="size-4" />} />
           </div>
@@ -156,26 +165,23 @@ function PlanningContent() {
         {error ? isAuthorizationError(error) ? <NForbiddenState surface="panel" /> : <NErrorState surface="panel" />
           : isLoading ? <NLoadingState surface="panel" label={t('common.loading')} />
             : <>
-              <div className={styles.classRow} role="group" aria-label={t('assessments.form.class')}>
-                <button className={styles.classButton} type="button" aria-pressed={!classId} disabled={dirty || saving} onClick={() => { setClass(''); setSelected(null); }}>{t('assessmentPlanning.allClasses')}</button>
-                {visibleClasses.map(cls => <button className={styles.classButton} key={cls.id} type="button" title={cls.name} aria-pressed={classId === cls.id} disabled={dirty || saving} onClick={() => { setClass(cls.id); setSelected(null); }}><span className={styles.dot} style={{ background: classDocumentColors(cls.name)[0] }} aria-hidden="true" />{toOfficialClassName(cls.name)}</button>)}
-              </div>
+              {canEdit && classPicker}
               {invalidRange ? <p className={styles.alert} role="alert">{t('assessmentPlanning.invalidRange')}</p>
-                : !shownClasses.length ? <NEmptyState icon={FEATURE_ICONS.assessmentPlanning} surface="panel" title={t('examPlanning.noClasses')} description={t('examPlanning.chooseClasses')} />
+                : !shownClasses.length ? <NEmptyState icon={FEATURE_ICONS.assessmentPlanning} surface="panel" title={t('examPlanning.noClasses')} description={canEdit ? t('examPlanning.chooseClasses') : undefined} />
                 : <TabsContent value={view} className="mt-0 min-w-0">
                   {view === 'preview' ? invalidDraft ? <p role="alert" className={styles.alert}>{t('examPlanning.invalidDraft')}</p>
-                    : !records.length ? <NEmptyState icon={FEATURE_ICONS.assessmentPlanning} surface="panel" title={t('examPlanning.emptyTitle')} description={t('examPlanning.emptyDescription')} />
+                    : !records.length ? <NEmptyState icon={FEATURE_ICONS.assessmentPlanning} surface="panel" title={t('examPlanning.emptyTitle')} description={canEdit ? t('examPlanning.emptyDescription') : undefined} />
                     : settingsError ? <NErrorState surface="panel" /> : isSettingsLoading ? <NLoadingState surface="panel" label={t('common.loading')} />
                     : <>
                       <div className={styles.paperStage}><PlanningPreview html={buildPlanningDocument(records, documentOptions)} title={t('assessmentPlanning.previewTab')} /></div>
                       <p className={styles.previewTip}>{t('examPlanning.previewTip')}</p>
                     </>
                     : <div className={styles.editorLayout}>
-                      <PlanningSchedule classes={shownClasses} entriesFor={entriesFor} selected={effectiveSelection} canEdit={canEdit} saving={saving} onSelect={setSelected} onAdd={addEntry} />
-                      {selectedEntry && selectedClass && selectedMonth ? <PlanningEntryEditor key={selectedClass.id + ':' + selectedMonth + ':' + selectedEntry.id} entry={selectedEntry} className={toOfficialClassName(selectedClass.name)} month={selectedMonth} disabled={saving} canEdit={canEdit} dirty={dirty} valid={!invalidDraft} onChange={updateEntry} onDelete={() => { updateEntries(selectedClass, selectedMonth, monthEntriesFor(selectedClass, selectedMonth).filter(entry => entry.id !== selectedEntry.id)); setSelected(null); }} onCancel={discard} onApply={applyAndPreview} />
+                      <PlanningSchedule classes={shownClasses} entriesFor={entriesFor} selected={effectiveSelection} saving={saving} onSelect={setSelected} onAdd={addEntry} />
+                      {selectedEntry && selectedClass && selectedMonth ? <PlanningEntryEditor key={selectedClass.id + ':' + selectedMonth + ':' + selectedEntry.id} entry={selectedEntry} className={toOfficialClassName(selectedClass.name)} month={selectedMonth} disabled={saving} dirty={dirty} valid={!invalidDraft} onChange={updateEntry} onDelete={() => { updateEntries(selectedClass, selectedMonth, monthEntriesFor(selectedClass, selectedMonth).filter(entry => entry.id !== selectedEntry.id)); setSelected(null); }} onCancel={discard} onApply={applyAndPreview} />
                         : <aside className={styles.editPanel} aria-label={t('examPlanning.editLessons')}>
                           <p className={styles.secondary}>{t(dirty ? 'examPlanning.unsaved' : 'examPlanning.selectSubject')}</p>
-                          {canEdit && dirty && <div className={styles.editorActions}>
+                          {dirty && <div className={styles.editorActions}>
                             <NButton variant="outline" type="button" disabled={saving} onClick={discard}>{t('common.cancel')}</NButton>
                             <NButton className={styles.applyButton} type="button" disabled={saving || invalidDraft} loading={saving} onClick={applyAndPreview}>{t('examPlanning.saveAndPreview')}</NButton>
                           </div>}
@@ -186,7 +192,7 @@ function PlanningContent() {
         </Tabs>
       </main>
     </NajmScroll>
-    <PlanningClassSettings classes={classes} selection={classSettings} saving={saving} onChange={setClassSettings} onClose={() => setClassSettings(null)} onSave={saveClasses} />
+    {canEdit && <PlanningClassSettings classes={classes} selection={classSettings} saving={saving} onChange={setClassSettings} onClose={() => setClassSettings(null)} onSave={saveClasses} />}
   </div>;
 }
 

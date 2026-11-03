@@ -85,7 +85,9 @@ function App({ bootstrap, privateAccess }: { bootstrap: ShellBootstrap; privateA
     return () => { cancelled = true; dispose?.(); };
   }, [bootstrap.accountId, bootstrap.academicYear, bootstrap.role, privateAccess]);
   const route = routeForPath(bootstrap.routes, path);
-  const navItems = useMemo(() => createShellNavItems(t, bootstrap.role, bootstrap.routes), [t, bootstrap.role, bootstrap.routes]);
+  const storedOrder = bootstrap.ui.settings?.sidebarOrder;
+  const navItems = useMemo(() => createShellNavItems(t, bootstrap.role, bootstrap.routes,
+    Array.isArray(storedOrder) ? storedOrder.filter((id): id is string => typeof id === 'string') : []), [t, bootstrap.role, bootstrap.routes, storedOrder]);
   const appName = bootstrap.ui.app?.appName ?? 'MyScolAI';
   return <NSidebarProvider><div className="flex h-dvh bg-background text-foreground">
     <NSidebar linkComponent={LocalLink} navItems={navItems} activePath={route?.href ?? path}

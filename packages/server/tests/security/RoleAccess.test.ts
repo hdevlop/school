@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { describe, expect, it } from 'bun:test';
 import { getGuardMetadata } from 'najm-guard';
-import { SIDEBAR_ENTRIES, SIDEBAR_CONFIGURED_PERMISSION, sidebarPermission, type AccessPermission } from '@sms/contracts/access-control';
+import { SIDEBAR_ENTRIES, SIDEBAR_CONFIGURED_PERMISSION, sidebarPermission, type AccessPermission, type SidebarOrderId } from '@sms/contracts/access-control';
 import { RoleAccessController } from '../../src/modules/roleAccess/RoleAccessController';
 import { RoleAccessService } from '../../src/modules/roleAccess/RoleAccessService';
 import { RoleAccessValidator } from '../../src/modules/roleAccess/RoleAccessValidator';
@@ -14,8 +14,11 @@ function build(roleName = 'accounting') {
   let catalog = ['read:fees', 'read:payroll', 'read:feeTypes'].map(permission);
   const assigned = new Set(['read:fees', 'read:payroll']);
   const calls: string[] = [];
+  let sidebarOrder: SidebarOrderId[] = [];
   const repository = {
     getRole: async (_id: string, lock: boolean) => { if (lock) calls.push('lock'); return { id: 'role-1', name: roleName }; },
+    getSidebarOrder: async () => sidebarOrder,
+    saveSidebarOrder: async (_id: string, order: SidebarOrderId[]) => { calls.push('order'); sidebarOrder = order; },
     ensureSidebarCatalog: async () => {
       calls.push('catalog');
       catalog = [...catalog, permission(SIDEBAR_CONFIGURED_PERMISSION), ...SIDEBAR_ENTRIES.map(([key]) => permission(sidebarPermission(key)))];
@@ -53,6 +56,34 @@ describe('review-and-save role access command', () => {
     expect(saveRoleAccessDto.safeParse({ ...body, sidebarKeys: ['not-a-page'] }).success).toBe(false);
     expect(saveRoleAccessDto.safeParse({ ...body, permissionIds: ['a', 'a'] }).success).toBe(false);
     expect(saveRoleAccessDto.safeParse({ permissionIds: [], expectedPermissionIds: [] }).success).toBe(true);
+    expect(saveRoleAccessDto.safeParse({ ...body, sidebarOrder: ['/students'], expectedSidebarOrder: [] }).success).toBe(true);
+    expect(saveRoleAccessDto.safeParse({ ...body, sidebarOrder: ['/students'] }).success).toBe(false);
+    expect(saveRoleAccessDto.safeParse({ ...body, sidebarOrder: ['/unknown'], expectedSidebarOrder: [] }).success).toBe(false);
+    expect(saveRoleAccessDto.safeParse({ ...body, sidebarOrder: ['/students', '/students'], expectedSidebarOrder: [] }).success).toBe(false);
+  });
+
+  it('saves role ordering without configuring visibility or changing grants', async () => {
+    const { service, assigned, calls } = build();
+    const result = await service.save('role-1', {
+      permissionIds: ['read:fees', 'read:payroll'], expectedPermissionIds: ['read:fees', 'read:payroll'],
+      sidebarOrder: ['attendance', '/students', '/dashboard'], expectedSidebarOrder: [],
+    }, 'admin-1');
+    expect(result.sidebarOrder).toEqual(['attendance', '/students', '/dashboard']);
+    expect([...assigned]).toEqual(['read:fees', 'read:payroll']);
+    expect(calls).toEqual(['lock', 'order', 'audit']);
+    await expect(service.save('role-1', {
+      permissionIds: [], expectedPermissionIds: ['read:fees', 'read:payroll'],
+      sidebarOrder: [], expectedSidebarOrder: [],
+    }, 'admin-1')).rejects.toMatchObject({ status: 409 });
+    expect([...assigned]).toEqual(['read:fees', 'read:payroll']);
+  });
+
+  it('allows protected administrator ordering while preserving its grants', async () => {
+    const { service, assigned } = build('admin');
+    const body = { permissionIds: ['read:fees', 'read:payroll'], expectedPermissionIds: ['read:fees', 'read:payroll'], sidebarOrder: ['/students'] as SidebarOrderId[], expectedSidebarOrder: [] };
+    expect((await service.save('role-1', body, 'admin-1')).sidebarOrder).toEqual(['/students']);
+    expect([...assigned]).toEqual(['read:fees', 'read:payroll']);
+    await expect(service.save('role-1', { ...body, permissionIds: [] }, 'admin-1')).rejects.toMatchObject({ status: 403 });
   });
 
   it('preserves an unconfigured sidebar during a permission-only change', async () => {

@@ -48,7 +48,7 @@ async function restore() {
 beforeAll(async () => {
   if (!sql || !connection) return;
   await sql.unsafe(`CREATE SCHEMA "${schema}"`);
-  for (const table of ['roles', 'permissions', 'role_permissions', 'users', 'tokens', 'audit_logs', 'credential_setup_requirements', 'credential_setup_sessions']) {
+  for (const table of ['roles', 'permissions', 'role_permissions', 'role_sidebar_layouts', 'users', 'tokens', 'audit_logs', 'credential_setup_requirements', 'credential_setup_sessions']) {
     await sql.unsafe(`CREATE TABLE "${schema}"."${table}" (LIKE public."${table}" INCLUDING ALL)`);
   }
   isolated = postgres(connection, { max: 4, connection: { search_path: schema }, onnotice: () => {} });

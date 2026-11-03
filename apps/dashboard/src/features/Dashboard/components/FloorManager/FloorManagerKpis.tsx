@@ -11,7 +11,7 @@ type FloorManagerKpisProps = {
   loading: boolean;
 };
 
-// The teacher's row of six figures, over the floor manager's grades.
+// The floor manager's six summary figures across their assigned grades.
 const FloorManagerKpis = ({ kpis, loading }: FloorManagerKpisProps) => {
   const { t } = useTranslation();
   const { number, percent } = useSchoolFormat();

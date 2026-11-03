@@ -9,9 +9,9 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { planningTextLanguage, type PlanningEntrySelection } from './examPlanningModel';
 import styles from './ExamPlanning.module.css';
 
-export function PlanningSchedule({ classes, entriesFor, selected, canEdit, saving, onSelect, onAdd }: {
+export function PlanningSchedule({ classes, entriesFor, selected, saving, onSelect, onAdd }: {
   classes: ExamPlanningClass[]; entriesFor: (cls: ExamPlanningClass) => ExamPlanningEntry[];
-  selected?: PlanningEntrySelection | null; canEdit: boolean; saving: boolean;
+  selected?: PlanningEntrySelection | null; saving: boolean;
   onSelect: (value: PlanningEntrySelection) => void; onAdd: (cls: ExamPlanningClass) => void;
 }) {
   const { t } = useTranslation();
@@ -31,7 +31,7 @@ export function PlanningSchedule({ classes, entriesFor, selected, canEdit, savin
         </div>
         <div className={styles.sectionTools}>
           {dates.length > 0 && <NButton type="button" variant="outline" size="sm" className={styles.scheduleAction} aria-pressed={compact} leftIcon={compact ? <ChevronsUpDown /> : <ChevronsDownUp />} onClick={() => setCollapsedDays(current => ({ ...current, ...Object.fromEntries(dates.map(date => [`${cls.id}:${date}`, !compact])) }))}>{compactLabel}</NButton>}
-          {canEdit && <NButton type="button" variant="outline" size="sm" className={styles.scheduleAction} disabled={saving} onClick={() => onAdd(cls)} leftIcon={<Plus />}>{t('examPlanning.addEntry')}</NButton>}
+          <NButton type="button" variant="outline" size="sm" className={styles.scheduleAction} disabled={saving} onClick={() => onAdd(cls)} leftIcon={<Plus />}>{t('examPlanning.addEntry')}</NButton>
         </div>
       </div>
       {!entries.length ? <p className={styles.empty}>{t('examPlanning.emptyDescription')}</p> : dates.map(date => {

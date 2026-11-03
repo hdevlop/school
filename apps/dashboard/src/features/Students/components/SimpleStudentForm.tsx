@@ -54,7 +54,7 @@ export const getStudentDefaultValues = (student = null, businessDate?: string | 
 const SimpleStudentForm = ({ student = null, classes = [] }) => {
 
   const { t } = useTranslation()
-  const { role } = useViewerRole()
+  const { role, can } = useViewerRole()
   const canChangePlacement = (role === 'admin' || role === 'principal') && !!student?.classId && !!student?.sectionId
   const studentProfileEditSchema = useMemo(() => createStudentSchemas(t).profileEdit, [t])
   const { pop } = useDialog()
@@ -80,7 +80,7 @@ const SimpleStudentForm = ({ student = null, classes = [] }) => {
       >
         <StudentFormContent classes={classes} student={student} placementReadOnly={!canChangePlacement} />
       </NForm>
-      {student?.id && <StudentParentsSection studentId={student.id} />}
+      {student?.id && can('read:parents') && <StudentParentsSection studentId={student.id} />}
     </>
   )
 }

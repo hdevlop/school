@@ -35,6 +35,7 @@ const calculateStaffPay = (row) => {
 
 const resolveRoleLabel = (row, language, t) => {
   if (!row?.role) return '—';
+  if (row.role === 'floorManager') return t('staff.roles.floorManager');
   const localized = row?.roleLabels?.[language];
   if (localized) return localized;
   if (row?.roleLabel) return row.roleLabel;
@@ -191,7 +192,7 @@ const StaffTable = () => {
               size="sm"
               version={avatarVersion(staffMember?.image, staffMember?.updatedAt)}
             />
-            {staffMember.loginStatus === 'pending' && <Badge variant="secondary">{t('staff.invitation.accessPending')}</Badge>}
+            {staffMember.loginStatus === 'pending' && <Badge variant="secondary" className="bg-amber-100 font-medium text-amber-900 ring-1 ring-inset ring-amber-300 dark:bg-amber-950 dark:text-amber-200 dark:ring-amber-700">{t('staff.invitation.accessPending')}</Badge>}
           </div>
         );
       },

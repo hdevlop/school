@@ -4,6 +4,7 @@ export const SIDEBAR_CONFIGURED_PERMISSION = 'sidebar:configured';
 export const SIDEBAR_ENTRIES = [
   ['dashboard', '/dashboard', 'navigation.dashboard'],
   ['students', '/students', 'navigation.students'],
+  ['insurance', '/insurance', 'navigation.insurance'],
   ['parents', '/parents', 'navigation.parents'],
   ['teachers', '/teachers', 'navigation.teachers'],
   ['staff', '/staff', 'navigation.staff'],
@@ -42,13 +43,38 @@ export type SidebarKey = typeof SIDEBAR_ENTRIES[number][0];
 export const sidebarPermission = (key: string) => `sidebar:${key}`;
 export const isSidebarPermission = (name: string) => name.startsWith('sidebar:');
 
+/** Stable navigation identities; labels and role access stay in the app. */
+export const SIDEBAR_ORDER_IDS = [
+  'financial', 'attendance', 'student-conduct', 'evaluations', 'academic',
+  'transport', 'access-control', 'appearance', '/exam-planning',
+  ...SIDEBAR_ENTRIES.map((entry) => entry[1]),
+] as const;
+export type SidebarOrderId = typeof SIDEBAR_ORDER_IDS[number];
+
+export function sidebarKeyForItem(itemId: string): SidebarKey | undefined {
+  const pageId = itemId === '/exam-planning' || itemId === '/assessment-planning' ? '/exams' : itemId;
+  return SIDEBAR_ENTRIES.find((entry) => entry[1] === pageId)?.[0];
+}
+
+/** Sort siblings only: an order preference cannot move a page into another group. */
+export function orderSidebarItems<T extends { id: string; children?: T[] }>(items: readonly T[], order: readonly string[]): T[] {
+  const position = new Map(order.map((id, index) => [id, index]));
+  const sort = (entries: readonly T[]): T[] => entries
+    .map((item) => item.children ? { ...item, children: sort(item.children) } : item)
+    .sort((a, b) => (position.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (position.get(b.id) ?? Number.MAX_SAFE_INTEGER));
+  return sort(items);
+}
+
+type SidebarIdentity = { id: string; children?: SidebarIdentity[] };
+export function sidebarItemIds(items: readonly SidebarIdentity[]): SidebarOrderId[] {
+  return items.flatMap((item) => [item.id as SidebarOrderId, ...sidebarItemIds(item.children ?? [])]);
+}
+
 /** Older roles retain their existing navigation until explicitly configured. */
 export function sidebarEntryVisible(can: (permission: string) => boolean, itemId: string): boolean {
-  // Exam planning follows the Exams sidebar preference; insurance follows Students.
-  const pageId = itemId === '/exam-planning' || itemId === '/assessment-planning' ? '/exams'
-    : itemId === '/insurance' ? '/students' : itemId;
-  const entry = SIDEBAR_ENTRIES.find((entry) => entry[1] === pageId);
-  return !entry || !can(SIDEBAR_CONFIGURED_PERMISSION) || can(sidebarPermission(entry[0]));
+  // Exam planning follows the Exams sidebar preference.
+  const key = sidebarKeyForItem(itemId);
+  return !key || !can(SIDEBAR_CONFIGURED_PERMISSION) || can(sidebarPermission(key));
 }
 
 export type AccessPermission = {
@@ -63,10 +89,14 @@ export type RoleAccessSnapshot = {
   role: AccessRole;
   permissions: AccessPermission[];
   catalog: AccessPermission[];
+  sidebarOrder?: SidebarOrderId[];
 };
 export type SaveRoleAccess = {
   permissionIds: string[];
   expectedPermissionIds: string[];
   /** Omit to preserve the current sidebar configuration, including legacy defaults. */
   sidebarKeys?: SidebarKey[];
+  /** Omit to preserve the saved order. Empty restores the default order. */
+  sidebarOrder?: SidebarOrderId[];
+  expectedSidebarOrder?: SidebarOrderId[];
 };

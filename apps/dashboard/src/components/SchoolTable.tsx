@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { NButton, NTable, useTableStore, type NTableProps } from 'najm-kit';
-import { Eye, Pencil, Plus, Trash2 } from 'lucide-react';
+import { Eye, Pencil, Trash2 } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { withSchoolExports } from '@/shared/tableExport';
@@ -56,7 +56,8 @@ export function SchoolTable<T = any>({
   const canCreate = allowed('create');
   const canUpdate = allowed('update');
   const canDelete = allowed('delete');
-  const blockedCreate = Boolean(props.onCreate && props.showAddButton !== false && !canCreate);
+  // Importing asks for edit as well as add, as the import routes do.
+  const canImport = canCreate && canUpdate;
   // Najm owns menus and their rendering; School supplies disabled action items.
   const defaultMenu = permissionResource && !props.menu && (props.onView || props.onEdit || props.onDelete) ? { row: (row: T) => [
     ...(props.onView ? [{ label: t('common.view'), icon: Eye, onSelect: () => props.onView?.(row) }] : []),
@@ -84,13 +85,13 @@ export function SchoolTable<T = any>({
       showPrintButton={props.showPrintButton ?? true}
       toolbarActionDisplay={props.toolbarActionDisplay ?? 'settings'}
       onCreate={canCreate ? props.onCreate : undefined}
-      showAddButton={blockedCreate ? false : props.showAddButton}
+      showAddButton={canCreate ? props.showAddButton : false}
       onEdit={canUpdate ? props.onEdit : undefined}
       onDelete={canDelete ? props.onDelete : undefined}
       onBulkDelete={canDelete ? props.onBulkDelete : undefined}
       onCellEdit={canUpdate ? props.onCellEdit : undefined}
-      onDataChange={canCreate ? props.onDataChange : undefined}
-      showImportButton={canCreate ? props.showImportButton : false}
+      onDataChange={canImport ? props.onDataChange : undefined}
+      showImportButton={canImport ? props.showImportButton : false}
       menu={guardedMenu}
       menuButton={defaultMenu ? true : props.menuButton}
       classNames={{
@@ -98,8 +99,7 @@ export function SchoolTable<T = any>({
         header: `${props.classNames?.header ?? ''} [&_.lucide-settings]:text-foreground`,
         pagination: `${props.classNames?.pagination ?? ''} pr-24`,
       }}
-      renderToolbar={blockedCreate || (showDeleteSelection && props.onBulkDelete) ? state => <>
-        {blockedCreate && <NButton data-school-create-action variant="outline" size="icon-lg" rounded="lg" disabled aria-label={props.addButtonText || t('common.create')}><Plus className="size-5" /></NButton>}
+      renderToolbar={showDeleteSelection && props.onBulkDelete ? state => <>
         {showDeleteSelection && props.onBulkDelete && <DeleteSelection onDelete={props.onBulkDelete} loading={props.loading} disabled={!canDelete} />}
         {props.renderToolbar?.(state)}
       </> : props.renderToolbar}

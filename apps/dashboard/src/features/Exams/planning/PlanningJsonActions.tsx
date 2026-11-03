@@ -8,8 +8,8 @@ import { useTranslation } from 'najm-i18n/react';
 import { toast } from 'sonner';
 import { parseExamPlanningJson, resolveExamPlanningClasses, MAX_EXAM_PLANNING_JSON_BYTES, type ExamPlanningClass, type ExamPlanningJson } from '@sms/contracts';
 
-export function PlanningJsonActions({ classes, schoolYear, canEdit, disabled, saving, onImport }: {
-  classes: ExamPlanningClass[]; schoolYear: string; canEdit: boolean; disabled: boolean; saving: boolean;
+export function PlanningJsonActions({ classes, schoolYear, disabled, saving, onImport }: {
+  classes: ExamPlanningClass[]; schoolYear: string; disabled: boolean; saving: boolean;
   onImport: (document: ExamPlanningJson) => Promise<unknown>;
 }) {
   const { t } = useTranslation();
@@ -66,16 +66,14 @@ export function PlanningJsonActions({ classes, schoolYear, canEdit, disabled, sa
 
   return <>
     <NButton variant="outline" size="icon" aria-label={t('examPlanning.json.export')} title={t('examPlanning.json.export')} disabled={disabled || !classes.length || !schoolYear} onClick={exportJson}><Download aria-hidden="true" /></NButton>
-    {canEdit && <>
-      <NButton variant="outline" size="icon" aria-label={t('examPlanning.json.import')} title={t('examPlanning.json.import')} disabled={disabled || !classes.length || !schoolYear} onClick={() => setOpen(true)}><Upload aria-hidden="true" /></NButton>
-      <FileImportDialog open={open} title={t('examPlanning.json.import')} description={`${schoolYear} · ${t('examPlanning.json.description')}`}
-        fileLabel={t('examPlanning.json.file')} file={selectedFile} busy={busy} reading={reading} saving={saving} disabled={disabled}
-        canSubmit={Boolean(pendingDocument)} error={fileError} onClose={close} onFile={readFile} onSubmit={importJson}>
-        {pendingDocument && <div className="mt-4 space-y-3 text-sm">
-          <p>{t('examPlanning.json.summary', { classes: pendingDocument.classes.length, months, entries })}</p>
-          <ul className="space-y-2">{pendingDocument.classes.map(cls => <li key={cls.name} className="rounded-md border p-3">{cls.name}</li>)}</ul>
-        </div>}
-      </FileImportDialog>
-    </>}
+    <NButton variant="outline" size="icon" aria-label={t('examPlanning.json.import')} title={t('examPlanning.json.import')} disabled={disabled || !classes.length || !schoolYear} onClick={() => setOpen(true)}><Upload aria-hidden="true" /></NButton>
+    <FileImportDialog open={open} title={t('examPlanning.json.import')} description={`${schoolYear} · ${t('examPlanning.json.description')}`}
+      fileLabel={t('examPlanning.json.file')} file={selectedFile} busy={busy} reading={reading} saving={saving} disabled={disabled}
+      canSubmit={Boolean(pendingDocument)} error={fileError} onClose={close} onFile={readFile} onSubmit={importJson}>
+      {pendingDocument && <div className="mt-4 space-y-3 text-sm">
+        <p>{t('examPlanning.json.summary', { classes: pendingDocument.classes.length, months, entries })}</p>
+        <ul className="space-y-2">{pendingDocument.classes.map(cls => <li key={cls.name} className="rounded-md border p-3">{cls.name}</li>)}</ul>
+      </div>}
+    </FileImportDialog>
   </>;
 }

@@ -1,12 +1,15 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { CalendarDays, Clock3, FileText, MapPin, ShieldAlert, UserRound } from 'lucide-react';
-import { FormInput, NForm, NFormSectionHeader } from 'najm-kit';
+import { FormControl, FormField, FormInput, FormItem, FormLabel, NForm, NFormSectionHeader, SelectInput, useVariantPreset } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useStudents } from '@/features/Students/hooks/useStudents';
+import { FormStudentCombobox } from '@/features/Students/components/StudentCombobox';
 import { useTranslation } from 'najm-i18n/react';
 import { createDisciplineSchemas } from '../config/disciplineSchemas';
+import { OTHER_LOCATION, buildDisciplineLocationOptions, isListedDisciplineLocation } from '../config/disciplineOptions';
 import { DISCIPLINE_CATEGORIES, DISCIPLINE_SEVERITIES, type DisciplineIncident } from '../disciplineConstants';
 import { useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYear';
@@ -22,6 +25,45 @@ const localParts = (value?: string) => {
   return { incidentDate: `${year}-${month}-${day}`, incidentTime: `${hours}:${minutes}` };
 };
 
+/** A list of usual places; "other" opens a text box, as does a place stored outside the list. */
+function IncidentLocationField() {
+  const { t } = useTranslation();
+  const { control, getValues } = useFormContext();
+  const preset = useVariantPreset();
+  const [isOther, setIsOther] = useState(() => {
+    const stored = getValues('location');
+    return Boolean(stored) && !isListedDisciplineLocation(stored);
+  });
+  const items = useMemo(() => buildDisciplineLocationOptions(t), [t]);
+
+  return (
+    <>
+      <FormField control={control} name="location" render={({ field }) => (
+        <FormItem className={preset.item}>
+          <FormLabel className={preset.label}>
+            <MapPin aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
+            {t('discipline.form.location')}
+          </FormLabel>
+          <FormControl>
+            <SelectInput
+              value={isOther ? OTHER_LOCATION : field.value ?? ''}
+              onChange={(choice) => {
+                setIsOther(choice === OTHER_LOCATION);
+                field.onChange(choice === OTHER_LOCATION ? '' : choice);
+              }}
+              items={items}
+              placeholder={t('discipline.form.locationPlaceholder')}
+              ariaLabel={t('discipline.form.location')}
+              className={preset.input}
+            />
+          </FormControl>
+        </FormItem>
+      )} />
+      {isOther && <FormInput name="location" type="text" placeholder={t('discipline.form.locationOtherPlaceholder')} />}
+    </>
+  );
+}
+
 export default function DisciplineForm({ incident }: { incident?: DisciplineIncident | null }) {
   const { t } = useTranslation();
   const disciplineSchema = useMemo(() => createDisciplineSchemas(t).discipline, [t]);
@@ -32,9 +74,7 @@ export default function DisciplineForm({ incident }: { incident?: DisciplineInci
   // A new incident starts on today's date inside the viewed year; once that
   // year has ended, today would be refused as outside it.
   if (!incident?.id) dateParts.incidentDate = teachingDateWithinYear(dateParts.incidentDate, yearCalendar);
-  const studentOptions = (students || [])
-    .filter((student) => student.status === 'active')
-    .map((student) => ({ value: student.id, label: `${student.name} · ${student.studentCode}` }));
+  const activeStudents = useMemo(() => (students || []).filter((student) => student.status === 'active'), [students]);
 
   const defaultValues = {
     ...(incident?.id ? { id: incident.id } : {}),
@@ -59,15 +99,13 @@ export default function DisciplineForm({ incident }: { incident?: DisciplineInci
     <NForm id="discipline-form" schema={disciplineSchema} defaultValues={defaultValues} onSubmit={submit}>
       <div className="flex flex-col gap-4">
         <NFormSectionHeader icon={ShieldAlert} title={t('discipline.form.incidentDetails')} />
-        <FormInput
-          name="studentId"
-          type="combobox"
+        <FormStudentCombobox
           formLabel={t('discipline.form.student')}
           placeholder={t('discipline.form.studentPlaceholder')}
           searchPlaceholder={t('discipline.form.studentSearch')}
           emptyMessage={t('discipline.form.noStudents')}
           icon={UserRound}
-          items={studentOptions}
+          students={activeStudents}
           disabled={isStudentsLoading}
           required
         />
@@ -83,7 +121,7 @@ export default function DisciplineForm({ incident }: { incident?: DisciplineInci
             items={DISCIPLINE_SEVERITIES.map((value) => ({ value, label: t(`discipline.severity.${value}`) }))}
           />
         </div>
-        <FormInput name="location" type="text" formLabel={t('discipline.form.location')} placeholder={t('discipline.form.locationPlaceholder')} icon={MapPin} />
+        <IncidentLocationField />
         <FormInput name="description" type="textarea" formLabel={t('discipline.form.description')} placeholder={t('discipline.form.descriptionPlaceholder')} icon={FileText} required />
       </div>
     </NForm>

@@ -36,7 +36,7 @@ export { default as OverviewTab } from './Overview';
 export default function StudentProfile({ studentId }: StudentProfileProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<string>('overview');
-  const { student, isStudentLoading, studentError, refetchStudent, parents, isParentsLoading } = useStudentProfile(studentId);
+  const { student, isStudentLoading, studentError, refetchStudent, canReadParents, parents, isParentsLoading } = useStudentProfile(studentId);
   const { t } = useTranslation();
   // The fees and transport tabs read finance and transport routes.
   const { isSchoolWide, isFamily, can } = useViewerRole();
@@ -98,7 +98,7 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
           </div>
         </section>
         <div className="flex min-w-0 flex-col gap-3">
-          <OverviewTab {...sharedTabProps} />
+          <OverviewTab {...sharedTabProps} canReadParents={canReadParents} />
         </div>
       </div>
     ) },

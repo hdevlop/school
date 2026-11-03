@@ -38,14 +38,23 @@ export const useGradesTableColumns = ({
     },
     {
       accessorKey: 'studentName',
-      header: t('grades.table.student'),
+      header: () => <span className="grade-student-name-column">{t('grades.table.student')}</span>,
+      meta: { exportHeader: t('grades.table.student') },
       enableSorting: false,
       cell: ({ row }) => {
         const name = row.original.studentName;
         const image = row.original.studentImage;
         const updatedAt = row.original.studentUpdatedAt;
         if (!name) return <span className="text-gray-400">{t('common.notAssigned')}</span>;
-        return <NAvatar src={image} title={name} size="sm" version={avatarVersion(image, updatedAt)} />;
+        return (
+          <NAvatar
+            src={image}
+            title={name}
+            size="sm"
+            version={avatarVersion(image, updatedAt)}
+            classNames={{ title: 'whitespace-normal break-words' }}
+          />
+        );
       },
       filterFn: (row, _id, value) => {
         const needle = String(value ?? '').toLowerCase().trim();
@@ -65,17 +74,6 @@ export const useGradesTableColumns = ({
         const gender = row.original.gender;
         if (!gender) return <span className="text-gray-400">{t('common.notSpecified')}</span>;
         return gender === 'M' ? t('common.male') : gender === 'F' ? t('common.female') : gender;
-      },
-    },
-    {
-      accessorKey: 'phone',
-      // Secondary to grading: shown only where the table has room, so names never truncate.
-      meta: { hiddenBelow: '2xl' },
-      header: t('grades.table.phone'),
-      enableSorting: false,
-      cell: ({ row }) => {
-        const phone = row.original.phone;
-        return phone || <span className="text-gray-400">{t('common.notAvailable')}</span>;
       },
     },
     {

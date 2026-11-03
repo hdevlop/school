@@ -25,4 +25,10 @@ export class RoleAccessValidator {
     const assignable = new Set(catalog.filter((permission) => !isSidebarPermission(permission.name)).map((permission) => permission.id));
     if (ids.some((id) => !assignable.has(id))) Err(422, this.t('invalidPermissions'));
   }
+
+  ensureSidebarOrderFresh(current: readonly string[], expected: readonly string[]) {
+    if (current.length !== expected.length || current.some((id, index) => id !== expected[index])) {
+      Err(409, this.t('conflict'));
+    }
+  }
 }

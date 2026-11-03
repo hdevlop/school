@@ -26,8 +26,8 @@ interface DonutChartProps {
 // Donut Chart Component
 export const DonutChart: React.FC<DonutChartProps> = ({ data }) => {
    return (
-      <div className="flex relative justify-center" style={{ height: 250 }}>
-         <ResponsiveContainer width="100%" height={250}>
+      <div className="relative flex min-h-32 max-h-[250px] flex-1 justify-center">
+         <ResponsiveContainer width="100%" height="100%">
             <PieChart>
                <Pie
                   data={data}

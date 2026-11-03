@@ -6,6 +6,7 @@ import { NBadge, NLoadingState } from 'najm-kit';
 import { Label } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useStudents } from '@/features/Students/hooks/useStudents';
+import { StudentComboboxInput } from '@/features/Students/components/StudentCombobox';
 import { useStudentReport } from '../hooks/useGrades';
 
 const gpaColor = (gpa) => {
@@ -49,19 +50,14 @@ const StudentReportCard = ({ studentId: initialStudentId = null }: { studentId?:
       {/* Student picker */}
       <div className="flex flex-col gap-1">
         <Label className="text-sm font-medium">{t('grades.report.selectStudent')}</Label>
-        <select
-          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-          value={studentId || ''}
-          onChange={(e) => setStudentId(e.target.value || null)}
+        <StudentComboboxInput
+          value={studentId}
+          onChange={(id) => setStudentId(id || null)}
+          students={students}
+          ariaLabel={t('grades.report.selectStudent')}
+          placeholder={t('grades.form.studentPlaceholder')}
           disabled={isStudentsLoading}
-        >
-          <option value="">{t('grades.form.studentPlaceholder')}</option>
-          {(students || []).map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.studentCode ? `${s.name} (${s.studentCode})` : s.name}
-            </option>
-          ))}
-        </select>
+        />
       </div>
 
       {!studentId && (

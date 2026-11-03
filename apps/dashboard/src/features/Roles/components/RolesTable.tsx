@@ -1,6 +1,7 @@
 'use client';
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { roleLabel } from '@/shared/roleLabel';
 
 import { useState } from 'react';
 import { Button, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, cn, surfaceBorderClasses } from 'najm-kit';
@@ -44,7 +45,7 @@ export default function RolesTable() {
   const edit = () => {
     if (!selected || locked) return;
     openDialog({
-      title: `${t('roles.dialogs.editTitle')} - ${selected.name}`, children: <RoleForm role={selected} />,
+      title: `${t('roles.dialogs.editTitle')} - ${roleLabel(selected.name, t)}`, children: <RoleForm role={selected} />,
       primaryButton: {
         form: 'role-form', text: t('roles.dialogs.updateButton'), loading: isUpdating,
         onClick: async (data) => { await updateRole(data); },
@@ -54,7 +55,7 @@ export default function RolesTable() {
   const remove = () => {
     if (!selected || locked || dirty) return;
     confirmDelete({
-      title: t('common.delete'), warningText: t('common.deleteConfirm'), itemName: selected.name,
+      title: t('common.delete'), warningText: t('common.deleteConfirm'), itemName: roleLabel(selected.name, t),
       confirmText: t('roles.dialogs.deleteButton'), loading: isDeleting,
       onConfirm: async () => { await deleteRole(selected.id); setSelectedId(null); },
     });
@@ -73,7 +74,7 @@ export default function RolesTable() {
             <nav aria-label={t('navigation.roles')} className="flex max-h-40 flex-wrap gap-1 overflow-y-auto px-2 pt-3 pb-2 lg:max-h-none lg:flex-1 lg:flex-col lg:flex-nowrap">
               {allRoles.map((role) => <button key={role.id} type="button" onClick={() => selectRole(role)} aria-pressed={selected.id === role.id}
                 className={`flex min-h-10 cursor-pointer items-center justify-between gap-2 rounded-md px-3 py-2 text-start text-sm capitalize transition-colors lg:w-full ${selected.id === role.id ? 'bg-primary/10 font-medium text-primary' : 'hover:bg-accent'}`}>
-                <span className="break-words">{role.name}</span>{role.name.toLowerCase() === 'admin' && <LockKeyhole className="size-3.5 shrink-0" aria-label={t('roleAccess.locked')} />}
+                <span className="break-words">{roleLabel(role.name, t)}</span>{role.name.toLowerCase() === 'admin' && <LockKeyhole className="size-3.5 shrink-0" aria-label={t('roleAccess.locked')} />}
               </button>)}
             </nav>
             <div className="shrink-0 p-3">

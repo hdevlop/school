@@ -9,6 +9,7 @@ import { useDialog } from '@/shared/useDialog'
 import { usersValidationSchema, updateUsersValidationSchema } from '../config/usersValidateSchema'
 import { useRoles } from '@/features/Roles/hooks/useRoles'
 import { useTranslation } from 'najm-i18n/react'
+import { roleLabel } from '@/shared/roleLabel';
 
 const UserForm = ({ user = null, mode = 'create' }) => {
 
@@ -30,7 +31,7 @@ const UserForm = ({ user = null, mode = 'create' }) => {
 
    const roleOptions = roles?.map(role => ({
       value: role.id,
-      label: role.name
+      label: roleLabel(role.name, t)
    })) || []
 
    // The photo is saved by its own request, so it is sent only when it changed.

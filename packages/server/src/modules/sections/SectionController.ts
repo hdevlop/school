@@ -40,7 +40,7 @@ export class SectionController {
   }
 
   @Get('/:id/parents')
-  @CanSchoolWide('read:sections')
+  @CanSchoolWide('read:sections', 'read:parents')
   @Validate({ params: sectionIdParam })
   @McpTool({ description: 'Get parents of students in a section', readOnly: true })
   @ResMsg('sections.success.retrieved')

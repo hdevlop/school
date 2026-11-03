@@ -11623,11 +11623,15 @@
     }
    ]
   },
-  "33d27e79ddf4dead": {
+  "9e91cb4c64df40f3": {
    "statements": [
     {
-     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where 1 = 0 order by \"parents\".\"created_at\" desc",
-     "params": [],
+     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where \"parents\".\"id\" in (select \"id\" from \"parents\" where exists (select 1 from student_parents managed_link\n    join students managed_student on managed_student.id = managed_link.student_id\n    where managed_link.parent_id = \"parents\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_student.class_id and exists (select 1 from floor_manager_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) order by \"parents\".\"created_at\" desc",
+     "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15"
+     ],
      "method": "all"
     }
    ]
@@ -11663,6 +11667,15 @@
     }
    ]
   },
+  "33d27e79ddf4dead": {
+   "statements": [
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where 1 = 0 order by \"parents\".\"created_at\" desc",
+     "params": [],
+     "method": "all"
+    }
+   ]
+  },
   "f4e4181dce10f783": {
    "statements": [
     {
@@ -11679,11 +11692,14 @@
     }
    ]
   },
-  "31d64976fcf3dc53": {
+  "fd651b636d6f8588": {
    "statements": [
     {
-     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where (1 = 0 and (\"parents\".\"name\" ilike $1 or \"parents\".\"cin\" ilike $2 or \"parents\".\"phone\" ilike $3 or \"users\".\"email\" ilike $4)) order by \"parents\".\"name\" limit $5",
+     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where (\"parents\".\"id\" in (select \"id\" from \"parents\" where exists (select 1 from student_parents managed_link\n    join students managed_student on managed_student.id = managed_link.student_id\n    where managed_link.parent_id = \"parents\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_student.class_id and exists (select 1 from floor_manager_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) and (\"parents\".\"name\" ilike $4 or \"parents\".\"cin\" ilike $5 or \"parents\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7)) order by \"parents\".\"name\" limit $8",
      "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
       "%Amina%",
       "%Amina%",
       "%Amina%",
@@ -11741,6 +11757,21 @@
     }
    ]
   },
+  "31d64976fcf3dc53": {
+   "statements": [
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where (1 = 0 and (\"parents\".\"name\" ilike $1 or \"parents\".\"cin\" ilike $2 or \"parents\".\"phone\" ilike $3 or \"users\".\"email\" ilike $4)) order by \"parents\".\"name\" limit $5",
+     "params": [
+      "%Amina%",
+      "%Amina%",
+      "%Amina%",
+      "%Amina%",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
   "29aa173a26763fad": {
    "statements": [
     {
@@ -11754,11 +11785,14 @@
     }
    ]
   },
-  "d1630b85f5fb671d": {
+  "e2382b070a86815e": {
    "statements": [
     {
-     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where (1 = 0 and \"parents\".\"id\" = $1) limit $2",
+     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where (\"parents\".\"id\" in (select \"id\" from \"parents\" where exists (select 1 from student_parents managed_link\n    join students managed_student on managed_student.id = managed_link.student_id\n    where managed_link.parent_id = \"parents\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_student.class_id and exists (select 1 from floor_manager_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) and \"parents\".\"id\" = $4) limit $5",
      "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
       "id-1",
       1
      ],
@@ -11804,6 +11838,18 @@
     }
    ]
   },
+  "d1630b85f5fb671d": {
+   "statements": [
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where (1 = 0 and \"parents\".\"id\" = $1) limit $2",
+     "params": [
+      "id-1",
+      1
+     ],
+     "method": "all"
+    }
+   ]
+  },
   "e005dc03f3ad799c": {
    "statements": [
     {
@@ -11817,11 +11863,14 @@
     }
    ]
   },
-  "af1adc178983c16d": {
+  "5bacd105844fec88": {
    "statements": [
     {
-     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where (1 = 0 and \"parents\".\"user_id\" = $1) limit $2",
+     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where (\"parents\".\"id\" in (select \"id\" from \"parents\" where exists (select 1 from student_parents managed_link\n    join students managed_student on managed_student.id = managed_link.student_id\n    where managed_link.parent_id = \"parents\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_student.class_id and exists (select 1 from floor_manager_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) and \"parents\".\"user_id\" = $4) limit $5",
      "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
       "user-9",
       1
      ],
@@ -11867,6 +11916,18 @@
     }
    ]
   },
+  "af1adc178983c16d": {
+   "statements": [
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where (1 = 0 and \"parents\".\"user_id\" = $1) limit $2",
+     "params": [
+      "user-9",
+      1
+     ],
+     "method": "all"
+    }
+   ]
+  },
   "be54bf83668f977a": {
    "statements": [
     {
@@ -11880,11 +11941,14 @@
     }
    ]
   },
-  "858af5b339486796": {
+  "820100cff4b4cccd": {
    "statements": [
     {
-     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where (1 = 0 and \"parents\".\"cin\" = $1) limit $2",
+     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where (\"parents\".\"id\" in (select \"id\" from \"parents\" where exists (select 1 from student_parents managed_link\n    join students managed_student on managed_student.id = managed_link.student_id\n    where managed_link.parent_id = \"parents\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_student.class_id and exists (select 1 from floor_manager_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) and \"parents\".\"cin\" = $4) limit $5",
      "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
       "AB123",
       1
      ],
@@ -11930,6 +11994,18 @@
     }
    ]
   },
+  "858af5b339486796": {
+   "statements": [
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where (1 = 0 and \"parents\".\"cin\" = $1) limit $2",
+     "params": [
+      "AB123",
+      1
+     ],
+     "method": "all"
+    }
+   ]
+  },
   "dd3ebee660aea3b4": {
    "statements": [
     {
@@ -11943,11 +12019,14 @@
     }
    ]
   },
-  "e53a16a362e6ccde": {
+  "d085922edb864f32": {
    "statements": [
     {
-     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where (1 = 0 and \"parents\".\"phone\" = $1) limit $2",
+     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where (\"parents\".\"id\" in (select \"id\" from \"parents\" where exists (select 1 from student_parents managed_link\n    join students managed_student on managed_student.id = managed_link.student_id\n    where managed_link.parent_id = \"parents\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_student.class_id and exists (select 1 from floor_manager_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) and \"parents\".\"phone\" = $4) limit $5",
      "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
       "0600000000",
       1
      ],
@@ -11985,6 +12064,18 @@
    "statements": [
     {
      "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where \"parents\".\"phone\" = $1 limit $2",
+     "params": [
+      "0600000000",
+      1
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "e53a16a362e6ccde": {
+   "statements": [
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"user_id\", \"parents\".\"name\", \"users\".\"email\", \"parents\".\"cin\", \"parents\".\"phone\", \"parents\".\"gender\", \"parents\".\"address\", \"parents\".\"date_of_birth\", \"parents\".\"age\", \"parents\".\"occupation\", \"parents\".\"nationality\", \"parents\".\"marital_status\", \"parents\".\"relationship_type\", \"parents\".\"is_emergency_contact\", \"parents\".\"financial_responsibility\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"parents\".\"created_at\", \"parents\".\"updated_at\", COALESCE(\"totalChildren\", 0)::int, COALESCE(\"totalChildren\", 0) = 0 from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" left join (select \"parent_id\", COUNT(\"student_id\")::int as \"totalChildren\" from \"student_parents\" group by \"student_parents\".\"parent_id\") \"childrenCounts\" on \"childrenCounts\".\"parent_id\" = \"parents\".\"id\" where (1 = 0 and \"parents\".\"phone\" = $1) limit $2",
      "params": [
       "0600000000",
       1
@@ -12437,11 +12528,14 @@
     }
    ]
   },
-  "8ece9eb457b43f64": {
+  "310cdb80f74e9577": {
    "statements": [
     {
-     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"parents\".\"name\" ilike $1 or \"parents\".\"cin\" ilike $2 or \"parents\".\"phone\" ilike $3 or \"users\".\"email\" ilike $4)) limit $5",
+     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"id\" from \"parents\" where exists (select 1 from student_parents managed_link\n    join students managed_student on managed_student.id = managed_link.student_id\n    where managed_link.parent_id = \"parents\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_student.class_id and exists (select 1 from floor_manager_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) and (\"parents\".\"name\" ilike $4 or \"parents\".\"cin\" ilike $5 or \"parents\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7)) limit $8",
      "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
       "%Adam%",
       "%Adam%",
       "%Adam%",
@@ -12499,6 +12593,21 @@
     }
    ]
   },
+  "8ece9eb457b43f64": {
+   "statements": [
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"parents\".\"name\" ilike $1 or \"parents\".\"cin\" ilike $2 or \"parents\".\"phone\" ilike $3 or \"users\".\"email\" ilike $4)) limit $5",
+     "params": [
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
   "c4a60d1ed938e776": {
    "statements": [
     {
@@ -12540,7 +12649,7 @@
     }
    ]
   },
-  "4131fe9865bb88cb": {
+  "e83f82e2ca2efd39": {
    "statements": [
     {
      "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"id\" from \"students\" where exists (select 1 from student_enrollments managed_enrollment\n    join student_enrollment_placements managed_placement on managed_placement.enrollment_id = managed_enrollment.id\n    where managed_enrollment.student_id = \"students\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_placement.class_id and exists (select 1 from floor_manager_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) and (\"students\".\"name\" ilike $4 or \"students\".\"student_code\" ilike $5 or \"students\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7)) limit $8",
@@ -12572,8 +12681,11 @@
      "method": "all"
     },
     {
-     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"parents\".\"name\" ilike $1 or \"parents\".\"cin\" ilike $2 or \"parents\".\"phone\" ilike $3 or \"users\".\"email\" ilike $4)) limit $5",
+     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"id\" from \"parents\" where exists (select 1 from student_parents managed_link\n    join students managed_student on managed_student.id = managed_link.student_id\n    where managed_link.parent_id = \"parents\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_student.class_id and exists (select 1 from floor_manager_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) and (\"parents\".\"name\" ilike $4 or \"parents\".\"cin\" ilike $5 or \"parents\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7)) limit $8",
      "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
       "%Adam%",
       "%Adam%",
       "%Adam%",
@@ -15587,11 +15699,15 @@
     }
    ]
   },
-  "c9b0804362011818": {
+  "df7269e4176c16a3": {
    "statements": [
     {
-     "sql": "select \"id\", \"user_id\", \"name\", \"image\", \"cin\", \"phone\", \"gender\", \"address\", \"date_of_birth\", \"age\", \"occupation\", \"relationship_type\", \"nationality\", \"marital_status\", \"is_emergency_contact\", \"financial_responsibility\", \"created_at\", \"updated_at\" from \"parents\" where 1 = 0",
-     "params": [],
+     "sql": "select \"id\", \"user_id\", \"name\", \"image\", \"cin\", \"phone\", \"gender\", \"address\", \"date_of_birth\", \"age\", \"occupation\", \"relationship_type\", \"nationality\", \"marital_status\", \"is_emergency_contact\", \"financial_responsibility\", \"created_at\", \"updated_at\" from \"parents\" where \"parents\".\"id\" in (select \"id\" from \"parents\" where exists (select 1 from student_parents managed_link\n    join students managed_student on managed_student.id = managed_link.student_id\n    where managed_link.parent_id = \"parents\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_student.class_id and exists (select 1 from floor_manager_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3)))))",
+     "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15"
+     ],
      "method": "scoped"
     }
    ]
@@ -15627,6 +15743,15 @@
     }
    ]
   },
+  "c9b0804362011818": {
+   "statements": [
+    {
+     "sql": "select \"id\", \"user_id\", \"name\", \"image\", \"cin\", \"phone\", \"gender\", \"address\", \"date_of_birth\", \"age\", \"occupation\", \"relationship_type\", \"nationality\", \"marital_status\", \"is_emergency_contact\", \"financial_responsibility\", \"created_at\", \"updated_at\" from \"parents\" where 1 = 0",
+     "params": [],
+     "method": "scoped"
+    }
+   ]
+  },
   "1faf6bb87ad2c354": {
    "statements": [
     {
@@ -15638,11 +15763,15 @@
     }
    ]
   },
-  "7bc56074f92a26a4": {
+  "0e8b7104cbf9c70b": {
    "statements": [
     {
-     "sql": "select \"id\" from \"parents\" where 1 = 0",
-     "params": [],
+     "sql": "select \"id\" from \"parents\" where exists (select 1 from student_parents managed_link\n    join students managed_student on managed_student.id = managed_link.student_id\n    where managed_link.parent_id = \"parents\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_student.class_id and exists (select 1 from floor_manager_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))",
+     "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15"
+     ],
      "method": "subquery"
     }
    ]
@@ -15673,6 +15802,15 @@
    "statements": [
     {
      "sql": "select \"id\" from \"parents\"",
+     "params": [],
+     "method": "subquery"
+    }
+   ]
+  },
+  "7bc56074f92a26a4": {
+   "statements": [
+    {
+     "sql": "select \"id\" from \"parents\" where 1 = 0",
      "params": [],
      "method": "subquery"
     }
@@ -17575,7 +17713,7 @@
   "repository:grades checkGradeExists (unscoped)|anonymous": "4010686eecaf7f49",
   "repository:grades checkGradeExists (unscoped)|outside-request": "4010686eecaf7f49",
   "repository:parents getAll|role:teacher": "1064447d92430e35",
-  "repository:parents getAll|role:floor_manager": "33d27e79ddf4dead",
+  "repository:parents getAll|role:floor_manager": "9e91cb4c64df40f3",
   "repository:parents getAll|role:parent": "5f2eb86d2b9c6dbe",
   "repository:parents getAll|role:student": "733c175826f49dae",
   "repository:parents getAll|role:admin": "0fffd5a39292f919",
@@ -17589,7 +17727,7 @@
   "repository:parents getAll|anonymous": "33d27e79ddf4dead",
   "repository:parents getAll|outside-request": "0fffd5a39292f919",
   "repository:parents search|role:teacher": "f4e4181dce10f783",
-  "repository:parents search|role:floor_manager": "31d64976fcf3dc53",
+  "repository:parents search|role:floor_manager": "fd651b636d6f8588",
   "repository:parents search|role:parent": "b18801188deb4d92",
   "repository:parents search|role:student": "34a7b2c7ee2aa61d",
   "repository:parents search|role:admin": "d17bcd48d1d980d1",
@@ -17603,7 +17741,7 @@
   "repository:parents search|anonymous": "31d64976fcf3dc53",
   "repository:parents search|outside-request": "d17bcd48d1d980d1",
   "repository:parents getById|role:teacher": "29aa173a26763fad",
-  "repository:parents getById|role:floor_manager": "d1630b85f5fb671d",
+  "repository:parents getById|role:floor_manager": "e2382b070a86815e",
   "repository:parents getById|role:parent": "1ccd2010c8bcb512",
   "repository:parents getById|role:student": "a10871b1517379ca",
   "repository:parents getById|role:admin": "25332a0d4140001c",
@@ -17617,7 +17755,7 @@
   "repository:parents getById|anonymous": "d1630b85f5fb671d",
   "repository:parents getById|outside-request": "25332a0d4140001c",
   "repository:parents getByUserId|role:teacher": "e005dc03f3ad799c",
-  "repository:parents getByUserId|role:floor_manager": "af1adc178983c16d",
+  "repository:parents getByUserId|role:floor_manager": "5bacd105844fec88",
   "repository:parents getByUserId|role:parent": "b10e58e0df094517",
   "repository:parents getByUserId|role:student": "3c12c3c0410721be",
   "repository:parents getByUserId|role:admin": "f0d0652e9f962a28",
@@ -17631,7 +17769,7 @@
   "repository:parents getByUserId|anonymous": "af1adc178983c16d",
   "repository:parents getByUserId|outside-request": "f0d0652e9f962a28",
   "repository:parents getReadableByCin|role:teacher": "be54bf83668f977a",
-  "repository:parents getReadableByCin|role:floor_manager": "858af5b339486796",
+  "repository:parents getReadableByCin|role:floor_manager": "820100cff4b4cccd",
   "repository:parents getReadableByCin|role:parent": "6a96428c457ae64b",
   "repository:parents getReadableByCin|role:student": "9b7e499290279478",
   "repository:parents getReadableByCin|role:admin": "44523160c9079040",
@@ -17645,7 +17783,7 @@
   "repository:parents getReadableByCin|anonymous": "858af5b339486796",
   "repository:parents getReadableByCin|outside-request": "44523160c9079040",
   "repository:parents getReadableByPhone|role:teacher": "dd3ebee660aea3b4",
-  "repository:parents getReadableByPhone|role:floor_manager": "e53a16a362e6ccde",
+  "repository:parents getReadableByPhone|role:floor_manager": "d085922edb864f32",
   "repository:parents getReadableByPhone|role:parent": "bb509ab48af694c8",
   "repository:parents getReadableByPhone|role:student": "d1daea6b8c815f26",
   "repository:parents getReadableByPhone|role:admin": "2cacc94b89572766",
@@ -17771,7 +17909,7 @@
   "repository:search teachers|anonymous": "74a61eeaf30642ea",
   "repository:search teachers|outside-request": "13ae43d651128249",
   "repository:search parents|role:teacher": "6b36b2351ee925cb",
-  "repository:search parents|role:floor_manager": "8ece9eb457b43f64",
+  "repository:search parents|role:floor_manager": "310cdb80f74e9577",
   "repository:search parents|role:parent": "c05cac23c11c7154",
   "repository:search parents|role:student": "be52238ea218e9d9",
   "repository:search parents|role:admin": "e76a60d89eeb9d3e",
@@ -17785,7 +17923,7 @@
   "repository:search parents|anonymous": "8ece9eb457b43f64",
   "repository:search parents|outside-request": "e76a60d89eeb9d3e",
   "repository:search global|role:teacher": "c4a60d1ed938e776",
-  "repository:search global|role:floor_manager": "4131fe9865bb88cb",
+  "repository:search global|role:floor_manager": "e83f82e2ca2efd39",
   "repository:search global|role:parent": "794c600252d90da1",
   "repository:search global|role:student": "2440897115c96f7c",
   "repository:search global|role:admin": "ae3729a73475dc69",
@@ -18677,7 +18815,7 @@
   "ownedIds:GradeGuards.GradeForTeacher|role:supervisor": "aa21fd05828db15c",
   "ownedIds:GradeGuards.GradeForTeacher|role:custom-role": "154a4a8be8c3a008",
   "token:ParentGuards.Parent|role:teacher": "91b80a05687a83b3",
-  "token:ParentGuards.Parent|role:floor_manager": "c9b0804362011818",
+  "token:ParentGuards.Parent|role:floor_manager": "df7269e4176c16a3",
   "token:ParentGuards.Parent|role:parent": "6414ba49e50c6ecc",
   "token:ParentGuards.Parent|role:student": "b633d8235958c9d1",
   "token:ParentGuards.Parent|role:admin": "40e14df48289383d",
@@ -18691,7 +18829,7 @@
   "token:ParentGuards.Parent|anonymous": "c9b0804362011818",
   "token:ParentGuards.Parent|outside-request": "40e14df48289383d",
   "ownedIds:ParentGuards.Parent|role:teacher": "1faf6bb87ad2c354",
-  "ownedIds:ParentGuards.Parent|role:floor_manager": "7bc56074f92a26a4",
+  "ownedIds:ParentGuards.Parent|role:floor_manager": "0e8b7104cbf9c70b",
   "ownedIds:ParentGuards.Parent|role:parent": "273726a4dd27c4a5",
   "ownedIds:ParentGuards.Parent|role:student": "a16ed4462e8b5a0f",
   "ownedIds:ParentGuards.Parent|role:admin": "92321895815281ae",

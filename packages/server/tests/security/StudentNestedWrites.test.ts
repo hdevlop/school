@@ -48,11 +48,13 @@ function studentHarness() {
 }
 
 describe('SEC-001 nested student creation boundary', () => {
-  it('keeps import validation on a separate route with the normal create permission', () => {
+  it('keeps import validation on a separate route that asks for create and update', () => {
     const normal = getGuardMetadata(StudentController, 'create');
     const importing = getGuardMetadata(StudentController, 'importStudent');
     expect(normal.length).toBeGreaterThan(0);
-    expect(importing).toEqual(normal);
+    expect(importing).toEqual(expect.arrayContaining(normal));
+    expect(importing.filter((guard) => guard.guardClass.name === 'PermissionGuard').map((guard) => guard.params))
+      .toContain('update:students');
     expect(getValidationConfig(StudentController.prototype, 'create')?.body).toBe(createStudentDto);
     expect(getValidationConfig(StudentController.prototype, 'importStudent')?.body).toBe(importStudentDto);
   });

@@ -2,7 +2,7 @@
 
 
 import { PermissionButton } from '@/components/PermissionButton';
-import { NAvatar, NCard, NIcon } from 'najm-kit';
+import { NAvatar, NCard, NIcon, NSkeleton } from 'najm-kit';
 
 import React from 'react';
 import {
@@ -346,33 +346,33 @@ const ReadOnlyParentCard = ({ parent }: { parent: Parent }) => {
 // ─── skeleton ─────────────────────────────────────────────────────────────────
 
 const ParentCardSkeleton = () => (
-  <div className="border border-slate-200 rounded-xl bg-white overflow-hidden animate-pulse">
+  <div className="border border-border rounded-xl bg-card overflow-hidden">
     <div className="flex items-center gap-4 p-5 pb-4">
-      <div className="w-20 h-20 rounded-xl bg-slate-200 flex-shrink-0" />
+      <NSkeleton className="w-20 h-20 rounded-xl flex-shrink-0" />
       <div className="flex-1 space-y-2">
-        <div className="h-4 w-36 bg-slate-200 rounded" />
-        <div className="h-3 w-20 bg-slate-100 rounded" />
+        <NSkeleton className="h-4 w-36 rounded" />
+        <NSkeleton className="h-3 w-20 rounded" />
         <div className="flex gap-2 mt-1">
-          <div className="h-5 w-16 bg-slate-100 rounded-full" />
-          <div className="h-5 w-14 bg-slate-100 rounded-full" />
+          <NSkeleton className="h-5 w-16 rounded-full" />
+          <NSkeleton className="h-5 w-14 rounded-full" />
         </div>
       </div>
     </div>
-    <div className="border-t border-slate-100" />
+    <div className="border-t border-border" />
     <div className="grid grid-cols-2 gap-4 px-5 py-4">
       <div className="space-y-3">
         {[80, 64, 72, 56].map(w => (
           <div key={w} className="space-y-1">
-            <div className="h-2.5 bg-slate-100 rounded" style={{ width: `${w}%` }} />
-            <div className="h-3.5 bg-slate-200 rounded" style={{ width: `${w + 10}%` }} />
+            <NSkeleton className="h-2.5 rounded" style={{ width: `${w}%` }} />
+            <NSkeleton className="h-3.5 rounded" style={{ width: `${w + 10}%` }} />
           </div>
         ))}
       </div>
       <div className="space-y-3">
         {[70, 60, 75, 65].map(w => (
           <div key={w} className="space-y-1">
-            <div className="h-2.5 bg-slate-100 rounded" style={{ width: `${w}%` }} />
-            <div className="h-3.5 bg-slate-200 rounded" style={{ width: `${w + 10}%` }} />
+            <NSkeleton className="h-2.5 rounded" style={{ width: `${w}%` }} />
+            <NSkeleton className="h-3.5 rounded" style={{ width: `${w + 10}%` }} />
           </div>
         ))}
       </div>

@@ -17,6 +17,7 @@ import { useSections } from '@/features/Sections/hooks/useSections'
 import { useSubjects } from '@/features/Subjects/hooks/useSubjects'
 import { useTeachers } from '@/features/Teachers/hooks/useTeachers'
 import { useStudents } from '@/features/Students/hooks/useStudents'
+import { FormStudentCombobox } from '@/features/Students/components/StudentCombobox'
 import { useAssessments } from '@/features/Assessments/hooks/useAssessments'
 
 const SectionDropdown = ({ initialClassId, isEdit }) => {
@@ -155,11 +156,6 @@ const GradeForm = ({ grade = null }) => {
     label: tc.name || tc.email || tc.id,
   })) || [];
 
-  const studentOptions = students?.map((s) => ({
-    value: s.id,
-    label: s.studentCode ? `${s.name} (${s.studentCode})` : s.name,
-  })) || [];
-
   const assessmentOptions = assessments?.map((a) => ({
     value: a.id,
     label: `${a.title}${a.totalMarks ? ` — /${a.totalMarks}` : ''}`,
@@ -195,13 +191,11 @@ const GradeForm = ({ grade = null }) => {
             />
 
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-              <FormInput
-                name='studentId'
-                type='combobox'
+              <FormStudentCombobox
                 formLabel={t('grades.form.student')}
                 placeholder={t('grades.form.studentPlaceholder')}
                 icon={UserCircle}
-                items={studentOptions}
+                students={students}
                 required={true}
                 disabled={isEdit || isStudentsLoading}
               />
