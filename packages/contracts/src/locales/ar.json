@@ -6548,6 +6548,8 @@
     "subjectNameMustBeAtLeast2Characters": "يجب أن يتكون اسم المادة من حرفين على الأقل",
     "subjectNameTooLong": "اسم المادة طويل جدًا",
     "teachingDaysMustBeUnique": "يجب ألا تتكرر أيام الدراسة",
+    "duplicateSidebarOrderEntries": "عناصر مكررة في ترتيب الشريط الجانبي",
+    "theOriginalSidebarOrderIsRequired": "الترتيب الأصلي للشريط الجانبي مطلوب",
     "theAdministrativeReasonMayNotExceed500Characters": "لا يمكن أن يتجاوز السبب الإداري 500 حرف",
     "timeMustBeInHhMmFormat": "يجب أن يكون الوقت بصيغة HH:MM",
     "timeMustUseHhMm": "يجب أن يكون الوقت بصيغة HH:mm",

@@ -22,21 +22,29 @@ function render(status: string, invitationApproval = true) {
   } finally { queryClient.clear(); }
 }
 
-test('pending staff approval explains the invitation before offering to send it', () => {
+const { approve, approveDescription } = translations.en.staff.invitation;
+
+test('pending staff approval names the recipient before offering to send the invitation', () => {
   const markup = render('pending');
-  expect(markup).toContain('Approve &amp; send invitation');
-  expect(markup).toContain(translations.en.staff.invitation.approveDescription);
-  expect(markup).toContain('type="submit"');
-  expect(markup).toContain('name="reason"');
+  expect(markup).toContain(approve);
+  for (const part of approveDescription.split('{{recipient}}')) expect(markup).toContain(part);
+  expect(markup).toContain('Fatima Zahra');
+  expect(markup).toContain('fatima@example.ma');
+  expect(markup).not.toContain('{recipient}');
+  expect(markup).not.toContain('name="reason"');
 });
 
 test('an account activated since opening the staff menu cannot be reset through approval', () => {
-  expect(render('active')).not.toContain('type="submit"');
-  expect(render('inactive')).not.toContain('type="submit"');
+  for (const status of ['active', 'inactive']) {
+    const markup = render(status);
+    expect(markup).not.toContain(approve);
+    expect(markup).toContain(translations.en.users.accessReset.unsupported);
+  }
 });
 
 test('ordinary recovery remains available for an active staff login', () => {
   const markup = render('active', false);
-  expect(markup).toContain('type="submit"');
-  expect(markup).not.toContain('Approve &amp; send invitation');
+  expect(markup).toContain(translations.en.users.accessReset.confirmButton);
+  expect(markup).toContain('Fatima Zahra');
+  expect(markup).not.toContain(approve);
 });

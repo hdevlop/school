@@ -6637,6 +6637,8 @@
     "subjectNameMustBeAtLeast2Characters": "Le nom de la matière doit contenir au moins 2 caractères",
     "subjectNameTooLong": "Le nom de la matière est trop long",
     "teachingDaysMustBeUnique": "Les jours d'enseignement doivent être uniques",
+    "duplicateSidebarOrderEntries": "Entrées en double dans l'ordre de la barre latérale",
+    "theOriginalSidebarOrderIsRequired": "L'ordre d'origine de la barre latérale est requis",
     "theAdministrativeReasonMayNotExceed500Characters": "Le motif administratif ne peut pas dépasser 500 caractères",
     "timeMustBeInHhMmFormat": "L'heure doit être au format HH:MM",
     "timeMustUseHhMm": "L'heure doit être au format HH:mm",

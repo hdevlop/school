@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import { Plus } from 'lucide-react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, useMediaQuery } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
@@ -21,6 +21,7 @@ import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/service
 
 const BehaviorRewardsTable = () => {
   const { t } = useTranslation();
+  const isPhone = useMediaQuery('(max-width: 767px)');
   // Parents and students read their own or their children's records only.
   // Deleting is never a teacher's, whatever they are granted (as on the server).
   const { isFamily, isSchoolWide, can } = useViewerRole();
@@ -96,12 +97,7 @@ const BehaviorRewardsTable = () => {
     <div className="flex h-full min-h-0 w-full flex-col gap-2">
       <NPageHeader
         icon={FEATURE_ICONS.behaviorRewards}
-        title={(
-          <>
-            <span className="md:hidden">{t('navigation.behaviorRewardsShort')}</span>
-            <span className="hidden md:inline">{t('navigation.behaviorRewards')}</span>
-          </>
-        )}
+        title={t(isPhone ? 'navigation.behaviorRewardsShort' : 'navigation.behaviorRewards')}
         subtitle={isCountUnknown(error, tableData, isBehaviorRewardsLoading) ? undefined : t('behaviorRewards.table.recordCount', { count: total })}
       >
         <NPageHeaderActions>

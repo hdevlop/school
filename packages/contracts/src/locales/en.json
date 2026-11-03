@@ -7242,6 +7242,8 @@
     "subjectNameMustBeAtLeast2Characters": "Subject name must be at least 2 characters",
     "subjectNameTooLong": "Subject name too long",
     "teachingDaysMustBeUnique": "Teaching days must be unique",
+    "duplicateSidebarOrderEntries": "Duplicate sidebar order entries",
+    "theOriginalSidebarOrderIsRequired": "The original sidebar order is required",
     "theAdministrativeReasonMayNotExceed500Characters": "The administrative reason may not exceed 500 characters",
     "timeMustBeInHhMmFormat": "Time must be in HH:MM format",
     "timeMustUseHhMm": "Time must use HH:mm",

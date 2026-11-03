@@ -6534,6 +6534,8 @@
     "subjectNameMustBeAtLeast2Characters": "El nombre de la asignatura debe tener al menos 2 caracteres",
     "subjectNameTooLong": "El nombre de la asignatura es demasiado largo",
     "teachingDaysMustBeUnique": "Los días lectivos no deben repetirse",
+    "duplicateSidebarOrderEntries": "Entradas duplicadas en el orden de la barra lateral",
+    "theOriginalSidebarOrderIsRequired": "Se requiere el orden original de la barra lateral",
     "theAdministrativeReasonMayNotExceed500Characters": "El motivo administrativo no puede superar los 500 caracteres",
     "timeMustBeInHhMmFormat": "La hora debe tener el formato HH:MM",
     "timeMustUseHhMm": "La hora debe tener el formato HH:mm",

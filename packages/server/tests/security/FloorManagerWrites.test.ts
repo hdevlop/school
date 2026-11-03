@@ -88,6 +88,6 @@ describe('a floor manager staff record', () => {
 
   it('names a grade in each assignment', () => {
     expect(() => validator.ensureAssignments('floorManager', [{ className: 'CP' }])).not.toThrow();
-    expect(() => validator.ensureAssignments('floorManager', [{ notes: 'second floor' }])).toThrow('Floor manager assignment requires a grade');
+    expect(() => validator.ensureAssignments('floorManager', [{ notes: 'second floor' }])).toThrow('Monitor assignment requires a grade');
   });
 });

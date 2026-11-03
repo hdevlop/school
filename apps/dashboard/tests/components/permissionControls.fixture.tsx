@@ -56,7 +56,9 @@ for (const resource of ['sections', 'cycles', 'staff']) {
   }
   const html = renderToStaticMarkup(<kit.TableStoreContext.Provider value={store as any}>{table.renderToolbar?.({} as NTableState)}</kit.TableStoreContext.Provider>);
   assert.match(html, /<button[^>]*disabled=""[^>]*>/);
-  assert.match(html, /aria-label="Add section"/);
+  // Without create, the Add button is hidden rather than shown disabled.
+  assert.equal(table.showAddButton, false);
+  assert.doesNotMatch(html, /aria-label="Add section"/);
 }
 const button = renderToStaticMarkup(<PermissionButton permission="create:sections" onClick={mutate}>Add</PermissionButton>);
 assert.match(button, /<button[^>]*disabled=""[^>]*>/);
