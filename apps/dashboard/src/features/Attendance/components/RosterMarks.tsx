@@ -38,6 +38,8 @@ interface RosterMarksProps {
   disabled?: boolean;
   /** The "not recorded" line above the marks; a card shows it beside the name instead. */
   showHint?: boolean;
+  /** A card's smaller marks, leaving a narrow phone room for the name. */
+  compact?: boolean;
 }
 
 /**
@@ -47,12 +49,12 @@ interface RosterMarksProps {
  * with the same control — same labels, same pressed state, same handler — and
  * neither can drift from the other.
  */
-export default function RosterMarks({ current, onSelect, className, disabled = false, showHint = true }: RosterMarksProps) {
+export default function RosterMarks({ current, onSelect, className, disabled = false, showHint = true, compact = false }: RosterMarksProps) {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col items-center gap-1">
     {showHint && current === 'unmarked' && <span className="text-xs text-muted-foreground">{t('attendance.roster.unmarked')}</span>}
-    <div className={cn('flex w-full justify-center gap-2', className)}>
+    <div className={cn('flex w-full justify-center', compact ? 'gap-1.5' : 'gap-2', className)}>
       {ROSTER_STATUSES.map((status) => {
         const meta = ROSTER_STATUS_META[status];
         const Icon = meta.icon;
@@ -74,11 +76,12 @@ export default function RosterMarks({ current, onSelect, className, disabled = f
               onSelect(status);
             }}
             className={cn(
-              'flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg p-0 transition-all duration-150 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
+              'flex cursor-pointer items-center justify-center rounded-lg p-0 transition-all duration-150 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
+              compact ? 'h-8 w-8' : 'h-9 w-9',
               active ? meta.active : meta.idle,
             )}
           >
-            <Icon className="h-4 w-4" />
+            <Icon className={compact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
           </NButton>
         );
       })}

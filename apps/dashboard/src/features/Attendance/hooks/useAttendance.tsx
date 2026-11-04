@@ -5,14 +5,28 @@ import { toast } from 'sonner';
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import { useYearScopedList, useYearScopedQuery } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import * as attendanceApi from '@/services/attendanceApi';
+import {
+  reconcileRosterItems, rosterRequestBody, settleWithLimit, type StudentRosterItem,
+} from '../config/rosterSave';
 
-const runRosterBatch = async (items: Array<any & { id?: string }>) => {
-  await Promise.all(items.map((item) => {
-    const { id, ...rest } = item;
+// Enough to save a section quickly without one request waiting behind thirty.
+const ROSTER_SAVE_CONCURRENCY = 6;
+
+// Creates are checked against the day's held marks first, so a register shown
+// before another save updates those marks instead of re-creating them. Every
+// item is sent even when one fails, and the first failure is reported.
+const runRosterBatch = async (items: StudentRosterItem[]) => {
+  const dates = [...new Set(items.filter((item) => !item.id).map((item) => item.date))];
+  const held = (await Promise.all(dates.map((date) => attendanceApi.getAttendanceByDateApi(date, 'student'))))
+    .flatMap((response) => response?.data ?? []);
+  const results = await settleWithLimit(reconcileRosterItems(items, held), ROSTER_SAVE_CONCURRENCY, (item) => {
+    const { id, body } = rosterRequestBody(item);
     return id
-      ? attendanceApi.updateAttendanceApi({ ...rest, id })
-      : attendanceApi.markAttendanceApi(rest);
-  }));
+      ? attendanceApi.updateAttendanceApi({ ...body, id })
+      : attendanceApi.markAttendanceApi(body);
+  });
+  const failure = results.find((result) => result.status === 'rejected');
+  if (failure) throw failure.reason;
 };
 
 // Matches backend i18n key attendance.errors.dailyAlreadyMarked. When the
@@ -48,14 +62,16 @@ export const useStudentAttendance = (options?) => {
   const { mutateAsync: deleteAttendance, isLoading: isDeleting } = crud.useDelete();
 
   const [isSubmittingRoster, setIsSubmittingRoster] = useState(false);
-  const submitRoster = useCallback(async (items: Array<any & { id?: string }>) => {
+  const submitRoster = useCallback(async (items: StudentRosterItem[]) => {
     if (!items.length) return;
     setIsSubmittingRoster(true);
     try {
       await runRosterBatch(items);
+    } finally {
+      // A save that failed part-way still wrote marks: read them back either
+      // way, so the register stops offering them as new.
       await queryClient.refetchQueries({ queryKey: ['attendance'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard', 'attendance'] });
-    } finally {
       setIsSubmittingRoster(false);
     }
   }, [queryClient]);

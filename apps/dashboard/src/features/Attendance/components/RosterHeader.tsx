@@ -27,11 +27,13 @@ function StatItem({
   label,
   value,
   tone,
+  className,
 }: {
   icon: any;
   label: string;
   value: number;
   tone?: 'emerald' | 'red' | 'amber';
+  className?: string;
 }) {
   const toneClass =
     tone === 'emerald' ? 'text-emerald-600'
@@ -41,7 +43,7 @@ function StatItem({
 
   return (
     <SimpleTooltip content={`${label}: ${value}`}>
-      <button type="button" aria-label={`${label}: ${value}`} className="flex cursor-help items-center justify-center gap-0.5 px-1 text-xs outline-offset-4 sm:gap-1.5 sm:px-2 sm:text-sm">
+      <button type="button" aria-label={`${label}: ${value}`} className={cn('flex cursor-help items-center justify-center gap-0.5 px-1 text-xs outline-offset-4 sm:gap-1.5 sm:px-2 sm:text-sm', className)}>
         <Icon aria-hidden="true" className={cn('h-3.5 w-3.5 shrink-0', toneClass)} />
         <span className={cn('font-mono font-semibold whitespace-nowrap', toneClass)}>{value}</span>
       </button>
@@ -63,7 +65,7 @@ export default function RosterHeader({
       <div aria-hidden="true" className="contents lg:order-3 lg:flex lg:items-center lg:gap-2">
         {onMarkAllPresent && <NSkeleton data-roster-loading-action="mark-all" className="col-span-2 h-10 lg:w-36" />}
         <div className="flex min-w-0 items-center justify-end gap-2">
-          <NSkeleton data-roster-loading-counts className="h-10 w-32 sm:w-36" />
+          <NSkeleton data-roster-loading-counts className="h-10 w-20 sm:w-36" />
           {print && <NSkeleton data-roster-loading-action="print" className="size-10 shrink-0" />}
           <NSkeleton data-roster-loading-action="submit" className="size-10 shrink-0" />
         </div>
@@ -80,7 +82,8 @@ export default function RosterHeader({
       </NButton>}
       <div className="flex min-w-0 items-center justify-end gap-2">
         <div className={cn('flex h-10 min-w-0 items-center divide-x divide-border rounded-md bg-card px-1', inputBorderClasses())}>
-          <StatItem icon={CheckCircle2} label={t('attendance.roster.present')} value={stats.present} tone="emerald" />
+          {/* On a phone the day needs the room; present is everyone not marked otherwise. */}
+          <StatItem icon={CheckCircle2} label={t('attendance.roster.present')} value={stats.present} tone="emerald" className="hidden sm:flex" />
           <StatItem icon={XCircle} label={t('attendance.roster.absent')} value={stats.absent} tone="red" />
           <StatItem icon={Clock3} label={t('attendance.roster.late')} value={stats.late} tone="amber" />
         </div>

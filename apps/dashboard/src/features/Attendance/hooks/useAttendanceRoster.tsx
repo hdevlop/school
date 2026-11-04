@@ -168,6 +168,10 @@ export const useAttendanceRoster = ({
         payload.sectionId = allSections ? person.sectionId : studentContext?.sectionId;
         if (!allSections && studentContext?.teacherId) payload.teacherId = studentContext.teacherId;
         if (!allSections && studentContext?.subjectId) payload.subjectId = studentContext.subjectId;
+        // Matches a per-class mark to its lesson when the save checks held marks.
+        if (!allSections && attendanceMode === 'per_class' && studentContext?.teacherAssignmentId) {
+          payload.teacherAssignmentId = studentContext.teacherAssignmentId;
+        }
       }
       if (existing) payload.id = existing.id;
       if (kind === 'staff') {

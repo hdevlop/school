@@ -56,7 +56,7 @@ export default function RosterCard({
           classNames={classNames?.avatar}
         />
         <div className="min-w-0 flex-1">
-          <Label className="block truncate text-md font-bold">{data.name}</Label>
+          <Label className="block truncate text-sm font-bold">{data.name}</Label>
           {detailLine && <span className="block truncate text-xs text-muted-foreground">{detailLine}</span>}
         </div>
         <div className="shrink-0">
@@ -64,6 +64,7 @@ export default function RosterCard({
             current={current}
             disabled={readOnly}
             showHint={false}
+            compact
             onSelect={(status) => setStatus(data.id, status)}
           />
         </div>
