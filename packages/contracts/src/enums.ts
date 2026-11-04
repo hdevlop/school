@@ -371,6 +371,7 @@ export const STAFF_ROLE_VALUES = [
   'assistant',
   'supervisor',
   'floorManager',
+  'registrar',
   'other',
 ] as const;
 export type StaffRole = (typeof STAFF_ROLE_VALUES)[number];

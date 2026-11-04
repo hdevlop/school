@@ -218,7 +218,6 @@
       "read:dashboard",
       "read:teachers",
       "read:students",
-      "update:students",
       "read:parents",
       "read:classes",
       "read:class-routines",
@@ -293,10 +292,8 @@
     "roleName": "secretary",
     "permissions": [
       "read:dashboard",
-      "create:students",
       "read:students",
       "read:insurance",
-      "update:students",
       "create:parents",
       "read:parents",
       "update:parents",
@@ -308,7 +305,6 @@
       "read:attendance",
       "read:discipline",
       "read:behavior-rewards",
-      "read:grades",
       "read:exams",
       "read:assessments",
       "read:events",
@@ -403,6 +399,22 @@
       "read:class-routines",
       "read:teachers",
       "read:offline"
+    ]
+  },
+  {
+    "roleName": "registrar",
+    "permissions": [
+      "read:dashboard",
+      "create:students",
+      "read:students",
+      "update:students",
+      "read:teachers",
+      "read:classes",
+      "read:sections",
+      "read:subjects",
+      "read:grades",
+      "read:exams",
+      "read:assessments"
     ]
   }
 ]

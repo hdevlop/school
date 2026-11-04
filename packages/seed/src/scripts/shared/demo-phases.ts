@@ -33,6 +33,7 @@ const STAFF_ROLE_DATA = [
   { code: 'accountant', label: 'Accountant', labels: { fr: 'Comptable', ar: 'محاسب', es: 'Contable' }, category: 'administration', sortOrder: 33, isSystem: false },
   { code: 'supervisor', label: 'Supervisor', labels: { fr: 'Surveillant', ar: 'مشرف', es: 'Supervisor' }, category: 'administration', sortOrder: 34, isSystem: false },
   { code: 'floorManager', label: 'Floor Manager', labels: { fr: "Responsable d'étage", ar: 'مسؤول الطابق', es: 'Responsable de planta' }, category: 'administration', sortOrder: 35, isSystem: false },
+  { code: 'registrar', label: 'Registrar', labels: { fr: 'Registraire', ar: 'مسجل', es: 'Registrador' }, category: 'administration', sortOrder: 36, isSystem: false },
   { code: 'librarian', label: 'Librarian', labels: { fr: 'Bibliothécaire', ar: 'أمين المكتبة', es: 'Bibliotecario' }, category: 'support', sortOrder: 40, isSystem: false },
   { code: 'itSupport', label: 'IT Support', labels: { fr: 'Support informatique', ar: 'دعم تقني', es: 'Soporte informático' }, category: 'support', sortOrder: 41, isSystem: false },
   { code: 'assistant', label: 'Assistant', labels: { fr: 'Assistant', ar: 'مساعد', es: 'Asistente' }, category: 'support', sortOrder: 42, isSystem: false },

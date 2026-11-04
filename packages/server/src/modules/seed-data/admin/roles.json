@@ -42,5 +42,9 @@
   {
     "name": "floor_manager",
     "description": "Moniteur: student attendance, discipline and behavior follow-up for the grades named in their staff record, with read-only access to those students and classes, their grades and the timetable; receives announcements and alerts without sending them; reads only the parents of those students, when granted, and has no access to visit requests"
+  },
+  {
+    "name": "registrar",
+    "description": "Student records and the Massar exchange: imports, creates, edits and exports students, and reads and exports grades, exams and assessments across the school without changing them"
   }
 ]

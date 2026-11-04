@@ -966,6 +966,49 @@
     }
   },
   "dashboard": {
+    "registrar": {
+      "title": "Panel del registrador",
+      "subtitle": "Las notas y la asistencia del curso, listas para su trabajo en Massar.",
+      "kpis": {
+        "average": "Nota media",
+        "passRate": "Tasa de aprobados",
+        "recorded": "Notas registradas",
+        "pending": "Notas pendientes",
+        "missed": "Notas perdidas",
+        "testsAwaitingGrades": "Pruebas sin notas"
+      },
+      "gradedCount": "Notas: {{count}}",
+      "distribution": {
+        "title": "Distribución de notas",
+        "empty": "No hay notas registradas este curso"
+      },
+      "trend": {
+        "title": "Nota media por mes",
+        "empty": "No hay notas registradas este curso"
+      },
+      "byClass": {
+        "title": "Media por clase",
+        "empty": "No hay medias de clase este curso"
+      },
+      "bySubject": {
+        "title": "Media por asignatura",
+        "empty": "No hay medias de asignatura este curso"
+      },
+      "quickActions": {
+        "students": "Alumnos",
+        "studentsHint": "Importar, exportar y actualizar expedientes",
+        "grades": "Notas",
+        "gradesHint": "Consultar y exportar notas para Massar",
+        "assessments": "Evaluaciones",
+        "assessmentsHint": "Consultar las evaluaciones del curso",
+        "exams": "Exámenes",
+        "examsHint": "Consultar los exámenes del curso",
+        "classes": "Clases",
+        "classesHint": "Consultar las clases y sus niveles",
+        "notifications": "Notificaciones",
+        "notificationsHint": "Leer sus últimos mensajes y alertas"
+      }
+    },
     "secretary": {
       "title": "Panel de secretaría",
       "subtitle": "Inscripciones, expedientes familiares y seguimiento administrativo de un vistazo.",
@@ -4204,6 +4247,7 @@
       "accountant": "Contador",
       "supervisor": "Supervisor",
       "floorManager": "Monitor",
+      "registrar": "Registrador",
       "librarian": "Bibliotecario",
       "itSupport": "Soporte IT",
       "assistant": "Asistente",

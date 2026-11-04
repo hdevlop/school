@@ -149,7 +149,7 @@ export const useFinanceCollectionByClass = (academicYear?: string) => {
   }));
 };
 
-export const useStudentAttendanceMonthly = (audience: 'school' | 'secretary' = 'school') => {
+export const useStudentAttendanceMonthly = (audience: 'school' | 'secretary' | 'registrar' = 'school') => {
   const { viewingYear, isReady } = useViewedYear();
   return untilYear(!isReady, useQuery({
     queryKey: audience === 'school'

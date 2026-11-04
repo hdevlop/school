@@ -23,6 +23,7 @@ export const MAIL_RECOVERABLE_ROLES = new Set([
   'assistant',
   'supervisor',
   'floor_manager',
+  'registrar',
 ]);
 
 /**

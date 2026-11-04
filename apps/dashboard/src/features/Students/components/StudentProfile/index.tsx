@@ -49,7 +49,10 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
   // beside the student's, and reach it as props: they arrive with the record
   // instead of one round trip after it, and its mount refetches nothing.
   const { data: attendanceResponse } = useStudentAttendanceRecords(studentId);
-  const { data: reportResponse } = useStudentReport(studentId || null);
+  // Grades have their own permission: a role that may open a student may not
+  // read their marks, so neither the report nor anything built on it appears.
+  const canReadGrades = can('read:grades');
+  const { data: reportResponse } = useStudentReport(canReadGrades && studentId ? studentId : null);
   const { studentFees } = useFees({ studentId, studentYear: viewingYear, enabled: false });
   const canReadFees = isSchoolWide && can('read:fees');
   const canReadTransport = isSchoolWide && can('read:student-routes');
@@ -93,6 +96,7 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
               isLoading={isStudentLoading}
               attendanceResponse={attendanceResponse}
               reportResponse={reportResponse}
+              canReadGrades={canReadGrades}
               studentFees={studentFees}
             />
           </div>
@@ -103,7 +107,9 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
       </div>
     ) },
     { value: 'attendance', icon: CalendarCheck, label: t('students.profile.tabs.attendance'), content: <AttendanceTab {...sharedTabProps} /> },
-    { value: 'grades', icon: GraduationCap, label: t('students.profile.tabs.grades'), content: <GradesTab {...sharedTabProps} /> },
+    ...(canReadGrades
+      ? [{ value: 'grades', icon: GraduationCap, label: t('students.profile.tabs.grades'), content: <GradesTab {...sharedTabProps} /> }]
+      : []),
     ...(canReadFees
       ? [{ value: 'fees', icon: DollarSign, label: t('students.profile.tabs.fees'), content: <FeesTab {...sharedTabProps} /> }]
       : []),

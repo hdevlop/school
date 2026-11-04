@@ -59,6 +59,10 @@
       "types": "./src/secretaryDashboard.ts",
       "default": "./src/secretaryDashboard.ts"
     },
+    "./registrar-dashboard": {
+      "types": "./src/registrarDashboard.ts",
+      "default": "./src/registrarDashboard.ts"
+    },
     "./subjects": {
       "types": "./src/subjects.ts",
       "default": "./src/subjects.ts"

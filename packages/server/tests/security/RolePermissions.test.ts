@@ -28,7 +28,7 @@ import { StudentRouteController } from '../../src/modules/transport/studentRoute
 import { withEnglishMessages } from '../support/englishMessages';
 
 /** Pinned here, not read from the code under test. */
-const SCHOOL_WIDE = ['admin', 'principal', 'accounting', 'secretary', 'driver', 'assistant'];
+const SCHOOL_WIDE = ['admin', 'principal', 'accounting', 'secretary', 'driver', 'assistant', 'registrar'];
 const admin = [['AuthGuard', null], ['RoleGuard', 'admin']];
 const can = (permission: string) => [['AuthGuard', null], ['PermissionGuard', permission]];
 const schoolWide = (permission: string) => [['AuthGuard', null], ['RoleGuard', SCHOOL_WIDE], ['PermissionGuard', permission]];
@@ -185,6 +185,89 @@ describe('seeded permissions', () => {
     expect([...grants.floor_manager].sort()).toEqual(grants.supervisor.filter((permission: string) => !keptBySupervisor.includes(permission)).sort());
     for (const received of ['read:alerts', 'update:alerts', 'read:announcements']) expect(grants.floor_manager).toContain(received);
   });
+
+  // The secretary is the bridge to parents and visitors: they read a student's
+  // record but do not create, change or delete one, and grades are not theirs to
+  // see or change. Exam and assessment dates stay, to answer parents.
+  it('keep the secretary out of student writes and grades', () => {
+    for (const permission of ['create:students', 'update:students', 'delete:students', 'read:grades', 'create:grades', 'update:grades', 'delete:grades']) {
+      expect(grants.secretary, permission).not.toContain(permission);
+    }
+    for (const kept of ['read:students', 'read:exams', 'read:assessments', 'read:parents', 'update:parents', 'read:visit-requests', 'update:visit-requests']) {
+      expect(grants.secretary, kept).toContain(kept);
+    }
+  });
+
+  it('let a teacher read their students and enter grades, but not change or delete a student', () => {
+    for (const permission of ['create:students', 'update:students', 'delete:students']) {
+      expect(grants.teacher, permission).not.toContain(permission);
+    }
+    for (const kept of ['read:students', 'read:grades', 'create:grades', 'update:grades']) {
+      expect(grants.teacher, kept).toContain(kept);
+    }
+  });
+
+  it('let the supervisor edit a student but not delete one, and only read grades', () => {
+    expect(grants.supervisor).toContain('update:students');
+    expect(grants.supervisor).not.toContain('delete:students');
+    expect(grants.supervisor).toContain('read:grades');
+    for (const permission of ['create:grades', 'update:grades', 'delete:grades']) {
+      expect(grants.supervisor, permission).not.toContain(permission);
+    }
+  });
+});
+
+describe('the registrar role', () => {
+  const sql = readFileSync(new URL('../../src/database/migrations/0098_registrar_role.sql', import.meta.url), 'utf8');
+  const seeded = (seedData('rolePermissions') as { roleName: string; permissions: string[] }[])
+    .find((row) => row.roleName === 'registrar')!.permissions;
+
+  // Student import asks for create and update together; grade export asks only to read.
+  it('can import and edit students and read grades, and changes neither grades nor anything else', () => {
+    expect([...seeded].sort()).toEqual([
+      'create:students', 'read:assessments', 'read:classes', 'read:dashboard', 'read:exams', 'read:grades',
+      'read:sections', 'read:students', 'read:subjects', 'read:teachers', 'update:students',
+    ]);
+  });
+
+  it('gives an existing database the role a new one is seeded with', () => {
+    const migrated = [...sql.matchAll(/'([\w-]+:[\w-]+)'/g)].map((match) => match[1]);
+    expect(migrated.sort()).toEqual([...seeded].sort());
+    expect((seedData('roles') as { name: string }[]).some((role) => role.name === 'registrar')).toBe(true);
+  });
+
+  it('links the registrar job title to the login', () => {
+    expect(sql).toContain(`SELECT 'registrar', 'Registrar'`);
+    expect(sql).toContain(`WHERE "roles"."name" = 'registrar'`);
+  });
+});
+
+describe('the student record access migration', () => {
+  const sql = readFileSync(new URL('../../src/database/migrations/0097_student_record_access.sql', import.meta.url), 'utf8');
+
+  it('removes exactly these grants, and only from these roles', () => {
+    expect(sql).toContain(`DELETE FROM "role_permissions"`);
+    const removed = [...sql.matchAll(/\('([\w-]+)', '([\w-]+:[\w-]+)'\)/g)].map((match) => `${match[1]} ${match[2]}`).sort();
+    expect(removed).toEqual([
+      'secretary create:grades', 'secretary create:students', 'secretary delete:grades', 'secretary delete:students',
+      'secretary read:grades', 'secretary update:grades', 'secretary update:students',
+      'supervisor create:grades', 'supervisor delete:grades', 'supervisor delete:students', 'supervisor update:grades',
+      'teacher delete:students', 'teacher update:students',
+    ]);
+  });
+
+  // A role not listed above would lose nothing, and neither would these pairs
+  // if the seed still handed them to a new database.
+  it('leaves none of them in the seeded defaults', () => {
+    const seeded = seedData('rolePermissions') as { roleName: string; permissions: string[] }[];
+    for (const match of sql.matchAll(/\('([\w-]+)', '([\w-]+:[\w-]+)'\)/g)) {
+      expect(seeded.find((row) => row.roleName === match[1])?.permissions, match[0]).not.toContain(match[2]);
+    }
+  });
+
+  it('revokes the sessions whose claims still carry them', () => {
+    expect(sql).toContain(`UPDATE "tokens" SET "status" = 'revoked'`);
+  });
 });
 
 describe('the deploy migration', () => {
@@ -253,7 +336,8 @@ describe('the dashboard permission migration', () => {
   it('seeds a new database with the same grants', () => {
     const grants = seedData('rolePermissions') as { roleName: string; permissions: string[] }[];
     const holders = grants.filter((row) => row.permissions.includes('read:dashboard')).map((row) => row.roleName);
-    expect(holders.sort()).toEqual([...OPENED_BY_ROLE].sort());
+    // The registrar came later and is granted it by its own migration, 0098.
+    expect(holders.sort()).toEqual([...OPENED_BY_ROLE, 'registrar'].sort());
     expect(seedData('permissions').some((permission: { name: string }) => permission.name === 'read:dashboard')).toBe(true);
   });
 

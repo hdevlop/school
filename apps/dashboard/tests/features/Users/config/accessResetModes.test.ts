@@ -26,7 +26,7 @@ describe('resolveExpectedMode', () => {
   });
 
   it('explains active students, teachers and staff as a reset email', () => {
-    for (const role of ['student', 'teacher', 'secretary', 'supervisor', 'floor_manager', 'driver', 'accounting']) {
+    for (const role of ['student', 'teacher', 'secretary', 'supervisor', 'floor_manager', 'registrar', 'driver', 'accounting']) {
       expect(resolveExpectedMode({ id: 'u', role, status: 'active', email: EMAIL })).toBe('reset_email_sent');
     }
   });

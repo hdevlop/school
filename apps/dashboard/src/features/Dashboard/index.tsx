@@ -17,9 +17,10 @@ import TeacherDashboard from './components/Teacher';
 import FloorManagerDashboard from './components/FloorManager';
 import SupervisorDashboard from './components/Supervisor';
 import SecretaryDashboard from './components/Secretary';
+import RegistrarDashboard from './components/Registrar';
 import {
   canReadFinanceDashboard, rowSpans, schoolDashboardCards,
-  usesFloorManagerDashboard, usesSecretaryDashboard, usesSupervisorDashboard, usesTeacherDashboard,
+  usesFloorManagerDashboard, usesRegistrarDashboard, usesSecretaryDashboard, usesSupervisorDashboard, usesTeacherDashboard,
 } from './config/dashboardAudience';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -32,6 +33,7 @@ const Dashboard = () => {
   if (usesFloorManagerDashboard(role)) return <FloorManagerDashboard />;
   if (usesSupervisorDashboard(role)) return <SupervisorDashboard />;
   if (usesSecretaryDashboard(role)) return <SecretaryDashboard />;
+  if (usesRegistrarDashboard(role)) return <RegistrarDashboard />;
   return <SchoolDashboard role={role} />;
 };
 

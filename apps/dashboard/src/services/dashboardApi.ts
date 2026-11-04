@@ -3,11 +3,17 @@ import type { TeacherDashboardOverview } from '@sms/contracts/teacher-dashboard'
 import type { FloorManagerDashboardOverview } from '@sms/contracts/floor-manager-dashboard';
 import type { SupervisorDashboardOverview } from '@sms/contracts/supervisor-dashboard';
 import type { SecretaryDashboardOverview } from '@sms/contracts/secretary-dashboard';
+import type { RegistrarDashboardOverview } from '@sms/contracts/registrar-dashboard';
 
 type ApiEnvelope<T> = { data: T; message?: string; status?: string };
 
 export const getSecretaryDashboardOverviewApi = async (): Promise<ApiEnvelope<SecretaryDashboardOverview>> => {
   const res = await api.get('/dashboard/secretary/overview');
+  return res.data;
+};
+
+export const getRegistrarDashboardOverviewApi = async (): Promise<ApiEnvelope<RegistrarDashboardOverview>> => {
+  const res = await api.get('/dashboard/registrar/overview');
   return res.data;
 };
 
@@ -22,10 +28,10 @@ export const getStudentsByGenderApi = async () => {
   return res.data;
 };
 
-export const getStudentAttendanceMonthlyApi = async (audience: 'school' | 'secretary' = 'school') => {
-  const res = await api.get(audience === 'secretary'
-    ? '/dashboard/secretary/attendance/students-monthly'
-    : '/dashboard/attendance/students-monthly');
+export const getStudentAttendanceMonthlyApi = async (audience: 'school' | 'secretary' | 'registrar' = 'school') => {
+  const res = await api.get(audience === 'school'
+    ? '/dashboard/attendance/students-monthly'
+    : `/dashboard/${audience}/attendance/students-monthly`);
   return res.data;
 };
 

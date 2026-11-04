@@ -147,7 +147,7 @@ function guards(controller: any, method: string) {
 
 const schoolWide = (permission: string) => [
   ['AuthGuard', null],
-  ['RoleGuard', ['admin', 'principal', 'accounting', 'secretary', 'driver', 'assistant']],
+  ['RoleGuard', ['admin', 'principal', 'accounting', 'secretary', 'driver', 'assistant', 'registrar']],
   ['PermissionGuard', permission],
 ];
 

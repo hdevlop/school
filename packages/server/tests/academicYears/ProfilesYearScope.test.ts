@@ -12,7 +12,7 @@ const OLD = { id: 'year-2025', label: '2025-2026', reportingStartsOn: '2025-09-0
 const CURRENT = { id: 'year-2026', label: '2026-2027', reportingStartsOn: '2026-09-01', reportingEndsOn: '2027-08-31' };
 const CONTROLLERS = [StudentProfileController, ParentProfileController, TeacherProfileController];
 // `CanSchoolWide`: the permission, and a role whose reads are school-wide.
-const SCHOOL_WIDE = 'roles:accounting,admin,assistant,driver,principal,secretary';
+const SCHOOL_WIDE = 'roles:accounting,admin,assistant,driver,principal,registrar,secretary';
 
 // The year the request resolved; the DI injector installs it in the server.
 function inYear<T extends object>(service: T, year: object): T {

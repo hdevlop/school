@@ -680,6 +680,20 @@
       "when": 1793710000000,
       "tag": "0096_dashboard_permission",
       "breakpoints": true
+    },
+    {
+      "idx": 97,
+      "version": "7",
+      "when": 1793720000000,
+      "tag": "0097_student_record_access",
+      "breakpoints": true
+    },
+    {
+      "idx": 98,
+      "version": "7",
+      "when": 1793730000000,
+      "tag": "0098_registrar_role",
+      "breakpoints": true
     }
   ]
 }

@@ -977,6 +977,49 @@
     }
   },
   "dashboard": {
+    "registrar": {
+      "title": "لوحة تحكم المسجل",
+      "subtitle": "نقط السنة وحضورها، جاهزة لعملك على مسار.",
+      "kpis": {
+        "average": "المعدل العام",
+        "passRate": "نسبة النجاح",
+        "recorded": "النقط المسجلة",
+        "pending": "النقط المعلقة",
+        "missed": "النقط الفائتة",
+        "testsAwaitingGrades": "فروض بدون نقط"
+      },
+      "gradedCount": "النقط: {{count}}",
+      "distribution": {
+        "title": "توزيع النقط",
+        "empty": "لم تسجل أي نقط هذه السنة"
+      },
+      "trend": {
+        "title": "المعدل حسب الشهر",
+        "empty": "لم تسجل أي نقط هذه السنة"
+      },
+      "byClass": {
+        "title": "المعدل حسب القسم",
+        "empty": "لا توجد معدلات أقسام هذه السنة"
+      },
+      "bySubject": {
+        "title": "المعدل حسب المادة",
+        "empty": "لا توجد معدلات مواد هذه السنة"
+      },
+      "quickActions": {
+        "students": "التلاميذ",
+        "studentsHint": "استيراد ملفات التلاميذ وتصديرها وتحديثها",
+        "grades": "النقط",
+        "gradesHint": "الاطلاع على النقط وتصديرها إلى مسار",
+        "assessments": "الفروض",
+        "assessmentsHint": "الاطلاع على فروض السنة",
+        "exams": "الامتحانات",
+        "examsHint": "الاطلاع على امتحانات السنة",
+        "classes": "الأقسام",
+        "classesHint": "الاطلاع على الأقسام ومستوياتها",
+        "notifications": "الإشعارات",
+        "notificationsHint": "قراءة آخر الرسائل والتنبيهات"
+      }
+    },
     "secretary": {
       "title": "لوحة السكرتارية",
       "subtitle": "التسجيل وملفات الأسر والمتابعة الإدارية في لمحة.",
@@ -4218,6 +4261,7 @@
       "accountant": "المحاسب",
       "supervisor": "مشرف",
       "floorManager": "المراقب",
+      "registrar": "مسجل",
       "librarian": "أمين المكتبة",
       "itSupport": "دعم تقني",
       "assistant": "مساعد",

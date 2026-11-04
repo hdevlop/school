@@ -23,7 +23,7 @@ function permissions(controller: any, method: string): string[] {
 
 const FINANCE_ROLES = ['accounting', 'admin', 'principal'];
 /** Pinned here, not read from the code under test. */
-const SCHOOL_WIDE_ROLES = ['accounting', 'admin', 'assistant', 'driver', 'principal', 'secretary'];
+const SCHOOL_WIDE_ROLES = ['accounting', 'admin', 'assistant', 'driver', 'principal', 'registrar', 'secretary'];
 
 describe('dashboard audience', () => {
   it('keeps every finance dashboard route to the roles that may read fees', () => {

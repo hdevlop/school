@@ -1030,6 +1030,7 @@
       "accountant": "Comptable",
       "supervisor": "Surveillant",
       "floorManager": "Moniteur",
+      "registrar": "Registraire",
       "librarian": "Bibliothécaire",
       "itSupport": "Support IT",
       "assistant": "Assistant",
@@ -1750,6 +1751,49 @@
     }
   },
   "dashboard": {
+    "registrar": {
+      "title": "Tableau de bord du registraire",
+      "subtitle": "Les notes et l'assiduité de l'année, pour votre travail sur Massar.",
+      "kpis": {
+        "average": "Moyenne générale",
+        "passRate": "Taux de réussite",
+        "recorded": "Notes saisies",
+        "pending": "Notes en attente",
+        "missed": "Notes manquées",
+        "testsAwaitingGrades": "Évaluations sans notes"
+      },
+      "gradedCount": "Notes : {{count}}",
+      "distribution": {
+        "title": "Répartition des notes",
+        "empty": "Aucune note saisie cette année"
+      },
+      "trend": {
+        "title": "Moyenne par mois",
+        "empty": "Aucune note saisie cette année"
+      },
+      "byClass": {
+        "title": "Moyenne par classe",
+        "empty": "Aucune moyenne de classe cette année"
+      },
+      "bySubject": {
+        "title": "Moyenne par matière",
+        "empty": "Aucune moyenne de matière cette année"
+      },
+      "quickActions": {
+        "students": "Élèves",
+        "studentsHint": "Importer, exporter et mettre à jour les dossiers",
+        "grades": "Notes",
+        "gradesHint": "Consulter et exporter les notes pour Massar",
+        "assessments": "Évaluations",
+        "assessmentsHint": "Consulter les évaluations de l'année",
+        "exams": "Examens",
+        "examsHint": "Consulter les examens de l'année",
+        "classes": "Classes",
+        "classesHint": "Consulter les classes et leurs niveaux",
+        "notifications": "Notifications",
+        "notificationsHint": "Lire vos derniers messages et alertes"
+      }
+    },
     "secretary": {
       "title": "Tableau de bord du secrétariat",
       "subtitle": "Inscriptions, dossiers des familles et suivi administratif en un coup d’œil.",

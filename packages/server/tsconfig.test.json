@@ -13,7 +13,8 @@
     "tests/email/**/*.test.ts",
     "tests/teacherDashboard/**/*.test.ts",
     "tests/supervisorDashboard/**/*.test.ts",
-    "tests/secretaryDashboard/**/*.test.ts"
+    "tests/secretaryDashboard/**/*.test.ts",
+    "tests/registrarDashboard/**/*.test.ts"
   ],
   "exclude": ["node_modules"]
 }

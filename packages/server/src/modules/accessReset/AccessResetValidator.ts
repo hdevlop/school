@@ -22,6 +22,7 @@ const STAFF_ACCESS_ROLES = new Set([
   'assistant',
   'supervisor',
   'floor_manager',
+  'registrar',
 ]);
 
 /** A staff member on leave still holds a working login; a terminated one does not. */

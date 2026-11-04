@@ -64,6 +64,7 @@ export const {
   isDriver,
   isAssistant,
   isSupervisor,
+  isRegistrar,
   isAdmin: _isAppAdmin, // renamed — built-in isAdmin from najm-auth is used instead
 } = defineRoles({
   ADMIN: 'admin',       // built-in najm-auth admin role — lets createGroupGuard include it
@@ -77,6 +78,7 @@ export const {
   ASSISTANT: 'assistant',
   SUPERVISOR: 'supervisor', // surveillant général
   FLOOR_MANAGER: 'floor_manager', // responsable d'étage
+  REGISTRAR: 'registrar', // student records and the Massar exchange
 });
 
 // ============================================================================
@@ -95,7 +97,7 @@ export const isFloorManager = createGroupGuard(['FLOOR_MANAGER']);
 // ============================================================================
 
 const SCHOOL_WIDE_ROLE_KEYS = [
-  'ADMIN', 'PRINCIPAL', 'ACCOUNTING', 'SECRETARY', 'DRIVER', 'ASSISTANT',
+  'ADMIN', 'PRINCIPAL', 'ACCOUNTING', 'SECRETARY', 'DRIVER', 'ASSISTANT', 'REGISTRAR',
 ] as const;
 
 /**

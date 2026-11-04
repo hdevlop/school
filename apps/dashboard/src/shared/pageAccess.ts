@@ -13,7 +13,7 @@ type PageRule = (viewer: PageViewer) => boolean;
 // dashboard a viewer gets, what stays the developer's, and — for the pages
 // whose routes use `CanSchoolWide` — that the permission reads the whole school.
 const ADMIN = ['admin'];
-const SCHOOL_WIDE = ['admin', 'principal', 'accounting', 'secretary', 'driver', 'assistant'];
+const SCHOOL_WIDE = ['admin', 'principal', 'accounting', 'secretary', 'driver', 'assistant', 'registrar'];
 
 /** A role whose reads are school-wide, as `SCHOOL_WIDE_ROLES` on the server. */
 export const isSchoolWideRole = (role: string | null | undefined) => !!role && SCHOOL_WIDE.includes(role.toLowerCase());

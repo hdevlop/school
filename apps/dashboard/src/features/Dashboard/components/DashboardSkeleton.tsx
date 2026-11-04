@@ -7,8 +7,9 @@ import { useTranslation } from 'najm-i18n/react';
 import { NajmScroll, NCard, NPageHeader, NPageHeaderActions, NSkeleton, NSkeletonCalendar, NSkeletonChart, NSkeletonDonut, NSkeletonEventList, NStatCardSkeleton, cn } from 'najm-kit';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
-import { canReadFinanceDashboard, schoolDashboardCards, usesFloorManagerDashboard, usesSecretaryDashboard, usesSupervisorDashboard, usesTeacherDashboard } from '../config/dashboardAudience';
+import { canReadFinanceDashboard, schoolDashboardCards, usesFloorManagerDashboard, usesRegistrarDashboard, usesSecretaryDashboard, usesSupervisorDashboard, usesTeacherDashboard } from '../config/dashboardAudience';
 import { secretaryQuickActions } from '../config/secretaryDashboard';
+import { registrarQuickActions } from '../config/registrarDashboard';
 import DashboardOverviewRow from './DashboardOverviewRow';
 
 function SkeletonCard({ className, children, title, icon }: { className?: string; children: ReactNode; title?: string; icon?: LucideIcon }) {
@@ -131,6 +132,76 @@ function StaffDashboardSkeleton({ role }: { role: 'supervisor' | 'floorManager' 
   );
 }
 
+function RegistrarDashboardSkeleton() {
+  const { t } = useTranslation();
+  const viewer = useViewerRole();
+  const showsGrades = viewer.can('read:grades');
+
+  return (
+    <div aria-busy="true" aria-label={t('common.loading')} className="flex h-full min-h-0 w-full flex-col gap-2">
+      <NPageHeader icon={FEATURE_ICONS.dashboard} title={t('dashboard.registrar.title')} subtitle={t('dashboard.registrar.subtitle')}>
+        <NPageHeaderActions>
+          <NSkeleton className="h-8 w-64 max-sm:hidden" />
+        </NPageHeaderActions>
+      </NPageHeader>
+
+      <NajmScroll axis="y" className="min-h-0 flex-1">
+        <div className="flex min-h-full flex-col gap-3 pb-1 xl:fit:h-full">
+          {showsGrades && (
+            <div className="grid shrink-0 grid-cols-2 gap-2 md:grid-cols-3 lg:gap-3 xl:grid-cols-6">
+              {Array.from({ length: 6 }, (_, index) => <NStatCardSkeleton key={index} />)}
+            </div>
+          )}
+
+          <DashboardOverviewRow>
+            <SkeletonCard title={t('dashboard.teacher.info.title')} icon={UserRound}>
+              <div className="flex flex-col items-center gap-3" aria-hidden="true">
+                <NSkeleton className="size-24 rounded-full" />
+                <NSkeleton className="h-4 w-1/2" />
+                <NSkeleton className="h-3 w-1/3" />
+              </div>
+            </SkeletonCard>
+            <SkeletonCard title={t('dashboard.attendance.studentsTitle')} icon={ClipboardCheck} className="min-h-[20rem] xl:min-h-0">
+              <NSkeletonChart />
+            </SkeletonCard>
+            {showsGrades && (
+              <SkeletonCard title={t('dashboard.registrar.distribution.title')} className="min-h-[20rem] xl:min-h-0">
+                <NSkeletonChart />
+              </SkeletonCard>
+            )}
+            {showsGrades && (
+              <SkeletonCard title={t('dashboard.registrar.trend.title')} className="min-h-[20rem] xl:min-h-0">
+                <NSkeletonChart />
+              </SkeletonCard>
+            )}
+          </DashboardOverviewRow>
+
+          <DashboardOverviewRow>
+            {showsGrades && (
+              <SkeletonCard title={t('dashboard.registrar.byClass.title')} className="min-h-[20rem] xl:min-h-0">
+                <NSkeletonEventList />
+              </SkeletonCard>
+            )}
+            {showsGrades && (
+              <SkeletonCard title={t('dashboard.registrar.bySubject.title')} className="min-h-[20rem] xl:min-h-0">
+                <NSkeletonEventList />
+              </SkeletonCard>
+            )}
+            <SkeletonCard title={t('dashboard.teacher.quickActions.title')} icon={Zap}>
+              <div className="flex flex-col gap-1">
+                {registrarQuickActions(viewer).map(({ key }) => <NSkeleton key={key} className="h-11 w-full rounded-lg" />)}
+              </div>
+            </SkeletonCard>
+            <SkeletonCard title={t('dashboard.calendar.title')} icon={CalendarDays} className="min-h-[23rem] xl:min-h-0">
+              <NSkeletonCalendar />
+            </SkeletonCard>
+          </DashboardOverviewRow>
+        </div>
+      </NajmScroll>
+    </div>
+  );
+}
+
 // Keep this fallback free of chart imports and data queries: it is visible
 // before hydration and while the desktop-only dashboard bundle downloads.
 export default function DashboardSkeleton() {
@@ -141,6 +212,8 @@ export default function DashboardSkeleton() {
   const isTeacher = usesTeacherDashboard(user?.role);
   const isSupervisor = usesSupervisorDashboard(user?.role);
   const showFinance = canReadFinanceDashboard(user?.role);
+
+  if (usesRegistrarDashboard(user?.role)) return <RegistrarDashboardSkeleton />;
 
   if (isSecretary || isSupervisor || usesFloorManagerDashboard(user?.role)) {
     return <StaffDashboardSkeleton role={isSecretary ? 'secretary' : isSupervisor ? 'supervisor' : 'floorManager'} />;

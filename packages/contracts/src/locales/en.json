@@ -872,6 +872,49 @@
     }
   },
   "dashboard": {
+    "registrar": {
+      "title": "Registrar Dashboard",
+      "subtitle": "Grades and attendance for the year, ready for your Massar work.",
+      "kpis": {
+        "average": "Average grade",
+        "passRate": "Pass rate",
+        "recorded": "Grades recorded",
+        "pending": "Grades pending",
+        "missed": "Grades missed",
+        "testsAwaitingGrades": "Tests awaiting grades"
+      },
+      "gradedCount": "Grades: {{count}}",
+      "distribution": {
+        "title": "Grade distribution",
+        "empty": "No grades recorded this year"
+      },
+      "trend": {
+        "title": "Average grade by month",
+        "empty": "No grades recorded this year"
+      },
+      "byClass": {
+        "title": "Average by class",
+        "empty": "No class averages this year"
+      },
+      "bySubject": {
+        "title": "Average by subject",
+        "empty": "No subject averages this year"
+      },
+      "quickActions": {
+        "students": "Students",
+        "studentsHint": "Import, export and update student records",
+        "grades": "Grades",
+        "gradesHint": "Read and export marks for Massar",
+        "assessments": "Assessments",
+        "assessmentsHint": "Review the year's assessments",
+        "exams": "Exams",
+        "examsHint": "Review the year's exams",
+        "classes": "Classes",
+        "classesHint": "Check classes and their levels",
+        "notifications": "Notifications",
+        "notificationsHint": "Read your latest messages and alerts"
+      }
+    },
     "secretary": {
       "title": "Secretary Dashboard",
       "subtitle": "Enrollment, family records and office follow-up at a glance.",
@@ -3119,6 +3162,7 @@
       "accountant": "Accountant",
       "supervisor": "Supervisor",
       "floorManager": "Monitor",
+      "registrar": "Registrar",
       "librarian": "Librarian",
       "itSupport": "IT Support",
       "assistant": "Assistant",

@@ -52,6 +52,8 @@ interface LeftSidebarProps {
   // the student so they do not wait for this sidebar to mount.
   attendanceResponse?: ReturnType<typeof useStudentAttendanceRecords>['data'];
   reportResponse?: ReturnType<typeof useStudentReport>['data'];
+  // Without it the grade figures are absent, not a misleading N/A or 0.
+  canReadGrades: boolean;
   studentFees?: ReturnType<typeof useFees>['studentFees'];
 }
 
@@ -60,6 +62,7 @@ export default function LeftSidebar({
   isLoading,
   attendanceResponse,
   reportResponse,
+  canReadGrades,
   studentFees,
 }: LeftSidebarProps) {
   const { t, language } = useTranslation();
@@ -141,21 +144,23 @@ export default function LeftSidebar({
       label: t('students.profile.attendanceDetails.late'),
       value: String(lateCount),
     },
-    {
-      icon: Award,
-      label: t('students.profile.examsAverage'),
-      value: examAverage,
-    },
-    {
-      icon: BookOpen,
-      label: t('students.profile.tabs.grades'),
-      value: String(gradeCount),
-    },
-    {
-      icon: GraduationCap,
-      label: t('students.profile.gpa'),
-      value: gpaValue,
-    },
+    ...(canReadGrades ? [
+      {
+        icon: Award,
+        label: t('students.profile.examsAverage'),
+        value: examAverage,
+      },
+      {
+        icon: BookOpen,
+        label: t('students.profile.tabs.grades'),
+        value: String(gradeCount),
+      },
+      {
+        icon: GraduationCap,
+        label: t('students.profile.gpa'),
+        value: gpaValue,
+      },
+    ] : []),
     {
       icon: CalendarClock,
       label: t('students.profile.nextDue'),
@@ -253,12 +258,14 @@ export default function LeftSidebar({
         </div>
 
         <div className="mt-2.5 space-y-2.5">
-          <NStatCard
-            variant="compact"
-            icon={GraduationCap}
-            label={t('students.profile.averageGrade')}
-            value={averageGrade}
-          />
+          {canReadGrades && (
+            <NStatCard
+              variant="compact"
+              icon={GraduationCap}
+              label={t('students.profile.averageGrade')}
+              value={averageGrade}
+            />
+          )}
           <NStatCard
             variant="compact"
             icon={Percent}
