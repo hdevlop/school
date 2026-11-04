@@ -47,5 +47,4 @@ export * from './roleAccess';
 export * from './seed';
 export * from './landing';
 export * from './visitRequests';
-export * from './offline';
 export * from './backup';

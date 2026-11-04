@@ -1684,7 +1684,7 @@
       "licenseDate": "License date"
     },
     "academic": {
-    "supervisorAssignmentHint": "Access is limited to the selected classes and their students, attendance, discipline and grades. Without assignments, no class data is accessible.",
+      "supervisorAssignmentHint": "Access is limited to the selected classes and their students, attendance, discipline and grades. Without assignments, no class data is accessible.",
       "semesterPlaceholder": "Semester",
       "title": "Academic settings",
       "attendanceRequirement": "Attendance Requirement (%)",
@@ -5448,7 +5448,6 @@
       "invalidFile": "This file is not a school backup.",
       "damaged": "This backup is incomplete or damaged. Nothing was changed.",
       "otherVersion": "This backup was made by a newer version of the app. Update the app, then restore it. Nothing was changed.",
-
       "databaseMismatch": "The database is not at this version of the app. Apply the app's database updates first. Nothing was changed.",
       "tooLarge": "This backup is larger than 512 MB.",
       "wrongPassword": "That password is not correct. Nothing was changed."
@@ -5538,7 +5537,6 @@
         "saved": "Class filter saved.",
         "saveError": "This browser could not save the filter. Check its site storage settings and try again."
       },
-
       "allClasses": "All classes",
       "title": "Routine",
       "subtitle": "Build a conflict-safe weekly timetable for every section",
@@ -7436,35 +7434,6 @@
     "title": "MyScolAI is offline",
     "description": "Reconnect to the internet, then try loading this page again.",
     "retry": "Try again"
-  },
-  "offlineShell": {
-    "prepare": "Connect and sign in to prepare this device for offline use.",
-    "unpreparedTitle": "This device is not ready to work offline",
-    "unpreparedReasons": "Offline access starts once you sign in on this browser while connected. It ends after 8 hours without a connection, when you sign out, or when your access changes.",
-    "signIn": "Sign in",
-    "update": "Update application",
-    "updateBlocked": "Save or discard open changes and close forms in all tabs before updating.",
-    "onlineAvailable": "The server is reachable. Try online to load your records.",
-    "title": "MyScolAI",
-    "retry": "Try online",
-    "noData": "School data is not available offline yet. Reconnect to load your records.",
-    "unavailable": "This page is not available offline."
-  },
-  "offlineRead": {
-    "unavailable": "This part of the profile has not been downloaded.",
-    "summaryUnavailable": "Attendance, grades and financial summaries are unavailable in this downloaded view.",
-    "errors": {
-      "notPermitted": "This account cannot download data for offline use.",
-      "accountChanged": "This account's access changed. Sign in again to download data for offline use.",
-      "settingsRequired": "The school settings must name the current academic year before data can be downloaded for offline use.",
-      "authorizationChanged": "This account's access changed since the download started. Try again.",
-      "studentLimit": "Offline download supports at most 2000 students per academic year.",
-      "pageLimit": "One downloaded record is too large for offline use.",
-      "snapshotExpired": "This download has expired. Start it again.",
-      "scopeMismatch": "This download belongs to another device, account or academic year.",
-      "pageNotFound": "This download has no such page.",
-      "disabled": "Offline use is turned off for this school."
-    }
   },
   "examPlanning": {
     "title": "Exam planning",

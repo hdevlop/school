@@ -13,11 +13,11 @@ export const BACKUP_FILES_PREFIX = 'files/';
 export const MAX_BACKUP_BYTES = 512 * 1024 * 1024;
 
 /**
- * Left out of a backup and emptied by a restore: sign-in sessions, one-time
- * setup links and per-device offline copies belong to the moment, not the
- * school. Restoring them would revive sessions that were ended since.
+ * Left out of a backup and emptied by a restore: sign-in sessions and one-time
+ * setup links belong to the moment, not the school. Restoring them would revive
+ * sessions that were ended since.
  */
-export const BACKUP_EXCLUDED_TABLES = ['tokens', 'credential_setup_sessions', 'offline_read_snapshots'] as const;
+export const BACKUP_EXCLUDED_TABLES = ['tokens', 'credential_setup_sessions'] as const;
 
 export type BackupManifest = {
   format: typeof BACKUP_FORMAT;

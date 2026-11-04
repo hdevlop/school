@@ -180,7 +180,7 @@ describe('backup validator', () => {
   });
 
   it('needs every rebuilt table in the backup, ignoring session tables and backed-up tables no migration creates', () => {
-    const tables = ['students', 'users', 'tokens', 'credential_setup_sessions', 'offline_read_snapshots'].map(table);
+    const tables = ['students', 'users', 'tokens', 'credential_setup_sessions'].map(table);
     expect(() => validator.ensureTables(manifest, tables)).not.toThrow();
     expect(() => validator.ensureTables(manifest, [...tables, table('grades')])).toThrow(refusal('backup.errors.damaged'));
     expect(() => validator.ensureTables(manifest, [...tables, table('constructor')])).toThrow(refusal('backup.errors.damaged'));

@@ -694,6 +694,13 @@
       "when": 1793730000000,
       "tag": "0098_registrar_role",
       "breakpoints": true
+    },
+    {
+      "idx": 99,
+      "version": "7",
+      "when": 1793829250707,
+      "tag": "0099_remove_offline_reads",
+      "breakpoints": true
     }
   ]
 }

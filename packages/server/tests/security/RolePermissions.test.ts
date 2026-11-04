@@ -308,7 +308,8 @@ describe('the floor manager migration', () => {
   // An existing database gets the role a new one is seeded with.
   it('grants the seeded defaults', () => {
     const grants = seedData('rolePermissions').find((row: { roleName: string }) => row.roleName === 'floor_manager').permissions;
-    const migrated = [...sql.matchAll(/'([\w-]+:[\w-]+)'/g)].map((match) => match[1]);
+    // 0099 removes offline reading and this grant with it.
+    const migrated = [...sql.matchAll(/'([\w-]+:[\w-]+)'/g)].map((match) => match[1]).filter((name) => name !== 'read:offline');
     // 0094 separates timetable reading from the existing classes grant.
     if (migrated.includes('read:classes')) migrated.push('read:class-routines');
     // 0096 grants the dashboard to every role that opened it by role.
@@ -319,6 +320,24 @@ describe('the floor manager migration', () => {
   it('links the floor manager job title to the login', () => {
     expect(sql).toContain(`SELECT 'floorManager', 'Floor Manager'`);
     expect(sql).toContain(`WHERE "roles"."name" = 'floor_manager'`);
+  });
+});
+
+describe('the offline removal migration', () => {
+  const sql = readFileSync(new URL('../../src/database/migrations/0099_remove_offline_reads.sql', import.meta.url), 'utf8');
+
+  // An existing database ends up with what a new one is seeded with.
+  it('removes the stored copies, the permission and its grants, grants first', () => {
+    expect(sql).toContain('DROP TABLE IF EXISTS "offline_read_snapshots"');
+    const grants = sql.indexOf('DELETE FROM "role_permissions"');
+    const permission = sql.indexOf('DELETE FROM "permissions"');
+    expect(grants).toBeGreaterThan(-1);
+    expect(permission).toBeGreaterThan(grants);
+  });
+
+  it('leaves the permission out of the seeded defaults', () => {
+    expect(seedData('permissions').some((row: { name: string }) => row.name === 'read:offline')).toBe(false);
+    for (const role of seedData('rolePermissions')) expect(role.permissions).not.toContain('read:offline');
   });
 });
 

@@ -1644,7 +1644,6 @@
       "invalidFile": "Este archivo no es una copia de seguridad del centro.",
       "damaged": "Esta copia de seguridad está incompleta o dañada. No se cambió nada.",
       "otherVersion": "Esta copia de seguridad se creó con una versión más reciente de la aplicación. Actualice la aplicación y vuelva a restaurarla. No se cambió nada.",
-
       "databaseMismatch": "La base de datos no corresponde a esta versión de la aplicación. Aplique primero las actualizaciones de la base de datos. No se cambió nada.",
       "tooLarge": "Esta copia de seguridad supera los 512 MB.",
       "wrongPassword": "Esa contraseña no es correcta. No se ha cambiado nada."
@@ -1734,7 +1733,6 @@
         "saved": "Filtro de clases guardado.",
         "saveError": "Este navegador no pudo guardar el filtro. Revisa sus ajustes de almacenamiento del sitio e inténtalo de nuevo."
       },
-
       "allClasses": "Todas las clases",
       "title": "Horario",
       "subtitle": "Crea un horario semanal sin conflictos para cada sección",
@@ -4622,7 +4620,7 @@
       "invalidSchoolDay": "El horario debe permitir el almuerzo y al menos seis clases de cinco minutos."
     },
     "academic": {
-    "supervisorAssignmentHint": "El acceso se limita a las clases seleccionadas, sus alumnos, asistencia, disciplina y notas. Sin asignaciones, no se puede acceder a datos de clases.",
+      "supervisorAssignmentHint": "El acceso se limita a las clases seleccionadas, sus alumnos, asistencia, disciplina y notas. Sin asignaciones, no se puede acceder a datos de clases.",
       "semesterPlaceholder": "Semestre",
       "attendanceMode": "Modo de asistencia",
       "attendanceModeDaily": "Diario",
@@ -6728,35 +6726,6 @@
     "title": "MyScolAI está sin conexión",
     "description": "Vuelve a conectarte a internet y luego intenta cargar esta página de nuevo.",
     "retry": "Reintentar"
-  },
-  "offlineShell": {
-    "prepare": "Conéctate e inicia sesión para preparar este dispositivo para su uso sin conexión.",
-    "unpreparedTitle": "Este dispositivo no está listo para trabajar sin conexión",
-    "unpreparedReasons": "El acceso sin conexión empieza al iniciar sesión en este navegador con conexión. Termina tras 8 horas sin conexión, al cerrar sesión o si cambian tus permisos.",
-    "signIn": "Iniciar sesión",
-    "update": "Actualizar aplicación",
-    "updateBlocked": "Guarda o descarta los cambios y cierra los formularios en todas las pestañas antes de actualizar.",
-    "onlineAvailable": "El servidor está disponible. Reintenta en línea para cargar tus datos.",
-    "title": "MyScolAI",
-    "retry": "Reintentar en línea",
-    "noData": "Los datos escolares aún no están disponibles sin conexión. Conéctate para cargarlos.",
-    "unavailable": "Esta página no está disponible sin conexión."
-  },
-  "offlineRead": {
-    "unavailable": "Esta parte del perfil no se ha descargado.",
-    "summaryUnavailable": "Los resúmenes de asistencia, notas y finanzas no están disponibles en esta vista descargada.",
-    "errors": {
-      "notPermitted": "Esta cuenta no puede descargar datos para usarlos sin conexión.",
-      "accountChanged": "Los accesos de esta cuenta han cambiado. Vuelve a iniciar sesión para descargar los datos sin conexión.",
-      "settingsRequired": "La configuración de la escuela debe indicar el curso escolar actual antes de descargar datos para usarlos sin conexión.",
-      "authorizationChanged": "Los accesos de esta cuenta han cambiado desde que empezó la descarga. Inténtalo de nuevo.",
-      "studentLimit": "La descarga sin conexión admite como máximo 2000 alumnos por curso escolar.",
-      "pageLimit": "Un registro descargado es demasiado grande para usarlo sin conexión.",
-      "snapshotExpired": "Esta descarga ha caducado. Vuelve a iniciarla.",
-      "scopeMismatch": "Esta descarga pertenece a otro dispositivo, cuenta o curso escolar.",
-      "pageNotFound": "Esta descarga no tiene esa página.",
-      "disabled": "El uso sin conexión está desactivado para esta escuela."
-    }
   },
   "examPlanning": {
     "title": "Planificación de exámenes",

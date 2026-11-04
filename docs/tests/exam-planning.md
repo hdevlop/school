@@ -21,8 +21,7 @@ separate pages in that dropdown.
   classes and months are refused. Dates must be valid and inside the requested
   month; IDs are unique within a class/month. Entry and lesson sizes are bounded.
 - Planning follows the Exams sidebar preference. Family roles can read/print
-  their owned classes and have no editing controls. Offline record transport
-  has not been added for this page.
+  their owned classes and have no editing controls.
 - Migration `0083_damp_maelstrom` adds only the planning table. Migration 0082's
   earlier nullable assessment field remains compatible but is not used here.
 

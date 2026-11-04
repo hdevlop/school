@@ -19,10 +19,10 @@ describe('timedRead', () => {
 
   test('a failed read still fails, and a slow failure is logged too', async () => {
     const logged: string[] = [];
-    const failing = timedRead('settings', async () => { await pause(520); throw new Error('offline'); }, (message) => logged.push(message));
+    const failing = timedRead('settings', async () => { await pause(520); throw new Error('unavailable'); }, (message) => logged.push(message));
     let failure: unknown;
     await failing.catch((error) => { failure = error; });
-    expect((failure as Error).message).toBe('offline');
+    expect((failure as Error).message).toBe('unavailable');
     expect(logged).toHaveLength(1);
   });
 });

@@ -834,12 +834,6 @@
     "action": "delete"
   },
   {
-    "name": "read:offline",
-    "description": "Read previously downloaded authorized data offline",
-    "resource": "offline",
-    "action": "read"
-  },
-  {
     "name": "read:insurance",
     "description": "Permission to view and print the student insurance register",
     "resource": "insurance",

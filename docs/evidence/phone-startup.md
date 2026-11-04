@@ -99,28 +99,19 @@ JHL's signed-in loads waited up to 5.6 s on the server before these changes. The
 repeated offline downloads are the likely cause, because they run heavy reads on every
 load, but that is not proven until it is measured on JHL.
 
-## Verification
+## Offline removed
 
-On the final code: `bun run lint`, `typecheck`, `i18n:check`, `test` (2,640 tests),
-`db:check`, `build`, `test:offline:transport` and the role sidebar script pass. So do
-`test:offline:renewal`, `navigation`, `recovery`, `test-offline-startup` and
-`test-offline-fallback`.
+School no longer reads offline; see the migration
+`0099_remove_offline_reads.sql`. The measurements above were taken while it existed.
+The worker remains only for push notifications and a plain page when a site cannot
+be reached. The app can still be installed to the home screen.
 
-Four offline browser tests fail. All four failed at the same step on an untouched
-checkout of the previous commit (2eb9484), so they do not come from this work:
-
-| Test | Failure |
-| --- | --- |
-| `test-offline-shell` | No `Academic` button in the offline sidebar |
-| `test:offline:session` | The stopped-server sidebar shows no feature icons |
-| `test:offline:reads` | No `change class or section` button |
-| `test:offline:lifecycle` | "Authoritative replacement did not arrive" after reconnecting |
+Each page load deletes what a device still holds from that feature
+(`lib/retiredOfflineData.ts`), because nothing else ever would. Going back to an image
+from before this removal still works online, but its offline downloads will fail.
 
 ## Still open
 
-- The four failing offline browser tests above. The lifecycle one matters most now:
-  after reconnecting, a fresh offline copy is kept for up to 15 minutes rather than
-  replaced. French and Arabic schools used to hide this by downloading on every load.
 - Whether the Redmi drops session cookies, which only the device can show.
 - JHL's own signed-in timings, which need a JHL login.
 - The JavaScript itself. `@sms/contracts/locales` sends all four languages to every
@@ -128,7 +119,5 @@ checkout of the previous commit (2eb9484), so they do not come from this work:
   368 KB. Sending one language needs najm-i18n to load a catalog asynchronously,
   because the provider needs one on its first render and putting it in the HTML would
   slow every return visit.
-- Two `/api/offline/grant` calls per load, from the renewal on start and the one after
-  the first token refresh. They are small, and removing one needs a guard in najm-offline.
 - The proxy answers a passing recovery failure with a login redirect, where server
   components show an error instead. Najm offers no option to let the request through.

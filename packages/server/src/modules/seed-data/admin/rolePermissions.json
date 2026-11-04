@@ -4,8 +4,7 @@
     "permissions": [
       "*:*",
       "read:visit-requests",
-      "update:visit-requests",
-      "read:offline"
+      "update:visit-requests"
     ]
   },
   {
@@ -140,8 +139,7 @@
       "read:participants",
       "create:participants",
       "update:participants",
-      "delete:participants",
-      "read:offline"
+      "delete:participants"
     ]
   },
   {
@@ -208,8 +206,7 @@
       "create:student-routes",
       "read:student-routes",
       "update:student-routes",
-      "delete:student-routes",
-      "read:offline"
+      "delete:student-routes"
     ]
   },
   {
@@ -240,8 +237,7 @@
       "read:announcements",
       "read:events",
       "read:assessments",
-      "read:exams",
-      "read:offline"
+      "read:exams"
     ]
   },
   {
@@ -262,8 +258,7 @@
       "read:behavior-rewards",
       "read:discipline",
       "read:sections",
-      "read:events",
-      "read:offline"
+      "read:events"
     ]
   },
   {
@@ -284,8 +279,7 @@
       "read:behavior-rewards",
       "read:discipline",
       "read:sections",
-      "read:events",
-      "read:offline"
+      "read:events"
     ]
   },
   {
@@ -311,8 +305,7 @@
       "read:alerts",
       "read:announcements",
       "read:visit-requests",
-      "update:visit-requests",
-      "read:offline"
+      "update:visit-requests"
     ]
   },
   {
@@ -348,8 +341,7 @@
       "read:announcements",
       "update:announcements",
       "read:visit-requests",
-      "update:visit-requests",
-      "read:offline"
+      "update:visit-requests"
     ]
   },
   {
@@ -377,16 +369,14 @@
       "read:events",
       "read:alerts",
       "update:alerts",
-      "read:announcements",
-      "read:offline"
+      "read:announcements"
     ]
   },
   {
     "roleName": "driver",
     "permissions": [
       "read:students",
-      "read:insurance",
-      "read:offline"
+      "read:insurance"
     ]
   },
   {
@@ -397,8 +387,7 @@
       "read:insurance",
       "read:classes",
       "read:class-routines",
-      "read:teachers",
-      "read:offline"
+      "read:teachers"
     ]
   },
   {

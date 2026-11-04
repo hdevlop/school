@@ -15,7 +15,6 @@ export * from '../shared';
 
 export { auditLogs } from './coreSchema';
 export { roleSidebarLayouts } from '../../modules/roleAccess/RoleSidebarSchema';
-export { offlineSnapshots } from '../../modules/offline/OfflineSchema';
 
 export {
   najmThemeAppearance,

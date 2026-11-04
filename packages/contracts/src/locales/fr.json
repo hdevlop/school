@@ -1535,7 +1535,7 @@
       "success": "Données de l’école effacées. Le compte administrateur, les classes, les sections, les matières et les types de frais ont été conservés."
     },
     "academic": {
-    "supervisorAssignmentHint": "L’accès est limité aux classes choisies, à leurs élèves, à l’assiduité, à la discipline et aux notes. Sans affectation, aucune donnée de classe n’est accessible.",
+      "supervisorAssignmentHint": "L’accès est limité aux classes choisies, à leurs élèves, à l’assiduité, à la discipline et aux notes. Sans affectation, aucune donnée de classe n’est accessible.",
       "semesterPlaceholder": "Semestre",
       "attendanceMode": "Mode de présence",
       "attendanceModeDaily": "Quotidien",
@@ -2286,7 +2286,6 @@
       "invalidFile": "Ce fichier n'est pas une sauvegarde de l'établissement.",
       "damaged": "Cette sauvegarde est incomplète ou endommagée. Rien n'a été modifié.",
       "otherVersion": "Cette sauvegarde a été créée par une version plus récente de l'application. Mettez l'application à jour, puis restaurez-la. Rien n'a été modifié.",
-
       "databaseMismatch": "La base de données ne correspond pas à cette version de l'application. Appliquez d'abord les mises à jour de la base de données. Rien n'a été modifié.",
       "tooLarge": "Cette sauvegarde dépasse 512 Mo.",
       "wrongPassword": "Ce mot de passe est incorrect. Rien n'a été modifié."
@@ -2376,7 +2375,6 @@
         "saved": "Filtre des classes enregistré.",
         "saveError": "Ce navigateur n’a pas pu enregistrer le filtre. Vérifiez ses paramètres de stockage du site et réessayez."
       },
-
       "allClasses": "Toutes les classes",
       "title": "Planning",
       "subtitle": "Créez un emploi du temps hebdomadaire sans conflits pour chaque section",
@@ -6830,35 +6828,6 @@
     "title": "MyScolAI est hors ligne",
     "description": "Reconnectez-vous à Internet, puis réessayez de charger cette page.",
     "retry": "Réessayer"
-  },
-  "offlineShell": {
-    "prepare": "Connectez-vous pour préparer cet appareil à une utilisation hors connexion.",
-    "unpreparedTitle": "Cet appareil n’est pas prêt pour le mode hors ligne",
-    "unpreparedReasons": "L’accès hors ligne commence dès que vous vous connectez sur ce navigateur avec Internet. Il prend fin après 8 heures sans connexion, à la déconnexion ou si vos droits changent.",
-    "signIn": "Se connecter",
-    "update": "Mettre à jour l’application",
-    "updateBlocked": "Enregistrez ou abandonnez les modifications et fermez les formulaires dans tous les onglets avant la mise à jour.",
-    "onlineAvailable": "Le serveur est accessible. Réessayez en ligne pour charger vos données.",
-    "title": "MyScolAI",
-    "retry": "Réessayer en ligne",
-    "noData": "Les données scolaires ne sont pas encore disponibles hors connexion. Reconnectez-vous pour les charger.",
-    "unavailable": "Cette page n’est pas disponible hors connexion."
-  },
-  "offlineRead": {
-    "unavailable": "Cette partie du profil n’a pas été téléchargée.",
-    "summaryUnavailable": "Les résumés de présence, de notes et de finances ne sont pas disponibles dans cette vue téléchargée.",
-    "errors": {
-      "notPermitted": "Ce compte ne peut pas télécharger de données pour une utilisation hors connexion.",
-      "accountChanged": "Les accès de ce compte ont changé. Reconnectez-vous pour télécharger les données hors connexion.",
-      "settingsRequired": "Les paramètres de l’école doivent indiquer l’année scolaire en cours avant de télécharger des données hors connexion.",
-      "authorizationChanged": "Les accès de ce compte ont changé depuis le début du téléchargement. Réessayez.",
-      "studentLimit": "Le téléchargement hors connexion prend en charge au maximum 2000 élèves par année scolaire.",
-      "pageLimit": "Un enregistrement téléchargé est trop volumineux pour une utilisation hors connexion.",
-      "snapshotExpired": "Ce téléchargement a expiré. Relancez-le.",
-      "scopeMismatch": "Ce téléchargement appartient à un autre appareil, compte ou année scolaire.",
-      "pageNotFound": "Cette page n’existe pas dans ce téléchargement.",
-      "disabled": "L’utilisation hors ligne est désactivée pour cette école."
-    }
   },
   "examPlanning": {
     "title": "Planification des examens",

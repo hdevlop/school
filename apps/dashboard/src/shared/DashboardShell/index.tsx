@@ -4,9 +4,7 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
 import { LogOut, Settings } from 'lucide-react';
-import { useAuth, usePermissions } from 'najm-auth/client/react';
-import { useSignInOnSessionExpired } from 'najm-offline/react';
-import { lockRefusedSession } from '@/offline/runtime';
+import { useAuth, usePermissions, useRedirectOnSessionExpired } from 'najm-auth/client/react';
 import { cn, isNavItemActiveOrNested, NSidebar, NSidebarProvider, useCardViewport, useMediaQuery, useNSidebar, type NavItem } from 'najm-kit';
 import { NSidebarNextLink } from 'najm-kit/next';
 import { NThemeImage } from 'najm-theme/react';
@@ -97,7 +95,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
   const { user, accessToken } = useAuth();
   const { t } = useTranslation();
   const role = (user as any)?.role ?? 'teacher';
-  useSignInOnSessionExpired(schoolApp.auth.loginRoute, lockRefusedSession);
+  useRedirectOnSessionExpired(schoolApp.auth.loginRoute);
 
   const { can } = usePermissions();
   const { data: sidebarOrder = [] } = useSidebarOrder();
