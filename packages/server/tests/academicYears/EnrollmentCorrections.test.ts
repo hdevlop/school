@@ -20,7 +20,7 @@ describe('historical enrollment corrections', () => {
     expect(() => check(correction())).not.toThrow();
     expect(() => validator.ensureCorrectionAllowed('principal')).not.toThrow();
   });
-  it.each(['teacher', 'parent', 'student', 'accounting', 'custom'])('refuses correction by %s', (role) => {
+  it.each(['teacher', 'parent', 'student', 'accounting', 'registrar', 'custom'])('refuses correction by %s', (role) => {
     expect(() => validator.ensureCorrectionAllowed(role)).toThrow();
   });
   it('requires the full state read when the form opened, including every placement', () => {

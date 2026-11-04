@@ -1,6 +1,11 @@
 /** School navigation preferences are grants in the existing role permission set. */
 export const SIDEBAR_CONFIGURED_PERMISSION = 'sidebar:configured';
 
+/** Additional placement policy; the student route still requires update:students. */
+export function canEditStudentPlacement(role?: string | null): boolean {
+  return role === 'admin' || role === 'principal' || role === 'registrar';
+}
+
 export const SIDEBAR_ENTRIES = [
   ['dashboard', '/dashboard', 'navigation.dashboard'],
   ['students', '/students', 'navigation.students'],

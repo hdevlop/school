@@ -107,6 +107,11 @@ export class StudentEnrollmentService {
   @Transaction()
   async correct(id: string, data: CorrectEnrollmentDto, actor: { id: string; role: string }, studentId?: string) {
     this.validator.ensureCorrectionAllowed(actor.role);
+    return this.applyCorrection(id, data, actor, studentId);
+  }
+
+  /** Callers authorize either a general correction or a server-built placement edit. */
+  private async applyCorrection(id: string, data: CorrectEnrollmentDto, actor: { id: string; role: string }, studentId?: string) {
     const enrollment = this.validator.ensureEnrollmentExists(await this.enrollments.getById(id, true));
     if (studentId && enrollment.studentId !== studentId) this.validator.ensureEnrollmentExists(null);
     const before = await this.enrollments.listPlacements(id);
@@ -289,7 +294,7 @@ export class StudentEnrollmentService {
     const sectionId = data.sectionId ?? current.sectionId;
     // Compare with the selected year's placement, never today's legacy projection.
     if (classId === current.classId && sectionId === current.sectionId) return current;
-    this.validator.ensureCorrectionAllowed(actor?.role ?? '');
+    this.validator.ensureProfilePlacementAllowed(actor?.role);
     const reason = 'Class or section updated from Edit Student';
     const settings = await this.settings.getAdminSettings();
     if (settings?.activeAcademicYearId === this.year.id) {
@@ -300,7 +305,7 @@ export class StudentEnrollmentService {
     // Past-year edits correct the last placement in that year and preserve its
     // dates, exit status and earlier placements through the audited safe path.
     const status = enrollment.status as CorrectEnrollmentDto['status'];
-    const corrected = await this.correct(enrollment.id, {
+    const corrected = await this.applyCorrection(enrollment.id, {
       enrolledOn: enrollment.enrolledOn, leftOn: enrollment.leftOn, status,
       expected: { enrolledOn: enrollment.enrolledOn, leftOn: enrollment.leftOn, status, placements },
       placement: { ...current, classId, sectionId }, reason,
@@ -320,9 +325,10 @@ export class StudentEnrollmentService {
     // Two date-only placements cannot both start on the same day. Correct
     // the open placement through the existing audited, record-safe path.
     if (data.validFrom === current.validFrom) {
+      this.validator.ensureProfilePlacementAllowed(actorRole);
       const placements = await this.enrollments.listPlacements(id);
       const status = enrollment.status as CorrectEnrollmentDto['status'];
-      const corrected = await this.correct(id, {
+      const corrected = await this.applyCorrection(id, {
         enrolledOn: enrollment.enrolledOn, leftOn: enrollment.leftOn, status,
         expected: { enrolledOn: enrollment.enrolledOn, leftOn: enrollment.leftOn, status, placements },
         placement: { ...current, classId: data.classId, sectionId: data.sectionId },

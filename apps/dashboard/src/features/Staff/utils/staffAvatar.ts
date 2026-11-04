@@ -14,6 +14,7 @@ const ROLES_WITH_AVATAR = new Set([
   'assistant',
   'floorManager',
   'supervisor',
+  'registrar',
   'cleaner',
 ]);
 

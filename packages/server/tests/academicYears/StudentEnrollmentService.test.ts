@@ -13,6 +13,7 @@ const oldYear = {
 
 function build(activeYearId = 'year-current', legacyProjection = false, yearStatus = 'open') {
   const writes: string[] = [];
+  const audits: { actorId: string; actorRole: string }[] = [];
   const enrollment = {
     id: 'enrollment-1', studentId: 'student-1', academicYearId: oldYear.id,
     enrolledOn: '2025-09-01', leftOn: null, status: 'active',
@@ -42,7 +43,9 @@ function build(activeYearId = 'year-current', legacyProjection = false, yearStat
       writes.push('correct-placement'); Object.assign(current, data.placement); return enrollment;
     },
     hasInvalidDatedRecords: async () => false,
-    auditCorrection: async () => { writes.push('audit-correction'); },
+    auditCorrection: async (_id: string, actorId: string, actorRole: string) => {
+      writes.push('audit-correction'); audits.push({ actorId, actorRole });
+    },
     closePlacement: async () => { writes.push('close-placement'); return current; },
     endEnrollment: async () => { writes.push('end-enrollment'); return enrollment; },
     updateCurrentStudent: async () => { writes.push('update-current-student'); },
@@ -54,7 +57,7 @@ function build(activeYearId = 'year-current', legacyProjection = false, yearStat
   const settings = { getAdminSettings: async () => ({ activeAcademicYearId: activeYearId }) };
   const migrationIssues = { recordUnknownEnrollmentDate: async () => { writes.push('preserve-legacy-placement'); } };
   const service = new StudentEnrollmentService(repository as any, years as any, settings as any, migrationIssues as any, withEnglishMessages(new StudentEnrollmentValidator()));
-  return { service, writes, repository, current, enrollment, years };
+  return { service, writes, audits, repository, current, enrollment, years };
 }
 
 describe('placement changes from Edit Student', () => {
@@ -106,6 +109,53 @@ describe('placement changes from Edit Student', () => {
     const { service, writes, current } = editable();
     await service.updatePlacementFromProfile('student-1', current);
     expect(writes).toEqual([]);
+  });
+
+  it('lets the registrar transfer a student from Edit Student in the active year', async () => {
+    const { service, writes } = editable(true);
+    const placement = await service.updatePlacementFromProfile('student-1', target, { id: 'registrar-1', role: 'registrar' });
+    expect(placement).toMatchObject({ ...target, actorId: 'registrar-1', validFrom: getBusinessDateOnly() });
+    expect(writes).toEqual(['close-placement', 'add-placement', 'update-current-student']);
+  });
+
+  it('audits a registrar placement edit repeated on the same day', async () => {
+    const { service, writes, audits, current } = editable(true);
+    current.validFrom = getBusinessDateOnly();
+    await service.updatePlacementFromProfile('student-1', target, { id: 'registrar-1', role: 'registrar' });
+    expect(current).toMatchObject(target);
+    expect(writes).toEqual(['correct-placement', 'audit-correction', 'update-current-student']);
+    expect(audits).toEqual([{ actorId: 'registrar-1', actorRole: 'registrar' }]);
+  });
+
+  it('lets the registrar correct only placement in the selected past year', async () => {
+    const { service, writes, current, enrollment } = editable();
+    const before = { ...enrollment };
+    const dates = { validFrom: current.validFrom, validTo: current.validTo };
+    await service.updatePlacementFromProfile('student-1', target, { id: 'registrar-1', role: 'registrar' });
+    expect(current).toMatchObject({ ...target, ...dates });
+    expect(enrollment).toEqual(before);
+    expect(writes).toEqual(['correct-placement', 'audit-correction']);
+  });
+
+  it('keeps general enrollment correction unavailable to the registrar', async () => {
+    const { service, writes, current, enrollment } = editable();
+    await expect(service.correct(enrollment.id, {
+      enrolledOn: enrollment.enrolledOn, leftOn: null, status: 'active',
+      expected: { ...enrollment, status: 'active', placements: [current] },
+      placement: { ...current, ...target }, reason: 'Manual correction',
+    }, { id: 'registrar-1', role: 'registrar' })).rejects.toThrow();
+    expect(writes).toEqual([]);
+  });
+
+  it('keeps capacity and dated-record protections for registrar placement edits', async () => {
+    const full = editable(true);
+    full.repository.sectionPeakOccupancy = async () => 30;
+    await expect(full.service.updatePlacementFromProfile('student-1', target, { id: 'registrar-1', role: 'registrar' })).rejects.toThrow('Section A is full');
+    expect(full.writes).toEqual([]);
+    const conflict = editable();
+    conflict.repository.hasInvalidDatedRecords = async () => true;
+    await expect(conflict.service.updatePlacementFromProfile('student-1', target, { id: 'registrar-1', role: 'registrar' })).rejects.toThrow('recorded attendance or grades');
+    expect(conflict.writes).not.toContain('audit-correction');
   });
 
   it('resolves an omitted class from the selected-year placement', async () => {

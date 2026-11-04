@@ -6103,6 +6103,7 @@
     "errors": {
       "notFoundInYear": "Matrícula no encontrada en el año seleccionado",
       "correctionRequiresAdmin": "Las correcciones de matrícula están reservadas a la administración",
+      "placementEditNotAllowed": "No puede cambiar la clase o la sección de un alumno",
       "importDatesNeedReview": "Esta matrícula tiene traslados o una fecha de fin. Revise sus fechas en la ficha del alumno antes de importar.",
       "changedReload": "La matrícula cambió; vuelva a cargarla antes de corregirla",
       "statusEndDateMismatch": "El estado de la matrícula debe coincidir con su fecha de fin",

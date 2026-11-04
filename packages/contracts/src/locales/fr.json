@@ -6205,6 +6205,7 @@
     "errors": {
       "notFoundInYear": "Inscription introuvable dans l'année sélectionnée",
       "correctionRequiresAdmin": "Les corrections d'inscription sont réservées à l'administration",
+      "placementEditNotAllowed": "Vous ne pouvez pas modifier la classe ou la section d'un élève",
       "importDatesNeedReview": "Cette inscription comporte un transfert ou une date de fin. Vérifiez ses dates dans la fiche élève avant l’importation.",
       "changedReload": "L'inscription a changé ; rechargez-la avant de la corriger",
       "statusEndDateMismatch": "Le statut de l'inscription doit correspondre à sa date de fin",

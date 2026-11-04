@@ -6811,6 +6811,7 @@
     "errors": {
       "notFoundInYear": "Enrollment not found in the selected year",
       "correctionRequiresAdmin": "Enrollment corrections require an administrator",
+      "placementEditNotAllowed": "You cannot change a student's class or section",
       "importDatesNeedReview": "This enrollment has transfers or an end date. Review its dates from the student profile before importing.",
       "changedReload": "Enrollment changed; reload it before correcting",
       "statusEndDateMismatch": "Enrollment status must match its end date",

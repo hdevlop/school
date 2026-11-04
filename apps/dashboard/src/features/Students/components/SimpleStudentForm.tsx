@@ -15,6 +15,7 @@ import { buildGenderOptions } from '../config/studentOptions'
 import { StudentParentsSection } from './StudentParentsSection'
 import { StudentBirthplaceFields } from './StudentBirthplaceFields'
 import { formatBirthplaceEntry } from '../config/birthplaceEntry'
+import { canEditStudentPlacement } from '@sms/contracts/access-control'
 
 const sectionHeaderClassName = 'student-form-section-header'
 
@@ -55,7 +56,7 @@ const SimpleStudentForm = ({ student = null, classes = [] }) => {
 
   const { t } = useTranslation()
   const { role, can } = useViewerRole()
-  const canChangePlacement = (role === 'admin' || role === 'principal') && !!student?.classId && !!student?.sectionId
+  const canChangePlacement = can('update:students') && canEditStudentPlacement(role) && !!student?.classId && !!student?.sectionId
   const studentProfileEditSchema = useMemo(() => createStudentSchemas(t).profileEdit, [t])
   const { pop } = useDialog()
   const handleSubmit = async (studentData) => {

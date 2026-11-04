@@ -74,8 +74,7 @@ export default function RegistrarDashboard() {
               <TeacherInfoCard
                 person={overview?.registrar ?? undefined}
                 jobTitle={jobTitle}
-                // There is no registrar portrait; the secretary's suits an office role.
-                fallbackSrc={accountAvatar('secretary', overview?.registrar?.gender)}
+                fallbackSrc={accountAvatar('registrar', overview?.registrar?.gender)}
                 {...cardState}
               />
               <StudentAttendanceChart audience="registrar" className="min-h-[20rem] xl:min-h-0" />

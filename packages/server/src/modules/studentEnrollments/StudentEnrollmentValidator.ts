@@ -2,6 +2,7 @@ import { Err, I18n, Service } from '../../najm';
 import { getBusinessDateOnly } from '../../shared/businessDate';
 import { isDateOnly } from '@sms/contracts/academic-years';
 import type { CorrectEnrollmentDto } from './StudentEnrollmentDto';
+import { canEditStudentPlacement } from '@sms/contracts/access-control';
 
 type YearInterval = { id: string; status: string; reportingStartsOn: string; reportingEndsOn: string };
 
@@ -20,6 +21,10 @@ export class StudentEnrollmentValidator {
 
   ensureCorrectionAllowed(role: string) {
     if (role !== 'admin' && role !== 'principal') Err(403, this.et('correctionRequiresAdmin'));
+  }
+
+  ensureProfilePlacementAllowed(role?: string) {
+    if (!canEditStudentPlacement(role)) Err(403, this.et('placementEditNotAllowed'));
   }
 
   ensureImportAdmissionUnchanged(actual: string, expected: string) {

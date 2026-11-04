@@ -1,5 +1,13 @@
 # Academic-year history implementation evidence
 
+## Registrar class and section edits, 2026-11-04
+
+The registrar's existing `update:students` grant now permits class and section changes through Student Edit. The form and backend use one shared placement role policy for administrators, principals and registrars. Active-year moves retain the business date; same-day and historical placement corrections retain their audit and record-integrity checks. General enrollment corrections and imported date corrections remain administrator/principal operations.
+
+- Regression tests reproduced the registrar's 403 before the fix. Focused access, placement and correction tests: **51 pass**, including registrar audit attribution, unchanged historical dates/status, capacity refusal and dated-record conflicts.
+- Full root test suite, workspace typecheck, i18n check and isolated production build (`.next-registrar-placement-20261104`) pass. Root lint passes with the existing ParentsTable hook-dependency warning.
+- Live authenticated verification was unavailable: the local app was not listening on port 3102 and history fixture credentials were not configured. No school records were changed. Not deployed.
+
 ## Student reassignment through Edit, 2026-11-01
 
 Student Edit now saves class and section in the same request as profile details. The separate Assignment button and form are removed, with no placement date or reason input. The enrollment service uses the school business date for active-year moves and audits same-day corrections. Past-year edits correct only that year's latest placement, preserving its dates, earlier history, exit status and today's projection. Administrator/principal restrictions, section capacity and dated-record safeguards still apply. Student saves also invalidate enrollment history and dashboard queries.
