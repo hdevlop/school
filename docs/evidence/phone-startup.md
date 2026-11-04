@@ -46,30 +46,45 @@ before compression.
 An emulated phone in headless Chromium: 393 x 873, Android user agent, service worker
 blocked so that throttling applies, admin role, medians of three.
 
-"Before" ran against the demo over the internet, and JHL's login page for that row.
-"After" ran against a local production build, whose server wait is about 60 ms against
-about 500 to 600 ms on the demo, so real times will be somewhat higher.
+Home ran against the demo over the internet, before and after, signed in. The login
+page ran against JHL, before and after. The offline traffic ran against a local
+production build, because the demo's English interface never had that problem.
 
 | Tiles visible | Before | After |
 | --- | --- | --- |
-| Returning visit, Fast 4G, CPU 4x slower | 4.5 s | 0.6 s |
-| Returning visit, Slow 4G, CPU 6x slower | 5.2 s | 1.3 s |
-| First visit, Slow 4G, CPU 6x slower | 16.5 s | 2.2 s (icons by 5 s) |
+| Returning visit, Fast 4G, CPU 4x slower | 4.5 s | 0.9 s |
+| Returning visit, Slow 4G, CPU 6x slower | 5.2 s | 1.2 s |
+| First visit, Slow 4G, CPU 6x slower | 16.5 s | 3.8 s (icons by 5.5 s) |
 
 | App ready, when the first sign-in call starts | Before | After |
 | --- | --- | --- |
-| Returning visit, Fast 4G, CPU 4x slower | 2.3 s | 1.7 s |
-| Returning visit, Slow 4G, CPU 6x slower | 3.7 s | 3.1 s |
-| First visit, Slow 4G, CPU 6x slower | 15.1 s | 10.4 s |
+| Returning visit, Fast 4G, CPU 4x slower | 2.3 s | 1.9 s |
+| Returning visit, Slow 4G, CPU 6x slower | 3.7 s | 3.0 s |
+| First visit, Slow 4G, CPU 6x slower | 15.1 s | 10.8 s |
 
 | Other | Before | After |
 | --- | --- | --- |
-| Login page load, first visit, Slow 4G, CPU 6x slower | 26 to 29 s | 8.5 s |
-| Images on the login page | 3,062 KB | 60 KB |
+| JHL login page load, first visit, Slow 4G, CPU 6x slower | 26 to 29 s | 8.7 to 9.3 s |
+| JHL login page load, first visit, Fast 4G, CPU 4x slower | 10.0 s | 2.8 s |
+| Images on JHL's login page | 3,062 KB | 60 KB |
 | Offline traffic on a reload, French interface | 14 calls, 3.7 MB | 2 calls, 2 KB |
 | `/api/navigation/sidebar` calls per load | 1 | 0 |
 
 Tiles are ordinary links until the page hydrates, so they work as soon as they show.
+
+On the demo after the change, the session check took 193 ms at the median and up to
+876 ms, about a third of a page's 602 ms median server wait.
+
+## Release
+
+Deployed to JHL on 2026-11-04 as `d9da051`, taking it from `eebf211`, with no pending
+migrations. The owner chose to deploy without an off-server backup, so the deploy log's
+"backup done" is only the `--yes` flag's stock answer. Previous image:
+`ghcr.io/hdevlop/school@sha256:195edba3fbe1...`, in the deploy log and Dokploy.
+
+Checked on JHL: the revision, `/login`, `/api/health/status`, the `www` redirect, and an
+emulated phone's login page with no browser errors. Not checked on JHL: signed-in pages,
+the worker image and heartbeat, and mail delivery.
 
 ## Reading production
 
@@ -107,7 +122,7 @@ checkout of the previous commit (2eb9484), so they do not come from this work:
   after reconnecting, a fresh offline copy is kept for up to 15 minutes rather than
   replaced. French and Arabic schools used to hide this by downloading on every load.
 - Whether the Redmi drops session cookies, which only the device can show.
-- JHL's own timings after a deploy.
+- JHL's own signed-in timings, which need a JHL login.
 - The JavaScript itself. `@sms/contracts/locales` sends all four languages to every
   page (284 KB compressed, about 210 KB of it unused), and najm-kit is one bundle of
   368 KB. Sending one language needs najm-i18n to load a catalog asynchronously,
