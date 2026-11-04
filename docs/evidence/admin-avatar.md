@@ -6,9 +6,11 @@ no administrator portrait existed in the project's assets.
 
 - Asset: `apps/dashboard/public/images/admin.png`
 - Original: `C:/Users/hdevlop/.codex/generated_images/01a1317d-b1ec-7b41-9634-377a49124118/exec-f5b5f947-7095-411f-9f5e-536d53f56f1e.png`
-- Format: PNG, 1254 × 1254, RGBA; alpha range 0–255.
-- Bytes: 1,300,524; original output copied without image modification.
-- SHA256: `7b5c4a0cf306505b0659a44dbe2e6788b33794374078b7c73ab78b57d8a59c91`
+- Original format: PNG, 1254 × 1254, RGBA; alpha range 0–255.
+- Original bytes: 1,300,524 (SHA256 `7b5c4a0cf306505b0659a44dbe2e6788b33794374078b7c73ab78b57d8a59c91`).
+- Since 2026-11-04 the asset is that image at 216 × 216, the size of the other
+  portraits, as a 256-colour PNG of about 17 KB. See
+  [phone startup](phone-startup.md).
 - Consumer: Mobile Home's admin avatar fallback. Uploaded images take precedence;
   the default `noavatar.png` placeholder is treated as a missing photo.
 

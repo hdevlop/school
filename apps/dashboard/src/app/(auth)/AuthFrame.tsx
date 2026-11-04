@@ -13,17 +13,18 @@ import { ReliableThemeImage } from './ReliableThemeImage';
  *
  * Responsive background artwork and a hero build the whole layout:
  *
- * - `auth-background.png` is the page itself, edge to edge. It carries a wide
+ * - `auth-background.webp` is the page itself, edge to edge. It carries a wide
  *   pale field on its leading side and the curve that divides it from the pink,
  *   so the artwork *is* the ground the form is read on. There is no card, panel,
  *   or ring on top of it: anything drawn there would cover the very edge the
  *   composition depends on, and the column split would stop lining up with the
  *   curve. The form sits inside the pale field, the illustration takes the pink.
- * - `auth-hero.png` is the illustration, resolved through the `authHeroImage`
+ * - `auth-hero.webp` is the illustration, resolved through the `authHeroImage`
  *   branding slot rather than by path, so a school replacing its hero replaces
- *   the illustration alone and never the ground under the form.
+ *   the illustration alone and never the ground under the form. It is lazy so a
+ *   phone, where its column is hidden, never downloads it.
  *
- * Below `lg`, `auth-background-mobile.png` supplies portrait artwork with a
+ * Below `lg`, `auth-background-mobile.webp` supplies portrait artwork with a
  * pale center for the form. The picture selects just one background to load.
  */
 export function AuthFrame({ children }: { readonly children: ReactNode }) {
@@ -36,10 +37,10 @@ export function AuthFrame({ children }: { readonly children: ReactNode }) {
           in dark mode — this is light-key artwork, and at full strength it
           would put dark-theme foreground text on a white ground. */}
       <picture>
-        <source media="(min-width: 64rem)" srcSet="/images/auth-background.png" />
+        <source media="(min-width: 64rem)" srcSet="/images/auth-background.webp" />
         <img
           aria-hidden
-          src="/images/auth-background-mobile.png"
+          src="/images/auth-background-mobile.webp"
           alt=""
           className="pointer-events-none absolute inset-0 h-full w-full object-cover rtl:-scale-x-100 dark:opacity-[0.12]"
         />
@@ -73,6 +74,7 @@ export function AuthFrame({ children }: { readonly children: ReactNode }) {
           <ReliableThemeImage
             slot="authHeroImage"
             alt=""
+            loading="lazy"
             className="max-h-[86svh] w-auto max-w-full object-contain"
           />
         </aside>

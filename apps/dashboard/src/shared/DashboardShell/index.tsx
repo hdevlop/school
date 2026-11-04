@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
 import { LogOut, Settings } from 'lucide-react';
-import { YearScopedChatbot } from '@/features/Chat/components/YearScopedChatbot';
 import { useAuth, usePermissions } from 'najm-auth/client/react';
 import { useSignInOnSessionExpired } from 'najm-offline/react';
 import { lockRefusedSession } from '@/offline/runtime';
@@ -16,8 +16,8 @@ import { sidebarEntryVisible } from '@sms/contracts/access-control';
 import { PAGE_ACCESS } from '@/shared/pageAccess';
 import { BRANDING_SETTINGS_NAV_ID, THEME_SETTINGS_NAV_ID, createSidebarItems } from '@/shared/schoolNavigation';
 import { schoolApp } from '@/najm.config';
-import { ThemeSettingsSheets, type ThemeSettingsSheet } from '@/features/Settings/components/ThemeSettingsSheets';
-import { SchoolSettingsSheet } from '@/features/Settings/components/SchoolSettingsSheet';
+import type { ThemeSettingsSheet } from '@/features/Settings/components/ThemeSettingsSheets';
+import { useOpenedOnce } from '@/hooks/useOpenedOnce';
 import { ViewingYearBanner } from '@/features/AcademicYears/components/ViewingYearBanner';
 import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
 import { PushPromptBanner } from '@/features/Notifications/PushPromptBanner';
@@ -25,6 +25,12 @@ import { NavigationActionsProvider } from './NavigationActions';
 import { SchoolSessionLoader } from '@/components/SchoolSessionLoader';
 import { useSidebarOrder } from '@/features/Roles/hooks/useSidebarOrder';
 import { useSchoolSignOut } from '@/providers/SignOutTransition';
+
+// Every page opens inside this shell, so these download only when first shown:
+// a phone starting up should not pay for an assistant or settings it may not open.
+const YearScopedChatbot = dynamic(() => import('@/features/Chat/components/YearScopedChatbot').then((module) => module.YearScopedChatbot), { ssr: false });
+const ThemeSettingsSheets = dynamic(() => import('@/features/Settings/components/ThemeSettingsSheets').then((module) => module.ThemeSettingsSheets), { ssr: false });
+const SchoolSettingsSheet = dynamic(() => import('@/features/Settings/components/SchoolSettingsSheet').then((module) => module.SchoolSettingsSheet), { ssr: false });
 
 const STUDENT_FEES_PATH = /^\/students\/[^/]+\/fees(?:\/|$)/;
 
@@ -88,7 +94,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
   const compactSidebar = useMediaQuery('(max-width: 1279px)');
   const isMobile = useCardViewport();
   const isHome = pathname === '/home';
-  const { user } = useAuth();
+  const { user, accessToken } = useAuth();
   const { t } = useTranslation();
   const role = (user as any)?.role ?? 'teacher';
   useSignInOnSessionExpired(schoolApp.auth.loginRoute, lockRefusedSession);
@@ -101,6 +107,8 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
   ];
   const [activeThemeSheet, setActiveThemeSheet] = useState<ThemeSettingsSheet | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const themeSheetsOpened = useOpenedOnce(activeThemeSheet !== null);
+  const settingsOpened = useOpenedOnce(settingsOpen);
   const canManageSettings = PAGE_ACCESS.settings({ role: (user as any)?.role, can });
 
   // The server layout only renders the shell for a session, so no user here
@@ -176,25 +184,29 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
       </div>
 
 
-      <YearScopedChatbot
-        settingsApiPath="/api/ai-settings"
-        mcpApiPath="/api/mcp"
-        testApiPath=""
-        suggestions={[
-          t('chatbot.suggestions.studentsAttention'),
-          t('chatbot.suggestions.feeActivity'),
-          t('chatbot.suggestions.attendanceIssues'),
-          t('chatbot.suggestions.createStudent'),
-        ]}
-        theme={{ primary: 'var(--primary)', radius: 'var(--radius)' }}
-      />
+      {accessToken && (
+        <YearScopedChatbot
+          settingsApiPath="/api/ai-settings"
+          mcpApiPath="/api/mcp"
+          testApiPath=""
+          suggestions={[
+            t('chatbot.suggestions.studentsAttention'),
+            t('chatbot.suggestions.feeActivity'),
+            t('chatbot.suggestions.attendanceIssues'),
+            t('chatbot.suggestions.createStudent'),
+          ]}
+          theme={{ primary: 'var(--primary)', radius: 'var(--radius)' }}
+        />
+      )}
     </div>
-    <ThemeSettingsSheets
-      activeSheet={activeThemeSheet}
-      onActiveSheetChange={setActiveThemeSheet}
-      role={role}
-    />
-    {canManageSettings && (
+    {themeSheetsOpened && (
+      <ThemeSettingsSheets
+        activeSheet={activeThemeSheet}
+        onActiveSheetChange={setActiveThemeSheet}
+        role={role}
+      />
+    )}
+    {canManageSettings && settingsOpened && (
       <SchoolSettingsSheet open={settingsOpen} onOpenChange={setSettingsOpen} onLeave={() => setSettingsOpen(false)} />
     )}
     </NavigationActionsProvider>

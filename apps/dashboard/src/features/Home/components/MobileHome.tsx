@@ -1,5 +1,6 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { ChevronRight, LockKeyhole, Menu } from 'lucide-react';
@@ -15,8 +16,10 @@ import { createHomeCards, type HomeCard } from '../config/homeFeatures';
 import { HOME_ICON_ATLAS, HOME_ICON_INDEX } from '../config/homeIllustrations';
 import { accountAvatar } from '../config/accountAvatar';
 import { avatarVersion } from '@/lib/avatarVersion';
-import HomeProfileSheet from './HomeProfileSheet';
+import { useOpenedOnce } from '@/hooks/useOpenedOnce';
 import styles from './MobileHome.module.css';
+
+const HomeProfileSheet = dynamic(() => import('./HomeProfileSheet'), { ssr: false });
 
 function FeatureIllustration({ card }: { card: HomeCard }) {
   const index = HOME_ICON_INDEX[card.id];
@@ -60,7 +63,10 @@ export default function MobileHome() {
   const sidebar = useNSidebar();
   const [greeting, setGreeting] = useState('mobileHome.welcome');
   const [profileOpen, setProfileOpen] = useState(false);
-  // Shared with the shell's sidebar query; the tiles wait for it rather than reshuffle.
+  const profileOpened = useOpenedOnce(profileOpen);
+  // Shared with the shell's sidebar query. The server already read the order for
+  // this page, so the tiles are in its first HTML; without that read they wait
+  // for the browser's answer rather than reshuffle.
   const { data: sidebarOrder = [], isLoading: isOrderLoading } = useSidebarOrder();
   const viewer = { role: user?.role, can };
   const cards = isOrderLoading ? [] : createHomeCards(t, viewer, permissions, sidebarOrder);
@@ -126,7 +132,7 @@ export default function MobileHome() {
           {cards.map((card) => <FeatureCard key={card.id} card={card} />)}
         </div>
       </div>
-      <HomeProfileSheet open={profileOpen} onOpenChange={setProfileOpen} />
+      {profileOpened && <HomeProfileSheet open={profileOpen} onOpenChange={setProfileOpen} />}
     </main>
   );
 }

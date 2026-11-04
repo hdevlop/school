@@ -12,7 +12,17 @@ export default defineNajmNextConfig({
     // no version, so they are kept a day and refreshed in the background
     // instead of revalidated on every list.
     {
-      source: "/images/:avatar((?:student|parent|teacher|principal|secretary|driver)_(?:male|female)\\.png)",
+      source: "/images/:avatar((?:admin|(?:student|parent|teacher|principal|secretary|driver|busAssistant|receptionist|accountant|librarian|itSupport|security|assistant|floorManager|supervisor|registrar|cleaner)_(?:male|female)(?:_v2)?)\\.png)",
+      headers: [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }],
+    },
+    // The same for the fee icons and the sign-in artwork, which do not change
+    // between visits and carry no version either.
+    {
+      source: "/images/fee-types/:file*",
+      headers: [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }],
+    },
+    {
+      source: "/images/:background(auth-background(?:-mobile)?\\.webp)",
       headers: [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }],
     },
   ],

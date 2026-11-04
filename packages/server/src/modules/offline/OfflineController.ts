@@ -22,7 +22,10 @@ export class OfflineController {
   @Can('read:offline')
   @CanList()
   @Validate(snapshotDto)
-  snapshot(@User('id') id: string, @Body() input: SnapshotInput, @Headers(LANGUAGE_HEADER) language?: string) {
+  // @Headers looks up the lowercased map, so 'X-Language' itself would find nothing.
+  // Every download would then be labelled English, and a browser in another language
+  // would find its copy stale and download everything again on each page load.
+  snapshot(@User('id') id: string, @Body() input: SnapshotInput, @Headers(LANGUAGE_HEADER.toLowerCase()) language?: string) {
     return this.offline.snapshot(id, input, language ?? 'en');
   }
   @Get('/snapshots/:id/pages/:page')

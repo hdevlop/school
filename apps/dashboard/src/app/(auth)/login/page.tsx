@@ -13,6 +13,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { AuthHeading } from '../AuthHeading';
 import { loginRedirectPath } from '@/shared/loginRedirect';
 import { authErrorMessage } from '../authMessages';
+import { LOGIN_DEFAULT_VALUES } from './loginDefaults';
 
 // `identifier` is Najm Auth's wire field. An account is reached by its email,
 // its phone, or both, so either is accepted here; the server normalizes a
@@ -58,12 +59,6 @@ const Login = () => {
     },
   });
 
-  const defaultValues = {
-    identifier: '',
-    password: '',
-    rememberMe: false
-  }
-
   const handleLogin = async (credentials) => {
     await login(credentials);
   }
@@ -77,7 +72,7 @@ const Login = () => {
 
       <div className='flex w-full flex-col gap-2'>
 
-        <NForm id='login-form' schema={schema} defaultValues={defaultValues} onSubmit={handleLogin}>
+        <NForm id='login-form' schema={schema} defaultValues={LOGIN_DEFAULT_VALUES} onSubmit={handleLogin}>
           <FormInput
             name='identifier'
             type='text'

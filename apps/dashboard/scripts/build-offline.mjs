@@ -44,7 +44,7 @@ await buildOfflineShell({
     compile: async (input, from) => (await postcss([tailwind({ base: appRoot, optimize: true })]).process(input, { from })).css,
   },
   fonts: {
-    files: ['src/app/fonts/Lora.ttf', 'src/app/fonts/RobotoMono.ttf'],
+    files: ['src/app/fonts/Lora.woff2', 'src/app/fonts/RobotoMono.woff2'],
     css: ([lora, mono]) => `@font-face{font-family:SchoolLora;src:url('${lora}');font-weight:400 700;font-display:swap}@font-face{font-family:SchoolRobotoMono;src:url('${mono}');font-display:swap}:root{--font-lora:SchoolLora;--font-roboto-mono:SchoolRobotoMono}body{font-family:var(--font-lora),system-ui,sans-serif}`,
   },
   files: [...flagPaths, ...['student_male', 'student_female', 'parent_male', 'parent_female'].map(name => `/images/${name}.png`)],

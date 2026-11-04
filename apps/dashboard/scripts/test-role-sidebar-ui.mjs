@@ -192,6 +192,9 @@ try {
   assert(await row('/students').getByRole('checkbox').isDisabled());
   assert(await row('/students').getByRole('button', { name: 'Move Students down', exact: true }).isEnabled());
   pass('Admin access stays protected while menu ordering remains available');
+  // The first render carries the order the server read. Past its minute the browser
+  // asks its own-role endpoint, and the sidebar follows the answer.
+  await page.clock.setFixedTime(Date.now() + 5 * 60_000);
   await page.route('**/api/navigation/sidebar', route => route.fulfill({ json: { success: true, data: { order: ['/students', '/dashboard'] } } }));
   await page.reload({ waitUntil: 'domcontentloaded' });
   const dashboardLink = page.getByRole('link', { name: 'Dashboard', exact: true });

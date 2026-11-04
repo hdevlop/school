@@ -27,7 +27,7 @@ import { registerYearPropertyInjector, registerYearRequestScope } from './module
 import { yearRequestControllers } from './config/yearScope';
 import { registerSchoolChatRequest } from './modules/chat/transport/registerSchoolChatRequest';
 
-export { loadActiveAcademicYearLabel, loadSchoolUiSettings, type SchoolUiSettings } from './uiSettings';
+export { loadActiveAcademicYearLabel, loadOwnSidebarOrder, loadSchoolUiSettings, type SchoolUiSettings } from './uiSettings';
 export { loadSchoolLandingProfile, loadLandingCycles, loadSchoolLandingContent } from './landing';
 
 export {

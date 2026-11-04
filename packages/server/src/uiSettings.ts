@@ -1,6 +1,7 @@
 import { desc } from 'drizzle-orm';
 
 import { db } from './database/db';
+import { readOwnSidebarOrder } from './modules/roleAccess/ownSidebarOrder';
 import { settings } from './modules/settings/settingSchema';
 
 /**
@@ -57,4 +58,14 @@ export async function loadActiveAcademicYearLabel(): Promise<string | null> {
     .limit(1);
 
   return row?.label ?? null;
+}
+
+/**
+ * A signed-in user's sidebar order for the first server render, so the phone's
+ * Home tiles arrive in the page instead of waiting for the browser to start,
+ * refresh its token and ask for the order. `userId` comes from the verified
+ * session, and the order only arranges what the user's permissions already allow.
+ */
+export function loadOwnSidebarOrder(userId: string) {
+  return readOwnSidebarOrder(db, userId);
 }

@@ -16,6 +16,12 @@ fallbacks contain two initials rather than the full name. Dashboard
 is a regular card at the start of the grid. Home has no search field.
 Feature cards form one continuous three-column grid without section headings.
 
+The cards arrive in the page's first HTML. The root layout reads the signed-in
+user's sidebar order on the server and seeds `useSidebarOrder`, so Home waits for
+neither the JavaScript nor an API call, and the cards are ordinary links until
+the page hydrates. If that read fails, the browser asks for the order as before
+and the cards appear once it answers. See [phone startup](../evidence/phone-startup.md).
+
 The generated 36-icon transparent atlas lives at
 `apps/dashboard/public/images/home/feature-icons-v2.webp`. Its exact generation
 and edit prompts are recorded in [the icon evidence](../evidence/mobile-home-icons.md).

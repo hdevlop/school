@@ -4,7 +4,7 @@ import "flag-icons/css/flag-icons.min.css";
 import 'najm-theme/styles.css';
 import localFont from 'next/font/local'
 import { AppProviders } from '@/providers/AppProviders';
-import { loadUiSnapshot } from '@/najm.server';
+import { loadSidebarOrderSeed, loadUiSnapshot } from '@/najm.server';
 import NajmClientRoot from '@/components/NajmClientRoot';
 import { AcademicYearSelectionOwner } from '@/features/AcademicYears/components/AcademicYearSelectionOwner';
 import { RenderedActiveAcademicYearProvider } from '@/features/Settings/context/RenderedActiveAcademicYear';
@@ -26,23 +26,26 @@ export const viewport: Viewport = {
 }
 
 const lora = localFont({
-  src: './fonts/Lora.ttf',
+  src: './fonts/Lora.woff2',
   weight: '400 700',
   display: 'swap',
   variable: '--font-lora',
 })
 
 const robotoMono = localFont({
-  src: './fonts/RobotoMono.ttf',
+  src: './fonts/RobotoMono.woff2',
   weight: '400 700',
   display: 'swap',
   variable: '--font-roboto-mono',
+  // Only codes and ids in some lists use it, so the page does not wait for it.
+  preload: false,
 })
 
 export default async function RootLayout({ children,}: Readonly<{children: React.ReactNode;}>) {
 
   const snapshot = await loadUiSnapshot();
   const { preferences, settings } = snapshot;
+  const sidebarOrderSeed = await loadSidebarOrderSeed(snapshot.session?.user?.id);
 
   return (
     <html
@@ -53,7 +56,7 @@ export default async function RootLayout({ children,}: Readonly<{children: React
       suppressHydrationWarning
     >
       <body suppressHydrationWarning className={`${lora.className} ${lora.variable} ${robotoMono.variable} antialiased  h-screen w-screen overflow-hidden`}>
-        <AppProviders snapshot={snapshot}>
+        <AppProviders snapshot={snapshot} sidebarOrderSeed={sidebarOrderSeed}>
           {/* The active year's label comes from the per-request School
               settings read, so the first render already knows it. The
               selection owner holds the tab's viewing year for pages and for

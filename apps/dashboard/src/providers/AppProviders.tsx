@@ -12,13 +12,14 @@ import { OfflinePreparation } from '@/offline/OfflinePreparation';
 import { OfflineRuntime } from '@/offline/OfflineRuntime';
 import { defineNajmTanStackQuery } from 'najm-next/query/tanstack';
 import { SignOutTransitionProvider } from './SignOutTransition';
+import { SidebarOrderSeedProvider, type SidebarOrderSeed } from '@/features/Roles/context/SidebarOrderSeed';
 
 // Below lg every table is one card list that reveals rows as the page scrolls.
 // Module scope keeps the object stable, so no table re-renders for it.
 const TABLE_DEFAULTS = { mobileList: true };
 const READ_QUERY = defineNajmTanStackQuery({ queries: { networkMode: 'offlineFirst' } });
 
-export function AppProviders({  children,snapshot}: Readonly<{ children: ReactNode; snapshot: SchoolUiSnapshot }>) {
+export function AppProviders({ children, snapshot, sidebarOrderSeed }: Readonly<{ children: ReactNode; snapshot: SchoolUiSnapshot; sidebarOrderSeed: SidebarOrderSeed | null }>) {
   // Auth operations bypass services/http, so they name the page language here;
   // a reset requested from a sign-in page is then emailed in that language.
   useEffect(() => auth.client.setRequestHeaders(() => languageHeader()), []);
@@ -32,10 +33,12 @@ export function AppProviders({  children,snapshot}: Readonly<{ children: ReactNo
       formDevTools={false}
       tableDefaults={TABLE_DEFAULTS}
     >
-      <ZodLanguage />
-      <OfflinePreparation snapshot={snapshot} />
-      <OfflineRuntime snapshot={snapshot} />
-      <SignOutTransitionProvider>{children}</SignOutTransitionProvider>
+      <SidebarOrderSeedProvider value={sidebarOrderSeed}>
+        <ZodLanguage />
+        <OfflinePreparation snapshot={snapshot} />
+        <OfflineRuntime snapshot={snapshot} />
+        <SignOutTransitionProvider>{children}</SignOutTransitionProvider>
+      </SidebarOrderSeedProvider>
     </NajmAppProvider>
   );
 }

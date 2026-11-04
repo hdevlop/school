@@ -101,6 +101,8 @@ test('real HTTP list, details, parents and class envelopes exactly match complet
     }
     expect(records.some(row => row.value.path.endsWith('/parents'))).toBe(true);
     expect(records.every(row => !/fees|attendance|grades|alerts/.test(row.value.path))).toBe(true);
+    // Labelled in the language asked for: the browser compares this before downloading again.
+    expect(records.every(row => row.value.language === 'fr')).toBe(true);
   }
 }, 30_000);
 

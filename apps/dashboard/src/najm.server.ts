@@ -7,6 +7,8 @@ import type { SchoolUiSettings } from '@sms/server';
 import { schoolI18n } from '@sms/contracts/locales';
 import { schoolTheme } from '@sms/server/theme';
 import { auth } from '@/najm.auth';
+import type { SidebarOrderSeed } from '@/features/Roles/context/SidebarOrderSeed';
+import { timedRead } from '@/lib/timedRead';
 import {
   schoolApp,
   SCHOOL_DEFAULT_CURRENCY,
@@ -62,8 +64,8 @@ export const najmServer = createNajmNextServerApp({
     // read the dashboard waits for the public settings as before, so its
     // failure must not replace the UI settings with the fallback.
     const [school, activeAcademicYear] = await Promise.all([
-      loadSchoolUiSettings(),
-      loadActiveAcademicYearLabel().catch(() => null),
+      timedRead('school settings', loadSchoolUiSettings),
+      timedRead('active year', loadActiveAcademicYearLabel).catch(() => null),
     ]);
     return {
       school: school ?? fallbackSchoolSettings,
@@ -81,3 +83,19 @@ export const najmServer = createNajmNextServerApp({
 
 export const { getSession, requireSession, requireRole, loadSettings, loadUiSnapshot } = najmServer;
 export type SchoolUiSnapshot = Awaited<ReturnType<typeof loadUiSnapshot>>;
+
+/**
+ * The signed-in user's sidebar order for the first render. A convenience: when
+ * it cannot be read, the browser asks for the order as it would without it.
+ */
+export async function loadSidebarOrderSeed(userId: string | undefined): Promise<SidebarOrderSeed | null> {
+  if (!userId) return null;
+  try {
+    const { loadOwnSidebarOrder } = await import('@sms/server');
+    const order = await timedRead('sidebar order', () => loadOwnSidebarOrder(userId));
+    return { userId, order, loadedAt: Date.now() };
+  } catch (error) {
+    console.warn('[school] first-render sidebar order unavailable', error);
+    return null;
+  }
+}

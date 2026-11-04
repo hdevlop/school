@@ -15,6 +15,7 @@ export function OfflineRuntime({ snapshot }: { snapshot: SchoolUiSnapshot }) {
   const { t, language } = useTranslation();
   const { data: sidebarOrder } = useSidebarOrder();
   const source = useRef<() => ShellBootstrap | null>(() => null);
+  const started = useRef(false);
   useEffect(() => {
     source.current = () => {
       const user = auth.client.getState().user;
@@ -31,8 +32,10 @@ export function OfflineRuntime({ snapshot }: { snapshot: SchoolUiSnapshot }) {
         ui: { app: snapshot.app, preferences: { ...snapshot.preferences, language }, appearance: snapshot.appearance, branding: snapshot.branding,
           settings: { sidebarOrder: sidebarOrder ?? [] } } };
     };
-    // Renewal downloads only missing or stale coverage, including a language not downloaded yet.
-    void renewOffline();
+    // Renewal downloads only missing or stale coverage, including a language not
+    // downloaded yet. Connecting below renews on start, so only a later change does it here.
+    if (started.current) void renewOffline();
+    started.current = true;
   }, [snapshot, t, language, sidebarOrder]);
   useEffect(() => {
     return connectOfflineRuntime(client, () => source.current());

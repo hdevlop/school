@@ -33,13 +33,15 @@ for (const engineName of (process.env.OFFLINE_BROWSERS ?? 'chromium').split(',')
     assert(response.ok(), `${method} ${path}: ${response.status()} ${await response.text()}`);
     return response.json();
   };
+  // A page may navigate between polls: the offline document reloads itself on reconnecting,
+  // and an online page whose session the server refuses goes to /login.
+  const inspectAcrossNavigation = page => page.evaluate(inspectReadReplica).catch(error => {
+    if (/Execution context was destroyed/.test(error.message)) return undefined;
+    throw error;
+  });
   const waitState = async (page, predicate, label) => {
     const deadline = Date.now() + 60_000;
-    // An online page whose session the server refuses navigates to /login meanwhile.
-    const inspect = () => page.evaluate(inspectReadReplica).catch(error => {
-      if (/Execution context was destroyed/.test(error.message)) return undefined;
-      throw error;
-    });
+    const inspect = () => inspectAcrossNavigation(page);
     let state;
     while (!predicate(state = await inspect())) {
       if (Date.now() >= deadline) throw new Error('Condition did not arrive: ' + label);
@@ -106,7 +108,7 @@ for (const engineName of (process.env.OFFLINE_BROWSERS ?? 'chromium').split(',')
     const waitProjection = async (expected, absentId) => {
       const deadline = Date.now() + 60_000;
       do {
-        const state = await page.evaluate(inspectReadReplica);
+        const state = await inspectAcrossNavigation(page);
         const students = state?.records.find(row => row.scope === 'year:2026-2027' && row.value?.path === '/students')?.value.body.data;
         if (state?.access?.selectionFence === state?.identity.fence
           && state?.presentation?.grant.issuedAt === state?.access?.entitlement?.issuedAt
