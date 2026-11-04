@@ -41,6 +41,38 @@ describe('insurance register', () => {
     expect(levelYearLabels('2025-2026')).toEqual(['24', '25']);
   });
 
+  it('prints Arabic level abbreviations in the matching year columns, including repeated levels', () => {
+    const html = buildInsuranceDocument(insuranceClasses([student('repeat', {
+      class: { id: 'ce1', name: '2APG' },
+      levels: [
+        { academicYear: '2023-2024', className: 'GS' },
+        { academicYear: '2024-2025', className: 'CE1' },
+        { academicYear: '2026-2027', className: 'CE2' },
+      ],
+    })]), options);
+    const cell = '<td class="level wrap" title="الثانية ابتدائي"><bdi dir="rtl">ت.اب</bdi></td>';
+    expect(html).toContain(`${cell}${cell}<td></td>`);
+    expect(html).not.toContain('>ث.اب<');
+  });
+
+  it('infers the preceding level when history is missing and escapes custom level names', () => {
+    const html = buildInsuranceDocument(insuranceClasses([student('new')]), options);
+    expect(html).toContain('<td class="level wrap" title="الثانية أولي"><bdi dir="rtl">ت.أو</bdi></td><td class="level wrap" title="الأولى ابتدائي"><bdi dir="rtl">أ.اب</bdi></td><td></td>');
+    const custom = buildInsuranceDocument(insuranceClasses([student('custom', {
+      levels: [{ academicYear: '2024-2025', className: '<Atelier>' }],
+    })]), options);
+    expect(custom).toContain('title="&lt;Atelier&gt;"><bdi dir="rtl">&lt;Atelier&gt;</bdi>');
+    expect(custom).not.toContain('<Atelier>');
+  });
+
+  it('leaves the previous level blank for the first level or an unknown progression', () => {
+    for (const name of ['PS', 'Atelier']) {
+      const html = buildInsuranceDocument(insuranceClasses([student('first', { class: { id: 'first', name } })]), options);
+      expect(html).toContain('<td></td><td class="level wrap"');
+      expect(html.match(/<td class="level wrap"/g)).toHaveLength(1);
+    }
+  });
+
   it('spans the grouped headers and pads each class to full sheets', () => {
     const rows = Array.from({ length: INSURANCE_ROWS_PER_PAGE + 1 }, (_, index) => student(String(index).padStart(2, '0')));
     const html = buildInsuranceDocument(insuranceClasses(rows), options);
@@ -57,14 +89,18 @@ describe('insurance register', () => {
     expect(html).toContain('size:A4 landscape');
   });
 
-  it('dates a renewal only for students first enrolled before this year, and escapes every value', () => {
+  it('prints the yearly enrollment date for both new and returning students, and escapes every value', () => {
     const html = buildInsuranceDocument(insuranceClasses([
       student('old', { dateOfBirth: '2018-03-07', enrollmentDate: '2023-09-04', enrollment: { enrolledOn: '2025-09-02' }, previousSchool: '<b>X</b>' }),
       student('new'),
+      student('no-first-date', { enrollmentDate: null, enrollment: { enrolledOn: '2025-09-03' } }),
+      student('no-yearly-date', { enrollmentDate: '2025-08-01', enrollment: null }),
     ]), options);
     expect(html).toContain('<bdi dir="ltr">07/03/2018</bdi>');
     expect(html).toContain('<bdi dir="ltr">04/09/2023</bdi></td>\n          <td><bdi dir="ltr">02/09/2025</bdi>');
-    expect(html).toContain('<bdi dir="ltr">01/09/2025</bdi></td>\n          <td></td>');
+    expect(html).toContain('<bdi dir="ltr">01/09/2025</bdi></td>\n          <td><bdi dir="ltr">01/09/2025</bdi>');
+    expect(html).toContain('<td></td>\n          <td><bdi dir="ltr">03/09/2025</bdi>');
+    expect(html).toContain('<bdi dir="ltr">01/08/2025</bdi></td>\n          <td></td>');
     expect(html).toContain('&lt;b&gt;X&lt;/b&gt;');
     expect(html).not.toContain('<b>X</b>');
   });

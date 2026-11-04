@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import {
-  classNameAliases, compareClassNames, findClassByName, SCHOOL_CLASS_ARABIC_NAMES, SCHOOL_CLASS_NAMES,
-  toAppClassName, toArabicClassName, toOfficialClassName,
+  classNameAliases, compareClassNames, findClassByName, previousClassName, SCHOOL_CLASS_ARABIC_NAMES, SCHOOL_CLASS_NAMES,
+  toAppClassName, toArabicClassAbbreviation, toArabicClassName, toOfficialClassName,
 } from '../src/classNames';
 
 describe('School class names', () => {
@@ -57,5 +57,30 @@ describe('School class names', () => {
     expect(findClassByName(classes, '1apg')?.id).toBe('official');
     expect(findClassByName(classes.toReversed(), 'cp')?.id).toBe('app');
     expect(findClassByName(classes, '2APG')).toBeUndefined();
+  });
+
+  it('abbreviates Arabic register levels for app, official and Arabic class names', () => {
+    const expected = ['أ.اب', 'ت.اب', 'ث.اب', 'ر.اب', 'خ.اب', 'س.اب', 'أ.إع', 'ت.إع', 'ث.إع'];
+    SCHOOL_CLASS_NAMES.forEach(({ app, official }, index) => {
+      expect(toArabicClassAbbreviation(app)).toBe(expected[index]);
+      expect(toArabicClassAbbreviation(` ${official.toLowerCase()} `)).toBe(expected[index]);
+      expect(toArabicClassAbbreviation(toArabicClassName(app))).toBe(expected[index]);
+    });
+    expect(['PS', 'MS', 'GS', 'TC', '1BAC', '2BAC'].map(toArabicClassAbbreviation))
+      .toEqual(['أ.رو', 'أ.أو', 'ت.أو', 'ج.م', 'أ.بك', 'ت.بك']);
+    expect(toArabicClassAbbreviation(' Atelier ')).toBe('Atelier');
+  });
+
+  it('finds the preceding level across cycles and aliases without guessing custom classes', () => {
+    expect(previousClassName('CE1')).toBe('CP');
+    expect(previousClassName(' 3apg ')).toBe('CE1');
+    expect(previousClassName('الثانية ابتدائي')).toBe('CP');
+    expect(previousClassName('CP')).toBe('GS');
+    expect(previousClassName('1APIC')).toBe('CE6');
+    expect(previousClassName('TC')).toBe('3AC');
+    expect(previousClassName('2BAC')).toBe('1BAC');
+    expect(previousClassName('PS')).toBeNull();
+    expect(previousClassName('Atelier')).toBeNull();
+    expect(previousClassName('')).toBeNull();
   });
 });

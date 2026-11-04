@@ -50,9 +50,35 @@ export function toArabicClassName(name: string): string {
     : toOfficialClassName(name);
 }
 
+/** Compact level labels for the narrow year columns in school registers. */
+const arabicClassAbbreviations: Record<keyof typeof SCHOOL_CLASS_ARABIC_NAMES, string> = {
+  PS: 'أ.رو', MS: 'أ.أو', GS: 'ت.أو',
+  CP: 'أ.اب', CE1: 'ت.اب', CE2: 'ث.اب', CM1: 'ر.اب', CM2: 'خ.اب', CE6: 'س.اب',
+  '1AC': 'أ.إع', '2AC': 'ت.إع', '3AC': 'ث.إع',
+  TC: 'ج.م', '1BAC': 'أ.بك', '2BAC': 'ت.بك',
+};
+
+export function toArabicClassAbbreviation(name: string): string {
+  const key = toAppClassName(name).toUpperCase();
+  if (Object.hasOwn(arabicClassAbbreviations, key)) {
+    return arabicClassAbbreviations[key as keyof typeof arabicClassAbbreviations];
+  }
+  const arabicKey = (Object.keys(SCHOOL_CLASS_ARABIC_NAMES) as (keyof typeof SCHOOL_CLASS_ARABIC_NAMES)[])
+    .find(code => SCHOOL_CLASS_ARABIC_NAMES[code] === name.trim());
+  return arabicKey ? arabicClassAbbreviations[arabicKey] : name.trim();
+}
+
 const academicClassOrder: readonly string[] = [
   'PS', 'MS', 'GS', ...SCHOOL_CLASS_NAMES.map(item => item.app), 'TC', '1BAC', '2BAC',
 ];
+
+/** The preceding level for a register fallback; custom and first levels have none. */
+export function previousClassName(name: string): string | null {
+  const key = toAppClassName(name).toUpperCase();
+  const index = academicClassOrder.findIndex(code => code === key
+    || SCHOOL_CLASS_ARABIC_NAMES[code as keyof typeof SCHOOL_CLASS_ARABIC_NAMES] === name.trim());
+  return index > 0 ? academicClassOrder[index - 1] : null;
+}
 
 /** Academic progression first; custom names follow in natural alphabetical order. */
 export function compareClassNames(left: string, right: string): number {

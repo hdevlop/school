@@ -1,4 +1,4 @@
-import { compareClassNames, toArabicClassName } from '@sms/contracts';
+import { compareClassNames, previousClassName, toArabicClassAbbreviation, toArabicClassName } from '@sms/contracts';
 import { ar } from '@sms/contracts/locales';
 import { birthplaceLabel } from '@sms/contracts/birthplace';
 
@@ -16,6 +16,7 @@ export type InsuranceStudent = {
   status?: string | null;
   class?: { id: string | null; name: string | null } | null;
   enrollment?: { enrolledOn?: string | null } | null;
+  levels?: { academicYear: string; className: string }[];
 };
 
 export type InsuranceClass = { id: string; name: string; students: InsuranceStudent[] };
@@ -76,12 +77,6 @@ const day = (value: string | null | undefined) => {
   return match ? `${match[3]}/${match[2]}/${match[1]}` : '';
 };
 
-/** A first enrollment before this year's makes this year a renewal; a new student has none. */
-function renewalDay(student: InsuranceStudent) {
-  const enrolledOn = student.enrollment?.enrolledOn;
-  return enrolledOn && student.enrollmentDate && student.enrollmentDate < enrolledOn ? day(enrolledOn) : '';
-}
-
 /** The preview and print window consume this exact document. */
 export function buildInsuranceDocument(classes: readonly InsuranceClass[], options: InsuranceDocumentOptions): string {
   const e = escapeHtml;
@@ -93,6 +88,15 @@ export function buildInsuranceDocument(classes: readonly InsuranceClass[], optio
   const arabicRange = 'U+0600-06FF,U+0750-077F,U+0870-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E';
   const year = options.academicYear.replace('-', '/');
   const [previousYear, currentYear] = levelYearLabels(options.academicYear);
+  const start = Number(/^\d{4}/.exec(options.academicYear)?.[0]);
+  const levelYears = [`${start - 1}-${start}`, options.academicYear];
+  const levelCell = (student: InsuranceStudent, academicYear: string) => {
+    const name = academicYear === options.academicYear
+      ? student.class?.name
+      : student.levels?.find(level => level.academicYear === academicYear)?.className
+        || previousClassName(student.class?.name ?? '');
+    return name ? `<td class="level wrap" title="${e(toArabicClassName(name))}"><bdi dir="rtl">${e(toArabicClassAbbreviation(name))}</bdi></td>` : '<td></td>';
+  };
   const date = (value: string) => value ? `<bdi dir="ltr">${e(value)}</bdi>` : '';
   const blank = '<span class="blank"></span>';
   const head = `<thead>
@@ -134,8 +138,8 @@ export function buildInsuranceDocument(classes: readonly InsuranceClass[], optio
           <td class="wrap"><bdi>${e(student.previousSchool)}</bdi></td>
           <td></td><td></td>
           <td>${date(day(student.enrollmentDate))}</td>
-          <td>${date(renewalDay(student))}</td>
-          <td></td><td></td><td></td>
+          <td>${date(day(student.enrollment?.enrolledOn))}</td>
+          ${levelYears.map(academicYear => levelCell(student, academicYear)).join('')}<td></td>
         </tr>`;
       }).join('');
       return `<section class="sheet">
