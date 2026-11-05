@@ -1,7 +1,8 @@
 'use client';
 
 import { PermissionButton } from '@/components/PermissionButton';
-import { NPageHeader, NForm, FormInput, NEmptyState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NForm, FormInput, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';

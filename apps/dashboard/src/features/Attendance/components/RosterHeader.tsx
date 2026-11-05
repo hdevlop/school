@@ -6,6 +6,7 @@ import { NButton, NSkeleton, SimpleTooltip, inputBorderClasses } from 'najm-kit'
 import { Send, CheckCircle2, XCircle, Clock3 } from 'lucide-react';
 import { cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { MobileFeatureActions } from '@/shared/FeatureActions';
 
 interface Stats { total: number; present: number; absent: number; late: number; unmarked: number }
 
@@ -17,9 +18,11 @@ interface Props {
   /** Sits between the counts and submit. */
   print?: ReactNode;
   onMarkAllPresent?: () => void;
+  canMarkAllPresent?: boolean;
   canSubmit?: boolean;
   submitTitle?: string;
   loading?: boolean;
+  showMobileSubmit?: boolean;
 }
 
 function StatItem({
@@ -53,9 +56,10 @@ function StatItem({
 
 export default function RosterHeader({
   hasChanges, isSubmitting, stats,
-  onSubmit, onMarkAllPresent, print,
+  onSubmit, onMarkAllPresent, canMarkAllPresent, print,
   canSubmit = true, submitTitle,
   loading = false,
+  showMobileSubmit = true,
 }: Props) {
   const { t } = useTranslation();
   const title = submitTitle ?? t('attendance.roster.submit');
@@ -63,11 +67,11 @@ export default function RosterHeader({
   if (loading) {
     return (
       <div aria-hidden="true" className="contents lg:order-3 lg:flex lg:items-center lg:gap-2">
-        {onMarkAllPresent && <NSkeleton data-roster-loading-action="mark-all" className="col-span-2 h-10 lg:w-36" />}
+        {onMarkAllPresent && <NSkeleton data-roster-loading-action="mark-all" className={cn('col-span-2 h-10 lg:w-36', !showMobileSubmit ? 'hidden lg:inline-flex' : 'hidden md:inline-flex')} />}
         <div className="flex min-w-0 items-center justify-end gap-2">
           <NSkeleton data-roster-loading-counts className="h-10 w-20 sm:w-36" />
-          {print && <NSkeleton data-roster-loading-action="print" className="size-10 shrink-0" />}
-          <NSkeleton data-roster-loading-action="submit" className="size-10 shrink-0" />
+          {print && <NSkeleton data-roster-loading-action="print" className="hidden size-10 shrink-0 md:inline-flex" />}
+          <NSkeleton data-roster-loading-action="submit" className={cn('size-10 shrink-0', !showMobileSubmit && 'hidden lg:inline-flex')} />
         </div>
       </div>
     );
@@ -77,9 +81,9 @@ export default function RosterHeader({
   // second column beside the day, and "mark all present" takes a row of its own.
   return (
     <div className="contents lg:order-3 lg:flex lg:items-center lg:gap-2">
-      {onMarkAllPresent && <NButton type="button" variant="outline" disabled={isSubmitting || !canSubmit} onClick={onMarkAllPresent} className="col-span-2 h-10">
+      {onMarkAllPresent && <MobileFeatureActions enabled={showMobileSubmit}><NButton type="button" variant="outline" disabled={isSubmitting || !(canMarkAllPresent ?? canSubmit)} onClick={onMarkAllPresent} className={cn('col-span-2 h-10', !showMobileSubmit && 'hidden lg:inline-flex')}>
         {t('attendance.roster.markAllPresent')}
-      </NButton>}
+      </NButton></MobileFeatureActions>}
       <div className="flex min-w-0 items-center justify-end gap-2">
         <div className={cn('flex h-10 min-w-0 items-center divide-x divide-border rounded-md bg-card px-1', inputBorderClasses())}>
           {/* On a phone the day needs the room; present is everyone not marked otherwise. */}
@@ -87,7 +91,7 @@ export default function RosterHeader({
           <StatItem icon={XCircle} label={t('attendance.roster.absent')} value={stats.absent} tone="red" />
           <StatItem icon={Clock3} label={t('attendance.roster.late')} value={stats.late} tone="amber" />
         </div>
-        {print}
+        {print && <MobileFeatureActions>{print}</MobileFeatureActions>}
         <NButton
           onClick={onSubmit}
           loading={isSubmitting}
@@ -95,7 +99,7 @@ export default function RosterHeader({
           disabled={isSubmitting || !hasChanges || !canSubmit}
           aria-label={title}
           title={title}
-          className="h-10 w-10 shrink-0 cursor-pointer p-0 disabled:cursor-not-allowed"
+          className={cn('h-10 w-10 shrink-0 cursor-pointer p-0 disabled:cursor-not-allowed', !showMobileSubmit && 'hidden lg:inline-flex')}
         />
       </div>
     </div>

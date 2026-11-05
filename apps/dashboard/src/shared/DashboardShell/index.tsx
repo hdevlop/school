@@ -23,6 +23,7 @@ import { NavigationActionsProvider } from './NavigationActions';
 import { SchoolSessionLoader } from '@/components/SchoolSessionLoader';
 import { useSidebarOrder } from '@/features/Roles/hooks/useSidebarOrder';
 import { useSchoolSignOut } from '@/providers/SignOutTransition';
+import { FeatureActionsProvider } from '@/shared/FeatureActions';
 
 // Every page opens inside this shell, so these download only when first shown:
 // a phone starting up should not pay for an assistant or settings it may not open.
@@ -178,12 +179,15 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
       <div className={cn('dashboard-content flex min-w-0 flex-1 flex-col h-full min-h-0', isHome ? 'gap-0 lg:gap-2 lg:px-2 lg:pt-2 lg:pb-2' : 'gap-2 px-3 pt-2 pb-2 lg:px-2')}>
         <ViewingYearBanner />
         <PushPromptBanner />
-        <div className="flex min-h-0 flex-1 flex-col">{children}</div>
+        <div className="flex min-h-0 flex-1 flex-col">
+          <FeatureActionsProvider key={pathname} enabled={pathname !== '/dashboard' && pathname !== '/home'}>{children}</FeatureActionsProvider>
+        </div>
       </div>
 
 
       {accessToken && (
         <YearScopedChatbot
+          className="school-chatbot"
           settingsApiPath="/api/ai-settings"
           mcpApiPath="/api/mcp"
           testApiPath=""

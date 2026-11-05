@@ -2,7 +2,8 @@
 
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
@@ -12,6 +13,7 @@ import FeeTypeForm from './FeeTypeForm';
 import { useFeeTypes } from '../hooks/useFeeTypes';
 import { useTranslation } from 'najm-i18n/react';
 import FeeTypeCard from './FeeTypeCard';
+import { FeeTypeCardSkeleton } from '@/shared/CardSkeletons';
 import { useFeeTypesTableColumns } from '../hooks/useFeeTypesTableColumns';
 import { useFeeTypesTableFilters } from '../hooks/useFeeTypesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -145,6 +147,7 @@ function FeeTypesTable() {
             : <NErrorState surface="panel" />
         )}
         renderCard={FeeTypeCard}
+        renderCardSkeleton={FeeTypeCardSkeleton}
         getRowClassName={getFeeTypeRowClassName}
         addButtonText={t('feeTypes.dialogs.createButton')}
         renderEmpty={() => (

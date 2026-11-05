@@ -1261,7 +1261,7 @@
     },
     "finance": {
       "collectionRateDueHint": "Importes pagados de cuotas ya vencidas. Se excluyen las cuotas pagadas por adelantado.",
-      "collectionRateDue": "Tasa de cobro de cuotas vencidas",
+      "collectionRateDue": "Tasa de cobro",
       "aging1_30": "1-30 días",
       "aging31_60": "31-60 días",
       "aging60plus": "60+ días",
@@ -1278,7 +1278,7 @@
       "expenseCount": "Cantidad de gastos",
       "expenses": "Gastos pagados",
       "expensesByCategory": "Gastos por categoría",
-      "expensesMonth": "Gastos pagados (mes)",
+      "expensesMonth": "Gastos (mes)",
       "income": "Ingresos",
       "incomeMonth": "Ingresos (Mes)",
       "incomeVsExpenses": "Ingresos vs Gastos",
@@ -1369,6 +1369,11 @@
     "view": "Ver",
     "toggleTheme": "Cambiar el tema de color",
     "toggleFullscreen": "Alternar pantalla completa",
+    "menuData": "Datos",
+    "menuAlerts": "Alertas",
+    "menuDark": "Oscuro",
+    "menuLight": "Claro",
+    "menuFullscreen": "Ampliar",
     "create": "Crear",
     "update": "Actualizar",
     "actions": "Acciones",
@@ -2111,6 +2116,7 @@
       "loading": "Cargando…",
       "nothingToSave": "No hay cambios que guardar",
       "submitSuccess": "Asistencia guardada correctamente",
+      "sendCount": "Enviar {{count}}",
       "teacherSubject": "Profesor y asignatura",
       "selectClass": "Seleccione primero una clase",
       "selectSection": "Seleccione primero una sección",
@@ -3686,7 +3692,7 @@
       "immediateChanges": "Los vínculos familiares se guardan inmediatamente, por separado de la ficha del estudiante."
     },
     "subtitle": {
-      "count": "Total: {{count}}"
+      "count": "{{count}} padres"
     },
     "success": {
       "retrieved": "Padre o madre obtenido correctamente",
@@ -3731,6 +3737,7 @@
     },
     "filters": {
       "missingDetails": "Datos de los padres incompletos",
+      "searchByNameOrCin": "Buscar por nombre o CIN...",
       "withoutStudents": "Sin alumnos",
       "filterByRelationship": "Filtrar por relación",
       "searchByEmail": "Buscar por correo...",
@@ -4811,7 +4818,7 @@
       "notInSection": "El alumno no está en esta sección"
     },
     "subtitle": {
-      "count": "Total: {{count}}"
+      "count": "{{count}} estudiantes"
     },
     "dialogs": {
       "deleteWarning": "Los datos de los alumnos se eliminarán permanentemente de todos los años escolares.",
@@ -4826,6 +4833,7 @@
     },
     "filters": {
       "missingParentDetails": "Datos de los padres incompletos",
+      "searchByNameOrCode": "Buscar por nombre o código...",
       "filterByClass": "Filtrar por clase",
       "filterBySection": "Filtrar por sección",
       "searchByName": "Buscar por nombre..."

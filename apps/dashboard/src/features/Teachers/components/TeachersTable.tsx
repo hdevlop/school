@@ -4,7 +4,8 @@ import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useResetLogin } from '@/features/Users/hooks/useResetLogin';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { TablePrintButton } from '@/components/TablePrintButton';
@@ -16,6 +17,7 @@ import TeacherForm from './TeacherForm';
 import { useTeachers } from '../hooks/useTeachers';
 import { useTranslation } from 'najm-i18n/react';
 import TeacherCard from './TeacherCard';
+import { TeacherCardSkeleton } from '@/shared/PersonCardSkeleton';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSubjects } from '@/features/Subjects/hooks/useSubjects';
 import { useTeachersTableColumns } from '../hooks/useTeachersTableColumns';
@@ -195,6 +197,7 @@ function TeachersTable() {
         )}
         loadingText={t('common.loading')}
         renderCard={TeacherCard}
+        renderCardSkeleton={TeacherCardSkeleton}
         addButtonText={t('teachers.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState

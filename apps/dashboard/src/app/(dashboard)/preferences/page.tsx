@@ -2,7 +2,8 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 
-import { NPageHeader, NPageHeaderActions } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { PushOptIn } from '@/features/Notifications';
 import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';

@@ -2,6 +2,7 @@ import { TrendingUp, TrendingDown, Target, Send } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { NButton, SimpleTooltip } from 'najm-kit';
 import { cn } from 'najm-kit';
+import { MobileFeatureActions } from '@/shared/FeatureActions';
 
 interface Stats {
   total: number;
@@ -75,9 +76,9 @@ export default function GradesHeader({
       </div>
       <div className="flex flex-wrap items-stretch justify-end gap-2">
         {hasChanges ? (
-          <NButton type="button" variant="outline" disabled={isSubmitting} onClick={onReset}>
+          <MobileFeatureActions><NButton type="button" variant="outline" disabled={isSubmitting} onClick={onReset}>
             {t('grades.messages.resetChanges')}
-          </NButton>
+          </NButton></MobileFeatureActions>
         ) : null}
         <NButton
           onClick={onSubmit}

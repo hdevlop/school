@@ -1,0 +1,64 @@
+@media (width < 768px) {
+  /* Filters stay beside the list; commands belong to the page's contextual menu. */
+  .contextual :global([data-ntable-mobile-toolbar]) > button:not([data-slot='popover-trigger']),
+  .contextual :global([data-ntable-mobile-toolbar]) > :global([data-ntable-action-skeleton]),
+  .contextual :global([data-ntable-controls]) {
+    display: none;
+  }
+
+  .contextual :global([data-ntable-mobile-primary-filter]) {
+    flex: 1 1 0%;
+  }
+}
+
+@media (width < 768px) {
+  /* Every filter stays in sight: Najm's full filter row replaces its phone
+     pair of one filter and a filter button. */
+  .inlineFilters :global([data-ntable-header]) {
+    flex-wrap: wrap;
+  }
+
+  .inlineFilters :global([data-ntable-desktop-filters]) {
+    display: flex;
+    flex: 1 1 100%;
+    order: -1;
+  }
+
+  .inlineFilters :global([data-ntable-mobile-primary-filter]),
+  .inlineFilters :global([data-ntable-filter-menu-skeleton]),
+  .inlineFilters :global([data-ntable-mobile-toolbar]) > :global([data-slot='popover-trigger']) {
+    display: none;
+  }
+
+  .inlineFilters .selectFilter {
+    flex: 1 1 calc((100% - 1rem) / 3);
+    width: auto;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .inlineFilters .textFilter {
+    flex: 1 1 100%;
+    order: 1;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+}
+
+@media (width < 768px) {
+  /* A search hint matches the selects beside it. Typed text keeps the
+     input's 16px, below which iPhones zoom the page on focus. */
+  .root :global([data-ntable-header]) input::placeholder {
+    font-size: 0.875rem;
+  }
+}
+
+@media (width < 768px) {
+  /* A page's own full-width phone filter, such as Fees' payment dates, takes
+     the row after the table's filters instead of squeezing beside them. */
+  .inlineFilters :global([data-ntable-header]) > div:has(> :global([data-phone-full-row])) {
+    flex-basis: 100%;
+    margin-top: 0.5rem;
+  }
+}

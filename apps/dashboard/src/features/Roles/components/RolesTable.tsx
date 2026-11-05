@@ -4,7 +4,8 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { roleLabel } from '@/shared/roleLabel';
 
 import { useState } from 'react';
-import { Button, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, cn, surfaceBorderClasses } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { Button, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, cn, surfaceBorderClasses } from 'najm-kit';
 import { Loader2, LockKeyhole, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import type { AccessRole } from '@sms/contracts/access-control';

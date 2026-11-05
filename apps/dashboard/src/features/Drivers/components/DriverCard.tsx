@@ -9,11 +9,26 @@ import { Label } from 'najm-kit';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { avatarVersion } from '@/lib/avatarVersion';
 import { PersonCard } from '@/shared/PersonCard';
+import { CompactPersonCard, CompactTag, CompactValue, useCompactPersonCard } from '@/shared/CompactPersonCard';
 
 const DriverCard = ({ data }) => {
    const { t } = useTranslation();
    const { displayDateOnly } = useSchoolFormat();
    const driver = data;
+   const compact = useCompactPersonCard();
+
+   if (compact) {
+      return (
+         <CompactPersonCard
+            avatar={<NAvatar src={driver?.image} fallback={driver.name} size="md" version={avatarVersion(driver?.image, driver?.updatedAt)} />}
+            name={driver.name}
+            details={[
+               driver.licenseNumber && <CompactTag><CompactValue>{driver.licenseNumber}</CompactValue></CompactTag>,
+               driver.phone && <CompactValue>{driver.phone}</CompactValue>,
+            ]}
+         />
+      );
+   }
 
    return (
       <PersonCard

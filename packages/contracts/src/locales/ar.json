@@ -1262,11 +1262,11 @@
     },
     "finance": {
       "collectionRateDueHint": "المبالغ المدفوعة من الأقساط المستحقة حتى اليوم. لا تشمل الأقساط المدفوعة مسبقاً.",
-      "collectionRateDue": "نسبة تحصيل الأقساط المستحقة",
+      "collectionRateDue": "نسبة التحصيل",
       "totalStudents": "إجمالي الطلاب",
       "totalTeachers": "إجمالي المعلمين",
       "incomeMonth": "الإيرادات (الشهر)",
-      "expensesMonth": "المصاريف المدفوعة (الشهر)",
+      "expensesMonth": "المصاريف (الشهر)",
       "netBalance": "الرصيد الصافي",
       "collectionRateYTD": "معدل التحصيل منذ بداية السنة",
       "studentsYear": "التلاميذ",
@@ -1383,6 +1383,11 @@
     "view": "عرض",
     "toggleTheme": "تبديل نمط الألوان",
     "toggleFullscreen": "تبديل ملء الشاشة",
+    "menuData": "البيانات",
+    "menuAlerts": "التنبيهات",
+    "menuDark": "داكن",
+    "menuLight": "فاتح",
+    "menuFullscreen": "تكبير",
     "create": "إنشاء",
     "update": "تحديث",
     "actions": "الإجراءات",
@@ -2125,6 +2130,7 @@
       "loading": "جارٍ التحميل…",
       "nothingToSave": "لا توجد تغييرات للحفظ",
       "submitSuccess": "تم حفظ الحضور بنجاح",
+      "sendCount": "إرسال {{count}}",
       "teacherSubject": "المعلم والمادة",
       "selectClass": "اختر صفاً أولاً",
       "selectSection": "اختر فصلاً أولاً",
@@ -3700,7 +3706,7 @@
       "immediateChanges": "تُحفظ الروابط العائلية فوراً، بشكل مستقل عن بيانات التلميذ."
     },
     "subtitle": {
-      "count": "الإجمالي: {{count}}"
+      "count": "{{count}} ولي أمر"
     },
     "success": {
       "retrieved": "تم جلب ولي الأمر بنجاح",
@@ -3745,6 +3751,7 @@
     },
     "filters": {
       "missingDetails": "بيانات أولياء الأمور ناقصة",
+      "searchByNameOrCin": "ابحث بالاسم أو رقم البطاقة...",
       "withoutStudents": "بدون تلاميذ",
       "filterByRelationship": "تصفية حسب العلاقة",
       "searchByEmail": "ابحث بالبريد الإلكتروني...",
@@ -4825,7 +4832,7 @@
       "notInSection": "التلميذ ليس في هذا القسم"
     },
     "subtitle": {
-      "count": "الإجمالي: {{count}}"
+      "count": "{{count}} طالب"
     },
     "dialogs": {
       "deleteWarning": "ستُحذف بيانات التلاميذ نهائيًا من جميع السنوات الدراسية.",
@@ -4840,6 +4847,7 @@
     },
     "filters": {
       "missingParentDetails": "بيانات أولياء الأمور ناقصة",
+      "searchByNameOrCode": "ابحث بالاسم أو الرمز...",
       "filterByClass": "تصفية حسب القسم",
       "filterBySection": "تصفية حسب الفوج",
       "searchByName": "ابحث بالاسم..."

@@ -1149,11 +1149,11 @@
     },
     "finance": {
       "collectionRateDueHint": "Paid toward installments due to date. Prepaid installments are excluded.",
-      "collectionRateDue": "Collection rate on due fees",
+      "collectionRateDue": "Collection rate",
       "totalStudents": "Total Students",
       "totalTeachers": "Total Teachers",
       "incomeMonth": "Income (month)",
-      "expensesMonth": "Paid expenses (month)",
+      "expensesMonth": "Expenses (month)",
       "netBalance": "Net Balance",
       "collectionRateYTD": "Collection Rate YTD",
       "studentsYear": "Students",
@@ -1263,6 +1263,11 @@
     "view": "View",
     "toggleTheme": "Toggle color theme",
     "toggleFullscreen": "Toggle fullscreen",
+    "menuData": "Data",
+    "menuAlerts": "Alerts",
+    "menuDark": "Dark",
+    "menuLight": "Light",
+    "menuFullscreen": "Full",
     "create": "Create",
     "update": "Update",
     "actions": "Actions",
@@ -2604,6 +2609,7 @@
     },
     "filters": {
       "missingParentDetails": "Missing parent details",
+      "searchByNameOrCode": "Search by name or code...",
       "searchByName": "Search by name...",
       "searchByStudentCode": "Search by student code...",
       "searchByEmail": "Search by email...",
@@ -2819,7 +2825,7 @@
     },
     "title": "Title",
     "subtitle": {
-      "count": "Total: {{count}}"
+      "count": "{{count}} students"
     },
     "invitation": {
       "sent": "Invitation email sent to {{email}}. The student activates the account from the link.",
@@ -2894,7 +2900,7 @@
       "leftSchool": "No active children in the selected academic year."
     },
     "subtitle": {
-      "count": "Total: {{count}}"
+      "count": "{{count}} parents"
     },
     "validation": {
       "nameMinLength": "Name must be at least 2 characters long",
@@ -2977,6 +2983,7 @@
     },
     "filters": {
       "missingDetails": "Missing parent details",
+      "searchByNameOrCin": "Search by name or CIN...",
       "withoutStudents": "Without students",
       "searchByName": "Search by name...",
       "searchByEmail": "Search by email...",
@@ -5961,6 +5968,7 @@
       "nothingToSave": "No changes to save",
       "submitError": "Failed to submit attendance",
       "submitSuccess": "Attendance submitted successfully",
+      "sendCount": "Send {{count}}",
       "teacherSubject": "Teacher & subject",
       "selectClass": "Select a class first",
       "selectSection": "Select a section first",

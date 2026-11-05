@@ -2,7 +2,8 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 
-import { NBadge, NAvatar, NButton, NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NBadge, NAvatar, NButton, NEmptyState, NErrorState, NForbiddenState, NPageHeaderActions } from 'najm-kit';
 import Link from 'next/link';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import React, { useEffect, useId, useMemo, useState } from 'react';
@@ -13,8 +14,10 @@ import { useTranslation } from 'najm-i18n/react';
 import { cn } from 'najm-kit';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { MobileFeatureActions } from '@/shared/FeatureActions';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import ReminderCard, { urgencyBadge, urgencyRowColor, type OverdueRow } from './components/ReminderCard';
+import { ReminderCardSkeleton } from '@/shared/CardSkeletons';
 
 const matchesStudent = (row: OverdueRow, query: string) =>
   row.studentName.toLowerCase().includes(query)
@@ -215,6 +218,7 @@ const RemindersPage: React.FC = () => {
         defaultSorting={[{ id: 'daysOverdue', desc: true }]}
         defaultMode="table"
         availableModes={['table', 'cards']}
+        renderCardSkeleton={ReminderCardSkeleton}
         renderCard={({ data: row }: { data: OverdueRow }) => (
           <ReminderCard
             data={row}
@@ -248,7 +252,7 @@ const RemindersPage: React.FC = () => {
             <NBadge className="inline-flex items-center rounded-lg bg-red-50 font-semibold text-red-700">
               {majorMoney(totalOverdue)} {t('reports.reminders.overdueAmount')}
             </NBadge>
-            <NButton
+            <MobileFeatureActions><NButton
               size="sm"
               variant="outline"
               disabled
@@ -257,7 +261,7 @@ const RemindersPage: React.FC = () => {
             >
               <BellRing className="h-4 w-4" />
               {t('reports.reminders.remindAll', { count: filtered.length })}
-            </NButton>
+            </NButton></MobileFeatureActions>
           </div>
         )}
       />

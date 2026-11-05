@@ -5,12 +5,14 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { Eye, Pencil, Trash2, Plus } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import DisciplineCard from './DisciplineCard';
+import { DisciplineCardSkeleton } from '@/shared/PersonCardSkeleton';
 import DisciplineDetails from './DisciplineDetails';
 import DisciplineForm from './DisciplineForm';
 import ResolveDisciplineForm from './ResolveDisciplineForm';
@@ -148,6 +150,7 @@ export default function DisciplineTable() {
           ],
         }}
         renderCard={DisciplineCard as any}
+        renderCardSkeleton={DisciplineCardSkeleton}
         addButtonText={t('discipline.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState

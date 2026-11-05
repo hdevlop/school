@@ -1,10 +1,8 @@
 'use client';
 
 import { ComboboxInput, SelectInput, TextInput, NButton, Popover, PopoverContent, PopoverTrigger } from 'najm-kit';
-import { Filter, Plus } from 'lucide-react';
+import { Filter } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
-import { PermissionButton } from '@/components/PermissionButton';
-import { FeesPrintButton } from './FeesPrintButton';
 import { FeesDateFilter } from './FeesDateFilter';
 import type { FeePaymentDateRange } from '../config/feeListFilters';
 
@@ -21,9 +19,8 @@ export type FeeTableFilter = {
 };
 
 /** Class and section stay inline; the remaining filters share one popover. */
-export function FeesMobileToolbar({ filters, onCreate, loading, paymentDateRange, onPaymentDateRangeChange }: {
+export function FeesMobileToolbar({ filters, loading, paymentDateRange, onPaymentDateRangeChange }: {
   filters: FeeTableFilter[];
-  onCreate: () => void;
   loading: boolean;
   paymentDateRange?: FeePaymentDateRange;
   onPaymentDateRangeChange: (range: FeePaymentDateRange | undefined) => void;
@@ -33,7 +30,7 @@ export function FeesMobileToolbar({ filters, onCreate, loading, paymentDateRange
   const section = filters.find(filter => filter.name === 'section');
   const additional = filters.filter(filter => filter.name !== 'class' && filter.name !== 'section');
   return (
-    <div className={`grid w-full min-w-0 items-center gap-2 md:hidden ${section ? 'grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto_auto_auto]' : 'grid-cols-[minmax(0,1fr)_auto_auto_auto]'}`}>
+    <div className={`grid w-full min-w-0 items-center gap-2 md:hidden ${section ? 'grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]' : 'grid-cols-[minmax(0,1fr)_auto]'}`}>
       <ComboboxInput
         value={schoolClass.value}
         onChange={schoolClass.onChange}
@@ -67,10 +64,6 @@ export function FeesMobileToolbar({ filters, onCreate, loading, paymentDateRange
           <FeesDateFilter value={paymentDateRange} onChange={onPaymentDateRangeChange} className="w-full" />
         </PopoverContent>
       </Popover>
-      <FeesPrintButton loading={loading} />
-      <PermissionButton permission="create:fees" variant="outline" size="icon" className="size-10 text-primary" onClick={onCreate} aria-label={t('fees.dialogs.createButton')} disabled={loading}>
-        <Plus className="size-5" />
-      </PermissionButton>
     </div>
   );
 }

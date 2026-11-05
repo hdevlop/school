@@ -2,7 +2,8 @@
 
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { CalendarX, Eye, Pencil, Plus, Trash2, UserRound } from 'lucide-react';
@@ -14,6 +15,7 @@ import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useVehicles } from '../hooks/useVehicles';
 import { useTranslation } from 'najm-i18n/react';
 import VehicleCard from './VehicleCard';
+import { VehicleCardSkeleton } from '@/shared/CardSkeletons';
 import { useDrivers } from '@/features/Drivers/hooks/useDrivers';
 import { useVehiclesTableColumns } from '../hooks/useVehiclesTableColumns';
 import { useVehiclesTableFilters } from '../hooks/useVehiclesTableFilters';
@@ -183,6 +185,7 @@ function VehiclesTable() {
             : <NErrorState surface="panel" />
         )}
         renderCard={VehicleCard}
+        renderCardSkeleton={VehicleCardSkeleton}
         addButtonText={t('vehicles.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState

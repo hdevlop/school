@@ -3,7 +3,8 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 
 import React from 'react';
-import { NPageHeader, NPageHeaderActions } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions } from 'najm-kit';
 import IncomeExpensesTrend from '@/features/Dashboard/components/IncomeExpensesTrend';
 import ExpenseBreakdownChart from './components/ExpenseBreakdownChart';
 import CollectionByClassChart from './components/CollectionByClassChart';

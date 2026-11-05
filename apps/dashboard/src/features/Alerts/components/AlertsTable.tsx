@@ -2,7 +2,8 @@
 
 import { CheckCheck, CircleCheck, CircleSlash, Trash2 } from 'lucide-react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NEmptyState, NErrorState, NForbiddenState, NPageHeaderActions } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
@@ -14,6 +15,7 @@ import { useAlerts } from '../hooks/useAlerts';
 import { useAlertsTableColumns } from '../hooks/useAlertsTableColumns';
 import { isAboutSomeone, type AlertRecord } from '../alertConstants';
 import AlertCard from './AlertCard';
+import { AlertCardSkeleton } from '@/shared/CardSkeletons';
 import { useMemo } from 'react';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 
@@ -106,6 +108,7 @@ export default function AlertsTable() {
           ],
         }}
         renderCard={AlertCard as any}
+        renderCardSkeleton={AlertCardSkeleton}
         loadingText={t('common.loading')}
         renderEmpty={() => (
           <NEmptyState

@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { FileText, List, Printer, Settings } from 'lucide-react';
-import { DateRangeInput, NajmScroll, NButton, NEmptyState, NErrorState, NForbiddenState, NLoadingState, NPageHeader, NPageHeaderActions, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { DateRangeInput, NajmScroll, NButton, NEmptyState, NErrorState, NForbiddenState, NLoadingState, NPageHeaderActions, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useNThemeBrandingSlot } from 'najm-theme/react';
 import { toast } from 'sonner';
@@ -15,6 +16,7 @@ import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
 import { useSchoolToday } from '@/hooks/useSchoolFormat';
 import { isAuthorizationError } from '@/services/apiError';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { MobileFeatureActions } from '@/shared/FeatureActions';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { classDocumentColors } from '@/features/Assessments/planning/planningModel';
 import { buildPlanningDocument, printPlanningDocument, type PlanningDocumentOptions } from '@/features/Assessments/planning/planningDocument';
@@ -154,12 +156,12 @@ function PlanningContent() {
               <DateRangeInput ariaLabel={t('assessmentPlanning.period')} className="w-64 max-sm:w-full" value={range} min={yearFrom} max={yearTo} onChange={({ from, to }) => { if (from && to) { setRange({ from, to }); setClass(classId); setSelected(null); } }} />
             </div>
           </fieldset>
-          <div className={styles.toolbarActions}>
+          <MobileFeatureActions><div className={styles.toolbarActions}>
             {canEdit && <PlanningClearAction schoolYear={viewingYear ?? ''} disabled={isLoading || !!error || (!dirty && !classes.some(cls => Object.values(cls.months).some(entries => entries.length)))} saving={saving} onClear={async () => { await save({ clear: true }); discard(); setView('planning'); }} />}
             {canEdit && <PlanningJsonActions classes={classes} schoolYear={viewingYear ?? ''} disabled={dirty || saving || isLoading || !!error} saving={saving} onImport={async document => { await save({ document }); setSelected(null); }} />}
             {canEdit && <NButton variant="outline" size="icon" aria-label={t('examPlanning.classSettings')} title={t('examPlanning.classSettings')} disabled={isLoading || !!error || dirty || saving} onClick={() => setClassSettings(visibleClasses.map(cls => cls.id))}><Settings className="size-4" aria-hidden="true" /></NButton>}
             <NButton variant="outline" size="icon" aria-label={t('assessmentPlanning.print')} title={t('assessmentPlanning.print')} disabled={outputDisabled} onClick={print} leftIcon={<Printer className="size-4" />} />
-          </div>
+          </div></MobileFeatureActions>
           </div>
         </div>
         {error ? isAuthorizationError(error) ? <NForbiddenState surface="panel" /> : <NErrorState surface="panel" />

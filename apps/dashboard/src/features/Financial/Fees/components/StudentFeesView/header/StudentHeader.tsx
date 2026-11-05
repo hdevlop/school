@@ -3,6 +3,7 @@ import { Label } from 'najm-kit';
 import { NAvatar, NButton, useNSidebar } from 'najm-kit';
 import { CreditCard, Menu } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
+import { HeaderActionsMenu } from '@/components/HeaderActionsMenu';
 
 export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) => {
 
@@ -57,6 +58,7 @@ export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) 
                   )}
                </div>
             </div>
+            <div className="md:hidden"><HeaderActionsMenu>{null}</HeaderActionsMenu></div>
          </div>
 
          {/* Below lg the summary strip and the Pay bar under the fees carry the

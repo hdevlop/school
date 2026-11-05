@@ -2,7 +2,8 @@
 
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useAcademicTableActions } from '@/features/Classes/hooks/useAcademicTableActions';
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
@@ -15,6 +16,7 @@ import SectionForm from './SectionForm';
 import { useSections } from '../hooks/useSections';
 import { useTranslation } from 'najm-i18n/react';
 import SectionCard from './SectionCard';
+import { SectionCardSkeleton } from '@/shared/CardSkeletons';
 import { useSectionsTableColumns } from '../hooks/useSectionsTableColumns';
 import { useSectionsTableFilters } from '../hooks/useSectionsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -123,6 +125,7 @@ function SectionsTable() {
             : <NErrorState surface="panel" />
         )}
         renderCard={SectionCard}
+        renderCardSkeleton={SectionCardSkeleton}
         addButtonText={t('sections.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState

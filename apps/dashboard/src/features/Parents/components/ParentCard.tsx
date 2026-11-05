@@ -8,6 +8,7 @@ import { cn } from 'najm-kit';
 import { useRouter } from 'next/navigation';
 import { avatarVersion } from '@/lib/avatarVersion';
 import { PersonCard } from '@/shared/PersonCard';
+import { CompactPersonCard, CompactTag, CompactValue, useCompactPersonCard } from '@/shared/CompactPersonCard';
 import { isParentDisabled, isParentOrphaned } from '../config/parentActivity';
 
 const ParentInfoRow = ({ icon: Icon, label, value, muted }) => (
@@ -23,6 +24,7 @@ const ParentInfoRow = ({ icon: Icon, label, value, muted }) => (
 const ParentCard = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const compact = useCompactPersonCard();
   // Opening the parent keeps an explicitly viewed year.
   const parent = data;
 
@@ -40,30 +42,45 @@ const ParentCard = ({ data }) => {
   const isDisabled = isParentDisabled(parent);
   const inactiveMessage = t(isOrphaned ? 'parents.tooltips.orphaned' : 'parents.tooltips.leftSchool');
   const mutedValueColor = isDisabled ? 'text-muted-foreground' : 'text-foreground';
+  const cardProps = {
+    role: 'link',
+    tabIndex: 0,
+    'aria-label': `${t('common.view')} ${parent.name}`,
+    onClick: () => router.push(`/parents/${parent.id}`),
+    onKeyDown: (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        router.push(`/parents/${parent.id}`);
+      }
+    },
+    className: cn(
+      'cursor-pointer overflow-hidden transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
+      isDisabled ? 'bg-muted/60 text-muted-foreground hover:bg-muted/80 [&_label]:text-muted-foreground' : 'hover:bg-primary/[0.035]'
+    ),
+    'data-parent-orphan-card': isOrphaned ? 'true' : undefined,
+    'data-parent-inactive-card': isDisabled ? 'true' : undefined,
+  };
+  const initials = parent.name?.trim().split(/\s+/).map((part) => part.charAt(0)).join('').slice(0, 2).toUpperCase();
+  const relationshipTag = isDisabled ? 'bg-muted text-muted-foreground' : undefined;
 
-  const card = (
+  const card = compact ? (
+    <CompactPersonCard
+      {...cardProps}
+      avatar={<NAvatar src={data?.image} alt={parent.name} fallback={initials} size="md" version={avatarVersion(data?.image, data?.updatedAt)} />}
+      name={parent.name}
+      details={[
+        relationshipDisplay && <CompactTag className={relationshipTag}>{relationshipDisplay}</CompactTag>,
+        parent.phone && <CompactValue>{parent.phone}</CompactValue>,
+      ]}
+    />
+  ) : (
     <PersonCard
-      role="link"
-      tabIndex={0}
-      aria-label={`${t('common.view')} ${parent.name}`}
-      onClick={() => router.push(`/parents/${parent.id}`)}
-      onKeyDown={(event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          router.push(`/parents/${parent.id}`);
-        }
-      }}
-      className={cn(
-        'cursor-pointer overflow-hidden transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
-        isDisabled ? 'bg-muted/60 text-muted-foreground hover:bg-muted/80 [&_label]:text-muted-foreground' : 'hover:bg-primary/[0.035]'
-      )}
-      data-parent-orphan-card={isOrphaned ? 'true' : undefined}
-      data-parent-inactive-card={isDisabled ? 'true' : undefined}
+      {...cardProps}
       avatar={(
         <NAvatar
           src={data?.image}
           alt={parent.name}
-          fallback={parent.name?.trim().split(/\s+/).map((part) => part.charAt(0)).join('').slice(0, 2).toUpperCase()}
+          fallback={initials}
           size="lg"
           version={avatarVersion(data?.image, data?.updatedAt)}
         />

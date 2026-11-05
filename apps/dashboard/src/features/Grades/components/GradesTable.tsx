@@ -5,7 +5,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { useAuth } from 'najm-auth/client/react';
 import { isSchoolWideRole } from '@/shared/pageAccess';
-import { NPageHeader, NPageHeaderActions, NTabs, NErrorState, NForbiddenState, NEmptyState, useMediaQuery } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NTabs, NErrorState, NForbiddenState, NEmptyState, useMediaQuery } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import GradesHeader from './GradesHeader';
 import GradeRosterCard from './GradeRosterCard';
@@ -27,6 +28,7 @@ import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/service
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useTranslation } from 'najm-i18n/react';
 import { EMPTY_GRADE_DRAFT, gradeDraftKey, useGradeDraftStore } from '../store/gradeDraftStore';
+import { GradeRosterCardSkeleton } from '@/shared/PersonCardSkeleton';
 
 const PASS_THRESHOLD = 50;
 type GradeSourceType = 'assessment' | 'exam';
@@ -510,6 +512,7 @@ function GradesTableForYear() {
         showAddButton={false}
         showViewToggle={false}
         defaultMode='table'
+        renderCardSkeleton={GradeRosterCardSkeleton}
         renderCard={mounted ? renderRosterCard : undefined}
         dynamicHeight={true}
         renderEmpty={() => (

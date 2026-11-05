@@ -5,13 +5,13 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { CheckCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
 import {
   NButton,
   NEmptyState,
   NErrorState,
   NForbiddenState,
   NNotifyItem,
-  NPageHeader,
   NPageHeaderActions,
   NSkeleton,
   type NNotifyItemData,

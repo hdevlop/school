@@ -8,6 +8,9 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { withSchoolExports } from '@/shared/tableExport';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { canPerformAction, permissionMenuItem, protectMenuItems } from '@/shared/actionPermissions';
+import { MobileFeatureActions, useFeatureActions } from '@/shared/FeatureActions';
+import { TableFeatureActions } from './TableFeatureActions';
+import styles from './SchoolTable.module.css';
 
 function DeleteSelection({ onDelete, loading, disabled }: { onDelete: (ids: string[]) => void; loading?: boolean; disabled?: boolean }) {
   const table = useTableStore.use.table();
@@ -33,12 +36,20 @@ function DeleteSelection({ onDelete, loading, disabled }: { onDelete: (ids: stri
   );
 }
 
+/** Text and search filters take a full row on phones; selects, comboboxes and dates share one. */
+function isTextFilter(filter: { type?: string; value?: unknown; options?: unknown }) {
+  return filter.type === 'text' || filter.type === 'search'
+    || (!filter.type && typeof filter.value === 'string' && !filter.options);
+}
+
 /** School's permissions and export policy; exporting, printing and import remain Najm's. */
 export function SchoolTable<T = any>({
   classNameColumns,
   showDeleteSelection = true,
   permissionResource,
   deletePermission,
+  mobileContextualActions = true,
+  inlinePhoneFilters = true,
   ...props
 }: Omit<NTableProps<T>, 'columns'> & {
   columns: ReadonlyArray<ColumnDef<NoInfer<T>, any>>;
@@ -48,7 +59,23 @@ export function SchoolTable<T = any>({
   permissionResource?: string;
   /** Some actions (such as voiding a payment) use update rather than delete. */
   deletePermission?: string;
+  mobileContextualActions?: boolean;
+  /**
+   * Phones show every filter in rows above the list instead of one filter and
+   * a filter button. Off for a page that lays out its own phone filters.
+   */
+  inlinePhoneFilters?: boolean;
 }) {
+  const featureActions = useFeatureActions();
+  const contextual = !!featureActions && mobileContextualActions;
+  const inlineFilters = inlinePhoneFilters && !!props.filters?.length;
+  // Najm renders every filter in one row and hides it on phones; tagging each
+  // wrapper lets that row lay selects three abreast and text full width there,
+  // the same while a skeleton stands in for the control during loading.
+  const filters = useMemo(() => inlineFilters ? props.filters?.map(filter => ({
+    ...filter,
+    className: `${filter.className ?? ''} ${isTextFilter(filter) ? styles.textFilter : styles.selectFilter}`,
+  })) : props.filters, [props.filters, inlineFilters]);
   const viewer = useViewerRole();
   const { t } = useTranslation();
   const allowed = (action: string) => !permissionResource || canPerformAction(viewer,
@@ -79,6 +106,12 @@ export function SchoolTable<T = any>({
   return (
     <NTable
       {...props}
+      className={`${props.className ?? ''} ${styles.root} ${contextual ? styles.contextual : ''} ${inlineFilters ? styles.inlineFilters : ''}`}
+      filters={filters}
+      headerSlot={contextual ? <>
+        <MobileFeatureActions><div className="md:hidden"><TableFeatureActions onDelete={showDeleteSelection ? props.onBulkDelete : undefined} canDelete={canDelete} /></div></MobileFeatureActions>
+        {props.headerSlot}
+      </> : props.headerSlot}
       columns={columns}
       // Every list exports (Excel, CSV) and prints from the settings menu; import stays opt-in.
       showExportButton={props.showExportButton ?? true}
@@ -100,7 +133,7 @@ export function SchoolTable<T = any>({
         pagination: `${props.classNames?.pagination ?? ''} pr-24`,
       }}
       renderToolbar={showDeleteSelection && props.onBulkDelete ? state => <>
-        {showDeleteSelection && props.onBulkDelete && <DeleteSelection onDelete={props.onBulkDelete} loading={props.loading} disabled={!canDelete} />}
+        {showDeleteSelection && props.onBulkDelete && <span className={contextual ? 'hidden md:contents' : 'contents'}><DeleteSelection onDelete={props.onBulkDelete} loading={props.loading} disabled={!canDelete} /></span>}
         {props.renderToolbar?.(state)}
       </> : props.renderToolbar}
     />

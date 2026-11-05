@@ -26,18 +26,20 @@ export const useStudentsTableFilters = (students = []) => {
       .sort(compareStudentListRows);
   }, [students, name, matches, matchesView]);
 
+  const searchFilter = useMemo(() => ({
+    name: 'name',
+    placeholder: t('students.filters.searchByNameOrCode'),
+    type: 'text',
+    value: name,
+    onChange: setName,
+    className: 'w-full lg:w-64',
+  }), [t, name]);
+
   const filters = useMemo(() => [
     ...scopeFilters,
-    {
-      name: 'name',
-      placeholder: t('students.filters.searchByName'),
-      type: 'text',
-      value: name,
-      onChange: setName,
-      className: 'w-full lg:w-64',
-    },
+    searchFilter,
     viewFilter,
-  ], [t, name, scopeFilters, viewFilter]);
+  ], [scopeFilters, searchFilter, viewFilter]);
 
-  return { filters, filteredStudents };
+  return { filters, filteredStudents, searchFilter, scopeFilters, viewFilter };
 };

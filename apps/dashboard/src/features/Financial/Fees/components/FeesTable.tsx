@@ -5,7 +5,9 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Table } from '@tanstack/react-table';
 import type { Schedule } from '@sms/contracts';
-import { NPageHeader, NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState, NStatCard, NStatCardSkeleton } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState, NStatCard } from 'najm-kit';
+import { StatCardSkeleton } from '@/shared/CardSkeletons';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Banknote, CreditCard, HandCoins, Landmark, Plus, ReceiptText, Wallet } from 'lucide-react';
@@ -14,7 +16,8 @@ import EditFeeForm from './EditFeeForm';
 import { useFees } from '../hooks/useFees';
 import { useTranslation } from 'najm-i18n/react';
 import FeeCard from './FeeCard';
-import { FeesMobileToolbar, type FeeTableFilter } from './FeesMobileToolbar';
+import { FeeCardSkeleton } from '@/shared/CardSkeletons';
+import type { FeeTableFilter } from './FeesMobileToolbar';
 import { defaultFeeSection, resolveFeeRosterSelection, type FeeRosterSelection } from '../utils/feeRosterSelection';
 import { useStudents } from '@/features/Students/hooks/useStudents';
 import { compareStudentActivity, getStudentRowClassName, isStudentDisabled } from '@/features/Students/config/studentActivity';
@@ -28,7 +31,7 @@ import { getFeeTypesApi } from '@/services/feeTypeApi';
 import { useQueryClient } from '@tanstack/react-query';
 import { buildFeeImport, isFeeReport } from '../config/feeImport';
 import { FeesPrintButton } from './FeesPrintButton';
-import { FeesDateFilter } from './FeesDateFilter';
+import { FeesDateFilter, FeesPhoneDateFilter } from './FeesDateFilter';
 import { FeeImportDatesPreview } from './FeeImportDatesPreview';
 import { withFeeYear } from '../utils/feeUtils';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
@@ -395,7 +398,8 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
 
       {isSummaryLoading ? (
         <div className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-7">
-          {Array.from({ length: 7 }, (_, index) => <NStatCardSkeleton key={index} />)}
+          {/* The last card, overdue to date, carries a hint line. */}
+          {Array.from({ length: 7 }, (_, index) => <StatCardSkeleton key={index} subtext={index === 6} />)}
         </div>
       ) : hasFailedToLoad(summaryError, stats ? [stats] : []) ? (
         isAuthorizationError(summaryError)
@@ -475,9 +479,10 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
         showImportButton={canImport}
         toolbarLabels={toolbarLabels}
         filters={filters}
+        // SchoolTable lays every filter out on phones; the date range follows them full width.
+        headerSlot={<FeesPhoneDateFilter value={paymentDateRange} onChange={setPaymentDateRange} />}
         renderToolbar={() => (
           <>
-            <FeesMobileToolbar filters={filters} onCreate={handleAddClick} loading={isLoading} paymentDateRange={paymentDateRange} onPaymentDateRangeChange={setPaymentDateRange} />
             <div className="hidden md:flex">
               <FeesDateFilter value={paymentDateRange} onChange={setPaymentDateRange} />
             </div>
@@ -499,6 +504,7 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
             : <NErrorState surface="panel" />
         )}
         renderCard={FeeCard}
+        renderCardSkeleton={FeeCardSkeleton}
         getRowClassName={getStudentRowClassName}
         classNames={{
           header: '[&_[data-ntable-mobile-toolbar]]:hidden max-md:[&_[data-school-create-action]]:hidden',

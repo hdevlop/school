@@ -9,6 +9,7 @@ import InstallmentCard from './InstallmentCard';
 import InstallmentDetails from './InstallmentDetails';
 import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
+import { MobileFeatureActions } from '@/shared/FeatureActions';
 import { useInstallmentsTableColumns } from '../hooks/useInstallmentsTableColumns';
 import { useInstallmentsTableFilters } from '../hooks/useInstallmentsTableFilters';
 
@@ -90,8 +91,8 @@ function InstallmentsTable({ fee, feeName = '', className = '', onPayInstallment
           {t('fees.studentView.installments')}
         </h3>
         <div className="flex shrink-0 items-center gap-2">
-          {toolbarActions}
-          <InstallmentTableActions />
+          {toolbarActions && <MobileFeatureActions>{toolbarActions}</MobileFeatureActions>}
+          <span className="hidden md:contents"><InstallmentTableActions /></span>
         </div>
       </>}
       renderEmpty={() => (

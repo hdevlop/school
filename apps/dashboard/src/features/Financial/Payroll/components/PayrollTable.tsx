@@ -5,7 +5,9 @@ import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Banknote, CalendarDays, Clock, HandCoins, ReceiptText, Undo2 } from 'lucide-react';
-import { NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NStatCard, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
+import { StatCardSkeleton } from '@/shared/CardSkeletons';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import type { RowSelectionState } from '@tanstack/react-table';
@@ -14,11 +16,13 @@ import { isPayrollPeriodAfterHire } from '@sms/contracts';
 import { useDialog } from '@/shared/useDialog';
 import { usePayroll } from '@/features/Financial/Payroll/hooks/usePayroll';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { MobileFeatureActions } from '@/shared/FeatureActions';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
 import { payrollPeriods, shownPayrollPeriod } from '@/features/Financial/Payroll/config/payrollPeriods';
 import PayrollCard, { PayrollStaff, PayrollStatusBadge, PayrollTypeBadge, type PayrollRow } from './PayrollCard';
+import { PayrollCardSkeleton } from '@/shared/CardSkeletons';
 
 const calculateStaffPay = (member) => {
   if (member?.compensationMode === 'hourly') {
@@ -326,7 +330,7 @@ const PayrollTable = () => {
           boxes left room for one staff card. */}
       {isLoading ? (
         <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, index) => <NStatCardSkeleton key={index} />)}
+          {Array.from({ length: 4 }).map((_, index) => <StatCardSkeleton key={index} />)}
         </div>
       ) : hasFailedToLoad(loadError, tableRows) ? null : (
         <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
@@ -373,7 +377,7 @@ const PayrollTable = () => {
             const payTargets = Object.values(rowSelection).some(Boolean) ? selectedUnpaidStaffIds : allUnpaidIds;
             const payLabel = `${t('payroll.actions.pay')} (${payTargets.length})`;
             return (
-              <PermissionButton permission="update:payroll"
+              <MobileFeatureActions><PermissionButton permission="update:payroll"
                 disabled={payTargets.length === 0 || isPaying}
                 onClick={() => handlePaySelected(payTargets)}
                 aria-label={payLabel}
@@ -382,7 +386,7 @@ const PayrollTable = () => {
               >
                 <HandCoins className="h-4 w-4" aria-hidden="true" />
                 <span className="hidden lg:inline">{payLabel}</span>
-              </PermissionButton>
+              </PermissionButton></MobileFeatureActions>
             );
           })()
         }
@@ -396,6 +400,7 @@ const PayrollTable = () => {
         showAddButton={false}
         showViewToggle={false}
         defaultMode='table'
+        renderCardSkeleton={PayrollCardSkeleton}
         renderCard={({ data }: { data: PayrollRow }) => (
           <PayrollCard data={data} isPaying={isPaying} onPay={handlePayOne} onUnpay={handleUnpayOne} />
         )}

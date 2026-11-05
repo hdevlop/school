@@ -4,7 +4,8 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { NajmScroll, NButton, NEmptyState, NErrorState, NForbiddenState, NLoadingState, NPageHeader, NPageHeaderActions, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NajmScroll, NButton, NEmptyState, NErrorState, NForbiddenState, NLoadingState, NPageHeaderActions, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
 import { AlertTriangle, ArrowLeft, Bus, CalendarCheck, DollarSign, GraduationCap, Pencil, User } from 'lucide-react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { StudentProfileProps } from './types';

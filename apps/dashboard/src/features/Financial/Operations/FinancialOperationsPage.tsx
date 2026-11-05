@@ -5,7 +5,8 @@ import { PermissionButton } from '@/components/PermissionButton';
 import { useCallback, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { RowSelectionState } from '@tanstack/react-table';
-import { NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NEmptyState, NErrorState, NForbiddenState, NPageHeaderActions } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { toast } from 'sonner';
@@ -14,6 +15,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { MobileFeatureActions } from '@/shared/FeatureActions';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { getPendingChecksApi, updateCheckStatusApi, voidPaymentApi } from '@/services/paymentApi';
 import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
@@ -184,14 +186,14 @@ export default function FinancialOperationsPage() {
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
         headerSlot={
-          <PermissionButton permission="update:payments"
+          <MobileFeatureActions><PermissionButton permission="update:payments"
             disabled={selectedChecks.length === 0 || isBulkBusy || busyId !== null}
             onClick={advanceSelected}
             className="gap-2"
           >
             <Landmark className="h-4 w-4" />
             {t(bulkLabelKey)} ({selectedChecks.length})
-          </PermissionButton>
+          </PermissionButton></MobileFeatureActions>
         }
         filters={filters}
         loading={isLoading}

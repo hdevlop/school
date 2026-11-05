@@ -4,10 +4,12 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 
 import RosterHeader from './RosterHeader';
+import RosterMobileSubmit from './RosterMobileSubmit';
 import RosterPrintMenu from './RosterPrintMenu';
 import RosterFilters from './RosterFilters';
 import { RosterPageHeaderSkeleton, ROSTER_LOADING_TABLE_HEADER } from './RosterLoading';
@@ -29,6 +31,7 @@ import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import { useViewingYearDate, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useSchoolFormat, useSchoolToday } from '@/hooks/useSchoolFormat';
+import styles from './StudentAttendanceTable.module.css';
 
 type SectionTeacherAssignment = {
   id: string;
@@ -203,13 +206,8 @@ function StudentAttendanceTableForYear() {
         }
       : null,
   });
-  const { resetDraft } = roster;
-
-  useEffect(() => {
-    resetDraft();
-  }, [selectedSectionId, selectedAssignmentId, resetDraft]);
-
-  const columns = useStudentRosterColumns({ getStatus: roster.getStatus, setStatus: roster.setStatus, readOnly: !canEdit });
+  const canMark = canEdit && !isSubmittingRoster && (isDailyMode || isAllClasses || !!selectedAssignment);
+  const columns = useStudentRosterColumns({ getStatus: roster.getStatus, setStatus: roster.setStatus, readOnly: !canMark });
 
   // Below `NTable`'s card breakpoint the nine-column register is unusable — it
   // compresses rather than scrolls — so the same roster row is handed a card
@@ -220,7 +218,7 @@ function StudentAttendanceTableForYear() {
     (props: any) => (
       <RosterCard
         {...props}
-        readOnly={!canEdit}
+        readOnly={!canMark}
         getStatus={roster.getStatus}
         setStatus={roster.setStatus}
         detail={[
@@ -229,7 +227,7 @@ function StudentAttendanceTableForYear() {
         ].filter(Boolean).join(' | ')}
       />
     ),
-    [roster.getStatus, roster.setStatus, canEdit],
+    [roster.getStatus, roster.setStatus, canMark],
   );
   const visibleStudents = useMemo(
     () => filterRoster(filteredStudents, { search, status }, roster.getStatus),
@@ -368,8 +366,8 @@ function StudentAttendanceTableForYear() {
     ],
   );
   const isSubmitting = isSubmittingRoster || (!isDailyMode && isAssignmentsLoading);
-  const canSubmit = canEdit && (isAllClasses || (!!selectedSectionId && (isDailyMode || !!selectedAssignmentId)));
-  const submitTitle = isAllClasses
+  const canSubmit = canEdit && (roster.hasChanges || isAllClasses || (!!selectedSectionId && (isDailyMode || !!selectedAssignmentId)));
+  const submitTitle = roster.hasChanges || isAllClasses
     ? t('attendance.roster.submit')
     : !selectedSectionId
       ? t('attendance.roster.selectSection')
@@ -386,7 +384,7 @@ function StudentAttendanceTableForYear() {
   const isRosterLoading = isStudentsLoading || isSectionsLoading || isClassesLoading || isAttendanceLoading;
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-2">
+    <div className={`${styles.screen} flex h-full min-h-0 flex-col gap-2`}>
       {isRosterLoading ? <RosterPageHeaderSkeleton /> : <NPageHeader
         icon={FEATURE_ICONS.studentAttendance}
         title={t('navigation.studentAttendance')}
@@ -405,6 +403,7 @@ function StudentAttendanceTableForYear() {
       >
         <RosterHeader
           loading={isRosterLoading}
+          showMobileSubmit={false}
           print={(
             <RosterPrintMenu
               counts={roster.stats}
@@ -416,7 +415,9 @@ function StudentAttendanceTableForYear() {
           isSubmitting={isSubmitting}
           stats={roster.stats}
           onSubmit={roster.handleSubmit}
-          canSubmit={canSubmit && filteredStudents.length > 0 && !isStudentsLoading && !isAttendanceLoading && !attendanceError}
+          onMarkAllPresent={() => roster.markAllAs('present')}
+          canMarkAllPresent={canMark && filteredStudents.length > 0 && !isRosterLoading && !attendanceError && !studentsError}
+          canSubmit={canSubmit && !isRosterLoading && !attendanceError && !studentsError}
           submitTitle={submitTitle}
         />
       </RosterFilters>
@@ -425,6 +426,7 @@ function StudentAttendanceTableForYear() {
         showExportButton={false} showPrintButton={false}
         responsiveSkeleton
         data={visibleStudents}
+        getRowId={(student) => student.id}
         isFilteredEmpty={filteredStudents.length > 0 && visibleStudents.length === 0}
         columns={columns}
         loading={isRosterLoading}
@@ -456,6 +458,15 @@ function StudentAttendanceTableForYear() {
           />
         )}
       />
+      {canEdit && <RosterMobileSubmit
+        count={roster.submissionCount}
+        onSubmit={roster.handleSubmit}
+        onMarkAllPresent={() => roster.markAllAs('present')}
+        canSubmit={canSubmit && !isRosterLoading && !attendanceError && !studentsError}
+        canMarkAllPresent={canMark && filteredStudents.length > 0 && !isRosterLoading && !attendanceError && !studentsError}
+        isSubmitting={isSubmitting}
+        loading={isRosterLoading}
+      />}
     </div>
   );
 }

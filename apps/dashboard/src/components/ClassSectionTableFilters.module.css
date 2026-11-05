@@ -1,0 +1,39 @@
+@media (width < 768px) {
+  .header {
+    gap: 0.5rem;
+  }
+
+  /* Share a row with Najm's existing mobile action buttons. */
+  .header :global([data-ntable-mobile-toolbar]),
+  .header > div:has(> :global([data-class-section-search])) {
+    display: contents;
+  }
+
+  .header :global([data-ntable-mobile-primary-filter]),
+  .header :global([data-class-section-filter]) {
+    min-width: 0;
+    flex: 1 1 0%;
+  }
+
+  .header :global([data-class-section-filter]) {
+    order: 1;
+  }
+
+  .header :global([data-ntable-mobile-toolbar]) > :not(:global([data-ntable-mobile-primary-filter])) {
+    order: 2;
+  }
+
+  .header :global([data-class-section-search]) {
+    order: 3;
+    flex-basis: 100%;
+  }
+
+  .header > :global([data-ntable-controls]) {
+    display: none;
+  }
+
+  /* Every filter is in the row, so no filter button follows the load. */
+  .header :global([data-ntable-filter-menu-skeleton]) {
+    display: none;
+  }
+}

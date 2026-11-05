@@ -2,7 +2,8 @@
 
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
@@ -10,6 +11,7 @@ import { Eye, EyeOff, Megaphone, Pencil, Plus, Trash2 } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import AnnouncementForm from './AnnouncementForm';
 import AnnouncementCard from './AnnouncementCard';
+import { AnnouncementCardSkeleton } from '@/shared/CardSkeletons';
 import { useAnnouncements } from '../hooks/useAnnouncements';
 import { useTranslation } from 'najm-i18n/react';
 import { useAnnouncementsTableColumns } from '../hooks/useAnnouncementsTableColumns';
@@ -159,6 +161,7 @@ function AnnouncementsTable() {
             : <NErrorState surface="panel" />
         )}
         renderCard={AnnouncementCard}
+        renderCardSkeleton={AnnouncementCardSkeleton}
         addButtonText={t('announcements.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState

@@ -3,7 +3,8 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 
 import { PermissionButton } from '@/components/PermissionButton';
-import { NButton, NPageHeader, NPageHeaderActions, NTabs, NLoadingState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NButton, NPageHeaderActions, NTabs, NLoadingState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 
 import React, { useCallback, useMemo, useState } from 'react';
@@ -40,6 +41,7 @@ import { useEvents } from '@/features/Events/hooks/useEvents';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat, useSchoolToday } from '@/hooks/useSchoolFormat';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { MobileFeatureActions } from '@/shared/FeatureActions';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useViewingYearCalendar, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { dateWithinYear } from '@/features/AcademicYears/utils/viewingYear';
@@ -379,7 +381,7 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
               ]}
             />
             {canManage && (
-              <>
+              <MobileFeatureActions>
                 <PermissionButton permission="create:events"
                   size="sm"
                   onClick={() => openEventDialog()}
@@ -401,7 +403,7 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
                   <Bell className="size-3.5" aria-hidden />
                   <span className="max-sm:hidden">{t('calendar.addAnnouncement')}</span>
                 </PermissionButton>
-              </>
+              </MobileFeatureActions>
             )}
           </div>
         </div>

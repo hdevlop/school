@@ -5,15 +5,16 @@ export function RosterPageHeaderSkeleton() {
   return (
     <div aria-hidden="true" className="flex min-h-14 shrink-0 items-center justify-between gap-3 rounded-lg border border-border bg-card px-3 py-2 lg:px-4">
       <div className="flex min-w-0 items-center gap-3">
-        <NSkeleton className="hidden size-8 shrink-0 sm:block" />
+        <NSkeleton className="size-8 shrink-0" />
         <div className="space-y-2">
           <NSkeleton className="h-4 w-24" />
           <NSkeleton className="h-3 w-20" />
         </div>
       </div>
       <div className="flex shrink-0 items-center gap-2">
-        <NSkeleton className="hidden h-8 w-28 sm:block" />
-        {Array.from({ length: 4 }, (_, index) => <NSkeleton key={index} className="size-8" />)}
+        <NSkeleton className="hidden h-8 w-28 md:block" />
+        <NSkeleton className="size-11 md:hidden" />
+        {Array.from({ length: 4 }, (_, index) => <NSkeleton key={index} className="hidden size-8 md:block" />)}
       </div>
     </div>
   );

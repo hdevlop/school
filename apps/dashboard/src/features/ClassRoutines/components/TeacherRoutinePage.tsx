@@ -3,7 +3,8 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 
 import { Clock, Layers3 } from 'lucide-react';
-import { NajmScroll, NEmptyState, NErrorState, NPageHeader, NPageHeaderActions } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NajmScroll, NEmptyState, NErrorState, NPageHeaderActions } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useTeacherOverview } from '@/features/Dashboard/hooks/useTeacherDashboard';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';

@@ -5,6 +5,7 @@ import { NAvatar, NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { avatarVersion } from '@/lib/avatarVersion';
 import { roleLabel } from '@/shared/roleLabel';
+import { CompactPersonCard, CompactTag, CompactValue, useCompactPersonCard } from '@/shared/CompactPersonCard';
 
 /**
  * Compact enough for five per row: who the account is, how it signs in, and
@@ -12,9 +13,24 @@ import { roleLabel } from '@/shared/roleLabel';
  */
 const UserCard = ({ data: user }) => {
   const { t } = useTranslation();
+  const compact = useCompactPersonCard();
   // An account signs in with its email, or with its phone when it has none.
   const contact = user.email || user.phone;
   const ContactIcon = user.email ? Mail : Phone;
+
+  if (compact) {
+    return (
+      <CompactPersonCard
+        avatar={<NAvatar src={user.image} fallback={user.name} size="md" version={avatarVersion(user.image, user?.updatedAt)} />}
+        name={user.name}
+        details={[
+          user.role && <CompactTag>{roleLabel(user.role, t)}</CompactTag>,
+          contact && <CompactValue>{contact}</CompactValue>,
+        ]}
+        trailing={<NBadge status={user.status} look="minimal" className="shrink-0 text-xs" />}
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col">

@@ -5,13 +5,15 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useEffect, useMemo, useState } from 'react';
 import { BookOpen, Clock3, Plus, Printer, Settings, Trash2, UserRound } from 'lucide-react';
 import { toast } from 'sonner';
-import { ComboboxInput, NajmScroll, NButton, NEmptyState, NFilterBar, NPageHeader, NPageHeaderActions, NSheet, NSkeleton, SelectInput } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { ComboboxInput, NajmScroll, NButton, NEmptyState, NFilterBar, NPageHeaderActions, NSheet, NSkeleton, SelectInput } from 'najm-kit';
 import { useAuth } from 'najm-auth/client/react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useActiveAcademicYear, usePublicSettings } from '@/features/Settings/hooks/useSettings';
 import { useViewingAcademicYear, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { MobileFeatureActions } from '@/shared/FeatureActions';
 import ClassRoutineSkeleton from './ClassRoutineSkeleton';
 import RoutineClassSettings from './RoutineClassSettings';
 import RoutineEntryForm from './RoutineEntryForm';
@@ -307,7 +309,7 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
             </div>}
           </>
         )}
-        <div className="flex shrink-0 justify-end gap-2 empty:hidden md:ms-auto">
+        <MobileFeatureActions><div className="flex shrink-0 justify-end gap-2 empty:hidden md:ms-auto">
           <NButton variant="outline" className="h-10 w-10 border-border p-0 text-foreground" disabled={busy || printBusy || !printableRoutines.length} onClick={() => printRoutines(printableRoutines)} aria-label={t('classRoutines.ui.actions.print')} title={t('classRoutines.ui.actions.print')}>
             <Printer className="h-4 w-4 text-foreground" />
           </NButton>
@@ -327,7 +329,7 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
           <NButton variant="outline" className="h-10 w-10 border-border p-0 text-foreground" disabled={busy} onClick={openClassSettings} aria-label={t('classRoutines.ui.classSelection.title')} title={t('classRoutines.ui.classSelection.title')} aria-haspopup="dialog" aria-expanded={classSelection !== null}>
             <Settings className="h-4 w-4 text-foreground" />
           </NButton>
-        </div>
+        </div></MobileFeatureActions>
       </NFilterBar>
 
       {hoursDiffer && <p role="status" className="shrink-0 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-100">{t('classRoutines.ui.schoolHoursMismatch')}</p>}

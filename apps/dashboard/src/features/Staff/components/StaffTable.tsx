@@ -3,7 +3,9 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useMemo } from 'react';
 import { Banknote, Briefcase, BriefcaseBusiness, Calendar, Eye, Hash, IdCard, MapPinned, Pencil, Phone, Trash2, UserRound, Wallet, Plus } from 'lucide-react';
-import { Badge, NAvatar, NFullscreenToggle, NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { Badge, NAvatar, NFullscreenToggle, NPageHeaderActions, NStatCard, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { StatCardSkeleton } from '@/shared/CardSkeletons';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { TablePrintButton } from '@/components/TablePrintButton';
@@ -16,6 +18,7 @@ import { useStaffRoles } from '../hooks/useStaffRoles';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import StaffForm from './StaffForm';
 import StaffCard from './StaffCard';
+import { StaffCardSkeleton } from '@/shared/PersonCardSkeleton';
 import ManageScopesDialog from './ManageScopesDialog';
 import ManageRolesDialog from './ManageRolesDialog';
 import { formatAssignments } from '../utils/staffAssignments';
@@ -377,7 +380,7 @@ const StaffTable = () => {
           the table below shows why. */}
       {isStaffLoading ? (
         <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, index) => <NStatCardSkeleton key={index} />)}
+          {Array.from({ length: 4 }).map((_, index) => <StatCardSkeleton key={index} />)}
         </div>
       ) : hasFailedToLoad(isError ? error : null, rows) ? null : (
         <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
@@ -428,6 +431,7 @@ const StaffTable = () => {
         )}
         showViewToggle={true}
         renderCard={StaffCard}
+        renderCardSkeleton={StaffCardSkeleton}
         addButtonText={t('staff.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState

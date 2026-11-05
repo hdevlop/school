@@ -7,6 +7,7 @@ import { ChevronRight, Loader2, LockKeyhole, Menu } from 'lucide-react';
 import { NAvatar, NButton, cn, useNajmFormat, useNSidebar } from 'najm-kit';
 import { useAuth, usePermissions } from 'najm-auth/client/react';
 import { useTranslation } from 'najm-i18n/react';
+import { HeaderActionsMenu } from '@/components/HeaderActionsMenu';
 import { NotificationsMenu } from '@/features/Notifications';
 import LanguageSwitcher from '@/features/Settings/components/LanguageSwitcher';
 import { PAGE_ACCESS } from '@/shared/pageAccess';
@@ -132,7 +133,9 @@ export default function MobileHome() {
             </NButton>
             <h1 className={styles.greeting}>{t(greeting)} <span aria-hidden>👋</span></h1>
           </div>
-          <div className={styles.headerActions}><LanguageSwitcher /><NotificationsMenu /></div>
+          <div className={styles.headerActions}>
+            <HeaderActionsMenu><LanguageSwitcher /><NotificationsMenu /></HeaderActionsMenu>
+          </div>
         </header>
 
         {familyProfile ? (

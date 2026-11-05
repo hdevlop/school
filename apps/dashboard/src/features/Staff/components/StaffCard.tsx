@@ -9,6 +9,7 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { currentAssignmentLabels, formatAssignments } from '../utils/staffAssignments';
 import { avatarVersion } from '@/lib/avatarVersion';
 import { PersonCard } from '@/shared/PersonCard';
+import { CompactPersonCard, CompactTag, CompactValue, useCompactPersonCard } from '@/shared/CompactPersonCard';
 
 const resolveRoleLabel = (staff, language, t) => {
   if (!staff?.role) return '-';
@@ -46,6 +47,32 @@ const StaffCard = ({ data, details = false }) => {
   const { t, language } = useTranslation();
   const { majorMoney } = useSchoolFormat();
   const staff = data;
+  // The details dialog always shows the full card.
+  const compact = useCompactPersonCard() && !details;
+
+  if (compact) {
+    return (
+      <CompactPersonCard
+        avatar={(
+          <NAvatar
+            src={staff?.image}
+            fallbackSrc={getStaffAvatar(staff?.role, staff?.gender)}
+            fallback={staff?.name}
+            size="md"
+            version={avatarVersion(staff?.image, staff?.updatedAt)}
+          />
+        )}
+        name={staff?.name}
+        details={[
+          <CompactTag key="role">{resolveRoleLabel(staff, language, t)}</CompactTag>,
+          staff?.phone && <CompactValue>{staff.phone}</CompactValue>,
+        ]}
+        trailing={staff?.loginStatus === 'pending' && (
+          <NBadge className="shrink-0 bg-amber-100 font-medium text-amber-900 ring-1 ring-inset ring-amber-300 dark:bg-amber-950 dark:text-amber-200 dark:ring-amber-700">{t('staff.invitation.accessPending')}</NBadge>
+        )}
+      />
+    );
+  }
 
   // A contact fills the card's width: wrapped in the details view, cut there on the card.
   const contactRow = details

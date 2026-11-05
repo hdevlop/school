@@ -3,7 +3,8 @@
 import { useLayoutEffect } from 'react';
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, useTableStore } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, useTableStore } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useAcademicTableActions } from '@/features/Classes/hooks/useAcademicTableActions';
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
@@ -14,6 +15,7 @@ import ClassForm from './ClassForm';
 import { useClasses } from '../hooks/useClasses';
 import { useTranslation } from 'najm-i18n/react';
 import ClassCard from './ClassCard';
+import { ClassCardSkeleton } from '@/shared/CardSkeletons';
 import { useClassesTableColumns } from '../hooks/useClassesTableColumns';
 import { useClassesTableFilters } from '../hooks/useClassesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -126,6 +128,7 @@ function ClassesTable() {
             : <NErrorState surface="panel" />
         )}
         renderCard={ClassCard}
+        renderCardSkeleton={ClassCardSkeleton}
         addButtonText={t('classes.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState

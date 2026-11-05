@@ -3,7 +3,8 @@
 import { PermissionButton } from '@/components/PermissionButton';
 import { BulkDeleteDialog } from '@/components/BulkDeleteDialog';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, useTableStore, useResolvedToolbarLabels, type ContextMenuItem } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, useMediaQuery, useTableStore, useResolvedToolbarLabels, type ContextMenuItem } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { TablePrintButton } from '@/components/TablePrintButton';
@@ -12,6 +13,7 @@ import FullStudentForm from './FullStudentForm';
 import { useStudents } from '../hooks/useStudents';
 import { useTranslation } from 'najm-i18n/react';
 import StudentCard from './StudentCard';
+import { StudentCardSkeleton } from '@/shared/PersonCardSkeleton';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes';
 import { getAvailableFeeTypes } from '@/features/Financial/FeeTypes/config/feeTypeOptions';
@@ -43,6 +45,7 @@ import { focusTableForKeyboard } from '@/shared/focusTableForKeyboard';
 
 import { useDisableStudent } from '../hooks/useDisableStudent';
 import { getStudentRowClassName, isStudentDisabled } from '../config/studentActivity';
+import { ClassSectionTableFilters, classSectionTableHeader, PHONE_INLINE_FILTERS } from '@/components/ClassSectionTableFilters';
 
 interface StudentImportProgress {
   phase: 'checking' | 'importing' | 'refreshing';
@@ -65,6 +68,7 @@ function StudentsImportButton() {
       type="button"
       variant="outline"
       size="sm"
+      className="hidden md:inline-flex"
       onClick={() => importAction.onSelect?.()}
     >
       <Upload aria-hidden="true" className="h-4 w-4" />
@@ -109,12 +113,17 @@ function StudentsTable() {
     isUpdating,
     isDeleting,
   } = useStudents();
-  const { filters, filteredStudents } = useStudentsTableFilters(students);
+  const { filters, filteredStudents, scopeFilters, searchFilter, viewFilter } = useStudentsTableFilters(students);
+  const sectionFilter = scopeFilters.find(filter => filter.name === 'sectionScope');
+  const isPhone = useMediaQuery('(max-width: 767px)');
+  const tableFilters = useMemo(() => isPhone
+    ? filters.filter(filter => !PHONE_INLINE_FILTERS.includes(filter.name))
+    : filters, [filters, isPhone]);
   const printTable = useRef<Table<any> | null>(null);
-  const printDetails = filters.filter(filter => ['classScope', 'sectionScope'].includes(filter.name) && filter.value)
+  const printDetails = scopeFilters.filter(filter => filter.value)
     .map(filter => ({
       label: filter.name === 'classScope' ? t('students.table.class') : t('students.table.section'),
-      value: ('options' in filter ? filter.options?.find(option => option.value === filter.value)?.label : '') ?? '',
+      value: filter.options.find(option => option.value === filter.value)?.label ?? '',
     }));
   const printStudents = useStudentsPrint({ title, academicYear: viewingYear ?? activeYear, details: printDetails });
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
@@ -319,7 +328,10 @@ function StudentsTable() {
       <NPageHeader
         icon={FEATURE_ICONS.students}
         title={title}
-        subtitle={isCountUnknown(error, students, isStudentsLoading) ? undefined : t('students.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, students, isStudentsLoading) ? undefined : [
+          ...printDetails.map(detail => detail.value),
+          t('students.subtitle.count', { count: total }),
+        ].filter(Boolean).join(' · ')}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -332,8 +344,8 @@ function StudentsTable() {
         permissionResource="students"
         className='min-h-0 flex-1'
         classNames={{
-          cards: 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5',
-          header: isStudentListEmpty ? 'hidden' : undefined,
+          cards: 'grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-5',
+          header: isStudentListEmpty ? 'hidden' : classSectionTableHeader,
           tableHeader: '[&_th:has(.student-name-column)]:w-[18%] [&_th:has(.student-arabic-name-column)]:w-[14%] [&_th:has(.student-email-column)]:w-[18%] [&_th:has(.student-class-column)]:w-[7%] [&_th:has(.student-section-column)]:w-[8%] [&_th:has(.student-gender-column)]:w-[8%] [&_th:last-child]:w-12',
         }}
         data={filteredStudents}
@@ -351,7 +363,8 @@ function StudentsTable() {
           ] : []),
         ] }}
         columns={columns}
-        filters={filters}
+        filters={tableFilters}
+        inlinePhoneFilters={false}
         isFilteredEmpty={filteredStudents.length === 0 && !!students?.length}
         onCreate={isFamily ? undefined : handleAddClick}
         onView={handleView}
@@ -364,7 +377,10 @@ function StudentsTable() {
         onRowSelectionChange={setRowSelection}
         dataActions={true}
         toolbarActionDisplay='settings'
-        headerSlot={<TablePrintButton loading={isStudentsLoading} tableRef={printTable} />}
+        headerSlot={<>
+          <ClassSectionTableFilters sectionFilter={sectionFilter} viewFilter={viewFilter} searchFilter={searchFilter} />
+          <TablePrintButton loading={isStudentsLoading} tableRef={printTable} />
+        </>}
         showImportButton={canCreate}
         onDataChange={canCreate ? handleImport : undefined}
         toolbarLabels={toolbarLabels}
@@ -377,6 +393,7 @@ function StudentsTable() {
         )}
         loadingText={t('common.loading')}
         renderCard={StudentCard}
+        renderCardSkeleton={StudentCardSkeleton}
         addButtonText={t('students.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState

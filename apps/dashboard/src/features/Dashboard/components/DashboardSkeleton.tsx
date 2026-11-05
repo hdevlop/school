@@ -4,7 +4,8 @@ import type { ReactNode } from 'react';
 import { AlertCircle, CalendarDays, ClipboardCheck, ClipboardList, ShieldAlert, UserCheck, UserRound, Users, Zap, type LucideIcon } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
 import { useTranslation } from 'najm-i18n/react';
-import { NajmScroll, NCard, NPageHeader, NPageHeaderActions, NSkeleton, NSkeletonCalendar, NSkeletonChart, NSkeletonDonut, NSkeletonEventList, NStatCardSkeleton, cn } from 'najm-kit';
+import { NajmScroll, NCard, NPageHeader, NPageHeaderActions, NSkeleton, NSkeletonCalendar, NSkeletonChart, NSkeletonDonut, NSkeletonEventList, cn } from 'najm-kit';
+import { StatCardSkeleton } from '@/shared/CardSkeletons';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { canReadFinanceDashboard, schoolDashboardCards, usesFloorManagerDashboard, usesRegistrarDashboard, usesSecretaryDashboard, usesSupervisorDashboard, usesTeacherDashboard } from '../config/dashboardAudience';
@@ -56,7 +57,7 @@ function StaffDashboardSkeleton({ role }: { role: 'supervisor' | 'floorManager' 
       <NajmScroll axis="y" className="min-h-0 flex-1">
         <div className="flex min-h-full flex-col gap-3 pb-1 xl:fit:h-full">
           <div className={cn('grid shrink-0 grid-cols-2 gap-2 lg:gap-3', kpiColumns)}>
-            {Array.from({ length: kpiCount }, (_, index) => <NStatCardSkeleton key={index} />)}
+            {Array.from({ length: kpiCount }, (_, index) => <StatCardSkeleton key={index} />)}
           </div>
 
           <DashboardOverviewRow>
@@ -149,7 +150,7 @@ function RegistrarDashboardSkeleton() {
         <div className="flex min-h-full flex-col gap-3 pb-1 xl:fit:h-full">
           {showsGrades && (
             <div className="grid shrink-0 grid-cols-2 gap-2 md:grid-cols-3 lg:gap-3 xl:grid-cols-6">
-              {Array.from({ length: 6 }, (_, index) => <NStatCardSkeleton key={index} />)}
+              {Array.from({ length: 6 }, (_, index) => <StatCardSkeleton key={index} />)}
             </div>
           )}
 
@@ -228,7 +229,7 @@ export default function DashboardSkeleton() {
 
       {(isTeacher || showFinance) && (
         <div className="grid shrink-0 grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
-          {Array.from({ length: 6 }, (_, index) => <NStatCardSkeleton key={index} />)}
+          {Array.from({ length: 6 }, (_, index) => <StatCardSkeleton key={index} />)}
         </div>
       )}
 

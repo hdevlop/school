@@ -2,7 +2,8 @@
 
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useAcademicTableActions } from '@/features/Classes/hooks/useAcademicTableActions';
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
@@ -14,6 +15,7 @@ import SubjectForm from './SubjectForm';
 import { useSubjects } from '../hooks/useSubjects';
 import { useTranslation } from 'najm-i18n/react';
 import SubjectCard from './SubjectCard';
+import { SubjectCardSkeleton } from '@/shared/CardSkeletons';
 import { useSubjectsTableColumns } from '../hooks/useSubjectsTableColumns';
 import { useSubjectsTableFilters } from '../hooks/useSubjectsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -112,6 +114,7 @@ function SubjectsTable() {
             : <NErrorState surface="panel" />
         )}
         renderCard={SubjectCard}
+        renderCardSkeleton={SubjectCardSkeleton}
         addButtonText={t('subjects.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState

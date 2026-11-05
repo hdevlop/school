@@ -6,12 +6,14 @@ import { useMemo } from 'react';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import { Plus } from 'lucide-react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, useMediaQuery } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, useMediaQuery } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import BehaviorRewardCard from './BehaviorRewardCard';
+import { BehaviorRewardCardSkeleton } from '@/shared/CardSkeletons';
 import BehaviorRewardDetails from './BehaviorRewardDetails';
 import BehaviorRewardForm from './BehaviorRewardForm';
 import { useBehaviorRewards } from '../hooks/useBehaviorRewards';
@@ -125,6 +127,7 @@ const BehaviorRewardsTable = () => {
             : <NErrorState surface="panel" />
         )}
         renderCard={BehaviorRewardCard}
+        renderCardSkeleton={BehaviorRewardCardSkeleton}
         addButtonText={t('behaviorRewards.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState

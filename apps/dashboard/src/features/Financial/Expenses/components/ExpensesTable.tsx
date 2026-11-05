@@ -2,7 +2,8 @@
 
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
@@ -16,6 +17,7 @@ import ExpenseForm from './ExpenseForm';
 import { useExpenses } from '../hooks/useExpenses';
 import { useTranslation } from 'najm-i18n/react';
 import ExpenseCard from './ExpenseCard';
+import { ExpenseCardSkeleton } from '@/shared/CardSkeletons';
 import { useExpensesTableColumns } from '../hooks/useExpensesTableColumns';
 import { useExpensesTableFilters } from '../hooks/useExpensesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -206,6 +208,7 @@ function ExpensesTable() {
             : <NErrorState surface="panel" />
         )}
         renderCard={ExpenseCard}
+        renderCardSkeleton={ExpenseCardSkeleton}
         addButtonText={t('expenses.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState

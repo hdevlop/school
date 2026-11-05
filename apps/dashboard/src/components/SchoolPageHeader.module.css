@@ -1,0 +1,17 @@
+@media (width < 768px) {
+  .header :global([data-slot='page-header-main']) {
+    grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+    gap: 0.25rem;
+  }
+
+  .header :global([data-slot='page-header-identity']) {
+    justify-self: stretch;
+    text-align: start;
+  }
+
+  .header :global([data-slot='page-header-identity']) p {
+    display: block;
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+}

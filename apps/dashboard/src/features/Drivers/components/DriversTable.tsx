@@ -2,7 +2,8 @@
 
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Plus } from 'lucide-react';
@@ -10,6 +11,7 @@ import DriverForm from './DriverForm';
 import { useDrivers } from '../hooks/useDrivers';
 import { useTranslation } from 'najm-i18n/react';
 import DriverCard from './DriverCard';
+import { DriverCardSkeleton } from '@/shared/PersonCardSkeleton';
 import { useDriversTableColumns } from '../hooks/useDriversTableColumns';
 import { useDriversTableFilters } from '../hooks/useDriversTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -141,6 +143,7 @@ function DriversTable() {
         )}
         loadingText={t('common.loading')}
         renderCard={DriverCard}
+        renderCardSkeleton={DriverCardSkeleton}
         addButtonText={t('drivers.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState

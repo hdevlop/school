@@ -10,7 +10,8 @@
  * refused `pop` as handled, see below.
  */
 
-import { useMemo } from 'react';
+import { createElement, useMemo } from 'react';
+import { InlineFeatureActions } from './FeatureActions';
 // eslint-disable-next-line no-restricted-imports -- the one place that wraps it
 import { useDialog as useKitDialog, type DialogApi, type PushDialogOptions, type DeleteDialogOptions } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
@@ -22,6 +23,7 @@ export function useDialog(): DialogApi {
   return useMemo(() => {
     const withLabels = (options: PushDialogOptions): PushDialogOptions => ({
       ...options,
+      children: createElement(InlineFeatureActions, null, options.children),
       primaryButton: { text: t('common.confirm'), loadingText: t('common.processing'), ...options.primaryButton },
       secondaryButton: { text: t('common.cancel'), loadingText: t('common.processing'), ...options.secondaryButton },
     });

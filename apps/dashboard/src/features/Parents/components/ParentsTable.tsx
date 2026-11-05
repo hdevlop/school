@@ -2,10 +2,12 @@
 
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, useMediaQuery } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { TablePrintButton } from '@/components/TablePrintButton';
+import { ClassSectionTableFilters, classSectionTableHeader, PHONE_INLINE_FILTERS } from '@/components/ClassSectionTableFilters';
 import { Plus } from 'lucide-react';
 import React, { useMemo } from 'react';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
@@ -14,6 +16,7 @@ import ParentForm from './SimpleParentForm';
 import { useParents } from '../hooks/useParents';
 import { useTranslation } from 'najm-i18n/react';
 import ParentCard from './ParentCard';
+import { ParentCardSkeleton } from '@/shared/PersonCardSkeleton';
 import { useParentsTableColumns } from '../hooks/useParentsTableColumns';
 import { useParentsTableFilters } from '../hooks/useParentsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -41,9 +44,16 @@ function ParentsTable() {
   const queryClient = useQueryClient();
   const columns = useParentsTableColumns();
   const scope = useClassSectionTableScope();
-  const parentFilters = useParentsTableFilters();
-  const rawFilters = useMemo(() => [...scope.filters, ...parentFilters.filters], [scope.filters, parentFilters.filters]);
-  const hasSelection = scope.hasSelection || parentFilters.hasSelection;
+  const { filters: parentFilters, searchFilter, viewFilter, matches: matchesParent, hasSelection: hasParentSelection } = useParentsTableFilters();
+  const isPhone = useMediaQuery('(max-width: 767px)');
+  const rawFilters = useMemo(() => [...scope.filters, ...parentFilters], [scope.filters, parentFilters]);
+  // Phones show Class, Section and the view filter in one row, with no filter button;
+  // the email column filter stays on wider screens, as search covers name and CIN.
+  const tableFilters = useMemo(() => isPhone
+    ? rawFilters.filter(filter => ![...PHONE_INLINE_FILTERS, 'email'].includes(filter.name))
+    : rawFilters, [rawFilters, isPhone]);
+  const sectionFilter = scope.filters.find(filter => filter.name === 'sectionScope');
+  const hasSelection = scope.hasSelection || hasParentSelection;
 
   const {
     parents,
@@ -58,8 +68,8 @@ function ParentsTable() {
   } = useParents();
   const filteredParents = useMemo(() => (parents || []).filter((parent) =>
     matchesAnyChild(parent.childPlacements, scope.classId, scope.sectionId)
-      && parentFilters.matches(parent)).sort(compareParentActivity),
-  [parents, scope.classId, scope.sectionId, parentFilters.matches]);
+      && matchesParent(parent)).sort(compareParentActivity),
+  [parents, scope.classId, scope.sectionId, matchesParent]);
 
   const { openDialog, confirmDelete } = useDialog();
 
@@ -143,7 +153,11 @@ function ParentsTable() {
       <NPageHeader
         icon={FEATURE_ICONS.parents}
         title={t('navigation.parents')}
-        subtitle={isCountUnknown(error, parents, isParentsLoading) ? undefined : t('parents.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, parents, isParentsLoading) ? undefined : [
+          ...scope.filters.filter(filter => filter.value)
+            .map(filter => filter.options.find(option => option.value === filter.value)?.label),
+          t('parents.subtitle.count', { count: total }),
+        ].filter(Boolean).join(' · ')}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -155,12 +169,17 @@ function ParentsTable() {
         permissionResource="parents"
         dataActions
         toolbarActionDisplay="settings"
-        headerSlot={<TablePrintButton loading={isParentsLoading} />}
+        headerSlot={<>
+          <ClassSectionTableFilters sectionFilter={sectionFilter} viewFilter={viewFilter} searchFilter={searchFilter} />
+          <TablePrintButton loading={isParentsLoading} />
+        </>}
+        classNames={{ header: classSectionTableHeader }}
         data={filteredParents}
         isFilteredEmpty={filteredParents.length === 0 && !!parents?.length}
         getRowId={(parent) => parent.id}
         columns={columns}
-        filters={rawFilters}
+        filters={tableFilters}
+        inlinePhoneFilters={false}
         onCreate={handleAddClick}
         onView={handleView}
         onEdit={handleEdit}
@@ -178,6 +197,7 @@ function ParentsTable() {
         )}
         loadingText={t('common.loading')}
         renderCard={ParentCard}
+        renderCardSkeleton={ParentCardSkeleton}
         getRowClassName={getParentRowClassName}
         addButtonText={t('parents.dialogs.createButton')}
         renderEmpty={() => (

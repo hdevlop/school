@@ -10,10 +10,12 @@ import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { avatarVersion } from '@/lib/avatarVersion';
 import { PersonCard } from '@/shared/PersonCard';
+import { CompactPersonCard, CompactTag, CompactValue, useCompactPersonCard } from '@/shared/CompactPersonCard';
 
 const TeacherCard = ({ data }) => {
    const { t } = useTranslation();
    const router = useRouter();
+   const compact = useCompactPersonCard();
    const teacher = data;
    const openTeacher = () => router.push(`/teachers/${teacher.id}`);
 
@@ -32,19 +34,40 @@ const TeacherCard = ({ data }) => {
       return uniqueClassIds.map(id => getClassName(id)).join(', ');
    };
 
+   const cardProps = {
+      role: 'link',
+      tabIndex: 0,
+      'aria-label': teacher.name,
+      onClick: openTeacher,
+      onKeyDown: (event: React.KeyboardEvent) => {
+         if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openTeacher();
+         }
+      },
+      className: 'cursor-pointer transition-all hover:bg-primary/[0.035] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
+   };
+
+   // Phones: specialization and classes, or the phone for a teacher with no classes yet.
+   if (compact) {
+      const classNames = getAllClasses();
+      return (
+         <CompactPersonCard
+            {...cardProps}
+            avatar={<NAvatar src={teacher?.image} fallback={teacher.name} size="md" version={avatarVersion(teacher?.image, teacher?.updatedAt)} />}
+            name={teacher.name}
+            details={[
+               teacher.specialization && <CompactTag>{teacher.specialization}</CompactTag>,
+               classNames !== '-' ? <span className="min-w-0 truncate">{classNames}</span>
+                  : teacher.phone && <CompactValue>{teacher.phone}</CompactValue>,
+            ]}
+         />
+      );
+   }
+
    return (
       <PersonCard
-         role="link"
-         tabIndex={0}
-         aria-label={teacher.name}
-         onClick={openTeacher}
-         onKeyDown={(event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-               event.preventDefault();
-               openTeacher();
-            }
-         }}
-         className="cursor-pointer transition-all hover:bg-primary/[0.035] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
+         {...cardProps}
          avatar={<NAvatar src={teacher?.image} fallback={teacher.name} size="lg" version={avatarVersion(teacher?.image, teacher?.updatedAt)} />}
          name={teacher.name}
          meta={teacher.specialization && (

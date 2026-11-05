@@ -3,7 +3,8 @@
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { Plus } from 'lucide-react';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useAcademicTableActions } from '@/features/Classes/hooks/useAcademicTableActions';
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
@@ -12,6 +13,7 @@ import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import CycleCard from './CycleCard';
+import { CycleCardSkeleton } from '@/shared/CardSkeletons';
 import CycleForm from './CycleForm';
 import { useCycles } from '../hooks/useCycles';
 import { useCyclesTableColumns } from '../hooks/useCyclesTableColumns';
@@ -105,6 +107,7 @@ function CyclesTable() {
             : <NErrorState surface="panel" />
         )}
         renderCard={CycleCard}
+        renderCardSkeleton={CycleCardSkeleton}
         addButtonText={t('cycles.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState

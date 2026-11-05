@@ -4,7 +4,8 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 
 import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { NAvatar, NBadge, NButton, NCard, NCardAction, NCardFooter, NEmptyState, NErrorState, NajmScroll, NLoadingState, NPageHeader, NPageHeaderActions, NProgress, NStatCard, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NAvatar, NBadge, NButton, NCard, NCardAction, NCardFooter, NEmptyState, NErrorState, NajmScroll, NLoadingState, NPageHeaderActions, NProgress, NStatCard, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import {
   AlertTriangle,

@@ -3,7 +3,8 @@
 import { PermissionButton } from '@/components/PermissionButton';
 import { BulkDeleteDialog } from '@/components/BulkDeleteDialog';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Eye, KeyRound, Pencil, Trash2, Plus } from 'lucide-react';
@@ -14,6 +15,7 @@ import ResetAccessDialog from './ResetAccessDialog';
 import { useUsers } from '../hooks/useUsers';
 import { useTranslation } from 'najm-i18n/react';
 import UserCard from './UserCard';
+import { UserCardSkeleton } from '@/shared/PersonCardSkeleton';
 import { useUsersTableColumns } from '../hooks/useUsersTableColumns';
 import { useUsersTableFilters } from '../hooks/useUsersTableFilters';
 import { useAccountLinks } from '../hooks/useAccountLinks';
@@ -241,8 +243,9 @@ function UsersTable() {
             : <NErrorState surface="panel" />
         )}
         renderCard={UserCard}
+        renderCardSkeleton={UserCardSkeleton}
         // The cards are compact, so a wide screen fits five per row.
-        classNames={{ cards: 'grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5' }}
+        classNames={{ cards: 'grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5' }}
         addButtonText={t('users.dialogs.createButton')}
         // The 'Linked to' filter narrows the rows before the table sees them, so
         // an empty result there is a filtered one, not a school without users.

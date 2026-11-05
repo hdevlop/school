@@ -2,13 +2,15 @@
 
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Plus } from 'lucide-react';
 import React, { useMemo } from 'react';
 import ExamForm from './ExamForm';
 import ExamCard from './ExamCard';
+import { ExamCardSkeleton } from '@/shared/CardSkeletons';
 import { useExams } from '../hooks/useExams';
 import { useTranslation } from 'najm-i18n/react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
@@ -128,6 +130,7 @@ function ExamsTable() {
             : <NErrorState surface="panel" />
         )}
         renderCard={ExamCard}
+        renderCardSkeleton={ExamCardSkeleton}
         addButtonText={t('exams.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState

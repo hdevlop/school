@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { Printer } from 'lucide-react';
-import { NajmScroll, NButton, NEmptyState, NErrorState, NForbiddenState, NLoadingState, NPageHeader, NPageHeaderActions } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NajmScroll, NButton, NEmptyState, NErrorState, NForbiddenState, NLoadingState, NPageHeaderActions } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useNThemeBrandingSlot } from 'najm-theme/react';
 import { toast } from 'sonner';
@@ -18,6 +19,7 @@ import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQ
 import { getInsuranceRegisterApi } from '@/services/insuranceApi';
 import { isAuthorizationError } from '@/services/apiError';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { MobileFeatureActions } from '@/shared/FeatureActions';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { buildInsuranceDocument, insuranceClasses, type InsuranceDocumentOptions } from './insuranceDocument';
 import styles from './InsuranceRegister.module.css';
@@ -94,7 +96,7 @@ function InsuranceContent() {
                   {toOfficialClassName(cls.name)}
                 </button>)}
               </div>
-              <NButton variant="outline" className={styles.printButton} disabled={printDisabled} loading={isPrinting} onClick={print} leftIcon={<Printer className="size-4" />}>{t('insurance.print')}</NButton>
+              <MobileFeatureActions><NButton variant="outline" className={styles.printButton} disabled={printDisabled} loading={isPrinting} onClick={print} leftIcon={<Printer className="size-4" />}>{t('insurance.print')}</NButton></MobileFeatureActions>
             </div>
             <div className={styles.paperStage}><PlanningPreview html={buildInsuranceDocument(shownClasses, options)} title={t('insurance.preview')} /></div>
           </>}

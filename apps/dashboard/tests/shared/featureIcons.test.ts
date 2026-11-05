@@ -68,7 +68,10 @@ const routeViews: Record<string, string[]> = {
 test('every page header chooses its icon from the shared feature registry', () => {
   let headers = 0;
   for (const file of sourceFiles(sourceRoot)) {
-    for (const icon of components(file, 'NPageHeader')) {
+    // SchoolPageHeader wraps NPageHeader and passes on its caller's icon, so
+    // the pages that use it are checked instead of the wrapper itself.
+    if (file.endsWith('SchoolPageHeader.tsx')) continue;
+    for (const icon of [...components(file, 'NPageHeader'), ...components(file, 'SchoolPageHeader')]) {
       expect(icon, file).toMatch(/^\{FEATURE_ICONS\.\w+\}$/);
       const key = icon.slice('{FEATURE_ICONS.'.length, -1) as FeatureIconKey;
       expect(FEATURE_ICONS[key], file).toBeDefined();

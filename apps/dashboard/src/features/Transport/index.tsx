@@ -3,7 +3,8 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 
 import { Bus } from 'lucide-react'
-import { NPageHeader, NPageHeaderActions, NSkeleton, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit'
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { NPageHeaderActions, NSkeleton, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
 import { useVehicles } from '@/features/Vehicles/hooks/useVehicles'
 import { VehicleStudentsPanel } from './components/VehicleStudentsPanel'
 import { useTranslation } from 'najm-i18n/react'

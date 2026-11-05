@@ -6,8 +6,9 @@ import { useTranslation } from 'najm-i18n/react';
 import { shiftLocalISODate } from '@/lib/utils';
 import { useSchoolToday } from '@/hooks/useSchoolFormat';
 
-import { changedRosterMarks, rosterMark, type RosterMark, type RosterStatus } from '../config/rosterMarks';
+import { rosterMark, type RosterMark, type RosterStatus } from '../config/rosterMarks';
 import { changedStaffRosterMarks, staffAttendanceDetails, type StaffAttendanceDetails } from '../config/staffAttendanceDetails';
+import { clearSavedStudentMarks, clearSubmittedStudentMarks, indexStudentMarks, stageStudentRoster, studentMarkKey, studentRosterItem, studentRosterSubmission, type StudentRosterDraft } from '../config/studentRosterDraft';
 export type { RosterStatus, RosterMark } from '../config/rosterMarks';
 type Kind = 'student' | 'staff';
 
@@ -45,6 +46,29 @@ export const useAttendanceRoster = ({
   const [draft, setDraft] = useState<Record<string, RosterStatus>>({});
   const [detailDraft, setDetailDraft] = useState<Record<string, StaffAttendanceDetails>>({});
   const selectedDate = controlledDate ?? internalDate;
+  const studentScope = JSON.stringify([selectedDate, attendanceMode]);
+  const [studentPending, setStudentPending] = useState<{ scope: string; items: StudentRosterDraft }>({ scope: studentScope, items: {} });
+  const studentDraft = useMemo(() => studentPending.scope === studentScope ? studentPending.items : {}, [studentPending, studentScope]);
+  const studentRosterContext = useMemo(() => ({
+    date: selectedDate, attendanceMode, allSections,
+    sectionId: studentContext?.sectionId,
+    teacherId: studentContext?.teacherId,
+    subjectId: studentContext?.subjectId,
+    teacherAssignmentId: studentContext?.teacherAssignmentId,
+  }), [selectedDate, attendanceMode, allSections, studentContext?.sectionId, studentContext?.teacherId, studentContext?.subjectId, studentContext?.teacherAssignmentId]);
+  const savedStudentMarks = useMemo(() => indexStudentMarks(existingAttendance), [existingAttendance]);
+  const peopleById = useMemo(() => new Map(roster.map(person => [person.id, person])), [roster]);
+  const studentPayloads = useMemo(() => kind === 'student'
+    ? studentRosterSubmission(roster, studentDraft, savedStudentMarks, studentRosterContext)
+    : [], [kind, roster, studentDraft, savedStudentMarks, studentRosterContext]);
+
+  useEffect(() => {
+    if (kind !== 'student') return;
+    setStudentPending(previous => {
+      const items = clearSavedStudentMarks(previous.items, savedStudentMarks);
+      return Object.keys(items).length === Object.keys(previous.items).length ? previous : { ...previous, items };
+    });
+  }, [kind, savedStudentMarks]);
 
   const setSelectedDate = useCallback((date: string) => {
     if (controlledDate === undefined) setInternalDate(date);
@@ -56,7 +80,8 @@ export const useAttendanceRoster = ({
   useEffect(() => {
     setDraft({});
     setDetailDraft({});
-  }, [selectedDate, kind, attendanceMode, allSections, studentContext?.sectionId, studentContext?.teacherAssignmentId]);
+    setStudentPending({ scope: studentScope, items: {} });
+  }, [studentScope, kind]);
 
   const fkKey = kind === 'student' ? 'studentId' : 'staffId';
 
@@ -89,12 +114,19 @@ export const useAttendanceRoster = ({
     return map;
   }, [existingAttendance, selectedDate, fkKey, kind, attendanceMode, allSections, studentContext?.sectionId, studentContext?.teacherAssignmentId]);
 
-  const getStatus = useCallback((id: string): RosterMark =>
-    rosterMark(draft[id], existingByPerson.get(id)?.status, kind === 'student' ? 'present' : 'unmarked'), [draft, existingByPerson, kind]);
+  const getStatus = useCallback((id: string): RosterMark => {
+    if (kind === 'student') {
+      const person = peopleById.get(id);
+      const item = person && studentRosterItem(person, studentRosterContext);
+      const key = item && studentMarkKey(item);
+      return key ? rosterMark(studentDraft[key]?.status, savedStudentMarks.get(key)?.status, 'present') : 'present';
+    }
+    return rosterMark(draft[id], existingByPerson.get(id)?.status);
+  }, [draft, existingByPerson, kind, peopleById, studentRosterContext, studentDraft, savedStudentMarks]);
 
   const changes = useMemo(() => kind === 'staff'
     ? changedStaffRosterMarks(roster, draft, detailDraft, existingByPerson)
-    : changedRosterMarks(roster, draft, existingByPerson, 'present'), [kind, roster, draft, detailDraft, existingByPerson]);
+    : [], [kind, roster, draft, detailDraft, existingByPerson]);
 
   const getDetails = useCallback((id: string) => detailDraft[id] ?? staffAttendanceDetails(existingByPerson.get(id)), [detailDraft, existingByPerson]);
   const setDetails = useCallback((id: string, details: StaffAttendanceDetails) => {
@@ -102,6 +134,11 @@ export const useAttendanceRoster = ({
   }, []);
 
   const setStatus = useCallback((id: string, status: RosterStatus) => {
+    if (kind === 'student') {
+      setStudentPending(previous => ({ scope: studentScope, items: stageStudentRoster(roster,
+        previous.scope === studentScope ? previous.items : {}, savedStudentMarks, studentRosterContext, { [id]: status }) }));
+      return;
+    }
     setDraft((prev) => {
       const next = { ...prev };
       if (existingByPerson.get(id)?.status === status) {
@@ -111,7 +148,7 @@ export const useAttendanceRoster = ({
       }
       return next;
     });
-  }, [existingByPerson]);
+  }, [existingByPerson, kind, studentScope, roster, savedStudentMarks, studentRosterContext]);
 
   const stats = useMemo(() => {
     const s = { total: roster.length, present: 0, absent: 0, late: 0, unmarked: 0 };
@@ -123,56 +160,55 @@ export const useAttendanceRoster = ({
     setSelectedDate(shiftLocalISODate(selectedDate, days));
     setDraft({});
     setDetailDraft({});
+    setStudentPending({ scope: '', items: {} });
   }, [selectedDate, setSelectedDate]);
 
   const goToDate = useCallback((v: string) => {
     setSelectedDate(v);
     setDraft({});
     setDetailDraft({});
+    setStudentPending({ scope: '', items: {} });
   }, [setSelectedDate]);
 
   const markAllAs = useCallback((status: RosterStatus) => {
+    if (kind === 'student') {
+      setStudentPending(previous => ({ scope: studentScope, items: stageStudentRoster(roster,
+        previous.scope === studentScope ? previous.items : {}, savedStudentMarks, studentRosterContext,
+        Object.fromEntries(roster.map(person => [person.id, status]))) }));
+      return;
+    }
     setDraft((prev) => {
       const next = { ...prev };
       roster.forEach((p) => { next[p.id] = status; });
       return next;
     });
-  }, [roster]);
+  }, [roster, kind, studentScope, savedStudentMarks, studentRosterContext]);
 
-  const resetDraft = useCallback(() => { setDraft({}); setDetailDraft({}); }, []);
+  const resetDraft = useCallback(() => { setDraft({}); setDetailDraft({}); setStudentPending({ scope: '', items: {} }); }, []);
 
   const handleSubmit = useCallback(async () => {
-    if (kind === 'student' && !allSections && !studentContext?.sectionId) {
+    if (kind === 'student' && !studentPayloads.length && !allSections && !studentContext?.sectionId) {
       toast.error(t('attendance.errors.selectSection'));
       return;
     }
 
-    if (kind === 'student' && !allSections && attendanceMode === 'per_class' && (!studentContext?.teacherId || !studentContext?.subjectId)) {
+    if (kind === 'student' && !studentPayloads.length && !allSections && attendanceMode === 'per_class' && (!studentContext?.teacherId || !studentContext?.subjectId || !studentContext?.teacherAssignmentId)) {
       toast.error(t('attendance.errors.selectTeacherSubject'));
       return;
     }
 
-    if (changes.length === 0) {
+    if (kind === 'student' ? studentPayloads.length === 0 : changes.length === 0) {
       toast.info(t('attendance.roster.nothingToSave'));
       return;
     }
 
-    const payloads = changes.map(({ person, status, existing }) => {
+    const payloads = kind === 'student' ? studentPayloads : changes.map(({ person, status, existing }) => {
       const payload: any = {
         type: kind,
         [fkKey]: person.id,
         date: selectedDate,
         status,
       };
-      if (kind === 'student') {
-        payload.sectionId = allSections ? person.sectionId : studentContext?.sectionId;
-        if (!allSections && studentContext?.teacherId) payload.teacherId = studentContext.teacherId;
-        if (!allSections && studentContext?.subjectId) payload.subjectId = studentContext.subjectId;
-        // Matches a per-class mark to its lesson when the save checks held marks.
-        if (!allSections && attendanceMode === 'per_class' && studentContext?.teacherAssignmentId) {
-          payload.teacherAssignmentId = studentContext.teacherAssignmentId;
-        }
-      }
       if (existing) payload.id = existing.id;
       if (kind === 'staff') {
         const details = getDetails(person.id);
@@ -182,23 +218,29 @@ export const useAttendanceRoster = ({
       return payload;
     });
 
+    if (kind === 'student') setStudentPending(previous => ({ scope: studentScope,
+      items: { ...(previous.scope === studentScope ? previous.items : {}), ...Object.fromEntries(studentPayloads.map(item => [studentMarkKey(item), item])) } }));
     try {
       await onSubmitBatch(payloads);
       toast.success(t('attendance.roster.submitSuccess'));
       setDraft({});
       setDetailDraft({});
+      if (kind === 'student') setStudentPending(previous => previous.scope === studentScope
+        ? { ...previous, items: clearSubmittedStudentMarks(previous.items, studentPayloads) } : previous);
     } catch (err: any) {
       toast.error(err?.response?.data?.message || err?.message || t('attendance.roster.submitError'));
     }
-  }, [changes, kind, fkKey, selectedDate, onSubmitBatch, studentContext, attendanceMode, allSections, t, getDetails]);
+  }, [changes, kind, fkKey, selectedDate, onSubmitBatch, studentContext, attendanceMode, allSections, t, getDetails, studentPayloads, studentScope]);
 
-  const hasChanges = changes.length > 0;
+  const submissionCount = kind === 'student' ? studentPayloads.length : changes.length;
+  const hasChanges = submissionCount > 0;
   const isToday = selectedDate === today;
   const goToToday = useCallback(() => goToDate(today), [goToDate, today]);
 
   return {
     selectedDate,
     hasChanges,
+    submissionCount,
     isToday,
     stats,
     getStatus,
