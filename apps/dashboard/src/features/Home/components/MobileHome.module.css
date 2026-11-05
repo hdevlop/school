@@ -17,7 +17,7 @@
 .chevron { width: 18px; height: 18px; flex-shrink: 0; color: #7b8aa2; }
 :global([dir="rtl"]) .chevron { transform: rotate(180deg); }
 .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.featureCard { position: relative; display: flex; min-width: 0; min-height: 104px; flex-direction: column; align-items: center; justify-content: center; gap: 7px; padding: 9px 5px; border: 1px solid #e7edf6; border-radius: 14px; background: #fff; color: inherit; font: inherit; box-shadow: 0 2px 8px rgb(54 88 130 / 2%); transition: border-color 120ms ease, background-color 120ms ease; }
+.featureCard { position: relative; display: flex; min-width: 0; min-height: 104px; flex-direction: column; align-items: center; justify-content: center; gap: 7px; padding: 9px 5px; border: 1px solid #e7edf6; border-radius: 14px; background: #fff; color: inherit; font: inherit; box-shadow: 0 2px 8px rgb(54 88 130 / 2%); }
 .illustrationFrame { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0; }
 .illustrationFrame[data-tone="blue"] { background: #eaf2ff; }
 .illustrationFrame[data-tone="rose"] { background: #fff0f3; }
@@ -31,6 +31,20 @@
 .locked { cursor: not-allowed; opacity: 0.55; }
 .lockIcon { position: absolute; inset-inline-end: 8px; top: 8px; width: 12px; height: 12px; color: #7b8aa2; }
 .profile:focus-visible, .featureCard:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.profile, .featureCard {
+  position: relative;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 120ms ease-out, box-shadow 120ms ease-out, border-color 120ms ease-out, background-color 120ms ease-out;
+}
+.navigationHint { position: absolute; top: 8px; inset-inline-end: 8px; display: grid; place-items: center; width: 16px; height: 16px; color: var(--primary); opacity: 0; pointer-events: none; }
+.navigationPending { animation: navigationReveal 120ms ease-out 150ms forwards; }
+.navigationSpinner { width: 16px; height: 16px; }
+.navigationPending .navigationSpinner { animation: navigationSpin 800ms linear infinite; }
+.profile:has(.navigationPending) .chevron { visibility: hidden; }
+.profile .navigationHint { top: 50%; inset-inline-end: 13px; margin-top: -8px; }
+@keyframes navigationReveal { to { opacity: 1; } }
+@keyframes navigationSpin { to { transform: rotate(360deg); } }
 @media (hover: hover) {
   .featureCard:not(:disabled):hover, .profile:hover { border-color: #c6d7ef; background: #fbfdff; }
 }
@@ -45,3 +59,24 @@
 :global(.dark) .name, :global(.dark) .greeting, :global(.dark) .cardLabel { color: #edf3fc; }
 :global(.dark) .email { color: #a6b4c9; }
 :global(.dark) .illustrationFrame[data-tone] { background: #24344c; }
+.featureCard:not(:disabled):is(:active:focus-visible, [data-pressed]), .profile:not(:disabled):is(:active:focus-visible, [data-pressed]) {
+  transform: scale(0.97);
+  transition-duration: 0ms;
+  box-shadow: 0 1px 2px rgb(54 88 130 / 2%);
+}
+.featureCard:not(:disabled):is(:active:focus-visible, [data-pressed]), .profile:not(:disabled):is(:active:focus-visible, [data-pressed]),
+.featureCard:has(.navigationPending), .profile:has(.navigationPending) {
+  background: #eaf2fc;
+  border-color: #b8cce7;
+}
+:global(.dark) .featureCard:not(:disabled):is(:active:focus-visible, [data-pressed]), :global(.dark) .profile:not(:disabled):is(:active:focus-visible, [data-pressed]),
+:global(.dark) .featureCard:has(.navigationPending), :global(.dark) .profile:has(.navigationPending) {
+  background: #263851;
+  border-color: #526d91;
+}
+@media (prefers-reduced-motion: reduce) {
+  .profile, .featureCard { transition: none; }
+  .featureCard:not(:disabled):is(:active:focus-visible, [data-pressed]), .profile:not(:disabled):is(:active:focus-visible, [data-pressed]) { transform: none; }
+  .navigationPending { animation: none; opacity: 1; }
+  .navigationPending .navigationSpinner { animation: none; }
+}

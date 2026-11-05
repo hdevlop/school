@@ -1,9 +1,9 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
+import Link, { useLinkStatus } from 'next/link';
 import { useEffect, useState } from 'react';
-import { ChevronRight, LockKeyhole, Menu } from 'lucide-react';
+import { ChevronRight, Loader2, LockKeyhole, Menu } from 'lucide-react';
 import { NAvatar, NButton, cn, useNajmFormat, useNSidebar } from 'najm-kit';
 import { useAuth, usePermissions } from 'najm-auth/client/react';
 import { useTranslation } from 'najm-i18n/react';
@@ -17,9 +17,22 @@ import { HOME_ICON_ATLAS, HOME_ICON_INDEX } from '../config/homeIllustrations';
 import { accountAvatar } from '../config/accountAvatar';
 import { avatarVersion } from '@/lib/avatarVersion';
 import { useOpenedOnce } from '@/hooks/useOpenedOnce';
+import { usePressFeedback } from './usePressFeedback';
 import styles from './MobileHome.module.css';
 
 const HomeProfileSheet = dynamic(() => import('./HomeProfileSheet'), { ssr: false });
+
+// Kept inside each Link so cancelled or superseded navigations clear themselves.
+function NavigationHint() {
+  const { pending } = useLinkStatus();
+  const { t } = useTranslation();
+  return (
+    <span className={cn(styles.navigationHint, pending && styles.navigationPending)} role="status">
+      <Loader2 className={styles.navigationSpinner} aria-hidden />
+      {pending && <span className="sr-only">{t('common.loading')}</span>}
+    </span>
+  );
+}
 
 function FeatureIllustration({ card }: { card: HomeCard }) {
   const index = HOME_ICON_INDEX[card.id];
@@ -35,6 +48,7 @@ function FeatureIllustration({ card }: { card: HomeCard }) {
 function FeatureCard({ card }: { card: HomeCard }) {
   const { t } = useTranslation();
   const actions = useNavigationActions();
+  const pressFeedback = usePressFeedback();
   const content = (
     <>
       <span aria-hidden className={styles.illustrationFrame} data-tone={card.tone}><FeatureIllustration card={card} /></span>
@@ -43,10 +57,10 @@ function FeatureCard({ card }: { card: HomeCard }) {
     </>
   );
   if (card.accessible && card.href) {
-    return <Link href={card.href} prefetch={false} className={styles.featureCard}>{content}</Link>;
+    return <Link href={card.href} prefetch={false} className={styles.featureCard} {...pressFeedback}>{content}<NavigationHint /></Link>;
   }
   if (card.accessible && card.action) {
-    return <button type="button" className={styles.featureCard} onClick={() => { if (card.action) actions?.openThemeSettings(card.action); }}>{content}</button>;
+    return <button type="button" className={styles.featureCard} {...pressFeedback} onClick={() => { if (card.action) actions?.openThemeSettings(card.action); }}>{content}</button>;
   }
   return (
     <button type="button" disabled title={t('mobileHome.viewUnavailable')} aria-label={card.label + ': ' + t('mobileHome.viewUnavailable')} className={cn(styles.featureCard, styles.locked)}>
@@ -63,6 +77,7 @@ export default function MobileHome() {
   const sidebar = useNSidebar();
   const [greeting, setGreeting] = useState('mobileHome.welcome');
   const [profileOpen, setProfileOpen] = useState(false);
+  const profilePressFeedback = usePressFeedback();
   const profileOpened = useOpenedOnce(profileOpen);
   // Shared with the shell's sidebar query. The server already read the order for
   // this page, so the tiles are in its first HTML; without that read they wait
@@ -121,9 +136,9 @@ export default function MobileHome() {
         </header>
 
         {familyProfile ? (
-          <Link href="/students" prefetch={false} className={styles.profile}>{profileContent}</Link>
+          <Link href="/students" prefetch={false} className={styles.profile} {...profilePressFeedback}>{profileContent}<NavigationHint /></Link>
         ) : (
-          <button type="button" onClick={() => setProfileOpen(true)} className={cn(styles.profile, 'w-full text-start')} aria-haspopup="dialog" aria-expanded={profileOpen}>
+          <button type="button" onClick={() => setProfileOpen(true)} className={cn(styles.profile, 'w-full text-start')} aria-haspopup="dialog" aria-expanded={profileOpen} {...profilePressFeedback}>
             {profileContent}
           </button>
         )}

@@ -99,7 +99,7 @@ describe('staff: shared identity with dated assignments', () => {
 
     function loginService(calls: Calls, options: { userId?: string | null; held?: string[] } = {}) {
       const staffRepository = {
-        getById: async () => ({ id: 'staff-1', role: 'secretary', userId: options.userId === undefined ? 'user-1' : options.userId, email: 'a@school.test', name: 'A', gender: 'F' }),
+        getById: async () => ({ id: 'staff-1', role: 'secretary', userId: options.userId === undefined ? 'user-1' : options.userId, email: 'a@school.test', name: 'A', gender: 'F', image: '/api/staff/files/serve/staff-1_avatar.png' }),
         update: async (_id: string, data: object) => ({ id: 'staff-1', userId: options.userId === undefined ? 'user-1' : options.userId, role: 'secretary', ...data }),
       };
       const roleRepository = {

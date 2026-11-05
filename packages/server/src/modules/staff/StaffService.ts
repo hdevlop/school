@@ -3,6 +3,7 @@ import { customAlphabet, nanoid } from 'nanoid';
 
 import { AuthService, UserService } from '../../auth';
 import { StorageService } from 'najm-storage';
+import { getStaffAvatar, isDefaultStaffAvatar } from '@sms/contracts';
 import { resolveUserPassword, isSeeding } from '../../shared/userPassword';
 import { DriverRepository } from '../transport/drivers/DriverRepository';
 import { VehicleAssignmentRepository } from '../transport/vehicleAssignments/VehicleAssignmentRepository';
@@ -70,10 +71,9 @@ export class StaffService {
 
   private async provisionUser(data: CreateStaffDto, staffId: string) {
     this.staffValidator.ensureLoginEmail(data.email);
-    const genderSuffix = data.gender === 'F' ? 'female' : 'male';
     const image = await this.storage.processFile('staff', data.image, {
       filePath: `${staffId}_avatar.png`,
-      fallback: `/images/${data.role}_${genderSuffix}.png`,
+      fallback: getStaffAvatar(data.role, data.gender),
     });
     const role = await this.staffValidator.ensureRoleExists(data.role);
     this.staffValidator.ensureAppAccessRole(role.accessRoleId);
@@ -357,6 +357,18 @@ export class StaffService {
       // A new email is where that account's password reset is sent.
       await this.staffValidator.ensureCanManageLogin(actor, await this.loginRoleId(existing.userId));
       await this.userService.update(existing.userId, { email: data.email });
+    }
+
+    // Existing accounts may store a bundled illustration as their image URL.
+    // Recompute that default when identity changes, but keep uploaded photos.
+    const imageInput = data.image !== undefined ? data.image : existing.image;
+    const usesDefaultImage = !imageInput || isDefaultStaffAvatar(imageInput);
+    if (existing.userId && (data.image !== undefined || (usesDefaultImage && (data.gender !== undefined || roleChanged)))) {
+      const image = await this.storage.processFile('staff', usesDefaultImage ? null : imageInput, {
+        filePath: `${id}_avatar.png`,
+        fallback: getStaffAvatar(data.role ?? existing.role, data.gender ?? existing.gender),
+      });
+      await this.userService.update(existing.userId, { image });
     }
 
     // An edit of assignments alone changes no staff column.

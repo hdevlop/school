@@ -14,6 +14,7 @@ export type { FeeSummary, FeePaymentDateFilters } from './feeSummary';
 export * from './payroll';
 export * from './receipts';
 export * from './schoolDefaults';
+export * from './staffAvatar';
 export * from './academicStructure';
 export * from './assessmentPlanning';
 export * from './examPlanning';

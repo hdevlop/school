@@ -10,7 +10,7 @@ import { useFormContext } from 'react-hook-form';
 import { useDialog } from '@/shared/useDialog';
 import type { StepConfig } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { COMPENSATION_MODE_VALUES, EMPLOYMENT_TYPE_VALUES, SHIFT_VALUES, STAFF_STATUS_VALUES } from '@sms/contracts';
+import { COMPENSATION_MODE_VALUES, EMPLOYMENT_TYPE_VALUES, SHIFT_VALUES, STAFF_STATUS_VALUES, getStaffAvatar, isDefaultStaffAvatar } from '@sms/contracts';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useNextEmployeeCode } from '../hooks/useStaff';
 import { useStaffRoles } from '../hooks/useStaffRoles';
@@ -139,7 +139,7 @@ const getStaffDefaultValues = (staff = null) => ({
   phone: staff?.phone || '',
   address: staff?.address || '',
   medicalConditions: staff?.medicalConditions || '',
-  image: staff?.image || null,
+  image: isDefaultStaffAvatar(staff?.image) ? null : staff?.image || null,
   role: staff?.role || '',
   department: staff?.department || '',
   compensationMode: staff?.compensationMode || 'monthly',
@@ -278,6 +278,7 @@ const PersonalStep = ({ form, isEditing, staffUserId, onRoleChange }) => {
   // The server refuses the same: only the admin, and not on their own record.
   const jobTitleLocked = isEditing && (viewerRole?.toLowerCase() !== 'admin' || (Boolean(staffUserId) && staffUserId === viewerId));
   const role = form.watch('role');
+  const gender = form.watch('gender');
   const needsVehicle = role === 'driver' || role === 'busAssistant';
   const { vehicles, isVehiclesLoading, isError: vehicleError } = useVehicles({ enabled: needsVehicle });
 
@@ -331,6 +332,7 @@ const PersonalStep = ({ form, isEditing, staffUserId, onRoleChange }) => {
       <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4">
         <AvatarFormInput
           name="image"
+          defaultImage={getStaffAvatar(role, gender)}
           formLabel={t('teachers.form.image')}
           radius="xl"
           allowClear
