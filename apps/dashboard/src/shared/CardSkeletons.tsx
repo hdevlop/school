@@ -178,25 +178,3 @@ export const AssessmentCardSkeleton = () => <RecordCardSkeleton rows={4} badge /
 export const AnnouncementCardSkeleton = () => <RecordCardSkeleton rows={4} badge />;
 export const ExpenseCardSkeleton = () => <RecordCardSkeleton rows={3} badge />;
 export const VehicleCardSkeleton = () => <RecordCardSkeleton rows={3} />;
-
-/**
- * NStatCard's loading shape. Najm's NStatCardSkeleton is a taller, padded
- * three-line card, so a row of them shrank by half when the figures arrived;
- * this one follows NStatCard's own padding, icon box and line heights at
- * every breakpoint.
- */
-export function StatCardSkeleton({ subtext = false }: {
-  /** The card shows a hint line under its value (NStatCard's `subtext`). */
-  subtext?: boolean;
-}) {
-  return (
-    <div data-bordered="true" className="flex items-center gap-2 rounded-xl bg-card p-2 shadow-sm najm-border border-border lg:gap-3 lg:p-3 2xl:gap-4 2xl:p-4">
-      <NSkeleton className="size-8 shrink-0 rounded-xl lg:size-9 2xl:size-10" />
-      <div className="flex min-w-0 flex-1 flex-col gap-0 2xl:gap-1">
-        <div className="flex h-4.5 items-center"><Bar className="h-2.5 w-16" /></div>
-        <Bar className="h-3.5 w-20 lg:h-4 2xl:h-5" />
-        {subtext && <div className="flex h-3.75 items-center"><Bar className="h-2 w-28" /></div>}
-      </div>
-    </div>
-  );
-}

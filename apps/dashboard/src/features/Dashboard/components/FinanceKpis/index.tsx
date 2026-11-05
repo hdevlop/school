@@ -15,8 +15,7 @@ import {
   useFinanceKpis,
 } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useTranslation } from 'najm-i18n/react';
-import { NStatCard } from 'najm-kit';
-import { StatCardSkeleton } from '@/shared/CardSkeletons';
+import { NStatCard, NStatCardSkeleton } from 'najm-kit';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 type KpiCardProps = {
@@ -52,7 +51,7 @@ const FinanceKpis: React.FC = () => {
 
   if (widgetsLoading || kpisLoading) return (
     <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
-      {Array.from({ length: 6 }).map((_, index) => <StatCardSkeleton key={index} />)}
+      {Array.from({ length: 6 }).map((_, index) => <NStatCardSkeleton key={index} />)}
     </div>
   );
 

@@ -6,8 +6,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Banknote, CalendarDays, Clock, HandCoins, ReceiptText, Undo2 } from 'lucide-react';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
-import { NPageHeaderActions, NStatCard, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
-import { StatCardSkeleton } from '@/shared/CardSkeletons';
+import { NPageHeaderActions, NStatCard, NEmptyState, NErrorState, NForbiddenState, NStatCardSkeleton } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import type { RowSelectionState } from '@tanstack/react-table';
@@ -330,7 +329,7 @@ const PayrollTable = () => {
           boxes left room for one staff card. */}
       {isLoading ? (
         <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, index) => <StatCardSkeleton key={index} />)}
+          {Array.from({ length: 4 }).map((_, index) => <NStatCardSkeleton key={index} />)}
         </div>
       ) : hasFailedToLoad(loadError, tableRows) ? null : (
         <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">

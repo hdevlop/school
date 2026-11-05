@@ -3,8 +3,7 @@
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { Calendar, DollarSign, TrendingUp, CheckCircle2 } from "lucide-react";
-import { NStatCard, NTableSkeleton } from 'najm-kit';
-import { StatCardSkeleton } from '@/shared/CardSkeletons';
+import { NStatCard, NTableSkeleton, NStatCardSkeleton } from 'najm-kit';
 import PaymentsTable from "@/features/Financial/Payment/components/PaymentsTable";
 import { useFees } from "../../../hooks/useFees";
 
@@ -31,7 +30,7 @@ export const PaymentHistory = ({ studentId, studentFees: initialStudentFees }: P
       <div className="flex min-h-64 flex-col gap-4">
         <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
           {Array.from({ length: 5 }).map((_, index) => (
-            <StatCardSkeleton key={index} />
+            <NStatCardSkeleton key={index} />
           ))}
         </div>
         <div className="rounded-lg border border-border bg-card">

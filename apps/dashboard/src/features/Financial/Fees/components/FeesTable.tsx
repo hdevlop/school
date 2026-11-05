@@ -6,8 +6,7 @@ import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'rea
 import type { Table } from '@tanstack/react-table';
 import type { Schedule } from '@sms/contracts';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
-import { NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState, NStatCard } from 'najm-kit';
-import { StatCardSkeleton } from '@/shared/CardSkeletons';
+import { NPageHeaderActions, NEmptyState, NErrorState, NForbiddenState, NStatCard, NStatCardSkeleton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Banknote, CreditCard, HandCoins, Landmark, Plus, ReceiptText, Wallet } from 'lucide-react';
@@ -399,7 +398,7 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
       {isSummaryLoading ? (
         <div className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-7">
           {/* The last card, overdue to date, carries a hint line. */}
-          {Array.from({ length: 7 }, (_, index) => <StatCardSkeleton key={index} subtext={index === 6} />)}
+          {Array.from({ length: 7 }, (_, index) => <NStatCardSkeleton key={index} subtext={index === 6} />)}
         </div>
       ) : hasFailedToLoad(summaryError, stats ? [stats] : []) ? (
         isAuthorizationError(summaryError)

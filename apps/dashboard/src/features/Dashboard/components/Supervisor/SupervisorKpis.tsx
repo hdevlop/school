@@ -1,8 +1,7 @@
 'use client';
 
 import { CalendarCheck, Clock, DoorOpen, ShieldAlert, UserX, UsersRound, type LucideIcon } from 'lucide-react';
-import { NStatCard, cn } from 'najm-kit';
-import { StatCardSkeleton } from '@/shared/CardSkeletons';
+import { NStatCard, cn, NStatCardSkeleton } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import type { SupervisorDashboardOverview } from '@sms/contracts/supervisor-dashboard';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
@@ -40,7 +39,7 @@ const SupervisorKpis = ({ overview, loading }: { overview: SupervisorDashboardOv
   if (loading) {
     return (
       <div className="grid shrink-0 grid-cols-2 gap-2 md:grid-cols-3 xl:grid-cols-6 lg:gap-3">
-        {Array.from({ length: 6 }, (_, index) => <StatCardSkeleton key={index} />)}
+        {Array.from({ length: 6 }, (_, index) => <NStatCardSkeleton key={index} />)}
       </div>
     );
   }
