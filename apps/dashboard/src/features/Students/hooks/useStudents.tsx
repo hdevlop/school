@@ -81,21 +81,25 @@ export const useStudentsOnDate = (date: string | undefined) => {
   const rosterDay = datedRosterDay(date, viewingYear, useViewingYearCalendar());
   const isDated = !!rosterDay;
   const list = useStudents({ enabled: !isDated });
-  // Until the calendar loads, a register's date may not yet sit in the year.
-  const isDatedReady = isDated && areYearsFetched;
+  // Asked at once rather than after the year list: opening a register used to
+  // wait for /academic-years before even asking, about a second on a phone.
+  // Until the calendar loads the day may still move into the year (a new key,
+  // asked again) or out of it (back to the list), so the answer is shown only
+  // for a day the calendar has confirmed, and a refusal for an unconfirmed day
+  // is never shown.
   const dated = useYearScopedList({
     resource: 'students',
     parts: [{ onDate: rosterDay }],
     fetch: () => studentApi.getStudentsOnDateApi(rosterDay as string),
-    enabled: isDatedReady,
+    enabled: isDated,
   });
 
   if (!isDated) {
     return { students: list.students, error: list.error, isStudentsLoading: list.isStudentsLoading };
   }
   return {
-    students: dated.data,
-    error: dated.error,
-    isStudentsLoading: !isDatedReady || dated.isLoading,
+    students: areYearsFetched ? dated.data : undefined,
+    error: areYearsFetched ? dated.error : null,
+    isStudentsLoading: !areYearsFetched || dated.isLoading,
   };
 };

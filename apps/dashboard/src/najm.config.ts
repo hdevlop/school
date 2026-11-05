@@ -22,7 +22,13 @@ export const schoolApp = defineNajmApp({
     protectedRoutes: ['/:path*'],
     loginRoute: '/login',
     forbiddenRoute: SCHOOL_HOME_PATH,
-    proxySessionMode: 'authoritative',
+    // A page request trusts the signed session snapshot until it expires (five
+    // minutes), then the proxy checks the refresh session with the server
+    // again. Checking on every request cost 0.2-0.7 s per page move on JHL.
+    // A removed role or a deactivated account therefore still sees page frames
+    // for up to five minutes; every API call is authorized on its own, so no
+    // data is served. Agreed with the owner on 2026-11-05.
+    proxySessionMode: 'optimistic',
     rememberCookieName: 'sms.remember',
     refreshThreshold: 0.8,
     tabSync: true,

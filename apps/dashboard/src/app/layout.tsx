@@ -3,6 +3,9 @@ import "@/styles/globals.css";
 import "flag-icons/css/flag-icons.min.css";
 import 'najm-theme/styles.css';
 import localFont from 'next/font/local'
+import { headers } from 'next/headers';
+import { NAJM_NONCE_HEADER } from 'najm-next/security';
+import { authBootRefreshScript } from '@/najm.auth';
 import { AppProviders } from '@/providers/AppProviders';
 import { loadSidebarOrderSeed, loadUiSnapshot } from '@/najm.server';
 import NajmClientRoot from '@/components/NajmClientRoot';
@@ -46,6 +49,11 @@ export default async function RootLayout({ children,}: Readonly<{children: React
   const snapshot = await loadUiSnapshot();
   const { preferences, settings } = snapshot;
   const sidebarOrderSeed = await loadSidebarOrderSeed(snapshot.session?.user?.id);
+  // Signed in, the auth client is hydrated without an access token and
+  // refreshes as it starts; the head starts that refresh instead (najm.auth.ts).
+  // Signed out there is no refresh to start.
+  const signedIn = Boolean(snapshot.session?.user);
+  const nonce = signedIn ? (await headers()).get(NAJM_NONCE_HEADER) ?? undefined : undefined;
 
   return (
     <html
@@ -55,6 +63,11 @@ export default async function RootLayout({ children,}: Readonly<{children: React
       lang={preferences.language}
       suppressHydrationWarning
     >
+      {signedIn && (
+        <head>
+          <script nonce={nonce} dangerouslySetInnerHTML={{ __html: authBootRefreshScript }} />
+        </head>
+      )}
       <body suppressHydrationWarning className={`${lora.className} ${lora.variable} ${robotoMono.variable} antialiased  h-screen w-screen overflow-hidden`}>
         <AppProviders snapshot={snapshot} sidebarOrderSeed={sidebarOrderSeed}>
           {/* The active year's label comes from the per-request School
