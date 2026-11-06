@@ -157,8 +157,11 @@ describe('normal fee list year scope', () => {
     expect(having).toContain('count("fees"."id") > 0');
     expect(having).toContain('sum("fees"."net_amount"::numeric)');
     expect(having).toContain('<=');
-    expect(having).toContain('"payments"."status" =');
-    expect(having).toContain('coalesce("payments"."settled_date", "payments"."payment_date") <=');
+    expect(having).toContain('sum("fee_paid_to_date")');
+    // Paid to date: each fee's completed allocations settled by today, read once per fee.
+    const feePaid = query.sql.slice(query.sql.indexOf('left join lateral'), query.sql.indexOf('"fee_paid" on true'));
+    expect(feePaid).toContain("\"payments\".\"status\" = 'completed'");
+    expect(feePaid).toContain('coalesce("payments"."settled_date", "payments"."payment_date") <=');
     expect(query.params).toContain('cp');
     expect(query.params).toContain('cp-a');
     expect(query.params).toContain(oldYear.id);

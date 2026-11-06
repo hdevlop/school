@@ -1,0 +1,2 @@
+CREATE INDEX "student_parents_student_idx" ON "student_parents" USING btree ("student_id");--> statement-breakpoint
+CREATE INDEX "student_parents_parent_idx" ON "student_parents" USING btree ("parent_id");

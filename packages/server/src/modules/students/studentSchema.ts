@@ -1,4 +1,4 @@
-import { date, doublePrecision, integer, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
+import { date, doublePrecision, index, integer, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
 
 import { createRef, genderEnum, idField, timestamps, userRef } from '../../database/shared';
 import { getEnumValues } from '../../shared/enums';
@@ -42,4 +42,9 @@ export const studentParents = pgTable('student_parents', {
   studentId: studentRef(),
   parentId: parentRef(),
   ...timestamps,
-});
+}, (table) => [
+  // The fees list reads each student's parent phone, and family screens read
+  // either side of the link; without these each lookup scans the whole table.
+  index('student_parents_student_idx').on(table.studentId),
+  index('student_parents_parent_idx').on(table.parentId),
+]);

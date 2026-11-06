@@ -1,0 +1,3833 @@
+{
+  "subjects": [
+    {
+      "id": "SB11",
+      "name": "Activité scientifique",
+      "code": "SCI"
+    },
+    {
+      "id": "SB18",
+      "name": "Activités artistiques et esthétiques",
+      "code": "PREART"
+    },
+    {
+      "id": "SB15",
+      "name": "Activités mathématiques",
+      "code": "PREMATH"
+    },
+    {
+      "id": "SB07",
+      "name": "Anglais",
+      "code": "ENG"
+    },
+    {
+      "id": "SB20",
+      "name": "Communication",
+      "code": "COM"
+    },
+    {
+      "id": "SB16",
+      "name": "Découverte de soi et de l'environnement",
+      "code": "PREDECO"
+    },
+    {
+      "id": "SB17",
+      "name": "Développement sensoriel et moteur",
+      "code": "PREMOT"
+    },
+    {
+      "id": "SB12",
+      "name": "Éducation artistique",
+      "code": "ART"
+    },
+    {
+      "id": "SB10",
+      "name": "Éducation islamique",
+      "code": "EI"
+    },
+    {
+      "id": "SB08",
+      "name": "Éducation physique et sportive",
+      "code": "PE"
+    },
+    {
+      "id": "SB01",
+      "name": "Français",
+      "code": "FR"
+    },
+    {
+      "id": "SB13",
+      "name": "Histoire-géographie et éducation à la citoyenneté",
+      "code": "HG"
+    },
+    {
+      "id": "SB09",
+      "name": "Informatique",
+      "code": "INFO"
+    },
+    {
+      "id": "SB14",
+      "name": "Langage et communication",
+      "code": "PRELANG"
+    },
+    {
+      "id": "SB00",
+      "name": "Mathématiques",
+      "code": "MATH"
+    },
+    {
+      "id": "SB03",
+      "name": "Physique-chimie",
+      "code": "PHY"
+    },
+    {
+      "id": "SB04",
+      "name": "Sciences de la vie et de la Terre",
+      "code": "SVT"
+    },
+    {
+      "id": "SB19",
+      "name": "Valeurs et règles de vie commune",
+      "code": "PREVIE"
+    },
+    {
+      "id": "SB02",
+      "name": "العربية",
+      "code": "AR"
+    }
+  ],
+  "schedules": [
+    {
+      "id": "EbAXH_ZYLw",
+      "className": "CP",
+      "sectionName": "A",
+      "academicYear": "2026-2027",
+      "status": "published",
+      "entries": [
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Poésie"
+            },
+            {
+              "kind": "fixed",
+              "label": "Structure de langue"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Écriture"
+            },
+            {
+              "kind": "fixed",
+              "label": "Exercices écrits"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "تمارين كتابية"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الفنية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Dictée"
+            },
+            {
+              "kind": "fixed",
+              "label": "Exercices écrits"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            },
+            {
+              "kind": "fixed",
+              "label": "Copie"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التعبير الكتابي"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "الاستماع والتحدث"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Expression orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Phonologie"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "الإملاء"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB09",
+          "subjectCode": "INFO",
+          "subjectName": "Informatique",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "النقل"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB08",
+          "subjectCode": "PE",
+          "subjectName": "Éducation physique et sportive",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB20",
+          "subjectCode": "COM",
+          "subjectName": "Communication",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB04",
+          "subjectCode": "SVT",
+          "subjectName": "Sciences de la vie et de la Terre",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "الخط"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "الاستماع والتحدث"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Expression orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Phonologie"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        }
+      ]
+    },
+    {
+      "id": "7e7DvGH-Cz",
+      "className": "CP",
+      "sectionName": "B",
+      "academicYear": "2026-2027",
+      "status": "published",
+      "entries": [
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "تمارين كتابية"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الفنية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Structure de langue"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            },
+            {
+              "kind": "fixed",
+              "label": "Poésie"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التعبير الكتابي"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "الاستماع والتحدث"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Dictée"
+            },
+            {
+              "kind": "fixed",
+              "label": "Exercices écrits"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            },
+            {
+              "kind": "fixed",
+              "label": "Copie"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB04",
+          "subjectCode": "SVT",
+          "subjectName": "Sciences de la vie et de la Terre",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Expression orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Phonologie"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "الإملاء"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "الاستماع والتحدث"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB08",
+          "subjectCode": "PE",
+          "subjectName": "Éducation physique et sportive",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "النقل"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exercices écrits"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            },
+            {
+              "kind": "fixed",
+              "label": "Écriture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Expression orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Phonologie"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB20",
+          "subjectCode": "COM",
+          "subjectName": "Communication",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "الخط"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "الاستماع والتحدث"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "8dbZGtRsZn",
+      "className": "CE1",
+      "sectionName": "A",
+      "academicYear": "2026-2027",
+      "status": "published",
+      "entries": [
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Production écrite"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "تربية فنية"
+            },
+            {
+              "kind": "fixed",
+              "label": "كتابة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "استماع وتحدث"
+            },
+            {
+              "kind": "fixed",
+              "label": "قراءة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB09",
+          "subjectCode": "INFO",
+          "subjectName": "Informatique",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Grammaire"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB08",
+          "subjectCode": "PE",
+          "subjectName": "Éducation physique et sportive",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exercices écrits"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lexique"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Écriture / Copie"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            },
+            {
+              "kind": "fixed",
+              "label": "Orthographe"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB20",
+          "subjectCode": "COM",
+          "subjectName": "Communication",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Conjugaison"
+            },
+            {
+              "kind": "fixed",
+              "label": "Poésie / Dictée"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "استماع وتحدث"
+            },
+            {
+              "kind": "fixed",
+              "label": "قراءة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "كتابة"
+            },
+            {
+              "kind": "fixed",
+              "label": "تربية إسلامية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "استماع وتحدث"
+            },
+            {
+              "kind": "fixed",
+              "label": "قراءة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "تربية إسلامية"
+            },
+            {
+              "kind": "fixed",
+              "label": "كتابة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB04",
+          "subjectCode": "SVT",
+          "subjectName": "Sciences de la vie et de la Terre",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "استماع وتحدث"
+            },
+            {
+              "kind": "fixed",
+              "label": "قراءة"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LH5iCQajZU",
+      "className": "CE1",
+      "sectionName": "B",
+      "academicYear": "2026-2027",
+      "status": "published",
+      "entries": [
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "استماع وتحدث"
+            },
+            {
+              "kind": "fixed",
+              "label": "قراءة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Orthographe"
+            },
+            {
+              "kind": "fixed",
+              "label": "Poésie / Dictée"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exercices écrits"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Grammaire"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Production écrite"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lexique"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Conjugaison"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB20",
+          "subjectCode": "COM",
+          "subjectName": "Communication",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "تربية فنية"
+            },
+            {
+              "kind": "fixed",
+              "label": "كتابة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "كتابة"
+            },
+            {
+              "kind": "fixed",
+              "label": "تربية إسلامية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB08",
+          "subjectCode": "PE",
+          "subjectName": "Éducation physique et sportive",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "استماع وتحدث"
+            },
+            {
+              "kind": "fixed",
+              "label": "قراءة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "استماع وتحدث"
+            },
+            {
+              "kind": "fixed",
+              "label": "قراءة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB04",
+          "subjectCode": "SVT",
+          "subjectName": "Sciences de la vie et de la Terre",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB09",
+          "subjectCode": "INFO",
+          "subjectName": "Informatique",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "استماع وتحدث"
+            },
+            {
+              "kind": "fixed",
+              "label": "قراءة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "كتابة"
+            },
+            {
+              "kind": "fixed",
+              "label": "تربية إسلامية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Écriture / Copie"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        }
+      ]
+    },
+    {
+      "id": "oangxNesla",
+      "className": "CE2",
+      "sectionName": "A",
+      "academicYear": "2026-2027",
+      "status": "published",
+      "entries": [
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Projet de classe"
+            },
+            {
+              "kind": "fixed",
+              "label": "Exercices écrits"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Vocabulaire"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB20",
+          "subjectCode": "COM",
+          "subjectName": "Communication",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Poésie"
+            },
+            {
+              "kind": "fixed",
+              "label": "Orthographe"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB08",
+          "subjectCode": "PE",
+          "subjectName": "Éducation physique et sportive",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "التعبير"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "الإملاء"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Grammaire"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "الاستماع والتحدث"
+            },
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التطبيقات"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "الاستماع والتحدث"
+            },
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "مشروع الوحدة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB09",
+          "subjectCode": "INFO",
+          "subjectName": "Informatique",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "الاستماع والتحدث"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الفنية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Production écrite"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Dictée"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            },
+            {
+              "kind": "fixed",
+              "label": "Conjugaison"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB04",
+          "subjectCode": "SVT",
+          "subjectName": "Sciences de la vie et de la Terre",
+          "contentGroups": []
+        }
+      ]
+    },
+    {
+      "id": "asc_AGY9Z1",
+      "className": "CE2",
+      "sectionName": "B",
+      "academicYear": "2026-2027",
+      "status": "published",
+      "entries": [
+        {
+          "subjectId": "SB08",
+          "subjectCode": "PE",
+          "subjectName": "Éducation physique et sportive",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "التعبير"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Production écrite"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Projet de classe"
+            },
+            {
+              "kind": "fixed",
+              "label": "Exercices écrits"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Vocabulaire"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB04",
+          "subjectCode": "SVT",
+          "subjectName": "Sciences de la vie et de la Terre",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "الاستماع والتحدث"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الفنية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            },
+            {
+              "kind": "fixed",
+              "label": "Conjugaison"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB09",
+          "subjectCode": "INFO",
+          "subjectName": "Informatique",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "الإملاء"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التطبيقات"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "الاستماع والتحدث"
+            },
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "الاستماع والتحدث"
+            },
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "مشروع الوحدة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Grammaire"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Dictée"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Poésie"
+            },
+            {
+              "kind": "fixed",
+              "label": "Orthographe"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB20",
+          "subjectCode": "COM",
+          "subjectName": "Communication",
+          "contentGroups": []
+        }
+      ]
+    },
+    {
+      "id": "gNUw_dFBEo",
+      "className": "CM1",
+      "sectionName": "A",
+      "academicYear": "2026-2027",
+      "status": "published",
+      "entries": [
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB09",
+          "subjectCode": "INFO",
+          "subjectName": "Informatique",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB20",
+          "subjectCode": "COM",
+          "subjectName": "Communication",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "قراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "التواصل الشفهي"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Production écrite"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lexique"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "قراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "تراكيب"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            },
+            {
+              "kind": "fixed",
+              "label": "Dictée"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB08",
+          "subjectCode": "PE",
+          "subjectName": "Éducation physique et sportive",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Conjugaison"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Poésie / Copie"
+            },
+            {
+              "kind": "fixed",
+              "label": "Projet de classe"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Orthographe"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Grammaire"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التربية المدنية"
+            },
+            {
+              "kind": "fixed",
+              "label": "التعبير الكتابي"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التربية الفنية"
+            },
+            {
+              "kind": "fixed",
+              "label": "التاريخ"
+            },
+            {
+              "kind": "fixed",
+              "label": "التطبيقات الكتابية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "قراءة مسترسلة"
+            },
+            {
+              "kind": "fixed",
+              "label": "الجغرافيا"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "قراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "إملاء"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB04",
+          "subjectCode": "SVT",
+          "subjectName": "Sciences de la vie et de la Terre",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "الصرف والتحويل"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hUNIX7w7Lf",
+      "className": "CM1",
+      "sectionName": "B",
+      "academicYear": "2026-2027",
+      "status": "published",
+      "entries": [
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التربية المدنية"
+            },
+            {
+              "kind": "fixed",
+              "label": "التعبير الكتابي"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التربية الفنية"
+            },
+            {
+              "kind": "fixed",
+              "label": "التاريخ"
+            },
+            {
+              "kind": "fixed",
+              "label": "التطبيقات الكتابية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "قراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "التراكيب"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Poésie / Copie"
+            },
+            {
+              "kind": "fixed",
+              "label": "Projet de classe"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Orthographe"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "قراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "التواصل الشفهي"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB08",
+          "subjectCode": "PE",
+          "subjectName": "Éducation physique et sportive",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lexique"
+            },
+            {
+              "kind": "fixed",
+              "label": "Production écrite"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Grammaire"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            },
+            {
+              "kind": "fixed",
+              "label": "Dictée"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB20",
+          "subjectCode": "COM",
+          "subjectName": "Communication",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Conjugaison"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB09",
+          "subjectCode": "INFO",
+          "subjectName": "Informatique",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "قراءة مسترسلة"
+            },
+            {
+              "kind": "fixed",
+              "label": "الجغرافيا"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB04",
+          "subjectCode": "SVT",
+          "subjectName": "Sciences de la vie et de la Terre",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "قراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "إملاء"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "الصرف والتحويل"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l1xqXdEZd_",
+      "className": "CM2",
+      "sectionName": "A",
+      "academicYear": "2026-2027",
+      "status": "published",
+      "entries": [
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            },
+            {
+              "kind": "fixed",
+              "label": "الاجتماعيات"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB09",
+          "subjectCode": "INFO",
+          "subjectName": "Informatique",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Correction du devoir"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lexique"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Conjugaison"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "alternative",
+              "options": [
+                "Orthographe",
+                "Dictée"
+              ]
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Acte de langage"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Projet de classe"
+            },
+            {
+              "kind": "alternative",
+              "options": [
+                "Production écrite",
+                "Poésie"
+              ]
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Acte de langage"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB20",
+          "subjectCode": "COM",
+          "subjectName": "Communication",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB08",
+          "subjectCode": "PE",
+          "subjectName": "Éducation physique et sportive",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Grammaire"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التعبير الكتابي"
+            },
+            {
+              "kind": "alternative",
+              "options": [
+                "مشروع الوحدة",
+                "الاجتماعيات"
+              ]
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "الاجتماعيات"
+            },
+            {
+              "kind": "fixed",
+              "label": "التراكيب"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Acte de langage"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التربية الفنية"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            },
+            {
+              "kind": "fixed",
+              "label": "التطبيقات الكتابية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "الإملاء"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التواصل الشفهي"
+            },
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB04",
+          "subjectCode": "SVT",
+          "subjectName": "Sciences de la vie et de la Terre",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Production écrite"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "الصرف والتحويل"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PTmGiGrvBh",
+      "className": "CM2",
+      "sectionName": "B",
+      "academicYear": "2026-2027",
+      "status": "published",
+      "entries": [
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB04",
+          "subjectCode": "SVT",
+          "subjectName": "Sciences de la vie et de la Terre",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Production écrite"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Acte de langage"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Grammaire"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Correction du devoir"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lexique"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Conjugaison"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Acte de langage"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التربية الفنية"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            },
+            {
+              "kind": "fixed",
+              "label": "التطبيقات الكتابية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Acte de langage"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "الإملاء"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            },
+            {
+              "kind": "fixed",
+              "label": "الاجتماعيات"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "الاجتماعيات"
+            },
+            {
+              "kind": "fixed",
+              "label": "التراكيب"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "الصرف والتحويل"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التعبير الكتابي"
+            },
+            {
+              "kind": "alternative",
+              "options": [
+                "مشروع الوحدة",
+                "الاجتماعيات"
+              ]
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB08",
+          "subjectCode": "PE",
+          "subjectName": "Éducation physique et sportive",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB09",
+          "subjectCode": "INFO",
+          "subjectName": "Informatique",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Projet de classe"
+            },
+            {
+              "kind": "alternative",
+              "options": [
+                "Production écrite",
+                "Poésie"
+              ]
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "التواصل الشفهي"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Orthographe"
+            },
+            {
+              "kind": "fixed",
+              "label": "Dictée"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB20",
+          "subjectCode": "COM",
+          "subjectName": "Communication",
+          "contentGroups": []
+        }
+      ]
+    },
+    {
+      "id": "XZprxnA_xa",
+      "className": "CE6",
+      "sectionName": "A",
+      "academicYear": "2026-2027",
+      "status": "published",
+      "entries": [
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Ex. écrits"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            },
+            {
+              "kind": "alternative",
+              "options": [
+                "التعبير الكتابي",
+                "مشروع الوحدة"
+              ]
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Ex. écrits / Évaluation"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Orthographe"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Production de l'écrit"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB04",
+          "subjectCode": "SVT",
+          "subjectName": "Sciences de la vie et de la Terre",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Ex. écrits"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التعبير الكتابي"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lexique"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "الإملاء"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "الصرف والتحويل"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التطبيقات الكتابية"
+            },
+            {
+              "kind": "fixed",
+              "label": "الاجتماعيات"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            },
+            {
+              "kind": "alternative",
+              "options": [
+                "التربية الفنية",
+                "الاجتماعيات"
+              ]
+            }
+          ]
+        },
+        {
+          "subjectId": "SB09",
+          "subjectCode": "INFO",
+          "subjectName": "Informatique",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB08",
+          "subjectCode": "PE",
+          "subjectName": "Éducation physique et sportive",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "التراكيب"
+            },
+            {
+              "kind": "fixed",
+              "label": "التواصل الشفهي"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Grammaire"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB20",
+          "subjectCode": "COM",
+          "subjectName": "Communication",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            },
+            {
+              "kind": "fixed",
+              "label": "Conjugaison"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        }
+      ]
+    },
+    {
+      "id": "hJBXNXv2gX",
+      "className": "CE6",
+      "sectionName": "B",
+      "academicYear": "2026-2027",
+      "status": "published",
+      "entries": [
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Orthographe"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lexique"
+            },
+            {
+              "kind": "fixed",
+              "label": "Ex. écrits"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Ex. écrits"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            },
+            {
+              "kind": "fixed",
+              "label": "Conjugaison"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التطبيقات الكتابية"
+            },
+            {
+              "kind": "fixed",
+              "label": "الاجتماعيات"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التعبير الكتابي"
+            },
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            },
+            {
+              "kind": "alternative",
+              "options": [
+                "التربية الفنية",
+                "الاجتماعيات"
+              ]
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "التربية الإسلامية"
+            },
+            {
+              "kind": "alternative",
+              "options": [
+                "التعبير الكتابي",
+                "مشروع الوحدة"
+              ]
+            }
+          ]
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Production de l'écrit"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "الإملاء"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "التراكيب"
+            },
+            {
+              "kind": "fixed",
+              "label": "التواصل الشفهي"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB09",
+          "subjectCode": "INFO",
+          "subjectName": "Informatique",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Grammaire"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB07",
+          "subjectCode": "ENG",
+          "subjectName": "Anglais",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Exp. orale"
+            },
+            {
+              "kind": "fixed",
+              "label": "Lecture"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB04",
+          "subjectCode": "SVT",
+          "subjectName": "Sciences de la vie et de la Terre",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB01",
+          "subjectCode": "FR",
+          "subjectName": "Français",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "Ex. écrits ou Évaluation"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB02",
+          "subjectCode": "AR",
+          "subjectName": "العربية",
+          "contentGroups": [
+            {
+              "kind": "fixed",
+              "label": "القراءة"
+            },
+            {
+              "kind": "fixed",
+              "label": "الصرف والتحويل"
+            }
+          ]
+        },
+        {
+          "subjectId": "SB00",
+          "subjectCode": "MATH",
+          "subjectName": "Mathématiques",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB08",
+          "subjectCode": "PE",
+          "subjectName": "Éducation physique et sportive",
+          "contentGroups": []
+        },
+        {
+          "subjectId": "SB20",
+          "subjectCode": "COM",
+          "subjectName": "Communication",
+          "contentGroups": []
+        }
+      ]
+    }
+  ]
+}

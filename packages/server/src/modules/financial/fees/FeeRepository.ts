@@ -1,5 +1,5 @@
 import { Repository } from '../../../najm';
-import { eq, desc, and, gte, lte, inArray, isNotNull, isNull, notInArray, or, sql, sum } from 'drizzle-orm';
+import { eq, desc, and, gte, lte, inArray, isNotNull, isNull, notInArray, or, sql, sum, type SQL } from 'drizzle-orm';
 import { fees, feeInstallments, feeTypes, paymentAllocations, payments, students, classes, sections, users, parents, studentParents, studentEnrollments, studentEnrollmentPlacements } from '../../../database/schema';
 import { DB } from '../../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
@@ -256,70 +256,56 @@ export class FeeRepository {
         desc(studentEnrollmentPlacements.id),
       ).as('fee_year_last_placement');
 
-    const completedAllocatedForFee = sql`
-      coalesce((
-        select sum(${paymentAllocations.amount}::numeric)
-        from ${paymentAllocations}
-        inner join ${payments} on ${paymentAllocations.paymentId} = ${payments.id}
-        where ${paymentAllocations.feeId} = ${fees.id}
-          and ${payments.status} = 'completed'
-      ), 0)
-    `;
+    // Each fee's figures are read in two passes joined per fee row: one over
+    // its completed allocations, one over its installments. Asking each
+    // figure in its own subquery read the same rows about fifteen times per
+    // fee: on JHL, all classes took 6.3 s against 0.16 s for one class.
+    const completed = sql`${payments.status} = 'completed'`;
+    const settledToDate = sql`coalesce(${payments.settledDate}, ${payments.paymentDate}) <= ${today}`;
+    const allocated = (filter?: SQL) => sql<string>`coalesce(sum(${paymentAllocations.amount}::numeric)${filter ? sql` filter (where ${filter})` : sql``}, 0)`;
+    const collectedToDate = (...methods: (typeof payments.$inferSelect.paymentMethod)[]) =>
+      allocated(methods.length ? sql`${settledToDate} and ${inArray(payments.paymentMethod, methods)}` : settledToDate);
+    const feePaid = this.db.select({
+      total: allocated().as('fee_paid_total'),
+      toDate: collectedToDate().as('fee_paid_to_date'),
+      cash: collectedToDate('cash').as('fee_paid_cash'),
+      check: collectedToDate('check').as('fee_paid_check'),
+      bankTransfer: collectedToDate('bankTransfer').as('fee_paid_bank_transfer'),
+      bankDeposit: collectedToDate('bankDeposit').as('fee_paid_bank_deposit'),
+      tpe: collectedToDate('creditCard', 'debitCard').as('fee_paid_tpe'),
+      online: collectedToDate('online').as('fee_paid_online'),
+      mobilePayment: collectedToDate('mobilePayment').as('fee_paid_mobile_payment'),
+      lastPayment: sql<string | null>`max(${payments.paymentDate}) filter (where ${settledToDate})`.as('fee_paid_last_payment'),
+    }).from(paymentAllocations)
+      .innerJoin(payments, eq(paymentAllocations.paymentId, payments.id))
+      .where(and(eq(paymentAllocations.feeId, fees.id), completed))
+      .as('fee_paid');
 
-    const collectedToDateForFee = (...methods: (typeof payments.$inferSelect.paymentMethod)[]) => sql`
-      coalesce((
-        select sum(${paymentAllocations.amount}::numeric)
-        from ${paymentAllocations}
-        inner join ${payments} on ${paymentAllocations.paymentId} = ${payments.id}
-        where ${paymentAllocations.feeId} = ${fees.id}
-          and ${payments.status} = 'completed'
-          and coalesce(${payments.settledDate}, ${payments.paymentDate}) <= ${today}
-          ${methods.length ? sql`and ${inArray(payments.paymentMethod, methods)}` : sql``}
-      ), 0)
-    `;
     // Derive the unpaid balance from completed allocations, rather than a
     // cached status: partially paid installments can also be overdue.
-    const installmentBalance = sql`greatest(${feeInstallments.amount}::numeric - coalesce((
-          select sum(${paymentAllocations.amount}::numeric)
-          from ${paymentAllocations}
-          inner join ${payments} on ${paymentAllocations.paymentId} = ${payments.id}
-          where ${paymentAllocations.installmentId} = ${feeInstallments.id}
-            and ${payments.status} = 'completed'
-            and coalesce(${payments.settledDate}, ${payments.paymentDate}) <= ${today}
-        ), 0), 0)`;
-    const overdueAmountForFee = sql`
-      coalesce((
-        select sum(${installmentBalance})
-        from ${feeInstallments}
-        where ${feeInstallments.feeId} = ${fees.id}
-          and ${feeInstallments.dueDate} < ${today}
-          and ${feeInstallments.status} != 'cancelled'
-      ), 0)
-    `;
-    const dueThroughMonthForFee = sql`
-      coalesce((
-        select sum(${installmentBalance})
-        from ${feeInstallments}
-        where ${feeInstallments.feeId} = ${fees.id}
-          and ${feeInstallments.dueDate} < (date_trunc('month', ${today}::date) + interval '1 month')::date
-          and ${feeInstallments.status} != 'cancelled'
-      ), 0)
-    `;
-    const overdueInstallmentsForFee = sql`(
-      select count(*) from ${feeInstallments}
-      where ${feeInstallments.feeId} = ${fees.id}
-        and ${feeInstallments.dueDate} < ${today}
-        and ${feeInstallments.status} != 'cancelled'
-        and ${installmentBalance} > 0
-    )`;
-    const lastPaymentForFee = sql`(
-      select max(${payments.paymentDate})
-      from ${paymentAllocations}
-      inner join ${payments} on ${paymentAllocations.paymentId} = ${payments.id}
-      where ${paymentAllocations.feeId} = ${fees.id}
-        and ${payments.status} = 'completed'
-        and coalesce(${payments.settledDate}, ${payments.paymentDate}) <= ${today}
-    )`;
+    // Joined rather than nested: drizzle leaves the columns of a one-table
+    // select unqualified, which would let `id` name the allocation's own.
+    const installmentPaid = this.db.select({
+      paid: allocated().as('installment_paid_sum'),
+    }).from(paymentAllocations)
+      .innerJoin(payments, eq(paymentAllocations.paymentId, payments.id))
+      .where(and(eq(paymentAllocations.installmentId, feeInstallments.id), completed, settledToDate))
+      .as('installment_paid');
+    const installmentBalance = this.db.select({
+      dueDate: feeInstallments.dueDate,
+      balance: sql<string>`greatest(${feeInstallments.amount}::numeric - ${installmentPaid.paid}, 0)`.as('installment_left'),
+    }).from(feeInstallments)
+      .leftJoinLateral(installmentPaid, sql`true`)
+      .where(and(eq(feeInstallments.feeId, fees.id), sql`${feeInstallments.status} != 'cancelled'`))
+      .as('installment_balance');
+    const overdue = sql`${installmentBalance.dueDate} < ${today}`;
+    const feeDue = this.db.select({
+      overdue: sql<string>`coalesce(sum(${installmentBalance.balance}) filter (where ${overdue}), 0)`.as('fee_due_overdue'),
+      throughMonth: sql<string>`coalesce(sum(${installmentBalance.balance}) filter (
+        where ${installmentBalance.dueDate} < (date_trunc('month', ${today}::date) + interval '1 month')::date
+      ), 0)`.as('fee_due_through_month'),
+      overdueCount: sql<number>`count(*) filter (where ${overdue} and ${installmentBalance.balance} > 0)`.as('fee_due_overdue_count'),
+    }).from(installmentBalance).as('fee_due');
 
     const result = await this.db.select({
       studentId: students.id,
@@ -345,27 +331,27 @@ export class FeeRepository {
       sectionName: sections.name,
       totalFees: getTotalFeesCount().as('totalFees'),
       netAmount: getNetAmountSum().as('netAmount'),
-      totalPaid: sql<string>`coalesce(sum(${completedAllocatedForFee}), 0)::text`.as('totalPaid'),
-      collectedToDate: sql<string>`coalesce(sum(${collectedToDateForFee()}), 0)::text`.as('collectedToDate'),
-      collectedCashToDate: sql<string>`coalesce(sum(${collectedToDateForFee('cash')}), 0)::text`.as('collectedCashToDate'),
-      collectedCheckToDate: sql<string>`coalesce(sum(${collectedToDateForFee('check')}), 0)::text`.as('collectedCheckToDate'),
-      collectedBankTransferToDate: sql<string>`coalesce(sum(${collectedToDateForFee('bankTransfer')}), 0)::text`.as('collectedBankTransferToDate'),
-      collectedBankDepositToDate: sql<string>`coalesce(sum(${collectedToDateForFee('bankDeposit')}), 0)::text`.as('collectedBankDepositToDate'),
-      collectedTpeToDate: sql<string>`coalesce(sum(${collectedToDateForFee('creditCard', 'debitCard')}), 0)::text`.as('collectedTpeToDate'),
-      collectedOnlineToDate: sql<string>`coalesce(sum(${collectedToDateForFee('online')}), 0)::text`.as('collectedOnlineToDate'),
-      collectedMobilePaymentToDate: sql<string>`coalesce(sum(${collectedToDateForFee('mobilePayment')}), 0)::text`.as('collectedMobilePaymentToDate'),
-      overdueAmount: sql<string>`coalesce(sum(${overdueAmountForFee}), 0)::text`.as('overdueAmount'),
-      dueThroughMonth: sql<string>`coalesce(sum(${dueThroughMonthForFee}), 0)::text`.as('dueThroughMonth'),
-      overdueInstallmentCount: sql<number>`coalesce(sum(${overdueInstallmentsForFee}), 0)::int`.as('overdueInstallmentCount'),
-      lastPayment: sql<string | null>`max(${lastPaymentForFee})`.as('lastPayment'),
+      totalPaid: sql<string>`coalesce(sum(${feePaid.total}), 0)::text`.as('totalPaid'),
+      collectedToDate: sql<string>`coalesce(sum(${feePaid.toDate}), 0)::text`.as('collectedToDate'),
+      collectedCashToDate: sql<string>`coalesce(sum(${feePaid.cash}), 0)::text`.as('collectedCashToDate'),
+      collectedCheckToDate: sql<string>`coalesce(sum(${feePaid.check}), 0)::text`.as('collectedCheckToDate'),
+      collectedBankTransferToDate: sql<string>`coalesce(sum(${feePaid.bankTransfer}), 0)::text`.as('collectedBankTransferToDate'),
+      collectedBankDepositToDate: sql<string>`coalesce(sum(${feePaid.bankDeposit}), 0)::text`.as('collectedBankDepositToDate'),
+      collectedTpeToDate: sql<string>`coalesce(sum(${feePaid.tpe}), 0)::text`.as('collectedTpeToDate'),
+      collectedOnlineToDate: sql<string>`coalesce(sum(${feePaid.online}), 0)::text`.as('collectedOnlineToDate'),
+      collectedMobilePaymentToDate: sql<string>`coalesce(sum(${feePaid.mobilePayment}), 0)::text`.as('collectedMobilePaymentToDate'),
+      overdueAmount: sql<string>`coalesce(sum(${feeDue.overdue}), 0)::text`.as('overdueAmount'),
+      dueThroughMonth: sql<string>`coalesce(sum(${feeDue.throughMonth}), 0)::text`.as('dueThroughMonth'),
+      overdueInstallmentCount: sql<number>`coalesce(sum(${feeDue.overdueCount}), 0)::int`.as('overdueInstallmentCount'),
+      lastPayment: sql<string | null>`max(${feePaid.lastPayment})`.as('lastPayment'),
       totalDiscount: getTotalDiscountSum().as('totalDiscount'),
-      totalDue: sql<string>`coalesce(sum(${fees.netAmount}::numeric - ${completedAllocatedForFee}), 0)::text`.as('totalDue'),
+      totalDue: sql<string>`coalesce(sum(${fees.netAmount}::numeric - ${feePaid.total}), 0)::text`.as('totalDue'),
       paidCount: getStatusCount('paid').as('paidCount'),
       pendingCount: getStatusCount('pending').as('pendingCount'),
       partiallyPaidCount: getStatusCount('partiallyPaid').as('partiallyPaidCount'),
       overdueCount: getStatusCount('overdue').as('overdueCount'),
       fees: sql<Array<{ id: string; feeTypeName: string }>>`
-        coalesce(json_agg(json_build_object('id', ${fees.id}, 'feeTypeName', ${feeTypes.name}))
+        coalesce(json_agg(json_build_object('id', ${fees.id}, 'feeTypeName', ${feeTypes.name}) order by ${fees.createdAt}, ${fees.id})
           filter (where ${fees.id} is not null), '[]'::json)
       `.as('fees'),
       enrollmentStatus: studentEnrollments.status,
@@ -381,6 +367,9 @@ export class FeeRepository {
       .leftJoin(sections, and(eq(lastPlacement.sectionId, sections.id), eq(sections.classId, classes.id)))
       .leftJoin(fees, and(eq(fees.studentId, students.id), eq(fees.academicYear, academicYear)))
       .leftJoin(feeTypes, eq(fees.feeTypeId, feeTypes.id))
+      // One row each per fee (an aggregate without GROUP BY), so no fee is counted twice.
+      .leftJoinLateral(feePaid, sql`true`)
+      .leftJoinLateral(feeDue, sql`true`)
       // Keep a fee with unresolved enrollment visible, with unknown class.
       .where(and(
         studentId ? eq(students.id, studentId) : undefined,
@@ -401,7 +390,7 @@ export class FeeRepository {
       )
       .having(and(tuitionPaidInFull ? sql`
         count(${fees.id}) > 0
-        and coalesce(sum(${fees.netAmount}::numeric), 0) <= coalesce(sum(${collectedToDateForFee()}), 0)
+        and coalesce(sum(${fees.netAmount}::numeric), 0) <= coalesce(sum(${feePaid.toDate}), 0)
       ` : undefined, roster.dateFrom || roster.dateTo ? sql`bool_or(exists(
         select 1 from ${paymentAllocations}
         inner join ${payments} on ${paymentAllocations.paymentId} = ${payments.id}

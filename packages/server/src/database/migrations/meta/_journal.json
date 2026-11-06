@@ -701,6 +701,13 @@
       "when": 1793829250707,
       "tag": "0099_remove_offline_reads",
       "breakpoints": true
+    },
+    {
+      "idx": 100,
+      "version": "7",
+      "when": 1793960715872,
+      "tag": "0100_student_parent_indexes",
+      "breakpoints": true
     }
   ]
 }
