@@ -227,3 +227,4 @@ export {
   chatbotStudioAuditLogsTable as chatbotStudioAuditLogs,
   chatbotUnmatchedQueriesTable as chatbotUnmatchedQueries,
 } from 'najm-rag/pg';
+export * from '../../modules/massar/massarSchema';

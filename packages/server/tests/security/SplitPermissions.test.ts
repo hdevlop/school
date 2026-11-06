@@ -63,11 +63,11 @@ describe('split action guards', () => {
     expect(permission(EventController, 'removeParticipant')).toEqual(['delete:participants']);
   });
 
-  it('has no manage action in fresh-install permissions or role defaults', () => {
+  it('keeps legacy actions split, with the dedicated Massar workflow as the only manage permission', () => {
     const catalog = JSON.parse(readFileSync(new URL('../../src/modules/seed-data/admin/permissions.json', import.meta.url), 'utf8'));
     const grants = JSON.parse(readFileSync(new URL('../../src/modules/seed-data/admin/rolePermissions.json', import.meta.url), 'utf8'));
-    expect(catalog.filter((p: any) => ['manage', 'rollover', 'resolve', 'publish'].includes(p.action))).toEqual([]);
-    expect(grants.flatMap((role: any) => role.permissions).filter((name: string) => name.startsWith('manage:'))).toEqual([]);
+    expect(catalog.filter((p: any) => p.name !== 'manage:massar' && ['manage', 'rollover', 'resolve', 'publish'].includes(p.action))).toEqual([]);
+    expect([...new Set(grants.flatMap((role: any) => role.permissions).filter((name: string) => name.startsWith('manage:')))]).toEqual(['manage:massar']);
     const migration = ['0073_split_manage_permissions', '0074_edit_workflow_permissions', '0075_publish_is_edit'].map((name) => readFileSync(new URL(`../../src/database/migrations/${name}.sql`, import.meta.url), 'utf8')).join('\n');
     for (const [legacy, replacements] of Object.entries(PERMISSION_ACTION_REPLACEMENTS)) {
       for (const replacement of replacements) {

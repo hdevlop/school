@@ -86,6 +86,7 @@ export const FEATURE_ICONS = {
   assessmentPlanning: CalendarRange,
   exams: FileText,
   grades: Award,
+  massar: BookOpen,
   calendar: CalendarDays,
   classRoutines: CalendarClock,
   documents: FileText,

@@ -27,6 +27,7 @@ import { AssessmentService } from '../assessments/AssessmentService';
 import { AttendanceService } from '../attendance/AttendanceService';
 import { ExamService } from '../exams/ExamService';
 import { ExamPlanningRepository } from '../examPlanning/ExamPlanningRepository';
+import { MassarRepository } from '../massar/MassarRepository';
 import { AnnouncementService } from '../announcements/AnnouncementService';
 import { AnnouncementRepository } from '../announcements/AnnouncementRepository';
 import { EventService as SchoolEventService } from '../events/EventService';
@@ -89,6 +90,7 @@ export class SeedService {
     private attendanceService: AttendanceService,
     private examService: ExamService,
     private examPlanningRepository: ExamPlanningRepository,
+    private massarRepository: MassarRepository,
     private announcementService: AnnouncementService,
     private announcementRepository: AnnouncementRepository,
     private schoolEventService: SchoolEventService,
@@ -176,6 +178,7 @@ export class SeedService {
    * school starts from, and everything that points at them is cleared first.
    */
   async clearAllData() {
+    await this.massarRepository.clearForSeedReset();
     await this.allocationService.clearForSeedReset();
     await this.paymentService.clearForSeedReset();
     await this.payrollService.deleteAll();

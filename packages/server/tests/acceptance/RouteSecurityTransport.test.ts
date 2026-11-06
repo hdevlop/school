@@ -22,7 +22,8 @@ process.env.SCHOOL_TRUSTED_PROXY_HOPS = '1';
 const { INJECTION_TYPES } = await import('najm-core');
 const { GUARD_CONFIG, getEffectiveGuards, getGuardMetadata } = await import('najm-guard');
 const { db } = await import('../../src/database/db');
-const { permissions, rolePermissions, roles, users, visitRequests, notifications } = await import('../../src/database/schema');
+const { permissions, rolePermissions, roles, users, visitRequests, notifications, massarImports } = await import('../../src/database/schema');
+const { template: massarTemplate } = await import('../massar/fixtures');
 const { server } = await import('../../src/index');
 
 // Reviewed routes that run no guard, each marked @Public(): sign-in,
@@ -66,8 +67,6 @@ const PUBLIC_ROUTES = [
 const SIGN_IN_ROUTES = [
   'DELETE /api/chat/sessions/:key',
   'DELETE /api/notifications/push-subscriptions',
-  'GET /api/:namespace/files/preview/*',
-  'GET /api/:namespace/files/serve/*',
   'GET /api/academic-years',
   'GET /api/academic-years/:id',
   'GET /api/ai-settings',
@@ -93,12 +92,14 @@ const SIGN_IN_ROUTES = [
 ];
 
 const base = 'http://school.local/api';
+const requestIpParts = crypto.getRandomValues(new Uint8Array(2));
+const requestIp = `198.18.${requestIpParts[0]}.${requestIpParts[1]}`;
 const port = 5530;
 const suffix = crypto.randomUUID().slice(0, 8);
 const password = `Sec-${crypto.randomUUID()}-A1a`;
 const mailbox = (name: string) => `${name}-${suffix}@security.example.test`;
 // An active account with no role, as self-registration used to leave one, and
-// one whose role grants read:classes and nothing else.
+// one whose role grants read:class-routines and nothing else.
 const roleless = { id: `security-roleless-${suffix}`, email: mailbox('roleless') };
 const reader = { id: `security-reader-${suffix}`, email: mailbox('reader'), roleId: `security-reader-${suffix}` };
 const notifier = { id: `security-notifier-${suffix}`, email: mailbox('notifier'), roleId: `security-notifier-${suffix}` };
@@ -122,11 +123,11 @@ let addedVisitPermission: string | undefined;
 const addedStudentPermissions: string[] = [];
 let usersBefore: number;
 
-type Init = { method?: string; token?: string | null; json?: unknown; body?: Uint8Array<ArrayBuffer>; type?: string };
+type Init = { method?: string; token?: string | null; json?: unknown; body?: Uint8Array<ArrayBuffer> | FormData; type?: string };
 
 async function send(path: string, init: Init = {}) {
   const token = init.token === undefined ? adminToken : init.token;
-  const headers: Record<string, string> = { 'x-forwarded-for': '198.18.0.21' };
+  const headers: Record<string, string> = { 'x-forwarded-for': requestIp };
   if (token) headers.Authorization = `Bearer ${token}`;
   if (init.json !== undefined) headers['content-type'] = 'application/json';
   if (init.type) headers['content-type'] = init.type;
@@ -153,10 +154,10 @@ async function login(email: string, secret: string) {
 beforeAll(async () => {
   const [before] = await db.select({ count: count() }).from(users);
   usersBefore = before.count;
-  const [existing] = await db.select({ id: permissions.id }).from(permissions).where(eq(permissions.name, 'read:classes'));
+  const [existing] = await db.select({ id: permissions.id }).from(permissions).where(eq(permissions.name, 'read:class-routines'));
   if (!existing) {
-    addedPermission = `security-read-classes-${suffix}`;
-    await db.insert(permissions).values({ id: addedPermission, name: 'read:classes', resource: 'classes', action: 'read' });
+    addedPermission = `security-read-routines-${suffix}`;
+    await db.insert(permissions).values({ id: addedPermission, name: 'read:class-routines', resource: 'class-routines', action: 'read' });
   }
   await db.insert(roles).values({ id: reader.roleId, name: `security-reader-${suffix}` });
   await db.insert(rolePermissions).values({ roleId: reader.roleId, permissionId: existing?.id ?? addedPermission! });
@@ -224,6 +225,51 @@ afterAll(async () => {
 });
 
 describe('route security over the history fixture', () => {
+  it('requires Massar permissions and previews multipart exports without changing the catalog', async () => {
+    expect(await status('/massar/rounds', { token: rolelessToken })).toBe(403);
+    expect(await status('/massar/setup', { token: readerToken })).toBe(403);
+    const body = new FormData(); body.append('upload0', new File([new Uint8Array(massarTemplate)], 'synthetic.xlsx'));
+    const response = await send('/massar/imports/preview', { method: 'POST', body });
+    const result = await response.json() as any;
+    expect(response.status, JSON.stringify(result)).toBe(200);
+    expect(result.data).toMatchObject({ acceptedCount: 1, hasCleanTemplate: true });
+    const id = result.data.previewId;
+    const [preview] = await db.select().from(massarImports).where(eq(massarImports.id, id));
+    expect(preview).toBeDefined();
+    try {
+      expect(await status(`/massar/files/serve/${preview.fileId}`)).toBe(403);
+      expect(await status(`/massar/imports/${id}/cancel`, { method: 'POST', token: readerToken })).toBe(403);
+      expect(await status(`/massar/imports/${id}/cancel`, { method: 'POST' })).toBe(200);
+      expect(await db.select().from(massarImports).where(eq(massarImports.id, id))).toHaveLength(0);
+      const { StorageService } = await import('najm-storage');
+      const storage = await server.container.resolve(StorageService);
+      expect(await storage.get('massar', preview.fileId)).toBeNull();
+    }
+    finally {
+      await db.delete(massarImports).where(eq(massarImports.id, id));
+      const { StorageService } = await import('najm-storage');
+      await (await server.container.resolve(StorageService)).delete('massar', preview.fileId);
+    }
+  });
+  it('cleans expired Massar preview files and records through the running maintenance service', async () => {
+    const body = new FormData(); body.append('upload0', new File([new Uint8Array(massarTemplate)], 'synthetic.xlsx'));
+    const response = await send('/massar/imports/preview', { method: 'POST', body });
+    const result = await response.json() as any;
+    expect(response.status).toBe(200);
+    const [preview] = await db.select().from(massarImports).where(eq(massarImports.id, result.data.previewId));
+    const { StorageService } = await import('najm-storage');
+    const { MassarCleanupService } = await import('../../src/modules/massar/MassarCleanupService');
+    const storage = await server.container.resolve(StorageService);
+    try {
+      await db.update(massarImports).set({ expiresAt: new Date(Date.now() - 1000).toISOString() }).where(eq(massarImports.id, preview.id));
+      await (await server.container.resolve(MassarCleanupService)).cleanup();
+      expect(await db.select().from(massarImports).where(eq(massarImports.id, preview.id))).toHaveLength(0);
+      expect(await storage.get('massar', preview.fileId)).toBeNull();
+    } finally {
+      await db.delete(massarImports).where(eq(massarImports.id, preview.id));
+      await storage.delete('massar', preview.fileId);
+    }
+  });
   it('refuses a student import to a role that may add students but not edit them', async () => {
     const request = { method: 'POST', json: {} };
     expect(await status('/students/import', { ...request, token: studentAdderToken })).toBe(403);
@@ -325,6 +371,9 @@ describe('route security over the history fixture', () => {
 
   it('leaves stored files to administrators, and serves them to any signed-in account', async () => {
     const upload = await send(`/${namespace}/files/probe.png`, { method: 'POST', body: png, type: 'image/png' });
+    for (const [name, type] of [['probe.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], ['probe.txt', 'text/plain']]) {
+      expect(await status(`/${namespace}/files/${name}`, { method: 'POST', body: new Uint8Array([1, 2, 3]), type })).toBe(400);
+    }
     expect(upload.status, await upload.clone().text()).toBe(200);
 
     const refused = [
@@ -343,7 +392,10 @@ describe('route security over the history fixture', () => {
     }
 
     const served = await send(`/${namespace}/files/serve/probe.png`, { token: rolelessToken });
-    expect(served.status).toBe(200);
+    expect(served.status, await served.clone().text()).toBe(200);
+    for (const namespace of ['massar', 'MaSsAr']) for (const token of [rolelessToken, adminToken]) {
+      expect(await status(`/${namespace}/files/serve/private.xlsx`, { token })).toBe(403);
+    }
     expect(new Uint8Array(await served.arrayBuffer())).toEqual(png);
     expect(await status(`/${namespace}/files/serve/probe.png`, { token: null })).toBe(401);
 
@@ -355,7 +407,7 @@ describe('route security over the history fixture', () => {
     expect(await status(`/${namespace}/files/probe.png`, { method: 'DELETE' })).toBe(200);
   });
 
-  it('offers no storage or auth helpers over MCP, and runs timetable tools for read:classes alone', async () => {
+  it('offers no storage or auth helpers over MCP, and runs timetable tools for read:class-routines alone', async () => {
     const { Client } = await import('@modelcontextprotocol/sdk/client/index.js');
     const { StreamableHTTPClientTransport } = await import('@modelcontextprotocol/sdk/client/streamableHttp.js');
     const connect = async (token: string) => {
@@ -389,7 +441,7 @@ describe('route security over the history fixture', () => {
     }
   });
 
-  it('reads timetables with read:classes, and refuses an account with no role', async () => {
+  it('reads timetables with read:class-routines, and refuses an account with no role', async () => {
     for (const path of ['/class-routines/periods', '/class-routines']) {
       expect(await status(path, { token: rolelessToken }), path).toBe(403);
       const read = await send(path, { token: readerToken });

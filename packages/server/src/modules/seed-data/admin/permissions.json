@@ -850,5 +850,29 @@
     "description": "Permission to open the dashboard home page",
     "resource": "dashboard",
     "action": "read"
+  },
+  {
+    "name": "read:massar",
+    "resource": "massar",
+    "action": "read",
+    "description": "Read owned Massar rounds, sheets and progress"
+  },
+  {
+    "name": "manage:massar",
+    "resource": "massar",
+    "action": "manage",
+    "description": "Manage Massar imports, mappings, rounds and exports"
+  },
+  {
+    "name": "update:massar-marks",
+    "resource": "massar-marks",
+    "action": "update",
+    "description": "Enter marks in owned Massar sheets"
+  },
+  {
+    "name": "sidebar:massar",
+    "resource": "sidebar",
+    "action": "massar",
+    "description": "Show the Massar navigation group"
   }
 ]

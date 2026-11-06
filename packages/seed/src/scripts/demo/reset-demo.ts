@@ -24,6 +24,7 @@ import {
   AssessmentService,
   ExamService,
   ExamPlanningRepository,
+  MassarRepository,
   AttendanceService,
   AlertRepository,
   AnnouncementRepository,
@@ -45,6 +46,7 @@ import type { Server } from '@sms/server/najm';
 type ResetOptions = { includeAcademic?: boolean };
 
 export async function clearDemoData(server: Server, { includeAcademic = false }: ResetOptions = {}) {
+  await (await server.container.resolve(MassarRepository)).clearForSeedReset();
   const allocationService = await server.container.resolve(AllocationService);
   const paymentService = await server.container.resolve(PaymentService);
   const installmentService = await server.container.resolve(InstallmentService);

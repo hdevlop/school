@@ -48,3 +48,4 @@ export * from './seed';
 export * from './landing';
 export * from './visitRequests';
 export * from './backup';
+export * from './massar';

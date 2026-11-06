@@ -6,6 +6,7 @@
   "include": [
     "src/**/*.ts",
     "tests/classRoutines/**/*.test.ts",
+    "tests/massar/**/*.ts",
     "tests/academicYears/**/*.test.ts",
     "tests/academicYears/fixtures/**/*.ts",
     "tests/acceptance/**/*.test.ts",

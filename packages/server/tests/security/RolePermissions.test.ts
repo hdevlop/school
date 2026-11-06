@@ -181,7 +181,8 @@ describe('seeded permissions', () => {
   // général, who alone edits student records, deals with parents and visits and
   // writes to the school.
   it('give the floor manager the supervisor\'s work without student edits, parents, visits or sending', () => {
-    const keptBySupervisor = ['read:insurance', 'update:students', 'read:parents', 'read:visit-requests', 'update:visit-requests', 'create:alerts', 'create:announcements', 'update:announcements'];
+    // Massar access for floor managers is pending an owner decision in the plan.
+    const keptBySupervisor = ['read:massar', 'sidebar:massar', 'read:insurance', 'update:students', 'read:parents', 'read:visit-requests', 'update:visit-requests', 'create:alerts', 'create:announcements', 'update:announcements'];
     expect([...grants.floor_manager].sort()).toEqual(grants.supervisor.filter((permission: string) => !keptBySupervisor.includes(permission)).sort());
     for (const received of ['read:alerts', 'update:alerts', 'read:announcements']) expect(grants.floor_manager).toContain(received);
   });
@@ -222,17 +223,19 @@ describe('the registrar role', () => {
   const seeded = (seedData('rolePermissions') as { roleName: string; permissions: string[] }[])
     .find((row) => row.roleName === 'registrar')!.permissions;
 
-  // Student import asks for create and update together; grade export asks only to read.
-  it('can import and edit students and read grades, and changes neither grades nor anything else', () => {
+  // School grades stay read-only; the separate Massar workflow belongs to the registrar.
+  it('imports and edits students, reads School grades, and manages the Massar exchange', () => {
     expect([...seeded].sort()).toEqual([
-      'create:students', 'read:assessments', 'read:classes', 'read:dashboard', 'read:exams', 'read:grades',
-      'read:sections', 'read:students', 'read:subjects', 'read:teachers', 'update:students',
+      'create:students', 'manage:massar', 'read:assessments', 'read:classes', 'read:dashboard', 'read:exams', 'read:grades', 'read:massar',
+      'read:sections', 'read:students', 'read:subjects', 'read:teachers', 'sidebar:massar', 'update:massar-marks', 'update:students',
     ]);
   });
 
   it('gives an existing database the role a new one is seeded with', () => {
-    const migrated = [...sql.matchAll(/'([\w-]+:[\w-]+)'/g)].map((match) => match[1]);
-    expect(migrated.sort()).toEqual([...seeded].sort());
+    const massarSql = readFileSync(new URL('../../src/database/migrations/0101_massar_grade_sheets.sql', import.meta.url), 'utf8');
+    expect(massarSql).toContain("r.name IN ('admin', 'principal', 'registrar')");
+    const migrated = [...sql.matchAll(/'([\w-]+:[\w-]+)'/g), ...massarSql.matchAll(/'((?:read:massar|manage:massar|update:massar-marks|sidebar:massar))'/g)].map(match => match[1]);
+    expect([...new Set(migrated)].sort()).toEqual([...seeded].sort());
     expect((seedData('roles') as { name: string }[]).some((role) => role.name === 'registrar')).toBe(true);
   });
 

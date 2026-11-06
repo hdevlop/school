@@ -41,7 +41,7 @@ describe('storage routes', () => {
     const routes = getRoutes(StorageController).map((route) => route.methodName);
     expect(routes.sort()).toEqual([...ADMIN_STORAGE_ROUTES, 'serveFile', 'servePreview'].sort());
     for (const method of ADMIN_STORAGE_ROUTES) expect(guards(StorageController, method), method).toEqual(administrator);
-    for (const method of ['serveFile', 'servePreview']) expect(guards(StorageController, method), method).toEqual([signIn]);
+    for (const method of ['serveFile', 'servePreview']) expect(guards(StorageController, method), method).toEqual([signIn, ['PrivateStorageGuard', null]]);
   });
 });
 

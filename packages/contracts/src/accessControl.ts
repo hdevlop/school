@@ -28,6 +28,7 @@ export const SIDEBAR_ENTRIES = [
   ['assessments', '/assessments', 'navigation.assessments'],
   ['exams', '/exams', 'navigation.exams'],
   ['grades', '/grades', 'navigation.grades'],
+  ['massar', '/massar/sheets', 'massar.title'],
   ['events', '/calendar', 'navigation.calendar'],
   ['class-routines', '/class-routines', 'navigation.classRoutines'],
   ['classes', '/classes', 'navigation.classes'],
@@ -50,13 +51,14 @@ export const isSidebarPermission = (name: string) => name.startsWith('sidebar:')
 
 /** Stable navigation identities; labels and role access stay in the app. */
 export const SIDEBAR_ORDER_IDS = [
-  'financial', 'attendance', 'student-conduct', 'evaluations', 'academic',
+  'financial', 'attendance', 'student-conduct', 'evaluations', 'academic', 'massar', '/massar/rounds', '/massar/setup',
   'transport', 'access-control', 'appearance', '/exam-planning',
   ...SIDEBAR_ENTRIES.map((entry) => entry[1]),
 ] as const;
 export type SidebarOrderId = typeof SIDEBAR_ORDER_IDS[number];
 
 export function sidebarKeyForItem(itemId: string): SidebarKey | undefined {
+  if (itemId === '/massar/rounds' || itemId === '/massar/setup') return 'massar';
   const pageId = itemId === '/exam-planning' || itemId === '/assessment-planning' ? '/exams' : itemId;
   return SIDEBAR_ENTRIES.find((entry) => entry[1] === pageId)?.[0];
 }

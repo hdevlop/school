@@ -198,6 +198,7 @@
         "reflect-metadata": "^0.2.2",
         "sharp": "0.35.5",
         "web-push": "3.6.7",
+        "xlsx-manager": "2.1.0",
         "zod": "^4.4.3",
       },
       "devDependencies": {
@@ -2372,6 +2373,8 @@
     "@radix-ui/react-visually-hidden/@radix-ui/react-primitive": ["@radix-ui/react-primitive@2.1.3", "", { "dependencies": { "@radix-ui/react-slot": "1.2.3" }, "peerDependencies": { "@types/react": "*", "@types/react-dom": "*", "react": "^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc", "react-dom": "^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc" }, "optionalPeers": ["@types/react", "@types/react-dom"] }, "sha512-m9gTwRkhy2lvCPe6QJp4d3G1TYEUHn/FzJUtq9MjH46an1wJU+GdoGC5VLof8RX8Ft/DlpshApkhswDLZzHIcQ=="],
 
     "@reduxjs/toolkit/immer": ["immer@11.1.4", "", {}, "sha512-XREFCPo6ksxVzP4E0ekD5aMdf8WMwmdNaz6vuvxgI40UaEiu6q3p8X52aU6GdyvLY3XXX/8R7JOTXStz/nBbRw=="],
+
+    "@sms/server/xlsx-manager": ["xlsx-manager@2.1.0", "", { "dependencies": { "exceljs": "^4.4.0", "fast-xml-parser": "^5.3.2", "jszip": "^3.10.1" } }, "sha512-q9UTq67fNu5Hf3Z8tQjYwIA2HDeCkwBmQR2wZbPFjv1F7mxJIQ45QI5jMESeukZjRVuG8/80YeuYU6VhIRNMSA=="],
 
     "@tailwindcss/oxide-wasm32-wasi/@emnapi/core": ["@emnapi/core@1.10.0", "", { "dependencies": { "@emnapi/wasi-threads": "1.2.1", "tslib": "^2.4.0" }, "bundled": true }, "sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw=="],
 

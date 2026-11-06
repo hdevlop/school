@@ -547,3 +547,4 @@ export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, MaintenanceValidator, [MaintenanceRepository, VehicleRepository]);
   registerSeedDeps(seedContainer, MaintenanceService, [MaintenanceRepository, MaintenanceValidator]);
 }
+export { MassarRepository } from '../massar/MassarRepository';

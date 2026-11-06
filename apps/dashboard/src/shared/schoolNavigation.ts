@@ -105,6 +105,11 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
     },
     evaluations,
     { id: '/grades', label: t('navigation.grades'), icon: FEATURE_ICONS.grades, href: '/grades', access: 'grades' },
+    { id: 'massar', label: t('massar.title'), icon: FEATURE_ICONS.massar, children: [
+      { id: '/massar/rounds', label: t('massar.rounds'), icon: FEATURE_ICONS.massar, href: '/massar/rounds', access: 'massarRounds' },
+      { id: '/massar/sheets', label: t(role === 'teacher' ? 'massar.mySheets' : 'massar.allSheets'), icon: FEATURE_ICONS.massar, href: '/massar/sheets', access: 'massarSheets' },
+      { id: '/massar/setup', label: t('massar.setup'), icon: FEATURE_ICONS.massar, href: '/massar/setup', access: 'massarSetup' },
+    ] },
     { id: '/calendar', label: t('navigation.calendar'), icon: FEATURE_ICONS.calendar, href: '/calendar', access: 'calendar' },
     routine,
     {

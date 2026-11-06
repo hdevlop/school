@@ -4,7 +4,11 @@
     "permissions": [
       "*:*",
       "read:visit-requests",
-      "update:visit-requests"
+      "update:visit-requests",
+      "read:massar",
+      "manage:massar",
+      "update:massar-marks",
+      "sidebar:massar"
     ]
   },
   {
@@ -139,7 +143,11 @@
       "read:participants",
       "create:participants",
       "update:participants",
-      "delete:participants"
+      "delete:participants",
+      "read:massar",
+      "manage:massar",
+      "update:massar-marks",
+      "sidebar:massar"
     ]
   },
   {
@@ -237,7 +245,10 @@
       "read:announcements",
       "read:events",
       "read:assessments",
-      "read:exams"
+      "read:exams",
+      "read:massar",
+      "update:massar-marks",
+      "sidebar:massar"
     ]
   },
   {
@@ -341,7 +352,9 @@
       "read:announcements",
       "update:announcements",
       "read:visit-requests",
-      "update:visit-requests"
+      "update:visit-requests",
+      "read:massar",
+      "sidebar:massar"
     ]
   },
   {
@@ -403,7 +416,11 @@
       "read:subjects",
       "read:grades",
       "read:exams",
-      "read:assessments"
+      "read:assessments",
+      "read:massar",
+      "manage:massar",
+      "update:massar-marks",
+      "sidebar:massar"
     ]
   }
 ]

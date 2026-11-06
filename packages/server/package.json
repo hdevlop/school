@@ -75,9 +75,9 @@
     "lodash.isempty": "^4.4.0",
     "najm-auth": "6.11.0",
     "najm-cache": "2.3.0",
+    "najm-chatbot": "3.7.1",
     "najm-core": "3.1.0",
     "najm-cors": "2.0.3",
-    "najm-chatbot": "3.7.1",
     "najm-database": "2.3.3",
     "najm-email": "3.3.0",
     "najm-event": "2.0.2",
@@ -97,8 +97,9 @@
     "postgres": "3.4.8",
     "reflect-metadata": "^0.2.2",
     "sharp": "0.35.5",
-    "zod": "^4.4.3",
-    "web-push": "3.6.7"
+    "web-push": "3.6.7",
+    "xlsx-manager": "2.1.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/web-push": "3.6.4"
