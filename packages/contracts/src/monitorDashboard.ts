@@ -1,11 +1,11 @@
 /**
- * The floor manager home page: the shape the server answers with. Every
- * figure covers the sections of the grades the signed-in floor manager runs
+ * The monitor home page: the shape the server answers with. Every
+ * figure covers the sections of the grades the signed-in monitor runs
  * today. Dependency-free, like every contracts module.
  */
 
 /** One section of a managed grade and how today's register stands. */
-export interface FloorManagerDashboardSection {
+export interface MonitorDashboardSection {
   classId: string;
   className: string;
   sectionId: string;
@@ -21,7 +21,7 @@ export interface FloorManagerDashboardSection {
 }
 
 /** A student marked absent or late today in one of the sections. */
-export interface FloorManagerDashboardAbsence {
+export interface MonitorDashboardAbsence {
   studentId: string;
   studentName: string;
   image: string | null;
@@ -34,7 +34,7 @@ export interface FloorManagerDashboardAbsence {
 }
 
 /** An open discipline incident in one of the sections. */
-export interface FloorManagerDashboardIncident {
+export interface MonitorDashboardIncident {
   id: string;
   studentName: string;
   className: string;
@@ -46,7 +46,7 @@ export interface FloorManagerDashboardIncident {
   incidentAt: string;
 }
 
-export interface FloorManagerDashboardAttention {
+export interface MonitorDashboardAttention {
   /** Sections with no register today, once the school day has started. */
   missingRegisters: number;
   absentToday: number;
@@ -55,7 +55,7 @@ export interface FloorManagerDashboardAttention {
   unreadNotifications: number;
 }
 
-export interface FloorManagerDashboardOverview {
+export interface MonitorDashboardOverview {
   /** The school's business date the figures describe. */
   date: string;
   academicYear: string;
@@ -68,7 +68,7 @@ export interface FloorManagerDashboardOverview {
     email: string | null;
     phone: string | null;
     address: string | null;
-    /** The grades (class names) the floor manager runs today. */
+    /** The grades (class names) the monitor runs today. */
     grades: string[];
   };
   kpis: {
@@ -88,8 +88,8 @@ export interface FloorManagerDashboardOverview {
     todayAbsent: number;
     todayLate: number;
   };
-  sections: FloorManagerDashboardSection[];
-  absences: FloorManagerDashboardAbsence[];
-  incidents: FloorManagerDashboardIncident[];
-  attention: FloorManagerDashboardAttention;
+  sections: MonitorDashboardSection[];
+  absences: MonitorDashboardAbsence[];
+  incidents: MonitorDashboardIncident[];
+  attention: MonitorDashboardAttention;
 }

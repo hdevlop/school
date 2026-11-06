@@ -58,7 +58,7 @@ const YEAR = { id: 'year-old', label: '2025-2026', reportingStartsOn: '2025-09-0
 const SCHOOL_WIDE = [
   'admin', 'principal', 'accounting', 'secretary', 'driver', 'assistant', 'supervisor',
 ] as const;
-const ROLES = ['teacher', 'floor_manager', 'parent', 'student', ...SCHOOL_WIDE, 'custom-role'] as const;
+const ROLES = ['teacher', 'monitor', 'parent', 'student', ...SCHOOL_WIDE, 'custom-role'] as const;
 
 type Context = { hasActiveContext(): boolean; getUser(): { id: string; role: string } | null };
 

@@ -14,13 +14,13 @@ import TeachersAttendance from './components/TeachersAttendance';
 import ExpenseBreakdownChart from '@/features/Reports/components/ExpenseBreakdownChart';
 import OverdueFees from './components/OverdueFees';
 import TeacherDashboard from './components/Teacher';
-import FloorManagerDashboard from './components/FloorManager';
+import MonitorDashboard from './components/Monitor';
 import SupervisorDashboard from './components/Supervisor';
 import SecretaryDashboard from './components/Secretary';
 import RegistrarDashboard from './components/Registrar';
 import {
   canReadFinanceDashboard, rowSpans, schoolDashboardCards,
-  usesFloorManagerDashboard, usesRegistrarDashboard, usesSecretaryDashboard, usesSupervisorDashboard, usesTeacherDashboard,
+  usesMonitorDashboard, usesRegistrarDashboard, usesSecretaryDashboard, usesSupervisorDashboard, usesTeacherDashboard,
 } from './config/dashboardAudience';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -30,7 +30,7 @@ const Dashboard = () => {
   const { user } = useAuth();
   const role = (user as { role?: string } | null)?.role;
   if (usesTeacherDashboard(role)) return <TeacherDashboard />;
-  if (usesFloorManagerDashboard(role)) return <FloorManagerDashboard />;
+  if (usesMonitorDashboard(role)) return <MonitorDashboard />;
   if (usesSupervisorDashboard(role)) return <SupervisorDashboard />;
   if (usesSecretaryDashboard(role)) return <SecretaryDashboard />;
   if (usesRegistrarDashboard(role)) return <RegistrarDashboard />;

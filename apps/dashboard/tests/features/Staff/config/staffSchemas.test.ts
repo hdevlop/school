@@ -64,12 +64,12 @@ describe('staff form schemas', () => {
     expect(assignmentStep.safeParse({ role: 'secretary', classIds: [], assignments: [] }).success).toBe(true);
   });
 
-  // A floor manager's grades are class names, one assignment each on submit.
-  it('keeps the grades of a floor manager, and allows saving before any is chosen', () => {
+  // A monitor's grades are class names, one assignment each on submit.
+  it('keeps the grades of a monitor, and allows saving before any is chosen', () => {
     const { assignmentStep, full } = createStaffSchemas(translatorFor('en'));
-    const step = assignmentStep.parse({ role: 'floorManager', classNames: ['PS', 'MS'], assignments: [] });
+    const step = assignmentStep.parse({ role: 'monitor', classNames: ['PS', 'MS'], assignments: [] });
     expect(step.classNames).toEqual(['PS', 'MS']);
-    expect(full.safeParse({ ...validPersonal, ...validEmployment, role: 'floorManager', classNames: [] }).success).toBe(true);
+    expect(full.safeParse({ ...validPersonal, ...validEmployment, role: 'monitor', classNames: [] }).success).toBe(true);
   });
 
   it('allows an accountant without a cycle while refusing an incomplete dated assignment', () => {

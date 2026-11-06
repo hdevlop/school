@@ -28,7 +28,7 @@ function render(table: any, condition: unknown) {
   return db.select().from(table).where(condition).toSQL() as { sql: string; params: unknown[] };
 }
 
-const read = (token: any) => render(token.table, ownershipCondition(db, [token], signedIn('floor_manager')));
+const read = (token: any) => render(token.table, ownershipCondition(db, [token], signedIn('monitor')));
 
 // The business day the assignment must hold on.
 beforeAll(() => {
@@ -37,9 +37,9 @@ beforeAll(() => {
 });
 afterAll(() => setSystemTime());
 
-describe('floor manager ownership', () => {
+describe('monitor ownership', () => {
   it('is class-scoped, as the supervisor is', () => {
-    expect(SCHOOL_WIDE_ROLES).not.toContain('floor_manager');
+    expect(SCHOOL_WIDE_ROLES).not.toContain('monitor');
     expect(SCHOOL_WIDE_ROLES).not.toContain('supervisor');
   });
 
@@ -50,7 +50,7 @@ describe('floor manager ownership', () => {
     ];
     for (const token of tokens) {
       const { sql, params } = read(token);
-      expect(sql, token.name).toContain('from floor_manager_assignments managed_grade');
+      expect(sql, token.name).toContain('from monitor_assignments managed_grade');
       expect(sql, token.name).toContain('join staff manager on manager.id = managed_grade.staff_id');
       expect(sql, token.name).toContain("managed_grade.status = 'active'");
       expect(sql, token.name).toContain('managed_grade.start_date is null or managed_grade.start_date <=');
@@ -105,7 +105,7 @@ describe('floor manager ownership', () => {
   });
 
   it('narrows a year\'s roster to placements in their classes that year', () => {
-    const roster = render(Student.table, studentReachedInYear('year-1', signedIn('floor_manager')));
+    const roster = render(Student.table, studentReachedInYear('year-1', signedIn('monitor')));
     expect(roster.sql).toContain('e.academic_year_id = $');
     expect(roster.sql).toContain('managed_class.id = p.class_id');
     expect(roster.params).toContain('year-1');

@@ -6,14 +6,14 @@ import Link from 'next/link';
 import { UserX } from 'lucide-react';
 import { NAvatar, NBadge, NCard, NCardAction, NEmptyState, NSkeleton, NajmScroll, cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import type { FloorManagerDashboardAbsence } from '@sms/contracts/floor-manager-dashboard';
-import { FLOOR_MANAGER_DASHBOARD_LINKS, sectionAttendanceHref } from '../../config/floorManagerDashboardLinks';
+import type { MonitorDashboardAbsence } from '@sms/contracts/monitor-dashboard';
+import { MONITOR_DASHBOARD_LINKS, sectionAttendanceHref } from '../../config/monitorDashboardLinks';
 import { CardLink, SCROLL_CARD, SCROLL_LIST } from '../Teacher/shared';
 
 const VISIBLE_ABSENCES = 5;
 
 type AbsencesCardProps = {
-  absences: FloorManagerDashboardAbsence[] | undefined;
+  absences: MonitorDashboardAbsence[] | undefined;
   // Without a school day there is no register to be absent from.
   schoolDay: boolean | undefined;
   loading: boolean;
@@ -35,7 +35,7 @@ const AbsencesCard = ({ absences, schoolDay, loading, error, onRetry, className 
 
   return (
     <NCard
-      title={t('dashboard.floorManager.absences.title')}
+      title={t('dashboard.monitor.absences.title')}
       icon={UserX}
       className={cn('h-full', className)}
       classNames={SCROLL_CARD}
@@ -46,7 +46,7 @@ const AbsencesCard = ({ absences, schoolDay, loading, error, onRetry, className 
       onRetry={onRetry}
     >
       <NCardAction>
-        <CardLink href={FLOOR_MANAGER_DASHBOARD_LINKS.attendance}>{t('dashboard.floorManager.absences.viewAll')}</CardLink>
+        <CardLink href={MONITOR_DASHBOARD_LINKS.attendance}>{t('dashboard.monitor.absences.viewAll')}</CardLink>
       </NCardAction>
 
       {rows.length ? (
@@ -73,7 +73,7 @@ const AbsencesCard = ({ absences, schoolDay, loading, error, onRetry, className 
       ) : (
         <NEmptyState
           icon={FEATURE_ICONS.studentAttendance}
-          title={t(schoolDay === false ? 'dashboard.floorManager.absences.noSchool' : 'dashboard.floorManager.absences.empty')}
+          title={t(schoolDay === false ? 'dashboard.monitor.absences.noSchool' : 'dashboard.monitor.absences.empty')}
           className="py-4"
         />
       )}

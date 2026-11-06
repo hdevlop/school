@@ -36,7 +36,7 @@ const calculateStaffPay = (row) => {
 
 const resolveRoleLabel = (row, language, t) => {
   if (!row?.role) return '—';
-  if (row.role === 'floorManager') return t('staff.roles.floorManager');
+  if (row.role === 'monitor') return t('staff.roles.monitor');
   const localized = row?.roleLabels?.[language];
   if (localized) return localized;
   if (row?.roleLabel) return row.roleLabel;

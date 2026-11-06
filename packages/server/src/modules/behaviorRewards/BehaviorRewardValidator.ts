@@ -1,7 +1,7 @@
 import { Err, I18n, Service } from '../../najm';
 import { SCHOOL_WIDE_ROLES } from '../../auth';
 import { BehaviorRewardRepository } from './BehaviorRewardRepository';
-import { FloorManagerScopeRepository } from '../staff/floorManagerScope';
+import { MonitorScopeRepository } from '../staff/monitorScope';
 import { SupervisorScopeRepository } from '../staff/supervisorScope';
 
 export type BehaviorRewardActor = {
@@ -20,7 +20,7 @@ export class BehaviorRewardValidator {
 
   constructor(
     private behaviorRewardRepository: BehaviorRewardRepository,
-    private floorManagers: FloorManagerScopeRepository,
+    private monitors: MonitorScopeRepository,
     private supervisors: SupervisorScopeRepository,
   ) {}
 
@@ -31,10 +31,10 @@ export class BehaviorRewardValidator {
   }
 
   // The route's permission decides who records; a teacher records for their
-  // own sections, a floor manager for their classes, a school-wide role for
+  // own sections, a monitor for their classes, a school-wide role for
   // any student.
   ensureSupportedActor(actor: BehaviorRewardActor) {
-    if (!['teacher', 'floor_manager', 'supervisor'].includes(actor.role ?? '') && !SCHOOL_WIDE_ROLES.includes(actor.role ?? '')) {
+    if (!['teacher', 'monitor', 'supervisor'].includes(actor.role ?? '') && !SCHOOL_WIDE_ROLES.includes(actor.role ?? '')) {
       Err(403, this.bt('forbidden'));
     }
   }
@@ -56,7 +56,7 @@ export class BehaviorRewardValidator {
       const assigned = await this.behaviorRewardRepository.isTeacherAssignedToSection(actor.id, placement.sectionId);
       if (!assigned) Err(403, this.bt('studentNotAssigned'));
     }
-    if (actor.role === 'floor_manager' && !await this.floorManagers.managesClass(actor.id, placement.classId)) {
+    if (actor.role === 'monitor' && !await this.monitors.managesClass(actor.id, placement.classId)) {
       Err(403, this.bt('studentNotAssigned'));
     }
     if (actor.role === 'supervisor' && !await this.supervisors.managesClass(actor.id, placement.classId)) {

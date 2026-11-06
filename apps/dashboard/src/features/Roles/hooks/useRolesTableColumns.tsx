@@ -45,7 +45,7 @@ export const useRolesTableColumns = (onManagePermissions?: (role: any) => void) 
       header: t('roles.table.description'),
       cell: (info) => (
         <div className="text-muted-foreground max-w-[300px] truncate">
-          {info.row.original.name === 'floor_manager' ? t('roleAccess.scope.floor_manager') : info.getValue() || t('roles.table.noDescription')}
+          {info.row.original.name === 'monitor' ? t('roleAccess.scope.monitor') : info.getValue() || t('roles.table.noDescription')}
         </div>
       ),
       size: 300,

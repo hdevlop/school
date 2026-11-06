@@ -8,8 +8,8 @@ import { PersonalNotificationRepository } from '../../notifications/Notification
 import { getBusinessDateOverride } from '../../../shared/businessDate';
 import { schoolClock } from '../teacher/teacherDashboardMetrics';
 import { isSchoolDay, summarizeRegisters } from '../registerSummary';
-import { FloorManagerDashboardRepository } from '../floorManager/FloorManagerDashboardRepository';
-import { FloorManagerDashboardValidator } from '../floorManager/FloorManagerDashboardValidator';
+import { MonitorDashboardRepository } from '../monitor/MonitorDashboardRepository';
+import { MonitorDashboardValidator } from '../monitor/MonitorDashboardValidator';
 import { SupervisorDashboardRepository } from './SupervisorDashboardRepository';
 
 type DashboardUser = { id: string; role?: string; permissions?: string[] };
@@ -24,11 +24,11 @@ export class SupervisorDashboardService {
 
   constructor(
     private repository: SupervisorDashboardRepository,
-    private sectionReads: FloorManagerDashboardRepository,
+    private sectionReads: MonitorDashboardRepository,
     private settingsRepository: SettingsRepository,
     private academicYears: AcademicYearValidator,
     private notifications: PersonalNotificationRepository,
-    private validator: FloorManagerDashboardValidator,
+    private validator: MonitorDashboardValidator,
   ) {}
 
   // The day of the classes assigned to the supervisor. Each part is read only

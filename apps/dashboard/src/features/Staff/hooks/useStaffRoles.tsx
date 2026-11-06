@@ -12,9 +12,7 @@ export const useStaffRoles = (options?) => {
   });
   const { data, isLoading, isError, error, refetch } = crud.useGetAll(enabled);
 
-  const roles = useMemo(() => (data || []).map(role => role.code === 'floorManager'
-    ? { ...role, label: 'Monitor', labels: { ...role.labels, en: 'Monitor', fr: 'Moniteur', ar: 'المراقب', es: 'Monitor' } }
-    : role), [data]);
+  const roles = useMemo(() => data || [], [data]);
 
   return {
     staffRoles: activeOnly ? [] : roles,

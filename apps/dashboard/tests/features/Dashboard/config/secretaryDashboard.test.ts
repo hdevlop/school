@@ -9,7 +9,7 @@ describe('secretary dashboard navigation', () => {
   it('selects the secretary layout only for that role', () => {
     expect(usesSecretaryDashboard('secretary')).toBe(true);
     expect(usesSecretaryDashboard('SECRETARY')).toBe(true);
-    for (const role of ['admin', 'floor_manager', 'supervisor', 'teacher', null, undefined]) {
+    for (const role of ['admin', 'monitor', 'supervisor', 'teacher', null, undefined]) {
       expect(usesSecretaryDashboard(role)).toBe(false);
     }
   });

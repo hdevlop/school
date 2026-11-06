@@ -7,7 +7,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { NajmScroll, NCard, NPageHeader, NPageHeaderActions, NSkeleton, NSkeletonCalendar, NSkeletonChart, NSkeletonDonut, NSkeletonEventList, cn, NStatCardSkeleton } from 'najm-kit';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
-import { canReadFinanceDashboard, schoolDashboardCards, usesFloorManagerDashboard, usesRegistrarDashboard, usesSecretaryDashboard, usesSupervisorDashboard, usesTeacherDashboard } from '../config/dashboardAudience';
+import { canReadFinanceDashboard, schoolDashboardCards, usesMonitorDashboard, usesRegistrarDashboard, usesSecretaryDashboard, usesSupervisorDashboard, usesTeacherDashboard } from '../config/dashboardAudience';
 import { secretaryQuickActions } from '../config/secretaryDashboard';
 import { registrarQuickActions } from '../config/registrarDashboard';
 import DashboardOverviewRow from './DashboardOverviewRow';
@@ -27,7 +27,7 @@ function SkeletonCard({ className, children, title, icon }: { className?: string
 
 // These roles use four cards per row, rather than the teacher's three.
 // Match their mounted loading layout without importing charts or starting queries.
-function StaffDashboardSkeleton({ role }: { role: 'supervisor' | 'floorManager' | 'secretary' }) {
+function StaffDashboardSkeleton({ role }: { role: 'supervisor' | 'monitor' | 'secretary' }) {
   const { t } = useTranslation();
   const viewer = useViewerRole();
   const supervisor = role === 'supervisor';
@@ -71,7 +71,7 @@ function StaffDashboardSkeleton({ role }: { role: 'supervisor' | 'floorManager' 
               </div>
             </SkeletonCard>
             {supervisor ? students : secretary ? (cards.studentsByGender && students) : (
-              <SkeletonCard title={t('dashboard.floorManager.registers.title')} icon={ClipboardCheck}>
+              <SkeletonCard title={t('dashboard.monitor.registers.title')} icon={ClipboardCheck}>
                 <div className="flex flex-col gap-2">
                   {Array.from({ length: 4 }, (_, index) => <NSkeleton key={index} className="h-14 w-full rounded-lg" />)}
                 </div>
@@ -215,8 +215,8 @@ export default function DashboardSkeleton() {
 
   if (usesRegistrarDashboard(user?.role)) return <RegistrarDashboardSkeleton />;
 
-  if (isSecretary || isSupervisor || usesFloorManagerDashboard(user?.role)) {
-    return <StaffDashboardSkeleton role={isSecretary ? 'secretary' : isSupervisor ? 'supervisor' : 'floorManager'} />;
+  if (isSecretary || isSupervisor || usesMonitorDashboard(user?.role)) {
+    return <StaffDashboardSkeleton role={isSecretary ? 'secretary' : isSupervisor ? 'supervisor' : 'monitor'} />;
   }
 
   return (

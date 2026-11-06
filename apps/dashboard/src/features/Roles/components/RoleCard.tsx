@@ -39,7 +39,7 @@ const RoleCard = ({ data }) => {
           <div className="flex-1">
             <span className="text-xs text-muted-foreground block">{t('roles.form.description')}:</span>
             <span className="text-sm text-foreground mt-1 block">
-              {role.name === 'floor_manager' ? t('roleAccess.scope.floor_manager') : role.description || t('roles.table.noDescription')}
+              {role.name === 'monitor' ? t('roleAccess.scope.monitor') : role.description || t('roles.table.noDescription')}
             </span>
           </div>
         </div>

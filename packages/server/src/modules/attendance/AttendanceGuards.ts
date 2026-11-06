@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where, when } from '../../auth';
 import { attendance, students, staff, parents, studentParents, teachers, teacherAssignments } from '../../database/schema';
-import { managesSection, managesStudent } from '../staff/floorManagerScope';
+import { managesSection, managesStudent } from '../staff/monitorScope';
 import { supervisesSection, supervisesStudent } from '../staff/supervisorScope';
 
 export const Attendance = own(attendance)
@@ -21,7 +21,7 @@ export const Attendance = own(attendance)
   )
   // Student marks taken in a section of their classes, and an older mark with
   // no section by its student; never staff attendance.
-  .for('floor_manager', when((userId: string) => sql`(${attendance.studentId} is not null and (
+  .for('monitor', when((userId: string) => sql`(${attendance.studentId} is not null and (
     ${managesSection(attendance.sectionId, userId)}
     or (${attendance.sectionId} is null and ${managesStudent(attendance.studentId, userId)})))`))
   .for('supervisor', when((userId: string) => sql`(${attendance.studentId} is not null and (

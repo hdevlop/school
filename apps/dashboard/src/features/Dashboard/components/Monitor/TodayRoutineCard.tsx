@@ -4,14 +4,14 @@ import { CalendarDays, Clock, UserRound } from 'lucide-react';
 import { NCard, NCardAction, NEmptyState, NSkeleton, NajmScroll } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { ROUTINE_DAYS } from '@sms/contracts/routines';
-import type { FloorManagerDashboardOverview } from '@sms/contracts/floor-manager-dashboard';
+import type { MonitorDashboardOverview } from '@sms/contracts/monitor-dashboard';
 import { useRoutineDetails, useRoutineList } from '@/features/ClassRoutines/hooks/useClassRoutines';
 import { selectRoutineSchedules } from '@/features/ClassRoutines/utils/selectRoutineSchedules';
-import { FLOOR_MANAGER_DASHBOARD_LINKS } from '../../config/floorManagerDashboardLinks';
+import { MONITOR_DASHBOARD_LINKS } from '../../config/monitorDashboardLinks';
 import { CardLink, SCROLL_CARD } from '../Teacher/shared';
 
 type TodayRoutineCardProps = {
-  overview: FloorManagerDashboardOverview | undefined;
+  overview: MonitorDashboardOverview | undefined;
   loading: boolean;
   error: unknown;
   onRetry: () => void;
@@ -62,7 +62,7 @@ const TodayRoutineCard = ({ overview, loading, error, onRetry }: TodayRoutineCar
       )}
     >
       <NCardAction>
-        <CardLink href={FLOOR_MANAGER_DASHBOARD_LINKS.timetable}>{t('dashboard.teacher.schedule.viewTimetable')}</CardLink>
+        <CardLink href={MONITOR_DASHBOARD_LINKS.timetable}>{t('dashboard.teacher.schedule.viewTimetable')}</CardLink>
       </NCardAction>
       {lessons.length ? (
         <NajmScroll axis="y" autoHide="scroll" className="min-h-0 flex-1 overscroll-contain">

@@ -84,7 +84,7 @@ export class StaffValidator {
       if (role === 'supervisor' && !assignment.classId) Err(400, this.t('supervisorClassRequired'));
       if (role === 'busAssistant' && !assignment.vehicleId) Err(400, this.t('busAssistantVehicleRequired'));
       if (role === 'accountant' && !assignment.cycleId) Err(400, this.t('accountantCycleRequired'));
-      if (role === 'floorManager' && !assignment.className) Err(400, this.t('floorManagerGradeRequired'));
+      if (role === 'monitor' && !assignment.className) Err(400, this.t('monitorGradeRequired'));
       if (role === 'security' && !assignment.zoneId) Err(400, this.t('securityZoneRequired'));
       if (role === 'driver' && !assignment.vehicleId) Err(400, this.t('driverVehicleRequired'));
     }

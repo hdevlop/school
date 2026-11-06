@@ -10,7 +10,7 @@ export const Assessment = own(assessments)
     join(teachers.staffId, staff.id),
     where(staff.userId),
   )
-  .for('floor_manager', when((userId: string) => targetsManagedSection(assessments, userId)))
+  .for('monitor', when((userId: string) => targetsManagedSection(assessments, userId)))
   .for('supervisor', when((userId: string) => targetsManagedSection(assessments, userId, supervisesSection)));
 
 // The student must have occupied a target section on the assessment date.

@@ -358,7 +358,7 @@
     ]
   },
   {
-    "roleName": "floor_manager",
+    "roleName": "monitor",
     "permissions": [
       "read:dashboard",
       "read:students",

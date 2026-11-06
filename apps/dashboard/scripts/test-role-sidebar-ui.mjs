@@ -65,7 +65,7 @@ try {
   token = signedIn.accessToken ?? signedIn.tokens?.accessToken;
   assert(token, 'Admin access token');
   const roles = await api('/roles');
-  const target = roles.find(role => role.name === 'floor_manager');
+  const target = roles.find(role => role.name === 'monitor');
   assert(target, 'Existing Monitor role');
   roleId = target.id;
   baseline = await api(`/admin/access/roles/${roleId}`);

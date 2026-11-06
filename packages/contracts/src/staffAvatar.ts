@@ -2,7 +2,7 @@
 const ROLES_WITH_AVATAR = new Set([
   'teacher', 'driver', 'busAssistant', 'principal', 'secretary',
   'receptionist', 'accountant', 'librarian', 'itSupport', 'security',
-  'assistant', 'floorManager', 'supervisor', 'registrar', 'cleaner',
+  'assistant', 'monitor', 'supervisor', 'registrar', 'cleaner',
 ]);
 
 export const getStaffAvatar = (role?: string | null, gender?: string | null) => {

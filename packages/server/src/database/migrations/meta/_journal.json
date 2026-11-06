@@ -715,6 +715,13 @@
       "when": 1793991675525,
       "tag": "0101_massar_grade_sheets",
       "breakpoints": true
+    },
+    {
+      "idx": 102,
+      "version": "7",
+      "when": 1793997648333,
+      "tag": "0102_rename_floor_manager_to_monitor",
+      "breakpoints": true
     }
   ]
 }

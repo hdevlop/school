@@ -2,13 +2,13 @@ import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
 
 const STAFF_ROLES: Record<string, string> = {
   accounting: 'accountant',
-  floor_manager: 'floorManager',
+  monitor: 'monitor',
 };
 
 const ROLE_LABEL_KEYS: Record<string, string> = {
   admin: 'users.roles.admin',
   accounting: 'staff.roles.accountant',
-  floor_manager: 'staff.roles.floorManager',
+  monitor: 'staff.roles.monitor',
 };
 
 /** The catalog key naming an account's role, for an account with no staff record to name it. */

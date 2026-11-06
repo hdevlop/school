@@ -68,13 +68,13 @@ export const accountantAssignments = pgTable('accountant_assignments', {
   cycleId: cycleRef('restrict'),
 });
 
-// A floor manager runs grades, named as their classes are (PS, CP, CE1...). The
+// A monitor runs grades, named as their classes are (PS, CP, CE1...). The
 // name, not one year's class row, so next year's classes of that grade follow.
-export const floorManagerAssignments = pgTable('floor_manager_assignments', {
+export const monitorAssignments = pgTable('monitor_assignments', {
   ...staffAssignmentFields(),
   className: text('class_name').notNull(),
 }, (table) => [
-  index('floor_manager_assignments_class_name_idx').on(table.className),
+  index('monitor_assignments_class_name_idx').on(table.className),
 ]);
 
 export const securityAssignments = pgTable('security_assignments', {
@@ -93,6 +93,6 @@ export type CleanerAssignment = typeof cleanerAssignments.$inferSelect;
 export type AssistantAssignment = typeof assistantAssignments.$inferSelect;
 export type SupervisorAssignment = typeof supervisorAssignments.$inferSelect;
 export type AccountantAssignment = typeof accountantAssignments.$inferSelect;
-export type FloorManagerAssignment = typeof floorManagerAssignments.$inferSelect;
+export type MonitorAssignment = typeof monitorAssignments.$inferSelect;
 export type SecurityAssignment = typeof securityAssignments.$inferSelect;
 export type BusAssistantAssignment = typeof busAssistantAssignments.$inferSelect;

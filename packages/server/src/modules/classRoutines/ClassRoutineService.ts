@@ -74,7 +74,7 @@ export class ClassRoutineService {
   }
 
   // Resolve filters under timetable access, without a second classes grant.
-  // Floor managers retain the same assigned-grade selection as their roster.
+  // Monitors retain the same assigned-grade selection as their roster.
   async getClassSections(reader?: RoutineReader) {
     const [classRows, sectionRows] = await Promise.all([
       this.repository.getClassesInSelectedYear(reader),

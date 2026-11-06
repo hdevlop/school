@@ -15,10 +15,10 @@ export function usesTeacherDashboard(role: string | null | undefined): boolean {
   return role?.toLowerCase() === 'teacher';
 }
 
-// The role the server's floor manager dashboard (`isFloorManager`) admits:
+// The role the server's monitor dashboard (`isMonitor`) admits:
 // the grades they run today rather than the school-wide charts.
-export function usesFloorManagerDashboard(role: string | null | undefined): boolean {
-  return role?.toLowerCase() === 'floor_manager';
+export function usesMonitorDashboard(role: string | null | undefined): boolean {
+  return role?.toLowerCase() === 'monitor';
 }
 
 // The role the server's supervisor dashboard (`isSupervisor`) admits: the

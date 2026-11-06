@@ -14,7 +14,7 @@ type ProfilePerson = {
 };
 
 type TeacherInfoCardProps = {
-  // The staff member the home page belongs to: a teacher, or a floor manager.
+  // The staff member the home page belongs to: a teacher, or a monitor.
   person: ProfilePerson | undefined;
   // What they do, under their name.
   subtitle?: ReactNode;

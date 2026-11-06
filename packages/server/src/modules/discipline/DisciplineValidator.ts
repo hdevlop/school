@@ -1,7 +1,7 @@
 import { Err, I18n, Service } from '../../najm';
 import { SCHOOL_WIDE_ROLES } from '../../auth';
 import { DisciplineRepository } from './DisciplineRepository';
-import { FloorManagerScopeRepository } from '../staff/floorManagerScope';
+import { MonitorScopeRepository } from '../staff/monitorScope';
 import { SupervisorScopeRepository } from '../staff/supervisorScope';
 
 export type DisciplineUser = { id: string; role?: string };
@@ -12,7 +12,7 @@ export class DisciplineValidator {
 
   constructor(
     private repository: DisciplineRepository,
-    private floorManagers: FloorManagerScopeRepository,
+    private monitors: MonitorScopeRepository,
     private supervisors: SupervisorScopeRepository,
   ) {}
 
@@ -35,11 +35,11 @@ export class DisciplineValidator {
     return { classId: student!.classId!, sectionId: student!.sectionId! };
   }
 
-  // A teacher reports students of the sections they teach, a floor manager
+  // A teacher reports students of the sections they teach, a monitor
   // students of their classes.
   async ensureTeacherMayReport(user: DisciplineUser, sectionId: string) {
     const reaches = user.role === 'teacher' ? await this.repository.isTeacherAssignedToSection(user.id, sectionId)
-      : user.role === 'floor_manager' ? await this.floorManagers.managesSection(user.id, sectionId)
+      : user.role === 'monitor' ? await this.monitors.managesSection(user.id, sectionId)
       : user.role === 'supervisor' ? await this.supervisors.managesSection(user.id, sectionId)
       : true;
     if (!reaches) Err(403, this.t('teacherStudentForbidden'));

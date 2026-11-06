@@ -2,11 +2,11 @@ import { sql } from 'drizzle-orm';
 import { Can, own, join, where, when } from '../../auth';
 import { parents, studentParents, students } from '../../database/schema';
 import { behaviorRewards } from './behaviorRewardSchema';
-import { managesClass } from '../staff/floorManagerScope';
+import { managesClass } from '../staff/monitorScope';
 import { supervisesClass } from '../staff/supervisorScope';
 
 /**
- * Teachers see the rewards they gave; floor managers those in their classes
+ * Teachers see the rewards they gave; monitors those in their classes
  * and their own; students their own; parents their children's.
  */
 export const BehaviorReward = own(behaviorRewards)
@@ -21,7 +21,7 @@ export const BehaviorReward = own(behaviorRewards)
     join(behaviorRewards.studentId, students.id),
     where(students.userId),
   )
-  .for('floor_manager', when((userId: string) => sql`(${behaviorRewards.awardedBy} = ${userId}
+  .for('monitor', when((userId: string) => sql`(${behaviorRewards.awardedBy} = ${userId}
     or ${managesClass(behaviorRewards.classId, userId)})`))
   .for('supervisor', when((userId: string) => supervisesClass(behaviorRewards.classId, userId)));
 

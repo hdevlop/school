@@ -182,7 +182,7 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
     ...navigationChanged.removed.map((key) => ({ id: `hide-${key}`, action: t('roleAccess.hide'), label: t(SIDEBAR_ENTRIES.find((entry) => entry[0] === key)![2]), icon: EyeOff, removed: true })),
     ...(orderChanged ? [{ id: 'sidebar-order', action: t('roleAccess.sidebar'), label: t('roleAccess.layout.orderChanged'), icon: ArrowUpDown, removed: false }] : []),
   ];
-  const scope = isSchoolWideRole(role.name) ? 'schoolWide' : ['teacher', 'floor_manager', 'parent', 'student'].includes(role.name) ? role.name : 'unconfigured';
+  const scope = isSchoolWideRole(role.name) ? 'schoolWide' : ['teacher', 'monitor', 'parent', 'student'].includes(role.name) ? role.name : 'unconfigured';
   const failureFeedback = failure && (
     <div role="alert" className="space-y-2">
       <NAlert tone="error" description={failure} />

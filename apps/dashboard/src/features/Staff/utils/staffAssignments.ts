@@ -9,7 +9,7 @@ export const formatAssignment = (assignment: any, language = 'en') => {
     return [assignment.className, assignment.sectionName].filter(Boolean).join(' / ') || assignment.classId || '-';
   }
 
-  if (assignment.type === 'floorManager') {
+  if (assignment.type === 'monitor') {
     return assignment.className || '-';
   }
 

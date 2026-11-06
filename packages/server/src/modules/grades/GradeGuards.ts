@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where, when } from '../../auth';
 import { grades, students, parents, studentParents } from '../../database/schema';
-import { managesClass } from '../staff/floorManagerScope';
+import { managesClass } from '../staff/monitorScope';
 import { supervisesClass } from '../staff/supervisorScope';
 
 export const Grade = own(grades)
@@ -15,7 +15,7 @@ export const Grade = own(grades)
     join(grades.studentId, students.id),
     where(students.userId),
   )
-  .for('floor_manager', when((userId: string) => placedInManagedClass(userId)))
+  .for('monitor', when((userId: string) => placedInManagedClass(userId)))
   .for('supervisor', when((userId: string) => placedInManagedClass(userId, supervisesClass)))
   .writeBy(grades.studentId);
 
@@ -59,7 +59,7 @@ const taughtByReader = (userId: string) => sql`exists (
     )
 )`;
 
-// A floor manager reads a grade earned while the student sat in one of their
+// A monitor reads a grade earned while the student sat in one of their
 // classes, by the same dated placement the teacher rule reads.
 function placedInManagedClass(userId: string, classScope = managesClass) {
   return sql`exists (

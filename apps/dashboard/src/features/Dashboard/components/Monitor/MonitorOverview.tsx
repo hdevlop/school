@@ -6,12 +6,12 @@ import { useTranslation } from 'najm-i18n/react';
 import { compareClassNames } from '@sms/contracts';
 import { isAuthorizationError } from '@/services/apiError';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
-import { useFloorManagerOverview } from '../../hooks/useFloorManagerDashboard';
-import { FLOOR_MANAGER_DASHBOARD_LINKS } from '../../config/floorManagerDashboardLinks';
+import { useMonitorOverview } from '../../hooks/useMonitorDashboard';
+import { MONITOR_DASHBOARD_LINKS } from '../../config/monitorDashboardLinks';
 import TeacherInfoCard from '../Teacher/TeacherInfoCard';
 import { AttentionCard, type AttentionRow } from '../Teacher/NeedsAttentionCard';
 import QuickActionsCard, { type QuickAction } from '../Teacher/QuickActionsCard';
-import FloorManagerKpis from './FloorManagerKpis';
+import MonitorKpis from './MonitorKpis';
 import RegistersCard from './RegistersCard';
 import TodayRoutineCard from './TodayRoutineCard';
 import CalendarCard from '../CalendarCard';
@@ -21,26 +21,26 @@ import DashboardOverviewRow from '../DashboardOverviewRow';
 
 const action = (key: string, icon: QuickAction['icon'], href: string): QuickAction => ({
   key,
-  label: `dashboard.floorManager.quickActions.${key}`,
-  hint: `dashboard.floorManager.quickActions.${key}Hint`,
+  label: `dashboard.monitor.quickActions.${key}`,
+  hint: `dashboard.monitor.quickActions.${key}Hint`,
   icon,
   href,
 });
 
-// A floor manager's everyday tasks. Every destination is a route their
+// A monitor's everyday tasks. Every destination is a route their
 // sidebar already offers.
 const ACTIONS: QuickAction[] = [
-  action('takeAttendance', ClipboardCheck, FLOOR_MANAGER_DASHBOARD_LINKS.attendance),
-  action('reportIncident', ShieldAlert, FLOOR_MANAGER_DASHBOARD_LINKS.discipline),
-  action('recordReward', Star, FLOOR_MANAGER_DASHBOARD_LINKS.behaviorRewards),
-  action('viewTimetable', CalendarDays, FLOOR_MANAGER_DASHBOARD_LINKS.timetable),
-  action('viewStudents', UsersRound, FLOOR_MANAGER_DASHBOARD_LINKS.students),
+  action('takeAttendance', ClipboardCheck, MONITOR_DASHBOARD_LINKS.attendance),
+  action('reportIncident', ShieldAlert, MONITOR_DASHBOARD_LINKS.discipline),
+  action('recordReward', Star, MONITOR_DASHBOARD_LINKS.behaviorRewards),
+  action('viewTimetable', CalendarDays, MONITOR_DASHBOARD_LINKS.timetable),
+  action('viewStudents', UsersRound, MONITOR_DASHBOARD_LINKS.students),
 ];
 
 /** The school's business date the overview describes, for a page header. */
-export const FloorManagerOverviewDate = () => {
+export const MonitorOverviewDate = () => {
   const { displayDate } = useSchoolFormat();
-  const { data: overview } = useFloorManagerOverview();
+  const { data: overview } = useMonitorOverview();
   if (!overview) return null;
   return (
     <NButton type="button" variant="outline" size="sm" className="gap-2 max-md:hidden">
@@ -50,9 +50,9 @@ export const FloorManagerOverviewDate = () => {
   );
 };
 
-const FloorManagerOverview = () => {
+const MonitorOverview = () => {
   const { t } = useTranslation();
-  const { data: overview, isLoading, error, refetch } = useFloorManagerOverview();
+  const { data: overview, isLoading, error, refetch } = useMonitorOverview();
   // A background refresh that fails keeps the figures already on screen.
   const loadError = overview ? null : error;
   const retry = () => { void refetch(); };
@@ -66,27 +66,27 @@ const FloorManagerOverview = () => {
 
   const attention = overview?.attention;
   const attentionRows: AttentionRow[] = [
-    { key: 'missingRegisters', label: t('dashboard.floorManager.attention.missingRegisters'), icon: CalendarX2, dot: 'bg-rose-500', href: FLOOR_MANAGER_DASHBOARD_LINKS.attendance, count: attention?.missingRegisters },
-    { key: 'absentToday', label: t('dashboard.floorManager.attention.absentToday'), icon: UserX, dot: 'bg-amber-500', href: FLOOR_MANAGER_DASHBOARD_LINKS.attendance, count: attention?.absentToday },
-    { key: 'unreadNotifications', label: t('dashboard.teacher.attention.notifications'), icon: Bell, dot: 'bg-sky-500', href: FLOOR_MANAGER_DASHBOARD_LINKS.notifications, count: attention?.unreadNotifications },
+    { key: 'missingRegisters', label: t('dashboard.monitor.attention.missingRegisters'), icon: CalendarX2, dot: 'bg-rose-500', href: MONITOR_DASHBOARD_LINKS.attendance, count: attention?.missingRegisters },
+    { key: 'absentToday', label: t('dashboard.monitor.attention.absentToday'), icon: UserX, dot: 'bg-amber-500', href: MONITOR_DASHBOARD_LINKS.attendance, count: attention?.absentToday },
+    { key: 'unreadNotifications', label: t('dashboard.teacher.attention.notifications'), icon: Bell, dot: 'bg-sky-500', href: MONITOR_DASHBOARD_LINKS.notifications, count: attention?.unreadNotifications },
   ];
   const grades = [...(overview?.manager.grades ?? [])].sort(compareClassNames);
 
   return (
     <div className="flex min-h-full flex-col gap-3 pb-1 xl:fit:h-full">
-      <FloorManagerKpis kpis={overview?.kpis} loading={isLoading} />
+      <MonitorKpis kpis={overview?.kpis} loading={isLoading} />
 
       <DashboardOverviewRow>
         <TeacherInfoCard
           person={overview?.manager}
-          jobTitle={t('staff.roles.floorManager')}
+          jobTitle={t('staff.roles.monitor')}
           subtitle={(
             <p className="flex max-w-full items-center gap-1.5 text-sm text-muted-foreground">
               <Layers3 className="size-4 shrink-0" aria-hidden="true" />
               <span className="truncate">
                 {grades.length
-                  ? t('dashboard.floorManager.info.grades', { grades: grades.join(', ') })
-                  : t('dashboard.floorManager.info.noGrades')}
+                  ? t('dashboard.monitor.info.grades', { grades: grades.join(', ') })
+                  : t('dashboard.monitor.info.noGrades')}
               </span>
             </p>
           )}
@@ -119,4 +119,4 @@ const FloorManagerOverview = () => {
   );
 };
 
-export default FloorManagerOverview;
+export default MonitorOverview;

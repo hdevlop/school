@@ -50,7 +50,7 @@ type StaffWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLabel
 const StaffWizardForm = WizardForm as ComponentType<StaffWizardFormProps>;
 
 const STAFF_FORM_EXCLUDED_ROLES = new Set(['teacher']);
-const STAFF_ASSIGNMENT_ROLES = new Set(['assistant', 'supervisor', 'floorManager', 'cleaner', 'accountant', 'security', 'driver', 'busAssistant']);
+const STAFF_ASSIGNMENT_ROLES = new Set(['assistant', 'supervisor', 'monitor', 'cleaner', 'accountant', 'security', 'driver', 'busAssistant']);
 
 const staffRoleHasAssignments = (role?: string) => !role || STAFF_ASSIGNMENT_ROLES.has(role);
 
@@ -96,8 +96,8 @@ const toStaffPayload = (data) => {
   if (data.role === 'assistant' || data.role === 'supervisor') {
     payload.assignments = (data.classIds || []).map((classId) => ({ classId }));
   }
-  // Floor manager picks grades by class name, one assignment row per grade.
-  if (data.role === 'floorManager') {
+  // Monitor picks grades by class name, one assignment row per grade.
+  if (data.role === 'monitor') {
     payload.assignments = (data.classNames || []).map((className) => ({ className }));
   }
   delete payload.classIds;
@@ -120,7 +120,7 @@ const toStaffPayload = (data) => {
         ))
       ))
       .filter((assignment) => Object.keys(assignment).length > 0);
-    if (payload.assignments.length === 0 && !(payload.id && ['assistant', 'supervisor', 'accountant', 'floorManager'].includes(data.role))) delete payload.assignments;
+    if (payload.assignments.length === 0 && !(payload.id && ['assistant', 'supervisor', 'accountant', 'monitor'].includes(data.role))) delete payload.assignments;
   }
 
   return payload;
@@ -163,7 +163,7 @@ const getStaffDefaultValues = (staff = null) => ({
   assignments: currentAssignments(staff).length ? currentAssignments(staff) : [{}],
   classIds: currentAssignments(staff).map((assignment) => assignment.classId).filter(Boolean),
   classNames: currentAssignments(staff)
-    .filter((assignment) => assignment.type === 'floorManager')
+    .filter((assignment) => assignment.type === 'monitor')
     .map((assignment) => assignment.className).filter(Boolean),
 });
 
@@ -434,7 +434,7 @@ const AssignmentsStep = ({ form }) => {
   const { push } = useDialog();
   const { can } = useViewerRole();
   const role = form.watch('role');
-  const { classes } = useClasses({ enabled: role === 'assistant' || role === 'supervisor' || role === 'floorManager' });
+  const { classes } = useClasses({ enabled: role === 'assistant' || role === 'supervisor' || role === 'monitor' });
   const { cycles } = useCycles({ activeOnly: true, enabled: role === 'accountant' });
   const { zones } = useZones({ enabled: role === 'cleaner' || role === 'security' });
   const { vehicles, isVehiclesLoading, isError: vehicleError, refetch: refetchVehicles, createVehicle, isCreating } = useManageVehicles({ enabled: role === 'driver' || role === 'busAssistant' });
@@ -493,11 +493,11 @@ const AssignmentsStep = ({ form }) => {
         </>
       )}
 
-      {role === 'floorManager' && (
+      {role === 'monitor' && (
         <>
           <FormSectionHeader icon={Briefcase} title={t('staff.form.assignments')} />
           <FormInput name="classNames" type="multiselect" formLabel={t('staff.form.grades')} placeholder={t('staff.form.grades')} items={gradeOptions} icon={Briefcase} maxDisplay={Infinity} />
-          <p className="text-sm text-muted-foreground">{t('academic.floorManagerAssignmentHint')}</p>
+          <p className="text-sm text-muted-foreground">{t('academic.monitorAssignmentHint')}</p>
         </>
       )}
 

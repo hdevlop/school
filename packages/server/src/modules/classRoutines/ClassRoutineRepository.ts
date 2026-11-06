@@ -19,7 +19,7 @@ import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import type { RoutineListQuery } from './ClassRoutineDto';
 import { DEFAULT_TEACHING_DAYS } from '@sms/contracts/routines';
-import { managesGrade } from '../staff/floorManagerScope';
+import { managesGrade } from '../staff/monitorScope';
 import { ScopeContext } from '../../auth';
 import { supervisesClass } from '../staff/supervisorScope';
 
@@ -312,7 +312,7 @@ export class ClassRoutineRepository {
 
   private managedGrade(reader?: RoutineReader) {
     if (reader?.role === 'supervisor') return supervisesClass(classes.id, reader.id);
-    return reader?.role === 'floor_manager' ? managesGrade(classes.name, reader.id) : undefined;
+    return reader?.role === 'monitor' ? managesGrade(classes.name, reader.id) : undefined;
   }
 
   // Import matches a file's class and section names against the selected year's.

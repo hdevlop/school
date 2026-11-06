@@ -28,8 +28,8 @@ export default function HomeProfileSheet({ open, onOpenChange }: { open: boolean
   const accountRole = person?.role ?? '';
   const accountRoleKey = accountRoleLabelKey(accountRole);
   const accountRoleLabel = t(accountRoleKey) === accountRoleKey ? accountRole : t(accountRoleKey);
-  const roleLabel = staff?.role === 'floorManager' || accountRole === 'floor_manager'
-    ? t('staff.roles.floorManager')
+  const roleLabel = staff?.role === 'monitor' || accountRole === 'monitor'
+    ? t('staff.roles.monitor')
     : staff?.roleLabels?.[language] || staff?.roleLabel || accountRoleLabel;
   const assignments = formatAssignments(staff, language);
   const phone = staff?.phone || person?.phone;

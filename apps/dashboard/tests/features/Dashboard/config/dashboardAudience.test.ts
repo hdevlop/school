@@ -2,7 +2,7 @@ import { describe, expect, it } from 'bun:test';
 import { matchPermission } from 'najm-auth/client';
 import {
   canReadFinanceDashboard, FINANCE_DASHBOARD_ROLES, rowSpans, schoolDashboardCards,
-  usesFloorManagerDashboard, usesSupervisorDashboard, usesTeacherDashboard,
+  usesMonitorDashboard, usesSupervisorDashboard, usesTeacherDashboard,
 } from '@/features/Dashboard/config/dashboardAudience';
 
 describe('usesTeacherDashboard', () => {
@@ -18,15 +18,15 @@ describe('usesTeacherDashboard', () => {
   });
 });
 
-describe('usesFloorManagerDashboard', () => {
-  it('gives floor managers their own home page', () => {
-    expect(usesFloorManagerDashboard('floor_manager')).toBe(true);
-    expect(usesFloorManagerDashboard('FLOOR_MANAGER')).toBe(true);
+describe('usesMonitorDashboard', () => {
+  it('gives monitors their own home page', () => {
+    expect(usesMonitorDashboard('monitor')).toBe(true);
+    expect(usesMonitorDashboard('MONITOR')).toBe(true);
   });
 
   it('keeps every other role, and a missing one, off it', () => {
     for (const role of ['admin', 'teacher', 'supervisor', 'parent', '', null, undefined]) {
-      expect(usesFloorManagerDashboard(role)).toBe(false);
+      expect(usesMonitorDashboard(role)).toBe(false);
     }
   });
 });
@@ -38,7 +38,7 @@ describe('usesSupervisorDashboard', () => {
   });
 
   it('keeps every other role, and a missing one, off it', () => {
-    for (const role of ['admin', 'teacher', 'floor_manager', 'principal', '', null, undefined]) {
+    for (const role of ['admin', 'teacher', 'monitor', 'principal', '', null, undefined]) {
       expect(usesSupervisorDashboard(role)).toBe(false);
     }
   });

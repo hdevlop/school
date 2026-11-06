@@ -77,7 +77,7 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
     const selected = activeClasses.filter((item) => visibleClassIds.includes(item.id));
     // A saved selection from before an assignment change must not hide the
     // manager's whole floor. An explicitly empty checklist still stays empty.
-    return role === 'floor_manager' && visibleClassIds.length > 0 && selected.length === 0
+    return role === 'monitor' && visibleClassIds.length > 0 && selected.length === 0
       ? activeClasses
       : selected;
   }, [activeClasses, visibleClassIds, role]);
@@ -131,7 +131,7 @@ function ClassRoutinePageForYear({ accountId }: { accountId: string }) {
     if (!filterReady || schedulesPending || classSectionsPending) return;
     setClassId((current) => current === ALL_CLASSES || activeClasses.some((item) => item.id === current)
       ? current
-      : hasSavedFilter || role === 'floor_manager' ? ALL_CLASSES : (activeClasses[0]?.id || ''));
+      : hasSavedFilter || role === 'monitor' ? ALL_CLASSES : (activeClasses[0]?.id || ''));
   }, [activeClasses, filterReady, hasSavedFilter, role, schedulesPending, classSectionsPending]);
 
   useEffect(() => {

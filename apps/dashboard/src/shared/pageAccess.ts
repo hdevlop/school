@@ -23,7 +23,7 @@ const can = (permission: string): PageRule => (viewer) => viewer.can(permission)
 const schoolWide = (permission: string): PageRule => (viewer) => isSchoolWideRole(viewer.role) && viewer.can(permission);
 
 export const PAGE_ACCESS = {
-  // The role picks the layout (teacher, floor manager, supervisor, school).
+  // The role picks the layout (teacher, monitor, supervisor, school).
   dashboard: can('read:dashboard'),
   students: can('read:students'),
   // The register reads students through their ownership rules.

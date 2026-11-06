@@ -4,7 +4,7 @@ export * from './finance';
 export * from './academic';
 export * from './operations';
 export * from './teacher';
-export * from './floorManager';
+export * from './monitor';
 export * from './supervisor';
 export * from './secretary';
 export * from './registrar';

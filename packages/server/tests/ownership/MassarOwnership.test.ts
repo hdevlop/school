@@ -18,7 +18,7 @@ describe('Massar ownership', () => {
   it('limits supervisors to currently supervised mapped classes, and monitors, unknown and family roles to nothing', () => {
     const condition = (role: string) => db.select().from(massarSheets).where(ownershipCondition(db, [MassarSheet], { hasActiveContext: () => true, getUser: () => ({ id: 'reader', role }) } as any)).toSQL();
     expect(condition('supervisor').sql).toContain("supervised.status = 'active'"); expect(condition('supervisor').sql).toContain('mapped.class_id');
-    for (const role of ['floor_manager','parent','student','custom']) expect(condition(role).sql).toContain('1 = 0');
+    for (const role of ['monitor','parent','student','custom']) expect(condition(role).sql).toContain('1 = 0');
   });
   it('requires a year scope and keeps owned sheet/mark/round reads inside that scope', async () => {
     const statements: Array<{ sql: string; params: unknown[] }> = [];

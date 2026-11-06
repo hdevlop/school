@@ -76,8 +76,8 @@ const SupervisorOverview = () => {
 
   const attentionRows: AttentionRow[] = [
     ...(shows('attendance') ? [
-      { key: 'missingRegisters', label: t('dashboard.floorManager.attention.missingRegisters'), icon: CalendarX2, dot: 'bg-rose-500', href: SUPERVISOR_DASHBOARD_LINKS.attendance, count: attendance?.missingRegisters },
-      { key: 'absentToday', label: t('dashboard.floorManager.attention.absentToday'), icon: UserX, dot: 'bg-amber-500', href: SUPERVISOR_DASHBOARD_LINKS.attendance, count: attendance?.absentToday },
+      { key: 'missingRegisters', label: t('dashboard.monitor.attention.missingRegisters'), icon: CalendarX2, dot: 'bg-rose-500', href: SUPERVISOR_DASHBOARD_LINKS.attendance, count: attendance?.missingRegisters },
+      { key: 'absentToday', label: t('dashboard.monitor.attention.absentToday'), icon: UserX, dot: 'bg-amber-500', href: SUPERVISOR_DASHBOARD_LINKS.attendance, count: attendance?.absentToday },
     ] : []),
     // The school-wide staff register is not a supervisor's page; this count is
     // the read:teachers figure, so it opens the teachers list.
@@ -85,7 +85,7 @@ const SupervisorOverview = () => {
       { key: 'absentTeachers', label: t('dashboard.supervisor.kpis.absentTeachers'), icon: UserX, dot: 'bg-orange-500', href: SUPERVISOR_DASHBOARD_LINKS.teachers, count: overview?.absentTeachers ?? undefined },
     ] : []),
     ...(shows('discipline') ? [
-      { key: 'openIncidents', label: t('dashboard.floorManager.attention.openIncidents'), icon: ShieldAlert, dot: 'bg-violet-500', href: SUPERVISOR_DASHBOARD_LINKS.discipline, count: discipline?.openIncidents },
+      { key: 'openIncidents', label: t('dashboard.monitor.attention.openIncidents'), icon: ShieldAlert, dot: 'bg-violet-500', href: SUPERVISOR_DASHBOARD_LINKS.discipline, count: discipline?.openIncidents },
     ] : []),
     ...(shows('visitRequests') ? [
       { key: 'newVisitRequests', label: t('dashboard.supervisor.kpis.newVisitRequests'), icon: DoorOpen, dot: 'bg-emerald-500', href: SUPERVISOR_DASHBOARD_LINKS.visitRequests, count: visitRequests?.newRequests },

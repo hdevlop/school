@@ -17,7 +17,7 @@ export function isSchoolDay(settings: RegisterSettings, weekday: string): boolea
 
 /**
  * Today's registers and the year's student marks over a set of sections, as
- * the floor manager's and the supervisor's dashboards both count them.
+ * the monitor's and the supervisor's dashboards both count them.
  */
 export function summarizeRegisters<S extends Section, M extends Marked>(input: {
   sections: S[];

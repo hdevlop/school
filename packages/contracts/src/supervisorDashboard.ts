@@ -8,14 +8,14 @@
  * every contracts module.
  */
 import type {
-  FloorManagerDashboardAbsence,
-  FloorManagerDashboardIncident,
-  FloorManagerDashboardSection,
-} from './floorManagerDashboard';
+  MonitorDashboardAbsence,
+  MonitorDashboardIncident,
+  MonitorDashboardSection,
+} from './monitorDashboard';
 
-export type SupervisorDashboardSection = FloorManagerDashboardSection;
-export type SupervisorDashboardAbsence = FloorManagerDashboardAbsence;
-export type SupervisorDashboardIncident = FloorManagerDashboardIncident;
+export type SupervisorDashboardSection = MonitorDashboardSection;
+export type SupervisorDashboardAbsence = MonitorDashboardAbsence;
+export type SupervisorDashboardIncident = MonitorDashboardIncident;
 
 /** One class (grade) and how its students scored over the year. */
 export interface SupervisorDashboardClassGrades {

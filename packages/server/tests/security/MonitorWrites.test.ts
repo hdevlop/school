@@ -7,19 +7,19 @@ import { DisciplineValidator } from '../../src/modules/discipline/DisciplineVali
 import { StaffValidator } from '../../src/modules/staff/StaffValidator';
 import { withEnglishMessages } from '../support/englishMessages';
 
-// One floor manager runs class `managed-class`, whose section is `managed`.
-const floorManagers = {
+// One monitor runs class `managed-class`, whose section is `managed`.
+const monitors = {
   managesSection: async (userId: string, sectionId: string) => userId === 'manager' && sectionId === 'managed',
   managesClass: async (userId: string, classId: string) => userId === 'manager' && classId === 'managed-class',
 } as any;
-const manager = { id: 'manager', role: 'floor_manager' };
+const manager = { id: 'manager', role: 'monitor' };
 const forbidden = { status: 403 };
 
-describe('a floor manager marks attendance', () => {
+describe('a monitor marks attendance', () => {
   const validator = withEnglishMessages(new AttendanceValidator(
     { isTeacherInSection: async () => false } as any,
     {} as any, {} as any, {} as any, {} as any, {} as any, {} as any,
-    floorManagers,
+    monitors,
     {} as any,
   ));
 
@@ -39,10 +39,10 @@ describe('a floor manager marks attendance', () => {
   });
 });
 
-describe('a floor manager reports discipline', () => {
+describe('a monitor reports discipline', () => {
   const validator = withEnglishMessages(new DisciplineValidator(
     { isTeacherAssignedToSection: async () => false } as any,
-    floorManagers,
+    monitors,
     {} as any,
   ));
 
@@ -57,10 +57,10 @@ describe('a floor manager reports discipline', () => {
   });
 });
 
-describe('a floor manager recognizes behavior', () => {
+describe('a monitor recognizes behavior', () => {
   const placedIn = (classId: string) => withEnglishMessages(new BehaviorRewardValidator(
     { getStudentPlacementOn: async () => ({ inSelectedYear: true, classId, sectionId: 'section' }) } as any,
-    floorManagers,
+    monitors,
     {} as any,
   ));
 
@@ -76,7 +76,7 @@ describe('a floor manager recognizes behavior', () => {
   });
 });
 
-describe('a floor manager handles alerts', () => {
+describe('a monitor handles alerts', () => {
   const validator = withEnglishMessages(new AlertValidator(...(Array(6).fill({}) as [any, any, any, any, any, any])));
 
   it('about their students, as a teacher does, and leaves shared notices to staff', () => {
@@ -86,11 +86,11 @@ describe('a floor manager handles alerts', () => {
   });
 });
 
-describe('a floor manager staff record', () => {
+describe('a monitor staff record', () => {
   const validator = withEnglishMessages(new StaffValidator({} as any, {} as any, {} as any));
 
   it('names a grade in each assignment', () => {
-    expect(() => validator.ensureAssignments('floorManager', [{ className: 'CP' }])).not.toThrow();
-    expect(() => validator.ensureAssignments('floorManager', [{ notes: 'second floor' }])).toThrow('Monitor assignment requires a grade');
+    expect(() => validator.ensureAssignments('monitor', [{ className: 'CP' }])).not.toThrow();
+    expect(() => validator.ensureAssignments('monitor', [{ notes: 'second floor' }])).toThrow('Monitor assignment requires a grade');
   });
 });

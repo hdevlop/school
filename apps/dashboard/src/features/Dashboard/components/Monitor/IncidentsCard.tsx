@@ -6,14 +6,14 @@ import Link from 'next/link';
 import { ChevronRight, ShieldAlert } from 'lucide-react';
 import { NBadge, NCard, NCardAction, NEmptyState, NSkeleton, cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import type { FloorManagerDashboardIncident } from '@sms/contracts/floor-manager-dashboard';
+import type { MonitorDashboardIncident } from '@sms/contracts/monitor-dashboard';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { SEVERITY_COLORS, severityClassName } from '@/features/Discipline/disciplineConstants';
-import { FLOOR_MANAGER_DASHBOARD_LINKS } from '../../config/floorManagerDashboardLinks';
+import { MONITOR_DASHBOARD_LINKS } from '../../config/monitorDashboardLinks';
 import { CardLink, FILL_CARD, IconTile } from '../Teacher/shared';
 
 type IncidentsCardProps = {
-  incidents: FloorManagerDashboardIncident[] | undefined;
+  incidents: MonitorDashboardIncident[] | undefined;
   loading: boolean;
   error: unknown;
   onRetry: () => void;
@@ -26,7 +26,7 @@ const IncidentsSkeleton = () => (
   </div>
 );
 
-// The latest open incidents in the floor manager's sections.
+// The latest open incidents in the monitor's sections.
 const IncidentsCard = ({ incidents, loading, error, onRetry, className }: IncidentsCardProps) => {
   const { t } = useTranslation();
   const { displayDate } = useSchoolFormat();
@@ -34,7 +34,7 @@ const IncidentsCard = ({ incidents, loading, error, onRetry, className }: Incide
 
   return (
     <NCard
-      title={t('dashboard.floorManager.incidents.title')}
+      title={t('dashboard.monitor.incidents.title')}
       icon={ShieldAlert}
       className={cn('h-full', className)}
       classNames={FILL_CARD}
@@ -45,7 +45,7 @@ const IncidentsCard = ({ incidents, loading, error, onRetry, className }: Incide
       onRetry={onRetry}
     >
       <NCardAction>
-        <CardLink href={FLOOR_MANAGER_DASHBOARD_LINKS.discipline}>{t('dashboard.floorManager.incidents.viewAll')}</CardLink>
+        <CardLink href={MONITOR_DASHBOARD_LINKS.discipline}>{t('dashboard.monitor.incidents.viewAll')}</CardLink>
       </NCardAction>
 
       {rows.length ? (
@@ -53,7 +53,7 @@ const IncidentsCard = ({ incidents, loading, error, onRetry, className }: Incide
           {rows.map((row) => (
             <li key={row.id}>
               <Link
-                href={FLOOR_MANAGER_DASHBOARD_LINKS.discipline}
+                href={MONITOR_DASHBOARD_LINKS.discipline}
                 prefetch={false}
                 className="flex items-center gap-3 rounded-lg px-1 py-3 transition-colors hover:bg-accent/50"
               >
@@ -76,7 +76,7 @@ const IncidentsCard = ({ incidents, loading, error, onRetry, className }: Incide
           ))}
         </ul>
       ) : (
-        <NEmptyState icon={FEATURE_ICONS.discipline} title={t('dashboard.floorManager.incidents.empty')} className="py-4" />
+        <NEmptyState icon={FEATURE_ICONS.discipline} title={t('dashboard.monitor.incidents.empty')} className="py-4" />
       )}
     </NCard>
   );

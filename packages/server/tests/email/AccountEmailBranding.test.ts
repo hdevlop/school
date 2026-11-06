@@ -14,7 +14,7 @@ const message = (html: string): EmailMessage => ({ to: 'recipient@example.test',
 describe('one School layout for account emails', () => {
   it('defaults outgoing invitations to French with the saved school name and a compact header', () => {
     const context = { appName: 'École Al Amal & Avenir', userName: 'Hicham <Jebara>' };
-    const original = message(accountInviteTemplate({ inviteLink: link, userName: 'Hicham', accountType: 'floor_manager', appName: 'MyScolAI', lang: 'en' }));
+    const original = message(accountInviteTemplate({ inviteLink: link, userName: 'Hicham', accountType: 'monitor', appName: 'MyScolAI', lang: 'en' }));
     const branded = brandAccountEmail(original, context);
     const $ = load(branded.html!);
     expect($('html').attr('lang')).toBe('fr');
@@ -24,7 +24,7 @@ describe('one School layout for account emails', () => {
     expect($('.school-email-button').attr('href')).toBe(link);
     expect($('.school-email-button').text()).toBe(translations.fr.auth.emails.accountInvite.button);
     expect($('body').text()).toContain(context.userName);
-    expect($('body').text()).not.toContain('floor_manager');
+    expect($('body').text()).not.toContain('monitor');
     expect($('body').text()).not.toContain('MyScolAI');
     expect($('jebara')).toHaveLength(0);
     expect(branded.subject).toBe(`${context.appName} : activez votre compte`);

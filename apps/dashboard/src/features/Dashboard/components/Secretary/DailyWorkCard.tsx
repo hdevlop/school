@@ -29,7 +29,7 @@ export default function DailyWorkCard({ overview, loading }: { overview: Secreta
             <>
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="text-sm font-semibold">{t('dashboard.secretary.dailyWork.followUp')}</p>
-                <CardLink href={SECRETARY_DASHBOARD_LINKS.visitRequests}>{t('dashboard.floorManager.registers.viewAll')}</CardLink>
+                <CardLink href={SECRETARY_DASHBOARD_LINKS.visitRequests}>{t('dashboard.monitor.registers.viewAll')}</CardLink>
               </div>
               <p className="text-xs text-muted-foreground">
                 {t('dashboard.secretary.dailyWork.counts', { new: number(visits.newRequests), contacted: number(visits.contactedRequests) })}

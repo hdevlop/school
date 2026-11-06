@@ -93,7 +93,7 @@
       "teacher": "Solo registros asignados. Los permisos no amplían el alcance del docente.",
       "parent": "Solo hijos vinculados. Los permisos no amplían el alcance del familiar.",
       "student": "Solo registros propios. Los permisos no amplían el alcance del alumno.",
-      "floor_manager": "Solo las clases de los niveles asignados en su ficha de personal. Los permisos no amplían el alcance del monitor.",
+      "monitor": "Solo las clases de los niveles asignados en su ficha de personal. Los permisos no amplían el alcance del monitor.",
       "unconfigured": "Este rol personalizado no tiene un alcance de registros configurado. Los permisos por sí solos no dan acceso a los registros protegidos."
     },
     "categories": {
@@ -1085,7 +1085,7 @@
         "viewStudentsHint": "Los estudiantes de tus clases"
       }
     },
-    "floorManager": {
+    "monitor": {
       "title": "Panel del monitor",
       "subtitle": "Este es el día de tus clases de un vistazo.",
       "kpis": {
@@ -4223,7 +4223,7 @@
       "assistantClassRequired": "La asignación de un asistente requiere una clase",
       "busAssistantVehicleRequired": "La asignación de un acompañante de autobús requiere un vehículo",
       "accountantCycleRequired": "La asignación de un contable requiere un ciclo",
-      "floorManagerGradeRequired": "La asignación de un monitor requiere un nivel",
+      "monitorGradeRequired": "La asignación de un monitor requiere un nivel",
       "securityZoneRequired": "La asignación de un agente de seguridad requiere una zona",
       "driverVehicleRequired": "La asignación de un conductor requiere un vehículo",
       "staffNotFound": "Miembro del personal no encontrado",
@@ -4266,7 +4266,7 @@
       "receptionist": "Recepcionista",
       "accountant": "Contador",
       "supervisor": "Supervisor",
-      "floorManager": "Monitor",
+      "monitor": "Monitor",
       "registrar": "Registrador",
       "librarian": "Bibliotecario",
       "itSupport": "Soporte IT",
@@ -6738,7 +6738,7 @@
   },
   "academic": {
     "accountantAssignmentOptional": "La asignación a un ciclo es opcional. Puede añadirla más tarde.",
-    "floorManagerAssignmentHint": "El acceso se limita a los alumnos, la asistencia, la disciplina y las notas de las clases de estos niveles, este curso y los siguientes.",
+    "monitorAssignmentHint": "El acceso se limita a los alumnos, la asistencia, la disciplina y las notas de las clases de estos niveles, este curso y los siguientes.",
     "deleteWarning": "Los registros vinculados están protegidos. Los registros eliminados no se pueden recuperar.",
     "classRequired": "Seleccione una clase.",
     "cycleNameRequired": "El nombre del ciclo es obligatorio.",

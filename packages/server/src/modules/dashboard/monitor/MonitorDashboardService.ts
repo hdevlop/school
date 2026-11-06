@@ -1,34 +1,34 @@
 import { Injectable } from '../../../najm';
-import type { FloorManagerDashboardOverview } from '@sms/contracts/floor-manager-dashboard';
+import type { MonitorDashboardOverview } from '@sms/contracts/monitor-dashboard';
 import { SettingsRepository } from '../../settings/SettingsRepository';
 import { AcademicYearValidator } from '../../academicYears/AcademicYearValidator';
 import { PersonalNotificationRepository } from '../../notifications/NotificationRepository';
 import { getBusinessDateOverride } from '../../../shared/businessDate';
 import { schoolClock } from '../teacher/teacherDashboardMetrics';
 import { summarizeRegisters } from '../registerSummary';
-import { FloorManagerDashboardRepository } from './FloorManagerDashboardRepository';
-import { FloorManagerDashboardValidator } from './FloorManagerDashboardValidator';
+import { MonitorDashboardRepository } from './MonitorDashboardRepository';
+import { MonitorDashboardValidator } from './MonitorDashboardValidator';
 
 type DashboardUser = { id: string; role?: string };
 
 const INCIDENT_LIMIT = 5;
 
 @Injectable()
-export class FloorManagerDashboardService {
+export class MonitorDashboardService {
   /** The instant "now" is read from; tests pin it. */
   now: () => Date = () => new Date();
 
   constructor(
-    private repository: FloorManagerDashboardRepository,
+    private repository: MonitorDashboardRepository,
     private settingsRepository: SettingsRepository,
     private academicYears: AcademicYearValidator,
     private notifications: PersonalNotificationRepository,
-    private validator: FloorManagerDashboardValidator,
+    private validator: MonitorDashboardValidator,
   ) {}
 
-  // The floor manager is resolved from the session, and their sections from
+  // The monitor is resolved from the session, and their sections from
   // the grades they run today, so nothing points at another floor's figures.
-  async getOverview(user: DashboardUser): Promise<FloorManagerDashboardOverview> {
+  async getOverview(user: DashboardUser): Promise<MonitorDashboardOverview> {
     const manager = this.validator.ensureManagerExists(await this.repository.getManager(user.id));
     const [settings, year] = await Promise.all([
       this.settingsRepository.getPublicSettings(),

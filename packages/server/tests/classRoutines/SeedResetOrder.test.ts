@@ -11,7 +11,7 @@ import {
   assistantAssignments,
   supervisorAssignments,
   accountantAssignments,
-  floorManagerAssignments,
+  monitorAssignments,
   busAssistantAssignments,
   staffCredentials,
   studentEnrollmentPlacements,
@@ -106,7 +106,7 @@ describe('seed reset foreign-key order', () => {
 
     expect(deleted).toEqual([
       cleanerAssignments, securityAssignments, assistantAssignments, supervisorAssignments,
-      accountantAssignments, floorManagerAssignments, busAssistantAssignments, staffCredentials,
+      accountantAssignments, monitorAssignments, busAssistantAssignments, staffCredentials,
     ]);
   });
 

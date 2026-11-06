@@ -30,7 +30,7 @@ export const Announcement = own(announcements)
   .for('student', when(reaches('students')))
   .for('parent', when(reaches('parents')))
   .for('teacher', when(reaches('teachers')))
-  .for('floor_manager', when(reaches('teachers')))
+  .for('monitor', when(reaches('teachers')))
   .for('supervisor', when(reaches('teachers')));
 
 // A najm rule is one join chain, so the other ways to reach an announcement
@@ -39,7 +39,7 @@ export const AnnouncementForClass = own(announcements)
   .for('student', when(reachesOwnClass))
   .for('parent', when(reachesOwnClass))
   .for('teacher', when(reachesOwnClass))
-  .for('floor_manager', when(reachesOwnClass))
+  .for('monitor', when(reachesOwnClass))
   .for('supervisor', when((userId: string, role: string) => {
     // Supervisors manage the drafts and expired notices for their classes too.
     return and(eq(announcements.targetAudience, 'class'),

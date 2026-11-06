@@ -178,7 +178,7 @@ describe('a full backup', () => {
         // 0092_ai_settings_memory_columns: no backup permissions, no memory settings.
         const journal: { entries: { tag: string; when: number }[] } = JSON.parse(
           await readFile(new URL('../../src/database/migrations/meta/_journal.json', import.meta.url), 'utf8'));
-        const before0091 = journal.entries.find(({ tag }) => tag === '0090_floor_manager_assignments')!.when;
+        const before0091 = journal.entries.find(({ tag }) => tag === '0090_monitor_assignments')!.when;
         const added = ['backup:system', 'restore:system'];
         const reader = new BackupArchiveReader(await bytes(original.archive));
         const entries = reader.read(reader.names);

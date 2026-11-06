@@ -17,7 +17,7 @@ export const STAFF_ROLE_LOGINS: Record<string, string> = {
   accountant: 'accounting',
   assistant: 'assistant',
   supervisor: 'supervisor',
-  floorManager: 'floor_manager',
+  monitor: 'monitor',
   registrar: 'registrar',
 };
 

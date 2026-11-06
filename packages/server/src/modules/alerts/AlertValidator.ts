@@ -43,7 +43,7 @@ export class AlertValidator {
 
   /**
    * Status is one value shared by everyone who reads the alert. Staff set it
-   * on any alert they can read. A teacher or floor manager sets it on an alert
+   * on any alert they can read. A teacher or monitor sets it on an alert
    * about one of their students or themselves; a parent or student may only acknowledge
    * one about their child or themselves. Class and school notices stay with
    * staff, so one family cannot close a notice for everybody.
@@ -51,7 +51,7 @@ export class AlertValidator {
   ensureCanHandle(alert: Parameters<typeof isAboutSomeone>[0], status: UpdateAlertStatusDto['status'], actor: AlertActor) {
     if (isStaff(actor)) return;
     if (!isAboutSomeone(alert)) Err(403, this.at('sharedNoticeStaffOnly'));
-    if (actor.role !== 'teacher' && actor.role !== 'floor_manager' && status !== 'acknowledged') {
+    if (actor.role !== 'teacher' && actor.role !== 'monitor' && status !== 'acknowledged') {
       Err(403, this.at('acknowledgeOnly'));
     }
   }

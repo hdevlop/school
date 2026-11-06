@@ -1,5 +1,5 @@
 import { sql, type AnyColumn, type SQL } from 'drizzle-orm';
-import { managesSection } from '../staff/floorManagerScope';
+import { managesSection } from '../staff/monitorScope';
 
 /** The columns an academic source (an assessment or an exam) is dated and targeted by. */
 type DatedAcademicSource = {
@@ -37,7 +37,7 @@ export const placedOnSourceDate = (source: DatedAcademicSource, userId: string, 
 export const studentPlacedOnSourceDate = (source: DatedAcademicSource, studentId: string) =>
   placedOn(source, sql`student.id = ${studentId}`, false);
 
-/** A section the source targets is in one of a floor manager's classes. */
+/** A section the source targets is in one of a monitor's classes. */
 export const targetsManagedSection = (source: DatedAcademicSource, userId: string, sectionScope = managesSection) => sql`exists (
   select 1 from jsonb_array_elements_text(coalesce(${source.sectionIds}, jsonb_build_array(
     (select section_id from teacher_assignments where id = ${source.teacherAssignmentId})

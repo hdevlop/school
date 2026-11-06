@@ -18,7 +18,7 @@ import { supervisesClass } from '../../staff/supervisorScope';
 
 // The supervisor's sections are the classes assigned to them today, as their
 // ownership rules read them; the section-id reads they share with the floor
-// manager stay in FloorManagerDashboardRepository.
+// manager stay in MonitorDashboardRepository.
 @Repository()
 export class SupervisorDashboardRepository {
   declare db: DB;
@@ -42,7 +42,7 @@ export class SupervisorDashboardRepository {
     return row ?? null;
   }
 
-  /** The sections of the year's assigned classes, in the order the floor manager's are listed. */
+  /** The sections of the year's assigned classes, in the order the monitor's are listed. */
   async getSections(userId: string, academicYear: string) {
     return this.db
       .select({

@@ -93,7 +93,7 @@
       "teacher": "Assigned records only. Permissions do not expand teacher ownership.",
       "parent": "Linked children only. Permissions do not expand parent ownership.",
       "student": "Own records only. Permissions do not expand student ownership.",
-      "floor_manager": "Classes of the grades assigned in their staff record only. Permissions do not expand monitor ownership.",
+      "monitor": "Classes of the grades assigned in their staff record only. Permissions do not expand monitor ownership.",
       "unconfigured": "This custom role has no record scope configured. Permissions alone do not grant access to owned school records."
     },
     "categories": {
@@ -991,7 +991,7 @@
         "viewStudentsHint": "Students in your classes"
       }
     },
-    "floorManager": {
+    "monitor": {
       "title": "Monitor Dashboard",
       "subtitle": "Here's your classes' day at a glance.",
       "kpis": {
@@ -3127,7 +3127,7 @@
       "assistantClassRequired": "Assistant assignment requires a class",
       "busAssistantVehicleRequired": "Bus assistant assignment requires a vehicle",
       "accountantCycleRequired": "Accountant assignment requires a cycle",
-      "floorManagerGradeRequired": "Monitor assignment requires a grade",
+      "monitorGradeRequired": "Monitor assignment requires a grade",
       "securityZoneRequired": "Security assignment requires a zone",
       "driverVehicleRequired": "Driver assignment requires a vehicle",
       "staffNotFound": "Staff not found",
@@ -3171,7 +3171,7 @@
       "receptionist": "Receptionist",
       "accountant": "Accountant",
       "supervisor": "Supervisor",
-      "floorManager": "Monitor",
+      "monitor": "Monitor",
       "registrar": "Registrar",
       "librarian": "Librarian",
       "itSupport": "IT Support",
@@ -7446,7 +7446,7 @@
   },
   "academic": {
     "accountantAssignmentOptional": "Cycle assignment is optional. You can assign a cycle later.",
-    "floorManagerAssignmentHint": "Access is limited to the students, attendance, discipline and grades of these grades' classes, this year and the years after.",
+    "monitorAssignmentHint": "Access is limited to the students, attendance, discipline and grades of these grades' classes, this year and the years after.",
     "deleteWarning": "Linked records are protected. Deleted records cannot be recovered.",
     "classRequired": "Please select a class.",
     "cycleNameRequired": "Cycle name is required.",

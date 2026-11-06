@@ -24,7 +24,7 @@ describe.skipIf(!db)('independent page permission migration', () => {
         CREATE TEMP TABLE users (id text PRIMARY KEY, role_id text) ON COMMIT DROP;
         CREATE TEMP TABLE tokens (user_id text, status text, updated_at timestamp) ON COMMIT DROP;
         INSERT INTO permissions (id, name) VALUES ('students', 'read:students'), ('classes', 'read:classes'), ('all', 'read:*');
-        INSERT INTO roles VALUES ('secretary', 'secretary'), ('monitor', 'floor_manager'), ('teacher', 'teacher'), ('custom', 'custom'), ('wildcard', 'principal'), ('empty', 'assistant');
+        INSERT INTO roles VALUES ('secretary', 'secretary'), ('monitor', 'monitor'), ('teacher', 'teacher'), ('custom', 'custom'), ('wildcard', 'principal'), ('empty', 'assistant');
         INSERT INTO role_permissions VALUES ('secretary', 'students'), ('monitor', 'students'), ('monitor', 'classes'), ('teacher', 'classes'), ('custom', 'students'), ('wildcard', 'all');
         INSERT INTO users SELECT id, id FROM roles;
         INSERT INTO tokens SELECT id, 'active', now() FROM users;

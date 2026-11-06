@@ -84,7 +84,7 @@ describe('Massar sheet workflow', () => {
   });
   it('locks submitted/exported sheets for teachers, and gives supervisors no write even if granted the permission', async () => {
     for (const status of ['submitted', 'exported', 'changed_after_export']) await expect(fixture(status).service.saveMarks('sheet-1', { revision: 0, marks: [] }, teacher)).rejects.toThrow();
-    for (const role of ['supervisor','floor_manager','parent','student']) await expect(fixture().service.saveMarks('sheet-1', { revision: 0, marks: [] }, { id: 'reader', role, permissions: ['update:massar-marks'] })).rejects.toThrow();
+    for (const role of ['supervisor','monitor','parent','student']) await expect(fixture().service.saveMarks('sheet-1', { revision: 0, marks: [] }, { id: 'reader', role, permissions: ['update:massar-marks'] })).rejects.toThrow();
   });
   it('reopens explicitly, retains the export record, and requires re-export after editing', async () => {
     const { service, row } = fixture('exported'); row.sheet.exportedAt = '2026-11-06T00:00:00Z';

@@ -21,10 +21,10 @@ const SupervisorKpis = ({ overview, loading }: { overview: SupervisorDashboardOv
   const { attendance, students, discipline, visitRequests } = overview ?? {};
 
   const kpis: Kpi[] = loading ? [] : [
-    ...(students ? [{ key: 'students', icon: UsersRound, label: t('dashboard.floorManager.kpis.totalStudents'), value: number(students.total) }] : []),
+    ...(students ? [{ key: 'students', icon: UsersRound, label: t('dashboard.monitor.kpis.totalStudents'), value: number(students.total) }] : []),
     ...(attendance ? [
-      { key: 'absent', icon: UserX, label: t('dashboard.floorManager.kpis.absentToday'), value: number(attendance.absentToday), alert: attendance.absentToday > 0 },
-      { key: 'late', icon: Clock, label: t('dashboard.floorManager.kpis.lateToday'), value: number(attendance.lateToday) },
+      { key: 'absent', icon: UserX, label: t('dashboard.monitor.kpis.absentToday'), value: number(attendance.absentToday), alert: attendance.absentToday > 0 },
+      { key: 'late', icon: Clock, label: t('dashboard.monitor.kpis.lateToday'), value: number(attendance.lateToday) },
       {
         key: 'rate',
         icon: CalendarCheck,
@@ -32,7 +32,7 @@ const SupervisorKpis = ({ overview, loading }: { overview: SupervisorDashboardOv
         value: percent(attendance.attendanceRate == null ? null : attendance.attendanceRate / 100, 0),
       },
     ] : []),
-    ...(discipline ? [{ key: 'incidents', icon: ShieldAlert, label: t('dashboard.floorManager.attention.openIncidents'), value: number(discipline.openIncidents), alert: discipline.openIncidents > 0 }] : []),
+    ...(discipline ? [{ key: 'incidents', icon: ShieldAlert, label: t('dashboard.monitor.attention.openIncidents'), value: number(discipline.openIncidents), alert: discipline.openIncidents > 0 }] : []),
     ...(visitRequests ? [{ key: 'visits', icon: DoorOpen, label: t('dashboard.supervisor.kpis.newVisitRequests'), value: number(visitRequests.newRequests), alert: visitRequests.newRequests > 0 }] : []),
   ];
 

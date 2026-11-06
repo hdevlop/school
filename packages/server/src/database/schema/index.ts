@@ -84,7 +84,7 @@ export {
   assistantAssignments,
   supervisorAssignments,
   accountantAssignments,
-  floorManagerAssignments,
+  monitorAssignments,
   securityAssignments,
   busAssistantAssignments,
 } from '../../modules/staff/staffAssignmentSchema';

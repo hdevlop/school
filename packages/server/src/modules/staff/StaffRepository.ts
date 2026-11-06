@@ -7,7 +7,7 @@ import {
   classes,
   cycles,
   drivers,
-  floorManagerAssignments,
+  monitorAssignments,
   roles,
   sections,
   securityAssignments,
@@ -163,18 +163,18 @@ export class StaffRepository {
       .leftJoin(cycles, eq(accountantAssignments.cycleId, cycles.id))
       .where(inArray(accountantAssignments.staffId, staffIds));
 
-    const floorManagerRows = await this.db
+    const monitorRows = await this.db
       .select({
-        id: floorManagerAssignments.id,
-        staffId: floorManagerAssignments.staffId,
-        status: floorManagerAssignments.status,
-        startDate: floorManagerAssignments.startDate,
-        endDate: floorManagerAssignments.endDate,
-        notes: floorManagerAssignments.notes,
-        className: floorManagerAssignments.className,
+        id: monitorAssignments.id,
+        staffId: monitorAssignments.staffId,
+        status: monitorAssignments.status,
+        startDate: monitorAssignments.startDate,
+        endDate: monitorAssignments.endDate,
+        notes: monitorAssignments.notes,
+        className: monitorAssignments.className,
       })
-      .from(floorManagerAssignments)
-      .where(inArray(floorManagerAssignments.staffId, staffIds));
+      .from(monitorAssignments)
+      .where(inArray(monitorAssignments.staffId, staffIds));
 
     const securityRows = await this.db
       .select({
@@ -233,7 +233,7 @@ export class StaffRepository {
     assistantRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'assistant' }));
     supervisorRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'supervisor' }));
     accountantRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'accountant' }));
-    floorManagerRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'floorManager' }));
+    monitorRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'monitor' }));
     securityRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'security' }));
     busAssistantRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'busAssistant' }));
     driverRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'driver' }));

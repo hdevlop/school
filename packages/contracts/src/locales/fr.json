@@ -93,7 +93,7 @@
       "teacher": "Données affectées uniquement. Les permissions n’élargissent pas le périmètre de l’enseignant.",
       "parent": "Enfants liés uniquement. Les permissions n’élargissent pas le périmètre du parent.",
       "student": "Données personnelles uniquement. Les permissions n’élargissent pas le périmètre de l’élève.",
-      "floor_manager": "Classes des niveaux affectés dans sa fiche personnel uniquement. Les permissions n’élargissent pas le périmètre du moniteur.",
+      "monitor": "Classes des niveaux affectés dans sa fiche personnel uniquement. Les permissions n’élargissent pas le périmètre du moniteur.",
       "unconfigured": "Ce rôle personnalisé n’a pas de périmètre de données configuré. Les permissions seules ne donnent pas accès aux données protégées de l’école."
     },
     "categories": {
@@ -994,7 +994,7 @@
       "assistantClassRequired": "L'affectation d'un assistant exige une classe",
       "busAssistantVehicleRequired": "L'affectation d'un accompagnateur de bus exige un véhicule",
       "accountantCycleRequired": "L'affectation d'un comptable exige un cycle",
-      "floorManagerGradeRequired": "L'affectation d'un moniteur exige un niveau",
+      "monitorGradeRequired": "L'affectation d'un moniteur exige un niveau",
       "securityZoneRequired": "L'affectation d'un agent de sécurité exige une zone",
       "driverVehicleRequired": "L'affectation d'un chauffeur exige un véhicule",
       "staffNotFound": "Membre du personnel introuvable",
@@ -1037,7 +1037,7 @@
       "receptionist": "Réceptionniste",
       "accountant": "Comptable",
       "supervisor": "Surveillant",
-      "floorManager": "Moniteur",
+      "monitor": "Moniteur",
       "registrar": "Registraire",
       "librarian": "Bibliothécaire",
       "itSupport": "Support IT",
@@ -1875,7 +1875,7 @@
         "viewStudentsHint": "Les élèves de vos classes"
       }
     },
-    "floorManager": {
+    "monitor": {
       "title": "Tableau de bord du moniteur",
       "subtitle": "Voici la journée de vos classes en un coup d’œil.",
       "kpis": {
@@ -6840,7 +6840,7 @@
   },
   "academic": {
     "accountantAssignmentOptional": "L’affectation à un cycle est facultative. Vous pourrez l’ajouter plus tard.",
-    "floorManagerAssignmentHint": "Accès limité aux élèves, à l’assiduité, à la discipline et aux notes des classes de ces niveaux, cette année comme les suivantes.",
+    "monitorAssignmentHint": "Accès limité aux élèves, à l’assiduité, à la discipline et aux notes des classes de ces niveaux, cette année comme les suivantes.",
     "deleteWarning": "Les données liées sont protégées. La suppression est définitive.",
     "classRequired": "Veuillez sélectionner une classe.",
     "cycleNameRequired": "Le nom du cycle est obligatoire.",

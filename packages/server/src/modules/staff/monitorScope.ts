@@ -5,13 +5,13 @@ import { Repository } from '../../najm';
 import { getBusinessDateOnly } from '../../shared/businessDate';
 
 /**
- * A grade the user runs as floor manager: one of their assignments names it
+ * A grade the user runs as monitor: one of their assignments names it
  * and holds today, as `isCurrentAssignment` reads one. `className` is a class
  * row's name, so every year's class of that grade matches.
  */
 export function managesGrade(className: SQLWrapper, userId: string) {
   const today = getBusinessDateOnly();
-  return sql`exists (select 1 from floor_manager_assignments managed_grade
+  return sql`exists (select 1 from monitor_assignments managed_grade
     join staff manager on manager.id = managed_grade.staff_id
     where manager.user_id = ${userId}
       and managed_grade.class_name = ${className}
@@ -70,9 +70,9 @@ export function managesStudentInYear(studentId: SQLWrapper, yearId: string, user
       )`})`;
 }
 
-/** Whether a floor manager may act on a class or section a write names. */
+/** Whether a monitor may act on a class or section a write names. */
 @Repository()
-export class FloorManagerScopeRepository {
+export class MonitorScopeRepository {
   declare db: DB;
 
   async managesClass(userId: string, classId: string) {

@@ -13,13 +13,13 @@ describe('page access', () => {
     expect(PAGE_ACCESS.insurance(viewer('secretary', ['read:students']))).toBe(false);
     expect(PAGE_ACCESS.insurance(viewer('secretary', ['read:insurance']))).toBe(true);
     expect(PAGE_ACCESS.students(viewer('secretary', ['read:insurance']))).toBe(false);
-    expect(PAGE_ACCESS.students(viewer('floor_manager', ['read:students']))).toBe(true);
+    expect(PAGE_ACCESS.students(viewer('monitor', ['read:students']))).toBe(true);
     // The register reads students through their ownership rules, so a
     // class-scoped role granted it sees its own classes' register.
     expect(PAGE_ACCESS.insurance(viewer('supervisor', ['read:insurance']))).toBe(true);
-    expect(PAGE_ACCESS.classRoutines(viewer('floor_manager', ['read:classes']))).toBe(false);
-    expect(PAGE_ACCESS.classRoutines(viewer('floor_manager', ['read:class-routines']))).toBe(true);
-    expect(PAGE_ACCESS.classes(viewer('floor_manager', ['read:class-routines']))).toBe(false);
+    expect(PAGE_ACCESS.classRoutines(viewer('monitor', ['read:classes']))).toBe(false);
+    expect(PAGE_ACCESS.classRoutines(viewer('monitor', ['read:class-routines']))).toBe(true);
+    expect(PAGE_ACCESS.classes(viewer('monitor', ['read:class-routines']))).toBe(false);
   });
   it('opens a page from the permission its routes ask for, for any school-wide role', () => {
     const accountant = viewer('accounting', ['read:staff', 'read:payroll', 'read:financial-operations', 'read:staff-attendance', 'read:vehicles']);
@@ -30,7 +30,7 @@ describe('page access', () => {
   // Their routes read the whole school, so the server asks for a school-wide
   // role too. A supervisor works over their assigned classes.
   it('keeps finance, staff and transport pages from a class-scoped role granted their permission', () => {
-    for (const role of ['teacher', 'supervisor', 'floor_manager']) {
+    for (const role of ['teacher', 'supervisor', 'monitor']) {
       const scoped = viewer(role, ['read:fees', 'read:staff', 'read:payroll', 'read:vehicles']);
       for (const page of ['fees', 'staff', 'payroll', 'vehicles'] as const) expect(PAGE_ACCESS[page](scoped), `${role} ${page}`).toBe(false);
     }
@@ -47,7 +47,7 @@ describe('page access', () => {
 
   // The roles screen grants the dashboard; the role only picks its layout.
   it('opens the dashboard with read:dashboard, for any role', () => {
-    for (const role of ['admin', 'principal', 'supervisor', 'floor_manager', 'driver', 'custom-role']) {
+    for (const role of ['admin', 'principal', 'supervisor', 'monitor', 'driver', 'custom-role']) {
       expect(PAGE_ACCESS.dashboard(viewer(role, ['read:dashboard'])), role).toBe(true);
       expect(PAGE_ACCESS.dashboard(viewer(role, ['read:students'])), role).toBe(false);
     }
@@ -55,7 +55,7 @@ describe('page access', () => {
   });
 
   it('keeps authenticated landing destinations inside the protected app', () => {
-    for (const role of ['admin', 'principal', 'accounting', 'teacher', 'secretary', 'assistant', 'supervisor', 'floor_manager']) {
+    for (const role of ['admin', 'principal', 'accounting', 'teacher', 'secretary', 'assistant', 'supervisor', 'monitor']) {
       expect(dashboardLandingPath(viewer(role, ['read:dashboard']))).toBe('/dashboard');
       // Revoked in the roles screen: the inbox is still a usable home.
       expect(dashboardLandingPath(viewer(role, []))).toBe('/notifications');

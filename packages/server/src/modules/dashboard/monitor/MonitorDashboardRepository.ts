@@ -5,20 +5,20 @@ import {
   attendance,
   classes,
   disciplineIncidents,
-  floorManagerAssignments,
+  monitorAssignments,
   sections,
   staff,
   students,
   users,
 } from '../../../database/schema';
-import { managesClass } from '../../staff/floorManagerScope';
+import { managesClass } from '../../staff/monitorScope';
 
-// Every read takes the floor manager's user id, or section ids already
-// derived from it, so a floor manager only counts the grades they run. The
+// Every read takes the monitor's user id, or section ids already
+// derived from it, so a monitor only counts the grades they run. The
 // supervisor's dashboard passes the sections of their assigned classes to
 // the section-id reads.
 @Repository()
-export class FloorManagerDashboardRepository {
+export class MonitorDashboardRepository {
   declare db: DB;
 
   async getManager(userId: string) {
@@ -41,15 +41,15 @@ export class FloorManagerDashboardRepository {
   /** The grades an assignment holding `today` names, as `managesGrade` reads them. */
   async getGrades(staffId: string, today: string) {
     const rows = await this.db
-      .selectDistinct({ className: floorManagerAssignments.className })
-      .from(floorManagerAssignments)
+      .selectDistinct({ className: monitorAssignments.className })
+      .from(monitorAssignments)
       .where(and(
-        eq(floorManagerAssignments.staffId, staffId),
-        eq(floorManagerAssignments.status, 'active'),
-        or(isNull(floorManagerAssignments.startDate), lte(floorManagerAssignments.startDate, today)),
-        or(isNull(floorManagerAssignments.endDate), gte(floorManagerAssignments.endDate, today)),
+        eq(monitorAssignments.staffId, staffId),
+        eq(monitorAssignments.status, 'active'),
+        or(isNull(monitorAssignments.startDate), lte(monitorAssignments.startDate, today)),
+        or(isNull(monitorAssignments.endDate), gte(monitorAssignments.endDate, today)),
       ))
-      .orderBy(asc(floorManagerAssignments.className));
+      .orderBy(asc(monitorAssignments.className));
     return rows.map((row) => row.className);
   }
 

@@ -4,7 +4,7 @@ import { DashboardController } from '../../src/modules/dashboard/DashboardContro
 import { FinanceDashboardController } from '../../src/modules/dashboard/finance/FinanceDashboardController';
 import { AcademicDashboardController } from '../../src/modules/dashboard/academic/AcademicDashboardController';
 import { TeacherDashboardController } from '../../src/modules/dashboard/teacher/TeacherDashboardController';
-import { FloorManagerDashboardController } from '../../src/modules/dashboard/floorManager/FloorManagerDashboardController';
+import { MonitorDashboardController } from '../../src/modules/dashboard/monitor/MonitorDashboardController';
 import { SupervisorDashboardController } from '../../src/modules/dashboard/supervisor/SupervisorDashboardController';
 
 // The roles a route's role guards admit, read from the guard metadata the
@@ -50,7 +50,7 @@ describe('dashboard audience', () => {
     }
     expect(allowedRoles(AcademicDashboardController, 'getKpis')).toEqual([SCHOOL_WIDE_ROLES]);
     expect(permissions(AcademicDashboardController, 'getKpis')).toEqual(['read:students', 'read:teachers', 'read:attendance', 'read:grades']);
-    for (const outsider of ['teacher', 'supervisor', 'floor_manager', 'parent', 'student']) {
+    for (const outsider of ['teacher', 'supervisor', 'monitor', 'parent', 'student']) {
       expect(SCHOOL_WIDE_ROLES).not.toContain(outsider);
     }
   });
@@ -60,7 +60,7 @@ describe('dashboard audience', () => {
     const own: [unknown, string, string[]][] = [
       [TeacherDashboardController, 'getOverview', ['teacher']],
       [TeacherDashboardController, 'getAttendanceTrend', ['teacher']],
-      [FloorManagerDashboardController, 'getOverview', ['floor_manager']],
+      [MonitorDashboardController, 'getOverview', ['monitor']],
       [SupervisorDashboardController, 'getOverview', ['supervisor']],
       [SupervisorDashboardController, 'getStaffAttendanceMonthly', ['supervisor']],
     ];

@@ -13,7 +13,7 @@ import { CompactPersonCard, CompactTag, CompactValue, useCompactPersonCard } fro
 
 const resolveRoleLabel = (staff, language, t) => {
   if (!staff?.role) return '-';
-  if (staff.role === 'floorManager') return t('staff.roles.floorManager');
+  if (staff.role === 'monitor') return t('staff.roles.monitor');
   const localized = staff?.roleLabels?.[language];
   if (localized) return localized;
   if (staff?.roleLabel) return staff.roleLabel;

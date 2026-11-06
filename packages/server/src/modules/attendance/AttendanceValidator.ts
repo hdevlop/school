@@ -8,7 +8,7 @@ import { TeacherValidator } from '../teachers/TeacherValidator';
 import { SectionValidator } from '../sections/SectionValidator';
 import { SubjectValidator } from '../subjects/SubjectValidator';
 import { StudentEnrollmentRepository } from '../studentEnrollments/StudentEnrollmentRepository';
-import { FloorManagerScopeRepository } from '../staff/floorManagerScope';
+import { MonitorScopeRepository } from '../staff/monitorScope';
 import { SupervisorScopeRepository } from '../staff/supervisorScope';
 import { getBusinessDate } from '../../shared/businessDate';
 import { Year } from '../academicYears/requestYear';
@@ -55,7 +55,7 @@ export class AttendanceValidator {
     private sectionValidator: SectionValidator,
     private subjectValidator: SubjectValidator,
     private enrollments: StudentEnrollmentRepository,
-    private floorManagers: FloorManagerScopeRepository,
+    private monitors: MonitorScopeRepository,
     private supervisors: SupervisorScopeRepository,
   ) { }
 
@@ -121,7 +121,7 @@ export class AttendanceValidator {
   }
 
   private classAssignments(role?: string) {
-    if (role === 'floor_manager') return this.floorManagers;
+    if (role === 'monitor') return this.monitors;
     if (role === 'supervisor') return this.supervisors;
     return undefined;
   }
@@ -145,7 +145,7 @@ export class AttendanceValidator {
   ) {
     // The route's update:attendance decides who corrects; a teacher corrects
     // their own sections, a school-wide role any section and any transition,
-    // and a floor manager any transition in the sections of their classes.
+    // and a monitor any transition in the sections of their classes.
     const isSchoolWide = SCHOOL_WIDE_ROLES.includes(user.role ?? '');
     const assignments = this.classAssignments(user.role);
     const isAssignedStaff = !!assignments && !!user.id && await assignments.managesSection(user.id, sectionId);

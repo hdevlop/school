@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'bun:test';
-import { FloorManagerDashboardService } from '../../src/modules/dashboard/floorManager/FloorManagerDashboardService';
-import { FloorManagerDashboardValidator } from '../../src/modules/dashboard/floorManager/FloorManagerDashboardValidator';
+import { MonitorDashboardService } from '../../src/modules/dashboard/monitor/MonitorDashboardService';
+import { MonitorDashboardValidator } from '../../src/modules/dashboard/monitor/MonitorDashboardValidator';
 import { withEnglishMessages } from '../support/englishMessages';
 
 const MONDAY = '2026-09-28';
@@ -79,20 +79,20 @@ function build(options: { manager?: unknown; at?: string; startTime?: string | n
     unreadCount: async (...args: unknown[]) => { record('unreadCount', args); return 2; },
   };
 
-  const service = new FloorManagerDashboardService(
+  const service = new MonitorDashboardService(
     repository as any,
     settingsRepository as any,
     academicYears as any,
     notifications as any,
-    withEnglishMessages(new FloorManagerDashboardValidator()),
+    withEnglishMessages(new MonitorDashboardValidator()),
   );
   service.now = () => new Date(options.at ?? `${MONDAY}T09:30:00Z`);
   return { service, calls };
 }
 
-const user = { id: 'user-1', role: 'floor_manager' };
+const user = { id: 'user-1', role: 'monitor' };
 
-describe('floor manager dashboard overview', () => {
+describe('monitor dashboard overview', () => {
   let savedOverride: string | undefined;
   beforeEach(() => { savedOverride = process.env.APP_BUSINESS_DATE; delete process.env.APP_BUSINESS_DATE; });
   afterEach(() => {
@@ -100,7 +100,7 @@ describe('floor manager dashboard overview', () => {
     else process.env.APP_BUSINESS_DATE = savedOverride;
   });
 
-  it('resolves the floor manager and their sections from the session', async () => {
+  it('resolves the monitor and their sections from the session', async () => {
     const { service, calls } = build();
     const overview = await service.getOverview(user);
 

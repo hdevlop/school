@@ -10,7 +10,7 @@ export const Exam = own(exams)
     join(teachers.staffId, staff.id),
     where(staff.userId),
   )
-  .for('floor_manager', when((userId: string) => targetsManagedSection(exams, userId)))
+  .for('monitor', when((userId: string) => targetsManagedSection(exams, userId)))
   .for('supervisor', when((userId: string) => targetsManagedSection(exams, userId, supervisesSection)));
 
 // A student sees an exam of a section they were placed in on the exam date, and

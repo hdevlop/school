@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'bun:test';
 import { SupervisorDashboardService } from '../../src/modules/dashboard/supervisor/SupervisorDashboardService';
-import { FloorManagerDashboardValidator } from '../../src/modules/dashboard/floorManager/FloorManagerDashboardValidator';
+import { MonitorDashboardValidator } from '../../src/modules/dashboard/monitor/MonitorDashboardValidator';
 import { withEnglishMessages } from '../support/englishMessages';
 
 const MONDAY = '2026-09-28';
@@ -97,7 +97,7 @@ function build(options: { supervisor?: unknown } = {}) {
     settingsRepository as any,
     academicYears as any,
     notifications as any,
-    withEnglishMessages(new FloorManagerDashboardValidator()),
+    withEnglishMessages(new MonitorDashboardValidator()),
   );
   service.now = () => new Date(`${MONDAY}T10:30:00Z`);
   return { service, calls };
@@ -128,7 +128,7 @@ describe('supervisor dashboard overview', () => {
     expect(overview.supervisor).toMatchObject({ id: 'staff-9', classes: ['2AC', '1AC'] });
   });
 
-  it('counts today\'s registers like the floor manager\'s', async () => {
+  it('counts today\'s registers like the monitor\'s', async () => {
     const overview = await build().service.getOverview(user(ALL));
 
     expect(overview.schoolDay).toBe(true);

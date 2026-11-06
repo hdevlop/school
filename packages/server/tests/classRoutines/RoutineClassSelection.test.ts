@@ -18,8 +18,8 @@ describe('timetable class selection', () => {
   };
 
   it('filters monitor classes and sections by current assignments within the selected year', async () => {
-    for (const { query, params } of await capture('floor_manager')) {
-      expect(query).toContain('floor_manager_assignments managed_grade');
+    for (const { query, params } of await capture('monitor')) {
+      expect(query).toContain('monitor_assignments managed_grade');
       expect(query).toContain('managed_grade.class_name = "classes"."name"');
       expect(query).toContain("managed_grade.status = 'active'");
       expect(params).toContain('monitor');
@@ -29,7 +29,7 @@ describe('timetable class selection', () => {
 
   it('retains the existing year-wide timetable selection for other readers', async () => {
     for (const { query, params } of await capture('teacher')) {
-      expect(query).not.toContain('floor_manager_assignments');
+      expect(query).not.toContain('monitor_assignments');
       expect(params).toEqual(['2026-2027']);
     }
   });

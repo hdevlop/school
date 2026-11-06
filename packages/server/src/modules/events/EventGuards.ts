@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 import { Can, own, when } from '../../auth';
 import { composeGuards } from 'najm-guard';
 import { events } from '../../database/schema';
-import { managesClass, managesSection } from '../staff/floorManagerScope';
+import { managesClass, managesSection } from '../staff/monitorScope';
 import { supervisesClass, supervisesSection } from '../staff/supervisorScope';
 
 export const canAccessEvent        = composeGuards(Can('read:events'));
@@ -40,7 +40,7 @@ const placedInTarget = (userId: string, parent: boolean) => sql`exists (
       or coalesce(${events.classIds}, '[]'::jsonb) @> jsonb_build_array(placement.class_id))
 )`;
 
-// A class or section event of one of a floor manager's classes.
+// A class or section event of one of a monitor's classes.
 const targetsManagedClass = (userId: string, classScope = managesClass, sectionScope = managesSection) => sql`(${classScope(events.classId, userId)}
   or ${sectionScope(events.sectionId, userId)}
   or exists (select 1 from jsonb_array_elements_text(coalesce(${events.classIds}, '[]'::jsonb)) as target(class_id)
@@ -51,7 +51,7 @@ const targetsManagedClass = (userId: string, classScope = managesClass, sectionS
  * audience: teachers read public, teacher and staff events and every event
  * they organize, private ones included; students and parents read public
  * events and their own audience's, and a class or section event only when
- * the student (or a child) was in it on its first day. A floor manager reads
+ * the student (or a child) was in it on its first day. A monitor reads
  * what a teacher does, and every event of their classes that is not private.
  */
 export const Event = own(events)
@@ -61,7 +61,7 @@ export const Event = own(events)
     and (${untargeted} or ${placedInTarget(userId, false)}))`))
   .for('parent', when((userId: string) => sql`(${audience} in ('public', 'parents')
     and (${untargeted} or ${placedInTarget(userId, true)}))`))
-  .for('floor_manager', when((userId: string) => sql`(${audience} in ('public', 'teachers', 'staff')
+  .for('monitor', when((userId: string) => sql`(${audience} in ('public', 'teachers', 'staff')
     or ${events.organizerId} = ${userId}
     or (${audience} <> 'private' and ${targetsManagedClass(userId)}))`))
   .for('supervisor', when((userId: string) => sql`(${audience} <> 'private'

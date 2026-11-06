@@ -6,19 +6,19 @@ import Link from 'next/link';
 import { CheckCircle2, ChevronRight, ClipboardCheck, UsersRound } from 'lucide-react';
 import { NCard, NCardAction, NEmptyState, NSkeleton, NajmScroll, cn, getNChartColor } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import type { FloorManagerDashboardSection } from '@sms/contracts/floor-manager-dashboard';
+import type { MonitorDashboardSection } from '@sms/contracts/monitor-dashboard';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
-import { FLOOR_MANAGER_DASHBOARD_LINKS, sectionAttendanceHref } from '../../config/floorManagerDashboardLinks';
+import { MONITOR_DASHBOARD_LINKS, sectionAttendanceHref } from '../../config/monitorDashboardLinks';
 import { CardLink, SCROLL_CARD, SCROLL_LIST } from '../Teacher/shared';
 
 const VISIBLE_SECTIONS = 5;
 
 type RegistersCardProps = {
-  sections: FloorManagerDashboardSection[] | undefined;
+  sections: MonitorDashboardSection[] | undefined;
   loading: boolean;
   error: unknown;
   onRetry: () => void;
-  // What a staff member with no sections sees; the floor manager's grades by default.
+  // What a staff member with no sections sees; the monitor's grades by default.
   emptyText?: string;
   className?: string;
 };
@@ -29,7 +29,7 @@ const RegistersSkeleton = () => (
   </div>
 );
 
-// Each section of the floor manager's grades, with today's register: taken,
+// Each section of the monitor's grades, with today's register: taken,
 // with its absences and late arrivals, or still to take.
 const RegistersCard = ({ sections, loading, error, onRetry, emptyText, className }: RegistersCardProps) => {
   const { t } = useTranslation();
@@ -38,7 +38,7 @@ const RegistersCard = ({ sections, loading, error, onRetry, emptyText, className
 
   return (
     <NCard
-      title={t('dashboard.floorManager.registers.title')}
+      title={t('dashboard.monitor.registers.title')}
       icon={ClipboardCheck}
       className={cn('h-full', className)}
       classNames={SCROLL_CARD}
@@ -49,7 +49,7 @@ const RegistersCard = ({ sections, loading, error, onRetry, emptyText, className
       onRetry={onRetry}
     >
       <NCardAction>
-        <CardLink href={FLOOR_MANAGER_DASHBOARD_LINKS.attendance}>{t('dashboard.floorManager.registers.viewAll')}</CardLink>
+        <CardLink href={MONITOR_DASHBOARD_LINKS.attendance}>{t('dashboard.monitor.registers.viewAll')}</CardLink>
       </NCardAction>
 
       {rows.length ? (
@@ -80,15 +80,15 @@ const RegistersCard = ({ sections, loading, error, onRetry, emptyText, className
                     <span className="flex shrink-0 flex-col items-end gap-0.5 text-xs">
                       <span className="flex items-center gap-1 font-medium text-success">
                         <CheckCircle2 className="size-3.5" aria-hidden="true" />
-                        {t('dashboard.floorManager.registers.taken')}
+                        {t('dashboard.monitor.registers.taken')}
                       </span>
                       <span className="text-muted-foreground">
-                        {t('dashboard.floorManager.registers.counts', { absent: number(row.absent), late: number(row.late) })}
+                        {t('dashboard.monitor.registers.counts', { absent: number(row.absent), late: number(row.late) })}
                       </span>
                     </span>
                   ) : (
                     <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-                      {t('dashboard.floorManager.registers.pending')}
+                      {t('dashboard.monitor.registers.pending')}
                     </span>
                   )}
                   <ChevronRight className="size-4 shrink-0 text-muted-foreground rtl:rotate-180" aria-hidden="true" />
@@ -98,7 +98,7 @@ const RegistersCard = ({ sections, loading, error, onRetry, emptyText, className
           </ul>
         </NajmScroll>
       ) : (
-        <NEmptyState icon={FEATURE_ICONS.sections} title={emptyText ?? t('dashboard.floorManager.registers.empty')} className="py-4" />
+        <NEmptyState icon={FEATURE_ICONS.sections} title={emptyText ?? t('dashboard.monitor.registers.empty')} className="py-4" />
       )}
     </NCard>
   );

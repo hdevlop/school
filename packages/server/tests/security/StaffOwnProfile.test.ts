@@ -12,9 +12,9 @@ const record = {
   email: 'fatima@example.ma',
   address: 'Casablanca',
   medicalConditions: 'Asthma',
-  role: 'floorManager',
-  roleLabel: 'Floor manager',
-  roleLabels: { fr: "Responsable d'étage" },
+  role: 'monitor',
+  roleLabel: 'Monitor',
+  roleLabels: { fr: "Moniteur" },
   department: 'Primary',
   salary: 9000,
   hourlyRate: 50,
@@ -26,8 +26,8 @@ const record = {
   hireDate: '2026-09-01',
   status: 'active',
   assignments: [
-    { id: 'a-1', type: 'floorManager', className: 'CM1', notes: 'Under review', current: true },
-    { id: 'a-2', type: 'floorManager', className: 'CE2', notes: null, current: false },
+    { id: 'a-1', type: 'monitor', className: 'CM1', notes: 'Under review', current: true },
+    { id: 'a-2', type: 'monitor', className: 'CE2', notes: null, current: false },
   ],
 };
 
@@ -60,7 +60,7 @@ describe('a staff member reading their own record', () => {
   it('keeps only current assignments, without the notes written about them', async () => {
     const { service } = serviceFor(record);
     const profile = await service.getOwnProfile('user-1');
-    expect(profile?.assignments).toEqual([{ id: 'a-1', type: 'floorManager', className: 'CM1', current: true }] as never);
+    expect(profile?.assignments).toEqual([{ id: 'a-1', type: 'monitor', className: 'CM1', current: true }] as never);
   });
 
   it('answers null for an account with no staff record', async () => {

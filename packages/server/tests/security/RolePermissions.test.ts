@@ -177,14 +177,14 @@ describe('seeded permissions', () => {
     }
   });
 
-  // A floor manager (responsable d'étage) follows its students like the surveillant
+  // A monitor follows its students like the surveillant
   // général, who alone edits student records, deals with parents and visits and
   // writes to the school.
-  it('give the floor manager the supervisor\'s work without student edits, parents, visits or sending', () => {
-    // Massar access for floor managers is pending an owner decision in the plan.
+  it('give the monitor the supervisor\'s work without student edits, parents, visits or sending', () => {
+    // Monitors have no Massar access (MASSAR-GRADES-PLAN.md §9.9).
     const keptBySupervisor = ['read:massar', 'sidebar:massar', 'read:insurance', 'update:students', 'read:parents', 'read:visit-requests', 'update:visit-requests', 'create:alerts', 'create:announcements', 'update:announcements'];
-    expect([...grants.floor_manager].sort()).toEqual(grants.supervisor.filter((permission: string) => !keptBySupervisor.includes(permission)).sort());
-    for (const received of ['read:alerts', 'update:alerts', 'read:announcements']) expect(grants.floor_manager).toContain(received);
+    expect([...grants.monitor].sort()).toEqual(grants.supervisor.filter((permission: string) => !keptBySupervisor.includes(permission)).sort());
+    for (const received of ['read:alerts', 'update:alerts', 'read:announcements']) expect(grants.monitor).toContain(received);
   });
 
   // The secretary is the bridge to parents and visitors: they read a student's
@@ -305,12 +305,13 @@ describe('the deploy migration', () => {
   });
 });
 
-describe('the floor manager migration', () => {
+// 0089 added the role as floor_manager; 0102 renames it to monitor.
+describe('the monitor role migration', () => {
   const sql = readFileSync(new URL('../../src/database/migrations/0089_floor_manager_role.sql', import.meta.url), 'utf8');
 
   // An existing database gets the role a new one is seeded with.
   it('grants the seeded defaults', () => {
-    const grants = seedData('rolePermissions').find((row: { roleName: string }) => row.roleName === 'floor_manager').permissions;
+    const grants = seedData('rolePermissions').find((row: { roleName: string }) => row.roleName === 'monitor').permissions;
     // 0099 removes offline reading and this grant with it.
     const migrated = [...sql.matchAll(/'([\w-]+:[\w-]+)'/g)].map((match) => match[1]).filter((name) => name !== 'read:offline');
     // 0094 separates timetable reading from the existing classes grant.
@@ -320,9 +321,28 @@ describe('the floor manager migration', () => {
     expect(migrated.sort()).toEqual([...grants].sort());
   });
 
-  it('links the floor manager job title to the login', () => {
+  it('links the monitor job title to the login', () => {
     expect(sql).toContain(`SELECT 'floorManager', 'Floor Manager'`);
     expect(sql).toContain(`WHERE "roles"."name" = 'floor_manager'`);
+  });
+});
+
+describe('the monitor rename migration', () => {
+  const sql = readFileSync(new URL('../../src/database/migrations/0102_rename_floor_manager_to_monitor.sql', import.meta.url), 'utf8');
+
+  it('renames the role, the job title, the staff records, the assignments table and the default avatars', () => {
+    expect(sql).toContain(`SET "name" = 'monitor'`);
+    expect(sql).toContain(`WHERE "name" = 'floor_manager'`);
+    expect(sql).toContain(`SET "code" = 'monitor'`);
+    expect(sql).toContain(`UPDATE "staff" SET "role" = 'monitor' WHERE "role" = 'floorManager'`);
+    expect(sql).toContain(`ALTER TABLE IF EXISTS "floor_manager_assignments" RENAME TO "monitor_assignments"`);
+    expect(sql).toContain(`'/images/floorManager_'`);
+  });
+
+  it('leaves a name another role or job title already holds, and revokes the renamed sessions', () => {
+    expect(sql).toContain(`NOT EXISTS (SELECT 1 FROM "roles" WHERE "name" = 'monitor')`);
+    expect(sql).toContain(`NOT EXISTS (SELECT 1 FROM "staff_roles" WHERE "code" = 'monitor')`);
+    expect(sql).toContain(`UPDATE "tokens" SET "status" = 'revoked'`);
   });
 });
 
@@ -347,8 +367,10 @@ describe('the offline removal migration', () => {
 describe('the dashboard permission migration', () => {
   const sql = readFileSync(new URL('../../src/database/migrations/0096_dashboard_permission.sql', import.meta.url), 'utf8');
   /** Pinned here: the roles the dashboard page admitted by role before. */
-  const OPENED_BY_ROLE = ['principal', 'accounting', 'teacher', 'secretary', 'assistant', 'supervisor', 'floor_manager'];
-  const migratedRoles = [...(sql.match(/"name" IN \(([^)]*)\)/)?.[1] ?? '').matchAll(/'([\w-]+)'/g)].map((match) => match[1]);
+  const OPENED_BY_ROLE = ['principal', 'accounting', 'teacher', 'secretary', 'assistant', 'supervisor', 'monitor'];
+  // 0096 predates the rename: its floor_manager is today's monitor (0102).
+  const migratedRoles = [...(sql.match(/"name" IN \(([^)]*)\)/)?.[1] ?? '').matchAll(/'([\w-]+)'/g)]
+    .map((match) => match[1] === 'floor_manager' ? 'monitor' : match[1]);
 
   // The administrator holds *:*, which already matches it.
   it('keeps the dashboard for every role that opened it, and grants no other', () => {

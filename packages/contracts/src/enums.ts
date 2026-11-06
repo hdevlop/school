@@ -370,7 +370,7 @@ export const STAFF_ROLE_VALUES = [
   'busAssistant',
   'assistant',
   'supervisor',
-  'floorManager',
+  'monitor',
   'registrar',
   'other',
 ] as const;

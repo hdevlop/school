@@ -75,7 +75,7 @@ export const createStaffSchemas = (t: T, today = new Date().toISOString().slice(
     assignments: z.array(assignment).optional(),
     // Assistants and supervisors select classes, expanded to assignments on submit.
     classIds: z.array(z.string()).optional(),
-    // Floor-manager-only: grades by class name, likewise one assignment each.
+    // Monitor-only: grades by class name, likewise one assignment each.
     classNames: z.array(z.string()).optional(),
   });
 
