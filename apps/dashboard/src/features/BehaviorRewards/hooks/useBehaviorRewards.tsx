@@ -2,7 +2,10 @@
 
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as behaviorRewardApi from '@/services/behaviorRewardApi';
-import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useYearScopedList, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+
+/** The list this feature's page opens with; the page warm-up asks for the same. */
+export const behaviorRewardListRead = { resource: 'behavior-rewards', fetch: behaviorRewardApi.getBehaviorRewardsApi } satisfies YearScopedRead;
 
 // The viewed year's records; mutations refresh every year's list.
 export const useBehaviorRewards =(options?: { behaviorRewardId?: string; enabled?: boolean }) => {
@@ -17,7 +20,7 @@ export const useBehaviorRewards =(options?: { behaviorRewardId?: string; enabled
 
   const {
     data: behaviorRewards, isLoading: isBehaviorRewardsLoading, isError, error, refetch,
-  } = useYearScopedList({ resource: 'behavior-rewards', fetch: behaviorRewardApi.getBehaviorRewardsApi, enabled });
+  } = useYearScopedList({ ...behaviorRewardListRead, enabled });
   const { data: behaviorReward, isLoading: isBehaviorRewardLoading } = crud.useGetById(
     behaviorRewardId,
     Boolean(behaviorRewardId),

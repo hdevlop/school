@@ -1,7 +1,10 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as expenseApi from '@/services/expenseApi';
-import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useYearScopedDetail, useYearScopedList, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+
+/** The list this feature's page opens with; the page warm-up asks for the same. */
+export const expenseListRead = { resource: 'expenses', fetch: expenseApi.getExpensesApi } satisfies YearScopedRead;
 
 export const useExpenses = (options?) => {
   const { expenseId, enabled = true } = options || {};
@@ -15,7 +18,7 @@ export const useExpenses = (options?) => {
   });
 
   const { data: expenses, isLoading: isExpensesLoading, isError, error, refetch, academicYear } =
-    useYearScopedList({ resource: 'expenses', fetch: expenseApi.getExpensesApi, enabled });
+    useYearScopedList({ ...expenseListRead, enabled });
   const { data: expense, isLoading: isExpenseLoading } = useYearScopedDetail({
     resource: 'expenses', parts: [expenseId], fetch: () => expenseApi.getExpenseByIdApi(expenseId),
     enabled: Boolean(expenseId),

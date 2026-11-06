@@ -1,7 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Bar, BarChart, LabelList, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
+import { Bar, BarChart, LabelList, Tooltip, XAxis } from 'recharts';
+import { DeferredChart } from '@/shared/DeferredChart';
 import { BarChart3 } from 'lucide-react';
 import { NCard, NSkeletonChart, cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
@@ -46,7 +47,7 @@ export default function GradeDistributionChart({ distribution, loading, error, o
         <DashboardEmptyState icon={BarChart3} title={t('dashboard.registrar.distribution.empty')} />
       ) : (
         <div className="h-full min-h-56" role="img" aria-label={title}>
-          <ResponsiveContainer width="100%" height="100%">
+          <DeferredChart>
             <BarChart data={rows} margin={{ top: 20, right: 4, left: 4, bottom: 0 }}>
               <XAxis dataKey="band" axisLine={{ stroke: 'var(--border)' }} tickLine={false} tick={AXIS_TICK} interval={0} />
               <Tooltip
@@ -63,11 +64,11 @@ export default function GradeDistributionChart({ distribution, loading, error, o
                   );
                 }}
               />
-              <Bar dataKey="count" fill={GRADE_FILL} radius={[4, 4, 0, 0]} maxBarSize={24}>
+              <Bar isAnimationActive={false} dataKey="count" fill={GRADE_FILL} radius={[4, 4, 0, 0]} maxBarSize={24}>
                 <LabelList dataKey="count" position="top" formatter={(value: unknown) => number(Number(value))} style={{ fill: 'var(--foreground)', fontSize: 12 }} />
               </Bar>
             </BarChart>
-          </ResponsiveContainer>
+          </DeferredChart>
         </div>
       )}
     </NCard>

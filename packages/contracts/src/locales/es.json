@@ -2101,6 +2101,17 @@
       "absent": "Ausente",
       "late": "Tarde",
       "absentAndLate": "Ausentes y retrasos",
+      "nothingToPrint": "No hay ausencias ni retrasos para imprimir.",
+      "importDescription": "Importa studentCode y status (present, absent o late) para el {{date}}. Revisa las asistencias y pulsa Enviar para guardar.",
+      "importConfirm": "Aplicar asistencias",
+      "importSuccess": "{{count}} asistencias aplicadas. Revisa y envía para guardar.",
+      "importUnavailable": "Espera a que cargue el registro y selecciona una clase o lección cuya asistencia puedas marcar.",
+      "importErrors": {
+        "missingFields": "Fila {{row}}: studentCode y status son obligatorios.",
+        "unknownStudent": "Fila {{row}}: el estudiante {{code}} no está en el registro seleccionado.",
+        "duplicateStudent": "Fila {{row}}: el estudiante {{code}} aparece más de una vez.",
+        "invalidStatus": "Fila {{row}}: el estado debe ser present, absent o late."
+      },
       "signature": "Firma",
       "allPresent": "Todos presentes",
       "allAbsent": "Todos ausentes",
@@ -2128,7 +2139,8 @@
       "search": "Buscar",
       "submitError": "Error al guardar la asistencia",
       "unmarked": "Sin registrar",
-      "markAllPresent": "Marcar todos presentes"
+      "markAllPresent": "Marcar todos presentes",
+      "markAllPresentShort": "Todos presentes"
     }
   },
   "fees": {

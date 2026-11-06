@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip} from 'recharts';
+import { DeferredChart } from '@/shared/DeferredChart';
 import { UserCheck } from 'lucide-react';
 import { NCard } from 'najm-kit';
 import { NSkeletonChart } from 'najm-kit';
@@ -110,7 +111,7 @@ const TeachersAttendance: React.FC<TeachersAttendanceProps> = ({ className, audi
           </div>
 
           <div className="flex-1 min-h-0">
-            <ResponsiveContainer width="100%" height="100%">
+            <DeferredChart>
               <BarChart data={data} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                 <XAxis
@@ -125,10 +126,10 @@ const TeachersAttendance: React.FC<TeachersAttendanceProps> = ({ className, audi
                   tick={{ fill: '#9ca3af', fontSize: 12 }}
                 />
                 <Tooltip content={<CustomTooltip todayAbsent={todayAbsent} todayLate={todayLate} t={t} />} />
-                <Bar dataKey="absent" name={t('dashboard.attendance.absent')} fill={ABSENT_COLOR} radius={[6, 6, 0, 0]} maxBarSize={14} />
-                <Bar dataKey="late" name={t('dashboard.attendance.late')} fill={LATE_COLOR} radius={[6, 6, 0, 0]} maxBarSize={14} />
+                <Bar isAnimationActive={false} dataKey="absent" name={t('dashboard.attendance.absent')} fill={ABSENT_COLOR} radius={[6, 6, 0, 0]} maxBarSize={14} />
+                <Bar isAnimationActive={false} dataKey="late" name={t('dashboard.attendance.late')} fill={LATE_COLOR} radius={[6, 6, 0, 0]} maxBarSize={14} />
               </BarChart>
-            </ResponsiveContainer>
+            </DeferredChart>
           </div>
         </>
       )}

@@ -51,11 +51,14 @@ export function studentRosterChanges(roster: StudentRosterPerson[], draft: Stude
     const key = studentMarkKey(item);
     const existing = saved.get(key);
     const status = rosterMark(draft[key]?.status, existing?.status, 'present') as RosterStatus;
-    return status === existing?.status ? [] : [{ ...item, status, ...(existing ? { id: existing.id } : {}) }];
+    // Present is the visual default, not a new record to send. Keep explicit
+    // corrections of saved absent/late marks so those records can be updated.
+    if (status === existing?.status || (status === 'present' && !existing)) return [];
+    return [{ ...item, status, ...(existing ? { id: existing.id } : {}) }];
   });
 }
 
-/** Editing a section stages its complete register, including its default Present marks. */
+/** Stage only exceptions and corrections, retaining edits from other sections. */
 export function stageStudentRoster(roster: StudentRosterPerson[], draft: StudentRosterDraft,
   saved: Map<string, SavedStudentMark>, context: StudentRosterContext, marks: Record<string, RosterStatus>) {
   const edited = { ...draft };
@@ -72,7 +75,7 @@ export function stageStudentRoster(roster: StudentRosterPerson[], draft: Student
   return next;
 }
 
-/** Combine reviewed sections with the current register, without marking unvisited sections. */
+/** Combine pending exceptions and corrections across sections with the current register. */
 export function studentRosterSubmission(roster: StudentRosterPerson[], draft: StudentRosterDraft,
   saved: Map<string, SavedStudentMark>, context: StudentRosterContext) {
   const queued = { ...draft };
@@ -84,7 +87,8 @@ export function studentRosterSubmission(roster: StudentRosterPerson[], draft: St
   return Object.values(queued).flatMap(item => {
     if (item.date !== context.date) return [];
     const existing = saved.get(studentMarkKey(item));
-    return existing?.status === item.status ? [] : [{ ...item, ...(existing ? { id: existing.id } : {}) }];
+    if (existing?.status === item.status || (item.status === 'present' && !existing)) return [];
+    return [{ ...item, ...(existing ? { id: existing.id } : {}) }];
   });
 }
 

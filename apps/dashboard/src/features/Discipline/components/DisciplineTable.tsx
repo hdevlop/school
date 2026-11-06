@@ -23,6 +23,7 @@ import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSect
 import { useMemo } from 'react';
 import type { DisciplineIncident } from '../disciplineConstants';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
+import styles from './DisciplineTable.module.css';
 
 export default function DisciplineTable() {
   const { t } = useTranslation();
@@ -36,7 +37,12 @@ export default function DisciplineTable() {
   const columns = useDisciplineTableColumns();
   const scope = useClassSectionTableScope();
   const disciplineFilters = useDisciplineTableFilters();
-  const filters = useMemo(() => [...scope.filters, ...disciplineFilters], [scope.filters, disciplineFilters]);
+  const filters = useMemo(() => [...scope.filters, ...disciplineFilters].map((filter) => ({
+    ...filter,
+    className: `${'className' in filter ? filter.className ?? '' : ''} ${filter.name === 'status'
+      ? styles.mobileStatus
+      : filter.type === 'text' ? '' : styles.mobileHalfWidth}`,
+  })), [scope.filters, disciplineFilters]);
   const { openDialog, confirmDelete } = useDialog();
   const {
     incidents, createIncident, updateIncident, deleteIncident, resolveIncident, reopenIncident,
@@ -128,7 +134,7 @@ export default function DisciplineTable() {
         exportTitle={t('navigation.discipline')}
         permissionResource="discipline"
         responsiveSkeleton
-        className="min-h-0 flex-1"
+        className={`min-h-0 flex-1 ${styles.table}`}
         data={filteredIncidents}
         columns={columns}
         filters={filters}

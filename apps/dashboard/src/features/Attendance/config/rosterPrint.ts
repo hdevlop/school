@@ -5,8 +5,6 @@ import type { RosterMark } from './rosterMarks';
 
 /** What the register's print menu offers, in menu order. */
 export const ROSTER_PRINT_CHOICES = [
-  { key: 'all', label: 'common.all', marks: ['present', 'absent', 'late', 'unmarked'] },
-  { key: 'present', label: 'attendance.roster.present', marks: ['present'] },
   { key: 'absent', label: 'attendance.roster.absent', marks: ['absent'] },
   { key: 'late', label: 'attendance.roster.late', marks: ['late'] },
   { key: 'absentAndLate', label: 'attendance.roster.absentAndLate', marks: ['absent', 'late'] },

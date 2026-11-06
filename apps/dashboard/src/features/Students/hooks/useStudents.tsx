@@ -1,7 +1,7 @@
 'use client';
 
 import { useEntityCRUD } from 'najm-kit/query/crud';
-import { useYearScopedList, useYearScopedDetail } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useYearScopedList, useYearScopedDetail, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import {
   useAcademicYearOptions,
   useViewingAcademicYear,
@@ -9,6 +9,14 @@ import {
 } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { datedRosterDay } from '@/features/AcademicYears/utils/viewingYear';
 import * as studentApi from '@/services/studentApi';
+
+/** The viewed year's students, as the students page opens; the page warm-up asks for the same. */
+export const studentListRead = { resource: 'students', fetch: studentApi.getStudentsApi } satisfies YearScopedRead;
+
+/** The students placed on `day`, as a register opens on it; the page warm-up asks for the same. */
+export const studentsOnDateRead = (day: string) => ({
+  resource: 'students', parts: [{ onDate: day }], fetch: () => studentApi.getStudentsOnDateApi(day),
+}) satisfies YearScopedRead;
 
 export const useStudents = (options?) => {
   const { studentId, enabled = true } = options || {};
@@ -23,9 +31,7 @@ export const useStudents = (options?) => {
     createBulk: studentApi.createBulkStudentsApi,
   });
 
-  const { data: students, isLoading: isStudentsLoading, isError, error, refetch } = useYearScopedList({
-    resource: 'students', fetch: studentApi.getStudentsApi, enabled,
-  });
+  const { data: students, isLoading: isStudentsLoading, isError, error, refetch } = useYearScopedList({ ...studentListRead, enabled });
   const { data: student, isLoading: isStudentLoading } = useYearScopedDetail({
     resource: 'students', parts: [studentId], fetch: () => studentApi.getStudentByIdApi(studentId),
     enabled: enabled && !!studentId,
@@ -87,12 +93,7 @@ export const useStudentsOnDate = (date: string | undefined) => {
   // asked again) or out of it (back to the list), so the answer is shown only
   // for a day the calendar has confirmed, and a refusal for an unconfirmed day
   // is never shown.
-  const dated = useYearScopedList({
-    resource: 'students',
-    parts: [{ onDate: rosterDay }],
-    fetch: () => studentApi.getStudentsOnDateApi(rosterDay as string),
-    enabled: isDated,
-  });
+  const dated = useYearScopedList({ ...studentsOnDateRead(rosterDay as string), enabled: isDated });
 
   if (!isDated) {
     return { students: list.students, error: list.error, isStudentsLoading: list.isStudentsLoading };

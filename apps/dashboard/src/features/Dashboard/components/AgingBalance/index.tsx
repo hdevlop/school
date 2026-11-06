@@ -95,7 +95,7 @@ const AgingBalance: React.FC<AgingBalanceProps> = ({ className = '' }) => {
               content={(props) => <AgingTooltip {...(props as unknown as AgingTooltipProps)} majorMoney={majorMoney} />}
               cursor={{ fill: 'rgba(0,0,0,0.04)' }}
             />
-            <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+            <Bar isAnimationActive={false} dataKey="value" radius={[6, 6, 0, 0]}>
               {chartData.map((_, i) => (
                 <Cell key={i} fill={COLORS[i]} />
               ))}

@@ -2,7 +2,10 @@
 
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as eventApi from '@/services/eventApi';
-import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useYearScopedDetail, useYearScopedList, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+
+/** The list this feature's page opens with; the page warm-up asks for the same. */
+export const eventListRead = { resource: 'events', fetch: eventApi.getEventsApi } satisfies YearScopedRead;
 
 // The viewed year's events: those whose dates overlap it. Mutations refresh every year.
 export const useEvents = (options?) => {
@@ -16,7 +19,7 @@ export const useEvents = (options?) => {
   });
 
   const { data: events, isLoading: isEventsLoading, isError, error, refetch } =
-    useYearScopedList({ resource: 'events', fetch: eventApi.getEventsApi, enabled });
+    useYearScopedList({ ...eventListRead, enabled });
   const { data: event, isLoading: isEventLoading } = useYearScopedDetail({
     resource: 'events', parts: [eventId], fetch: () => eventApi.getEventByIdApi(eventId), enabled: !!eventId,
   });

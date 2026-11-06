@@ -7,12 +7,14 @@ import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'n
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 
 import { useCallback, useMemo, useState } from 'react';
-import RosterHeader from './RosterHeader';
+import RosterHeader, { RosterStats } from './RosterHeader';
+import { HeaderActionsMenu } from '@/components/HeaderActionsMenu';
+import RosterMobileSubmit from './RosterMobileSubmit';
 import RosterPrintMenu from './RosterPrintMenu';
 import { useRosterPrint } from '../hooks/useRosterPrint';
 import type { RosterPrintChoice } from '../config/rosterPrint';
 import RosterFilters from './RosterFilters';
-import { RosterPageHeaderSkeleton, ROSTER_LOADING_TABLE_HEADER } from './RosterLoading';
+import { StaffRosterCardSkeleton, ROSTER_LOADING_TABLE_HEADER } from './RosterLoading';
 import { filterRoster } from '../config/filterRoster';
 import RosterCard from './RosterCard';
 import { useStaffAttendance } from '../hooks/useAttendance';
@@ -28,6 +30,7 @@ import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
 import { useViewingYearDate } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useSchoolToday } from '@/hooks/useSchoolFormat';
 import StaffAttendanceDetails from './StaffAttendanceDetails';
+import styles from './StudentAttendanceTable.module.css';
 
 function StaffAttendanceTable() {
   const { t } = useTranslation();
@@ -35,7 +38,6 @@ function StaffAttendanceTable() {
   const canEdit = can('update:staff-attendance');
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('');
-  const [role, setRole] = useState('');
   const [selectedDate, setSelectedDate] = useViewingYearDate(useSchoolToday());
   const { staff, error: staffError, isStaffLoading } = useStaff({ attendanceRoster: true, attendanceDate: selectedDate });
   const { activeStaffRoles, isStaffRolesLoading } = useStaffRoles({ activeOnly: true });
@@ -51,13 +53,16 @@ function StaffAttendanceTable() {
     onDateChange: setSelectedDate,
   });
 
+  const isRosterLoading = isStaffLoading || isAttendanceLoading || isStaffRolesLoading;
+  const canMark = canEdit && !isSubmittingRoster && !isRosterLoading && !attendanceError && !staffError;
+  const canSubmit = canMark && staffRows.length > 0;
   const { getDetails, getStatus, setDetails } = roster;
   const renderDetails = useCallback((person: any) => (
     <StaffAttendanceDetails name={person.name} details={getDetails(person.id)}
-      disabled={!canEdit || getStatus(person.id) === 'unmarked'}
+      disabled={!canMark || getStatus(person.id) === 'unmarked'}
       onChange={(details) => setDetails(person.id, details)} />
-  ), [canEdit, getDetails, getStatus, setDetails]);
-  const columns = useStaffRosterColumns({ readOnly: !canEdit, getStatus: roster.getStatus, setStatus: roster.setStatus, renderDetails });
+  ), [canMark, getDetails, getStatus, setDetails]);
+  const columns = useStaffRosterColumns({ readOnly: !canMark, getStatus: roster.getStatus, setStatus: roster.setStatus, renderDetails });
 
   // The staff register is the same nine-column table as the student one and was
   // squeezed the same way below the card breakpoint.
@@ -65,50 +70,54 @@ function StaffAttendanceTable() {
     (props: any) => (
       <RosterCard
         {...props}
-        readOnly={!canEdit}
+        classNames={{ ...props.classNames, name: 'text-xs', root: 'p-2 md:px-4 md:py-3' }}
+        readOnly={!canMark}
         getStatus={roster.getStatus}
         setStatus={roster.setStatus}
-        detail={t(`staff.roles.${props.data?.role}`)}
+        detail={activeStaffRoles.find((item) => item.code === props.data?.role)?.label || t(`staff.roles.${props.data?.role}`)}
         avatarSrc={props.data?.image || getStaffAvatar(props.data?.role, props.data?.gender)}
-      >{renderDetails(props.data)}</RosterCard>
+        actions={(
+          <StaffAttendanceDetails iconOnly name={props.data?.name} details={getDetails(props.data.id)}
+            disabled={!canMark || getStatus(props.data.id) === 'unmarked'}
+            onChange={(details) => setDetails(props.data.id, details)} />
+        )}
+      />
     ),
-    [t, canEdit, roster.getStatus, roster.setStatus, renderDetails],
+    [t, canMark, roster.getStatus, roster.setStatus, activeStaffRoles, getDetails, getStatus, setDetails],
   );
   const rawFilters = useStaffRosterFilters(
     { value: roster.selectedDate, onChange: roster.goToDate },
     activeStaffRoles,
   );
-  const filters = rawFilters.map((filter) => {
+  const filters = rawFilters.filter((filter) => filter.name !== 'role').map((filter) => {
     const binding = filter.name === 'name'
       ? { label: t('attendance.roster.search'), value: search, onChange: setSearch }
-      : filter.name === 'role'
-        ? { label: t('staff.table.role'), value: role, onChange: setRole }
-        : filter.name === 'status'
-          ? { label: t('attendance.roster.status'), value: status, onChange: setStatus }
-          : { label: t('attendance.roster.date'), value: roster.selectedDate, onChange: roster.goToDate };
+      : filter.name === 'status'
+        ? { label: t('attendance.roster.status'), value: status, onChange: setStatus }
+        : { label: t('attendance.roster.date'), value: roster.selectedDate, onChange: roster.goToDate };
     return {
       ...filter,
       ...binding,
-      ...(filter.name === 'role' || filter.name === 'status'
+      className: undefined,
+      ...(filter.name === 'status'
         ? {
-            placeholder: t(filter.name === 'role' ? 'common.allRoles' : 'common.allStatuses'),
-            options: [{ value: '', label: t(filter.name === 'role' ? 'common.allRoles' : 'common.allStatuses') }, ...(filter.options ?? [])],
+            placeholder: t('common.allStatuses'),
+            options: [{ value: '', label: t('common.allStatuses') }, ...(filter.options ?? [])],
           }
         : {}),
     };
   });
   const visibleStaff = useMemo(
-    () => filterRoster(staff || [], { search, status, role }, roster.getStatus),
-    [staff, search, status, role, roster.getStatus],
+    () => filterRoster(staff || [], { search, status }, roster.getStatus),
+    [staff, search, status, roster.getStatus],
   );
   const resetFilters = () => {
     setSearch('');
     setStatus('');
-    setRole('');
   };
   const total = staffRows.length;
   // The print menu picks the marks, so it prints every staff member whatever
-  // the search, role and status filters show.
+  // the search and status filters show.
   const print = useRosterPrint();
   const genderLabel = (gender?: string | null) => gender === 'M' ? t('common.male') : gender === 'F' ? t('common.female') : gender ?? '';
   const printRoster = (choice: RosterPrintChoice) => print(choice, staffRows.map((person: any) => ({
@@ -121,28 +130,35 @@ function StaffAttendanceTable() {
     columns: [t('staff.table.name'), t('students.table.gender'), t('teachers.table.phone'), t('staff.table.role')],
   });
 
-  const isRosterLoading = isStaffLoading || isAttendanceLoading || isStaffRolesLoading;
-
   return (
-    <div className="flex h-full min-h-0 flex-col gap-2">
-      {isRosterLoading ? <RosterPageHeaderSkeleton /> : <NPageHeader
+    <div className={`${styles.screen} flex h-full min-h-0 flex-col gap-2`}>
+      {/* The header is drawn at once: only its count waits for the roster. A
+          placeholder header left the page without any text until every list
+          had loaded, and mounting the real one then refetched its menus. */}
+      <NPageHeader
         icon={FEATURE_ICONS.staffAttendance}
         title={t('navigation.staffAttendance')}
         subtitle={isCountUnknown(staffError, staffRows, isStaffLoading || isAttendanceLoading || isStaffRolesLoading) ? undefined : t('attendance.subtitle.staffCount', { count: total })}
+        compactActions={(
+          <HeaderActionsMenu contentClassName="md:hidden"><PageHeaderGlobalActions /></HeaderActionsMenu>
+        )}
       >
         <NPageHeaderActions>
+          <RosterStats stats={roster.stats} loading={isRosterLoading} />
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
-      </NPageHeader>}
+      </NPageHeader>
 
       <RosterFilters
         loading={isRosterLoading}
         filters={filters}
         onReset={resetFilters}
-        canReset={!!search || !!status || !!role}
+        canReset={!!search || !!status}
       >
         <RosterHeader
           loading={isRosterLoading}
+          showMobileSubmit={false}
+          showStats={false}
           print={(
             <RosterPrintMenu
               counts={roster.stats}
@@ -155,7 +171,8 @@ function StaffAttendanceTable() {
           stats={roster.stats}
           onSubmit={roster.handleSubmit}
           onMarkAllPresent={() => roster.markAllAs('present')}
-          canSubmit={canEdit && total > 0 && !isStaffLoading && !isAttendanceLoading && !isStaffRolesLoading && !attendanceError}
+          canMarkAllPresent={canSubmit}
+          canSubmit={canSubmit}
         />
       </RosterFilters>
 
@@ -163,6 +180,7 @@ function StaffAttendanceTable() {
         showExportButton={false} showPrintButton={false}
         responsiveSkeleton
         data={visibleStaff}
+        getRowId={(person) => person.id}
         isFilteredEmpty={total > 0 && visibleStaff.length === 0}
         columns={columns}
         loading={isRosterLoading}
@@ -194,7 +212,17 @@ function StaffAttendanceTable() {
         showViewToggle={false}
         defaultMode="table"
         renderCard={renderRosterCard}
+        renderCardSkeleton={StaffRosterCardSkeleton}
       />
+      {canEdit && <RosterMobileSubmit
+        count={roster.submissionCount}
+        onSubmit={roster.handleSubmit}
+        onMarkAllPresent={() => roster.markAllAs('present')}
+        canSubmit={canSubmit}
+        canMarkAllPresent={canSubmit}
+        isSubmitting={isSubmittingRoster}
+        loading={isRosterLoading}
+      />}
     </div>
   );
 }

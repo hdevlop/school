@@ -5952,6 +5952,17 @@
       "absent": "Absent",
       "late": "Late",
       "absentAndLate": "Absent and late",
+      "nothingToPrint": "No absences or late arrivals to print.",
+      "importDescription": "Import studentCode and status (present, absent or late) for {{date}}. Review the marks, then press Send to save.",
+      "importConfirm": "Apply marks",
+      "importSuccess": "Applied {{count}} attendance marks. Review and send to save.",
+      "importUnavailable": "Wait for the register to load and select a class or lesson you can mark.",
+      "importErrors": {
+        "missingFields": "Row {{row}}: studentCode and status are required.",
+        "unknownStudent": "Row {{row}}: student {{code}} is not in the selected register.",
+        "duplicateStudent": "Row {{row}}: student {{code}} appears more than once.",
+        "invalidStatus": "Row {{row}}: status must be present, absent or late."
+      },
       "signature": "Signature",
       "allPresent": "All Present",
       "allAbsent": "All Absent",
@@ -5979,7 +5990,8 @@
       "resetFilters": "Reset filters",
       "search": "Search",
       "unmarked": "Not recorded",
-      "markAllPresent": "Mark all present"
+      "markAllPresent": "Mark all present",
+      "markAllPresentShort": "All present"
     }
   },
   "behaviorRewards": {

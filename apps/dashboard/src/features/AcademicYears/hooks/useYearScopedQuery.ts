@@ -1,5 +1,6 @@
 'use client';
 
+import type { QueryKey } from '@tanstack/react-query';
 import { useEntityQuery } from 'najm-kit/query';
 import { selectedYearLabel, useYearSelectionStore } from '../store/yearSelectionStore';
 import { withAcademicYear, yearOfKey, yearScopedKey, type YearScope } from '../utils/yearScope';
@@ -16,17 +17,33 @@ export function useAcademicYearScope(override?: string): YearScope & { ready: bo
   return { accountScope: accountId ?? 'anonymous', academicYear, ready: !!academicYear };
 }
 
-type YearScopedQueryOptions = {
+/** What a year-scoped read asks for. A feature exports the ones its pages open with, for the warm-up. */
+export type YearScopedRead = {
   /** The entity cache namespace; mutations invalidating `[resource]` reach every year. */
   resource: string;
   /** Filters and ids after the year, part of the key. */
   parts?: readonly unknown[];
   /** Calls the API; its request carries the key's year, whatever the tab shows later. */
   fetch: () => Promise<any>;
+};
+
+type YearScopedQueryOptions = YearScopedRead & {
   enabled?: boolean;
   /** A year the read names itself instead of the tab's selection. */
   academicYear?: string;
 };
+
+/**
+ * The cache key and query function of a year-scoped read. The page's hook and
+ * the warm-up both build their query here, so a warmed answer lands under
+ * the key the page then reads.
+ */
+export function yearScopedQueryOptions({ resource, parts = [], fetch }: YearScopedRead, scope: YearScope) {
+  return {
+    queryKey: yearScopedKey(resource, scope, ...parts),
+    queryFn: ({ queryKey }: { queryKey: QueryKey }) => withAcademicYear(yearOfKey(queryKey), fetch),
+  };
+}
 
 /**
  * A year-scoped read. The key and the request share one year, taken from the
@@ -34,11 +51,10 @@ type YearScopedQueryOptions = {
  * own year, not the one the page shows now, and a late response can only land
  * under the key it was asked for. Reads wait until the selection is ready.
  */
-export function useYearScopedQuery({ resource, parts = [], fetch, enabled = true, academicYear }: YearScopedQueryOptions) {
+export function useYearScopedQuery({ enabled = true, academicYear, ...read }: YearScopedQueryOptions) {
   const scope = useAcademicYearScope(academicYear);
   const query = useEntityQuery<any>({
-    queryKey: yearScopedKey(resource, scope, ...parts),
-    queryFn: ({ queryKey }) => withAcademicYear(yearOfKey(queryKey), fetch),
+    ...yearScopedQueryOptions(read, scope),
     enabled: enabled && scope.ready,
     refetchOnWindowFocus: true,
     refetchOnMount: true,

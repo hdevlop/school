@@ -121,7 +121,7 @@ export const useAttendanceRoster = ({
       const key = item && studentMarkKey(item);
       return key ? rosterMark(studentDraft[key]?.status, savedStudentMarks.get(key)?.status, 'present') : 'present';
     }
-    return rosterMark(draft[id], existingByPerson.get(id)?.status);
+    return rosterMark(draft[id], existingByPerson.get(id)?.status, 'present');
   }, [draft, existingByPerson, kind, peopleById, studentRosterContext, studentDraft, savedStudentMarks]);
 
   const changes = useMemo(() => kind === 'staff'
@@ -133,22 +133,24 @@ export const useAttendanceRoster = ({
     setDetailDraft((previous) => ({ ...previous, [id]: details }));
   }, []);
 
-  const setStatus = useCallback((id: string, status: RosterStatus) => {
+  const setStatuses = useCallback((marks: Record<string, RosterStatus>) => {
     if (kind === 'student') {
       setStudentPending(previous => ({ scope: studentScope, items: stageStudentRoster(roster,
-        previous.scope === studentScope ? previous.items : {}, savedStudentMarks, studentRosterContext, { [id]: status }) }));
+        previous.scope === studentScope ? previous.items : {}, savedStudentMarks, studentRosterContext, marks) }));
       return;
     }
     setDraft((prev) => {
       const next = { ...prev };
-      if (existingByPerson.get(id)?.status === status) {
-        delete next[id];
-      } else {
-        next[id] = status;
+      for (const [id, status] of Object.entries(marks)) {
+        if (!peopleById.has(id)) continue;
+        if (existingByPerson.get(id)?.status === status) delete next[id];
+        else next[id] = status;
       }
       return next;
     });
-  }, [existingByPerson, kind, studentScope, roster, savedStudentMarks, studentRosterContext]);
+  }, [existingByPerson, kind, studentScope, roster, savedStudentMarks, studentRosterContext, peopleById]);
+
+  const setStatus = useCallback((id: string, status: RosterStatus) => setStatuses({ [id]: status }), [setStatuses]);
 
   const stats = useMemo(() => {
     const s = { total: roster.length, present: 0, absent: 0, late: 0, unmarked: 0 };
@@ -245,6 +247,7 @@ export const useAttendanceRoster = ({
     stats,
     getStatus,
     setStatus,
+    setStatuses,
     getDetails,
     setDetails,
     shiftDate,

@@ -1,7 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
+import { DeferredChart } from '@/shared/DeferredChart';
 import { TrendingUp } from 'lucide-react';
 import { NCard, NSkeletonChart, cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
@@ -46,7 +47,7 @@ export default function GradeTrendChart({ monthly, businessDate, loading, error,
         <DashboardEmptyState icon={TrendingUp} title={t('dashboard.registrar.trend.empty')} />
       ) : (
         <div className="h-full min-h-56" role="img" aria-label={title}>
-          <ResponsiveContainer width="100%" height="100%">
+          <DeferredChart>
             <LineChart data={rows} margin={{ top: 8, right: 12, left: -12, bottom: 0 }}>
               <CartesianGrid vertical={false} stroke="var(--border)" />
               <XAxis dataKey="label" axisLine={false} tickLine={false} tick={AXIS_TICK} />
@@ -71,7 +72,7 @@ export default function GradeTrendChart({ monthly, businessDate, loading, error,
                   );
                 }}
               />
-              <Line
+              <Line isAnimationActive={false}
                 type="monotone"
                 dataKey="average"
                 stroke={GRADE_FILL}
@@ -80,7 +81,7 @@ export default function GradeTrendChart({ monthly, businessDate, loading, error,
                 activeDot={{ r: 5, fill: GRADE_FILL, stroke: 'var(--card)', strokeWidth: 2 }}
               />
             </LineChart>
-          </ResponsiveContainer>
+          </DeferredChart>
         </div>
       )}
     </NCard>

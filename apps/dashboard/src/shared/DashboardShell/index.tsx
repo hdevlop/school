@@ -24,6 +24,7 @@ import { SchoolSessionLoader } from '@/components/SchoolSessionLoader';
 import { useSidebarOrder } from '@/features/Roles/hooks/useSidebarOrder';
 import { useSchoolSignOut } from '@/providers/SignOutTransition';
 import { FeatureActionsProvider } from '@/shared/FeatureActions';
+import { PageWarmup } from '@/shared/PageWarmup';
 
 // Every page opens inside this shell, so these download only when first shown:
 // a phone starting up should not pay for an assistant or settings it may not open.
@@ -184,8 +185,11 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
         </div>
       </div>
 
+      {/* Once this page has loaded, the account's most used pages are read ahead. */}
+      <PageWarmup navItems={navItems} />
 
-      {accessToken && (
+
+      {accessToken && (pathname === '/dashboard' || isHome) && (
         <YearScopedChatbot
           className="school-chatbot"
           settingsApiPath="/api/ai-settings"

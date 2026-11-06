@@ -1,0 +1,10 @@
+@media (width < 768px) {
+  /* Class and section share one row; type and severity share the next. */
+  .table :global([data-ntable-desktop-filters]) > .mobileHalfWidth {
+    flex: 1 1 calc((100% - 0.5rem) / 2);
+  }
+
+  .table :global([data-ntable-desktop-filters]) > .mobileStatus {
+    display: none;
+  }
+}

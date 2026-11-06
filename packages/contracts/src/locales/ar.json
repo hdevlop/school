@@ -2115,6 +2115,17 @@
       "absent": "غائب",
       "late": "متأخر",
       "absentAndLate": "الغائبون والمتأخرون",
+      "nothingToPrint": "لا توجد حالات غياب أو تأخر للطباعة.",
+      "importDescription": "استورد studentCode وstatus بالقيم present أو absent أو late ليوم {{date}}. راجع الحضور ثم اضغط إرسال للحفظ.",
+      "importConfirm": "تطبيق الحضور",
+      "importSuccess": "تم تطبيق {{count}} علامة حضور. راجعها ثم أرسلها للحفظ.",
+      "importUnavailable": "انتظر تحميل السجل واختر قسماً أو حصة يمكنك تسجيل حضورها.",
+      "importErrors": {
+        "missingFields": "السطر {{row}}: الحقلان studentCode وstatus مطلوبان.",
+        "unknownStudent": "السطر {{row}}: التلميذ {{code}} غير موجود في السجل المحدد.",
+        "duplicateStudent": "السطر {{row}}: التلميذ {{code}} مكرر في الملف.",
+        "invalidStatus": "السطر {{row}}: يجب أن تكون الحالة present أو absent أو late."
+      },
       "signature": "التوقيع",
       "allPresent": "الكل حاضر",
       "allAbsent": "الكل غائب",
@@ -2142,7 +2153,8 @@
       "search": "بحث",
       "submitError": "فشل حفظ الحضور",
       "unmarked": "غير مسجل",
-      "markAllPresent": "تحديد الجميع حاضرين"
+      "markAllPresent": "تحديد الجميع حاضرين",
+      "markAllPresentShort": "الجميع حاضر"
     }
   },
   "fees": {

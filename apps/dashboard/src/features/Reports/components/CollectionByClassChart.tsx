@@ -99,7 +99,7 @@ const CollectionByClassChart: React.FC<Props> = ({ academicYear, className = '' 
               dx={-4}
             />
             <Tooltip content={<CustomTooltip majorMoney={majorMoney} t={t} />} />
-            <Bar dataKey="rate" radius={[4, 4, 0, 0]} maxBarSize={48}>
+            <Bar isAnimationActive={false} dataKey="rate" radius={[4, 4, 0, 0]} maxBarSize={48}>
               {chartData.map((entry, i) => (
                 <Cell key={i} fill={rateColor(entry.rate)} />
               ))}

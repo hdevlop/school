@@ -1,23 +1,39 @@
-import { NSkeleton } from 'najm-kit';
+import { NSkeleton, cn, inputBorderClasses, surfaceBorderClasses } from 'najm-kit';
+import { CARD_SKELETON_SURFACE } from '@/shared/PersonCardSkeleton';
 
-/** Match the page header's footprint while its identity and actions load. */
-export function RosterPageHeaderSkeleton() {
+// The registers draw their real page header at once; only its count waits.
+
+/** Match RosterCard's 40px avatar, two text lines and compact mark buttons. */
+function RosterCardPlaceholder({ showDetails = false }: { showDetails?: boolean }) {
   return (
-    <div aria-hidden="true" className="flex min-h-14 shrink-0 items-center justify-between gap-3 rounded-lg border border-border bg-card px-3 py-2 lg:px-4">
-      <div className="flex min-w-0 items-center gap-3">
-        <NSkeleton className="size-8 shrink-0" />
-        <div className="space-y-2">
-          <NSkeleton className="h-4 w-24" />
-          <NSkeleton className="h-3 w-20" />
+    <div aria-hidden="true" data-bordered="true" className={CARD_SKELETON_SURFACE}>
+      <div className="flex items-center gap-3 p-2 md:px-4 md:py-3">
+        <NSkeleton className="size-10 shrink-0 rounded-full" />
+        <div className="min-w-0 flex-1">
+          <div className="flex h-5 items-center"><NSkeleton className="h-3.5 w-28 max-w-full" /></div>
+          <div className="flex h-4 items-center"><NSkeleton className="h-3 w-20 max-w-full" /></div>
         </div>
-      </div>
-      <div className="flex shrink-0 items-center gap-2">
-        <NSkeleton className="hidden h-8 w-28 md:block" />
-        <NSkeleton className="size-11 md:hidden" />
-        {Array.from({ length: 4 }, (_, index) => <NSkeleton key={index} className="hidden size-8 md:block" />)}
+        <div className="flex shrink-0 items-center gap-1">
+          <div data-bordered="true" className={cn('inline-flex overflow-hidden rounded-lg', inputBorderClasses())}>
+            {Array.from({ length: 3 }, (_, index) => (
+              <div key={index} className={cn('flex size-8 items-center justify-center first:border-s-0', surfaceBorderClasses(true, 'start'), 'border-input')}>
+                <NSkeleton className="size-3.5 rounded-sm" />
+              </div>
+            ))}
+          </div>
+          {showDetails && <NSkeleton data-bordered="true" className={cn('size-8 rounded-lg', inputBorderClasses())} />}
+        </div>
       </div>
     </div>
   );
+}
+
+export function RosterCardSkeleton() {
+  return <RosterCardPlaceholder />;
+}
+
+export function StaffRosterCardSkeleton() {
+  return <RosterCardPlaceholder showDetails />;
 }
 
 // NTable's loading header only renders string labels. Replace every label

@@ -12,7 +12,7 @@ import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Banknote, CreditCard, HandCoins, Landmark, Plus, ReceiptText, Wallet } from 'lucide-react';
 import FeeForm from './FeeForm';
 import EditFeeForm from './EditFeeForm';
-import { useFees } from '../hooks/useFees';
+import { feeSummaryRead, useFees } from '../hooks/useFees';
 import { useTranslation } from 'najm-i18n/react';
 import FeeCard from './FeeCard';
 import { FeeCardSkeleton } from '@/shared/CardSkeletons';
@@ -25,7 +25,7 @@ import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
-import { createBulkFeesApi, getFeesApi, getFeeSummaryApi, importStudentFeesApi, previewFeeImportDatesApi } from '@/services/feeApi';
+import { createBulkFeesApi, getFeesApi, importStudentFeesApi, previewFeeImportDatesApi } from '@/services/feeApi';
 import { getFeeTypesApi } from '@/services/feeTypeApi';
 import { useQueryClient } from '@tanstack/react-query';
 import { buildFeeImport, isFeeReport } from '../config/feeImport';
@@ -98,11 +98,9 @@ function FeesTableForYear({ initialFilters, memoryKey }: { initialFilters: FeeLi
 
   // Collection cards follow payment dates across the viewed year. Overdue
   // balances still count every collected allocation through today.
-  const { data: stats, isLoading: isSummaryLoading, error: summaryError } = useYearScopedDetail({
-    resource: 'fees',
-    parts: ['summary', ...(paymentDateRange ? [paymentDates] : [])],
-    fetch: () => getFeeSummaryApi(paymentDates),
-  });
+  const { data: stats, isLoading: isSummaryLoading, error: summaryError } = useYearScopedDetail(
+    feeSummaryRead(paymentDateRange ? paymentDates : undefined),
+  );
 
   const {
     fees,

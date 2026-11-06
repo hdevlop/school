@@ -6,8 +6,8 @@ import {
   Pie,
   Cell,
   Tooltip,
-  ResponsiveContainer,
 } from 'recharts';
+import { DeferredChart } from '@/shared/DeferredChart';
 import { NCard } from 'najm-kit';
 import { PieChart as PieIcon } from 'lucide-react';
 import { NSkeletonChart } from 'najm-kit';
@@ -88,9 +88,9 @@ const ExpenseBreakdownChart: React.FC<Props> = ({ academicYear, className = '' }
             {t('common.total')} : <span className="font-semibold text-foreground">{majorMoney(total)}</span>
           </p>
           <div className="flex-1 min-h-[160px]">
-            <ResponsiveContainer width="100%" height="100%">
+            <DeferredChart>
               <PieChart>
-                <Pie
+                <Pie isAnimationActive={false}
                   data={chartData}
                   cx="50%"
                   cy="50%"
@@ -105,7 +105,7 @@ const ExpenseBreakdownChart: React.FC<Props> = ({ academicYear, className = '' }
                 </Pie>
                 <Tooltip content={<CustomTooltip majorMoney={majorMoney} t={t} />} />
               </PieChart>
-            </ResponsiveContainer>
+            </DeferredChart>
           </div>
           <div className="flex flex-col gap-1">
             {chartData.map((r, i) => (

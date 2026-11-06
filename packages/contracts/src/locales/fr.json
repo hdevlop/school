@@ -2788,6 +2788,17 @@
       "absent": "Absent",
       "late": "En retard",
       "absentAndLate": "Absents et retards",
+      "nothingToPrint": "Aucune absence ni aucun retard à imprimer.",
+      "importDescription": "Importez studentCode et status (present, absent ou late) pour le {{date}}. Vérifiez les présences, puis appuyez sur Envoyer pour enregistrer.",
+      "importConfirm": "Appliquer les présences",
+      "importSuccess": "{{count}} présences appliquées. Vérifiez puis envoyez pour enregistrer.",
+      "importUnavailable": "Attendez le chargement du registre et sélectionnez une classe ou un cours dont vous pouvez saisir les présences.",
+      "importErrors": {
+        "missingFields": "Ligne {{row}} : studentCode et status sont obligatoires.",
+        "unknownStudent": "Ligne {{row}} : l’élève {{code}} ne figure pas dans le registre sélectionné.",
+        "duplicateStudent": "Ligne {{row}} : l’élève {{code}} apparaît plusieurs fois.",
+        "invalidStatus": "Ligne {{row}} : le statut doit être present, absent ou late."
+      },
       "signature": "Signature",
       "allPresent": "Tous présents",
       "allAbsent": "Tous absents",
@@ -2815,7 +2826,8 @@
       "search": "Rechercher",
       "submitError": "Échec de l'enregistrement de la présence",
       "unmarked": "Non renseigné",
-      "markAllPresent": "Marquer tout le monde présent"
+      "markAllPresent": "Marquer tout le monde présent",
+      "markAllPresentShort": "Tous présents"
     }
   },
   "expenses": {

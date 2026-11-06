@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import type { Schedule, FeePaymentDateFilters } from '@sms/contracts';
 import { useTranslation } from 'najm-i18n/react';
 import { useEntityCRUD } from 'najm-kit/query/crud';
-import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useYearScopedDetail, useYearScopedList, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import * as feeApi from '@/services/feeApi';
@@ -26,6 +26,28 @@ type UseFeesOptions = FeePaymentDateFilters & {
   studentAllYears?: boolean;
 };
 
+type FeeListFilters = Pick<UseFeesOptions, 'schedule' | 'tuitionPayment' | 'classId' | 'sectionId' | 'dateFrom' | 'dateTo'>;
+
+/** The viewed year's fees matching `filters`; the page warm-up asks for the fees page's first list. */
+export const feeListRead = ({ schedule, tuitionPayment, classId, sectionId, dateFrom, dateTo }: FeeListFilters = {}) => ({
+  resource: 'fees',
+  parts: [
+    ...(schedule ? [{ schedule }] : []),
+    ...(tuitionPayment ? [{ tuitionPayment }] : []),
+    ...(classId ? ['class', classId] : []),
+    ...(sectionId ? ['section', sectionId] : []),
+    ...(dateFrom || dateTo ? [{ dateFrom, dateTo }] : []),
+  ],
+  fetch: () => feeApi.getFeesApi({ schedule, tuitionPayment, classId, sectionId, dateFrom, dateTo }),
+}) satisfies YearScopedRead;
+
+/** The fees page's collection cards: payments between the dates, or across the viewed year. */
+export const feeSummaryRead = (dates?: FeePaymentDateFilters) => ({
+  resource: 'fees',
+  parts: ['summary', ...(dates ? [dates] : [])],
+  fetch: () => feeApi.getFeeSummaryApi(dates ?? {}),
+}) satisfies YearScopedRead;
+
 export const useFees = (options?: UseFeesOptions) => {
   const { t, language } = useTranslation();
   const viewer = useViewerRole();
@@ -47,15 +69,7 @@ export const useFees = (options?: UseFeesOptions) => {
   // The list follows the viewed year. `allYears` reads the students owing
   // fees of any year, which the outstanding view needs whatever year is viewed.
   const yearFees = useYearScopedList({
-    resource: 'fees',
-    parts: [
-      ...(schedule ? [{ schedule }] : []),
-      ...(tuitionPayment ? [{ tuitionPayment }] : []),
-      ...(classId ? ['class', classId] : []),
-      ...(sectionId ? ['section', sectionId] : []),
-      ...(dateFrom || dateTo ? [{ dateFrom, dateTo }] : []),
-    ],
-    fetch: () => feeApi.getFeesApi({ schedule, tuitionPayment, classId, sectionId, dateFrom, dateTo }),
+    ...feeListRead({ schedule, tuitionPayment, classId, sectionId, dateFrom, dateTo }),
     enabled: enabled && !allYears,
   });
   const allYearFees = crud.useGetByParam('scope', allYears ? 'outstanding' : undefined, enabled && allYears);

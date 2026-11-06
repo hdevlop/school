@@ -1,7 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
+import { DeferredChart } from '@/shared/DeferredChart';
 import { ShieldAlert } from 'lucide-react';
 import { NCard, NSkeletonChart, cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
@@ -97,14 +98,14 @@ const IncidentsTrendChart = ({ monthly, businessDate, loading, error, onRetry, c
             ))}
           </ul>
           <div className="min-h-0 flex-1" role="img" aria-label={t('dashboard.supervisor.incidentsTrend.title')}>
-            <ResponsiveContainer width="100%" height="100%">
+            <DeferredChart>
               <BarChart data={data} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
                 <XAxis dataKey="month" axisLine={false} tickLine={false} tick={AXIS_TICK} />
                 <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={AXIS_TICK} />
                 <Tooltip content={<IncidentsTooltip />} cursor={{ fill: 'var(--muted)', opacity: 0.4 }} />
                 {SEVERITIES.map((severity, index) => (
-                  <Bar
+                  <Bar isAnimationActive={false}
                     key={severity}
                     dataKey={severity}
                     stackId="severity"
@@ -118,7 +119,7 @@ const IncidentsTrendChart = ({ monthly, businessDate, loading, error, onRetry, c
                   />
                 ))}
               </BarChart>
-            </ResponsiveContainer>
+            </DeferredChart>
           </div>
         </div>
       )}

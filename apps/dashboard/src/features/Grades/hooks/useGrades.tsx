@@ -1,7 +1,7 @@
 'use client'
 import { useCallback, useState } from 'react';
 import { useEntityCRUD } from 'najm-kit/query/crud';
-import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useYearScopedDetail, useYearScopedList, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { useQueryClient } from '@tanstack/react-query';
 import * as gradeApi from '@/services/gradeApi';
 
@@ -13,6 +13,9 @@ const runGradesBatch = async (items: Array<any & { id?: string }>) => {
       : gradeApi.createGradeApi(rest);
   }));
 };
+
+/** The list this feature's page opens with; the page warm-up asks for the same. */
+export const gradeListRead = { resource: 'grades', fetch: gradeApi.getGradesApi } satisfies YearScopedRead;
 
 export const useGrades = (options?) => {
   const { gradeId, enabled = true } = options || {};
@@ -27,7 +30,7 @@ export const useGrades = (options?) => {
     deleteBulk: gradeApi.deleteBulkGradesApi,
   });
 
-  const { data: grades, isLoading: isGradesLoading, isError, error, refetch } = useYearScopedList({ resource: 'grades', fetch: gradeApi.getGradesApi, enabled: enabled });
+  const { data: grades, isLoading: isGradesLoading, isError, error, refetch } = useYearScopedList({ ...gradeListRead, enabled });
   const { data: grade, isLoading: isGradeLoading } = crud.useGetById(gradeId, !!gradeId);
 
   const { mutateAsync: createGrade, isLoading: isCreating } = crud.useCreate();

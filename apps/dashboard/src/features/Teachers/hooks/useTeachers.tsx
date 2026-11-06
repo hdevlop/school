@@ -1,7 +1,10 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as teacherApi from '@/services/teacherApi';
-import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useYearScopedDetail, useYearScopedList, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+
+/** The list this feature's page opens with; the page warm-up asks for the same. */
+export const teacherListRead = { resource: 'teachers', fetch: teacherApi.getTeachersApi } satisfies YearScopedRead;
 
 export const useTeachers = (options?) => {
   const { teacherId, enabled = true } = options || {};
@@ -16,9 +19,7 @@ export const useTeachers = (options?) => {
     createBulk: teacherApi.createBulkTeachersApi
   });
 
-  const { data: teachers, isLoading: isTeachersLoading, isError, error, refetch } = useYearScopedList({
-    resource: 'teachers', fetch: teacherApi.getTeachersApi, enabled,
-  });
+  const { data: teachers, isLoading: isTeachersLoading, isError, error, refetch } = useYearScopedList({ ...teacherListRead, enabled });
   const { data: teacher, isLoading: isTeacherLoading } = useYearScopedDetail({
     resource: 'teachers', parts: ['detail', teacherId],
     fetch: () => teacherApi.getTeacherByIdApi(teacherId), enabled: !!teacherId,

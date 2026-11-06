@@ -22,6 +22,7 @@ const statusCell = ({ getStatus, setStatus, readOnly }: RosterColumnsOptions, la
   id: 'status',
   accessorFn: (row: any) => getStatus(row.id),
   header: () => <div className="flex w-full justify-center text-center">{label}</div>,
+  meta: { exportHeader: label },
   enableSorting: false,
   enableColumnFilter: true,
   cell: ({ row }: any) => (

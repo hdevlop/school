@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip} from 'recharts';
+import { DeferredChart } from '@/shared/DeferredChart';
 import { NCard } from 'najm-kit';
 import { ClipboardCheck } from 'lucide-react';
 import { cn } from 'najm-kit';
@@ -125,7 +126,7 @@ export const StudentAttendanceChartCard = ({ className, payload, businessDate, l
         <div className="flex flex-col flex-1 min-h-0">
           <Legend t={t} />
           <div className="flex-1 min-h-0">
-            <ResponsiveContainer width="100%" height="100%">
+            <DeferredChart>
               <LineChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
                 <XAxis
@@ -142,7 +143,7 @@ export const StudentAttendanceChartCard = ({ className, payload, businessDate, l
                   dx={-10}
                 />
                 <Tooltip content={<CustomTooltip todayAbsent={todayAbsent} todayLate={payload?.todayLate ?? null} businessDate={businessDate} t={t} />} />
-                <Line
+                <Line isAnimationActive={false}
                   type="monotone"
                   dataKey="absent"
                   stroke={ABSENT_COLOR}
@@ -150,7 +151,7 @@ export const StudentAttendanceChartCard = ({ className, payload, businessDate, l
                   dot={false}
                   name={t('dashboard.attendance.absent')}
                 />
-                <Line
+                <Line isAnimationActive={false}
                   type="monotone"
                   dataKey="late"
                   stroke={LATE_COLOR}
@@ -160,7 +161,7 @@ export const StudentAttendanceChartCard = ({ className, payload, businessDate, l
                   name={t('dashboard.attendance.late')}
                 />
               </LineChart>
-            </ResponsiveContainer>
+            </DeferredChart>
           </div>
         </div>
       )}

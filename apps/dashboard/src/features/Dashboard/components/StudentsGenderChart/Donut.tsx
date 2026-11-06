@@ -1,6 +1,7 @@
 import React from 'react';
 import { Mars, Venus } from 'lucide-react';
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell} from 'recharts';
+import { DeferredChart } from '@/shared/DeferredChart';
 import { getGenderColor } from './genderColors';
 
 const CenterIcons = () => {
@@ -27,9 +28,9 @@ interface DonutChartProps {
 export const DonutChart: React.FC<DonutChartProps> = ({ data }) => {
    return (
       <div className="relative flex min-h-32 max-h-[250px] flex-1 justify-center">
-         <ResponsiveContainer width="100%" height="100%">
+         <DeferredChart>
             <PieChart>
-               <Pie
+               <Pie isAnimationActive={false}
                   data={data}
                   cx="50%"
                   cy="50%"
@@ -47,7 +48,7 @@ export const DonutChart: React.FC<DonutChartProps> = ({ data }) => {
                   ))}
                </Pie>
             </PieChart>
-         </ResponsiveContainer>
+         </DeferredChart>
 
          <CenterIcons />
       </div>

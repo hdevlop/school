@@ -25,10 +25,10 @@ const options: RosterDocumentOptions = {
 };
 
 describe('attendance register print', () => {
-  it('offers all, each mark, and absent with late together', () => {
-    expect(ROSTER_PRINT_CHOICES.map((item) => item.key)).toEqual(['all', 'present', 'absent', 'late', 'absentAndLate']);
-    expect(rowsForChoice(rows, choice('all'))).toEqual(rows);
-    expect(rowsForChoice(rows, choice('present')).map((row) => row.cells[1])).toEqual(['Amine']);
+  it('offers absent, late, and absent with late together', () => {
+    expect(ROSTER_PRINT_CHOICES.map((item) => item.key)).toEqual(['absent', 'late', 'absentAndLate']);
+    expect(rowsForChoice(rows, choice('absent')).map((row) => row.cells[1])).toEqual(['Salma']);
+    expect(rowsForChoice(rows, choice('late')).map((row) => row.cells[1])).toEqual(['Yahya']);
     expect(rowsForChoice(rows, choice('absentAndLate')).map((row) => row.cells[1])).toEqual(['Salma', 'Yahya']);
   });
 

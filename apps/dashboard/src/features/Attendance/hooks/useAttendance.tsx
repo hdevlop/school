@@ -3,11 +3,23 @@ import { useCallback, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useEntityCRUD } from 'najm-kit/query/crud';
-import { useYearScopedList, useYearScopedQuery } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useYearScopedList, useYearScopedQuery, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import * as attendanceApi from '@/services/attendanceApi';
 import {
   reconcileRosterItems, rosterRequestBody, settleWithLimit, type StudentRosterItem,
 } from '../config/rosterSave';
+
+/** The viewed year's student marks, as the student register opens; the page warm-up asks for the same. */
+export const studentAttendanceListRead = {
+  resource: 'attendance', parts: ['student'], fetch: attendanceApi.getStudentAttendanceApi,
+} satisfies YearScopedRead;
+
+/** Staff marks of `date`, or of the viewed year without one; the staff register opens on a date. */
+export const staffAttendanceRead = (date?: string) => ({
+  resource: 'attendance-staff',
+  parts: [date || 'all'],
+  fetch: () => date ? attendanceApi.getAttendanceByDateApi(date, 'staff') : attendanceApi.getStaffAttendanceApi(),
+}) satisfies YearScopedRead;
 
 // Enough to save a section quickly without one request waiting behind thirty.
 const ROSTER_SAVE_CONCURRENCY = 6;
@@ -53,9 +65,7 @@ export const useStudentAttendance = (options?) => {
     delete: attendanceApi.deleteAttendanceApi,
   });
 
-  const { data: attendance, isLoading: isAttendanceLoading, isError, error, refetch } = useYearScopedList({
-    resource: 'attendance', parts: ['student'], fetch: attendanceApi.getStudentAttendanceApi, enabled,
-  });
+  const { data: attendance, isLoading: isAttendanceLoading, isError, error, refetch } = useYearScopedList({ ...studentAttendanceListRead, enabled });
 
   const { mutateAsync: createRaw, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateAttendance, isLoading: isUpdating } = crud.useUpdate();
@@ -169,14 +179,7 @@ export const useStaffAttendance = (options?) => {
   // Without a date, the viewed year's marks; a day's marks belong to the
   // year holding that day, so the key still names the viewed year it was
   // read under.
-  const { query: attendanceQuery } = useYearScopedQuery({
-    resource: 'attendance-staff',
-    parts: [date || 'all'],
-    fetch: () => date
-      ? attendanceApi.getAttendanceByDateApi(date, 'staff')
-      : attendanceApi.getStaffAttendanceApi(),
-    enabled,
-  });
+  const { query: attendanceQuery } = useYearScopedQuery({ ...staffAttendanceRead(date), enabled });
   const attendance = attendanceQuery.data?.data || [];
 
   const { mutateAsync: createStaffRaw, isLoading: isCreating } = crud.useCreate();

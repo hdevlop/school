@@ -1,7 +1,10 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as sectionApi from '@/services/sectionApi';
-import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useYearScopedDetail, useYearScopedList, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+
+/** The list this feature's page opens with; the page warm-up asks for the same. */
+export const sectionListRead = { resource: 'sections', fetch: sectionApi.getSectionsApi } satisfies YearScopedRead;
 
 // The sections of the viewed year's classes, or of `academicYear` when named.
 export const useSections = (options?: { sectionId?: string; enabled?: boolean; academicYear?: string }) => {
@@ -17,7 +20,7 @@ export const useSections = (options?: { sectionId?: string; enabled?: boolean; a
 
   const {
     data: sections, isLoading: isSectionsLoading, isError, error, refetch,
-  } = useYearScopedList({ resource: 'sections', fetch: sectionApi.getSectionsApi, enabled, academicYear });
+  } = useYearScopedList({ ...sectionListRead, enabled, academicYear });
   // One record of the viewed year; another year's reads as not found.
   const { data: section, isLoading: isSectionLoading } = useYearScopedDetail({
     resource: 'sections', parts: ['detail', sectionId], fetch: () => sectionApi.getSectionByIdApi(sectionId!), enabled: !!sectionId,

@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { Clock3, FileText } from 'lucide-react';
-import { FormInput, NButton, NForm } from 'najm-kit';
+import { FormInput, NButton, NForm, cn, inputBorderClasses } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { z } from 'zod';
 import { useDialog } from '@/shared/useDialog';
@@ -24,14 +24,22 @@ function DetailsForm({ details }: { details: Details }) {
   );
 }
 
-export default function StaffAttendanceDetails({ name, details, disabled, onChange }: {
-  name: string; details: Details; disabled?: boolean; onChange: (details: Details) => void;
+export default function StaffAttendanceDetails({ name, details, disabled, onChange, compact = false, iconOnly = false }: {
+  name: string; details: Details; disabled?: boolean; onChange: (details: Details) => void; compact?: boolean; iconOnly?: boolean;
 }) {
   const { t } = useTranslation();
   const { openDialog } = useDialog();
+  const hasDetails = Boolean(details.arrivalTime || details.notes);
+  const title = [t('attendance.roster.details'), details.arrivalTime, details.notes].filter(Boolean).join(' · ');
   return (
-    <div className="flex min-w-0 flex-col items-center gap-1" onClick={event => event.stopPropagation()}>
+    <div className={cn('flex min-w-0 items-center', iconOnly ? 'shrink-0' : compact ? 'justify-end gap-2' : 'flex-col gap-1')} onClick={event => event.stopPropagation()}
+      title={disabled ? t('attendance.roster.markBeforeDetails') : undefined}>
       <NButton type="button" size="sm" variant="outline" disabled={disabled}
+        className={cn(iconOnly ? 'relative size-8 shrink-0 rounded-lg p-0' : compact ? 'order-last h-7 shrink-0 gap-1.5 px-2 text-xs' : undefined,
+          inputBorderClasses(), 'text-foreground hover:text-foreground',
+          iconOnly && hasDetails && 'bg-primary/10')}
+        aria-label={`${t('attendance.roster.details')} — ${name}`}
+        title={title}
         onClick={() => openDialog({
           title: `${t('attendance.roster.details')} — ${name}`,
           children: <DetailsForm details={details} />,
@@ -40,14 +48,15 @@ export default function StaffAttendanceDetails({ name, details, disabled, onChan
             onClick: (values: Details) => { onChange(values); },
           },
         })}>
-        <Clock3 className="h-4 w-4" />{t('attendance.roster.details')}
+        {iconOnly ? <FileText aria-hidden="true" className="h-3.5 w-3.5 text-foreground" /> : <><Clock3 className="h-4 w-4" />{t('attendance.roster.details')}</>}
+        {iconOnly && hasDetails && <span aria-hidden="true" className="absolute end-1 top-1 size-1.5 rounded-full bg-primary" />}
       </NButton>
-      {disabled ? <span className="text-xs text-muted-foreground">{t('attendance.roster.markBeforeDetails')}</span> : (
+      {!iconOnly && (disabled ? (!compact && <span className="text-xs text-muted-foreground">{t('attendance.roster.markBeforeDetails')}</span>) : (
         <>
-          {details.arrivalTime && <span className="text-xs font-medium" dir="ltr">{details.arrivalTime}</span>}
-          {details.notes && <span className="max-w-48 truncate text-xs text-muted-foreground" title={details.notes}>{details.notes}</span>}
+          {details.arrivalTime && <span className="shrink-0 text-xs font-medium" dir="ltr">{details.arrivalTime}</span>}
+          {details.notes && <span className={cn('truncate text-xs text-muted-foreground', compact ? 'min-w-0 flex-1' : 'max-w-48')} title={details.notes}>{details.notes}</span>}
         </>
-      )}
+      ))}
     </div>
   );
 }

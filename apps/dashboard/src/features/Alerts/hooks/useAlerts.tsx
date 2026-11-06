@@ -2,7 +2,10 @@
 
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as alertApi from '@/services/alertApi';
-import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useYearScopedList, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+
+/** The list this feature's page opens with; the page warm-up asks for the same. */
+export const alertListRead = { resource: 'alerts', fetch: alertApi.getAlertsApi } satisfies YearScopedRead;
 
 /**
  * The viewed year's alerts that the signed-in person may see, or one
@@ -21,9 +24,7 @@ export const useAlerts = (options?: { studentId?: string; enabled?: boolean }) =
   const {
     data: alerts, isLoading: isAlertsLoading, isError, error, refetch,
   } = useYearScopedList({
-    resource: 'alerts',
-    parts: studentId ? ['student', studentId] : [],
-    fetch: studentId ? () => alertApi.getStudentAlertsApi(studentId) : alertApi.getAlertsApi,
+    ...(studentId ? { resource: 'alerts', parts: ['student', studentId], fetch: () => alertApi.getStudentAlertsApi(studentId) } : alertListRead),
     enabled,
   });
 

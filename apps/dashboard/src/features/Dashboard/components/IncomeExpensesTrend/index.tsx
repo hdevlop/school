@@ -8,8 +8,8 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
 } from 'recharts';
+import { DeferredChart } from '@/shared/DeferredChart';
 import { NCard } from 'najm-kit';
 import { DollarSign } from 'lucide-react';
 import { cn } from 'najm-kit';
@@ -161,7 +161,7 @@ const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '
         <div className="flex flex-col flex-1 min-h-0">
           <TrendLegend incomeLabel={incomeLabel} expensesLabel={expensesLabel} />
           <div className="flex-1 min-h-0">
-            <ResponsiveContainer width="100%" height="100%">
+            <DeferredChart>
               <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
                 <XAxis
@@ -191,7 +191,7 @@ const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '
                     />
                   )}
                 />
-                <Line
+                <Line isAnimationActive={false}
                   type="monotone"
                   dataKey="income"
                   stroke={INCOME_COLOR}
@@ -199,7 +199,7 @@ const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '
                   dot={false}
                   name={incomeLabel}
                 />
-                <Line
+                <Line isAnimationActive={false}
                   type="monotone"
                   dataKey="expenses"
                   stroke={EXPENSES_COLOR}
@@ -209,7 +209,7 @@ const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '
                   name={expensesLabel}
                 />
               </LineChart>
-            </ResponsiveContainer>
+            </DeferredChart>
           </div>
         </div>
       )}

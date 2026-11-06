@@ -100,7 +100,7 @@ const FeesExpensesChart = ({ className = '' }) => {
               dx={-10}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Line
+            <Line isAnimationActive={false}
               type="monotone"
               dataKey="income"
               stroke={incomeColor}
@@ -108,7 +108,7 @@ const FeesExpensesChart = ({ className = '' }) => {
               dot={false}
               name={incomeLabel}
             />
-            <Line
+            <Line isAnimationActive={false}
               type="monotone"
               dataKey="expenses"
               stroke={expensesColor}

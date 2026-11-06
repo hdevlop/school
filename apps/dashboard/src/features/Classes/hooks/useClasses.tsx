@@ -1,7 +1,10 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as classApi from '@/services/classApi';
-import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useYearScopedDetail, useYearScopedList, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+
+/** The list this feature's page opens with; the page warm-up asks for the same. */
+export const classListRead = { resource: 'classes', fetch: classApi.getClassesApi } satisfies YearScopedRead;
 
 // The classes of the viewed year, or of `academicYear` when a screen names
 // one (the active year, to name a current class whatever year is viewed).
@@ -18,7 +21,7 @@ export const useClasses = (options?: { classId?: string; enabled?: boolean; acad
 
   const {
     data: classes, isLoading: isClassesLoading, isError, error, refetch,
-  } = useYearScopedList({ resource: 'classes', fetch: classApi.getClassesApi, enabled, academicYear });
+  } = useYearScopedList({ ...classListRead, enabled, academicYear });
   // One record of the viewed year; another year's reads as not found.
   const { data: classData, isLoading: isClassLoading } = useYearScopedDetail({
     resource: 'classes', parts: ['detail', classId], fetch: () => classApi.getClassByIdApi(classId!), enabled: !!classId,

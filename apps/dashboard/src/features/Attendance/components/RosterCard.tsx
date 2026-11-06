@@ -16,7 +16,8 @@ interface RosterCardProps {
   /** The line under the name: a student's code and class, a staff member's role. */
   detail?: string;
   avatarSrc?: string | null;
-  classNames?: { avatar?: any };
+  classNames?: { avatar?: any; name?: string; root?: string };
+  actions?: ReactNode;
   children?: ReactNode;
 }
 
@@ -37,6 +38,7 @@ export default function RosterCard({
   detail,
   avatarSrc,
   classNames,
+  actions,
   children,
 }: RosterCardProps) {
   const { t } = useTranslation();
@@ -46,7 +48,7 @@ export default function RosterCard({
   const detailLine = [detail, current === 'unmarked' && t('attendance.roster.unmarked')].filter(Boolean).join(' · ');
 
   return (
-    <div className="flex flex-col gap-2 px-4 py-3">
+    <div className={`flex flex-col gap-2 ${classNames?.root ?? 'px-4 py-3'}`}>
       <div className="flex items-center gap-3">
         <NAvatar
           src={avatarSrc ?? data.image}
@@ -56,10 +58,10 @@ export default function RosterCard({
           classNames={classNames?.avatar}
         />
         <div className="min-w-0 flex-1">
-          <Label className="block truncate text-sm font-bold">{data.name}</Label>
+          <Label className={`block truncate font-bold ${classNames?.name ?? 'text-sm'}`}>{data.name}</Label>
           {detailLine && <span className="block truncate text-xs text-muted-foreground">{detailLine}</span>}
         </div>
-        <div className="shrink-0">
+        <div className="flex shrink-0 items-center gap-1">
           <RosterMarks
             current={current}
             disabled={readOnly}
@@ -67,6 +69,7 @@ export default function RosterCard({
             compact
             onSelect={(status) => setStatus(data.id, status)}
           />
+          {actions}
         </div>
       </div>
       {children}

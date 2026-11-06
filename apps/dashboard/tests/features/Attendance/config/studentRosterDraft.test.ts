@@ -14,14 +14,20 @@ const context = (sectionId: string, extra: Partial<StudentRosterContext> = {}): 
 const empty = indexStudentMarks([]);
 
 describe('sending student attendance across classes', () => {
-  it('keeps edits across sections and sends both reviewed registers, without an unvisited class', () => {
+  it('has nothing to send when all 465 students are present by default', () => {
+    const school = Array.from({ length: 465 }, (_, index) => ({ id: `student-${index}`, sectionId: 'A' }));
+    expect(studentRosterSubmission(school, {}, empty, context('', { allSections: true }))).toEqual([]);
+    expect(studentRosterSubmission(sectionA, {}, empty, context('A'))).toEqual([]);
+  });
+
+  it('keeps absent and late edits across sections without sending default present students', () => {
     let draft = stageStudentRoster(sectionA, {}, empty, context('A'), { a1: 'absent' });
     draft = stageStudentRoster(sectionB, draft, empty, context('B'), { b1: 'late' });
     const returningToA = studentRosterChanges(sectionA, draft, empty, context('A'));
-    expect(returningToA.map(item => [item.studentId, item.status])).toEqual([['a1', 'absent'], ['a2', 'present']]);
+    expect(returningToA.map(item => [item.studentId, item.status])).toEqual([['a1', 'absent']]);
     const sent = studentRosterSubmission(sectionB, draft, empty, context('B'));
     expect(sent.map(item => [item.studentId, item.sectionId, item.status])).toEqual([
-      ['a1', 'A', 'absent'], ['a2', 'A', 'present'], ['b1', 'B', 'late'],
+      ['a1', 'A', 'absent'], ['b1', 'B', 'late'],
     ]);
     expect(sent.some(item => sectionC.some(person => person.id === item.studentId))).toBe(false);
   });
@@ -29,14 +35,14 @@ describe('sending student attendance across classes', () => {
   it('does not stage the initial All Classes view just because a section was opened', () => {
     studentRosterSubmission([...sectionA, ...sectionB, ...sectionC], {}, empty, context('', { allSections: true }));
     const draft = stageStudentRoster(sectionA, {}, empty, context('A'), { a1: 'absent' });
-    expect(studentRosterSubmission(sectionA, draft, empty, context('A')).map(item => item.studentId)).toEqual(['a1', 'a2']);
+    expect(studentRosterSubmission(sectionA, draft, empty, context('A')).map(item => item.studentId)).toEqual(['a1']);
   });
 
   it('keeps one daily mark per person when moving between All Classes and a section', () => {
     let draft = stageStudentRoster([...sectionA, ...sectionB], {}, empty, context('', { allSections: true }), { a1: 'absent' });
     draft = stageStudentRoster(sectionA, draft, empty, context('A'), { a1: 'late' });
     const sent = studentRosterSubmission([...sectionA, ...sectionB], draft, empty, context('', { allSections: true }));
-    expect(sent).toHaveLength(3);
+    expect(sent).toHaveLength(1);
     expect(sent.find(item => item.studentId === 'a1')?.status).toBe('late');
     expect(new Set(sent.map(studentMarkKey)).size).toBe(sent.length);
   });
@@ -46,12 +52,32 @@ describe('sending student attendance across classes', () => {
     let draft = stageStudentRoster(sectionA, {}, saved, context('A'), { a1: 'late' });
     expect(studentRosterSubmission(sectionA, draft, saved, context('A')).find(item => item.studentId === 'a1')?.id).toBe('held');
     draft = stageStudentRoster(sectionA, draft, saved, context('A'), { a1: 'absent' });
-    expect(studentRosterSubmission(sectionA, draft, saved, context('A')).map(item => item.studentId)).toEqual(['a2']);
+    expect(studentRosterSubmission(sectionA, draft, saved, context('A'))).toEqual([]);
   });
 
   it('can send queued classes even when the newly selected class has no register', () => {
     const draft = stageStudentRoster(sectionA, {}, empty, context('A'), { a1: 'absent' });
-    expect(studentRosterSubmission([], draft, empty, context('')).map(item => item.studentId)).toEqual(['a1', 'a2']);
+    expect(studentRosterSubmission([], draft, empty, context('')).map(item => item.studentId)).toEqual(['a1']);
+  });
+
+  it('cancels unsaved absent and late marks when marked present, including mark all present', () => {
+    let draft = stageStudentRoster(sectionA, {}, empty, context('A'), { a1: 'absent', a2: 'late' });
+    draft = stageStudentRoster(sectionA, draft, empty, context('A'), { a1: 'present' });
+    expect(studentRosterSubmission(sectionA, draft, empty, context('A')).map(item => item.studentId)).toEqual(['a2']);
+    draft = stageStudentRoster(sectionA, draft, empty, context('A'), { a1: 'present', a2: 'present' });
+    expect(draft).toEqual({});
+    expect(studentRosterSubmission(sectionA, draft, empty, context('A'))).toEqual([]);
+  });
+
+  it('still saves present corrections to recorded absence and lateness after changing sections', () => {
+    const saved = indexStudentMarks([
+      { id: 'absence', studentId: 'a1', sectionId: 'A', date, status: 'absent' },
+      { id: 'lateness', studentId: 'a2', sectionId: 'A', date, status: 'late' },
+    ]);
+    const draft = stageStudentRoster(sectionA, {}, saved, context('A'), { a1: 'present', a2: 'present' });
+    expect(studentRosterSubmission(sectionB, draft, saved, context('B')).map(item => [item.id, item.status])).toEqual([
+      ['absence', 'present'], ['lateness', 'present'],
+    ]);
   });
 
   it('never sends a previous day under a newly selected date', () => {
@@ -63,6 +89,12 @@ describe('sending student attendance across classes', () => {
 describe('lesson-specific pending attendance', () => {
   const lesson = (id: string) => context('A', {
     attendanceMode: 'per_class', teacherAssignmentId: id, teacherId: 'teacher-' + id, subjectId: 'subject-' + id,
+  });
+
+  it('does not send default present students in a lesson', () => {
+    expect(studentRosterSubmission(sectionA, {}, empty, lesson('math'))).toEqual([]);
+    const draft = stageStudentRoster(sectionA, {}, empty, lesson('math'), { a1: 'late' });
+    expect(studentRosterSubmission(sectionA, draft, empty, lesson('math')).map(item => item.studentId)).toEqual(['a1']);
   });
 
   it('preserves independent marks and teacher/subject metadata for the same student in two lessons', () => {

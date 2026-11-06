@@ -4,16 +4,19 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
+import { toast } from 'sonner';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
 import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 
-import RosterHeader from './RosterHeader';
+import RosterHeader, { RosterStats } from './RosterHeader';
+import { HeaderActionsMenu } from '@/components/HeaderActionsMenu';
 import RosterMobileSubmit from './RosterMobileSubmit';
 import RosterPrintMenu from './RosterPrintMenu';
 import RosterFilters from './RosterFilters';
-import { RosterPageHeaderSkeleton, ROSTER_LOADING_TABLE_HEADER } from './RosterLoading';
+import { RosterCardSkeleton, ROSTER_LOADING_TABLE_HEADER } from './RosterLoading';
 import { filterRoster } from '../config/filterRoster';
+import { parseStudentRosterImport, STUDENT_ROSTER_IMPORT_COLUMNS } from '../config/studentRosterImport';
 import { orderByCycle, type RosterPrintChoice } from '../config/rosterPrint';
 import RosterCard from './RosterCard';
 import { useStudentAttendance } from '../hooks/useAttendance';
@@ -218,6 +221,7 @@ function StudentAttendanceTableForYear() {
     (props: any) => (
       <RosterCard
         {...props}
+        classNames={{ ...props.classNames, name: 'text-xs', root: 'p-2 md:px-4 md:py-3' }}
         readOnly={!canMark}
         getStatus={roster.getStatus}
         setStatus={roster.setStatus}
@@ -382,18 +386,42 @@ function StudentAttendanceTableForYear() {
         ? t('attendance.roster.selectSection')
         : t('attendance.roster.selectClass');
   const isRosterLoading = isStudentsLoading || isSectionsLoading || isClassesLoading || isAttendanceLoading;
+  const canImportRoster = canMark && !isRosterLoading && !attendanceError && !studentsError && filteredStudents.length > 0;
+  const importLabels = {
+    importDescription: t('attendance.roster.importDescription', { date: displayDateOnly(roster.selectedDate) }),
+    importConfirm: t('attendance.roster.importConfirm'),
+  };
+  const handleImport = (rows: Record<string, unknown>[]) => {
+    if (!canImportRoster) throw new Error(t('attendance.roster.importUnavailable'));
+    const result = parseStudentRosterImport(rows, filteredStudents, {
+      codeHeader: t('students.table.studentCode'),
+      statusHeader: t('common.status'),
+      statuses: { present: t('attendance.roster.present'), absent: t('attendance.roster.absent'), late: t('attendance.roster.late') },
+    });
+    if (result.ok === false) throw new Error(t(`attendance.roster.importErrors.${result.issue.reason}`, { row: result.issue.row, code: result.issue.code }));
+    roster.setStatuses(result.marks);
+    toast.success(t('attendance.roster.importSuccess', { count: result.count }));
+  };
 
   return (
     <div className={`${styles.screen} flex h-full min-h-0 flex-col gap-2`}>
-      {isRosterLoading ? <RosterPageHeaderSkeleton /> : <NPageHeader
+      {/* The header is drawn at once: only its count waits for the roster. A
+          placeholder header left the page without any text until every list
+          had loaded (3.5 s on a JHL phone), and mounting the real one then
+          refetched its menus' settings and unread count. */}
+      <NPageHeader
         icon={FEATURE_ICONS.studentAttendance}
         title={t('navigation.studentAttendance')}
         subtitle={isCountUnknown(studentsError, filteredStudents, isStudentsLoading || isSectionsLoading || isClassesLoading) ? undefined : t('attendance.subtitle.studentCount', { count: filteredStudents.length })}
+        compactActions={(
+          <HeaderActionsMenu contentClassName="md:hidden"><PageHeaderGlobalActions /></HeaderActionsMenu>
+        )}
       >
         <NPageHeaderActions>
+          <RosterStats stats={roster.stats} loading={isRosterLoading} />
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
-      </NPageHeader>}
+      </NPageHeader>
 
       <RosterFilters
         loading={isRosterLoading}
@@ -404,6 +432,7 @@ function StudentAttendanceTableForYear() {
         <RosterHeader
           loading={isRosterLoading}
           showMobileSubmit={false}
+          showStats={false}
           print={(
             <RosterPrintMenu
               counts={roster.stats}
@@ -423,7 +452,13 @@ function StudentAttendanceTableForYear() {
       </RosterFilters>
 
       <NTable<any>
-        showExportButton={false} showPrintButton={false}
+        showExportButton
+        exportTitle={`${t('attendance.roster.studentTitle')} - ${roster.selectedDate}`}
+        showPrintButton={false}
+        showImportButton={canImportRoster}
+        importColumns={STUDENT_ROSTER_IMPORT_COLUMNS}
+        onDataChange={handleImport}
+        toolbarLabels={importLabels}
         responsiveSkeleton
         data={visibleStudents}
         getRowId={(student) => student.id}
@@ -442,6 +477,7 @@ function StudentAttendanceTableForYear() {
         showViewToggle={false}
         defaultMode='table'
         renderCard={renderRosterCard}
+        renderCardSkeleton={RosterCardSkeleton}
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
