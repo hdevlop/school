@@ -21,7 +21,8 @@ export function useExamPlanning() {
           : await api.put(`/exam-planning/${encodeURIComponent(data.classId)}`, { month: data.month, entries: data.entries });
         return result;
       }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['exam-planning'] }),
+    // Planning saves create and update the Exams page's exams too.
+    onSuccess: () => Promise.all([queryClient.invalidateQueries({ queryKey: ['exam-planning'] }), queryClient.invalidateQueries({ queryKey: ['exams'] })]),
   });
   return { ...list, classes: list.data as ExamPlanningClass[], save: mutation.mutateAsync, isSaving: mutation.isPending };
 }

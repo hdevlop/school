@@ -53,7 +53,7 @@ export class GradeService {
     studentId: string,
     sectionId: string,
     sourceIds: GradeSourceIds,
-    teacherId: string,
+    teacherId: string | null,
     subjectId: string,
     resolvedSource?: NonNullable<Awaited<ReturnType<ExamRepository['getSourceContext']>>>,
   ) {
@@ -213,7 +213,7 @@ export class GradeService {
     if (data.teacherId) await this.gradeValidator.ensureTeacherOwnsSource(user, data.teacherId);
     const sourceIds = { assessmentId: data.assessmentId, examId: data.examId };
     const source = this.gradeValidator.ensureSourceExists(await this.sourceContext(sourceIds));
-    const { teacherId, subjectId } = this.gradeValidator.ensureSourceTeachingAssignment(source);
+    const { teacherId, subjectId } = this.gradeValidator.ensureSourceTeachingAssignment(source, user);
     await this.gradeValidator.ensureTeacherOwnsSource(user, teacherId);
     this.gradeValidator.ensureSourceAssignmentMatches(source, data.teacherId || teacherId, data.subjectId || subjectId);
     const targets = targetSectionIds(source);
@@ -252,9 +252,8 @@ export class GradeService {
     if (!eligibility.hasDatedEnrollment) {
       await this.gradeValidator.ensureStudentInSection(gradeDetails.studentId, sectionId);
     }
-    await this.gradeValidator.ensureTeacherAssignmentExists(
-      teacherId, subjectId, sectionId,
-    );
+    // No teacher yet: there is no assignment of theirs to check.
+    if (teacherId) await this.gradeValidator.ensureTeacherAssignmentExists(teacherId, subjectId, sectionId);
     if (!eligibility.hasDatedEnrollment && gradeDetails.assessmentId) {
       await this.gradeValidator.ensureStudentInAssessment(gradeDetails.studentId, gradeDetails.assessmentId);
     }

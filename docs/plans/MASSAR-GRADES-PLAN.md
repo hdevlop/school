@@ -1,404 +1,479 @@
 # Plan: Massar grade sheets (نقط المراقبة المستمرة)
 
-Status: v1 implemented on 2026-11-06; filled export is gated pending the real
-Massar import check in §9.1. Unshipped migrations are consolidated in 0101;
-the final schema is present in the local databases. Verification and remaining
-external checks: [Massar grades](../tests/massar-grades.md).
-Owner role: registrar ("student records and the Massar exchange").
+Implementation update (2026-11-06): the single-page dashboard in §1–§5 is
+implemented. `/massar` now owns upload, Contrôle selection, Overview, paper
+entry, printing and acceptance. Old URLs redirect there. The external checks
+in §6 and the owner's desktop/phone/Arabic review remain open. Teacher
+notifications remain outside this implementation; optional due dates are included.
 
-## 1. Goal
+Downloads stay editable. A signed, year-bound receipt records the downloaded
+sheet revisions; acceptance refuses a receipt if any sheet changed in the
+meantime. The acceptance question survives a page refresh in the same browser.
+Unsaved entry drafts survive year switches in that tab, retaining their original
+revision. No new permission is required.
 
-Today the registrar exports empty grade sheets from Massar (one per class ×
-subject × فرض), hands them to teachers, collects them, fixes mistakes, and
-uploads them to Massar. School replaces the middle of that work:
+Migration `0103_massar_pending_students` retains unmatched students' Massar
+identities and order. Fix → add students in School → Check again now unblocks
+their class without another upload. Legacy imports need one re-import to recover
+those details. Migration `0104_massar_round_due_date` adds the optional due date.
+Overdue sheets stay editable until acceptance. Both migrations were verified
+against the local fixture before applying to local `school`.
 
-1. **Start of year (once):** the registrar uploads Massar's empty exports.
-   School learns the Massar classes, students and subject components.
-2. **Each فرض:** School creates every sheet (class × subject) itself.
-3. **Teachers** type marks in School, or write on a printed sheet and the
-   registrar types them in.
-4. **The registrar** follows progress and missing marks.
-5. **Download:** one zip of Massar files, identical to Massar's own format.
-6. **Upload to Massar** — all classes at once, as today.
+Status (2026-11-06): v1 is built and committed (`f91351f`): import, catalog,
+sheet generation, mark entry, progress, export, permissions, tests. How it
+works is in the code (`packages/server/src/modules/massar/`) and in the
+verification guide [Massar grades](../tests/massar-grades.md).
 
-Primary (APG, marks /10, several components) and collège (APIC, marks /20, one
-column) are both in scope.
+The specification below covers:
+1. the new, simpler dashboard (§1–§5), agreed with the owner on 2026-11-06;
+2. the checks that still need real Massar files (§6).
 
-## 2. What we know (evidence)
+Owner role: registrar.
 
-From 2025/26 and 2026/27 files (about 130 workbooks) and a generation test.
+## 1. Why the current screens are hard
 
-### 2.1 The Massar file
+Seen by the owner on the first try:
 
-One workbook, sheets `NotesCC` (visible, right-to-left) and `Data` (hidden,
-holds the absence list: `' '`, `مبرر`). Written by the Open XML SDK (`x:`
-namespace prefix). Sheet and workbook structure are protected; **the password
-hash and salt are the same in every file**.
+1. **Wrong order.** The page opens on *Rounds*, empty. The first real step,
+   uploading the Massar files, is the last tab (*Setup*).
+2. **"Round" is our word.** The registrar thinks "Semester 1 · Contrôle 1".
+3. **The menu is twice:** sidebar children *and* tabs on the page.
+4. **Empty pages give no next step.** *All sheets* shows three filters over
+   nothing; *New round* is offered before any file is uploaded.
+5. **Technical words:** "clean export required as a template", "mappings",
+   "roster", "copy labels exactly from Massar".
 
-| Cell(s) | Meaning | Source |
-|---|---|---|
-| `C5` | school code | constant |
-| `E5` | Massar class GUID | **one per class per year**, same for every subject and both terms |
-| `G5` | term number (1, 2) | round |
-| `I5` | فرض number (1, 2, 3…; 4 = الأنشطة المندمجة) | round |
-| `K5` | subject code `#0011#` | catalog |
-| `M5` | Massar year id (18 = 2025/26, 19 = 2026/27) | year |
-| `O5` | level code (`1061101010`… for APG, `2A31101110`… for APIC, number or text) | level |
-| `D7`, `I7`, `O7` | academy, direction, school name | constant |
-| `D9`, `I9` | level label (`الأول ابتدائي عام`), class (`1APG-1`) | level, class |
-| `D11`, `I11`, `O11` | term label, فرض label, subject name | round, catalog |
-| `D13` | year label `2026/2027` | year |
-| row 15, from `G` | component code `#1001#` on the first column of each pair | catalog |
-| row 16 | component name, on **both** columns of the pair | catalog |
-| row 17 | `النقطة` / `التغيب` | constant |
-| rows 18+ | `B` hidden Massar student id, `C` code Massar, `D` name (merged D:E), `F` birth date `dd-mm-yyyy` (text) | enrollment |
-| validations | mark column `decimal 0..max`, absence column `list Data!$A$1:$A$2`, rows 18..last student | generated |
+Most users are not used to apps. The new page copies a page they already
+understand: the **Insurance register** (class buttons → the paper → Print).
 
-Everything else (merges, hidden rows 1, 2, 5, 8, 15, hidden column B and all
-absence columns, styles, conditional formatting that draws the borders, print
-area) is **the same skeleton in every file**, whatever the class, subject or
-number of components. Generating a sheet = writing values + setting the
-validation ranges. No row or column is inserted.
+## 2. The new flow
 
-Collège differs: one column per sheet, component code `#<فرض>#`, label = the
-فرض label (`الفرض الأول`), marks 0–20.
+1. **Upload** the Massar files (once a year; more files any time).
+2. **Open** a Contrôle → every teacher sees their sheets.
+3. **Teachers type** marks on a sheet that looks like the Massar paper; it
+   saves by itself. The registrar follows on the **Overview**.
+4. **Download for Massar** → upload to Massar → "Did Massar accept the
+   files?" **Yes** → the sheets are locked 🔒.
 
-### 2.2 What Massar checks (observed, not documented)
+### 2.1 Registrar, step by step
 
-- Last year every file imported without error, including 12 robotics files
-  copied from the 1APG-1 file (wrong GUID, wrong level code, maths code, wrong
-  hidden ids) and two maths files whose hidden ids differed for all 50
-  students. The registrar changed only the subject name.
-- So Massar reads the **visible** names (class, subject) and finds students
-  by **code Massar**, not by the hidden id. Unconfirmed for a row with an
-  **empty** hidden id (a new student) — see §9.
-- School still writes **every** field exactly like a real export, so it does
-  not matter which ones Massar reads.
+Example: 12 primary classes (1APG-1 … 6APG-2); the registrar starts with
+Arabic in September. Principal and admin follow the same flow.
 
-### 2.3 Generation test (2026-11-06) — passed
+**Step 1 — first visit.** Sidebar → **Massar** → empty state (§3.2 A):
+"No Massar files yet" + **[⬆ Upload Massar files]**.
 
-12 Arabic sheets for 2026/27 S1 فرض 1 were generated with `xlsx-manager` 2.1.0
-from app-side data, each from **another level's** export as template, with
-components learned from **another class's** export. Compared cell by cell
-(value, type, lock, font, fill, border, alignment, number format, merges,
-hidden rows/columns, validations, conditional formatting, protection, print
-area) with Massar's real exports: **identical**.
+**Step 2 — choose files.** The button opens the **Add files** dialog: drop
+zone for `.xlsx`, `.zip` or a folder, one or many → **[Check]**.
 
-Rules learned:
-1. The template must be a **clean Massar export** (still has the `x:` prefix).
-   Files a teacher opened and saved in Excel are not clean.
-2. Component **names must be copied exactly** from this year's export:
-   Massar adds trailing spaces / line breaks (`'الخط '`, `'الإستماع والتحدث\n'`)
-   and they changed between 2025/26 and 2026/27.
-3. The level label comes from Massar (`الأول ابتدائي عام`), **not** from
-   `SCHOOL_CLASS_ARABIC_NAMES` (`الأولى ابتدائي`).
-
-## 3. Scope
-
-**v1:** import, catalog, rounds, generated empty sheets, teacher/registrar
-entry, progress, filled export, lock after export.
-
-**Not v1:** linking Massar marks to School's `grades`/report cards; importing
-Massar final results (yearly averages, pass/fail); school-defined components
-that roll up into Massar ones (CP French 6 → 4); PE and Amazigh (no files yet).
-
-Massar marks are a separate module. They do not change `grades`, `assessments`
-or `exams`.
-
-## 4. Data model (new module `massar`, all year-scoped)
-
-All new value lists are readonly tuples in `@sms/contracts`
-(`MASSAR_ABSENCE_VALUES = ['none', 'justified']`, `MASSAR_SHEET_STATUS_VALUES`,
-`MASSAR_ROUND_STATUS_VALUES`, `MASSAR_SHEET_KIND_VALUES = ['components', 'exam']`),
-pinned in `packages/contracts/tests/enums.test.ts`.
-
-| Table | Per | Columns (main) |
-|---|---|---|
-| `massar_years` | academic year | `academicYearId` (unique), `massarYearId` (M5), `schoolCode`, `academy`, `direction`, `schoolName`, `templateFileId` (clean export in storage), `importedAt`, `importedBy` |
-| `massar_levels` | year × level | `code` (`1APG`), `label` (D9, exact), `levelCode` (O5, text), `maxMark` (10/20), `kind` |
-| `massar_classes` | year × Massar class | `name` (`1APG-1`), `levelId`, `guid` (E5), `classId` + `sectionId` (app mapping) |
-| `massar_subjects` | year × level × subject | `code` (`0011`), `name` (O11, exact), `subjectId` (app mapping), `components` jsonb `[{code, name}]` (exact text) |
-| `massar_enrollments` | year × student | `studentId`, `massarClassId`, `massarStudentId` (hidden B, nullable), `position` (Massar order), `leftOn` (nullable) |
-| `massar_rounds` | year × term × فرض | `term`, `termLabel`, `exam`, `examLabel`, `status` (open / exported / closed), `createdBy` |
-| `massar_sheets` | round × class × subject | `teacherAssignmentId` (nullable), `status` (not_started / in_progress / submitted / exported / changed_after_export), `exportedAt`, `exportHash` |
-| `massar_marks` | sheet × student × component | `mark` numeric nullable, `absence` (none / justified), `updatedBy`, `updatedAt`; unique (sheet, student, component) |
-
-Notes:
-- `code Massar` is `students.studentCode` (see `docs/architecture/student-names.md`).
-  It is the join key everywhere; nothing else identifies a student to Massar.
-- A Massar class maps to one app class + section, but the student list of a
-  sheet comes from `massar_enrollments`, not from the app section. The
-  registrar never moves a student's Massar class during the year; the app
-  section may change.
-- Several app subjects can share a Massar code in old files (robotics used
-  `0019`). The real المعلوميات code is `0030`. Mapping is by
-  (level, Massar code) → app subject, chosen once by the registrar.
-
-## 5. Flows
-
-### 5.1 Start-of-year import (registrar)
-
-1. Upload a zip, a folder, or many `.xlsx` (Massar names
-   `export_notesCC_<class>_<subject>.xlsx`, any فرض, empty or not).
-2. Server reads each file with `xlsx-manager` (`loadBuffer`, `useSheet('NotesCC')`):
-   year (D13, M5), school (C5, row 7), level (D9, O5), class (I9, E5),
-   subject (K5, O11), components (rows 15–16, exact text), students (rows 18+).
-3. **Preview, nothing written yet:**
-   - classes found / missing compared with the app's classes;
-   - each Massar class → proposed app class + section (via `toAppClassName`,
-     section number → `A`/`B`…), editable;
-   - each (level, subject code) → proposed app subject, editable, remembered;
-   - students: matched by code Massar; listed separately: in Massar but not in
-     School, in School's class but not in Massar, same code with a different
-     name or birth date (warning only);
-   - files refused: password-protected, not a `NotesCC` workbook, another year,
-     another school code, two files that disagree on the same class's
-     students or GUID.
-4. **Confirm:** writes the year, levels, classes, subjects, enrollments. Keeps
-   one clean export as the template (prefer the newest clean file; refuse to
-   proceed with no clean file).
-5. **Any time, any number of files.** Each upload is merged into what the year
-   already holds; the preview shows only **new**, **changed** and **already
-   known** items. Typical use: Arabic in September, other subjects later, one
-   class after a new student.
-   - A file adds a missing class, subject or student, and updates what it
-     changed (components, student order, hidden id, a new student).
-   - A file **never deletes**: a class, subject or student it does not
-     mention stays as it is. Removing is an explicit action (a student
-     leaving sets `leftOn`; a wrong mapping is edited on the setup page).
-   - Rounds already created get the new subject's sheets when the registrar
-     confirms ("add missing sheets to open rounds"); exported sheets are not
-     touched.
-   - Files of another year or another school code are refused with a message.
-
-### 5.2 New or leaving student (no file needed)
-
-- Arrives: the registrar adds the student in Massar first, then in School with
-  the same code Massar and the Massar class. `massarStudentId` stays empty
-  until the next import fills it. Sheets created after that include the
-  student.
-- Leaves: set `leftOn`; later sheets leave the student out. Marks already
-  entered stay.
-
-### 5.3 Rounds and sheets
-
-- The registrar creates a round: term (1, 2) and فرض (1, 2, 3…, or
-  الأنشطة المندمجة = 4), labels as Massar writes them.
-- School creates one sheet per (Massar class × Massar subject) of that year.
-  The teacher comes from `teacher_assignments` (class + section + subject); a
-  sheet without a teacher is shown as "no teacher" and stays editable by the
-  registrar.
-- Collège sheets get one column: code `#<فرض>#`, label = the فرض label.
-
-### 5.4 Entering marks
-
-- Grid: students in Massar order, one column per component, mark + an
-  "absent / justified" toggle per component.
-- Checks (UX in the form, again in the DTO): `0 ≤ mark ≤ maxMark`, step to be
-  decided (§9), a mark and "justified" together are refused, only this
-  sheet's students and components.
-- "Submit" by the teacher; the registrar can reopen.
-- Printable sheet: download the generated empty `.xlsx` for one sheet or a
-  class (it prints like Massar's); a web print view can come later.
-
-### 5.5 Progress (registrar)
-
-Board per round: class × subject with status, teacher, count of missing marks;
-filter "missing only"; export the list.
-
-### 5.6 Export
-
-1. The registrar picks a round (all sheets, or a selection).
-2. Server builds every file from the template (section 2.1), fills marks and
-   absences, names it `export_notesCC_<class>_<subject>.xlsx`, zips with
-   `fflate`, streams the zip.
-3. Each exported sheet records `exportedAt` and a hash of its marks; status
-   `exported`. A later edit sets `changed_after_export` and the board shows
-   "re-export needed".
-4. Unfinished sheets are listed before export; the registrar can export them
-   anyway (Massar accepts blanks).
-
-## 6. Server
-
-Module `packages/server/src/modules/massar/` following the 4-layer pattern:
+**Step 3 — check, nothing saved yet.** Same dialog (§3.4):
 
 ```
-massar/
-├── MassarController.ts        # import preview/commit, rounds, sheets, marks, export
-├── MassarService.ts
-├── MassarRepository.ts        # year-scoped via @Year(); owned reads for teachers
-├── MassarValidator.ts
-├── MassarDto.ts
-├── MassarGuards.ts            # ownership: teacher → own sheets via teacher assignment
-├── massarSchema.ts
-└── workbook/
-    ├── cells.ts               # the cell map of §2.1, one place
-    ├── readExport.ts          # file → typed export (pure, no DB)
-    └── writeSheet.ts          # template + sheet data → buffer (pure, no DB)
+12 files read · العربية · 12 classes · 354 students
+✓ 1APG-1 → School class 1AP A   30 students    [change]
+⚠ 3APG-1 → 3AP A · 2 students not in School    [see]
+✗ 1 file refused: opened and saved in Excel    [why?]
+                                     [Back] [Confirm]
 ```
 
-- Dependency: `xlsx-manager` **2.1.0 exact** in `packages/server/package.json`;
-  `fflate` is already there.
-- Year scope: register the controller in `packages/server/src/config/yearScope.ts`;
-  no `academicYear` in params/body.
-- Ownership (`MassarGuards.ts`, one `.where(and(this.ownershipCondition(), …))`):
-  - **teacher** — reads and writes only sheets whose `teacherAssignmentId`
-    belongs to them: **their own subjects in their own sections**. Teaching
-    Arabic in 1APG-1 does not show 1APG-1's maths sheet (stricter than
-    `GradeForTeacher`, which also shows other grades of a taught section).
-    A sheet with no teacher is visible to no teacher.
-  - **supervisor** — reads (never writes) every sheet and mark of the Massar
-    classes mapped to a class they supervise: `supervisesClass(massar_classes.classId, userId)`
-    from `packages/server/src/modules/staff/supervisorScope.ts`, the rule
-    students and grades already use.
-  - **monitor** (moniteur) — **no access**, decided 2026-11-06: no ownership rule, no default grant.
-  - `SCHOOL_WIDE_ROLES` (registrar, principal, admin…) read all; their
-    permissions decide what they can change.
-  - Any other role sees nothing.
-- Every route names its guard. New permissions in
-  `packages/server/src/modules/seed-data/admin/permissions.json`:
-  - `read:massar` — see rounds, sheets, progress
-  - `manage:massar` — import, rounds, export, edit any sheet
-  - `update:massar-marks` — enter marks (teacher: own sheets only)
-  Defaults in `rolePermissions.json`: registrar `read:massar`, `manage:massar`,
-  `update:massar-marks`; teacher `read:massar`, `update:massar-marks`;
-  supervisor `read:massar`; principal and admin all. A migration grants the same to existing roles (see
-  `0066_role_permission_defaults.sql`).
-- Files: uploads and the template through `najm-storage` (restricted, not
-  public). Upload size limit (a year is about 150 files ≈ 5 MB).
-- Messages: every refusal is a catalog key, in the four languages
-  (`test:server-i18n`).
+- ✓ ready. ⚠ saved, but that class waits until its problem is fixed.
+  ✗ file not used; "why?" says what to do ("export it again from Massar").
+- **[see]** lists the students: "In Massar, not in School: EL AMRANI Yassine
+  (code J135…)". Fix = add them in **Students** with the same code Massar.
 
-## 7. Dashboard
+**Step 4 — confirm.** Toast "12 classes saved". The page shows state B:
+"12 classes · العربية", the line "3APG-1 is waiting: 2 students missing
+[Fix]", and **[Open Semester 1 · Contrôle 1]**.
 
-`apps/dashboard/src/features/Massar/` with its own `config/` (schemas, options,
-columns). Pages, each in `PAGE_ACCESS`:
+**Step 5 — open Contrôle 1.** Short confirmation:
 
-| Page | Who | What |
-|---|---|---|
-| Massar setup | registrar, principal | upload exports, preview, confirm; mapping of classes and subjects; template status |
-| Rounds | registrar, principal; supervisor (read-only, own classes) | list, create round, progress board, export zip (not for supervisor) |
-| My sheets | teacher | own subjects in own sections, open rounds |
-| Sheet | teacher (own, edit), registrar (any, edit), supervisor (own classes, read-only) | entry grid, submit/reopen, print/download |
+```
+┌ Open Semester 1 · Contrôle 1? ────────────────────┐
+│ Teachers of 11 classes will see their sheets now. │
+│ 3APG-1 will be added when it is ready.            │
+│                                                   │
+│ Marks due by:  [ 15/11/2026 📅 ]   (optional)     │
+│                               [Cancel] [Open]     │
+└───────────────────────────────────────────────────┘
+```
 
-Sidebar: a **Massar** group right after **Notes** (`/grades`), with children
-filtered by `PAGE_ACCESS` like every other group. A role with one Massar page
-gets a single item (existing `simplifySidebarGroups`).
+The **due date** is optional and can be changed later from the Contrôle
+dropdown ("Change due date"). It never locks anything: after the date,
+teachers can still type; the sheets are only shown as **Late** (§3.2 C).
 
-| Role | Sidebar shows | Sees | Can edit |
+The page opens on the **Overview** (§3.2 C), everything ⚪ Empty.
+
+**Step 6 — follow.** On the Overview, cells turn 🟠 "20/29" then 🟢 "Done";
+"Still missing, by teacher" says whom to call. After the due date, sheets not
+done turn 🔴 **Late** and their teachers come first in that list. For marks given on paper, the
+registrar clicks the cell (or the class button, then the subject) and types
+them on the paper sheet (§3.3).
+
+**Step 7 — download.** **[⬇ Download for Massar]** downloads every sheet of
+the Contrôle in one zip. Empty marks stay empty (Massar accepts them). If
+some sheets are not full, one line warns first: "2 sheets are not full.
+Download anyway?" Downloading does not lock anything.
+
+**Step 8 — upload to Massar** outside School, as today (all classes at once).
+
+**Step 9 — confirm Massar accepted.** After the download, the page asks:
+"Did Massar accept the files? **[Yes]** [Not yet]". **Yes** → the downloaded
+sheets are locked 🔒; teachers can no longer change them. **Not yet** → the
+question stays on the page until answered.
+
+**Step 10 — a correction after sending.** **Only the registrar reopens** a 🔒
+sheet (button on the sheet). Then the teacher or the registrar edits; the
+sheet shows ⚠ "changed after sending" and the page says "1 sheet changed —
+download and send again" → steps 7–9.
+
+**Step 11 — the next Contrôle.** The Contrôle dropdown → **+ Open next
+Contrôle** → steps 5–10 again. Semester 2 the same.
+
+**Any time:**
+- **+ Add files** (header): a new subject (French in October), a class after
+  a change in Massar. Steps 2–4; it adds and updates, never deletes. New
+  subjects get their sheets in the Contrôles already open.
+- **A student arrives:** add them in Massar first, then in Students with the
+  same code Massar and class, then **+ Add files** with the class's new Massar
+  file. The next Contrôle's sheets include them.
+- **A student leaves:** withdraw them in Students. Later sheets leave them
+  out; marks already entered stay. Massar has no arrivals/departures screen of
+  its own.
+
+### 2.2 Teacher, in short
+
+Example: Mrs Salma, French in 3APG-1 and 4APG-2.
+
+1. Sidebar → **Massar**. Before the registrar opens a Contrôle: "No Contrôle
+   open yet. The registrar will open it."
+2. Once open, the page opens **directly on her first sheet** (§3.5). Her
+   buttons: `[3APG-1] [4APG-2]`, subject `[Français]` only.
+3. She types; it saves by itself. A full sheet turns 🟢 for the registrar.
+   No Submit button.
+   The due date is shown above her sheet: "Marks due by 15/11/2026 — 3 days
+   left"; on the last day in orange "Due today"; after it in red "Late — due
+   15/11/2026". She can still type when late.
+4. She can change marks until the registrar answers **Yes** (step 9); then
+   the sheet is 🔒 and she asks the registrar to reopen it.
+5. **Print** gives her the paper version if she prefers to write first.
+
+Decided: a **due date** per Contrôle (2026-11-06). Open for the teacher flow
+(owner to decide): a notification when a Contrôle opens.
+
+## 3. Screens
+
+### 3.1 Sidebar
+
+One item: **Massar** (no children), after **Grades**. Shown to registrar,
+principal, admin, teacher and supervisor, as `PAGE_ACCESS` allows today.
+Monitor, parent and student: nothing (unchanged).
+
+No tabs on the page. Secondary screens open from buttons.
+
+### 3.2 One Massar page that shows the next step
+
+**Every empty screen looks like the rest of the app.** Same as *Teachers*
+when it has no teacher: the page header, then one centred `NEmptyState`
+(`surface="panel"`, Massar icon, title, one line, one button). The button is
+shown only to a role allowed to use it (`PermissionButton` /
+`useViewerRole().can()`); other roles get the title and line only. No big
+drop zone on the page: the button opens the **Add files** dialog (§3.4), which
+holds the drop zone.
+
+**State A — no file uploaded yet**
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│ [icon] Massar                                   2026-2027 ▾  │
+│        Not set up                                            │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│                         [Massar icon]                        │
+│                 No Massar files yet                          │
+│   Upload the empty grade files you exported from Massar.     │
+│                  [ ⬆ Upload Massar files ]                   │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
+
+| Role | Title | Line | Button |
 |---|---|---|---|
-| Registrar, principal, admin | Massar ▸ Rounds, All sheets, Setup | every class and subject | every sheet; import; export |
-| Teacher | Massar (→ My sheets) | only their subjects in their sections | those sheets, until exported or submitted |
-| Supervisor | Massar ▸ Rounds, All sheets | only the classes they supervise | nothing |
-| Monitor | — | nothing | nothing |
-| Parent, student | — | nothing | nothing |
+| Registrar, principal, admin (`manage:massar`) | No Massar files yet | Upload the empty grade files you exported from Massar. | Upload Massar files → Add files dialog |
+| Teacher, supervisor | Massar is not ready yet | The registrar has not uploaded the Massar files. | — |
 
-Rules from CLAUDE.md: `useEntityCRUD`, `tableErrorProps` + `isCountUnknown`
-on every `NTable`, selects from `@sms/contracts` tuples, all text in the shared
-catalogs, mobile card views for lists. The grid needs a keyboard-first layout
-(arrow keys, Enter moves down) for the registrar typing paper sheets.
+**State B — files uploaded, no Contrôle open yet**
 
-## 8. Tests
+Same centred empty state, under a header that already shows what is loaded
+("12 classes · العربية", **+ Add files** in the header actions).
 
-No real Massar file is committed: they hold student names, codes and the
-school's identifiers.
+| Role | Title | Line | Button |
+|---|---|---|---|
+| Registrar, principal, admin | No Contrôle open | Open Contrôle 1 so teachers can enter their marks. | Open Semester 1 · Contrôle 1 |
+| Teacher, supervisor | No Contrôle open yet | The registrar will open it. Your sheets appear here. | — |
 
-**Workbook (pure, `packages/server/tests/massar/`)**
-- A committed **synthetic template**: built once by a script from a clean export
-  with every student row removed and the school fields, GUID and protection
-  hash replaced by placeholders. Kept small and reviewed for personal data.
-- `readExport`: header, row 5 values and types (number vs text `O5`), component
-  pairs (1, 6, 9, 13 components), exact labels (trailing space and `\n`),
-  collège shape, students in order, filled marks/absences read back.
-- `writeSheet`: values, validation ranges for 1 and 33 students, list rule,
-  0–10 vs 0–20, empty rows untouched, protection and print area kept,
-  absence `مبرر` written, `Data` sheet values.
-- Round trip: `writeSheet` → `readExport` returns the same data.
-- **Local golden test** (skipped unless `MASSAR_SAMPLES` contains at least two
-  clean exports, never in CI):
-  for each real clean export, regenerate it from its parsed data with another
-  file as template and compare cell by cell — must be identical (the 2026-11-06
-  test, kept as a regression check).
+Other empty cases, same component:
 
-**Server**
-- Import preview/commit: matching by code Massar, unmatched lists, refused
-  files, re-import diff, one GUID per class.
-- Ownership (`test:ownership`): a teacher with Arabic in 1APG-1 sees and edits
-  that sheet only — not 1APG-1 maths, not Arabic in 1APG-2; a supervisor of
-  CP reads CP's sheets and marks only and every write is refused; a
-  supervisor whose assignment ended sees none; other roles none;
-  school-wide roles all.
-- Security (`test:security` and transport lists): every new route has a
-  permission guard.
-- Year scope: controller registered; reads outside the scope throw.
-- Export: status changes, `changed_after_export`, zip names, blanks allowed.
-- i18n: every new key in four languages.
-
-**Dashboard**
-- Schemas: mark limits per level, mark + justified refused.
-- Tables: failed load is not an empty list.
-
-## 9. Open questions and pending checks
-
-| # | Question / check | Blocks |
+| Case | Title | Line |
 |---|---|---|
-| 1 | **Massar import test:** one generated sheet with one class's real marks, imported into Massar, marks checked there. | export (phase 4) |
+| Teacher with no sheet in the open Contrôle | You have no Massar sheets | If this is wrong, ask the registrar to check your classes and subjects. |
+| Supervisor with no supervised class | No class assigned to you | — |
+| Load failed / refused | `NErrorState` / `NForbiddenState` (as *Teachers*) | — |
+
+**State C — a Contrôle is open (main screen for the rest of the year)**
+
+Like the *Insurance register*: one row of **class buttons**, then the paper.
+The registrar and the supervisor also get one **Overview** button first.
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│ [icon] Massar · Contrôle 1 — Semester 1 ▾      [⬇ Download for Massar] │
+├──────────────────────────────────────────────────────────────────────┤
+│ [📋 Overview] [● 1APG-1] [● 1APG-2] [● 2APG-1] … [● 6APG-2]  [⎙ Print] │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+Header:
+- **One dropdown** "Contrôle 1 — Semester 1 ▾" lists the opened Contrôles and
+  ends with **+ Open next Contrôle** and **Change due date** (registrar). It
+  replaces "rounds". Next to it: "Due 15/11/2026 · 3 days left" (red "Late"
+  after the date) when a due date is set.
+- **Labels are never typed.** The screen shows simple words in the user's
+  language ("Contrôle 1 — Semester 1", "الفرض 1 — الدورة الأولى"). The file
+  gets Massar's exact text, read from the uploaded files (§4.1).
+- **[⬇ Download for Massar]** (registrar) — §2.1 step 7.
+- **+ Add files** (registrar) in the header actions menu.
+- The "Did Massar accept the files?" question (§2.1 step 9) and the
+  "1 sheet changed — download and send again" line appear under the header
+  when they apply.
+
+Buttons row:
+- **📋 Overview** — registrar, principal, admin, supervisor. The registrar's
+  page opens here.
+- **Class buttons** — Massar classes in level order, with the insurance page
+  colours (`CLASS_DOCUMENT_COLORS`) and a status dot: 🟢 all done, 🟠
+  started, ⚪ empty, 🔒 sent, ⚠ changed after sending, ⏸ waiting (students
+  missing).
+- **[⎙ Print]** — one button, prints what is shown (§3.6).
+
+**Overview** (registrar, supervisor):
+
+```
+ 52 of 72 sheets done · Due 15/11/2026 — Late by 2 days · 20 sheets late
+
+ Class    العربية   Français   Maths    Science   Islamic   Art
+ 1APG-1   🟢 Done   🟢 Done    🟢 Done  🟢 Done   🟢 Done   🟢 Done
+ 1APG-2   🔴 Late 20/29  🟢 Done  🔴 Late  🔴 Late 10/29  🔴 Late  🔴 Late
+ 3APG-1   ⏸ Waiting · 2 students missing  [Fix]
+ 4APG-1   🔴 Late — no teacher (registrar enters)
+
+ Still missing, by teacher (late first):
+   🔴 Mr Hassan    2APG-1 العربية, 2APG-2 العربية
+   🔴 Mrs Amina    1APG-2 Islamic, 1APG-2 Art
+```
+
+- **Words with the colours** ("Done", "Empty", "20/29", "Late"), never
+  symbols alone.
+- **Due date:** before it, cells are 🟠 / ⚪ as usual; after it, every sheet
+  not done is 🔴 **Late** (with its count when started). Without a due date,
+  nothing is ever late. Class buttons show 🔴 when one of their sheets is late.
+- **Click a cell** → that class and subject (§3.3).
+- **Still missing, by teacher** answers "whom do I call?".
+- With one subject uploaded (September, Arabic only) the table has one
+  column plus the teacher's name.
+- Phone: one card per class with its subjects as small badges.
+
+**A class button** → a **subject row** with the same status colours, then
+the paper sheet of the chosen subject (§3.3):
+
+```
+ [📋 Overview] [● 1APG-1] [● 1APG-2] …                         [⎙ Print]
+ [🟢 العربية] [🟢 Français] [⚪ Maths] [🟠 Science] [⚪ Islamic] [⚪ Art]
+```
+
+**Reuse:** `apps/dashboard/src/features/Students/insurance/InsuranceRegisterPage.tsx`
+already has the class buttons, the paper preview (`PlanningPreview`) and
+printing (`printPlanningDocument`). The Massar page uses the same pieces; the
+paper sheet adds editable mark cells.
+
+### 3.3 The sheet (on the paper)
+
+Drawn like the Massar paper, so it is familiar, but easier. Primary example
+(several components, /10):
+
+```
+ ┌───────────────────────────────────────────────────────────────────┐
+ │ مؤسسة جان هنري لامبير             نقط المراقبة المستمرة      [logo] │
+ │ المستوى: الأول ابتدائي عام   القسم: 1APG-1   السنة: 2026/2027      │
+ │ الدورة: الأولى   الفرض: 1   المادة: العربية   الأستاذة: Mrs Salma   │
+ ├────┬────────────┬────────────────┬──────────┬────────┬────────┬──────┤
+ │ ر.ت│ رقم مسار   │ اسم التلميذ     │ تاريخ    │الاستماع│ القراءة│الكتابة│
+ │    │            │                │ الازدياد │والتحدث │        │      │
+ ├────┼────────────┼────────────────┼──────────┼────────┼────────┼──────┤
+ │ 01 │ J130045678 │ AMINE Rachid   │ 03-05-19 │  8.5   │   7    │  9   │
+ │ 02 │ J130045679 │ BENANI Sara    │ 11-09-19 │  9     │ [   ]  │      │
+ │ 03 │ J130045680 │ CHAFIK Omar    │ 22-01-19 │ مبرر   │  مبرر  │ مبرر │
+ │ 04 │ J130045681 │ DRISSI Lina    │ 30-07-19 │ 12 ⚠   │        │      │
+ └────┴────────────┴────────────────┴──────────┴────────┴────────┴──────┘
+              ✓ Saved · 18 / 30 done          [◀ العربية]  [Maths ▶]
+```
+
+Collège: the same sheet with **one** mark column, /20.
+
+- **Columns:** N°, code Massar, name, birth date, then one column per
+  component with Massar's names, in Massar's student order.
+- **Saves by itself** while typing: "Saving…" / "✓ Saved" / "Not saved —
+  retry". Uses today's revision check, so two people editing the same sheet
+  cannot overwrite each other silently.
+- **No Submit button.** A sheet with every mark (or مبرر) filled is "Done".
+- **Checks at once:** a mark above the maximum or below 0 turns red with
+  "max is 10" and is not saved. Empty cells are light yellow.
+- **Absence per component**, like the Massar file: a key (for example `A`) or
+  the cell menu sets **مبرر**; a mark and مبرر together are refused.
+- **Keyboard:** Enter = next student, Tab = next component, arrows move.
+- **Paste from Excel:** a column or block copied from Excel fills the cells
+  from the selected one down; invalid values are shown red, not saved.
+- **Stays readable:** header row and name column stay visible while
+  scrolling. Right-to-left in Arabic, left-to-right in French/English.
+- **◀ / ▶** = previous or next subject of the same class (typing paper sheets
+  one after another).
+- **After "Yes, Massar accepted":** grey, 🔒 "Sent to Massar", read-only;
+  **[Reopen]** for the registrar only (§2.1 step 10).
+- **Phone:** one student at a time, the components as fields, the مبرر
+  checkbox, **◀ / ▶** students.
+
+### 3.4 Add files (dialog, registrar)
+
+Same import as today, said simply:
+
+```
+┌ Add Massar files ──────────────────────────────────────────┐
+│ 12 files read · العربية · 12 classes · 354 students         │
+│ ✓ 1APG-1 → School class 1AP A   30 students    [change]    │
+│ ✓ 1APG-2 → School class 1AP B   29 students    [change]    │
+│ ⚠ 3APG-1 → 3AP A · 2 students not in School    [see]       │
+│ ✗ 1 file refused: opened and saved in Excel    [why?]      │
+│ Subject: العربية → School subject Arabic ✓                 │
+│                                                            │
+│ Nothing changes until you confirm.      [Back] [Confirm]   │
+└────────────────────────────────────────────────────────────┘
+```
+
+- One line per class, grouped by level; "change" opens the existing mapping
+  editor.
+- No word "template". If no untouched Massar file is in the upload, say:
+  "Upload at least one file exactly as Massar gave it (not opened in Excel)."
+- A small **Massar settings** link (registrar only) opens what *Setup* holds
+  today besides the upload: class/subject matching. Arrivals and departures
+  stay in Students.
+
+### 3.5 Who sees what
+
+| | Overview | Class → subject → paper | Print | Download for Massar, + Add files, Massar accepted?, Reopen |
+|---|---|---|---|---|
+| Registrar, principal, admin | ✅ opens here | ✅ all, edit | ✅ | ✅ |
+| Supervisor | ✅ own classes | ✅ own classes, read-only | ✅ | — |
+| Teacher | — | ✅ own classes and subjects, edit until 🔒 | ✅ | — |
+| Monitor, parent, student | — | — | — | — |
+
+- **Teacher:** no Overview; the page opens **directly on their first sheet**;
+  class buttons show only their classes and the subject row only their
+  subjects (the rule in `MassarGuards.ts`, unchanged). With one class and one
+  subject there is nothing to choose: the sheet only.
+- **Supervisor:** the registrar's page, read-only, limited to the classes
+  they supervise.
+
+### 3.6 Print
+
+One **[⎙ Print]** button that prints what is shown, with the marks typed so
+far (empty cells stay empty, so the same print is the paper for teachers):
+- **Overview** selected → every sheet of the Contrôle the viewer can see,
+  one page each;
+- **a class** selected → all its subjects, one page each.
+
+## 4. Server changes the new screens need
+
+### 4.1 Labels come from the files
+
+- `POST /massar/rounds` no longer takes `termLabel` / `examLabel` from the
+  user: only `term` and `exam`.
+- The server takes the labels from `massar_subjects.observedRounds` (what the
+  imported files said for that term and فرض).
+- If no file showed that term/فرض yet: use Massar's standard text from a fixed
+  list built from the 2025/26 files, and tell the registrar "these labels were
+  not seen in your files yet" (§6.3, §6.4). Collège rules from v1 stay.
+
+### 4.2 Small additions
+
+- **Massar accepted → lock:** a new action that sets the downloaded sheets to
+  `exported`. Today the download itself does this; download alone will no
+  longer lock.
+- **Download:** every sheet of the Contrôle the registrar may export, in one
+  zip (today's export with the full list).
+- **No Submit:** the dashboard stops offering it; "Done" = every cell filled.
+  The server's `submitted` status stays but is no longer set by the new
+  screens; teachers edit until `exported`.
+- **Reopen after sending:** registrar (`manage:massar`) only, as today.
+- **Auto-save:** today's `PUT /massar/sheets/:id/marks` with its revision;
+  the sheet sends small batches. No new route expected.
+- **Overview data:** built from the existing sheet list (`GET /massar/sheets`,
+  class × subject × status × missing × teacher). New route only if it is slow.
+- "Open next Contrôle" = today's create round with the next number.
+- **Due date:** one nullable `due_date` (date) column on `massar_rounds`
+  (new migration), set when opening and changed with a small `PUT` on the
+  round (`manage:massar`). "Late" is computed from it and the school's
+  business date (`getBusinessDateOnly`); nothing is locked by it.
+- No new permission.
+
+## 5. Build steps
+
+1. **Agree on the mockups** — done with the owner on 2026-11-06 (registrar
+   flow, middle version with Overview, paper sheet, who sees what, due
+   date). Teacher notification still open (§2.2).
+2. **Labels from files** (§4.1) + **due date** column and route (§4.2) +
+   tests; remove the label fields from the form.
+3. **One page** with states A/B/C; delete the tabs and the sidebar children;
+   keep the old URLs redirecting to `/massar`.
+4. **Class buttons + Overview**, reusing the insurance page pieces; phone
+   cards; "Still missing, by teacher".
+5. **Paper sheet** (§3.3): auto-save, checks, absence per component,
+   keyboard, paste from Excel, ◀ / ▶ subjects, phone view; no Submit.
+6. **Download for Massar**, "Did Massar accept?" lock, Reopen, "changed after
+   sending".
+7. **Print** (§3.6).
+8. **Add files dialog** + Massar settings screen.
+9. **Teacher and supervisor** versions of the same page (§3.5).
+10. Owner review on desktop, phone and in Arabic, with a non-technical user.
+
+The implementation reuses the matching editor and app styling from the earlier uncommitted redesign. Its tabs and separate
+round/sheet lists have been replaced by the agreed flow in §3.
+
+Rules from CLAUDE.md still apply: texts in the four catalogs, `NTable` error
+props, `PAGE_ACCESS`, mobile cards, keyboard-first sheet.
+
+**Tests:** labels (seen / not seen / collège), page state per role, Overview
+counts and "missing by teacher", due date (none / before / due today / late,
+late teachers first, never locks), "Done" without Submit, download of the full
+Contrôle, "Massar accepted" lock and "changed after sending", only the
+registrar reopens a sent sheet, auto-save with a stale revision, paste of
+valid and invalid values, keyboard moves, teacher opens on their first sheet,
+supervisor read-only, failed load is not an empty Overview.
+
+## 6. Checks that still need real Massar files
+
+| # | Check | Blocks |
+|---|---|---|
+| 1 | **Massar import test:** one generated sheet with one class's real marks, imported into Massar, marks checked there. Then set `MASSAR_FILLED_EXPORT_VERIFIED=true`. | filled export |
 | 2 | A row with an **empty hidden id** (new student) imports correctly. Include one in test 1, or wait for a real arrival. | new students without re-import |
-| 3 | Collège: a فرض 2 export, to confirm `#2#` / `الفرض الثاني`. | collège rounds beyond فرض 1 |
-| 4 | الأنشطة المندمجة sheets for other subjects than Islamic level 6. | that round type |
-| 5 | Allowed decimals (0.25? 0.5? 2 digits?). The file only says `decimal 0..max`, number format `0.00`. | entry checks |
-| 6 | PE and Amazigh: graded in Massar? | catalog completeness |
-| 7 | Do all teachers have a login? If not, the registrar enters for them (already supported). | none |
-| 8 | Next year's `M5` value: confirm from the first 2027/28 export (expected 20). | next year |
-| 9 | ~~Monitor access~~ — decided 2026-11-06: monitors see no Massar sheets. | — |
+| 3 | Collège: a فرض 2 export, to confirm `#2#` / `الفرض الثاني`. | collège beyond فرض 1 |
+| 4 | الأنشطة المندمجة sheets for other subjects than Islamic level 6. | that Contrôle type |
+| 5 | Allowed decimals (0.25? 0.5? 2 digits?). The file only says `decimal 0..max`. | entry checks |
+| 6 | PE and Amazigh: graded in Massar? | full subject list |
+| 7 | Next year's `M5` value: confirm from the first 2027/28 export (expected 20). | next year |
+| 8 | Uploading again a file Massar already accepted (after a correction, §2.1 step 10) replaces its marks without error. | the one-button download |
 
-## 10. Phases
+Decided: monitors see no Massar sheets (2026-11-06).
 
-Each phase is usable on its own.
+## 7. Later (not planned)
 
-1. **Workbook core:** `cells.ts`, `readExport`, `writeSheet`, synthetic template,
-   unit and local golden tests. No UI.
-2. **Import and catalog:** tables, import preview/commit, mapping screens,
-   template storage, permissions and migration.
-3. **Rounds and empty sheets:** create a round, generate the zip of empty
-   sheets. The registrar can already stop exporting from Massar each فرض and
-   use the current paper/Excel flow with School's files.
-4. **Entry and progress:** grid for teachers and registrar, submit/reopen,
-   progress board.
-5. **Filled export and lock:** zip with marks, export record,
-   changed-after-export. Needs check §9.1.
-6. **Later:** link to School grades/report cards, import Massar final results,
-   school components that roll up into Massar components.
-
-## 11. Implementation notes (2026-11-06)
-
-Phases 1–5 are implemented. Phase 6 stays out of scope.
-
-- Sheets snapshot their roster and components when created. Later arrivals,
-  departures and catalog imports affect later sheets; marks retain their meaning.
-- Re-imports merge records and add missing sheets to open rounds. An unmatched
-  code blocks only its class until its School identity is added and the export
-  re-imported. Managers see the class and reason on the progress board; other
-  classes can create rounds and sheets. Existing sheets retain their roster.
-- Preview records are private, bound to the actor and year, expire after one
-  hour, and carry a digest of the preview and its starting data. A consumed or
-  stale preview cannot be committed again. Confirm and Cancel delete their
-  preview file after the database commits; Confirm also deletes a replaced
-  template. Startup and five-minute sweeps delete expired previews and old
-  unreferenced Massar files, retaining active templates across years.
-- Saves use a revision and a transaction lock on the selected year. Submitted
-  and exported sheets require an explicit manager reopen before teacher entry.
-- Numeric and text Massar hidden student IDs and level codes retain their
-  original types. The writer also preserves zero-width hidden columns and
-  explicit normal styles that ExcelJS otherwise drops.
-- Decimal validation follows the workbook's observed range, without inventing
-  a rounding step. Collège rounds beyond فرض 1 and integrated activities need
-  matching imported evidence for every subject being generated.
-- `MASSAR_FILLED_EXPORT_VERIFIED=true` enables filled exports only after §9.1
-  passes. Arrivals with a missing hidden ID can download printable/empty sheets;
-  filled export still requires re-import until the external hidden-ID test passes;
-  monitors have no Massar access (no ownership rule, no grant; §9.9).
-- ZIP names use the Massar subject code. Progress lists use owned, year-scoped
-  SQL counts. Spreadsheet/text uploads are allowed only in the Massar namespace.
-- Migration 0101 includes hidden-ID numeric types; the unshipped 0102 was merged
-  into it. Edited files with unsupported dimensions receive a layout refusal.
+Link Massar marks to School grades and report cards; import Massar final
+results; school components that roll up into Massar ones (CP French 6 → 4).

@@ -391,11 +391,9 @@ export class StudentEnrollmentRepository {
     return row;
   }
 
-  // Attendance and grade sources must still have a placement covering their
-  // business date and section. A correction never rewrites those records.
-  async hasInvalidDatedRecords(studentId: string) {
-    const rows = await this.db.execute(sql`
-      WITH records AS (
+  /** Attendance and grades of the selected year, by day and section. */
+  private datedRecords(studentId: string) {
+    return sql`
         SELECT a.date AS day, a.section_id AS section_id
         FROM attendance a WHERE a.student_id = ${studentId}
           AND (a.academic_year_id = ${this.year.id} OR
@@ -406,8 +404,21 @@ export class StudentEnrollmentRepository {
         LEFT JOIN assessments a ON a.id = g.assessment_id
         JOIN teacher_assignments ta ON ta.id = COALESCE(x.teacher_assignment_id, a.teacher_assignment_id)
         WHERE g.student_id = ${studentId}
-          AND COALESCE(x.date, a.date) BETWEEN ${this.year.reportingStartsOn}::date AND ${this.year.reportingEndsOn}::date
-      )
+          AND COALESCE(x.date, a.date) BETWEEN ${this.year.reportingStartsOn}::date AND ${this.year.reportingEndsOn}::date`;
+  }
+
+  /** Whether anything was recorded for the student on or after `from`. */
+  async hasDatedRecordsSince(studentId: string, from: string) {
+    const rows = await this.db.execute(sql`WITH records AS (${this.datedRecords(studentId)})
+      SELECT 1 FROM records r WHERE r.day >= ${from}::date LIMIT 1`);
+    return rows.length > 0;
+  }
+
+  // Attendance and grade sources must still have a placement covering their
+  // business date and section. A correction never rewrites those records.
+  async hasInvalidDatedRecords(studentId: string) {
+    const rows = await this.db.execute(sql`
+      WITH records AS (${this.datedRecords(studentId)})
       SELECT 1 FROM records r WHERE NOT EXISTS (
         SELECT 1 FROM student_enrollments e JOIN student_enrollment_placements p ON p.enrollment_id = e.id
         WHERE e.student_id = ${studentId} AND e.academic_year_id = ${this.year.id}

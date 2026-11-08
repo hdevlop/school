@@ -43,7 +43,7 @@ describe('academic structure seed', () => {
     expect(primary.subjects.some(subject => 'gradeLevel' in subject)).toBe(false);
     const preschool = academicStructure('2026-2027', ['Maternelle']);
     expect(preschool.subjects).toHaveLength(6);
-    expect(preschool.subjects.every(subject => subject.code.startsWith('PRE'))).toBe(true);
+    expect(preschool.subjects.map(subject => subject.code).sort()).toEqual(['AR', 'FR', 'MATH', 'EI', 'ART', 'PE'].sort());
     const combined = academicStructure('2026-2027', ['Primaire', 'Collège']);
     expect(new Set(combined.subjects.map(subject => subject.code)).size).toBe(combined.subjects.length);
     expect(combined.subjects.map(subject => subject.code)).toEqual(expect.arrayContaining(['PHY', 'SVT', 'ENG']));

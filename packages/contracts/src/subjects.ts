@@ -8,7 +8,8 @@ export const schoolSubjectsData = subjects;
 type SchoolCycle = NonNullable<ReturnType<typeof schoolCycleForLevel>>['name'];
 
 const subjectCodesByCycle: Record<SchoolCycle, readonly string[]> = {
-  Maternelle: ['PRELANG', 'PREMATH', 'PREDECO', 'PREMOT', 'PREART', 'PREVIE'],
+  // Preschool uses the school's common subjects; it has none of its own.
+  Maternelle: ['AR', 'FR', 'MATH', 'EI', 'ART', 'PE'],
   Primaire: ['AR', 'FR', 'MATH', 'EI', 'SCI', 'HG', 'ART', 'PE', 'COM'],
   Collège: ['AR', 'FR', 'MATH', 'EI', 'HG', 'PHY', 'SVT', 'ENG', 'PE', 'INFO', 'ART'],
   // Common secondary catalogue only; filière-specific subjects remain school-owned.

@@ -32,7 +32,7 @@ async function importFixture() {
     get: async (_namespace: string, id: string) => objects.get(id),
     delete: async (_namespace: string, id: string) => objects.delete(id),
   };
-  const service = new MassarService(repository as any, new MassarValidator(), storage as any);
+  const service = new MassarService(repository as any, new MassarValidator(), storage as any, {} as any, {} as any);
   Object.defineProperty(service, 'year', { value: { id: 'year', label: '2026-2027', status: 'open' } });
   Object.defineProperty(service, 'transactions', { value: { afterCommit: async (callback: () => Promise<void>) => { committed.push(callback); }, afterRollback: async (callback: () => Promise<void>) => { rolledBack.push(callback); } } });
   const preview = await service.previewUploads([new File([template], 'synthetic.xlsx')], actor);

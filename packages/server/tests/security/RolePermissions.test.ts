@@ -181,7 +181,7 @@ describe('seeded permissions', () => {
   // général, who alone edits student records, deals with parents and visits and
   // writes to the school.
   it('give the monitor the supervisor\'s work without student edits, parents, visits or sending', () => {
-    // Monitors have no Massar access (MASSAR-GRADES-PLAN.md §9.9).
+    // Monitors have no Massar access (decided 2026-11-06).
     const keptBySupervisor = ['read:massar', 'sidebar:massar', 'read:insurance', 'update:students', 'read:parents', 'read:visit-requests', 'update:visit-requests', 'create:alerts', 'create:announcements', 'update:announcements'];
     expect([...grants.monitor].sort()).toEqual(grants.supervisor.filter((permission: string) => !keptBySupervisor.includes(permission)).sort());
     for (const received of ['read:alerts', 'update:alerts', 'read:announcements']) expect(grants.monitor).toContain(received);

@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { boolean, check, date, index, integer, jsonb, numeric, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
-import type { MassarComponent, MassarRoundStatus, MassarSheetKind, MassarSheetStatus, MassarAbsence, MassarStudent } from '@sms/contracts';
+import type { MassarComponent, MassarPlan, MassarRoundStatus, MassarSheetKind, MassarSheetStatus, MassarAbsence, MassarStudent } from '@sms/contracts';
 import { actionByRef, idField, timestamps } from '../../database/shared';
 import { academicYears } from '../academicYears/AcademicYearSchema';
 import { classes } from '../classes/classSchema';
@@ -14,6 +14,8 @@ export const massarYears = pgTable('massar_years', {
   id: idField(12), academicYearId: yearRef(), massarYearId: integer('massar_year_id').notNull(),
   schoolCode: text('school_code').notNull(), academy: text('academy').notNull(), direction: text('direction').notNull(), schoolName: text('school_name').notNull(),
   templateFileId: text('template_file_id').notNull(), importedAt: timestamp('imported_at', { mode: 'string' }).defaultNow().notNull(), importedBy: actionByRef('imported_by'),
+  // The school's Contrôles of the year; see MassarPlan.
+  plan: jsonb('plan').$type<MassarPlan>().notNull().default({ primary: 2, college: 3, dates: [] }),
 }, table => [uniqueIndex('massar_year_unique').on(table.academicYearId)]);
 export const massarLevels = pgTable('massar_levels', {
   id: idField(12), academicYearId: yearRef(), code: text('code').notNull(), label: text('label').notNull(),
@@ -24,12 +26,15 @@ export const massarClasses = pgTable('massar_classes', {
   id: idField(12), academicYearId: yearRef(), name: text('name').notNull(), levelId: text('level_id').notNull().references(() => massarLevels.id, { onDelete: 'restrict' }),
   guid: text('guid').notNull(), classId: text('class_id').references(() => classes.id, { onDelete: 'restrict' }), sectionId: text('section_id').references(() => sections.id, { onDelete: 'restrict' }),
   unmatchedCodes: jsonb('unmatched_codes').$type<string[]>().notNull().default([]),
+  pendingStudents: jsonb('pending_students').$type<Array<{ studentCode: string; name: string; dateOfBirth: string; massarStudentId: string | number | null; position: number }>>().notNull().default([]),
 }, table => [uniqueIndex('massar_class_unique').on(table.academicYearId, table.name), uniqueIndex('massar_class_guid_unique').on(table.academicYearId, table.guid)]);
 export const massarSubjects = pgTable('massar_subjects', {
   id: idField(12), academicYearId: yearRef(), levelId: text('level_id').notNull().references(() => massarLevels.id, { onDelete: 'restrict' }),
   code: text('code').notNull(), name: text('name').notNull(), subjectId: text('subject_id').references(() => subjects.id, { onDelete: 'restrict' }),
   components: jsonb('components').$type<MassarComponent[]>().notNull(),
   observedRounds: jsonb('observed_rounds').$type<Array<{ term: number; exam: number; termLabel: string; examLabel: string; components: MassarComponent[] }>>().notNull().default([]),
+  // False for a subject taken from the default model (last year's files), until a Massar file of this year confirms it.
+  confirmed: boolean('confirmed').notNull().default(true),
 }, table => [uniqueIndex('massar_subject_unique').on(table.academicYearId, table.levelId, table.code)]);
 export const massarEnrollments = pgTable('massar_enrollments', {
   id: idField(12), academicYearId: yearRef(), studentId: text('student_id').notNull().references(() => students.id, { onDelete: 'restrict' }),
@@ -40,6 +45,7 @@ export const massarEnrollments = pgTable('massar_enrollments', {
 export const massarRounds = pgTable('massar_rounds', {
   id: idField(12), academicYearId: yearRef(), term: integer('term').notNull(), termLabel: text('term_label').notNull(), exam: integer('exam').notNull(), examLabel: text('exam_label').notNull(),
   status: text('status').$type<MassarRoundStatus>().notNull().default('open'), createdBy: actionByRef('created_by'), ...timestamps,
+  dueDate: date('due_date'),
 }, table => [uniqueIndex('massar_round_unique').on(table.academicYearId, table.term, table.exam), check('massar_round_status_check', sql`${table.status} in ('open','exported','closed')`)]);
 export const massarSheets = pgTable('massar_sheets', {
   id: idField(12), academicYearId: yearRef(), roundId: text('round_id').notNull().references(() => massarRounds.id, { onDelete: 'restrict' }),

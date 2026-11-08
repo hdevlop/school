@@ -1,9 +1,10 @@
 import { ToolGroup } from 'najm-mcp';
 import { Body, Controller, Delete, Get, Params, Put, ResMsg, Validate } from '../../najm';
 import { Can, CanSchoolWide } from '../../auth';
+import { canUpdateSubject } from '../subjects/SubjectGuards';
 import type { ExamPlanningJson } from '@sms/contracts';
 import { ExamPlanningService } from './ExamPlanningService';
-import { importExamPlanningDto, planningClassParam, planningVisibilityDto, saveExamPlanningDto, type SaveExamPlanningDto } from './ExamPlanningDto';
+import { importExamPlanningDto, planningClassParam, addSubSubjectsDto, planningVisibilityDto, saveExamPlanningDto, type SaveExamPlanningDto } from './ExamPlanningDto';
 
 @ToolGroup('exam-planning')
 @Controller('/exam-planning')
@@ -25,6 +26,18 @@ export class ExamPlanningController {
   @Validate({ body: planningVisibilityDto })
   @ResMsg('exams.success.updated')
   saveVisibility(@Body() body: { classIds: string[] }) { return this.service.saveVisibility(body.classIds); }
+
+  @Get('/subjects')
+  @CanSchoolWide('update:exams')
+  @ResMsg('exams.success.retrieved')
+  subjectOptions() { return this.service.subjectOptions(); }
+
+  // It adds sub-subjects to Subjects: the Subjects permission decides.
+  @Put('/subjects')
+  @canUpdateSubject()
+  @Validate({ body: addSubSubjectsDto })
+  @ResMsg('subjects.success.updated')
+  addSubSubjects(@Body() body: { add: Array<{ name: string; subjectId: string }> }) { return this.service.addSubSubjects(body.add); }
 
   @Put('/import')
   @CanSchoolWide('update:exams')

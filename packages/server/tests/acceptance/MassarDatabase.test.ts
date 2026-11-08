@@ -59,7 +59,7 @@ it('imports, merges, generates, owns, edits and exports Massar sheets in the sel
       const { repo, inYear } = await scopedHistoryRepository(MassarRepository, tx);
       const objects = new Map<string, Buffer>();
       const storage = { save: async (_namespace: string, path: string, bytes: Buffer) => { objects.set(path, Buffer.from(bytes)); }, get: async (_namespace: string, path: string) => objects.get(path) ?? null, delete: async (_namespace: string, path: string) => objects.delete(path) };
-      const service = new MassarService(repo, new MassarValidator(), storage as any); Object.defineProperty(service, 'year', { value: year });
+      const service = new MassarService(repo, new MassarValidator(), storage as any, {} as any, {} as any); Object.defineProperty(service, 'year', { value: year });
       // This test owns an outer rollback and uses in-memory storage only.
       Object.defineProperty(service, 'transactions', { value: { afterCommit: async (callback: () => Promise<void>) => callback(), afterRollback: async () => {} } });
       const admin = { id: id('admin'), role: 'admin', permissions: ['*:*'] }, teacher = { id: id('teacher-a'), role: 'teacher', permissions: ['read:massar','update:massar-marks'] }, supervisor = { id: id('supervisor'), role: 'supervisor', permissions: ['read:massar'] };
@@ -75,7 +75,12 @@ it('imports, merges, generates, owns, edits and exports Massar sheets in the sel
       expect(objects.has(`${preview.previewId}_preview.txt`)).toBe(false);
       expect([...objects.keys()].filter(path => path.endsWith('_template.xlsx'))).toHaveLength(1);
       await expectRefused(run(() => service.commit({ ...mappings, previewId: preview.previewId, digest: preview.digest, addMissingSheets: true }, admin)));
-      const round = await run(() => service.createRound({ term: 1, exam: 1, termLabel: 'الدورة الأولى', examLabel: 'الفرض الأول' }, admin));
+      const round = await run(() => service.createRound({ term: 1, exam: 1, dueDate: year.instructionStartsOn }, admin));
+      expect(round.dueDate).toBe(year.instructionStartsOn);
+      await run(() => service.changeDueDate(round.id, null));
+      expect((await run(() => service.rounds(admin))).find(item => item.id === round.id)?.dueDate).toBeNull();
+      await run(() => service.changeDueDate(round.id, year.instructionStartsOn));
+      await expectRefused(run(() => service.changeDueDate(round.id, '2000-01-01')));
       const all = await run(() => service.sheets(round.id)); expect(all).toHaveLength(5); // 2 CP classes × 2 subjects + CE1 Arabic.
       const own = await run(() => service.sheets(round.id), teacher); expect(own).toHaveLength(1); expect(own[0]).toMatchObject({ className: '1APG-1', subjectName: 'Synthetic arabic' });
       const foreign = all.find(sheet => sheet.className === '1APG-1' && sheet.subjectName === 'Synthetic math')!;
@@ -92,8 +97,7 @@ it('imports, merges, generates, owns, edits and exports Massar sheets in the sel
       await run(() => service.saveMarks(own[0].id, { revision: 0, marks: [{ studentId: id('student-1'), componentCode: '1001', mark: 0, absence: 'none' }] }, teacher), teacher);
       expect((await run(() => service.sheets(round.id), teacher))[0].missing).toBe(0); // Zero counts as a completed mark.
       await expectRefused(run(() => service.saveMarks(own[0].id, { revision: 0, marks: [] }, teacher), teacher));
-      await run(() => service.submit(own[0].id, 1, teacher), teacher);
-      await expectRefused(run(() => service.saveMarks(own[0].id, { revision: 2, marks: [] }, teacher), teacher));
+      expect((await run(() => service.sheet(own[0].id, teacher), teacher)).canEdit).toBe(true);
       // Re-import one class only: absent classes, subjects and students survive.
       const partial = await run(() => service.previewUploads([files[0]], admin));
       await run(() => service.commit({ ...mappings, previewId: partial.previewId, digest: partial.digest, addMissingSheets: true }, admin));
@@ -101,26 +105,34 @@ it('imports, merges, generates, owns, edits and exports Massar sheets in the sel
       expect([...objects.keys()].filter(path => path.endsWith('_template.xlsx'))).toHaveLength(1);
       expect((await run(() => service.sheets(round.id))).map(sheet => sheet.id).sort()).toEqual(all.map(sheet => sheet.id).sort());
       expect(await tx.select().from(massarEnrollments).where(eq(massarEnrollments.academicYearId, year.id))).toHaveLength(3);
-      const setup = await run(() => service.setup()), massarClassId = setup.classes.find(cls => cls.name === '1APG-1')!.id;
+      const setup = await run(() => service.setup());
+      // An arrival is created in Students with its Massar code; adding the
+      // class's Massar file again links it, and a preview made before is stale.
       const stalePreview = await run(() => service.previewUploads([files[0]], admin));
-      await run(() => service.addStudent(id('student-4'), massarClassId));
+      const arrivalSource = { ...sources[0], students: [...sources[0].students, { ...sources[0].students[0], studentCode: id('CODE4'), massarStudentId: 400, name: 'Synthetic student 4' }] };
+      const arrivalFile = await cleanFile(arrivalSource, 'arrival.xlsx');
+      const arrivals = await run(() => service.previewUploads([arrivalFile], admin));
+      await run(() => service.commit({ ...mappings, previewId: arrivals.previewId, digest: arrivals.digest, addMissingSheets: true }, admin));
       await expectRefused(run(() => service.commit({ ...mappings, previewId: stalePreview.previewId, digest: stalePreview.digest, addMissingSheets: true }, admin)));
       expect((await run(() => service.sheet(own[0].id, admin))).students).toHaveLength(1);
-      const secondRound = await run(() => service.createRound({ term: 1, exam: 2, termLabel: 'الدورة الأولى', examLabel: 'الفرض الثاني' }, admin));
+      const secondRound = await run(() => service.createRound({ term: 1, exam: 2 }, admin));
       const later = (await run(() => service.sheets(secondRound.id), teacher))[0];
       expect((await run(() => service.sheet(later.id, teacher), teacher)).students).toHaveLength(2);
       const printableArrival = await run(() => service.downloadEmpty(later.id), teacher);
       expect((await readExport(printableArrival.bytes)).students).toHaveLength(2);
       process.env.MASSAR_FILLED_EXPORT_VERIFIED = 'true';
       await expectRefused(run(() => service.exportSheets([later.id], false)));
-      const arrivalSource = { ...sources[0], students: [...sources[0].students, { ...sources[0].students[0], studentCode: id('CODE4'), massarStudentId: 400, name: 'Synthetic student 4' }] };
-      const arrivalFile = await cleanFile(arrivalSource, 'arrival.xlsx');
-      const arrivals = await run(() => service.previewUploads([arrivalFile], admin));
-      await run(() => service.commit({ ...mappings, previewId: arrivals.previewId, digest: arrivals.digest, addMissingSheets: true }, admin));
+      // Importing the same file again does not add the arrival twice.
+      const again = await run(() => service.previewUploads([arrivalFile], admin));
+      await run(() => service.commit({ ...mappings, previewId: again.previewId, digest: again.digest, addMissingSheets: true }, admin));
       expect((await readExport((await run(() => service.downloadEmpty(later.id), teacher)).bytes)).students).toHaveLength(2);
       process.env.MASSAR_FILLED_EXPORT_VERIFIED = 'true';
-      await run(() => service.exportSheets([own[0].id], false));
+      const downloaded = await run(() => service.downloadRound(round.id));
+      expect((await run(() => service.sheet(own[0].id, teacher), teacher)).canEdit).toBe(true);
+      await run(() => service.acceptDownload(round.id, downloaded.receipt!));
       expect((await run(() => service.sheet(own[0].id, admin))).sheet.status).toBe('exported');
+      await expectRefused(run(() => service.saveMarks(own[0].id, { revision: 2, marks: [] }, teacher), teacher));
+      await run(() => service.reopen(own[0].id, 2));
       await run(() => service.saveMarks(own[0].id, { revision: 3, marks: [{ studentId: id('student-1'), componentCode: '1001', mark: 8.25, absence: 'none' }] }, admin));
       expect((await run(() => service.sheet(own[0].id, admin))).sheet.status).toBe('changed_after_export');
       expect(await tx.select().from(massarImports).where(and(eq(massarImports.academicYearId, year.id), eq(massarImports.id, arrivals.previewId)))).toHaveLength(0);
@@ -129,22 +141,52 @@ it('imports, merges, generates, owns, edits and exports Massar sheets in the sel
       const newSubject = await run(() => service.previewUploads([itFile], admin));
       await run(() => service.commit({ ...mappings, subjects: [...mappings.subjects, { level: '1APG', code: '0030', subjectId: id('it') }], previewId: newSubject.previewId, digest: newSubject.digest, addMissingSheets: true }, admin));
       expect(await tx.select().from(massarSheets).where(eq(massarSheets.academicYearId, year.id))).toHaveLength(14);
-      const originalEnrollment = setup.enrollments.find(row => row.enrollment.studentId === id('student-1'))!.enrollment;
-      await run(() => service.leaveStudent(originalEnrollment.id, year.instructionStartsOn));
-      const thirdRound = await run(() => service.createRound({ term: 1, exam: 3, termLabel: 'الدورة الأولى', examLabel: 'الفرض الثالث' }, admin));
+      // A student withdrawn in Students is left off the sheets created afterwards.
+      const leftOn = new Date(Date.parse(`${year.instructionStartsOn}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10);
+      await tx.update(studentEnrollments).set({ leftOn, status: 'withdrawn' }).where(and(eq(studentEnrollments.academicYearId, year.id), eq(studentEnrollments.studentId, id('student-1'))));
+      // The school's plan: primary has 2 Contrôles per semester by default, so Contrôle 3 needs the plan changed first.
+      expect((await run(() => service.availability())).planned.map(item => `${item.term}:${item.exam}`)).toEqual(['1:1', '1:2', '2:1', '2:2']);
+      await expectRefused(run(() => service.createRound({ term: 1, exam: 3 }, admin)));
+      await run(() => service.savePlan({ primary: 3, college: 3, dates: [{ term: 2, exam: 1, dueDate: year.instructionStartsOn }] }));
+      expect((await run(() => service.availability())).planned.find(item => item.term === 2 && item.exam === 1)?.dueDate).toBe(year.instructionStartsOn);
+      const thirdRound = await run(() => service.createRound({ term: 1, exam: 3 }, admin));
+      await expectRefused(run(() => service.savePlan({ primary: 2, college: 2, dates: [] }))); // Contrôle 3 is open now.
       const afterDeparture = (await run(() => service.sheets(thirdRound.id), teacher))[0];
       expect((await run(() => service.sheet(afterDeparture.id, teacher), teacher)).students.map(student => student.id)).toEqual([id('student-4')]);
       expect((await run(() => service.sheet(own[0].id, admin))).marks[0].mark).toBe(8.25);
       expect(await tx.select().from(massarSheets).where(eq(massarSheets.academicYearId, year.id))).toHaveLength(21);
       const blockedClassId = setup.classes.find(cls => cls.name === '1APG-2')!.id;
       await tx.update(massarClasses).set({ unmatchedCodes: ['SYNTHETIC-MISSING'] }).where(eq(massarClasses.id, blockedClassId));
-      const partialRound = await run(() => service.createRound({ term: 2, exam: 1, termLabel: 'Synthetic term 2', examLabel: 'Synthetic assessment 1' }, admin));
+      const partialRound = await run(() => service.createRound({ term: 2, exam: 1 }, admin));
       expect((await run(() => service.sheets(partialRound.id))).map(row => row.className)).not.toContain('1APG-2');
       expect(await run(() => service.blockedClasses(partialRound.id))).toEqual([{ className: '1APG-2', unmatchedCount: 1 }]);
       expect(await run(() => service.sheets(partialRound.id))).toHaveLength(4);
       await tx.update(massarClasses).set({ unmatchedCodes: [] }).where(eq(massarClasses.id, blockedClassId));
       await run(() => service.mappings(mappings));
       expect(await run(() => service.sheets(partialRound.id))).toHaveLength(7);
+      // A waiting class retains the missing student's exact Massar row. Creating
+      // that student in School unblocks later sheets without another upload.
+      const waitingSource = { ...sources[2], students: [...sources[2].students, { ...sources[2].students[0], studentCode: id('CODE5'), massarStudentId: 500, name: 'Synthetic pending student' }] };
+      const waitingFile = await cleanFile(waitingSource, 'waiting-class.xlsx');
+      const waitingPreview = await run(() => service.previewUploads([waitingFile], admin));
+      await run(() => service.commit({ ...mappings, previewId: waitingPreview.previewId, digest: waitingPreview.digest, addMissingSheets: true }, admin));
+      const waitingSetup = await run(() => service.setup());
+      expect(waitingSetup.classes.find(cls => cls.id === blockedClassId)?.pendingStudents).toMatchObject([{ studentCode: id('CODE5'), name: 'Synthetic pending student' }]);
+      const waitingRound = await run(() => service.createRound({ term: 2, exam: 2 }, admin));
+      expect((await run(() => service.sheets(waitingRound.id))).some(sheet => sheet.className === '1APG-2')).toBe(false);
+      await tx.insert(students).values({ id: id('student-5'), studentCode: id('CODE5'), name: 'School spelling', dateOfBirth: '2018-01-01', enrollmentDate: year.instructionStartsOn, classId: id('cp'), sectionId: id('b') });
+      await tx.insert(studentEnrollments).values({ id: id('enrollment-5'), studentId: id('student-5'), academicYearId: year.id, enrolledOn: year.instructionStartsOn });
+      // Wrong placement does not silently associate a student with this class.
+      await tx.insert(studentEnrollmentPlacements).values({ enrollmentId: id('enrollment-5'), classId: id('cp'), sectionId: id('a'), validFrom: year.instructionStartsOn });
+      expect(await run(() => service.refreshStudents())).toEqual({ resolved: 0 });
+      await tx.update(studentEnrollmentPlacements).set({ sectionId: id('b') }).where(eq(studentEnrollmentPlacements.enrollmentId, id('enrollment-5')));
+      expect(await run(() => service.refreshStudents())).toEqual({ resolved: 1 });
+      expect(await run(() => service.refreshStudents())).toEqual({ resolved: 0 });
+      const repairedSheet = (await run(() => service.sheets(waitingRound.id))).find(sheet => sheet.className === '1APG-2')!;
+      const repaired = await run(() => service.sheet(repairedSheet.id, admin));
+      expect(repaired.students.map(student => [student.studentCode, student.massarStudentId, student.position])).toEqual([[id('CODE2'), 200, 0], [id('CODE5'), 500, 1]]);
+      expect(repaired.students[1].name).toBe('Synthetic pending student');
+      expect((await run(() => service.sheet(own[0].id, admin))).marks[0].mark).toBe(8.25);
       throw rollback;
     });
   } catch (error) { if (error !== rollback) throw error; }

@@ -18,12 +18,13 @@ describe('academic integrity', () => {
   it('normalizes service callers too, and gives concurrent duplicates the ordinary conflict message', async () => {
     const repository = {
       getByCode: async () => null,
+      allNames: async () => ({ subjects: [], subSubjects: [] }),
       create: async (data: { code: string }) => {
         expect(data.code).toBe('MATH');
         throw { cause: { code: '23505', constraint_name: 'subjects_code_normalized_unique' } };
       },
     };
-    const service = new SubjectService(repository as any, withEnglishMessages(new SubjectValidator(repository as any)));
+    const service = new SubjectService(repository as any, withEnglishMessages(new SubjectValidator(repository as any)), {} as any);
     await expect(service.create({ code: ' math ', name: 'Mathematics' })).rejects.toThrow('code');
   });
 

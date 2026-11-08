@@ -99,7 +99,7 @@ export type AssessmentStatus = (typeof ASSESSMENT_STATUS_VALUES)[number];
 export const SUBMISSION_TYPE_VALUES = ['online', 'paper', 'presentation', 'practical', 'discussion'] as const;
 export type SubmissionType = (typeof SUBMISSION_TYPE_VALUES)[number];
 
-export const EXAM_TYPE_VALUES = ['midterm', 'final', 'standardized'] as const;
+export const EXAM_TYPE_VALUES = ['midterm', 'final', 'standardized', 'test'] as const;
 export type ExamType = (typeof EXAM_TYPE_VALUES)[number];
 
 export const EXAM_SECURITY_VALUES = ['low', 'medium', 'high'] as const;

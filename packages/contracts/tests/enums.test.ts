@@ -79,7 +79,7 @@ const PERSISTED_ENUMS: Partial<Record<EnumKey, readonly string[]>> = {
   eventVisibility: ['public', 'private', 'teachers', 'students', 'parents', 'staff'],
   examSecurity: ['low', 'medium', 'high'],
   examStatus: ['scheduled', 'active', 'completed', 'cancelled', 'rescheduled'],
-  examType: ['midterm', 'final', 'standardized'],
+  examType: ['midterm', 'final', 'standardized', 'test'],
   expenseCategory: [
                      'utilities',
                      'maintenance',

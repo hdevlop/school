@@ -13,8 +13,10 @@ import ExamCard from './ExamCard';
 import { ExamCardSkeleton } from '@/shared/CardSkeletons';
 import { useExams } from '../hooks/useExams';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolToday } from '@/hooks/useSchoolFormat';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
-import { useExamsTableColumns } from '../hooks/useExamsTableColumns';
+import { examTitle, groupPlannedExams, useExamsTableColumns, type ExamRow } from '../hooks/useExamsTableColumns';
+import { compareClassNames } from '@sms/contracts';
 import { useExamsTableFilters } from '../hooks/useExamsTableFilters';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -40,7 +42,18 @@ function ExamsTable() {
     isCreating,
     isDeleting,
   } = useExams();
-  const filteredExams = useMemo(() => (exams || []).filter(scope.matches), [exams, scope.matches]);
+  // Coming exams first, soonest on top; past ones after, latest first. Within
+  // a day, by time, class (CP, CE1…), then name. One Planning exam is one row,
+  // whatever its number of sections.
+  const today = useSchoolToday();
+  const filteredExams = useMemo(() => groupPlannedExams(((exams || []) as ExamRow[]).filter(scope.matches)).sort((a, b) => {
+    const aPast = a.date < today, bPast = b.date < today;
+    if (aPast !== bPast) return aPast ? 1 : -1;
+    if (a.date !== b.date) return aPast ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date);
+    // Within a day: by start time (untimed last), then class, then name.
+    const time = (row: ExamRow) => row.startTime?.slice(0, 5) ?? '99:99';
+    return time(a).localeCompare(time(b)) || compareClassNames(a.class?.name ?? '', b.class?.name ?? '') || examTitle(a).localeCompare(examTitle(b));
+  }), [exams, scope.matches, today]);
 
   const { openDialog, confirmDelete } = useDialog();
 
@@ -75,14 +88,21 @@ function ExamsTable() {
         form: 'exam-form',
         text: t('exams.dialogs.updateButton'),
         loading: isUpdating,
+        // A Planning row stands for each section's exam: the change goes to all of them.
         onClick: async (data) => {
-          await updateExam({ ...data, id: exam.id });
+          for (const member of exam.members ?? [exam]) await updateExam({ ...data, id: member.id });
         },
       },
     });
   };
 
   const handleDelete = (exam) => {
+    // Planning owns its exams: one deleted here would come back with the next
+    // Planning save, so the entry is deleted there.
+    if (exam.planningEntryId) {
+      openDialog({ title: t('common.delete'), children: <p className="text-sm">{t('exams.deleteInPlanning')}</p>, showButtons: false });
+      return;
+    }
     confirmDelete({
       title: t('common.delete'),
       warningText: t('common.deleteConfirm'),
@@ -96,7 +116,7 @@ function ExamsTable() {
     });
   };
 
-  const total = exams?.length ?? 0;
+  const total = groupPlannedExams((exams || []) as ExamRow[]).length;
 
   return (
     <div className='flex flex-col gap-2 w-full h-full min-h-0'>

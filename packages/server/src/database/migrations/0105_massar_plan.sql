@@ -1,0 +1,1 @@
+ALTER TABLE "massar_years" ADD COLUMN "plan" jsonb DEFAULT '{"primary":2,"college":3,"dates":[]}'::jsonb NOT NULL;

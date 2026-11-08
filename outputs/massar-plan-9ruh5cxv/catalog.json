@@ -1,0 +1,3211 @@
+{
+  "sourceFolder": "C:\\Users\\hdevlop\\Downloads\\notes\\notes",
+  "records": [
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\1APG-A\\ANG 1APG-1.xlsx",
+      "relativePath": "1APG-A\\ANG 1APG-1.xlsx",
+      "folderGrade": 1,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "1APG-1",
+      "subject": "اللغة الإنجليزية",
+      "subjectCode": "0013",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0013",
+          "name": "اللغة الإنجليزية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\1APG-A\\ARABE 1APG-1.xlsx",
+      "relativePath": "1APG-A\\ARABE 1APG-1.xlsx",
+      "folderGrade": 1,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "1APG-1",
+      "subject": "اللغة العربية",
+      "subjectCode": "0011",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1001",
+          "name": "التعبير الكتابي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1002",
+          "name": "القراءة",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1003",
+          "name": "الإملاء",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1020",
+          "name": "الخط",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1026",
+          "name": "النقل",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1039",
+          "name": "الإستماع والتحدث",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\1APG-A\\ART 1APG-1.xlsx",
+      "relativePath": "1APG-A\\ART 1APG-1.xlsx",
+      "folderGrade": 1,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "1APG-1",
+      "subject": "التربية الفنية",
+      "subjectCode": "1000",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1000",
+          "name": "التربية الفنية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\1APG-A\\INFO 1APG-1.xlsx",
+      "relativePath": "1APG-A\\INFO 1APG-1.xlsx",
+      "folderGrade": 1,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "1APG-1",
+      "subject": "المعلوميات و الروبوتيك",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "المعلوميات و الروبوتيك",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\1APG-A\\ISLAMIQUE 1APG-1.xlsx",
+      "relativePath": "1APG-A\\ISLAMIQUE 1APG-1.xlsx",
+      "folderGrade": 1,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "1APG-1",
+      "subject": "التربية الإسلامية",
+      "subjectCode": "0024",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0024",
+          "name": "التربية الإسلامية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\1APG-A\\MATH 1APG-1.xlsx",
+      "relativePath": "1APG-A\\MATH 1APG-1.xlsx",
+      "folderGrade": 1,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "1APG-1",
+      "subject": "الرياضيات",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "الرياضيات",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\1APG-A\\SVT 1APG-1.xlsx",
+      "relativePath": "1APG-A\\SVT 1APG-1.xlsx",
+      "folderGrade": 1,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "1APG-1",
+      "subject": "النشاط العلمي",
+      "subjectCode": "0034",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0034",
+          "name": "النشاط العلمي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\1APG-B\\ANG 1APG-2.xlsx",
+      "relativePath": "1APG-B\\ANG 1APG-2.xlsx",
+      "folderGrade": 1,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "1APG-2",
+      "subject": "اللغة الإنجليزية",
+      "subjectCode": "0013",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0013",
+          "name": "اللغة الإنجليزية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\1APG-B\\ARABIC 1APG-2.xlsx",
+      "relativePath": "1APG-B\\ARABIC 1APG-2.xlsx",
+      "folderGrade": 1,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "1APG-2",
+      "subject": "اللغة العربية",
+      "subjectCode": "0011",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1001",
+          "name": "التعبير الكتابي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1002",
+          "name": "القراءة",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1003",
+          "name": "الإملاء",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1020",
+          "name": "الخط",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1026",
+          "name": "النقل",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1039",
+          "name": "الإستماع والتحدث",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\1APG-B\\ART 1APG-2.xlsx",
+      "relativePath": "1APG-B\\ART 1APG-2.xlsx",
+      "folderGrade": 1,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "1APG-2",
+      "subject": "التربية الفنية",
+      "subjectCode": "1000",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1000",
+          "name": "التربية الفنية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\1APG-B\\INFO 1APG-2.xlsx",
+      "relativePath": "1APG-B\\INFO 1APG-2.xlsx",
+      "folderGrade": 1,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "1APG-2",
+      "subject": "المعلوميات و الروبوتيك",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "المعلوميات و الروبوتيك",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\1APG-B\\ISLAMIQUE 1APG-2.xlsx",
+      "relativePath": "1APG-B\\ISLAMIQUE 1APG-2.xlsx",
+      "folderGrade": 1,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "1APG-2",
+      "subject": "التربية الإسلامية",
+      "subjectCode": "0024",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0024",
+          "name": "التربية الإسلامية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\1APG-B\\MATH 1APG-2.xlsx",
+      "relativePath": "1APG-B\\MATH 1APG-2.xlsx",
+      "folderGrade": 1,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "1APG-2",
+      "subject": "الرياضيات",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "الرياضيات",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\1APG-B\\SVT 1APG2.xlsx",
+      "relativePath": "1APG-B\\SVT 1APG2.xlsx",
+      "folderGrade": 1,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "1APG-2",
+      "subject": "النشاط العلمي",
+      "subjectCode": "0034",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0034",
+          "name": "النشاط العلمي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\2APG-A\\ARABE 2APG-A.xlsx",
+      "relativePath": "2APG-A\\ARABE 2APG-A.xlsx",
+      "folderGrade": 2,
+      "sheet": "NotesCC",
+      "gradeName": "الثاني ابتدائي عام",
+      "class": "2APG-1",
+      "subject": "اللغة العربية",
+      "subjectCode": "0011",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1001",
+          "name": "التعبير الكتابي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1002",
+          "name": "القراءة",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1003",
+          "name": "الإملاء",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1020",
+          "name": "الخط",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1039",
+          "name": "الإستماع والتحدث",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1040",
+          "name": "تمارين كتابية",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\2APG-A\\ART 2APG-A.xlsx",
+      "relativePath": "2APG-A\\ART 2APG-A.xlsx",
+      "folderGrade": 2,
+      "sheet": "NotesCC",
+      "gradeName": "الثاني ابتدائي عام",
+      "class": "2APG-1",
+      "subject": "التربية الفنية",
+      "subjectCode": "1000",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1000",
+          "name": "التربية الفنية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\2APG-A\\FR 2APG-A.xlsx",
+      "relativePath": "2APG-A\\FR 2APG-A.xlsx",
+      "folderGrade": 2,
+      "sheet": "NotesCC",
+      "gradeName": "الثاني ابتدائي عام",
+      "class": "2APG-1",
+      "subject": "اللغة الفرنسية",
+      "subjectCode": "0012",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1008",
+          "name": "Activités de prod. écrite",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1009",
+          "name": "Lexique",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1010",
+          "name": "Grammaire",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1011",
+          "name": "Conjugaison",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1012",
+          "name": "Orthographe/Dictée",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1022",
+          "name": "copie",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        },
+        {
+          "code": "1024",
+          "name": "dictée",
+          "codeCell": "S15",
+          "labelCell": "S16"
+        },
+        {
+          "code": "1046",
+          "name": "Activités orales",
+          "codeCell": "U15",
+          "labelCell": "U16"
+        },
+        {
+          "code": "1047",
+          "name": "Poésie",
+          "codeCell": "W15",
+          "labelCell": "W16"
+        },
+        {
+          "code": "1048",
+          "name": "Lecture",
+          "codeCell": "Y15",
+          "labelCell": "Y16"
+        },
+        {
+          "code": "1049",
+          "name": "Écriture/Copie",
+          "codeCell": "AA15",
+          "labelCell": "AA16"
+        },
+        {
+          "code": "1050",
+          "name": "Exercices écrits",
+          "codeCell": "AC15",
+          "labelCell": "AC16"
+        },
+        {
+          "code": "1052",
+          "name": "Projet de classe",
+          "codeCell": "AE15",
+          "labelCell": "AE16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\2APG-A\\INFO 2APG-A.xlsx",
+      "relativePath": "2APG-A\\INFO 2APG-A.xlsx",
+      "folderGrade": 2,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "2APG-1",
+      "subject": "المعلوميات و الروبوتيك",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "المعلوميات و الروبوتيك",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\2APG-A\\ISLAMIQUE 2APG-A.xlsx",
+      "relativePath": "2APG-A\\ISLAMIQUE 2APG-A.xlsx",
+      "folderGrade": 2,
+      "sheet": "NotesCC",
+      "gradeName": "الثاني ابتدائي عام",
+      "class": "2APG-1",
+      "subject": "التربية الإسلامية",
+      "subjectCode": "0024",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0024",
+          "name": "التربية الإسلامية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\2APG-A\\MATH 2APG-A.xlsx",
+      "relativePath": "2APG-A\\MATH 2APG-A.xlsx",
+      "folderGrade": 2,
+      "sheet": "NotesCC",
+      "gradeName": "الثاني ابتدائي عام",
+      "class": "2APG-1",
+      "subject": "الرياضيات",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "الرياضيات",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\2APG-A\\SVT 2APG-A.xlsx",
+      "relativePath": "2APG-A\\SVT 2APG-A.xlsx",
+      "folderGrade": 2,
+      "sheet": "NotesCC",
+      "gradeName": "الثاني ابتدائي عام",
+      "class": "2APG-1",
+      "subject": "النشاط العلمي",
+      "subjectCode": "0034",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0034",
+          "name": "النشاط العلمي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\2APG-B\\ARABE 2APG-B.xlsx",
+      "relativePath": "2APG-B\\ARABE 2APG-B.xlsx",
+      "folderGrade": 2,
+      "sheet": "NotesCC",
+      "gradeName": "الثاني ابتدائي عام",
+      "class": "2APG-2",
+      "subject": "اللغة العربية",
+      "subjectCode": "0011",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1001",
+          "name": "التعبير الكتابي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1002",
+          "name": "القراءة",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1003",
+          "name": "الإملاء",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1020",
+          "name": "الخط",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1039",
+          "name": "الإستماع والتحدث",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1040",
+          "name": "تمارين كتابية",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\2APG-B\\ART 2APG-B.xlsx",
+      "relativePath": "2APG-B\\ART 2APG-B.xlsx",
+      "folderGrade": 2,
+      "sheet": "NotesCC",
+      "gradeName": "الثاني ابتدائي عام",
+      "class": "2APG-2",
+      "subject": "التربية الفنية",
+      "subjectCode": "1000",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1000",
+          "name": "التربية الفنية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\2APG-B\\FR 2APG-B.xlsx",
+      "relativePath": "2APG-B\\FR 2APG-B.xlsx",
+      "folderGrade": 2,
+      "sheet": "NotesCC",
+      "gradeName": "الثاني ابتدائي عام",
+      "class": "2APG-2",
+      "subject": "اللغة الفرنسية",
+      "subjectCode": "0012",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1008",
+          "name": "Activités de prod. écrite",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1009",
+          "name": "Lexique",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1010",
+          "name": "Grammaire",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1011",
+          "name": "Conjugaison",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1012",
+          "name": "Orthographe/Dictée",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1022",
+          "name": "copie",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        },
+        {
+          "code": "1024",
+          "name": "dictée",
+          "codeCell": "S15",
+          "labelCell": "S16"
+        },
+        {
+          "code": "1046",
+          "name": "Activités orales",
+          "codeCell": "U15",
+          "labelCell": "U16"
+        },
+        {
+          "code": "1047",
+          "name": "Poésie",
+          "codeCell": "W15",
+          "labelCell": "W16"
+        },
+        {
+          "code": "1048",
+          "name": "Lecture",
+          "codeCell": "Y15",
+          "labelCell": "Y16"
+        },
+        {
+          "code": "1049",
+          "name": "Écriture/Copie",
+          "codeCell": "AA15",
+          "labelCell": "AA16"
+        },
+        {
+          "code": "1050",
+          "name": "Exercices écrits",
+          "codeCell": "AC15",
+          "labelCell": "AC16"
+        },
+        {
+          "code": "1052",
+          "name": "Projet de classe",
+          "codeCell": "AE15",
+          "labelCell": "AE16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\2APG-B\\INFO 2APG-B.xlsx",
+      "relativePath": "2APG-B\\INFO 2APG-B.xlsx",
+      "folderGrade": 2,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "2APG-2",
+      "subject": "المعلوميات و الروبوتيك",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "المعلوميات و الروبوتيك",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\2APG-B\\ISLAMIQUE 2APG-B.xlsx",
+      "relativePath": "2APG-B\\ISLAMIQUE 2APG-B.xlsx",
+      "folderGrade": 2,
+      "sheet": "NotesCC",
+      "gradeName": "الثاني ابتدائي عام",
+      "class": "2APG-2",
+      "subject": "التربية الإسلامية",
+      "subjectCode": "0024",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0024",
+          "name": "التربية الإسلامية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\2APG-B\\MATH 2APG-B.xlsx",
+      "relativePath": "2APG-B\\MATH 2APG-B.xlsx",
+      "folderGrade": 2,
+      "sheet": "NotesCC",
+      "gradeName": "الثاني ابتدائي عام",
+      "class": "2APG-2",
+      "subject": "الرياضيات",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "الرياضيات",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\2APG-B\\SVT 2APG-B.xlsx",
+      "relativePath": "2APG-B\\SVT 2APG-B.xlsx",
+      "folderGrade": 2,
+      "sheet": "NotesCC",
+      "gradeName": "الثاني ابتدائي عام",
+      "class": "2APG-2",
+      "subject": "النشاط العلمي",
+      "subjectCode": "0034",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0034",
+          "name": "النشاط العلمي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\3APG -B\\ARABE 3APG-B.xlsx",
+      "relativePath": "3APG -B\\ARABE 3APG-B.xlsx",
+      "folderGrade": 3,
+      "sheet": "NotesCC",
+      "gradeName": "الثالث ابتدائي عام",
+      "class": "3APG-2",
+      "subject": "اللغة العربية",
+      "subjectCode": "0011",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1001",
+          "name": "التعبير الكتابي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1002",
+          "name": "القراءة",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1003",
+          "name": "الإملاء",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1039",
+          "name": "الإستماع والتحدث",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1041",
+          "name": "التطبيقات الكتابية",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1042",
+          "name": "مشروع الوحدة",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\3APG -B\\ART 3APG-B.xlsx",
+      "relativePath": "3APG -B\\ART 3APG-B.xlsx",
+      "folderGrade": 3,
+      "sheet": "NotesCC",
+      "gradeName": "الثالث ابتدائي عام",
+      "class": "3APG-2",
+      "subject": "التربية الفنية",
+      "subjectCode": "1000",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1000",
+          "name": "التربية الفنية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\3APG -B\\FR 3APG-B.xlsx",
+      "relativePath": "3APG -B\\FR 3APG-B.xlsx",
+      "folderGrade": 3,
+      "sheet": "NotesCC",
+      "gradeName": "الثالث ابتدائي عام",
+      "class": "3APG-2",
+      "subject": "اللغة الفرنسية",
+      "subjectCode": "0012",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1008",
+          "name": "Activités de prod. écrite",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1009",
+          "name": "Lexique",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1010",
+          "name": "Grammaire",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1011",
+          "name": "Conjugaison",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1024",
+          "name": "dictée",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1046",
+          "name": "Activités orales",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        },
+        {
+          "code": "1047",
+          "name": "Poésie",
+          "codeCell": "S15",
+          "labelCell": "S16"
+        },
+        {
+          "code": "1048",
+          "name": "Lecture",
+          "codeCell": "U15",
+          "labelCell": "U16"
+        },
+        {
+          "code": "1049",
+          "name": "Écriture/Copie",
+          "codeCell": "W15",
+          "labelCell": "W16"
+        },
+        {
+          "code": "1050",
+          "name": "Exercices écrits",
+          "codeCell": "Y15",
+          "labelCell": "Y16"
+        },
+        {
+          "code": "1051",
+          "name": "Production de l’écrit",
+          "codeCell": "AA15",
+          "labelCell": "AA16"
+        },
+        {
+          "code": "1052",
+          "name": "Projet de classe",
+          "codeCell": "AC15",
+          "labelCell": "AC16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\3APG -B\\INFO 3APG-B.xlsx",
+      "relativePath": "3APG -B\\INFO 3APG-B.xlsx",
+      "folderGrade": 3,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "3APG-2",
+      "subject": "المعلوميات و الروبوتيك",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "المعلوميات و الروبوتيك",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\3APG -B\\ISLAMIQUE 3APG-B.xlsx",
+      "relativePath": "3APG -B\\ISLAMIQUE 3APG-B.xlsx",
+      "folderGrade": 3,
+      "sheet": "NotesCC",
+      "gradeName": "الثالث ابتدائي عام",
+      "class": "3APG-2",
+      "subject": "التربية الإسلامية",
+      "subjectCode": "0024",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0024",
+          "name": "التربية الإسلامية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\3APG -B\\MATH 3APG-B.xlsx",
+      "relativePath": "3APG -B\\MATH 3APG-B.xlsx",
+      "folderGrade": 3,
+      "sheet": "NotesCC",
+      "gradeName": "الثالث ابتدائي عام",
+      "class": "3APG-2",
+      "subject": "الرياضيات",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "الرياضيات",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\3APG -B\\SVT 3APG-B.xlsx",
+      "relativePath": "3APG -B\\SVT 3APG-B.xlsx",
+      "folderGrade": 3,
+      "sheet": "NotesCC",
+      "gradeName": "الثالث ابتدائي عام",
+      "class": "3APG-2",
+      "subject": "النشاط العلمي",
+      "subjectCode": "0034",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0034",
+          "name": "النشاط العلمي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\3APG-A\\ANG 3APG-A.xlsx",
+      "relativePath": "3APG-A\\ANG 3APG-A.xlsx",
+      "folderGrade": 3,
+      "sheet": "NotesCC",
+      "gradeName": "الثالث ابتدائي عام",
+      "class": "3APG-1",
+      "subject": "اللغة الإنجليزية",
+      "subjectCode": "0013",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0013",
+          "name": "اللغة الإنجليزية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\3APG-A\\ARABE 3APG-A.xlsx",
+      "relativePath": "3APG-A\\ARABE 3APG-A.xlsx",
+      "folderGrade": 3,
+      "sheet": "NotesCC",
+      "gradeName": "الثالث ابتدائي عام",
+      "class": "3APG-1",
+      "subject": "اللغة العربية",
+      "subjectCode": "0011",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1001",
+          "name": "التعبير الكتابي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1002",
+          "name": "القراءة",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1003",
+          "name": "الإملاء",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1039",
+          "name": "الإستماع والتحدث",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1041",
+          "name": "التطبيقات الكتابية",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1042",
+          "name": "مشروع الوحدة",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\3APG-A\\ART 3APG-A.xlsx",
+      "relativePath": "3APG-A\\ART 3APG-A.xlsx",
+      "folderGrade": 3,
+      "sheet": "NotesCC",
+      "gradeName": "الثالث ابتدائي عام",
+      "class": "3APG-1",
+      "subject": "التربية الفنية",
+      "subjectCode": "1000",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1000",
+          "name": "التربية الفنية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\3APG-A\\FR 3APG-A.xlsx",
+      "relativePath": "3APG-A\\FR 3APG-A.xlsx",
+      "folderGrade": 3,
+      "sheet": "NotesCC",
+      "gradeName": "الثالث ابتدائي عام",
+      "class": "3APG-1",
+      "subject": "اللغة الفرنسية",
+      "subjectCode": "0012",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1008",
+          "name": "Activités de prod. écrite",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1009",
+          "name": "Lexique",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1010",
+          "name": "Grammaire",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1011",
+          "name": "Conjugaison",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1024",
+          "name": "dictée",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1046",
+          "name": "Activités orales",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        },
+        {
+          "code": "1047",
+          "name": "Poésie",
+          "codeCell": "S15",
+          "labelCell": "S16"
+        },
+        {
+          "code": "1048",
+          "name": "Lecture",
+          "codeCell": "U15",
+          "labelCell": "U16"
+        },
+        {
+          "code": "1049",
+          "name": "Écriture/Copie",
+          "codeCell": "W15",
+          "labelCell": "W16"
+        },
+        {
+          "code": "1050",
+          "name": "Exercices écrits",
+          "codeCell": "Y15",
+          "labelCell": "Y16"
+        },
+        {
+          "code": "1051",
+          "name": "Production de l’écrit",
+          "codeCell": "AA15",
+          "labelCell": "AA16"
+        },
+        {
+          "code": "1052",
+          "name": "Projet de classe",
+          "codeCell": "AC15",
+          "labelCell": "AC16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\3APG-A\\INFO 3APG-A.xlsx",
+      "relativePath": "3APG-A\\INFO 3APG-A.xlsx",
+      "folderGrade": 3,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "3APG-1",
+      "subject": "المعلوميات و الروبوتيك",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "المعلوميات و الروبوتيك",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\3APG-A\\ISLAMIQUE 3APG-A.xlsx",
+      "relativePath": "3APG-A\\ISLAMIQUE 3APG-A.xlsx",
+      "folderGrade": 3,
+      "sheet": "NotesCC",
+      "gradeName": "الثالث ابتدائي عام",
+      "class": "3APG-1",
+      "subject": "التربية الإسلامية",
+      "subjectCode": "0024",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0024",
+          "name": "التربية الإسلامية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\3APG-A\\MATH 3APG-A.xlsx",
+      "relativePath": "3APG-A\\MATH 3APG-A.xlsx",
+      "folderGrade": 3,
+      "sheet": "NotesCC",
+      "gradeName": "الثالث ابتدائي عام",
+      "class": "3APG-1",
+      "subject": "الرياضيات",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "الرياضيات",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\3APG-A\\SVT 3APG-A.xlsx",
+      "relativePath": "3APG-A\\SVT 3APG-A.xlsx",
+      "folderGrade": 3,
+      "sheet": "NotesCC",
+      "gradeName": "الثالث ابتدائي عام",
+      "class": "3APG-1",
+      "subject": "النشاط العلمي",
+      "subjectCode": "0034",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0034",
+          "name": "النشاط العلمي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\4APG-A\\ANG 4apg-A.xlsx",
+      "relativePath": "4APG-A\\ANG 4apg-A.xlsx",
+      "folderGrade": 4,
+      "sheet": "NotesCC",
+      "gradeName": "الرابع ابتدائي عام",
+      "class": "4APG-1",
+      "subject": "اللغة الإنجليزية",
+      "subjectCode": "0013",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0013",
+          "name": "اللغة الإنجليزية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\4APG-A\\ARABE 4APG-A.xlsx",
+      "relativePath": "4APG-A\\ARABE 4APG-A.xlsx",
+      "folderGrade": 4,
+      "sheet": "NotesCC",
+      "gradeName": "الرابع ابتدائي عام",
+      "class": "4APG-1",
+      "subject": "اللغة العربية",
+      "subjectCode": "0011",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1001",
+          "name": "التعبير الكتابي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1002",
+          "name": "القراءة",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1003",
+          "name": "الإملاء",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1005",
+          "name": "التراكيب",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1006",
+          "name": "الصرف والتحويل",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1042",
+          "name": "مشروع الوحدة",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        },
+        {
+          "code": "1043",
+          "name": "التواصل الشفهي",
+          "codeCell": "S15",
+          "labelCell": "S16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\4APG-A\\FR 4APG-A.xlsx",
+      "relativePath": "4APG-A\\FR 4APG-A.xlsx",
+      "folderGrade": 4,
+      "sheet": "NotesCC",
+      "gradeName": "الرابع ابتدائي عام",
+      "class": "4APG-1",
+      "subject": "اللغة الفرنسية",
+      "subjectCode": "0012",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1009",
+          "name": "Lexique",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1010",
+          "name": "Grammaire",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1011",
+          "name": "Conjugaison",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1012",
+          "name": "Orthographe/Dictée",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1046",
+          "name": "Activités orales",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1047",
+          "name": "Poésie",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        },
+        {
+          "code": "1048",
+          "name": "Lecture",
+          "codeCell": "S15",
+          "labelCell": "S16"
+        },
+        {
+          "code": "1049",
+          "name": "Écriture/Copie",
+          "codeCell": "U15",
+          "labelCell": "U16"
+        },
+        {
+          "code": "1051",
+          "name": "Production de l’écrit",
+          "codeCell": "W15",
+          "labelCell": "W16"
+        },
+        {
+          "code": "1052",
+          "name": "Projet de classe",
+          "codeCell": "Y15",
+          "labelCell": "Y16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\4APG-A\\INFO 4APG-A.xlsx",
+      "relativePath": "4APG-A\\INFO 4APG-A.xlsx",
+      "folderGrade": 4,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "4APG-1",
+      "subject": "المعلوميات و الروبوتيك",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "المعلوميات و الروبوتيك",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\4APG-A\\ISLAMIQUE 4APG-A.xlsx",
+      "relativePath": "4APG-A\\ISLAMIQUE 4APG-A.xlsx",
+      "folderGrade": 4,
+      "sheet": "NotesCC",
+      "gradeName": "الرابع ابتدائي عام",
+      "class": "4APG-1",
+      "subject": "التربية الإسلامية",
+      "subjectCode": "0024",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0024",
+          "name": "التربية الإسلامية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\4APG-A\\MATH 4APG-A.xlsx",
+      "relativePath": "4APG-A\\MATH 4APG-A.xlsx",
+      "folderGrade": 4,
+      "sheet": "NotesCC",
+      "gradeName": "الرابع ابتدائي عام",
+      "class": "4APG-1",
+      "subject": "الرياضيات",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "الرياضيات",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\4APG-A\\SVT 4APG-A.xlsx",
+      "relativePath": "4APG-A\\SVT 4APG-A.xlsx",
+      "folderGrade": 4,
+      "sheet": "NotesCC",
+      "gradeName": "الرابع ابتدائي عام",
+      "class": "4APG-1",
+      "subject": "النشاط العلمي",
+      "subjectCode": "0034",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0034",
+          "name": "النشاط العلمي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\4APG-B\\ANG 4APG-B.xlsx",
+      "relativePath": "4APG-B\\ANG 4APG-B.xlsx",
+      "folderGrade": 4,
+      "sheet": "NotesCC",
+      "gradeName": "الرابع ابتدائي عام",
+      "class": "4APG-2",
+      "subject": "اللغة الإنجليزية",
+      "subjectCode": "0013",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0013",
+          "name": "اللغة الإنجليزية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\4APG-B\\ARABE 4APG-B.xlsx",
+      "relativePath": "4APG-B\\ARABE 4APG-B.xlsx",
+      "folderGrade": 4,
+      "sheet": "NotesCC",
+      "gradeName": "الرابع ابتدائي عام",
+      "class": "4APG-2",
+      "subject": "اللغة العربية",
+      "subjectCode": "0011",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1001",
+          "name": "التعبير الكتابي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1002",
+          "name": "القراءة",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1003",
+          "name": "الإملاء",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1005",
+          "name": "التراكيب",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1006",
+          "name": "الصرف والتحويل",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1042",
+          "name": "مشروع الوحدة",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        },
+        {
+          "code": "1043",
+          "name": "التواصل الشفهي",
+          "codeCell": "S15",
+          "labelCell": "S16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\4APG-B\\FR 4APG-B.xlsx",
+      "relativePath": "4APG-B\\FR 4APG-B.xlsx",
+      "folderGrade": 4,
+      "sheet": "NotesCC",
+      "gradeName": "الرابع ابتدائي عام",
+      "class": "4APG-2",
+      "subject": "اللغة الفرنسية",
+      "subjectCode": "0012",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1009",
+          "name": "Lexique",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1010",
+          "name": "Grammaire",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1011",
+          "name": "Conjugaison",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1012",
+          "name": "Orthographe/Dictée",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1046",
+          "name": "Activités orales",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1047",
+          "name": "Poésie",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        },
+        {
+          "code": "1048",
+          "name": "Lecture",
+          "codeCell": "S15",
+          "labelCell": "S16"
+        },
+        {
+          "code": "1049",
+          "name": "Écriture/Copie",
+          "codeCell": "U15",
+          "labelCell": "U16"
+        },
+        {
+          "code": "1051",
+          "name": "Production de l’écrit",
+          "codeCell": "W15",
+          "labelCell": "W16"
+        },
+        {
+          "code": "1052",
+          "name": "Projet de classe",
+          "codeCell": "Y15",
+          "labelCell": "Y16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\4APG-B\\INFO 4APG-B.xlsx",
+      "relativePath": "4APG-B\\INFO 4APG-B.xlsx",
+      "folderGrade": 4,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "4APG-2",
+      "subject": "المعلوميات و الروبوتيك",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "المعلوميات و الروبوتيك",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\4APG-B\\ISLAMIQUE 4APG-B.xlsx",
+      "relativePath": "4APG-B\\ISLAMIQUE 4APG-B.xlsx",
+      "folderGrade": 4,
+      "sheet": "NotesCC",
+      "gradeName": "الرابع ابتدائي عام",
+      "class": "4APG-2",
+      "subject": "التربية الإسلامية",
+      "subjectCode": "0024",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0024",
+          "name": "التربية الإسلامية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\4APG-B\\MATH 4APG-B.xlsx",
+      "relativePath": "4APG-B\\MATH 4APG-B.xlsx",
+      "folderGrade": 4,
+      "sheet": "NotesCC",
+      "gradeName": "الرابع ابتدائي عام",
+      "class": "4APG-2",
+      "subject": "الرياضيات",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "الرياضيات",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\4APG-B\\SVT 4APG-B.xlsx",
+      "relativePath": "4APG-B\\SVT 4APG-B.xlsx",
+      "folderGrade": 4,
+      "sheet": "NotesCC",
+      "gradeName": "الرابع ابتدائي عام",
+      "class": "4APG-2",
+      "subject": "النشاط العلمي",
+      "subjectCode": "0034",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0034",
+          "name": "النشاط العلمي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\5APG-A\\ANG 5APG-A.xlsx",
+      "relativePath": "5APG-A\\ANG 5APG-A.xlsx",
+      "folderGrade": 5,
+      "sheet": "NotesCC",
+      "gradeName": "الخامس ابتدائي عام",
+      "class": "5APG-1",
+      "subject": "اللغة الإنجليزية",
+      "subjectCode": "0013",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0013",
+          "name": "اللغة الإنجليزية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\5APG-A\\ART 5APG-A.xlsx",
+      "relativePath": "5APG-A\\ART 5APG-A.xlsx",
+      "folderGrade": 5,
+      "sheet": "NotesCC",
+      "gradeName": "الخامس ابتدائي عام",
+      "class": "5APG-1",
+      "subject": "التربية الفنية",
+      "subjectCode": "1000",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1000",
+          "name": "التربية الفنية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\5APG-A\\FR 5APG-A.xlsx",
+      "relativePath": "5APG-A\\FR 5APG-A.xlsx",
+      "folderGrade": 5,
+      "sheet": "NotesCC",
+      "gradeName": "الخامس ابتدائي عام",
+      "class": "5APG-1",
+      "subject": "اللغة الفرنسية",
+      "subjectCode": "0012",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1008",
+          "name": "Activités de prod. écrite",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1009",
+          "name": "Lexique",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1010",
+          "name": "Grammaire",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1011",
+          "name": "Conjugaison",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1012",
+          "name": "Orthographe/Dictée",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1013",
+          "name": "Activités de Lecture",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        },
+        {
+          "code": "1025",
+          "name": "communication et actes de langage",
+          "codeCell": "S15",
+          "labelCell": "S16"
+        },
+        {
+          "code": "1030",
+          "name": "Poésie/lecture/diction",
+          "codeCell": "U15",
+          "labelCell": "U16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\5APG-A\\INFO 5APG-A.xlsx",
+      "relativePath": "5APG-A\\INFO 5APG-A.xlsx",
+      "folderGrade": 5,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "5APG-1",
+      "subject": "المعلوميات و الروبوتيك",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "المعلوميات و الروبوتيك",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\5APG-A\\ISLAMIQUE 5APG-A.xlsx",
+      "relativePath": "5APG-A\\ISLAMIQUE 5APG-A.xlsx",
+      "folderGrade": 5,
+      "sheet": "NotesCC",
+      "gradeName": "الخامس ابتدائي عام",
+      "class": "5APG-1",
+      "subject": "التربية الإسلامية",
+      "subjectCode": "0024",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0024",
+          "name": "التربية الإسلامية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\5APG-A\\MATH 5APG-A.xlsx",
+      "relativePath": "5APG-A\\MATH 5APG-A.xlsx",
+      "folderGrade": 5,
+      "sheet": "NotesCC",
+      "gradeName": "الخامس ابتدائي عام",
+      "class": "5APG-1",
+      "subject": "الرياضيات",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "الرياضيات",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\5APG-A\\SVT 5APG-A.xlsx",
+      "relativePath": "5APG-A\\SVT 5APG-A.xlsx",
+      "folderGrade": 5,
+      "sheet": "NotesCC",
+      "gradeName": "الخامس ابتدائي عام",
+      "class": "5APG-1",
+      "subject": "النشاط العلمي",
+      "subjectCode": "0034",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0034",
+          "name": "النشاط العلمي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\5APG-B\\ANG 5APG-B.xlsx",
+      "relativePath": "5APG-B\\ANG 5APG-B.xlsx",
+      "folderGrade": 5,
+      "sheet": "NotesCC",
+      "gradeName": "الخامس ابتدائي عام",
+      "class": "5APG-2",
+      "subject": "اللغة الإنجليزية",
+      "subjectCode": "0013",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0013",
+          "name": "اللغة الإنجليزية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\5APG-B\\ARABE 5APG-B.xlsx",
+      "relativePath": "5APG-B\\ARABE 5APG-B.xlsx",
+      "folderGrade": 5,
+      "sheet": "NotesCC",
+      "gradeName": "الخامس ابتدائي عام",
+      "class": "5APG-2",
+      "subject": "اللغة العربية",
+      "subjectCode": "0011",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1002",
+          "name": "القراءة",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1003",
+          "name": "الإملاء",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1004",
+          "name": "الشكل",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1005",
+          "name": "التراكيب",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1006",
+          "name": "الصرف والتحويل",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1027",
+          "name": "فهم المقروء",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        },
+        {
+          "code": "1028",
+          "name": "إنشاء",
+          "codeCell": "S15",
+          "labelCell": "S16"
+        },
+        {
+          "code": "1053",
+          "name": "التواصل الشفوي",
+          "codeCell": "U15",
+          "labelCell": "U16"
+        },
+        {
+          "code": "1054",
+          "name": "مشروع الوحدة",
+          "codeCell": "W15",
+          "labelCell": "W16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\5APG-B\\ART 5APG-B.xlsx",
+      "relativePath": "5APG-B\\ART 5APG-B.xlsx",
+      "folderGrade": 5,
+      "sheet": "NotesCC",
+      "gradeName": "الخامس ابتدائي عام",
+      "class": "5APG-2",
+      "subject": "التربية الفنية",
+      "subjectCode": "1000",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1000",
+          "name": "التربية الفنية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\5APG-B\\FR 5APG-B.xlsx",
+      "relativePath": "5APG-B\\FR 5APG-B.xlsx",
+      "folderGrade": 5,
+      "sheet": "NotesCC",
+      "gradeName": "الخامس ابتدائي عام",
+      "class": "5APG-2",
+      "subject": "اللغة الفرنسية",
+      "subjectCode": "0012",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1008",
+          "name": "Activités de prod. écrite",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1009",
+          "name": "Lexique",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1010",
+          "name": "Grammaire",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1011",
+          "name": "Conjugaison",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1012",
+          "name": "Orthographe/Dictée",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1013",
+          "name": "Activités de Lecture",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        },
+        {
+          "code": "1025",
+          "name": "communication et actes de langage",
+          "codeCell": "S15",
+          "labelCell": "S16"
+        },
+        {
+          "code": "1030",
+          "name": "Poésie/lecture/diction",
+          "codeCell": "U15",
+          "labelCell": "U16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\5APG-B\\HG 5APG-B.xlsx",
+      "relativePath": "5APG-B\\HG 5APG-B.xlsx",
+      "folderGrade": 5,
+      "sheet": "NotesCC",
+      "gradeName": "الخامس ابتدائي عام",
+      "class": "5APG-2",
+      "subject": "الاجتماعيات",
+      "subjectCode": "0018",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1017",
+          "name": "التاريخ",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1018",
+          "name": "الجغرافية",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1019",
+          "name": "التربية المدنية",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\5APG-B\\INFO 5APG-B.xlsx",
+      "relativePath": "5APG-B\\INFO 5APG-B.xlsx",
+      "folderGrade": 5,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "5APG-2",
+      "subject": "المعلوميات و الروبوتيك",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "المعلوميات و الروبوتيك",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\5APG-B\\IS 5APG-B.xlsx",
+      "relativePath": "5APG-B\\IS 5APG-B.xlsx",
+      "folderGrade": 5,
+      "sheet": "NotesCC",
+      "gradeName": "الخامس ابتدائي عام",
+      "class": "5APG-2",
+      "subject": "التربية الإسلامية",
+      "subjectCode": "0024",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0024",
+          "name": "التربية الإسلامية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\5APG-B\\MATH 5APG-B.xlsx",
+      "relativePath": "5APG-B\\MATH 5APG-B.xlsx",
+      "folderGrade": 5,
+      "sheet": "NotesCC",
+      "gradeName": "الخامس ابتدائي عام",
+      "class": "5APG-2",
+      "subject": "الرياضيات",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "الرياضيات",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\5APG-B\\SVT 5APG-B.xlsx",
+      "relativePath": "5APG-B\\SVT 5APG-B.xlsx",
+      "folderGrade": 5,
+      "sheet": "NotesCC",
+      "gradeName": "الخامس ابتدائي عام",
+      "class": "5APG-2",
+      "subject": "النشاط العلمي",
+      "subjectCode": "0034",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0034",
+          "name": "النشاط العلمي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-A\\ANG 6APG-A.xlsx",
+      "relativePath": "6APG-A\\ANG 6APG-A.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-1",
+      "subject": "اللغة الإنجليزية",
+      "subjectCode": "0013",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0013",
+          "name": "اللغة الإنجليزية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-A\\ARABE 6APG-A.xlsx",
+      "relativePath": "6APG-A\\ARABE 6APG-A.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-1",
+      "subject": "اللغة العربية",
+      "subjectCode": "0011",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1002",
+          "name": "القراءة",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1003",
+          "name": "الإملاء",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1004",
+          "name": "الشكل",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1005",
+          "name": "التراكيب",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1006",
+          "name": "الصرف والتحويل",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1027",
+          "name": "فهم المقروء",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        },
+        {
+          "code": "1028",
+          "name": "إنشاء",
+          "codeCell": "S15",
+          "labelCell": "S16"
+        },
+        {
+          "code": "1053",
+          "name": "التواصل الشفوي",
+          "codeCell": "U15",
+          "labelCell": "U16"
+        },
+        {
+          "code": "1054",
+          "name": "مشروع الوحدة",
+          "codeCell": "W15",
+          "labelCell": "W16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-A\\ART 6APG-A.xlsx",
+      "relativePath": "6APG-A\\ART 6APG-A.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-1",
+      "subject": "التربية الفنية",
+      "subjectCode": "1000",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1000",
+          "name": "التربية الفنية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-A\\FR 6APG-A.xlsx",
+      "relativePath": "6APG-A\\FR 6APG-A.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-1",
+      "subject": "اللغة الفرنسية",
+      "subjectCode": "0012",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1008",
+          "name": "Activités de prod. écrite",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1009",
+          "name": "Lexique",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1010",
+          "name": "Grammaire",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1011",
+          "name": "Conjugaison",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1012",
+          "name": "Orthographe/Dictée",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1013",
+          "name": "Activités de Lecture",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        },
+        {
+          "code": "1025",
+          "name": "communication et actes de langage",
+          "codeCell": "S15",
+          "labelCell": "S16"
+        },
+        {
+          "code": "1030",
+          "name": "Poésie/lecture/diction",
+          "codeCell": "U15",
+          "labelCell": "U16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-A\\HG 6APG-A.xlsx",
+      "relativePath": "6APG-A\\HG 6APG-A.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-1",
+      "subject": "الاجتماعيات",
+      "subjectCode": "0018",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1017",
+          "name": "التاريخ",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1018",
+          "name": "الجغرافية",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1019",
+          "name": "التربية المدنية",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-A\\INFO 6APG-A.xlsx",
+      "relativePath": "6APG-A\\INFO 6APG-A.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "1APG-1",
+      "subject": "المعلوميات و الروبوتيك",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "المعلوميات و الروبوتيك",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-A\\ISLAMIQUE 6APG-A.xlsx",
+      "relativePath": "6APG-A\\ISLAMIQUE 6APG-A.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-1",
+      "subject": "التربية الإسلامية",
+      "subjectCode": "0024",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0024",
+          "name": "التربية الإسلامية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-A\\ISLAMIQUE ANCHITA 6APG-A.xlsx",
+      "relativePath": "6APG-A\\ISLAMIQUE ANCHITA 6APG-A.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-1",
+      "subject": "التربية الإسلامية",
+      "subjectCode": "0024",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الأنشطة المندمجة",
+      "components": [
+        {
+          "code": "0024",
+          "name": "التربية الإسلامية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-A\\MATH 6APG-A.xlsx",
+      "relativePath": "6APG-A\\MATH 6APG-A.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-1",
+      "subject": "الرياضيات",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "الرياضيات",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-A\\SVT 6APG-A.xlsx",
+      "relativePath": "6APG-A\\SVT 6APG-A.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-1",
+      "subject": "النشاط العلمي",
+      "subjectCode": "0034",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0034",
+          "name": "النشاط العلمي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-B\\ANG 6APG-B.xlsx",
+      "relativePath": "6APG-B\\ANG 6APG-B.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-2",
+      "subject": "اللغة الإنجليزية",
+      "subjectCode": "0013",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0013",
+          "name": "اللغة الإنجليزية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-B\\ARABE 6APG-B.xlsx",
+      "relativePath": "6APG-B\\ARABE 6APG-B.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-2",
+      "subject": "اللغة العربية",
+      "subjectCode": "0011",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1002",
+          "name": "القراءة",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1003",
+          "name": "الإملاء",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1004",
+          "name": "الشكل",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1005",
+          "name": "التراكيب",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1006",
+          "name": "الصرف والتحويل",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1027",
+          "name": "فهم المقروء",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        },
+        {
+          "code": "1028",
+          "name": "إنشاء",
+          "codeCell": "S15",
+          "labelCell": "S16"
+        },
+        {
+          "code": "1053",
+          "name": "التواصل الشفوي",
+          "codeCell": "U15",
+          "labelCell": "U16"
+        },
+        {
+          "code": "1054",
+          "name": "مشروع الوحدة",
+          "codeCell": "W15",
+          "labelCell": "W16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-B\\ART 6APG-B.xlsx",
+      "relativePath": "6APG-B\\ART 6APG-B.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-2",
+      "subject": "التربية الفنية",
+      "subjectCode": "1000",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1000",
+          "name": "التربية الفنية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-B\\FR 6APG-B.xlsx",
+      "relativePath": "6APG-B\\FR 6APG-B.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-2",
+      "subject": "اللغة الفرنسية",
+      "subjectCode": "0012",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1008",
+          "name": "Activités de prod. écrite",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1009",
+          "name": "Lexique",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1010",
+          "name": "Grammaire",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        },
+        {
+          "code": "1011",
+          "name": "Conjugaison",
+          "codeCell": "M15",
+          "labelCell": "M16"
+        },
+        {
+          "code": "1012",
+          "name": "Orthographe/Dictée",
+          "codeCell": "O15",
+          "labelCell": "O16"
+        },
+        {
+          "code": "1013",
+          "name": "Activités de Lecture",
+          "codeCell": "Q15",
+          "labelCell": "Q16"
+        },
+        {
+          "code": "1025",
+          "name": "communication et actes de langage",
+          "codeCell": "S15",
+          "labelCell": "S16"
+        },
+        {
+          "code": "1030",
+          "name": "Poésie/lecture/diction",
+          "codeCell": "U15",
+          "labelCell": "U16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-B\\HG 6APG-B.xlsx",
+      "relativePath": "6APG-B\\HG 6APG-B.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-2",
+      "subject": "الاجتماعيات",
+      "subjectCode": "0018",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "1017",
+          "name": "التاريخ",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        },
+        {
+          "code": "1018",
+          "name": "الجغرافية",
+          "codeCell": "I15",
+          "labelCell": "I16"
+        },
+        {
+          "code": "1019",
+          "name": "التربية المدنية",
+          "codeCell": "K15",
+          "labelCell": "K16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-B\\INFO 6APG-B.xlsx",
+      "relativePath": "6APG-B\\INFO 6APG-B.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "الأول ابتدائي عام",
+      "class": "6APG-2",
+      "subject": "المعلوميات و الروبوتيك",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "المعلوميات و الروبوتيك",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-B\\ISLAMIQUE 6APG-B.xlsx",
+      "relativePath": "6APG-B\\ISLAMIQUE 6APG-B.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-2",
+      "subject": "التربية الإسلامية",
+      "subjectCode": "0024",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0024",
+          "name": "التربية الإسلامية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-B\\ISLAMIQUE ANCHITA 6APG-B.xlsx",
+      "relativePath": "6APG-B\\ISLAMIQUE ANCHITA 6APG-B.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-2",
+      "subject": "التربية الإسلامية",
+      "subjectCode": "0024",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الأنشطة المندمجة",
+      "components": [
+        {
+          "code": "0024",
+          "name": "التربية الإسلامية",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-B\\MATH 6APG-B.xlsx",
+      "relativePath": "6APG-B\\MATH 6APG-B.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-2",
+      "subject": "الرياضيات",
+      "subjectCode": "0019",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0019",
+          "name": "الرياضيات",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\6APG-B\\SVT 6APG-B.xlsx",
+      "relativePath": "6APG-B\\SVT 6APG-B.xlsx",
+      "folderGrade": 6,
+      "sheet": "NotesCC",
+      "gradeName": "السادس ابتدائي عام",
+      "class": "6APG-2",
+      "subject": "النشاط العلمي",
+      "subjectCode": "0034",
+      "academicYear": "2025/2026",
+      "term": "الدورة الأولى",
+      "assessment": "الفرض الأول",
+      "components": [
+        {
+          "code": "0034",
+          "name": "النشاط العلمي",
+          "codeCell": "G15",
+          "labelCell": "G16"
+        }
+      ],
+      "sourceType": "massar_style"
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\1APG-A\\FR 1APG-1.xlsx",
+      "relativePath": "1APG-A\\FR 1APG-1.xlsx",
+      "folderGrade": 1,
+      "sheet": "Feuil1",
+      "gradeName": "الأول ابتدائي",
+      "class": "1APG-A",
+      "subject": "اللغة الفرنسية",
+      "subjectCode": null,
+      "academicYear": "2025/2026",
+      "sourceType": "school_custom",
+      "term": null,
+      "assessment": null,
+      "components": [
+        {
+          "code": null,
+          "name": "Etude de son/Phonologie",
+          "codeCell": null,
+          "labelCell": "F13",
+          "continuationCell": null
+        },
+        {
+          "code": null,
+          "name": "Ecriture/copie",
+          "codeCell": null,
+          "labelCell": "G13",
+          "continuationCell": null
+        },
+        {
+          "code": null,
+          "name": "Dictée",
+          "codeCell": null,
+          "labelCell": "H13",
+          "continuationCell": null
+        },
+        {
+          "code": null,
+          "name": "Poésie",
+          "codeCell": null,
+          "labelCell": "I13",
+          "continuationCell": null
+        },
+        {
+          "code": null,
+          "name": "lecture",
+          "codeCell": null,
+          "labelCell": "J13",
+          "continuationCell": null
+        },
+        {
+          "code": null,
+          "name": "Expression orale",
+          "codeCell": null,
+          "labelCell": "K13",
+          "continuationCell": "K14"
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\hdevlop\\Downloads\\notes\\notes\\1APG-B\\FR 1APG-2.xlsx",
+      "relativePath": "1APG-B\\FR 1APG-2.xlsx",
+      "folderGrade": 1,
+      "sheet": "Feuil1",
+      "gradeName": "الأول ابتدائي",
+      "class": "1APG-B",
+      "subject": "اللغة الفرنسية",
+      "subjectCode": null,
+      "academicYear": "2025/2026",
+      "sourceType": "school_custom",
+      "term": null,
+      "assessment": null,
+      "components": [
+        {
+          "code": null,
+          "name": "Etude de son/Phonologie",
+          "codeCell": null,
+          "labelCell": "E10",
+          "continuationCell": null
+        },
+        {
+          "code": null,
+          "name": "Ecriture/copie",
+          "codeCell": null,
+          "labelCell": "F10",
+          "continuationCell": null
+        },
+        {
+          "code": null,
+          "name": "Dictée",
+          "codeCell": null,
+          "labelCell": "G10",
+          "continuationCell": null
+        },
+        {
+          "code": null,
+          "name": "Poésie",
+          "codeCell": null,
+          "labelCell": "H10",
+          "continuationCell": null
+        },
+        {
+          "code": null,
+          "name": "Lecture",
+          "codeCell": null,
+          "labelCell": "I10",
+          "continuationCell": null
+        },
+        {
+          "code": null,
+          "name": "Expression orale",
+          "codeCell": null,
+          "labelCell": "J10",
+          "continuationCell": null
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "file": "2APG-A\\ANG 2APG-A.xlsx",
+      "error": "Password-encrypted Office workbook (EncryptedPackage); password required"
+    },
+    {
+      "file": "2APG-B\\ANG 2APG-B.xlsx",
+      "error": "Password-encrypted Office workbook (EncryptedPackage); password required"
+    },
+    {
+      "file": "3APG -B\\ANG 3APG-B.xlsx",
+      "error": "Password-encrypted Office workbook (EncryptedPackage); password required"
+    },
+    {
+      "file": "4APG-A\\ART 4APG-A.xlsx",
+      "error": "Password-encrypted Office workbook (EncryptedPackage); password required"
+    },
+    {
+      "file": "4APG-A\\HG 4APG-A.xlsx",
+      "error": "Password-encrypted Office workbook (EncryptedPackage); password required"
+    },
+    {
+      "file": "4APG-B\\ART 4APG-B.xlsx",
+      "error": "Password-encrypted Office workbook (EncryptedPackage); password required"
+    },
+    {
+      "file": "4APG-B\\HG 4APG B.xlsx",
+      "error": "Password-encrypted Office workbook (EncryptedPackage); password required"
+    },
+    {
+      "file": "5APG-A\\ARABE 5APG-A.xlsx",
+      "error": "Password-encrypted Office workbook (EncryptedPackage); password required"
+    },
+    {
+      "file": "5APG-A\\HG 5APG-A.xlsx",
+      "error": "Password-encrypted Office workbook (EncryptedPackage); password required"
+    }
+  ],
+  "summary": {
+    "files": 104,
+    "readableFiles": 95,
+    "encryptedFiles": 9,
+    "academicYear": "2025/2026",
+    "frenchCountsByGrade": {
+      "1": 6,
+      "2": 13,
+      "3": 12,
+      "4": 10,
+      "5": 8,
+      "6": 8
+    }
+  },
+  "cautions": [
+    "CP French files are custom school sheets with six named components and no Massar component IDs.",
+    "Math and informatics/robotics workbooks reuse subject code 0019 and component code 0019; code alone does not identify the school subject.",
+    "Grade-six Islamic education and ANCHITA files share the same subject/component labels and codes; the filenames distinguish them.",
+    "The earlier french_cp.xlsx export has four Massar grading fields; the new school CP plan has six different teaching/grading headings.",
+    "Other than capitalization, readable A/B component schemas match for each grade and subject.",
+    "Physical education and Amazigh workbooks are not present in this supplied folder."
+  ]
+}

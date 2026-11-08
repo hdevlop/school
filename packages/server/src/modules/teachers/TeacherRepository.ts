@@ -1,6 +1,7 @@
 import { DB } from '../../database/db';
 import { teachers, users, teacherAssignments, sections, subjects, students, classes, staff, studentEnrollments, studentEnrollmentPlacements, assessments, exams, attendance, routineEntries } from '../../database/schema';
 import { Repository } from '../../najm';
+import { getBusinessDateOnly } from '../../shared/businessDate';
 import { Owned, type OwnedWhere } from '../../auth';
 import { count, eq, desc, sql, and, inArray, gt, isNull, lte, or } from 'drizzle-orm';
 import { Teacher } from './TeacherGuards';
@@ -334,11 +335,37 @@ export class TeacherRepository {
   }
 
   async createAssignment(data) {
+    // A slot Planning made for this class, section and subject is filled, so its exams get the teacher.
+    if (data.teacherId) {
+      const [filled] = await this.db.update(teacherAssignments).set({ teacherId: data.teacherId, updatedAt: sql`CURRENT_TIMESTAMP` })
+        .where(and(isNull(teacherAssignments.teacherId), eq(teacherAssignments.classId, data.classId), eq(teacherAssignments.sectionId, data.sectionId), eq(teacherAssignments.subjectId, data.subjectId)))
+        .returning();
+      if (filled) return filled;
+    }
     const [assignment] = await this.db
       .insert(teacherAssignments)
       .values(data)
       .returning();
     return assignment;
+  }
+
+  /**
+   * A teacher taken off a class's subject leaves its upcoming, unmarked Planning
+   * exams to an empty slot, for the next teacher to fill. Marked or past exams
+   * keep the teacher they were set under: they are history, and an assignment
+   * they use is refused deletion as any other.
+   */
+  private async moveUpcomingPlanned(filter) {
+    const today = getBusinessDateOnly();
+    const upcoming = sql`${exams.planningEntryId} is not null and ${exams.date} >= ${today} and not exists (select 1 from grades mark where mark.exam_id = ${exams.id})`;
+    const rows = await this.db.select({ id: teacherAssignments.id, classId: teacherAssignments.classId, sectionId: teacherAssignments.sectionId, subjectId: teacherAssignments.subjectId })
+      .from(teacherAssignments).where(and(filter, sql`exists (select 1 from exams where ${exams.teacherAssignmentId} = ${teacherAssignments.id} and ${upcoming})`));
+    for (const row of rows) {
+      const [slot] = await this.db.select({ id: teacherAssignments.id }).from(teacherAssignments)
+        .where(and(isNull(teacherAssignments.teacherId), eq(teacherAssignments.classId, row.classId), eq(teacherAssignments.sectionId, row.sectionId), eq(teacherAssignments.subjectId, row.subjectId))).limit(1);
+      const slotId = slot?.id ?? (await this.db.insert(teacherAssignments).values({ classId: row.classId, sectionId: row.sectionId, subjectId: row.subjectId, teacherId: null }).returning({ id: teacherAssignments.id }))[0].id;
+      await this.db.update(exams).set({ teacherAssignmentId: slotId, updatedAt: sql`CURRENT_TIMESTAMP` }).where(and(eq(exams.teacherAssignmentId, row.id), upcoming));
+    }
   }
 
   async getAssignmentRows(teacherId: string) {
@@ -374,16 +401,16 @@ export class TeacherRepository {
   }
 
   async deleteAssignment(teacherId, sectionId, subjectId) {
+    const filter = and(
+      eq(teacherAssignments.teacherId, teacherId),
+      eq(teacherAssignments.sectionId, sectionId),
+      eq(teacherAssignments.subjectId, subjectId),
+      inArray(teacherAssignments.classId, this.classesInSelectedYear()),
+    );
+    await this.moveUpcomingPlanned(filter);
     const [deleted] = await this.db
       .delete(teacherAssignments)
-      .where(
-        and(
-          eq(teacherAssignments.teacherId, teacherId),
-          eq(teacherAssignments.sectionId, sectionId),
-          eq(teacherAssignments.subjectId, subjectId),
-          inArray(teacherAssignments.classId, this.classesInSelectedYear()),
-        )
-      )
+      .where(filter)
       .returning();
     return deleted;
   }
@@ -404,6 +431,7 @@ export class TeacherRepository {
       filters.push(eq(teacherAssignments.subjectId, subjectId));
     }
 
+    await this.moveUpcomingPlanned(and(...filters));
     return await this.db
       .delete(teacherAssignments)
       .where(and(...filters))

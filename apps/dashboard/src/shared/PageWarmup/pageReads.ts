@@ -58,14 +58,18 @@ const feeTypes = entityList('feeTypes', getFeeTypesApi);
 const subjects = entityList('subjects', getSubjectsApi);
 
 // The fees page opens on its default class and section, chosen from the lists.
+// "All classes" is warmed too: the whole school's list is the one people
+// switch to, and it is the slowest the server builds.
 const feesPage: Warm = (context) => {
   const [classes, sections] = classesAndSections(context);
   const list = Promise.all([classes, sections]).then(([classList, sectionList]: any[]) => {
     const { classId, sectionId } = resolveFeeRosterSelection(classList?.data ?? [], sectionList?.data ?? [], null);
-    if (!classId) return undefined;
-    return year(feeListRead({ classId: classId === 'all' ? undefined : classId, sectionId: sectionId || undefined }))(context)[0];
+    if (!classId || classId === 'all') return undefined;
+    return year(feeListRead({ classId, sectionId: sectionId || undefined }))(context)[0];
   });
-  return [classes, sections, list, ...feeTypes(context), ...year(feeSummaryRead())(context)];
+  // Asked after the opening list, so the page's own first answer comes first.
+  const allClasses = list.catch(() => undefined).then(() => year(feeListRead())(context)[0]);
+  return [classes, sections, list, allClasses, ...feeTypes(context), ...year(feeSummaryRead())(context)];
 };
 
 const PAGE_READS: Record<string, Warm> = {

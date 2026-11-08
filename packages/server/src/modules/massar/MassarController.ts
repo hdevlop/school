@@ -6,8 +6,8 @@ import { MassarSheet } from './MassarGuards';
 import { MASSAR_MIME } from './workbook/cells';
 import type { MassarActor } from './MassarValidator';
 import {
-  massarCommitDto, massarEnrollmentDto, massarExportDto, massarIdParam, massarLeavingDto, massarMappingDto, massarMarksDto, massarRevisionDto, massarRoundDto, massarUploadDto,
-  type MassarCommit, type MassarMappings, type MassarMarksInput, type MassarRoundInput,
+  massarAcceptanceDto, massarClassExportDto, massarCommitDto, massarDueDateDto, massarExportDto, massarIdParam, massarMappingDto, massarMarksDto, massarResolveDto, massarRevisionDto, massarPlanDto, massarRoundDto, massarUploadDto,
+  type MassarCommit, type MassarMappings, type MassarMarksInput, type MassarPlanInput, type MassarResolve, type MassarRoundInput,
 } from './MassarDto';
 import { z } from 'zod';
 
@@ -19,6 +19,11 @@ function download(bytes: Uint8Array, name: string, type: string) {
 @Controller('/massar')
 export class MassarController {
   constructor(private service: MassarService) {}
+
+  @Get('/availability')
+  @Can('read:massar')
+  @ResMsg('massar.success.loaded')
+  availability() { return this.service.availability(); }
 
   @Get('/setup')
   @CanSchoolWide('manage:massar')
@@ -51,6 +56,17 @@ export class MassarController {
   @ResMsg('massar.success.saved')
   mappings(@Body() body: MassarMappings) { return this.service.mappings(body); }
 
+  @Post('/students/resolve')
+  @CanSchoolWide('manage:massar')
+  @Validate(massarResolveDto)
+  @ResMsg('massar.success.saved')
+  resolvePending(@Body() body: MassarResolve, @User() actor: MassarActor) { return this.service.resolvePending(body, actor); }
+
+  @Post('/students/recheck')
+  @CanSchoolWide('manage:massar')
+  @ResMsg('massar.success.saved')
+  recheckStudents() { return this.service.refreshStudents(); }
+
   @Get('/rounds')
   @Can('read:massar')
   @McpTool({ description: 'List Massar rounds with sheets visible to the current reader', readOnly: true })
@@ -68,6 +84,34 @@ export class MassarController {
   @Validate(massarRoundDto)
   @ResMsg('massar.success.created')
   createRound(@Body() body: MassarRoundInput, @User() actor: MassarActor) { return this.service.createRound(body, actor); }
+
+  @Put('/plan')
+  @CanSchoolWide('manage:massar')
+  @Validate(massarPlanDto)
+  @ResMsg('massar.success.saved')
+  savePlan(@Body() body: MassarPlanInput) { return this.service.savePlan(body); }
+
+  @Put('/rounds/:id/due-date')
+  @CanSchoolWide('manage:massar')
+  @Validate({ params: massarIdParam, body: massarDueDateDto })
+  @ResMsg('massar.success.saved')
+  changeDueDate(@Params('id') id: string, @Body() body: { dueDate: string | null }) { return this.service.changeDueDate(id, body.dueDate); }
+
+  @Post('/rounds/:id/download')
+  @CanSchoolWide('manage:massar')
+  @Validate({ params: massarIdParam })
+  async downloadRound(@Params('id') id: string) {
+    const result = await this.service.downloadRound(id);
+    const response = download(result.bytes, 'massar.zip', 'application/zip');
+    if (result.receipt) response.headers.set('X-Massar-Receipt', result.receipt);
+    return response;
+  }
+
+  @Post('/rounds/:id/accept')
+  @CanSchoolWide('manage:massar')
+  @Validate({ params: massarIdParam, body: massarAcceptanceDto })
+  @ResMsg('massar.success.saved')
+  acceptDownload(@Params('id') id: string, @Body() body: { receipt: string }) { return this.service.acceptDownload(id, body.receipt); }
 
   @Post('/rounds/:id/close')
   @CanSchoolWide('manage:massar')
@@ -128,15 +172,9 @@ export class MassarController {
   @Validate(massarExportDto)
   async export(@Body() body: { sheetIds: string[]; empty: boolean }) { return download(await this.service.exportSheets(body.sheetIds, body.empty), 'massar.zip', 'application/zip'); }
 
-  @Post('/enrollments')
+  /** The open class as Massar files, to check them or try an import; nothing is marked as sent. */
+  @Post('/export/class')
   @CanSchoolWide('manage:massar')
-  @Validate(massarEnrollmentDto)
-  @ResMsg('massar.success.saved')
-  addStudent(@Body() body: { studentId: string; massarClassId: string }) { return this.service.addStudent(body.studentId, body.massarClassId); }
-
-  @Put('/enrollments/:id/leave')
-  @CanSchoolWide('manage:massar')
-  @Validate({ params: massarIdParam, body: massarLeavingDto })
-  @ResMsg('massar.success.saved')
-  leaveStudent(@Params('id') id: string, @Body() body: { leftOn: string }) { return this.service.leaveStudent(id, body.leftOn); }
+  @Validate({ body: massarClassExportDto })
+  async exportClass(@Body() body: { sheetIds: string[] }) { const file = await this.service.exportClass(body.sheetIds); return download(file.bytes, file.name, file.type); }
 }

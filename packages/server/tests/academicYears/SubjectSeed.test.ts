@@ -6,11 +6,18 @@ import { SubjectValidator } from '../../src/modules/subjects/SubjectValidator';
 
 type SubjectRecord = typeof schoolSubjectsData[number];
 
+// A subject row as stored: the catalogue's sub-subjects live in their own table.
+const stored = ({ subSubjects: _parts, ...subject }: SubjectRecord) => subject;
+
 function subjectSeed(initial: SubjectRecord[] = []) {
-  const rows = new Map(initial.map(subject => [subject.id, { ...subject }]));
+  const rows = new Map(initial.map(subject => [subject.id, stored(subject)]));
+  const parts: Array<{ subjectId: string; name: string }> = [];
   const repository = {
     getByCode: mock(async (code: string) => [...rows.values()].find(subject => subject.code.toUpperCase() === code)),
-    getById: async (id: string) => rows.get(id),
+    // As the repository reads it: with its sub-subjects.
+    getById: async (id: string) => rows.has(id) ? { ...rows.get(id)!, subSubjects: [] } : undefined,
+    allNames: async () => ({ subjects: [...rows.values()].map(({ id, name }) => ({ id, name })), subSubjects: parts.map((part, index) => ({ id: `p${index}`, ...part })) }),
+    addSubSubjects: mock(async (items: Array<{ subjectId: string; name: string }>) => { parts.push(...items); }),
     create: mock(async (data: SubjectRecord) => {
       rows.set(data.id, { ...data });
       return rows.get(data.id)!;
@@ -22,8 +29,8 @@ function subjectSeed(initial: SubjectRecord[] = []) {
   };
   const typedRepository = repository as unknown as SubjectRepository;
   return {
-    rows, repository,
-    service: new SubjectService(typedRepository, new SubjectValidator(typedRepository)),
+    rows, parts, repository,
+    service: new SubjectService(typedRepository, new SubjectValidator(typedRepository), { followSubjects: async () => {} } as any),
   };
 }
 
@@ -33,7 +40,7 @@ describe('subject seeding without changing historical references', () => {
     const defaults = schoolSubjectsForLevels(['Primaire']);
     expect(await service.seedDemoSubjects(defaults)).toHaveLength(defaults.length);
     expect(await service.seedDemoSubjects(defaults)).toEqual([]);
-    expect([...rows.values()]).toEqual(defaults);
+    expect([...rows.values()]).toEqual(defaults.map(stored));
     expect(repository.create).toHaveBeenCalledTimes(defaults.length);
     expect(repository.update).not.toHaveBeenCalled();
   });
@@ -47,7 +54,7 @@ describe('subject seeding without changing historical references', () => {
     const current = schoolSubjectsData.find(subject => subject.code === old.code)!;
     const { service, rows, repository } = subjectSeed([{ ...old, id: 'existing-subject-id' }]);
     expect(await service.seedDemoSubjects([current])).toEqual([]);
-    expect(rows.get('existing-subject-id')).toEqual({ ...current, id: 'existing-subject-id' });
+    expect(rows.get('existing-subject-id')).toEqual({ ...stored(current), id: 'existing-subject-id' });
     expect(repository.create).not.toHaveBeenCalled();
     expect(repository.update).toHaveBeenCalledTimes(1);
     await service.seedDemoSubjects([current]);
@@ -65,7 +72,7 @@ describe('subject seeding without changing historical references', () => {
     ];
     const { service, rows, repository } = subjectSeed(custom);
     await service.seedDemoSubjects(schoolSubjectsForLevels(['Collège']));
-    for (const subject of custom) expect(rows.get(subject.id)).toEqual(subject);
+    for (const subject of custom) expect(rows.get(subject.id)).toEqual(stored(subject));
     expect(repository.update).not.toHaveBeenCalled();
     expect(rows.get('custom-physics')?.id).toBe('custom-physics');
   });
@@ -99,5 +106,20 @@ describe('subject seeding without changing historical references', () => {
     const update = subjectSeed([{ ...current, name: 'English', description: 'English language and literature' }]);
     update.repository.update.mockImplementation(async () => { throw failure; });
     await expect(update.service.seedDemoSubjects([current])).rejects.toBe(failure);
+  });
+
+  it('adds the catalogue sub-subjects once, leaving a name the school put elsewhere where it is', async () => {
+    const french = schoolSubjectsData.find(subject => subject.code === 'FR')!;
+    const arabic = schoolSubjectsData.find(subject => subject.code === 'AR')!;
+    const { service, parts } = subjectSeed([arabic]);
+    // The school already filed "Dictée" under العربية.
+    parts.push({ subjectId: arabic.id, name: 'dictee' });
+    await service.seedDemoSubjects([french, arabic]);
+    const frenchParts = parts.filter(part => part.subjectId === french.id).map(part => part.name);
+    expect(frenchParts).toEqual(french.subSubjects!.filter(name => name !== 'Dictée'));
+    expect(parts.filter(part => part.subjectId === arabic.id)).toHaveLength(arabic.subSubjects!.length + 1);
+    const count = parts.length;
+    await service.seedDemoSubjects([french, arabic]);
+    expect(parts).toHaveLength(count);
   });
 });

@@ -1,4 +1,4 @@
-import { and, eq, inArray, isNull, lte, sql } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNull, lt, lte, ne, notInArray, sql } from 'drizzle-orm';
 import { Repository } from '../../najm';
 import { Owned, type OwnedWhere } from '../../auth';
 import { DB } from '../../database/db';
@@ -12,9 +12,10 @@ import { students } from '../students/studentSchema';
 import { studentEnrollments, studentEnrollmentPlacements } from '../studentEnrollments/StudentEnrollmentSchema';
 import { staff } from '../staff/staffSchema';
 import { teachers, teacherAssignments } from '../teachers/teacherSchema';
+import { examPlanning } from '../examPlanning/ExamPlanningSchema';
 import { massarClasses, massarEnrollments, massarImports, massarLevels, massarMarks, massarRounds, massarSheets, massarSubjects, massarYears } from './massarSchema';
 import { MassarSheet } from './MassarGuards';
-import type { MassarMark } from '@sms/contracts';
+import type { MassarComponent, MassarMark } from '@sms/contracts';
 
 @Repository()
 export class MassarRepository {
@@ -36,7 +37,7 @@ export class MassarRepository {
       this.db.select().from(classes).where(eq(classes.academicYear, this.year.label)),
       this.db.select({ id: sections.id, name: sections.name, classId: sections.classId }).from(sections).innerJoin(classes, eq(classes.id, sections.classId)).where(eq(classes.academicYear, this.year.label)),
       this.db.select().from(subjects), // Shared catalog; has no academic year.
-      this.db.select({ id: students.id, studentCode: students.studentCode, name: students.name, arabicName: students.arabicName, dateOfBirth: students.dateOfBirth, classId: studentEnrollmentPlacements.classId, sectionId: studentEnrollmentPlacements.sectionId }).from(students)
+      this.db.select({ id: students.id, studentCode: students.studentCode, name: students.name, arabicName: students.arabicName, dateOfBirth: students.dateOfBirth, leftOn: studentEnrollments.leftOn, classId: studentEnrollmentPlacements.classId, sectionId: studentEnrollmentPlacements.sectionId }).from(students)
         .innerJoin(studentEnrollments, eq(studentEnrollments.studentId, students.id))
         .leftJoin(studentEnrollmentPlacements, and(eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id), sql`not exists (select 1 from student_enrollment_placements later where later.enrollment_id = ${studentEnrollments.id} and later.valid_from > ${studentEnrollmentPlacements.validFrom})`))
         .where(eq(studentEnrollments.academicYearId, academicYearId)),
@@ -45,6 +46,9 @@ export class MassarRepository {
     ]);
     return { year: yearRows[0] ?? null, yearLabel: this.year.label, levels, classes: mappedClasses, subjects: mappedSubjects, enrollments, appClasses, appSections, appSubjects, appStudents, assignments };
   }
+  async savePlan(plan: NonNullable<typeof massarYears.$inferInsert['plan']>) { await this.db.update(massarYears).set({ plan }).where(eq(massarYears.academicYearId, this.year.id)); }
+  /** The year's Planning, every class: when each Contrôle's exams take place. */
+  async planningMonths() { return this.db.select({ classId: examPlanning.classId, months: examPlanning.months }).from(examPlanning).where(eq(examPlanning.academicYearId, this.year.id)); }
   async yearConfig() { return (await this.db.select().from(massarYears).where(eq(massarYears.academicYearId, this.year.id)))[0]; }
   async subjectForImport(levelId: string, code: string) { return (await this.db.select().from(massarSubjects).where(and(eq(massarSubjects.academicYearId, this.year.id), eq(massarSubjects.levelId, levelId), eq(massarSubjects.code, code))))[0]; }
   async saveYear(data: Omit<typeof massarYears.$inferInsert, 'academicYearId'>) {
@@ -59,10 +63,41 @@ export class MassarRepository {
   async saveSubject(data: Omit<typeof massarSubjects.$inferInsert, 'academicYearId'>) {
     const [row] = await this.db.insert(massarSubjects).values({ ...data, academicYearId: this.year.id }).onConflictDoUpdate({ target: [massarSubjects.academicYearId, massarSubjects.levelId, massarSubjects.code], set: data }).returning(); return row;
   }
+  /** A subject from the default model: added only where no file brought it, and to confirm. */
+  async addModelSubject(data: Omit<typeof massarSubjects.$inferInsert, 'academicYearId' | 'confirmed' | 'observedRounds'>) {
+    await this.db.insert(massarSubjects).values({ ...data, academicYearId: this.year.id, confirmed: false }).onConflictDoNothing();
+  }
+  /** The latest earlier year's confirmed Massar subjects: the school's own starting model for this year. */
+  async previousYearSubjects() {
+    const [previous] = await this.db.select({ id: academicYears.id }).from(academicYears)
+      .where(lt(academicYears.reportingStartsOn, this.year.reportingStartsOn)).orderBy(desc(academicYears.reportingStartsOn)).limit(1);
+    if (!previous) return [];
+    return this.db.select({ level: massarLevels.code, code: massarSubjects.code, name: massarSubjects.name, components: massarSubjects.components }).from(massarSubjects)
+      .innerJoin(massarLevels, eq(massarLevels.id, massarSubjects.levelId))
+      .where(and(eq(massarSubjects.academicYearId, previous.id), eq(massarSubjects.confirmed, true)));
+  }
+  /** A subject's grids still being filled: not sent to Massar, in a Contrôle still open. */
+  async subjectOpenSheets(subjectId: string) {
+    return this.db.select({ id: massarSheets.id, components: massarSheets.components, term: massarRounds.term, exam: massarRounds.exam, examLabel: massarRounds.examLabel }).from(massarSheets)
+      .innerJoin(massarRounds, eq(massarRounds.id, massarSheets.roundId))
+      .where(and(eq(massarSheets.academicYearId, this.year.id), eq(massarSheets.massarSubjectId, subjectId), isNull(massarSheets.exportedAt), ne(massarRounds.status, 'closed')));
+  }
+  /** Marks entered on a subject's open grids for parts Massar's file does not have. */
+  async marksOutside(subjectId: string, codes: string[]) {
+    const [row] = await this.db.select({ count: sql<number>`count(*)::integer` }).from(massarMarks)
+      .innerJoin(massarSheets, eq(massarSheets.id, massarMarks.sheetId)).innerJoin(massarRounds, eq(massarRounds.id, massarSheets.roundId))
+      .where(and(eq(massarMarks.academicYearId, this.year.id), eq(massarSheets.massarSubjectId, subjectId), isNull(massarSheets.exportedAt), ne(massarRounds.status, 'closed'),
+        codes.length ? notInArray(massarMarks.componentCode, codes) : undefined, sql`(${massarMarks.mark} is not null or ${massarMarks.absence} = 'justified')`));
+    return row?.count ?? 0;
+  }
+  /** A grid takes Massar's parts; marks on a part Massar does not have go with it. */
+  async replaceSheetComponents(id: string, components: MassarComponent[]) {
+    await this.db.delete(massarMarks).where(and(eq(massarMarks.academicYearId, this.year.id), eq(massarMarks.sheetId, id), notInArray(massarMarks.componentCode, components.map(component => component.code))));
+    await this.db.update(massarSheets).set({ components, revision: sql`${massarSheets.revision} + 1` }).where(and(eq(massarSheets.academicYearId, this.year.id), eq(massarSheets.id, id)));
+  }
   async saveEnrollment(data: Omit<typeof massarEnrollments.$inferInsert, 'academicYearId'>) {
     await this.db.insert(massarEnrollments).values({ ...data, academicYearId: this.year.id }).onConflictDoUpdate({ target: [massarEnrollments.academicYearId, massarEnrollments.studentId], set: data });
   }
-  async leave(id: string, leftOn: string) { return this.db.update(massarEnrollments).set({ leftOn }).where(and(eq(massarEnrollments.academicYearId, this.year.id), eq(massarEnrollments.id, id))).returning(); }
   async createPreview(data: Omit<typeof massarImports.$inferInsert, 'academicYearId'>) { await this.db.insert(massarImports).values({ ...data, academicYearId: this.year.id }); }
   async previewById(id: string, actorId: string) { return (await this.db.select().from(massarImports).where(and(eq(massarImports.academicYearId, this.year.id), eq(massarImports.id, id), eq(massarImports.actorId, actorId))).for('update'))[0]; }
   async consumePreview(id: string) { await this.db.delete(massarImports).where(and(eq(massarImports.academicYearId, this.year.id), eq(massarImports.id, id))); }
@@ -89,7 +124,7 @@ export class MassarRepository {
       .leftJoin(teacherAssignments, eq(teacherAssignments.id, massarSheets.teacherAssignmentId)).leftJoin(teachers, eq(teachers.id, teacherAssignments.teacherId)).leftJoin(staff, eq(staff.id, teachers.staffId));
   }
   async sheets(roundId?: string) {
-    return this.sheetQuery().where(and(this.ownedWhere(), eq(massarSheets.academicYearId, this.year.id), roundId ? eq(massarSheets.roundId, roundId) : undefined)).orderBy(massarClasses.name, massarSubjects.name);
+    return this.sheetQuery().where(and(this.ownedWhere(), eq(massarSheets.academicYearId, this.year.id), roundId ? eq(massarSheets.roundId, roundId) : undefined)).orderBy(massarClasses.name, massarSubjects.code); // Massar's own order: Arabic (0011), French (0012), …
   }
   async sheetById(id: string) { return (await this.sheetQuery().where(and(this.ownedWhere(), eq(massarSheets.academicYearId, this.year.id), eq(massarSheets.id, id))))[0]; }
   async marks(sheetId?: string) {
@@ -119,6 +154,7 @@ export class MassarRepository {
   async allRoundsForManagement() { return this.db.select().from(massarRounds).where(eq(massarRounds.academicYearId, this.year.id)); }
   async createRound(data: Omit<typeof massarRounds.$inferInsert, 'academicYearId'>) { return (await this.db.insert(massarRounds).values({ ...data, academicYearId: this.year.id }).onConflictDoNothing().returning())[0]; }
   async updateRound(id: string, status: typeof massarRounds.$inferInsert['status']) { await this.db.update(massarRounds).set({ status }).where(and(eq(massarRounds.academicYearId, this.year.id), eq(massarRounds.id, id))); }
+  async updateDueDate(id: string, dueDate: string | null) { await this.db.update(massarRounds).set({ dueDate }).where(and(eq(massarRounds.academicYearId, this.year.id), eq(massarRounds.id, id))); }
   async createSheet(data: Omit<typeof massarSheets.$inferInsert, 'academicYearId'>) { await this.db.insert(massarSheets).values({ ...data, academicYearId: this.year.id }).onConflictDoNothing(); }
   async updateSheet(id: string, data: Partial<Pick<typeof massarSheets.$inferInsert, 'status' | 'exportHash' | 'exportedAt' | 'teacherAssignmentId' | 'teacherUnlocked'>>) {
     return (await this.db.update(massarSheets).set({ ...data, revision: sql`${massarSheets.revision} + 1` }).where(and(eq(massarSheets.academicYearId, this.year.id), eq(massarSheets.id, id))).returning())[0];
@@ -131,7 +167,10 @@ export class MassarRepository {
   }
   async activeRoster(classId: string) {
     const rows = await this.db.select({ id: students.id, studentCode: students.studentCode, name: massarEnrollments.name, dateOfBirth: massarEnrollments.dateOfBirth, massarStudentId: massarEnrollments.massarStudentId, numeric: massarEnrollments.massarStudentIdNumeric, position: massarEnrollments.position })
-      .from(massarEnrollments).innerJoin(students, eq(students.id, massarEnrollments.studentId)).where(and(eq(massarEnrollments.academicYearId, this.year.id), eq(massarEnrollments.massarClassId, classId), isNull(massarEnrollments.leftOn))).orderBy(massarEnrollments.position, students.studentCode);
+      .from(massarEnrollments).innerJoin(students, eq(students.id, massarEnrollments.studentId))
+      // A sheet follows the Students view: a student withdrawn there, or no longer enrolled this year, is not on it.
+      .innerJoin(studentEnrollments, and(eq(studentEnrollments.studentId, students.id), eq(studentEnrollments.academicYearId, this.year.id), isNull(studentEnrollments.leftOn)))
+      .where(and(eq(massarEnrollments.academicYearId, this.year.id), eq(massarEnrollments.massarClassId, classId), isNull(massarEnrollments.leftOn))).orderBy(massarEnrollments.position, students.studentCode);
     return rows.map(({ numeric, ...row }) => ({ ...row, massarStudentId: numeric && row.massarStudentId !== null ? Number(row.massarStudentId) : row.massarStudentId }));
   }
   async clearForSeedReset() {

@@ -1,2 +1,3 @@
-import { redirect } from 'next/navigation';
-export default function Page() { redirect('/massar/sheets'); }
+import { requirePageAccess } from '@/shared/requirePageAccess';
+import { MassarPage } from '@/features/Massar/components/MassarPage';
+export default async function Page() { await requirePageAccess('massarSheets'); return <MassarPage />; }

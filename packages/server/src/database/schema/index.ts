@@ -24,7 +24,7 @@ export {
 
 export { classes, classRef } from '../../modules/classes/classSchema';
 export { cycles, cycleRef } from '../../modules/cycles/cycleSchema';
-export { subjects, subjectRef } from '../../modules/subjects/subjectSchema';
+export { subjects, subjectRef, subSubjects } from '../../modules/subjects/subjectSchema';
 export { settings, calendarSystemEnum, languageEnum } from '../../modules/settings/settingSchema';
 export { academicYears } from '../../modules/academicYears/AcademicYearSchema';
 export { academicYearTransitionRuns } from '../../modules/academicYearTransitions/AcademicYearTransitionSchema';

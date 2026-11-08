@@ -12,3 +12,4 @@ export const examPlanning = pgTable('exam_planning', {
   months: jsonb('months').$type<Record<string, ExamPlanningEntry[]>>().notNull().default({}),
   ...timestamps,
 }, table => [uniqueIndex('exam_planning_year_class_unique').on(table.academicYearId, table.classId)]);
+

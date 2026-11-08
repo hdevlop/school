@@ -15,20 +15,25 @@ const monthPattern = /^\d{4}-(0[1-9]|1[0-2])$/;
 const record = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 const onlyKeys = (value: Record<string, unknown>, keys: string[]) => Object.keys(value).every(key => keys.includes(key));
 const text = (value: unknown, max: number): value is string => typeof value === 'string' && value.length > 0 && value.length <= max;
+const clock = (value: unknown): value is string => typeof value === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
 const classNameKey = (name: string) => name.trim().normalize('NFC').toLowerCase();
 
 export function isExamPlanningEntry(value: unknown): value is ExamPlanningEntry {
   // `language` is no longer stored: saved plans and older exports may still carry it, and it is dropped.
-  if (!record(value) || !onlyKeys(value, ['id', 'date', 'subject', 'language', 'lessons'])) return false;
+  if (!record(value) || !onlyKeys(value, ['id', 'date', 'subject', 'language', 'lessons', 'startTime', 'endTime'])) return false;
   return text(value.id, 100) && typeof value.date === 'string' && isDateOnly(value.date)
     && typeof value.subject === 'string' && text(value.subject.trim(), 120)
     && (!('language' in value) || REVISION_LANGUAGES.some(language => language === value.language))
     && Array.isArray(value.lessons) && value.lessons.length <= 40
-    && Array.from(value.lessons).every(lesson => typeof lesson === 'string' && text(lesson.trim(), 500));
+    && Array.from(value.lessons).every(lesson => typeof lesson === 'string' && text(lesson.trim(), 500))
+    // Both times or neither, and the end after the start.
+    && (value.startTime === undefined) === (value.endTime === undefined)
+    && (value.startTime === undefined || (clock(value.startTime) && clock(value.endTime) && value.endTime > value.startTime));
 }
 
 export function normalizeExamPlanningEntry(entry: ExamPlanningEntry): ExamPlanningEntry {
-  return { id: entry.id, date: entry.date, subject: entry.subject.trim(), lessons: entry.lessons.map(lesson => lesson.trim()) };
+  return { id: entry.id, date: entry.date, subject: entry.subject.trim(), lessons: entry.lessons.map(lesson => lesson.trim()),
+    ...(entry.startTime && entry.endTime ? { startTime: entry.startTime, endTime: entry.endTime } : {}) };
 }
 
 export function isExamPlanningMonth(month: string, entries: unknown): entries is ExamPlanningEntry[] {

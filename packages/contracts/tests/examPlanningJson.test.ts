@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
-import { parseExamPlanningJson, resolveExamPlanningClasses, type ExamPlanningJson } from '../src/examPlanningJson';
-import type { ExamPlanningEntry } from '../src/examPlanning';
+import { isExamPlanningEntry, normalizeExamPlanningEntry, parseExamPlanningJson, resolveExamPlanningClasses, type ExamPlanningJson } from '../src/examPlanningJson';
+import { addPlanningMinutes, planningDuration, type ExamPlanningEntry } from '../src/examPlanning';
 
 const entry: ExamPlanningEntry = { id: 'arabic', date: '2026-11-09', subject: 'اللغة العربية', lessons: ['الجملة الاسمية'] };
 const document: ExamPlanningJson = { format: 'school-exam-planning', version: 1, schoolYear: '2026-2027', exportedAt: '2026-10-29T12:00:00.000Z', classes: [
@@ -45,6 +45,19 @@ describe('exam planning JSON contract', () => {
     if (result.success) expect(result.data.classes[0].months['2026-11'][0]).toEqual({ ...entry, subject: 'Arabic', lessons: ['Lesson'] });
     expect(parseExamPlanningJson({ ...document, exportedAt: '2026-02-31T12:00:00Z' }).success).toBe(false);
     expect(parseExamPlanningJson({ ...document, classes: [{ ...document.classes[0], months: { '2026-11': [{ ...entry, assessmentId: 'unrelated' }] } }] }).success).toBe(false);
+  });
+
+  it('accepts a time from and to, keeps it, and refuses one half missing or ending first', () => {
+    const timed = { ...entry, startTime: '08:30', endTime: '10:00' };
+    expect(isExamPlanningEntry(timed)).toBe(true);
+    expect(normalizeExamPlanningEntry(timed)).toEqual(timed);
+    expect(normalizeExamPlanningEntry(entry)).toEqual(entry);
+    for (const bad of [{ startTime: '08:30' }, { endTime: '10:00' }, { startTime: '8:30', endTime: '10:00' }, { startTime: '10:00', endTime: '09:00' }, { startTime: '10:00', endTime: '10:00' }, { startTime: '22:00', endTime: '24:00' }]) {
+      expect(isExamPlanningEntry({ ...entry, ...bad })).toBe(false);
+    }
+    expect(planningDuration('08:30', '10:00')).toBe(90);
+    expect(planningDuration()).toBe(60);
+    expect(addPlanningMinutes('08:30', 60)).toBe('09:30');
   });
 
   it('accepts the lesson language older plans stored, and drops it', () => {

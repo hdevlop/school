@@ -13,6 +13,7 @@
   --planning-line: var(--border);
   --planning-accent: var(--primary);
   --planning-selected: var(--accent);
+  --planning-control-height: 2.25rem;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -39,12 +40,17 @@
 .toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-bottom: 8px; margin-bottom: 17px; }
 .toolbarControls { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; min-width: 0; }
 .toolbarActions { display: flex; align-items: center; flex-wrap: wrap; min-width: 0; gap: 8px; }
+.viewSwitch { display: inline-flex; flex-shrink: 0; height: var(--planning-control-height); gap: 2px; padding: 2px; border: var(--border-width, 1px) solid var(--planning-line); border-radius: var(--radius); background: var(--planning-panel); }
+.viewSwitch button { display: inline-flex; align-items: center; gap: 6px; height: 100%; min-height: 0; padding: 0 10px; border: 0; border-radius: calc(var(--radius) - 2px); background: transparent; color: var(--planning-muted); font-size: 12px; white-space: nowrap; }
+.viewSwitch button svg { width: 14px; height: 14px; }
+.viewSwitch button:hover { color: var(--planning-text); }
+.viewSwitch button[aria-pressed='true'] { background: var(--planning-accent); color: var(--primary-foreground); }
 .dateFilters { display: flex; flex-wrap: wrap; gap: 16px; min-width: 0; margin: 0; padding: 0; border: 0; }
 .dateField { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .classRow { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
 .toolbar > .classRow { flex: 1; min-width: 0; margin-bottom: 0; }
 .toolbarControls[data-preview-only='true'] { flex-shrink: 0; }
-.classButton { display: inline-flex; align-items: center; gap: 7px; padding: 7px 11px; border: var(--border-width, 1px) solid var(--planning-line); border-radius: var(--radius); background: var(--planning-panel); color: var(--planning-muted); font-size: 12px; line-height: 18px; }
+.classButton { display: inline-flex; align-items: center; gap: 7px; height: var(--planning-control-height); padding: 0 11px; border: var(--border-width, 1px) solid var(--planning-line); border-radius: var(--radius); background: var(--planning-panel); color: var(--planning-muted); font-size: 12px; line-height: 18px; }
 .classButton:hover:not(:disabled) { border-color: var(--planning-accent); }
 .classButton[aria-pressed='true'] { border-color: var(--planning-accent); color: var(--planning-accent); box-shadow: inset 0 0 0 .5px var(--planning-accent); }
 .dot { width: 7px; height: 7px; flex-shrink: 0; border-radius: 50%; }
@@ -59,19 +65,24 @@
 .secondary { font-size: 11px; font-weight: 400; color: var(--planning-muted); }
 .day { border: var(--border-width, 1px) solid var(--planning-line); border-radius: var(--radius); background: var(--planning-panel); margin-bottom: 10px; overflow: hidden; }
 .page .dayHeading { margin: 0; }
-.dayTitle { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 10px; padding: 9px 12px; border: 0; background: var(--planning-accent); color: var(--primary-foreground); font: 700 12px/1.5 var(--font-sans); text-align: start; }
+.dayTitle { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 10px; padding: 9px 12px; border: 0; background: var(--secondary); color: var(--secondary-foreground); font: 700 12px/1.5 var(--font-sans); text-align: start; }
 .dayTitle[aria-expanded='true'] { border-bottom: var(--border-width, 1px) solid var(--planning-line); }
-.main .dayTitle:focus-visible { outline-color: var(--primary-foreground); outline-offset: -3px; }
+.main .dayTitle:focus-visible { outline-color: var(--secondary-foreground); outline-offset: -3px; }
 .dayTools { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .dayTitle[aria-expanded='true'] .dayChevron { transform: rotate(180deg); }
 .dayTitle .secondary { color: inherit; }
-.entry { display: grid; grid-template-columns: minmax(0,1fr) 17px; align-items: center; width: 100%; gap: 10px; padding: 9px 12px; border: 0; border-bottom: var(--border-width, 1px) solid var(--planning-line); background: transparent; color: var(--planning-text); text-align: left; }
-.entry:last-child { border-bottom: 0; }
-.entry:hover:not(:disabled) { background: var(--planning-selected); }
-.entry[aria-pressed='true'] { background: var(--planning-selected); box-shadow: inset 3px 0 var(--planning-accent); }
+.entryRow { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; border-bottom: var(--border-width, 1px) solid var(--planning-line); }
+.entryRow:last-child { border-bottom: 0; }
+.entryRow:hover { background: var(--planning-selected); }
+.entryRow[data-selected='true'] { background: var(--planning-selected); box-shadow: inset 3px 0 var(--planning-accent); }
+.entry { display: grid; grid-template-columns: minmax(0,1fr) 17px; align-items: center; width: 100%; min-width: 0; gap: 10px; padding: 9px 12px; border: 0; background: transparent; color: var(--planning-text); text-align: left; }
+.entryDelete { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; margin-inline-end: 8px; border: 0; border-radius: var(--radius); background: transparent; color: var(--planning-muted); }
+.entryDelete svg { width: 15px; height: 15px; }
+.entryDelete:hover:not(:disabled) { color: var(--destructive); background: color-mix(in oklab, var(--destructive) 10%, transparent); }
 .entryLabel { display: block; font: 700 12px/1.5 var(--font-sans); overflow-wrap: anywhere; }
 .entryLabel[lang='ar'] { font: 700 17px/1.5 PlanningArabic, serif; }
 .entryTopic { display: block; margin-top: 2px; color: var(--planning-muted); font-size: 11px; }
+.entryTime { color: var(--planning-text); font-weight: 600; font-variant-numeric: tabular-nums; }
 .entryArrow { width: 13px !important; height: 13px !important; color: var(--planning-muted); }
 .editPanel { position: sticky; top: 16px; min-width: 0; padding: 15px; border: var(--border-width, 1px) solid var(--planning-line); border-radius: var(--radius); background: var(--planning-panel); }
 .editHeading { display: flex; align-items: center; gap: 10px; min-width: 0; padding-bottom: 12px; border-bottom: var(--border-width, 1px) solid var(--planning-line); margin-bottom: 15px; }
@@ -84,15 +95,15 @@
 .fieldLabel [lang='ar'] { font: 400 16px/1.5 PlanningArabic, serif; margin-inline-start: 5px; }
 .page .lessonsInput { display: block; width: 100%; min-height: 215px; padding: 11px; resize: vertical; font: 400 13px/1.7 var(--font-sans); }
 .page .lessonsInput[lang='ar'] { font: 400 18px/1.7 PlanningArabic, serif; }
-.fieldNote { color: var(--planning-muted); font-size: 11px; margin: 6px 0 15px; }
+.labelNote { color: var(--planning-muted); font-size: 11px; font-weight: 400; margin-inline-start: 6px; }
+.editPanel .lessonsInput { margin-bottom: 12px; }
 .applyButton { font-size: 12px; white-space: normal; }
 .editorStatus { min-height: 18px; color: var(--planning-muted); font-size: 11px; margin: 10px 0 0; }
-.details { margin: 0 0 15px; border-top: var(--border-width, 1px) solid var(--planning-line); padding-top: 10px; }
-.detailFields { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: end; gap: 10px; margin-top: 12px; }
+.details { margin: 0 0 15px; border-bottom: var(--border-width, 1px) solid var(--planning-line); padding-bottom: 15px; }
+.detailFields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; gap: 10px; }
 .detailFields > div { min-width: 0; }
 .editorActions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
 .textButton { padding: 0; border: 0; background: none; color: var(--planning-muted); font-size: 11px; }
-.deleteButton { margin-inline-end: auto; color: var(--destructive); }
 .paperStage { padding: 15px; border-radius: var(--radius); background: var(--muted); }
 .paperStage iframe { max-width: 794px; margin: 0 auto; border: 0; border-radius: 0; }
 .previewTip { color: var(--planning-muted); font-size: 11px; text-align: center; margin: 12px 0 0; }
@@ -101,7 +112,7 @@
 
 .page:dir(rtl) .entry { text-align: right; }
 .page:dir(rtl) .editSubject { text-align: left; }
-.page:dir(rtl) .entry[aria-pressed='true'] { box-shadow: inset -3px 0 var(--planning-accent); }
+.page:dir(rtl) .entryRow[data-selected='true'] { box-shadow: inset -3px 0 var(--planning-accent); }
 .page:dir(rtl) .entryArrow { transform: rotate(180deg); }
 
 @media (max-width: 850px) {
@@ -118,11 +129,13 @@
   .toolbarControls[data-preview-only='true'] { flex-wrap: nowrap; gap: 8px; }
   .toolbarControls[data-preview-only='true'] .dateFilters { flex: 1; width: auto; }
   .toolbarControls[data-preview-only='true'] .toolbarActions { flex-shrink: 0; }
-  .classButton { padding: 7px 9px; }
+  .classButton { padding: 0 9px; }
   .paperStage { padding: 5px; }
 }
 @media (pointer: coarse) {
+  .page { --planning-control-height: 44px; }
   .main button { min-height: 44px; }
+  .viewSwitch button { min-height: 0; }
   .page .lessonsInput { font-size: 16px; }
 }
 @media (max-width: 480px) {

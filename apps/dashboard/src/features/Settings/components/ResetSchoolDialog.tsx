@@ -14,9 +14,9 @@ import { BackupStep, BackupSteps } from './BackupSteps';
 const canMaskText = () => typeof CSS !== 'undefined' && CSS.supports('-webkit-text-security', 'disc');
 
 /**
- * Deletes the whole school. The current data must be downloaded first, then the
- * administrator's password and a typed word are asked for; the server checks the
- * password again. Everyone is signed out afterwards.
+ * Deletes the whole school. A backup is recommended but optional. The
+ * administrator confirms with their password and a typed word; the server
+ * checks the password again. Everyone is signed out afterwards.
  */
 export function ResetSchoolDialog({ open, onOpenChange }: {
   open: boolean;
@@ -36,7 +36,7 @@ export function ResetSchoolDialog({ open, onOpenChange }: {
   const confirmed = typed.trim().toLocaleUpperCase() === word.toLocaleUpperCase();
   // The word sits at a different place in each language's sentence.
   const [confirmBefore, confirmAfter] = t('settings.backup.reset.confirm', { word: '|' }).split('|');
-  const ready = currentSaved && Boolean(password) && confirmed && !busy;
+  const ready = Boolean(password) && confirmed && !busy;
 
   const close = () => {
     if (busy) return;
@@ -86,18 +86,20 @@ export function ResetSchoolDialog({ open, onOpenChange }: {
           </div>
         </div>
 
-        <BackupSteps>
-          <BackupStep number={1} done={currentSaved} title={t('settings.backup.reset.stepDownload')} hint={t('settings.backup.reset.stepDownloadHint')}>
-            <div className="w-0 min-w-full">
-              <NButton className="w-full" type="button" variant="outline" loading={savingCurrent} disabled={resetting} onClick={saveCurrent}
-                leftIcon={currentSaved ? <Check className="h-4 w-4 text-emerald-600" aria-hidden /> : <Download className="h-4 w-4" aria-hidden />}>
-                {currentSaved ? t('settings.backup.restore.safetyDone') : t('settings.backup.download.action')}
-              </NButton>
-            </div>
-            {savingCurrent && <div className="col-span-2"><BackupDownloadStatus progress={backup.progress} /></div>}
-          </BackupStep>
+        <div className="grid gap-3 rounded-lg border p-3 text-sm">
+          <div className="grid gap-1">
+            <p className="font-medium">{t('settings.backup.reset.stepDownload')}</p>
+            <p className="text-xs leading-relaxed text-muted-foreground">{t('settings.backup.reset.stepDownloadHint')}</p>
+          </div>
+          <NButton className="w-full sm:w-fit" type="button" variant="outline" loading={savingCurrent} disabled={resetting} onClick={saveCurrent}
+            leftIcon={currentSaved ? <Check className="h-4 w-4 text-emerald-600" aria-hidden /> : <Download className="h-4 w-4" aria-hidden />}>
+            {currentSaved ? t('settings.backup.restore.safetyDone') : t('settings.backup.download.action')}
+          </NButton>
+          {savingCurrent && <BackupDownloadStatus progress={backup.progress} />}
+        </div>
 
-          <BackupStep number={2} done={Boolean(password)} title={t('settings.backup.reset.password')} hint={t('settings.backup.reset.passwordHint')} htmlFor="reset-password">
+        <BackupSteps>
+          <BackupStep number={1} done={Boolean(password)} title={t('settings.backup.reset.password')} hint={t('settings.backup.reset.passwordHint')} htmlFor="reset-password">
             <div className="relative w-0 min-w-full">
               {/*
                 Typed on purpose every time. A real password input makes the browser treat the page as a
@@ -117,12 +119,12 @@ export function ResetSchoolDialog({ open, onOpenChange }: {
             </div>
           </BackupStep>
 
-          <BackupStep number={3} done={confirmed} htmlFor="reset-confirm" hint={t('settings.backup.reset.confirmHint')}
+          <BackupStep number={2} done={confirmed} htmlFor="reset-confirm" hint={t('settings.backup.reset.confirmHint')}
             title={<>{confirmBefore}<code className="rounded bg-destructive/10 px-1.5 py-0.5 font-mono text-xs font-semibold text-destructive"><bdi>{word}</bdi></code>{confirmAfter}</>}>
             <Input className="w-0 min-w-full" id="reset-confirm" value={typed} disabled={resetting} autoComplete="off" spellCheck={false} placeholder={word} onChange={(event) => setTyped(event.target.value)} />
           </BackupStep>
 
-          <BackupStep number={4} done={false} last>
+          <BackupStep number={3} done={false} last>
             <div>
               <NButton type="button" variant="destructive" loading={resetting} disabled={!ready} onClick={reset} leftIcon={<Trash2 className="h-4 w-4" aria-hidden />}>{t('settings.backup.reset.submit')}</NButton>
             </div>

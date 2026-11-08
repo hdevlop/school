@@ -4,6 +4,7 @@ export const EXAM_TYPE_COLORS: Record<string, BadgeColor> = {
   midterm: 'info',
   final: 'primary',
   standardized: 'warning',
+  test: 'success',
 };
 
 export const EXAM_STATUS_COLORS: Record<string, BadgeColor> = {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useId, useState } from 'react';
-import { ChevronDown, ChevronRight, ChevronsDownUp, ChevronsUpDown, Plus } from 'lucide-react';
+import { ChevronDown, ChevronRight, ChevronsDownUp, ChevronsUpDown, Plus, Trash2 } from 'lucide-react';
 import { NButton } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { toOfficialClassName, type ExamPlanningClass, type ExamPlanningEntry } from '@sms/contracts';
@@ -9,10 +9,11 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { planningTextLanguage, type PlanningEntrySelection } from './examPlanningModel';
 import styles from './ExamPlanning.module.css';
 
-export function PlanningSchedule({ classes, entriesFor, selected, saving, onSelect, onAdd }: {
+export function PlanningSchedule({ classes, entriesFor, selected, saving, onSelect, onAdd, onDelete }: {
   classes: ExamPlanningClass[]; entriesFor: (cls: ExamPlanningClass) => ExamPlanningEntry[];
   selected?: PlanningEntrySelection | null; saving: boolean;
   onSelect: (value: PlanningEntrySelection) => void; onAdd: (cls: ExamPlanningClass) => void;
+  onDelete: (cls: ExamPlanningClass, entry: ExamPlanningEntry) => void;
 }) {
   const { t } = useTranslation();
   const { displayDate } = useSchoolFormat();
@@ -47,10 +48,18 @@ export function PlanningSchedule({ classes, entriesFor, selected, saving, onSele
             </button>
           </h3>
           <div id={contentId} hidden={collapsed}>
-          {dayEntries.map(entry => <button key={entry.id} type="button" disabled={saving} className={styles.entry} aria-pressed={selected?.entryId === entry.id && selected?.classId === cls.id && selected.month === entry.date.slice(0, 7)} onClick={() => onSelect({ classId: cls.id, month: entry.date.slice(0, 7), entryId: entry.id })}>
-            <span><span className={styles.entryLabel} lang={planningTextLanguage(entry.subject)} dir="auto">{entry.subject}</span><span className={styles.entryTopic}>{t('examPlanning.lessonCount', { count: entry.lessons.filter(line => line.trim()).length })}</span></span>
-            <ChevronRight className={styles.entryArrow} aria-hidden="true" />
-          </button>)}
+          {dayEntries.map(entry => {
+            const isSelected = selected?.entryId === entry.id && selected?.classId === cls.id && selected.month === entry.date.slice(0, 7);
+            const name = entry.subject || t('examPlanning.newEntry');
+            // The row opens the exam; its trash button removes it (saved with the month, like any change).
+            return <div key={entry.id} className={styles.entryRow} data-selected={isSelected}>
+              <button type="button" disabled={saving} className={styles.entry} aria-pressed={isSelected} onClick={() => onSelect({ classId: cls.id, month: entry.date.slice(0, 7), entryId: entry.id })}>
+                <span><span className={styles.entryLabel} lang={planningTextLanguage(entry.subject)} dir="auto">{name}</span><span className={styles.entryTopic}>{entry.startTime && entry.endTime && <><span className={styles.entryTime}>{entry.startTime} – {entry.endTime}</span> · </>}{t('examPlanning.lessonCount', { count: entry.lessons.filter(line => line.trim()).length })}</span></span>
+                <ChevronRight className={styles.entryArrow} aria-hidden="true" />
+              </button>
+              <button type="button" disabled={saving} className={styles.entryDelete} aria-label={`${t('common.delete')} · ${name}`} title={t('common.delete')} onClick={() => onDelete(cls, entry)}><Trash2 aria-hidden="true" /></button>
+            </div>;
+          })}
           </div>
         </section>;
       })}

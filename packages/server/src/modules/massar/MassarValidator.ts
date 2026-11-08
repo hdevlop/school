@@ -11,7 +11,7 @@ export class MassarValidator {
   refuse(key: string, status = 409): never { return Err(status, t(`massar.errors.${key}`)); }
   ensureWriter(actor: MassarActor, sheet: { status: string; teacherUnlocked?: boolean }, manager: boolean) {
     if (!manager && actor.role !== 'teacher') this.refuse('readOnly', 403);
-    if (!manager && (['submitted', 'exported'].includes(sheet.status) || sheet.status === 'changed_after_export' && !sheet.teacherUnlocked)) this.refuse('locked');
+    if (sheet.status === 'exported' || sheet.status === 'changed_after_export' && !sheet.teacherUnlocked) this.refuse('locked');
   }
   ensureMarks(data: MassarMarksInput, roster: MassarStudent[], components: MassarComponent[], maxMark: number) {
     const seen = new Set<string>();

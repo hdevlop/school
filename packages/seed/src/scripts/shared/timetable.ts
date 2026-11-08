@@ -3,7 +3,7 @@
 
 /** Weekly lessons of each subject (by code) per section, by class level. */
 const WEEKLY_LESSONS: Record<string, Record<string, number>> = {
-  Maternelle: { PRELANG: 4, PREMATH: 4, PREDECO: 4, PREMOT: 4, PREART: 4, PREVIE: 4 },
+  Maternelle: { AR: 6, FR: 6, MATH: 4, EI: 2, ART: 4, PE: 2 },
   Primaire: { AR: 7, FR: 6, MATH: 5, EI: 2, SCI: 2, HG: 2, ART: 1, PE: 2, COM: 1 },
   Collège: { MATH: 5, FR: 4, AR: 4, ENG: 2, PHY: 2, SVT: 2, EI: 2, HG: 3, PE: 2, INFO: 1, ART: 1 },
 };

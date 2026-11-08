@@ -15,6 +15,8 @@ function service(catalog = [{ id: 'cp', name: 'CP' }]) {
     saveVisibility: async (...args: unknown[]) => { writes.push(args); },
     importDocument: async (...args: unknown[]) => { writes.push(args); },
     clearContent: async (...args: unknown[]) => { writes.push(args); },
+    syncContext: async () => ({ classes: [], sections: [], assignments: [], subjects: [], subSubjects: [], planned: [] }),
+    deleteExams: async () => {},
   } });
   return { instance, writes };
 }

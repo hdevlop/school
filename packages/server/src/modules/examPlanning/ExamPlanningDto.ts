@@ -10,3 +10,5 @@ export const importExamPlanningDto = z.object({ document: z.custom<ExamPlanningJ
   .refine(value => new TextEncoder().encode(JSON.stringify(value.document)).byteLength <= MAX_EXAM_PLANNING_JSON_BYTES, 'JSON file exceeds 5 MB');
 export const planningVisibilityDto = z.object({ classIds: z.array(z.string().min(1).max(100)).max(300) });
 export type SaveExamPlanningDto = z.infer<typeof saveExamPlanningDto>;
+/** Which School subject each Planning subject belongs to; null removes the link. */
+export const addSubSubjectsDto = z.object({ add: z.array(z.object({ name: z.string().trim().min(1).max(120), subjectId: z.string().min(1).max(100) })).min(1).max(500) });

@@ -1,0 +1,1 @@
+ALTER TABLE "exam_planning_subjects" ALTER COLUMN "subject_id" DROP NOT NULL;

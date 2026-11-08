@@ -2,6 +2,7 @@ import { Service, Err, I18n } from '../../najm';
 import { GradeRepository } from './GradeRepository';
 import { StudentValidator } from '../students/StudentValidator';
 import { TeacherValidator } from '../teachers/TeacherValidator';
+import { SCHOOL_WIDE_ROLES } from '../../auth';
 import { SectionValidator } from '../sections/SectionValidator';
 import { SubjectValidator } from '../subjects/SubjectValidator';
 import { AssessmentValidator } from '../assessments/AssessmentValidator';
@@ -52,9 +53,14 @@ export class GradeValidator {
     return source;
   }
 
-  ensureSourceTeachingAssignment(source: GradeSourceContext) {
-    if (!source.teacherId || !source.subjectId) Err(409, this.gt('sourceNoAssignment'));
-    return { teacherId: source.teacherId, subjectId: source.subjectId };
+  /**
+   * The teacher and subject a mark is recorded under. A source whose class has
+   * no teacher yet (a Planning exam on an empty slot) is marked by school-wide
+   * staff, the registrar; a teacher marks only their own sources.
+   */
+  ensureSourceTeachingAssignment(source: GradeSourceContext, user: { role?: string }) {
+    if (!source.subjectId || (!source.teacherId && !SCHOOL_WIDE_ROLES.includes(user.role ?? ''))) Err(409, this.gt('sourceNoAssignment'));
+    return { teacherId: source.teacherId ?? null, subjectId: source.subjectId };
   }
 
   ensureSourceAssignmentMatches(source: GradeSourceContext, teacherId: string | null, subjectId: string | null) {

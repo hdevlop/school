@@ -182,6 +182,8 @@ import { AcademicSourceValidator } from '../academicSources/AcademicSourceValida
 import { SubjectService } from '../subjects/SubjectService';
 import { SubjectRepository } from '../subjects/SubjectRepository';
 import { SubjectValidator } from '../subjects/SubjectValidator';
+import { ExamPlanningRepository } from '../examPlanning/ExamPlanningRepository';
+import { ExamPlanningService } from '../examPlanning/ExamPlanningService';
 
 import { ClassService } from '../classes/ClassService';
 import { ClassRepository } from '../classes/ClassRepository';
@@ -339,7 +341,8 @@ export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, AcademicSourceService, [AcademicYearValidator, SectionRepository, AcademicSourceValidator]);
 
   registerSeedDeps(seedContainer, SubjectValidator, [SubjectRepository]);
-  registerSeedDeps(seedContainer, SubjectService, [SubjectRepository, SubjectValidator]);
+  registerSeedDeps(seedContainer, ExamPlanningService, [ExamPlanningRepository, SubjectRepository, SubjectValidator]);
+  registerSeedDeps(seedContainer, SubjectService, [SubjectRepository, SubjectValidator, ExamPlanningService]);
 
   registerSeedDeps(seedContainer, ClassValidator, [ClassRepository, SettingsRepository]);
   registerSeedDeps(seedContainer, ClassService, [ClassRepository, ClassValidator, SettingsRepository, SectionService]);

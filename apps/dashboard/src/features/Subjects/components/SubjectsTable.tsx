@@ -103,6 +103,7 @@ function SubjectsTable() {
         filters={rawFilters}
         onCreate={handleAddClick}
         onView={handleView}
+        onRowClick={handleView}
         onEdit={handleEdit}
         {...tableActions}
         {...tableMode}

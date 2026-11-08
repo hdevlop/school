@@ -105,11 +105,7 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
     },
     evaluations,
     { id: '/grades', label: t('navigation.grades'), icon: FEATURE_ICONS.grades, href: '/grades', access: 'grades' },
-    { id: 'massar', label: t('massar.title'), icon: FEATURE_ICONS.massar, children: [
-      { id: '/massar/rounds', label: t('massar.rounds'), icon: FEATURE_ICONS.massar, href: '/massar/rounds', access: 'massarRounds' },
-      { id: '/massar/sheets', label: t(role === 'teacher' ? 'massar.mySheets' : 'massar.allSheets'), icon: FEATURE_ICONS.massar, href: '/massar/sheets', access: 'massarSheets' },
-      { id: '/massar/setup', label: t('massar.setup'), icon: FEATURE_ICONS.massar, href: '/massar/setup', access: 'massarSetup' },
-    ] },
+    { id: '/massar', label: t('massar.title'), icon: FEATURE_ICONS.massar, href: '/massar', access: 'massarSheets' },
     { id: '/calendar', label: t('navigation.calendar'), icon: FEATURE_ICONS.calendar, href: '/calendar', access: 'calendar' },
     routine,
     {
@@ -121,6 +117,7 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
         { id: '/sections', label: t('navigation.sections'), icon: FEATURE_ICONS.sections, href: '/sections', access: 'sections' },
         { id: '/cycles', label: t('navigation.cycles'), icon: FEATURE_ICONS.cycles, href: '/cycles', access: 'cycles' },
         { id: '/subjects', label: t('navigation.subjects'), icon: FEATURE_ICONS.subjects, href: '/subjects', access: 'subjects' },
+        { id: '/massar-settings', label: t('massar.flow.settings'), icon: FEATURE_ICONS.massar, href: '/massar-settings', access: 'massarSetup' },
       ],
     },
     { id: '/insurance', label: t('navigation.insurance'), icon: FEATURE_ICONS.insurance, href: '/insurance', access: 'insurance' },

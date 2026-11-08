@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { schoolSubjectsData, schoolSubjectsForClass, schoolSubjectsForLevels } from '../src/subjects';
+import { foldSubjectName } from '../src/subjectNames';
 
 describe('Moroccan subject defaults', () => {
   it('keeps legacy IDs available without seeding separate history and geography as defaults', () => {
@@ -12,10 +13,10 @@ describe('Moroccan subject defaults', () => {
     expect(new Set(defaults.map(subject => subject.id)).size).toBe(defaults.length);
   });
 
-  it('uses preschool learning areas and primary science instead of secondary sciences', () => {
+  it('gives preschool the common subjects and primary science instead of secondary sciences', () => {
     const preschool = schoolSubjectsForLevels(['Maternelle']);
     expect(preschool).toHaveLength(6);
-    expect(preschool.every(subject => subject.code.startsWith('PRE'))).toBe(true);
+    expect(preschool.map(subject => subject.code).sort()).toEqual(['AR', 'FR', 'MATH', 'EI', 'ART', 'PE'].sort());
     const primaryCodes = schoolSubjectsForLevels(['Primaire']).map(subject => subject.code);
     expect(primaryCodes).toEqual(expect.arrayContaining(['AR', 'FR', 'MATH', 'EI', 'SCI', 'HG', 'ART', 'PE', 'COM']));
     for (const code of ['PHY', 'SVT', 'ENG', 'INFO']) expect(primaryCodes).not.toContain(code);
@@ -39,5 +40,12 @@ describe('Moroccan subject defaults', () => {
     expect(schoolSubjectsForLevels(['Primaire', 'Primary School'])).toEqual(primary);
     expect(schoolSubjectsForLevels([])).toEqual([]);
     expect(() => schoolSubjectsForLevels(['University'])).toThrow('Unknown school level');
+  });
+
+  it('gives each default sub-subject one subject: no name twice, none a subject name', () => {
+    const names = [...schoolSubjectsData.map(subject => subject.name), ...schoolSubjectsData.flatMap(subject => subject.subSubjects ?? [])].map(foldSubjectName);
+    expect(new Set(names).size).toBe(names.length);
+    const primary = schoolSubjectsForLevels(['Primaire']).find(subject => subject.code === 'FR')!;
+    expect(primary.subSubjects).toEqual(expect.arrayContaining(['Grammaire', 'Dictée', 'Étude du son']));
   });
 });

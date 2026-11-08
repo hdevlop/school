@@ -1,7 +1,8 @@
 "use client";
 
 import React from 'react';
-import { BookOpen, Hash, FileText } from 'lucide-react';
+import { BookOpen, Hash, FileText, Tags } from 'lucide-react';
+import { SubSubjectTags } from './SubSubjectsEditor';
 import { NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
@@ -32,6 +33,14 @@ const SubjectCard = ({ data, details = false }: any) => {
             maxChars={details ? Infinity : 12}
             valueColor="text-primary font-semibold uppercase"
           />
+
+          {subject.subSubjects?.length > 0 && (
+            <div className="space-y-1">
+              <p className="flex items-center gap-1.5 text-sm text-muted-foreground"><Tags className="size-4" />{t('subjects.form.subSubjects')} ({subject.subSubjects.length})</p>
+              {/* All of them in the details view; a few in the card list. */}
+              <SubSubjectTags items={subject.subSubjects} oneLine={!details} />
+            </div>
+          )}
 
           {subject.description && (
             <NSectionInfo

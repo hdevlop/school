@@ -313,6 +313,32 @@ export class StudentEnrollmentService {
     return corrected.placements.find(placement => placement.id === current.id)!;
   }
 
+  /**
+   * A source of truth outside School (Massar) places the student. With nothing
+   * recorded under the current placement it was simply wrong: correct it and
+   * keep its dates. Otherwise move from today, so past records stay valid.
+   */
+  @Transaction()
+  async placeFromSource(studentId: string, target: { classId: string; sectionId: string }, actor: { id: string; role: string }, reason: string) {
+    const selected = this.validator.ensureEnrollmentExists(await this.enrollments.getByStudentAndYear(studentId, this.year.id));
+    const enrollment = this.validator.ensureEnrollmentExists(await this.enrollments.getById(selected.id, true));
+    const placements = await this.enrollments.listPlacements(enrollment.id);
+    const current = this.validator.ensureClassSection(placements[0]);
+    if (current.classId === target.classId && current.sectionId === target.sectionId) return current;
+    this.validator.ensureProfilePlacementAllowed(actor.role);
+    const settings = await this.settings.getAdminSettings();
+    if (!enrollment.leftOn && settings?.activeAcademicYearId === this.year.id && await this.enrollments.hasDatedRecordsSince(studentId, current.validFrom)) {
+      return this.transfer(enrollment.id, { ...target, validFrom: getBusinessDateOnly(), reason }, actor.id, actor.role);
+    }
+    const status = enrollment.status as CorrectEnrollmentDto['status'];
+    const corrected = await this.applyCorrection(enrollment.id, {
+      enrolledOn: enrollment.enrolledOn, leftOn: enrollment.leftOn, status,
+      expected: { enrolledOn: enrollment.enrolledOn, leftOn: enrollment.leftOn, status, placements },
+      placement: { ...current, ...target }, reason,
+    }, actor, studentId);
+    return corrected.placements.find(placement => placement.id === current.id)!;
+  }
+
   @Transaction()
   async transfer(id: string, data: TransferEnrollmentDto, actorId: string, actorRole?: string) {
     const enrollment = this.validator.ensureEnrollmentExists(await this.enrollments.getById(id, true));

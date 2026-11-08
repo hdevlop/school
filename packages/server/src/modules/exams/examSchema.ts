@@ -26,7 +26,9 @@ export const exams = pgTable('exams', {
   instructions: text('instructions'),
   status: examStatusEnum('status').notNull().default('scheduled'),
   sectionIds: jsonb('section_ids').$type<string[]>(),
+  // The Planning entry this exam comes from (one exam per section); Planning keeps it in sync.
+  planningEntryId: text('planning_entry_id'),
   ...timestamps,
-}, (table) => [index('exams_year_date_idx').on(table.academicYearId, table.date)]);
+}, (table) => [index('exams_year_date_idx').on(table.academicYearId, table.date), index('exams_planning_entry_idx').on(table.planningEntryId)]);
 
 export const examRef = createRef('exam_id', () => exams.id);

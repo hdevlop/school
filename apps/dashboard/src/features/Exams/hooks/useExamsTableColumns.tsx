@@ -1,80 +1,96 @@
 import { useMemo } from 'react';
-import { NBadge } from 'najm-kit';
+import { formatTimeRangeDuration, NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { EXAM_STATUS_COLORS, EXAM_TYPE_COLORS } from '../examBadgeColors';
+import { foldSubjectName } from '@sms/contracts';
+import { EXAM_STATUS_COLORS } from '../examBadgeColors';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 import { exportLabel } from '@/shared/tableExport';
-const formatDuration = (mins) => {
-  if (mins == null) return '—';
-  const m = Number(mins);
-  if (m >= 60) {
-    const h = Math.floor(m / 60);
-    const rest = m % 60;
-    return rest ? `${h}h ${rest}m` : `${h}h`;
-  }
-  return `${m}m`;
+
+type Named = { title?: string | null; subject?: { name?: string | null } | null };
+type NamedRef = { id?: string; name?: string | null } | null;
+/** An exam as the list reads it. */
+export type ExamRow = Named & { id: string; date: string; planningEntryId?: string | null; class?: NamedRef; section?: NamedRef; teacher?: NamedRef; sectionIds?: string[] | null;
+  startTime?: string | null; endTime?: string | null; duration?: number | null };
+
+/** The exam's own name (a Planning sub-subject, a manual title), else its subject's. */
+export const examTitle = (exam: Named) => exam.title?.trim() || exam.subject?.name || '';
+
+/** The subject under the title, only when it says something the title does not. */
+export const examSubjectLine = (exam: Named) => {
+  const subject = exam.subject?.name ?? '';
+  return subject && foldSubjectName(subject) !== foldSubjectName(examTitle(exam)) ? subject : '';
 };
 
+/**
+ * Planning makes one exam per section, each on that section's teaching
+ * assignment (its teacher marks it). A list shows each Planning exam once,
+ * with every section it covers; `members` are the exams the row stands for.
+ */
+export function groupPlannedExams<T extends { id: string; date: string; planningEntryId?: string | null }>(exams: T[]): Array<T & { members?: T[] }> {
+  const groups = new Map<string, T[]>(), rows: Array<T & { members?: T[] }> = [];
+  for (const exam of exams) {
+    if (!exam.planningEntryId) { rows.push(exam); continue; }
+    const group = groups.get(exam.planningEntryId);
+    if (group) { group.push(exam); continue; }
+    const members = [exam];
+    groups.set(exam.planningEntryId, members);
+    rows.push({ ...exam, members });
+  }
+  return rows;
+}
+
+const sectionNames = (row: { section?: { name?: string | null } | null; members?: Array<{ section?: { name?: string | null } | null }> }) =>
+  [...new Set((row.members ?? [row]).map(member => member.section?.name).filter(Boolean) as string[])].sort((a, b) => a.localeCompare(b));
+const teacherNames = (row: { teacher?: { name?: string | null } | null; members?: Array<{ teacher?: { name?: string | null } | null }> }) =>
+  [...new Set((row.members ?? [row]).map(member => member.teacher?.name).filter(Boolean) as string[])];
+
+/** Both, for search and export: "Lecture · Français". */
+export const examName = (exam: Named) => [examTitle(exam), examSubjectLine(exam)].filter(Boolean).join(' · ');
+
+/**
+ * Columns a newcomer reads at a glance: what, who, when and how long, out
+ * of what, and where it stands. Type, duration and the passing mark live in the exam's
+ * details and form.
+ */
 export const useExamsTableColumns = () => {
   const { t } = useTranslation();
-  const { displayDateOnly } = useSchoolFormat();
+  const { displayDate } = useSchoolFormat();
 
   return useMemo(() => [
     {
       accessorKey: 'title',
-      header: t('exams.table.title'),
+      header: t('exams.table.exam'),
       enableSorting: true,
-      cell: ({ getValue }) => (
-        <div className="font-medium text-sm">{getValue()}</div>
+      // Search finds the subject as well as the title.
+      filterFn: (row, _columnId, value) => examName(row.original).toLocaleLowerCase().includes(String(value ?? '').trim().toLocaleLowerCase()),
+      meta: { exportValue: (row) => examName(row) },
+      cell: ({ row }) => (
+        // Each line keeps the column's alignment; only the words inside follow
+        // their own language, so Arabic and French names line up.
+        <div className="min-w-0 text-start">
+          <div className="truncate text-sm font-medium"><bdi dir="auto">{examTitle(row.original)}</bdi></div>
+          {/* The subject, then a teacher only when one is assigned: an empty slot is not an error. */}
+          {(examSubjectLine(row.original) || teacherNames(row.original).length > 0) && <div className="truncate text-xs text-muted-foreground">
+            {[examSubjectLine(row.original), ...teacherNames(row.original)].filter(Boolean).map((part, index) => <span key={index}>{index > 0 && ' · '}<bdi dir="auto">{part}</bdi></span>)}
+          </div>}
+        </div>
       ),
-    },
-    {
-      accessorKey: 'type',
-      meta: { exportValue: exportLabel(code => t(`exams.type.${code}`)) },
-      header: t('exams.table.type'),
-      enableSorting: true,
-      cell: ({ getValue }) => {
-        const type = getValue() as string;
-        return <NBadge color={EXAM_TYPE_COLORS[type]} label={t(`exams.type.${type}`)} look="soft" />;
-      },
-    },
-    {
-      accessorKey: 'subject',
-      header: t('exams.table.subject'),
-      enableSorting: false,
-      cell: ({ row }) => {
-        const name = row.original.subject?.name;
-        if (!name) return <span className="text-gray-400">{t('common.notAssigned')}</span>;
-        return <div className="font-medium text-sm">{name}</div>;
-      },
-    },
-    {
-      accessorKey: 'teacher',
-      header: t('exams.table.teacher'),
-      enableSorting: false,
-      cell: ({ row }) => {
-        const name = row.original.teacher?.name;
-        return name ? (
-          <div className="text-sm">{name}</div>
-        ) : (
-          <span className="text-gray-400">{t('common.notAssigned')}</span>
-        );
-      },
+      size: 340,
     },
     {
       accessorKey: 'class',
-      header: `${t('exams.table.class')} - ${t('exams.table.section')}`,
+      header: t('exams.table.class'),
       enableSorting: false,
       cell: ({ row }) => {
         const className = row.original.class?.name;
+        if (!className) return <span className="text-muted-foreground">—</span>;
+        // "CE1 A, B": every section the row covers.
+        const sections = row.original.members ? sectionNames(row.original) : [];
         const sectionName = row.original.section?.name;
         const additionalSections = Math.max((row.original.sectionIds?.length || 0) - (sectionName ? 1 : 0), 0);
-        if (!className) return <span className="text-gray-400">{t('common.notAssigned')}</span>;
-        const sectionLabel = sectionName
-          ? `${sectionName}${additionalSections ? ` +${additionalSections}` : ''}`
-          : `${row.original.sectionIds?.length || 0} sections`;
-        return <div className="font-medium text-sm">{`${className} - ${sectionLabel}`}</div>;
+        const sectionLabel = sections.length ? sections.join(', ') : sectionName ? `${sectionName}${additionalSections ? ` +${additionalSections}` : ''}` : '';
+        return <div className="text-sm font-medium">{[className, sectionLabel].filter(Boolean).join(' ')}</div>;
       },
     },
     {
@@ -83,31 +99,34 @@ export const useExamsTableColumns = () => {
       enableSorting: true,
       cell: ({ getValue }) => {
         const value = getValue();
-        return value ? <div className="text-sm">{displayDateOnly(value)}</div> : <span className="text-gray-400">—</span>;
+        return value ? <div className="text-sm">{displayDate(value, { weekday: 'short', day: 'numeric', month: 'short' })}</div> : <span className="text-muted-foreground">—</span>;
       },
     },
     {
-      accessorKey: 'duration',
-      header: t('exams.table.duration'),
-      enableSorting: true,
-      cell: ({ getValue }) => (
-        <div className="text-sm">{formatDuration(getValue())}</div>
-      ),
-    },
-    {
-      accessorKey: 'totalMarks',
-      header: t('exams.table.totalMarks'),
+      // "08:30 – 10:00" and its length; an exam with no time shows its length only.
+      id: 'time',
+      accessorFn: (row) => row.startTime ?? '',
+      header: t('exams.table.time'),
       enableSorting: true,
       cell: ({ row }) => {
-        const total = row.original.totalMarks;
-        const passing = row.original.passingMarks;
+        const { startTime, endTime, duration } = row.original;
+        const units = { hourShort: t('common.hourShort'), minuteShort: t('common.minuteShort') };
+        const from = startTime?.slice(0, 5), to = endTime?.slice(0, 5);
         return (
-          <div className="text-sm">
-            <span className="font-medium">{total}</span>
-            {passing != null && <span className="text-xs text-gray-500"> / {passing}</span>}
+          <div className="flex items-center gap-2 text-sm tabular-nums">
+            {from && to ? <span>{from} – {to}</span> : <span className="text-muted-foreground">—</span>}
+            {duration ? <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">{formatTimeRangeDuration(Number(duration), units)}</span> : null}
           </div>
         );
       },
+      size: 190,
+    },
+    {
+      accessorKey: 'totalMarks',
+      header: t('exams.table.outOf'),
+      enableSorting: true,
+      cell: ({ row }) => <div className="text-sm font-medium tabular-nums">{Number(row.original.totalMarks)}</div>,
+      size: 110,
     },
     {
       accessorKey: 'status',
@@ -119,7 +138,7 @@ export const useExamsTableColumns = () => {
         const status = getValue() as string;
         return <NBadge color={EXAM_STATUS_COLORS[status]} label={t(`exams.status.${status}`)} look="soft" />;
       },
-      size: 120,
+      size: 140,
     },
-  ], [t, displayDateOnly]);
+  ], [t, displayDate]);
 };

@@ -7,19 +7,8 @@ export const useExamsTableFilters = () => {
   return useMemo(() => [
     {
       name: 'title',
-      placeholder: t('exams.filters.searchByTitle'),
+      placeholder: t('exams.filters.searchByExam'),
       type: 'text',
-    },
-    {
-      name: 'type',
-      placeholder: t('exams.filters.filterByType'),
-      type: 'select',
-      showIcon: false,
-      options: [
-        { value: 'midterm', label: t('exams.type.midterm') },
-        { value: 'final', label: t('exams.type.final') },
-        { value: 'standardized', label: t('exams.type.standardized') },
-      ],
     },
     {
       name: 'status',

@@ -83,6 +83,14 @@ describe('grade write contract', () => {
     expect(inserted()).toBeNull();
   });
 
+  it('lets the registrar mark a source whose class has no teacher yet, and no teacher', () => {
+    const validator = gradeValidator();
+    const unassigned = { subjectId: 'subject-1', teacherId: null } as any;
+    expect(validator.ensureSourceTeachingAssignment(unassigned, { role: 'registrar' })).toEqual({ teacherId: null, subjectId: 'subject-1' });
+    expect(() => validator.ensureSourceTeachingAssignment(unassigned, { role: 'teacher' })).toThrow('sourceNoAssignment');
+    expect(() => validator.ensureSourceTeachingAssignment({ subjectId: null, teacherId: 'teacher-1' } as any, { role: 'registrar' })).toThrow('sourceNoAssignment');
+  });
+
   it('accepts only editable fields in a grade update', () => {
     expect(updateGradeDto.safeParse({ marksObtained: 17, feedback: 'Improved' }).success).toBe(true);
     expect(updateGradeDto.parse({ feedback: 'Improved' })).toEqual({ feedback: 'Improved' });

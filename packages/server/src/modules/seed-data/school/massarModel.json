@@ -1,0 +1,945 @@
+{
+  "levels": {
+    "1APG": [
+      {
+        "code": "0011",
+        "name": "اللغة العربية",
+        "components": [
+          {
+            "code": "1001",
+            "name": "التعبير الكتابي"
+          },
+          {
+            "code": "1002",
+            "name": "القراءة"
+          },
+          {
+            "code": "1003",
+            "name": "الإملاء"
+          },
+          {
+            "code": "1020",
+            "name": "الخط "
+          },
+          {
+            "code": "1026",
+            "name": "النقل"
+          },
+          {
+            "code": "1039",
+            "name": "الإستماع والتحدث\n"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0012",
+        "name": "اللغة الفرنسية",
+        "components": [
+          {
+            "code": "1044",
+            "name": "Comptine/Chant"
+          },
+          {
+            "code": "1045",
+            "name": "Graphisme"
+          },
+          {
+            "code": "1046",
+            "name": "Activités orales"
+          },
+          {
+            "code": "1052",
+            "name": "Projet de classe"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0013",
+        "name": "اللغة الإنجليزية",
+        "components": [
+          {
+            "code": "0013",
+            "name": "اللغة الإنجليزية"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0019",
+        "name": "الرياضيات",
+        "components": [
+          {
+            "code": "0019",
+            "name": "الرياضيات"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0024",
+        "name": "التربية الإسلامية",
+        "components": [
+          {
+            "code": "0024",
+            "name": "التربية الإسلامية"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0030",
+        "name": "المعلوميات",
+        "components": [
+          {
+            "code": "0030",
+            "name": "المعلوميات"
+          }
+        ],
+        "source": "other levels"
+      },
+      {
+        "code": "0034",
+        "name": "النشاط العلمي",
+        "components": [
+          {
+            "code": "0034",
+            "name": "النشاط العلمي"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "1000",
+        "name": "التربية الفنية",
+        "components": [
+          {
+            "code": "1000",
+            "name": "التربية الفنية"
+          }
+        ],
+        "source": "2025/2026"
+      }
+    ],
+    "2APG": [
+      {
+        "code": "0011",
+        "name": "اللغة العربية",
+        "components": [
+          {
+            "code": "1001",
+            "name": "التعبير الكتابي"
+          },
+          {
+            "code": "1002",
+            "name": "القراءة"
+          },
+          {
+            "code": "1003",
+            "name": "الإملاء"
+          },
+          {
+            "code": "1020",
+            "name": "الخط "
+          },
+          {
+            "code": "1039",
+            "name": "الإستماع والتحدث\n"
+          },
+          {
+            "code": "1040",
+            "name": "تمارين كتابية"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0012",
+        "name": "اللغة الفرنسية",
+        "components": [
+          {
+            "code": "1008",
+            "name": "Activités de prod. écrite"
+          },
+          {
+            "code": "1009",
+            "name": "Lexique"
+          },
+          {
+            "code": "1010",
+            "name": "Grammaire"
+          },
+          {
+            "code": "1011",
+            "name": "Conjugaison"
+          },
+          {
+            "code": "1012",
+            "name": "Orthographe/Dictée"
+          },
+          {
+            "code": "1022",
+            "name": "copie"
+          },
+          {
+            "code": "1024",
+            "name": "dictée"
+          },
+          {
+            "code": "1046",
+            "name": "Activités orales"
+          },
+          {
+            "code": "1047",
+            "name": "Poésie"
+          },
+          {
+            "code": "1048",
+            "name": "Lecture"
+          },
+          {
+            "code": "1049",
+            "name": "Écriture/Copie"
+          },
+          {
+            "code": "1050",
+            "name": "Exercices écrits"
+          },
+          {
+            "code": "1052",
+            "name": "Projet de classe"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0013",
+        "name": "اللغة الإنجليزية",
+        "components": [
+          {
+            "code": "0013",
+            "name": "اللغة الإنجليزية"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0019",
+        "name": "الرياضيات",
+        "components": [
+          {
+            "code": "0019",
+            "name": "الرياضيات"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0024",
+        "name": "التربية الإسلامية",
+        "components": [
+          {
+            "code": "0024",
+            "name": "التربية الإسلامية"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0030",
+        "name": "المعلوميات",
+        "components": [
+          {
+            "code": "0030",
+            "name": "المعلوميات"
+          }
+        ],
+        "source": "other levels"
+      },
+      {
+        "code": "0034",
+        "name": "النشاط العلمي",
+        "components": [
+          {
+            "code": "0034",
+            "name": "النشاط العلمي"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "1000",
+        "name": "التربية الفنية",
+        "components": [
+          {
+            "code": "1000",
+            "name": "التربية الفنية"
+          }
+        ],
+        "source": "2025/2026"
+      }
+    ],
+    "3APG": [
+      {
+        "code": "0011",
+        "name": "اللغة العربية",
+        "components": [
+          {
+            "code": "1001",
+            "name": "التعبير الكتابي"
+          },
+          {
+            "code": "1002",
+            "name": "القراءة"
+          },
+          {
+            "code": "1003",
+            "name": "الإملاء"
+          },
+          {
+            "code": "1039",
+            "name": "الإستماع والتحدث\n"
+          },
+          {
+            "code": "1041",
+            "name": "التطبيقات الكتابية\n"
+          },
+          {
+            "code": "1042",
+            "name": "مشروع الوحدة\n"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0012",
+        "name": "اللغة الفرنسية",
+        "components": [
+          {
+            "code": "1008",
+            "name": "Activités de prod. écrite"
+          },
+          {
+            "code": "1009",
+            "name": "Lexique"
+          },
+          {
+            "code": "1010",
+            "name": "Grammaire"
+          },
+          {
+            "code": "1011",
+            "name": "Conjugaison"
+          },
+          {
+            "code": "1024",
+            "name": "dictée"
+          },
+          {
+            "code": "1046",
+            "name": "Activités orales"
+          },
+          {
+            "code": "1047",
+            "name": "Poésie"
+          },
+          {
+            "code": "1048",
+            "name": "Lecture"
+          },
+          {
+            "code": "1049",
+            "name": "Écriture/Copie"
+          },
+          {
+            "code": "1050",
+            "name": "Exercices écrits"
+          },
+          {
+            "code": "1051",
+            "name": "Production de l’écrit"
+          },
+          {
+            "code": "1052",
+            "name": "Projet de classe"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0013",
+        "name": "اللغة الإنجليزية",
+        "components": [
+          {
+            "code": "0013",
+            "name": "اللغة الإنجليزية"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0019",
+        "name": "الرياضيات",
+        "components": [
+          {
+            "code": "0019",
+            "name": "الرياضيات"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0024",
+        "name": "التربية الإسلامية",
+        "components": [
+          {
+            "code": "0024",
+            "name": "التربية الإسلامية"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0030",
+        "name": "المعلوميات",
+        "components": [
+          {
+            "code": "0030",
+            "name": "المعلوميات"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0034",
+        "name": "النشاط العلمي",
+        "components": [
+          {
+            "code": "0034",
+            "name": "النشاط العلمي"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "1000",
+        "name": "التربية الفنية",
+        "components": [
+          {
+            "code": "1000",
+            "name": "التربية الفنية"
+          }
+        ],
+        "source": "2025/2026"
+      }
+    ],
+    "4APG": [
+      {
+        "code": "0011",
+        "name": "اللغة العربية",
+        "components": [
+          {
+            "code": "1001",
+            "name": "التعبير الكتابي"
+          },
+          {
+            "code": "1002",
+            "name": "القراءة"
+          },
+          {
+            "code": "1003",
+            "name": "الإملاء"
+          },
+          {
+            "code": "1005",
+            "name": "التراكيب"
+          },
+          {
+            "code": "1006",
+            "name": "الصرف والتحويل"
+          },
+          {
+            "code": "1042",
+            "name": "مشروع الوحدة\n"
+          },
+          {
+            "code": "1043",
+            "name": "التواصل الشفهي"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0012",
+        "name": "اللغة الفرنسية",
+        "components": [
+          {
+            "code": "1009",
+            "name": "Lexique"
+          },
+          {
+            "code": "1010",
+            "name": "Grammaire"
+          },
+          {
+            "code": "1011",
+            "name": "Conjugaison"
+          },
+          {
+            "code": "1012",
+            "name": "Orthographe/Dictée"
+          },
+          {
+            "code": "1046",
+            "name": "Activités orales"
+          },
+          {
+            "code": "1047",
+            "name": "Poésie"
+          },
+          {
+            "code": "1048",
+            "name": "Lecture"
+          },
+          {
+            "code": "1049",
+            "name": "Écriture/Copie"
+          },
+          {
+            "code": "1051",
+            "name": "Production de l’écrit"
+          },
+          {
+            "code": "1052",
+            "name": "Projet de classe"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0013",
+        "name": "اللغة الإنجليزية",
+        "components": [
+          {
+            "code": "0013",
+            "name": "اللغة الإنجليزية"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0018",
+        "name": "الاجتماعيات",
+        "components": [
+          {
+            "code": "1017",
+            "name": "التاريخ"
+          },
+          {
+            "code": "1018",
+            "name": "الجغرافية"
+          },
+          {
+            "code": "1019",
+            "name": "التربية المدنية"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0019",
+        "name": "الرياضيات",
+        "components": [
+          {
+            "code": "0019",
+            "name": "الرياضيات"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0024",
+        "name": "التربية الإسلامية",
+        "components": [
+          {
+            "code": "0024",
+            "name": "التربية الإسلامية"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0030",
+        "name": "المعلوميات",
+        "components": [
+          {
+            "code": "0030",
+            "name": "المعلوميات"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0034",
+        "name": "النشاط العلمي",
+        "components": [
+          {
+            "code": "0034",
+            "name": "النشاط العلمي"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "1000",
+        "name": "التربية الفنية",
+        "components": [
+          {
+            "code": "1000",
+            "name": "التربية الفنية"
+          }
+        ],
+        "source": "2025/2026"
+      }
+    ],
+    "5APG": [
+      {
+        "code": "0011",
+        "name": "اللغة العربية",
+        "components": [
+          {
+            "code": "1002",
+            "name": "القراءة"
+          },
+          {
+            "code": "1003",
+            "name": "الإملاء"
+          },
+          {
+            "code": "1004",
+            "name": "الشكل"
+          },
+          {
+            "code": "1005",
+            "name": "التراكيب"
+          },
+          {
+            "code": "1006",
+            "name": "الصرف والتحويل"
+          },
+          {
+            "code": "1027",
+            "name": "فهم المقروء"
+          },
+          {
+            "code": "1028",
+            "name": "إنشاء"
+          },
+          {
+            "code": "1053",
+            "name": "التواصل الشفوي"
+          },
+          {
+            "code": "1054",
+            "name": "مشروع الوحدة"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0012",
+        "name": "اللغة الفرنسية",
+        "components": [
+          {
+            "code": "1008",
+            "name": "Activités de prod. écrite"
+          },
+          {
+            "code": "1009",
+            "name": "Lexique"
+          },
+          {
+            "code": "1010",
+            "name": "Grammaire"
+          },
+          {
+            "code": "1011",
+            "name": "Conjugaison"
+          },
+          {
+            "code": "1012",
+            "name": "Orthographe/Dictée"
+          },
+          {
+            "code": "1013",
+            "name": "Activités de Lecture"
+          },
+          {
+            "code": "1025",
+            "name": "communication et actes de langage"
+          },
+          {
+            "code": "1030",
+            "name": "Poésie/lecture/diction"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0013",
+        "name": "اللغة الإنجليزية",
+        "components": [
+          {
+            "code": "0013",
+            "name": "اللغة الإنجليزية"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0018",
+        "name": "الاجتماعيات",
+        "components": [
+          {
+            "code": "1017",
+            "name": "التاريخ"
+          },
+          {
+            "code": "1018",
+            "name": "الجغرافية"
+          },
+          {
+            "code": "1019",
+            "name": "التربية المدنية"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0019",
+        "name": "الرياضيات",
+        "components": [
+          {
+            "code": "0019",
+            "name": "الرياضيات"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0024",
+        "name": "التربية الإسلامية",
+        "components": [
+          {
+            "code": "0024",
+            "name": "التربية الإسلامية"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0030",
+        "name": "المعلوميات",
+        "components": [
+          {
+            "code": "0030",
+            "name": "المعلوميات"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0034",
+        "name": "النشاط العلمي",
+        "components": [
+          {
+            "code": "0034",
+            "name": "النشاط العلمي"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "1000",
+        "name": "التربية الفنية",
+        "components": [
+          {
+            "code": "1000",
+            "name": "التربية الفنية"
+          }
+        ],
+        "source": "2025/2026"
+      }
+    ],
+    "6APG": [
+      {
+        "code": "0011",
+        "name": "اللغة العربية",
+        "components": [
+          {
+            "code": "1002",
+            "name": "القراءة"
+          },
+          {
+            "code": "1003",
+            "name": "الإملاء"
+          },
+          {
+            "code": "1004",
+            "name": "الشكل"
+          },
+          {
+            "code": "1005",
+            "name": "التراكيب"
+          },
+          {
+            "code": "1006",
+            "name": "الصرف والتحويل"
+          },
+          {
+            "code": "1027",
+            "name": "فهم المقروء"
+          },
+          {
+            "code": "1028",
+            "name": "إنشاء"
+          },
+          {
+            "code": "1053",
+            "name": "التواصل الشفوي"
+          },
+          {
+            "code": "1054",
+            "name": "مشروع الوحدة"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0012",
+        "name": "اللغة الفرنسية",
+        "components": [
+          {
+            "code": "1008",
+            "name": "Activités de prod. écrite"
+          },
+          {
+            "code": "1009",
+            "name": "Lexique"
+          },
+          {
+            "code": "1010",
+            "name": "Grammaire"
+          },
+          {
+            "code": "1011",
+            "name": "Conjugaison"
+          },
+          {
+            "code": "1012",
+            "name": "Orthographe/Dictée"
+          },
+          {
+            "code": "1013",
+            "name": "Activités de Lecture"
+          },
+          {
+            "code": "1025",
+            "name": "communication et actes de langage"
+          },
+          {
+            "code": "1030",
+            "name": "Poésie/lecture/diction"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0013",
+        "name": "اللغة الإنجليزية",
+        "components": [
+          {
+            "code": "0013",
+            "name": "اللغة الإنجليزية"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0018",
+        "name": "الاجتماعيات",
+        "components": [
+          {
+            "code": "1017",
+            "name": "التاريخ"
+          },
+          {
+            "code": "1018",
+            "name": "الجغرافية"
+          },
+          {
+            "code": "1019",
+            "name": "التربية المدنية"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0019",
+        "name": "الرياضيات",
+        "components": [
+          {
+            "code": "0019",
+            "name": "الرياضيات"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0024",
+        "name": "التربية الإسلامية",
+        "components": [
+          {
+            "code": "0024",
+            "name": "التربية الإسلامية"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "0030",
+        "name": "المعلوميات",
+        "components": [
+          {
+            "code": "0030",
+            "name": "المعلوميات"
+          }
+        ],
+        "source": "other levels"
+      },
+      {
+        "code": "0034",
+        "name": "النشاط العلمي",
+        "components": [
+          {
+            "code": "0034",
+            "name": "النشاط العلمي"
+          }
+        ],
+        "source": "2025/2026"
+      },
+      {
+        "code": "1000",
+        "name": "التربية الفنية",
+        "components": [
+          {
+            "code": "1000",
+            "name": "التربية الفنية"
+          }
+        ],
+        "source": "2025/2026"
+      }
+    ]
+  }
+}

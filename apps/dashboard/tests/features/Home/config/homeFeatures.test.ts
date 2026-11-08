@@ -136,7 +136,7 @@ describe('Home card order', () => {
   it('follows the order saved in the roles screen, opening a group in place', () => {
     const order = ['academic', '/dashboard', '/subjects', '/classes'];
     const ids = createHomeCards(t, admin, ['*:*'], order).map((card) => card.id);
-    expect(ids.slice(0, 5)).toEqual(['/subjects', '/classes', '/sections', '/cycles', '/dashboard']);
+    expect(ids.slice(0, 6)).toEqual(['/subjects', '/classes', '/sections', '/cycles', '/massar-settings', '/dashboard']);
     expect(ids).toEqual([...leafIds(createSidebarItems(t, admin, order)), '/settings']);
   });
 

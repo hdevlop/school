@@ -16,6 +16,6 @@ export async function exportFixture(): Promise<MassarExport> {
 export function setupFixture(): Setup {
   return { year: null, yearLabel: '2026-2027', levels: [], classes: [], subjects: [], enrollments: [],
     appClasses: [{ id: 'class-cp', name: 'CP' }], appSections: [{ id: 'section-a', classId: 'class-cp', name: 'A' }], appSubjects: [{ id: 'subject-arabic', code: '0011', name: 'Synthetic subject' }],
-    appStudents: [{ id: 'student-1', studentCode: 'SYNTHETIC1', name: 'Synthetic student', arabicName: null, dateOfBirth: '2018-01-01', classId: 'class-cp', sectionId: 'section-a' }], assignments: [],
+    appStudents: [{ id: 'student-1', studentCode: 'SYNTHETIC1', name: 'Synthetic student', arabicName: null, dateOfBirth: '2018-01-01', leftOn: null, classId: 'class-cp', sectionId: 'section-a' }], assignments: [],
   } as Setup;
 }

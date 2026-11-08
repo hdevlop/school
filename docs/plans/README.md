@@ -8,7 +8,7 @@ plan active. Archiving a plan does not establish deployment or close its checks.
 | Plan | Work still tracked |
 | --- | --- |
 | [Production embeddings](PRODUCTION-EMBEDDINGS-PLAN.md) | Proposed production infrastructure; not applied according to the plan. |
-| [Massar grade sheets](MASSAR-GRADES-PLAN.md) | V1 implemented; filled export remains gated on the real Massar import test. [Verification](../tests/massar-grades.md). |
+| [Massar grade sheets](MASSAR-GRADES-PLAN.md) | One-page dashboard, paper entry, due dates, acceptance locking and local migrations implemented. Left: owner visual review and real Massar checks. [Verification](../tests/massar-grades.md). |
 
 For follow-up verification, use the [academic-year ledger](../tests/academic-year-history.md),
 [Jev/router validation guide](../tests/jev-router-validation.md) and

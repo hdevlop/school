@@ -67,6 +67,9 @@ const mergeDescriptionAndInstructions = (description?: string, instructions?: st
 const ExamForm = ({ exam = null }) => {
   const { t } = useTranslation();
   const examSchema = useMemo(() => createExamSchema(t), [t]);
+  // Planning owns a planned exam's title, lessons, date, class, subject and teacher; the rest is the exam's own.
+  const planned = Boolean(exam?.planningEntryId);
+  const plannedSchema = useMemo(() => examSchema.pick({ type: true, totalMarks: true, passingMarks: true, roomNumber: true, status: true }), [examSchema]);
   const { pop } = useDialog();
   const { viewingYear, isResolving } = useViewingAcademicYear();
   const { data: registeredYears, isPending: isYearsPending } = useAcademicYearOptions();
@@ -125,6 +128,11 @@ const ExamForm = ({ exam = null }) => {
   })) || [];
 
   const handleSubmit = async (formData) => {
+    // A planned exam sends only its own fields; Planning keeps the rest.
+    if (planned) {
+      pop(formData);
+      return;
+    }
     const sectionIds = [...new Set((formData.sectionIds || []).filter(Boolean))];
     pop({
       ...formData,
@@ -149,7 +157,7 @@ const ExamForm = ({ exam = null }) => {
         <NForm
           key={viewingYear}
           id='exam-form'
-          schema={examSchema}
+          schema={planned ? plannedSchema : examSchema}
           defaultValues={defaultValues}
           onSubmit={handleSubmit}
         >
@@ -160,15 +168,17 @@ const ExamForm = ({ exam = null }) => {
               title={t('exams.form.examDetails')}
             />
 
+            {planned && <p className='text-sm text-muted-foreground'>{t('exams.fromPlanningHint')}</p>}
+
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-              <FormInput
+              {!planned && <FormInput
                 name='title'
                 type='text'
                 formLabel={t('exams.form.title')}
                 placeholder={t('exams.form.titlePlaceholder')}
                 icon={GraduationCap}
                 required={true}
-              />
+              />}
 
               <FormInput
                 name='type'
@@ -181,7 +191,7 @@ const ExamForm = ({ exam = null }) => {
               />
             </div>
 
-            <div className='grid grid-cols-1'>
+            {!planned && <div className='grid grid-cols-1'>
               <FormInput
                 name='description'
                 type='textarea'
@@ -189,14 +199,14 @@ const ExamForm = ({ exam = null }) => {
                 placeholder={t('exams.form.descriptionPlaceholder')}
                 icon={FileText}
               />
-            </div>
+            </div>}
 
-            <FormSectionHeader
+            {!planned && <FormSectionHeader
               icon={BookOpen}
               title={t('exams.form.academicContext')}
-            />
+            />}
 
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            {!planned && <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <FormInput
                 name='classId'
                 type='select'
@@ -230,7 +240,7 @@ const ExamForm = ({ exam = null }) => {
                 required={true}
                 disabled={isTeachersLoading}
               />
-            </div>
+            </div>}
 
             <FormSectionHeader
               icon={Calendar}
@@ -238,14 +248,14 @@ const ExamForm = ({ exam = null }) => {
             />
 
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-              <FormInput
+              {!planned && <FormInput
                 name='date'
                 type='date'
                 formLabel={t('exams.form.date')}
                 placeholder={t('exams.form.datePlaceholder')}
                 icon={Calendar}
                 required={true}
-              />
+              />}
 
               <FormInput
                 name='roomNumber'
@@ -255,14 +265,14 @@ const ExamForm = ({ exam = null }) => {
                 icon={Hash}
               />
 
-              <FormInput
+              {!planned && <FormInput
                 name='duration'
                 type='number'
                 formLabel={t('exams.form.duration')}
                 placeholder={t('exams.form.durationPlaceholder')}
                 icon={Clock}
                 required={true}
-              />
+              />}
 
               <FormInput
                 name='totalMarks'

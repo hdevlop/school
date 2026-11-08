@@ -23,7 +23,9 @@ export const teacherAssignments = pgTable('teacher_assignments', {
   id: idField(),
   classId: classRef('restrict'),
   subjectId: subjectRef(),
-  teacherId: teacherRef(),
+  // Empty while the class's subject waits for a teacher: Planning creates such a
+  // slot so its exams exist before anyone is assigned; assigning fills it.
+  teacherId: text('teacher_id').references(() => teachers.id, { onDelete: 'cascade' }),
   sectionId: sectionRef('restrict'),
   ...timestamps,
 });

@@ -19,7 +19,8 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
   // database failure raises an error instead of offering to install again.
   const { loadActiveAcademicYearLabel } = await import('@sms/server');
   if (await loadActiveAcademicYearLabel() === null) {
-    return <SchoolSetup canInstall={PAGE_ACCESS.settings(pageViewer(session))} />;
+    const viewer = pageViewer(session);
+    return <SchoolSetup canInstall={PAGE_ACCESS.settings(viewer)} canRestore={viewer.can('restore:system')} />;
   }
 
   return <DashboardShell>{children}</DashboardShell>;

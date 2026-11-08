@@ -3,7 +3,26 @@ export type ExamPlanningEntry = {
   date: string;
   subject: string;
   lessons: string[];
+  /** From "08:30" to "09:30"; none until the school sets them. */
+  startTime?: string;
+  endTime?: string;
 };
+
+/** How long an exam lasts while Planning gives it no time. */
+export const PLANNING_DEFAULT_DURATION = 60;
+
+const minutesOf = (time: string) => { const [hours, minutes] = time.split(':').map(Number); return hours * 60 + minutes; };
+
+/** "09:30": a time some minutes later, within the day. */
+export function addPlanningMinutes(time: string, minutes: number) {
+  const total = Math.min(minutesOf(time) + minutes, 23 * 60 + 59);
+  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+}
+
+/** Minutes from start to end, or the default while either is missing. */
+export function planningDuration(startTime?: string | null, endTime?: string | null) {
+  return startTime && endTime ? minutesOf(endTime) - minutesOf(startTime) : PLANNING_DEFAULT_DURATION;
+}
 
 export type ExamPlanningClass = {
   id: string;

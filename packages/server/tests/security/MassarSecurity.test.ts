@@ -9,7 +9,7 @@ it('gives every Massar route an explicit permission guard, with school-wide mana
   for (const route of getRoutes(MassarController)) {
     const guards = getGuardMetadata(MassarController, route.methodName);
     expect(guards.some(guard => guard.guardClass.name === 'PermissionGuard'), String(route.methodName)).toBe(true);
-    if (['setup','preview','commit','cancelPreview','blockedClasses','mappings','createRound','closeRound','reopenRound','reopen','export','addStudent','leaveStudent'].includes(String(route.methodName))) expect(guards.some(guard => guard.guardClass.name === 'RoleGuard')).toBe(true);
+    if (['setup','preview','commit','cancelPreview','blockedClasses','mappings','recheckStudents','createRound','changeDueDate','closeRound','reopenRound','reopen','export','downloadRound','acceptDownload'].includes(String(route.methodName))) expect(guards.some(guard => guard.guardClass.name === 'RoleGuard')).toBe(true);
   }
 });
 it('keeps source workbooks out of the generic file server, including Windows case variants', () => {

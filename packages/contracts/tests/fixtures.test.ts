@@ -72,7 +72,8 @@ describe('fixtures', () => {
         .map(subjectId => subjectsData.find(subject => subject.id === subjectId)!.code);
     };
     expect(codesFor('GS')).toHaveLength(6);
-    expect(codesFor('GS').every(code => code.startsWith('PRE'))).toBe(true);
+    // Preschool uses the school's common subjects.
+    expect(new Set(codesFor('GS'))).toEqual(new Set(['AR', 'FR', 'MATH', 'EI', 'ART', 'PE']));
     expect(codesFor('CP')).toContain('SCI');
     expect(codesFor('CP')).not.toContain('HG');
     expect(codesFor('CP')).not.toContain('PHY');

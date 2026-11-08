@@ -5,12 +5,66 @@ unchanged. Massar uses its own year-scoped records and permission guards.
 
 ## Available workflow
 
-- `/massar/setup`: upload XLSX files, a folder or a ZIP; review matches and
-  refusals; confirm the merge; edit mappings and record arrivals/departures.
-- `/massar/rounds`: create rounds and open progress.
-- `/massar/sheets`: filter progress, select exports and download progress CSV.
-- `/massar/sheets/:id`: ordered mark grid, arrow/Enter navigation, justified
-  absence, submit/reopen, printable empty XLSX.
+- `/massar`: one sidebar item, with no page tabs. Upload/check/confirm is a
+  dialog; class/subject matching opens in Massar settings. Arrivals and
+  departures are made in Students: sheets follow the School enrollment.
+- Empty screens point to uploading files, then opening the first Contrôle.
+  Registrars open on Overview; teachers open directly on their first owned
+  sheet; supervisors see only their supervised classes, read-only.
+- Class buttons and subject buttons lead to a paper sheet. Sparse auto-saves
+  serialize requests using the sheet revision, preserving typing during an
+  in-flight save. Invalid cells stay visible and are not saved. A/مبرر sets a
+  justified absence; Enter, Tab, arrows and Excel block paste are supported.
+- Overview refreshes while visible, counts completion without Submit and groups
+  remaining sheets by teacher. Phone layouts use class cards and one student at
+  a time. Print includes current marks and blanks: all visible sheets from
+  Overview, or all visible subjects of the selected class.
+- Download for Massar generates the full Contrôle ZIP without locking. A signed
+  receipt binds acceptance to the downloaded year, sheets and revisions. Only
+  confirming acceptance locks them. Reopen is a management action; corrections
+  retain the prior export record and show “changed after sending”.
+- The acceptance question is retained in browser storage per account/year;
+  unsaved cells are retained in tab storage per account/year/sheet. Restored
+  drafts keep their old revision, so concurrent edits are still refused.
+- The class and subject links (Réglages Massar) are their own page in the
+  Académique menu, `/massar-settings`, for roles with `manage:massar`. The old
+  `/massar/setup` URL redirects there.
+- Old `/massar/rounds`, `/massar/sheets` and sheet detail URLs redirect to
+  `/massar`. Existing REST/MCP read routes remain available.
+
+Labels are resolved on the server from imported observations. Unseen primary
+rounds use standard Arabic labels and show a notice; later collège rounds and
+integrated activities still require matching imported evidence. Unmatched
+students are added in School with their Massar code and correct class; Fix →
+Check again restores their imported identities and order and creates waiting
+sheets. Legacy imports that retained only codes need one re-import.
+
+Optional due dates appear above the sheet and Overview. Today is orange;
+unfinished sheets after the date are red, with overdue teachers first. The
+server computes lateness from the school business date. Managers can change
+or clear the date; passing it never locks entry.
+
+## Single-page redesign verification (2026-11-06)
+
+Focused tests cover page states, French/Arabic text, role controls, editable
+paper, phone fields, due dates, sparse saves, typing during an in-flight request,
+stale revisions, draft recovery, paste validation and keyboard movement. The
+PostgreSQL workflow uses an outer rollback and includes pending-student
+reconciliation, wrong-class refusal, original row order/hidden IDs, full-Control
+download, acceptance and reopening. Lint, workspace typecheck, translations,
+boundaries, full root tests, production build and authenticated security suites
+all pass. The full root suite passes 2,727 tests (five skips); the final
+focused suite passes 51 tests, including integrated-activity navigation. The
+rolled-back PostgreSQL workflow passes 70 assertions; authenticated route and
+refresh transport checks pass all 16 tests. The optional local golden workbook
+test remains skipped without a samples directory.
+
+Migrations `0103` (pending student details) and `0104` (optional due date) are
+additive and preserve existing records. Each was verified on
+`school_history_test` before applying the single reviewed migration to local
+`school`. No new permission, external deployment, external Massar upload or
+verification-flag change is included. The browser-control host was unavailable,
+so live desktop/phone visual inspection and owner acceptance remain open.
 
 Registrar, principal and admin defaults include all Massar permissions. Teachers
 get read and mark entry for their exact assignments. Supervisors get reads for

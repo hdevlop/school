@@ -4,7 +4,8 @@ import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
+import { SubSubjectsEditor, subSubjectDrafts, subSubjectPayload } from './SubSubjectsEditor'
 import { BookOpen, Hash, FileText } from 'lucide-react'
 import { useDialog } from '@/shared/useDialog'
 import { createSubjectSchema } from '../config/subjectSchemas'
@@ -15,6 +16,7 @@ const SubjectForm = ({ subject = null }) => {
    const { t } = useTranslation();
    const subjectSchema = useMemo(() => createSubjectSchema(t), [t]);
    const { pop } = useDialog();
+   const [subSubjects, setSubSubjects] = useState(() => subSubjectDrafts(subject?.subSubjects));
 
    const defaultValues = {
       ...(subject?.id && { id: subject.id }),
@@ -24,7 +26,7 @@ const SubjectForm = ({ subject = null }) => {
    }
 
    const handleSubmit = async (formData) => {
-      pop(formData);
+      pop({ ...formData, subSubjects: subSubjectPayload(subSubjects) });
    }
 
    return (
@@ -72,6 +74,8 @@ const SubjectForm = ({ subject = null }) => {
                   placeholder={t('subjects.form.descriptionPlaceholder')}
                   className='col-span-1'
                />
+
+               <SubSubjectsEditor rows={subSubjects} onChange={setSubSubjects} />
 
                </div>
 

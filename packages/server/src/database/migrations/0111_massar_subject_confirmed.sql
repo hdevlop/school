@@ -1,0 +1,1 @@
+ALTER TABLE "massar_subjects" ADD COLUMN "confirmed" boolean DEFAULT true NOT NULL;

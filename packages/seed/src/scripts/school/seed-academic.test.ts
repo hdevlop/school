@@ -61,7 +61,8 @@ describe('default school data seed', () => {
     for (const code of ['AMZ', 'PHY', 'SVT', 'ENG', 'HIST', 'GEO']) expect(codes).not.toContain(code);
     const preschool = await runSeed(true, true, 'maternelle');
     expect(preschool.error).toBeUndefined();
-    expect(preschool.subjects.every((subject: { code: string }) => subject.code.startsWith('PRE'))).toBe(true);
+    // The common subjects, once each (the run records every seed call).
+    expect([...new Set(preschool.subjects.map((subject: { code: string }) => subject.code))].sort()).toEqual(['AR', 'FR', 'MATH', 'EI', 'ART', 'PE'].sort());
   });
 
   it('creates settings once for the selected year and links sections to persisted classes', async () => {
