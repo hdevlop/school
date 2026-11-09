@@ -143,10 +143,11 @@ describe('Home card order', () => {
   it("puts a family role's sidebar pages first, in that sidebar's order", () => {
     const permissions = ['read:students', 'read:alerts', 'read:grades', 'read:discipline', 'read:behavior-rewards', 'read:events'];
     const parent = viewer('parent', permissions);
-    const order = ['/calendar', 'student-conduct', '/discipline', '/students'];
+    // The calendar sits in the Communications group, ordered as one entry.
+    const order = ['communications', 'student-conduct', '/discipline', '/students'];
     const ids = createHomeCards(t, parent, permissions, order).map((card) => card.id);
     const sidebar = leafIds(createSidebarItems(t, parent, order));
-    expect(sidebar.slice(0, 4)).toEqual(['/calendar', '/discipline', '/behavior-rewards', '/students']);
+    expect(sidebar).toEqual(['/notifications', '/alerts', '/calendar', '/discipline', '/behavior-rewards', '/students']);
     expect(ids.slice(0, sidebar.length)).toEqual(sidebar);
     // Grades lives in the child's profile, not the family sidebar.
     expect(ids.indexOf('/grades')).toBeGreaterThanOrEqual(sidebar.length);

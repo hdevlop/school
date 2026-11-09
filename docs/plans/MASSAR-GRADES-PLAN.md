@@ -2,13 +2,14 @@
 
 Implementation update (2026-11-06): the single-page dashboard in §1–§5 is
 implemented. `/massar` now owns upload, Contrôle selection, Overview, paper
-entry, printing and acceptance. Old URLs redirect there. The external checks
+entry, printing and the send download. Old URLs redirect there. The external checks
 in §6 and the owner's desktop/phone/Arabic review remain open. Teacher
 notifications remain outside this implementation; optional due dates are included.
 
-Downloads stay editable. A signed, year-bound receipt records the downloaded
-sheet revisions; acceptance refuses a receipt if any sheet changed in the
-meantime. The acceptance question survives a page refresh in the same browser.
+Update (2026-11-09): the "Did Massar accept?" question is gone. Downloading
+the whole Contrôle for Massar locks exactly the sheets it sends, in the same
+transaction; a manager reopens a sheet to correct it. Checking downloads (the
+open subject, or one class) still lock nothing.
 Unsaved entry drafts survive year switches in that tab, retaining their original
 revision. No new permission is required.
 
@@ -16,7 +17,7 @@ Migration `0103_massar_pending_students` retains unmatched students' Massar
 identities and order. Fix → add students in School → Check again now unblocks
 their class without another upload. Legacy imports need one re-import to recover
 those details. Migration `0104_massar_round_due_date` adds the optional due date.
-Overdue sheets stay editable until acceptance. Both migrations were verified
+Overdue sheets stay editable until the Contrôle is downloaded for Massar. Both migrations were verified
 against the local fixture before applying to local `school`.
 
 Status (2026-11-06): v1 is built and committed (`f91351f`): import, catalog,
@@ -52,8 +53,7 @@ understand: the **Insurance register** (class buttons → the paper → Print).
 2. **Open** a Contrôle → every teacher sees their sheets.
 3. **Teachers type** marks on a sheet that looks like the Massar paper; it
    saves by itself. The registrar follows on the **Overview**.
-4. **Download for Massar** → upload to Massar → "Did Massar accept the
-   files?" **Yes** → the sheets are locked 🔒.
+4. **Download for Massar** → the sheets are locked 🔒 → upload to Massar.
 
 ### 2.1 Registrar, step by step
 
@@ -112,19 +112,18 @@ them on the paper sheet (§3.3).
 **Step 7 — download.** **[⬇ Download for Massar]** downloads every sheet of
 the Contrôle in one zip. Empty marks stay empty (Massar accepts them). If
 some sheets are not full, one line warns first: "2 sheets are not full.
-Download anyway?" Downloading does not lock anything.
+Download anyway?" Downloading the whole Contrôle locks the sheets it sends 🔒;
+teachers can no longer change them.
 
 **Step 8 — upload to Massar** outside School, as today (all classes at once).
 
-**Step 9 — confirm Massar accepted.** After the download, the page asks:
-"Did Massar accept the files? **[Yes]** [Not yet]". **Yes** → the downloaded
-sheets are locked 🔒; teachers can no longer change them. **Not yet** → the
-question stays on the page until answered.
+**Step 9 — (removed 2026-11-09).** School no longer asks whether Massar
+accepted the files: the download in step 7 locks them.
 
 **Step 10 — a correction after sending.** **Only the registrar reopens** a 🔒
 sheet (button on the sheet). Then the teacher or the registrar edits; the
 sheet shows ⚠ "changed after sending" and the page says "1 sheet changed —
-download and send again" → steps 7–9.
+download and send again" → steps 7–8.
 
 **Step 11 — the next Contrôle.** The Contrôle dropdown → **+ Open next
 Contrôle** → steps 5–10 again. Semester 2 the same.
@@ -462,7 +461,7 @@ supervisor read-only, failed load is not an empty Overview.
 
 | # | Check | Blocks |
 |---|---|---|
-| 1 | **Massar import test:** one generated sheet with one class's real marks, imported into Massar, marks checked there. Then set `MASSAR_FILLED_EXPORT_VERIFIED=true`. | filled export |
+| 1 | ~~**Massar import test:** one generated sheet with one class's real marks, imported into Massar, marks checked there.~~ **Done 2026-11-08**: Massar accepted the files; the `MASSAR_FILLED_EXPORT_VERIFIED` switch is gone. | — |
 | 2 | A row with an **empty hidden id** (new student) imports correctly. Include one in test 1, or wait for a real arrival. | new students without re-import |
 | 3 | Collège: a فرض 2 export, to confirm `#2#` / `الفرض الثاني`. | collège beyond فرض 1 |
 | 4 | الأنشطة المندمجة sheets for other subjects than Islamic level 6. | that Contrôle type |

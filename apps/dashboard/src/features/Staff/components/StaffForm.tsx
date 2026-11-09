@@ -100,8 +100,15 @@ const toStaffPayload = (data) => {
   if (data.role === 'monitor') {
     payload.assignments = (data.classNames || []).map((className) => ({ className }));
   }
+  // An accountant may follow several cycles: one assignment each, with the dates and notes entered once.
+  // None chosen means the whole school, which the accounting role reads anyway.
+  if (data.role === 'accountant' && Array.isArray(data.cycleIds)) {
+    const { startDate, endDate, notes, status } = data.assignments?.[0] || {};
+    payload.assignments = data.cycleIds.map((cycleId) => ({ cycleId, startDate, endDate, notes, status }));
+  }
   delete payload.classIds;
   delete payload.classNames;
+  delete payload.cycleIds;
 
   if (!staffRoleHasAssignments(data.role)) {
     delete payload.assignments;
@@ -165,6 +172,9 @@ const getStaffDefaultValues = (staff = null) => ({
   classNames: currentAssignments(staff)
     .filter((assignment) => assignment.type === 'monitor')
     .map((assignment) => assignment.className).filter(Boolean),
+  cycleIds: currentAssignments(staff)
+    .filter((assignment) => assignment.type === 'accountant')
+    .map((assignment) => assignment.cycleId).filter(Boolean),
 });
 
 const StaffForm = ({ staff = null, onSubmitStaff }) => {
@@ -209,7 +219,7 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
         title: t('staff.form.assignments'),
         schema: schemas.assignmentStep,
         // `role` is carried (not validated here) so the step can show role-based assignment fields.
-        fields: ['assignments', 'classIds', 'classNames', 'role'],
+        fields: ['assignments', 'classIds', 'classNames', 'cycleIds', 'role'],
         render: ({ form }) => <AssignmentsStep form={form} />,
       });
     }
@@ -302,6 +312,7 @@ const PersonalStep = ({ form, isEditing, staffUserId, onRoleChange }) => {
     form.setValue('assignments', isStoredRole ? stored.assignments : [{}]);
     form.setValue('classIds', isStoredRole ? stored.classIds : []);
     form.setValue('classNames', isStoredRole ? stored.classNames : []);
+    form.setValue('cycleIds', isStoredRole ? stored.cycleIds : []);
   };
 
   const roleOptions = useMemo(() => {
@@ -527,7 +538,7 @@ const AssignmentsStep = ({ form }) => {
             )}
             {role === 'accountant' && (
               <div className="space-y-2 md:col-span-2">
-                <FormInput name="assignments.0.cycleId" type="select" formLabel={t('staff.form.cycle')} placeholder={t('staff.form.cycle')} items={cycleOptions} icon={Briefcase} />
+                <FormInput name="cycleIds" type="multiselect" formLabel={t('staff.form.cycle')} placeholder={t('staff.form.cycle')} items={cycleOptions} icon={Briefcase} maxDisplay={Infinity} />
                 <p className="text-sm text-muted-foreground">{t('academic.accountantAssignmentOptional')}</p>
               </div>
             )}

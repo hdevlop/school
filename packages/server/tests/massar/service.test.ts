@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
 import { getTransactionalMethods } from 'najm-database';
-import { MassarService, storedUtc, summarizeSheet } from '../../src/modules/massar/MassarService';
+import { MassarService, mergeObservedRounds, storedUtc, summarizeSheet } from '../../src/modules/massar/MassarService';
 import { getBusinessDateOnly } from '../../src/shared/businessDate';
 import { MassarValidator } from '../../src/modules/massar/MassarValidator';
 import { massarMarkDto } from '../../src/modules/massar/MassarDto';
@@ -24,7 +24,7 @@ function fixture(status = 'not_started') {
     hiddenIds: async () => [], previousYearSubjects: async () => [], addModelSubject: async () => {},
     // Planning gives the ready class exams in October and the college class in October to December: Contrôles 1 to 3 of semester 1.
     planningMonths: async () => [{ classId: 'school-ready', months: { '2026-10': [{ date: '2026-10-20' }] } }, { classId: 'school-college', months: { '2026-10': [{ date: '2026-10-21' }], '2026-11': [{ date: '2026-11-18' }], '2026-12': [{ date: '2026-12-16' }] } }] as Array<{ classId: string; months: Record<string, Array<{ date?: string }>> }>,
-    updateSheet: async (_id: string, data: any) => { Object.assign(row.sheet, data); row.sheet.revision++; return row.sheet; },
+    relinkTeachers: async () => {}, levelSubjectCodes: async () => [], updateSheet: async (_id: string, data: any) => { Object.assign(row.sheet, data); row.sheet.revision++; return row.sheet; },
     yearConfig: async () => ({ schoolCode: 'SYNTHETIC-SCHOOL', massarYearId: 19, schoolName: 'Synthetic school', academy: 'Synthetic academy', direction: 'Synthetic direction', templateFileId: 'template.xlsx' }),
     sheets: async () => [row], completedMarkCounts: async () => [{ sheetId: row.sheet.id, completed: marks.filter(mark => mark.mark !== null || mark.absence === 'justified').length }], updateRound: async (_id: string, status: string) => { row.round.status = status; },
   };
@@ -46,7 +46,7 @@ describe('Massar waiting class', () => {
       pendingStudents: [{ studentCode: 'F200000009', name: 'تلميذ منتظر', dateOfBirth: '14-01-2019', massarStudentId: null, position: 0 }] }] } as any;
     setup.appStudents.push({ ...setup.appStudents[0], id: 'school-pupil', studentCode: '8800009/26', name: 'WAITING PUPIL', dateOfBirth: '2019-01-14', sectionId: 'section-b' });
     const calls: string[] = [];
-    const repository = { lock: async () => {}, setup: async () => setup, sheets: async () => [], allRoundsForManagement: async () => [], planningMonths: async () => [] };
+    const repository = { lock: async () => {}, setup: async () => setup, sheets: async () => [], relinkTeachers: async () => {}, allRoundsForManagement: async () => [], planningMonths: async () => [] };
     const students = { update: async (id: string, data: object) => { calls.push(`update ${id} ${JSON.stringify(data)}`); }, create: async (data: { studentCode: string; gender: string }) => { calls.push(`create ${data.studentCode} ${data.gender}`); } };
     const enrollments = { placeFromSource: async (id: string, place: { sectionId: string }) => { calls.push(`place ${id} ${place.sectionId}`); } };
     const service = new MassarService(repository as any, new MassarValidator(), {} as any, students as any, enrollments as any);
@@ -69,6 +69,20 @@ describe('Massar waiting class', () => {
     expect(refused).toBe(true);
   });
 });
+describe('Massar rounds seen in files', () => {
+  const test = (exam: number, examLabel: string) => ({ exam, examLabel, components: [{ code: String(exam), name: examLabel }] });
+  it('takes a whole-term export as the full list of its term\'s tests, keeping the other term', async () => {
+    const source = { ...await exportFixture(), term: 1, exam: 0, termLabel: 'الدورة الأولى', examLabel: '', termRounds: [test(1, 'الفرض الأول'), test(2, 'الفرض الثاني'), test(4, 'الأنشطة المندمجة')] };
+    // Test 3 came from the default model; this school's Massar has no third test this term.
+    const earlier = [{ term: 1, termLabel: 'الدورة الأولى', ...test(1, 'old label') }, { term: 2, termLabel: 'الدورة الثانية', ...test(1, 'الفرض الأول') }, { term: 1, termLabel: 'الدورة الأولى', ...test(3, 'الفرض الثالث') }];
+    expect(mergeObservedRounds(earlier, source)).toEqual([earlier[1], ...source.termRounds.map(round => ({ term: 1, termLabel: 'الدورة الأولى', ...round }))]);
+  });
+  it('records one test from a single-test export, replacing only that test', async () => {
+    const source = { ...await exportFixture(), term: 1, exam: 2, termLabel: 'الدورة الأولى', examLabel: 'الفرض الثاني', components: [{ code: '2', name: 'الفرض الثاني' }] };
+    const earlier = [{ term: 1, termLabel: 'الدورة الأولى', ...test(1, 'الفرض الأول') }, { term: 1, termLabel: 'الدورة الأولى', ...test(2, 'old label') }];
+    expect(mergeObservedRounds(earlier, source)).toEqual([earlier[0], { term: 1, termLabel: 'الدورة الأولى', ...test(2, 'الفرض الثاني') }]);
+  });
+});
 describe('Massar is the reference on import', () => {
   it('always takes the birth date from Massar, and the class only when not kept', async () => {
     const source = await exportFixture(), setup = setupFixture();
@@ -84,6 +98,44 @@ describe('Massar is the reference on import', () => {
     expect(calls).toEqual([`update student-1 {"dateOfBirth":"${view.classes[0].students[0].dateOfBirth}"}`]);
     calls.length = 0; await commit(['SYNTHETIC1']);
     expect(calls).toEqual([`update student-1 {"dateOfBirth":"${view.classes[0].students[0].dateOfBirth}"}`, 'place student-1 section-a']);
+  });
+});
+describe('Marks a Massar file already holds', () => {
+  const roster = [{ id: 'student-1', studentCode: 'S1' }, { id: 'student-2', studentCode: 'S2' }, { id: 'student-3', studentCode: 'S3' }];
+  const student = (studentCode: string, marks: Array<[string, number | null, string?]>) => ({ studentCode, marks: marks.map(([componentCode, mark, absence]) => ({ componentCode, mark, absence: absence ?? 'none' })) });
+  function importer(kind: 'exam' | 'components', sheets: Array<{ id: string; term: number; exam: number; status?: string; components: Array<{ code: string }> }>, filled: Record<string, string[]> = {}) {
+    const saved: Record<string, unknown[]> = {}, statuses: Record<string, string> = {};
+    const repository = {
+      setup: async () => ({ classes: [{ id: 'class', name: '1APIC-1' }], levels: [{ id: 'level', code: '1APIC', kind }], subjects: [{ id: 'subject', levelId: 'level', code: '0012' }] }),
+      openClassSheets: async () => sheets.map(sheet => ({ status: 'not_started', roster, ...sheet })),
+      // A filled cell is "student:code:mark"; no mark stands for a justified absence.
+      filledCells: async (id: string) => (filled[id] ?? []).map(cell => { const [studentId, componentCode, mark] = cell.split(':'); return { studentId, componentCode, mark: mark || null, absence: mark ? 'none' : 'justified' }; }),
+      saveMarks: async (id: string, marks: unknown[]) => { saved[id] = marks; },
+      updateSheet: async (id: string, data: { status: string }) => { statuses[id] = data.status; },
+    };
+    const service = new MassarService(repository as any, new MassarValidator(), {} as any, {} as any, {} as any);
+    return { run: (files: unknown[]) => (service as any).marksFromFiles(files, registrar) as Promise<{ added: number; replaced: number }>, saved, statuses };
+  }
+  it('fills each collège test grid from a whole-term file, the file replacing what School holds', async () => {
+    const { run, saved, statuses } = importer('exam', [{ id: 'test-1', term: 1, exam: 1, components: [{ code: '1' }] }, { id: 'test-2', term: 1, exam: 2, components: [{ code: '2' }] }, { id: 'term-2', term: 2, exam: 1, components: [{ code: '1' }] }],
+      { 'test-1': ['student-1:1:14.00', 'student-3:1:11.00'], 'test-2': ['student-1:2:14.00'] });
+    const file = { className: '1APIC-1', level: '1APIC', subjectCode: '0012', term: 1, exam: 0, termRounds: [{ exam: 1 }, { exam: 2 }],
+      students: [student('S1', [['1', 16], ['2', 14]]), student('S2', [['1', 9.5], ['2', null, 'justified']]), student('S3', [['1', null], ['2', null]]), student('NOT-ON-GRID', [['1', 20]])] };
+    expect(await run([file])).toEqual({ added: 2, replaced: 1 });
+    // Student 1's test 1 was corrected in the file (14 to 16); the same 14 on test 2 is not rewritten; student 3's empty
+    // cell erases nothing; the other term and a student off the grid are left alone.
+    expect(saved).toEqual({ 'test-1': [{ studentId: 'student-1', componentCode: '1', mark: 16, absence: 'none' }, { studentId: 'student-2', componentCode: '1', mark: 9.5, absence: 'none' }],
+      'test-2': [{ studentId: 'student-2', componentCode: '2', mark: null, absence: 'justified' }] });
+    expect(statuses).toEqual({ 'test-1': 'in_progress', 'test-2': 'in_progress' });
+  });
+  it('fills only its own test from a single-test collège file, and the parts of a primary grid', async () => {
+    const college = importer('exam', [{ id: 'test-1', term: 1, exam: 1, components: [{ code: '1' }] }, { id: 'test-2', term: 1, exam: 2, components: [{ code: '2' }] }]);
+    expect(await college.run([{ className: '1APIC-1', level: '1APIC', subjectCode: '0012', term: 1, exam: 2, students: [student('S1', [['7', 16]])] }])).toEqual({ added: 1, replaced: 0 });
+    expect(college.saved).toEqual({ 'test-2': [{ studentId: 'student-1', componentCode: '2', mark: 16, absence: 'none' }] });
+    const primary = importer('components', [{ id: 'primary', term: 1, exam: 1, status: 'in_progress', components: [{ code: '1001' }] }]);
+    expect(await primary.run([{ className: '1APIC-1', level: '1APIC', subjectCode: '0012', term: 1, exam: 1, students: [student('S1', [['1001', 8], ['9999', 5]])] }])).toEqual({ added: 1, replaced: 0 });
+    expect(primary.saved).toEqual({ primary: [{ studentId: 'student-1', componentCode: '1001', mark: 8, absence: 'none' }] });
+    expect(primary.statuses).toEqual({});
   });
 });
 describe('Massar sheet workflow', () => {
@@ -155,12 +207,8 @@ describe('Massar sheet workflow', () => {
     expect(empty.name).toBe('export_notesCC_1APG-1_0011.xlsx');
     expect((await readExport(empty.bytes)).students[0].massarStudentId).toBeNull();
     expect(Object.keys(unpack(await service.exportSheets(['sheet-1'], true)))).toEqual(['export_notesCC_1APG-1_0011.xlsx']);
-    const original = process.env.MASSAR_FILLED_EXPORT_VERIFIED;
-    try {
-      process.env.MASSAR_FILLED_EXPORT_VERIFIED = 'true';
-      await expect(service.exportSheets(['sheet-1'], false)).rejects.toThrow();
-      expect(row.sheet.status).toBe('not_started');
-    } finally { if (original === undefined) delete process.env.MASSAR_FILLED_EXPORT_VERIFIED; else process.env.MASSAR_FILLED_EXPORT_VERIFIED = original; }
+    await expect(service.exportSheets(['sheet-1'], false)).rejects.toThrow();
+    expect(row.sheet.status).toBe('not_started');
   });
   it('keeps a subject still to confirm out of the files for Massar, but exports its class files to check', async () => {
     const { service, row, repository } = fixture(); row.subject.confirmed = false;
@@ -219,48 +267,32 @@ describe('Massar sheet workflow', () => {
     const transactional = getTransactionalMethods(MassarService).map(method => method.propertyKey);
     for (const method of ['commit','mappings','createRound','saveMarks','submit','reopen','closeRound','exportSheets','resolvePending']) expect(transactional).toContain(method);
   });
-  it('keeps empty and verified filled downloads unlocked', async () => {
-    const original = process.env.MASSAR_FILLED_EXPORT_VERIFIED; delete process.env.MASSAR_FILLED_EXPORT_VERIFIED;
-    try {
-      const { service, row } = fixture();
-      await expect(service.exportSheets(['sheet-1'], false)).rejects.toThrow();
-      const zip = await service.exportSheets(['sheet-1'], true); expect(zip[0]).toBe(0x50); expect(row.sheet.status).toBe('not_started');
-      process.env.MASSAR_FILLED_EXPORT_VERIFIED = 'true';
-      await service.exportSheets(['sheet-1'], false); expect(row.sheet.status).toBe('not_started'); expect(row.round.status).toBe('open');
-      await service.saveMarks('sheet-1', { revision: row.sheet.revision, marks: [] }, teacher); expect(row.sheet.status).toBe('in_progress');
-      expect((await service.sheet('sheet-1', registrar)).sheet.missing).toBe(1);
-    } finally { if (original === undefined) delete process.env.MASSAR_FILLED_EXPORT_VERIFIED; else process.env.MASSAR_FILLED_EXPORT_VERIFIED = original; }
+  it('keeps empty and filled downloads unlocked', async () => {
+    const { service, row } = fixture();
+    const zip = await service.exportSheets(['sheet-1'], true); expect(zip[0]).toBe(0x50); expect(row.sheet.status).toBe('not_started');
+    await service.exportSheets(['sheet-1'], false); expect(row.sheet.status).toBe('not_started'); expect(row.round.status).toBe('open');
+    await service.saveMarks('sheet-1', { revision: row.sheet.revision, marks: [] }, teacher); expect(row.sheet.status).toBe('in_progress');
+    expect((await service.sheet('sheet-1', registrar)).sheet.missing).toBe(1);
   }, 30000);
-  it('downloads the full control, then locks exactly those revisions on acceptance', async () => {
-    const original = process.env.MASSAR_FILLED_EXPORT_VERIFIED, secret = process.env.JWT_ACCESS_SECRET;
-    process.env.MASSAR_FILLED_EXPORT_VERIFIED = 'true'; process.env.JWT_ACCESS_SECRET = 'synthetic-receipt-test-secret';
-    try {
-      const { service, row, repository } = fixture();
-      const second = structuredClone(row); second.sheet.id = 'sheet-2'; second.cls.name = '1APG-2';
-      repository.sheets = async () => [row, second];
-      repository.sheetById = async id => id === 'sheet-1' ? row : id === 'sheet-2' ? second : undefined;
-      repository.updateSheet = async (id, data) => { const sheet = id === 'sheet-1' ? row.sheet : second.sheet; Object.assign(sheet, data); sheet.revision++; return sheet; };
-      const result = await service.downloadRound('round-1');
-      expect(Object.keys(unpack(result.bytes))).toHaveLength(2);
-      expect(row.sheet.status).toBe('not_started'); expect(second.sheet.status).toBe('not_started');
-      await expect(service.acceptDownload('round-1', result.receipt!.replace(/.$/, '!'))).rejects.toThrow();
-      await expect(service.acceptDownload('other-round', result.receipt!)).rejects.toThrow();
-      expect(await service.acceptDownload('round-1', result.receipt!)).toEqual({ locked: 2 });
-      expect(row.sheet.status).toBe('exported'); expect(second.sheet.status).toBe('exported');
-      expect((await service.sheet('sheet-1', registrar)).canEdit).toBe(false);
-      expect((await service.sheet('sheet-1', registrar)).canReopen).toBe(true);
-      await expect(service.saveMarks('sheet-1', { revision: row.sheet.revision, marks: [] }, teacher)).rejects.toThrow();
-      await service.reopen('sheet-1', row.sheet.revision);
-      expect((await service.sheet('sheet-1', teacher)).canEdit).toBe(true);
-      expect(row.sheet.status).toBe('changed_after_export');
-      const changed = await service.downloadRound('round-1');
-      await service.saveMarks('sheet-1', { revision: row.sheet.revision, marks: [] }, teacher);
-      await expect(service.acceptDownload('round-1', changed.receipt!)).rejects.toThrow();
-      expect(row.sheet.status).toBe('changed_after_export');
-      expect((await service.sheet('sheet-1', { role: 'supervisor', id: 'reader' })).canEdit).toBe(false);
-    } finally {
-      if (original === undefined) delete process.env.MASSAR_FILLED_EXPORT_VERIFIED; else process.env.MASSAR_FILLED_EXPORT_VERIFIED = original;
-      if (secret === undefined) delete process.env.JWT_ACCESS_SECRET; else process.env.JWT_ACCESS_SECRET = secret;
-    }
+  it('locks exactly the sheets the full control download sends', async () => {
+    const { service, row, repository } = fixture();
+    const second = structuredClone(row); second.sheet.id = 'sheet-2'; second.cls.name = '1APG-2';
+    repository.sheets = async () => [row, second];
+    repository.sheetById = async id => id === 'sheet-1' ? row : id === 'sheet-2' ? second : undefined;
+    repository.updateSheet = async (id, data) => { const sheet = id === 'sheet-1' ? row.sheet : second.sheet; Object.assign(sheet, data); sheet.revision++; return sheet; };
+    const result = await service.downloadRound('round-1');
+    expect(Object.keys(unpack(result.bytes))).toHaveLength(2);
+    expect(result.locked).toBe(2);
+    expect(row.sheet.status).toBe('exported'); expect(second.sheet.status).toBe('exported');
+    expect((row.sheet as { exportHash?: string }).exportHash).toBeTruthy();
+    expect((await service.sheet('sheet-1', registrar)).canEdit).toBe(false);
+    expect((await service.sheet('sheet-1', registrar)).canReopen).toBe(true);
+    await expect(service.saveMarks('sheet-1', { revision: row.sheet.revision, marks: [] }, teacher)).rejects.toThrow();
+    await service.reopen('sheet-1', row.sheet.revision);
+    expect((await service.sheet('sheet-1', teacher)).canEdit).toBe(true);
+    expect(row.sheet.status).toBe('changed_after_export');
+    await service.saveMarks('sheet-1', { revision: row.sheet.revision, marks: [] }, teacher);
+    expect(row.sheet.status).toBe('changed_after_export');
+    expect((await service.sheet('sheet-1', { role: 'supervisor', id: 'reader' })).canEdit).toBe(false);
   }, 30000);
 });

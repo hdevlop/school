@@ -5,13 +5,12 @@ type Option = { value: string; label: string };
 
 type Params = {
   classId: string;
+  isAllClasses: boolean;
   sectionId: string;
   subjectId: string;
-  teacherId: string;
   setClassId: (v: string) => void;
   setSectionId: (v: string) => void;
   setSubjectId: (v: string) => void;
-  setTeacherId: (v: string) => void;
   sourceType: 'assessment' | 'exam';
   sourceId: string;
   setSourceId: (v: string) => void;
@@ -19,24 +18,20 @@ type Params = {
   classOptions: Option[];
   sectionOptions: Option[];
   subjectOptions: Option[];
-  teacherOptions: Option[];
   isClassesLoading: boolean;
   isSectionsLoading: boolean;
   isSubjectsLoading: boolean;
-  isTeachersLoading: boolean;
   isSourceLoading: boolean;
-  isAdminOrPrincipal: boolean;
 };
 
 export const useGradesTableFilters = (params: Params) => {
   const { t } = useTranslation();
   const {
-    classId, sectionId, subjectId, teacherId,
-    setClassId, setSectionId, setSubjectId, setTeacherId,
+    classId, isAllClasses, sectionId, subjectId,
+    setClassId, setSectionId, setSubjectId,
     sourceType, sourceId, setSourceId, sourceOptions,
-    classOptions, sectionOptions, subjectOptions, teacherOptions,
-    isClassesLoading, isSectionsLoading, isSubjectsLoading, isTeachersLoading, isSourceLoading,
-    isAdminOrPrincipal,
+    classOptions, sectionOptions, subjectOptions,
+    isClassesLoading, isSectionsLoading, isSubjectsLoading, isSourceLoading,
   } = params;
 
   return useMemo(() => {
@@ -51,9 +46,9 @@ export const useGradesTableFilters = (params: Params) => {
         onChange: setClassId,
         options: classOptions,
         disabled: isClassesLoading,
-        className: 'w-full lg:w-32 xl:w-32',
+        className: 'w-full lg:w-40 xl:w-40',
       },
-      {
+      ...(!isAllClasses ? [{
         name: 'section',
         type: 'select',
         showIcon: false,
@@ -64,7 +59,7 @@ export const useGradesTableFilters = (params: Params) => {
         options: sectionOptions,
         disabled: !classId || isSectionsLoading || sectionOptions.length === 0,
         className: 'w-full lg:w-32 xl:w-32',
-      },
+      }] : []),
       {
         name: 'subject',
         type: 'combobox',
@@ -78,34 +73,22 @@ export const useGradesTableFilters = (params: Params) => {
         className: 'w-full lg:w-40',
       },
     ];
-    if (isAdminOrPrincipal) {
-      base.push({
-        name: 'teacher',
-        type: 'combobox',
-        showIcon: false,
-        placeholder: subjectId ? t('grades.toolbar.teacherForSubject') : t('grades.form.teacher'),
-        searchPlaceholder: t('grades.form.teacherPlaceholder'),
-        value: teacherId,
-        onChange: setTeacherId,
-        options: teacherOptions,
-        disabled: isTeachersLoading || teacherOptions.length === 0,
-        className: 'w-full lg:w-40',
-      });
-    }
     base.push({
       name: 'source',
       type: 'combobox',
       showIcon: false,
-      placeholder: isSourceLoading
-        ? t('common.loading')
-        : sourceType === 'assessment'
-          ? t('grades.form.assessmentPlaceholder')
-          : t('grades.toolbar.selectExam'),
+      placeholder: isAllClasses
+        ? t('grades.toolbar.selectClass')
+        : isSourceLoading
+          ? t('common.loading')
+          : sourceType === 'assessment'
+            ? t('grades.form.assessmentPlaceholder')
+            : t('grades.toolbar.selectExam'),
       searchPlaceholder: sourceType === 'assessment' ? t('grades.toolbar.searchAssessment') : t('grades.toolbar.searchExam'),
       value: sourceId,
       onChange: setSourceId,
       options: sourceOptions,
-      disabled: !sectionId || isSourceLoading || sourceOptions.length === 0,
+      disabled: isAllClasses || !sectionId || isSourceLoading || sourceOptions.length === 0,
       className: 'w-full lg:w-56',
     });
     base.push({
@@ -116,11 +99,10 @@ export const useGradesTableFilters = (params: Params) => {
     });
     return base;
   }, [
-    t, classOptions, sectionOptions, subjectOptions, teacherOptions, sourceOptions,
-    classId, sectionId, subjectId, teacherId, sourceType, sourceId,
-    setClassId, setSectionId, setSubjectId, setTeacherId,
+    t, classOptions, sectionOptions, subjectOptions, sourceOptions,
+    classId, isAllClasses, sectionId, subjectId, sourceType, sourceId,
+    setClassId, setSectionId, setSubjectId,
     setSourceId,
-    isClassesLoading, isSectionsLoading, isSubjectsLoading, isTeachersLoading, isSourceLoading,
-    isAdminOrPrincipal,
+    isClassesLoading, isSectionsLoading, isSubjectsLoading, isSourceLoading,
   ]);
 };

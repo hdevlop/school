@@ -77,10 +77,40 @@ describe('Massar workbook', () => {
     files[path] = strToU8(strFromU8(files[path]).replace('</sheetData>', '<row r="1000000"><c r="C1000000" t="str"><v>Synthetic value</v></c></row></sheetData>'));
     await expect(readExport(zipSync(files))).rejects.toMatchObject({ key: 'unsupportedLayout' });
   });
+  it('reads a collège whole-term export as one round per test, leaving teacher notes aside', async () => {
+    const data = await readExport(await syntheticTermExport());
+    expect([data.exam, data.examLabel, data.kind, data.maxMark]).toEqual([0, '', 'exam', 20]);
+    expect(data.termRounds).toEqual(TERM_COLUMNS.slice(0, 5).map(([code, name]) => ({ exam: Number(code), examLabel: name, components: [{ code, name }] })));
+    // The first test stands for the file elsewhere, exactly as its single-test export would.
+    expect(data.components).toEqual([{ code: '1', name: 'الفرض الأول' }]);
+    // Every test's marks, coded with the test's number: the import fills each test's grid from them.
+    expect(data.students[0].marks).toEqual(TERM_COLUMNS.slice(0, 5).map(([code]) => ({ componentCode: code, mark: code === '1' ? 18 : null, absence: 'none' })));
+  }, 30000);
+  it('checks every test of a whole-term export, and still refuses a primary export without its test', async () => {
+    await expect(readExport(await syntheticTermExport(xlsx => { xlsx.getCell('I18')!.value = 25; }))).rejects.toMatchObject({ key: 'invalidMark' });
+    await expect(readExport(await syntheticTermExport(xlsx => { xlsx.getCell('I15')!.value = '#12#'; }))).rejects.toMatchObject({ key: 'invalidComponents' });
+    await expect(readExport(await syntheticTermExport(xlsx => { xlsx.getCell('I11')!.value = 'الفرض الأول'; }))).rejects.toMatchObject({ key: 'invalidHeader' });
+    const primary = new Xlsx(); await primary.loadBuffer(await writeSheet(template, await syntheticExport(2, 1))); primary.useSheet('NotesCC');
+    primary.getCell('I5')!.value = 0; primary.getCell('I11')!.value = null;
+    await expect(readExport(new Uint8Array(await primary.writeBuffer()))).rejects.toMatchObject({ key: 'invalidHeader' });
+  }, 30000);
   it('treats relationship identifiers as literal data', () => {
     expect(sheetPath({ 'xl/workbook.xml': strToU8('<workbook><sheets><sheet name="NotesCC" r:id="("/></sheets></workbook>'), 'xl/_rels/workbook.xml.rels': strToU8('<Relationships><Relationship Id="(" Target="worksheets/sheet1.xml"/></Relationships>') }, 'NotesCC')).toBe('xl/worksheets/sheet1.xml');
   });
 });
+// A collège whole-term export's columns, in Massar's order: the fourth test is #5#, integrated activities #4#.
+const TERM_COLUMNS = [['1', 'الفرض الأول'], ['2', 'الفرض الثاني'], ['3', 'الفرض الثالث'], ['5', 'الفرض الرابع'], ['4', 'الأنشطة المندمجة'], ['100', 'ملاحظات الأستاذ']] as const;
+async function syntheticTermExport(edit?: (xlsx: Xlsx) => void) {
+  const data = await syntheticExport(1, 2);
+  Object.assign(data, { className: '1APIC-1', level: '1APIC', kind: 'exam', maxMark: 20, levelCode: '2A31101110', components: TERM_COLUMNS.map(([code, name]) => ({ code, name })) });
+  data.students[0].marks = [{ componentCode: '1', mark: 18, absence: 'none' }];
+  const xlsx = new Xlsx(); await xlsx.loadBuffer(await writeSheet(template, data)); xlsx.useSheet('NotesCC');
+  xlsx.getCell('I5')!.value = 0; xlsx.getCell('I11')!.value = null;
+  // Teacher notes (column Q) carry no mark: "-" instead of النقطة, and free text per student.
+  xlsx.getCell('Q17')!.value = '-'; xlsx.getCell('Q18')!.value = 'Synthetic note';
+  edit?.(xlsx);
+  return new Uint8Array(await xlsx.writeBuffer());
+}
 async function structure(bytes: Uint8Array) {
   const xlsx = new Xlsx(); await xlsx.loadBuffer(bytes); xlsx.useSheet('NotesCC');
   // ExcelJS alone drops Massar's dxf borders on read; xlsx-manager restores them.
@@ -107,7 +137,9 @@ async function loadGoldenSamples(sampleDirectory?: string) {
     try { zip = unpack(bytes); } catch { continue; }
     const sheet = sheetPath(zip, 'NotesCC');
     if (!sheet || !/<x:worksheet\b/.test(new TextDecoder().decode(zip[sheet]))) continue;
-    samples.push({ bytes, data: await readExport(bytes) });
+    // Generated sheets hold one test: a whole-term export is read, never regenerated.
+    const data = await readExport(bytes);
+    if (!data.termRounds) samples.push({ bytes, data });
   }
   return samples;
 }

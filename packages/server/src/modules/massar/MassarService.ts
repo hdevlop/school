@@ -4,11 +4,12 @@ import { StorageService } from 'najm-storage';
 import { Inject, LoggerService, Service, Transaction, TransactionService } from '../../najm';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
-import { massarPlanningControls, type MassarComponent, type MassarMark, type MassarSheetDetail, type MassarSheetRow } from '@sms/contracts';
+import { massarPlanningControls, type MassarComponent, type MassarGradeSource, type MassarMark, type MassarSheetDetail, type MassarSheetRow } from '@sms/contracts';
 import { MassarRepository } from './MassarRepository';
 import { MassarValidator, mayManageMassar, type MassarActor } from './MassarValidator';
 import { buildImportPreview, pendingWithSuggestions, proposeSubject, sameName, type ImportedFile, type RefusedFile, type Setup } from './importPreview';
 import { massarModel } from './massarModel';
+import { MassarGradeLink } from './MassarGradeLink';
 import { StudentService } from '../students/StudentService';
 import { StudentEnrollmentService } from '../studentEnrollments/StudentEnrollmentService';
 import { readExport, unpack, MassarWorkbookError, type MassarExport } from './workbook/readExport';
@@ -17,7 +18,6 @@ import { MASSAR_MIME } from './workbook/cells';
 import type { MassarCommit, MassarMappings, MassarMarksInput, MassarPlanInput, MassarResolve, MassarRoundInput } from './MassarDto';
 import { getBusinessDateOnly } from '../../shared/businessDate';
 import { resolveRoundLabels } from './roundLabels';
-import { signExportReceipt, readExportReceipt, type ExportReceipt } from './exportReceipt';
 
 const NAMESPACE = 'massar';
 const hash = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -31,8 +31,17 @@ const numericMarks = (marks: Awaited<ReturnType<MassarRepository['marks']>>): Ma
  * time, and in Morocco (UTC+1) every check would expire the moment it is made.
  */
 export const storedUtc = (stamp: string) => Date.parse(/(?:Z|[+-]\d{2}:?\d{2})$/i.test(stamp) ? stamp : `${stamp.replace(' ', 'T')}Z`);
-export const massarFilledExportVerified = () => process.env.MASSAR_FILLED_EXPORT_VERIFIED === 'true';
-export const sheetComponents = (kind: string, components: MassarComponent[], round: MassarRoundInput & { examLabel: string }) => kind === 'exam' ? [{ code: String(round.exam), name: round.examLabel }] : components;
+type ObservedRound = { term: number; exam: number; termLabel: string; examLabel: string; components: MassarComponent[] };
+/**
+ * The rounds a file shows Massar holds for its subject replace what earlier files (or the default model) said about them.
+ * A whole-term export lists every test of its term, each as its own single-test file would, so it replaces the whole term.
+ */
+export function mergeObservedRounds(current: ObservedRound[], source: MassarExport): ObservedRound[] {
+  const seen = (source.termRounds ?? [{ exam: source.exam, examLabel: source.examLabel, components: source.components }])
+    .map(round => ({ term: source.term, termLabel: source.termLabel, ...round }));
+  return [...current.filter(round => round.term !== source.term || (!source.termRounds && !seen.some(item => item.exam === round.exam))), ...seen];
+}
+export const sheetComponents =(kind: string, components: MassarComponent[], round: MassarRoundInput & { examLabel: string }) => kind === 'exam' ? [{ code: String(round.exam), name: round.examLabel }] : components;
 export function summarizeSheet(row: Sheet, marks: MassarMark[] | number): MassarSheetRow {
   const completed = typeof marks === 'number' ? marks : marks.filter(mark => mark.mark !== null || mark.absence === 'justified').length;
   const total = row.sheet.roster.length * row.sheet.components.length;
@@ -44,7 +53,8 @@ export class MassarService {
   @Year() private readonly year!: ResolvedAcademicYear;
   @Inject(TransactionService) private transactions!: TransactionService;
   @Inject(LoggerService) private log!: LoggerService;
-  constructor(private repository: MassarRepository, private validator: MassarValidator, private storage: StorageService, private students: StudentService, private enrollments: StudentEnrollmentService) {}
+  // `grades` keeps each grid and School's exam grades the same mark; tests that build the service by hand leave it out.
+  constructor(private repository: MassarRepository, private validator: MassarValidator, private storage: StorageService, private students: StudentService, private enrollments: StudentEnrollmentService, private grades?: MassarGradeLink) {}
   private writable() { if (this.year.status === 'closed') this.validator.refuse('closedYear'); }
   private async removeStoredFiles(fileIds: string[]) {
     for (const fileId of fileIds) {
@@ -63,7 +73,7 @@ export class MassarService {
   }
   async setup() {
     const setup = await this.repository.setup(), pending = pendingWithSuggestions(setup);
-    return { ...setup, classes: setup.classes.map(cls => ({ ...cls, pendingStudents: pending.get(cls.id) ?? [] })), year: setup.year ? { ...setup.year, templateFileId: undefined, templateReady: true } : null, filledExportVerified: massarFilledExportVerified() };
+    return { ...setup, classes: setup.classes.map(cls => ({ ...cls, pendingStudents: pending.get(cls.id) ?? [] })), year: setup.year ? { ...setup.year, templateFileId: undefined, templateReady: true } : null };
   }
   async availability() {
     const [config, rounds, planning] = await Promise.all([this.repository.yearConfig(), this.repository.allRoundsForManagement(), this.repository.planningMonths()]);
@@ -101,7 +111,8 @@ export class MassarService {
       const level = setup.levels.find(level => level.code === subject.level), old = setup.subjects.find(item => item.levelId === level?.id && item.code === subject.code);
       if (old) subject.lostMarks = await this.repository.marksOutside(old.id, subject.components.map(component => component.code));
     }
-    const cleanFile = result.accepted.findLast(file => file.data.clean);
+    // Generated sheets hold one test: only a single-test export has that layout to copy.
+    const cleanFile = result.accepted.findLast(file => file.data.clean && !file.data.termRounds);
     if (cleanFile) template = originals.get(cleanFile.data) ?? null;
     const payload: PreviewPayload = { files: result.accepted, template: template ? Buffer.from(template).toString('base64') : null, base: setupHash(setup) };
     const id = crypto.randomUUID(), digest = hash(payload), fileId = `${id}_preview.txt`;
@@ -244,7 +255,7 @@ export class MassarService {
       const subjectMapping = subjectMappings.find(subject => subject.level === source.level && subject.code === source.subjectCode);
       if (!subjectMapping) this.validator.refuse('invalidMapping', 422);
       const current = await this.repository.subjectForImport(level.id, source.subjectCode);
-      const observedRounds = [...(current?.observedRounds ?? []).filter(round => round.term !== source.term || round.exam !== source.exam), { term: source.term, exam: source.exam, termLabel: source.termLabel, examLabel: source.examLabel, components: source.components }];
+      const observedRounds = mergeObservedRounds(current?.observedRounds ?? [], source);
       const subject = await this.repository.saveSubject({ levelId: level.id, code: source.subjectCode, name: source.subjectName, subjectId: subjectMapping.subjectId, components: source.exam === 4 && current ? current.components : source.components, observedRounds, confirmed: true });
       if (current && !current.confirmed) await this.confirmSheets(subject, level.kind);
       for (const [position, student] of source.students.entries()) {
@@ -258,9 +269,48 @@ export class MassarService {
     await this.applyModel();
     await this.refreshAssignments();
     if (data.addMissingSheets) await this.addMissingSheets();
+    const importedMarks = await this.marksFromFiles(accepted.map(file => file.data), actor);
     await this.repository.consumePreview(preview.id);
     await this.transactions.afterCommit(() => this.removeStoredFiles([preview.fileId, ...(setup.year?.templateFileId && setup.year.templateFileId !== templateFileId ? [setup.year.templateFileId] : [])]));
-    return { importedFiles: accepted.length, unmatchedStudents: view.classes.flatMap(cls => cls.students).filter(student => !student.studentId).length };
+    return { importedFiles: accepted.length, importedMarks: importedMarks.added, replacedMarks: importedMarks.replaced, unmatchedStudents: view.classes.flatMap(cls => cls.students).filter(student => !student.studentId).length };
+  }
+  /**
+   * The marks a Massar file holds go into the matching open grid, so a test done
+   * in Massar, or a mark a teacher corrected in the file, is not typed again: the
+   * file's mark replaces School's. An empty cell in the file is "not entered" and
+   * erases nothing. A sent grid or a closed Contrôle is never touched; a test with
+   * no grid yet takes its marks when the file is imported again once it has one.
+   */
+  private async marksFromFiles(files: MassarExport[], actor: MassarActor) {
+    const setup = await this.repository.setup();
+    const counts = { added: 0, replaced: 0 };
+    for (const source of files) {
+      const cls = setup.classes.find(item => item.name === source.className), level = setup.levels.find(item => item.code === source.level);
+      const subject = setup.subjects.find(item => item.levelId === level?.id && item.code === source.subjectCode);
+      if (!cls || !level || !subject) continue;
+      for (const sheet of await this.repository.openClassSheets(cls.id, subject.id)) {
+        if (sheet.term !== source.term) continue;
+        // A collège grid holds one test, coded with its number: a whole-term file codes each column so, a single-test file has one column.
+        const fileCode = (code: string) => level.kind !== 'exam' ? code : source.termRounds ? (code === String(sheet.exam) ? code : null) : (source.exam === sheet.exam ? String(sheet.exam) : null);
+        const codes = new Set(sheet.components.map(component => component.code));
+        const held = new Map((await this.repository.filledCells(sheet.id)).map(cell => [`${cell.studentId}:${cell.componentCode}`, cell]));
+        let replaced = 0;
+        const marks: MassarMark[] = sheet.roster.flatMap(student => (source.students.find(row => row.studentCode === student.studentCode)?.marks ?? []).flatMap(mark => {
+          const componentCode = fileCode(mark.componentCode);
+          if (!componentCode || !codes.has(componentCode) || (mark.mark === null && mark.absence !== 'justified')) return [];
+          const old = held.get(`${student.id}:${componentCode}`);
+          if (old && old.absence === mark.absence && (old.mark === null ? null : Number(old.mark)) === mark.mark) return [];
+          if (old) replaced++;
+          return [{ studentId: student.id, componentCode, mark: mark.mark, absence: mark.absence }];
+        }));
+        if (!marks.length) continue;
+        await this.repository.saveMarks(sheet.id, marks, actor.id);
+        await this.grades?.fromMassar(sheet.id, marks, actor.id);
+        if (sheet.status === 'not_started') await this.repository.updateSheet(sheet.id, { status: 'in_progress' });
+        counts.added += marks.length - replaced; counts.replaced += replaced;
+      }
+    }
+    return counts;
   }
   @Transaction()
   async cancelPreview(id: string, actor: MassarActor) {
@@ -317,17 +367,7 @@ export class MassarService {
     await this.refreshAssignments(); await this.addMissingSheets();
     return { resolved };
   }
-  private async refreshAssignments() {
-    const refreshed = await this.repository.setup();
-    for (const row of await this.repository.sheets()) {
-      if (row.round.status === 'closed' || row.sheet.exportedAt) continue;
-      const cls = refreshed.classes.find(cls => cls.id === row.cls.id)!;
-      const subject = refreshed.subjects.find(subject => subject.id === row.subject.id)!;
-      const assignments = refreshed.assignments.filter(({ assignment }) => assignment.classId === cls.classId && assignment.sectionId === cls.sectionId && assignment.subjectId === subject.subjectId);
-      const teacherAssignmentId = assignments.length === 1 ? assignments[0].assignment.id : null;
-      if (teacherAssignmentId !== row.sheet.teacherAssignmentId) await this.repository.updateSheet(row.sheet.id, { teacherAssignmentId });
-    }
-  }
+  private async refreshAssignments() { await this.repository.relinkTeachers(); }
   /**
    * Every Massar level the school has gets the model's subjects that no file
    * brought yet, so each class has all its grids. They stay "to confirm": a
@@ -341,8 +381,19 @@ export class MassarService {
       const known = setup.subjects.find(item => item.levelId === level.id && item.code === subject.code), subjectId = proposeSubject(setup.appSubjects, subject.code, subject.name)?.id ?? null;
       // A model subject still unlinked takes the School subject it now matches; a linked one keeps the registrar's choice.
       if (known) { if (!known.confirmed && !known.subjectId && subjectId) await this.repository.saveSubject({ ...known, subjectId }); continue; }
-      await this.repository.addModelSubject({ levelId: level.id, code: subject.code, name: subject.name, components: subject.components, subjectId });
+      await this.repository.addModelSubject({ levelId: level.id, code: subject.code, name: subject.name, components: subject.components, observedRounds: subject.rounds ?? [], subjectId });
     }
+  }
+  private async modelHasNewSubjects() {
+    const levels = await this.repository.levelSubjectCodes();
+    if (!levels.length) return false;
+    const model = massarModel(await this.repository.previousYearSubjects());
+    return levels.some(level => [...(model.get(level.code)?.keys() ?? [])].some(code => !level.subjects.has(code)));
+  }
+  @Transaction()
+  private async applyModelToOpenRounds() {
+    await this.repository.lock();
+    await this.addMissingSheets();
   }
   /** A file of this year confirmed a model subject: its open grids take Massar's exact parts (the check counted any mark this drops). */
   private async confirmSheets(subject: Setup['subjects'][number], kind: string) {
@@ -369,6 +420,8 @@ export class MassarService {
         }
       }
     }
+    // New grids meet their exams: marks on either side come together.
+    await this.grades?.reconcile(null);
   }
   async rounds(actor: MassarActor) { return mayManageMassar(actor) ? this.repository.allRoundsForManagement() : this.repository.rounds(); }
   async blockedClasses(roundId: string) {
@@ -420,11 +473,33 @@ export class MassarService {
     await this.repository.updateDueDate(id, dueDate); return { saved: true };
   }
   async sheets(roundId?: string) {
+    if (this.year.status !== 'closed') {
+      // A subject the default model gained since this year was set up gets its grids in the open Contrôles.
+      if (await this.modelHasNewSubjects()) await this.applyModelToOpenRounds();
+      // A teacher assigned in School since the sheets were made shows here (and finds their sheets) at once.
+      await this.repository.relinkTeachers();
+    }
     const [rows, counts] = await Promise.all([this.repository.sheets(roundId), this.repository.completedMarkCounts(roundId)]);
     const completed = new Map(counts.map(row => [row.sheetId, row.completed]));
     return rows.map(row => summarizeSheet(row, completed.get(row.sheet.id) ?? 0));
   }
+  async gradeSources(): Promise<MassarGradeSource[]> {
+    const rows = await this.repository.sheets();
+    const links = await this.grades?.examLinks(rows.map(row => row.sheet.id)) ?? [];
+    const linked = new Map(links.map(cell => [JSON.stringify([cell.sheet.id, cell.componentCode]), cell.exam.id]));
+    return rows.flatMap(({ sheet, cls, subject, level, round, teacherId }) => {
+      if (!cls.classId || !cls.sectionId || !subject.subjectId) return [];
+      return sheet.components.map(component => ({
+        id: `massar:${sheet.id}:${encodeURIComponent(component.code)}`,
+        sheetId: sheet.id, componentCode: component.code, title: component.name.trim(),
+        classId: cls.classId!, sectionId: cls.sectionId!, subjectId: subject.subjectId!, teacherId,
+        totalMarks: Number(level.maxMark), term: round.term, exam: round.exam, termLabel: round.termLabel, examLabel: round.examLabel,
+        linkedExamId: linked.get(JSON.stringify([sheet.id, component.code])) ?? null,
+      }));
+    });
+  }
   async sheet(id: string, actor: MassarActor): Promise<MassarSheetDetail> {
+    if (this.year.status !== 'closed') await this.repository.relinkTeachers();
     const row = await this.requireSheet(id), marks = numericMarks(await this.repository.marks(id)), manager = mayManageMassar(actor);
     const config = await this.repository.yearConfig();
     return { sheet: summarizeSheet(row, marks), round: row.round, components: row.sheet.components, maxMark: row.level.maxMark, students: row.sheet.roster, marks,
@@ -436,6 +511,7 @@ export class MassarService {
     await this.repository.lock(); const row = await this.ownedOpenSheet(id, data.revision, actor);
     this.validator.ensureMarks(data, row.sheet.roster, row.sheet.components, row.level.maxMark);
     await this.repository.saveMarks(id, data.marks, actor.id);
+    await this.grades?.fromMassar(id, data.marks, actor.id);
     return this.repository.updateSheet(id, { status: row.sheet.exportedAt ? 'changed_after_export' : 'in_progress' });
   }
   @Transaction()
@@ -495,30 +571,36 @@ export class MassarService {
     // A grid whose subject a Massar file of this year has not confirmed stays out of the download.
     const sheets = all.filter(row => row.subject.confirmed);
     if (!sheets.length) this.validator.refuse('subjectUnconfirmed');
-    return this.buildExport(sheets.map(row => row.sheet.id), false, true);
+    // The whole Contrôle is what goes to Massar: downloading it locks exactly the marks it carries, in the same transaction.
+    const result = await this.buildExport(sheets.map(row => row.sheet.id), false);
+    const exportedAt = new Date().toISOString();
+    for (const [index, row] of result.rows.entries())
+      await this.repository.updateSheet(row.sheet.id, { status: 'exported', teacherUnlocked: false, exportedAt, exportHash: result.digests[index] });
+    const roundSheets = await this.repository.sheets(id);
+    if (roundSheets.length && roundSheets.every(row => row.sheet.status === 'exported')) await this.repository.updateRound(id, 'exported');
+    return { bytes: result.bytes, locked: result.rows.length };
   }
   /**
-   * One class's sheets as Massar files, to check them or to try an import in
-   * Massar: nothing is marked as sent, so it waits neither for the first
-   * successful import nor for this year's file to confirm a subject (one still
-   * to confirm keeps last year's spelling). One sheet comes as its .xlsx,
+   * One class's sheets as Massar files, to check them: nothing is marked as
+   * sent, so it does not wait for this year's file to confirm a subject (one
+   * still to confirm keeps last year's spelling). One sheet comes as its .xlsx,
    * several as a zip.
    */
   @Transaction()
   async exportClass(ids: string[]) {
-    const { bytes, files, rows } = await this.buildExport(ids, false, false, true);
+    const { bytes, files, rows } = await this.buildExport(ids, false, true);
     if (new Set(rows.map(row => row.cls.id)).size !== 1) this.validator.refuse('invalidSelection', 422);
     const names = Object.keys(files);
     return names.length === 1 ? { bytes: files[names[0]], name: names[0], type: MASSAR_MIME }
       : { bytes, name: `export_notesCC_${rows[0].cls.name.replace(/[^\w-]/g, '_')}.zip`, type: 'application/zip' };
   }
-  private async buildExport(ids: string[], empty: boolean, issueReceipt = false, check = false) {
-    // Sending (a download that locks sheets once Massar accepts it) waits for the first successful import; a check does not.
-    this.writable(); if (!empty && !check && !massarFilledExportVerified()) this.validator.refuse('exportUnverified');
+  private async buildExport(ids: string[], empty: boolean, check = false) {
+    // Massar accepted School's filled files on 2026-11-08: sending is no longer held back by a first import test.
+    this.writable();
     await this.repository.lock();
     const config = await this.repository.yearConfig(); if (!config) this.validator.refuse('setupRequired');
     const template = await this.storage.get(NAMESPACE, config.templateFileId); if (!template) this.validator.refuse('noCleanTemplate');
-    const files: Record<string, Uint8Array> = {}, exported: Sheet[] = [], snapshots: ExportReceipt['sheets'] = [];
+    const files: Record<string, Uint8Array> = {}, exported: Sheet[] = [], digests: string[] = [];
     if (new Set(ids).size !== ids.length) this.validator.refuse('invalidSelection', 422);
     for (const id of ids) {
       const row = await this.requireSheet(id);
@@ -528,31 +610,10 @@ export class MassarService {
       if (!row.subject.confirmed && !check) this.validator.refuse('subjectUnconfirmed');
       const result = await this.workbook(row, empty, template, config), name = exportName(row);
       if (files[name]) this.validator.refuse('invalidSelection', 422);
-      files[name] = result.bytes; exported.push(row);
-      snapshots.push({ id, revision: row.sheet.revision });
+      files[name] = result.bytes; exported.push(row); digests.push(result.digest);
     }
     const bytes = zipSync(files);
-    return { bytes, files, rows: exported, receipt: issueReceipt ? signExportReceipt({ yearId: this.year.id, roundId: exported[0].round.id, downloadedAt: new Date().toISOString(), sheets: snapshots }) : null };
-  }
-  @Transaction()
-  async acceptDownload(roundId: string, token: string) {
-    this.writable(); await this.repository.lock();
-    const receipt = readExportReceipt(token);
-    if (!receipt || receipt.yearId !== this.year.id || receipt.roundId !== roundId) this.validator.refuse('invalidDownload');
-    const rows = await Promise.all(receipt.sheets.map(snapshot => this.requireSheet(snapshot.id)));
-    // Validate the whole snapshot before writing; never lock newer, unsent marks.
-    for (const [index, row] of rows.entries()) {
-      if (row.round.id !== roundId || row.round.status === 'closed') this.validator.refuse('locked');
-      if (row.sheet.revision !== receipt.sheets[index].revision) this.validator.refuse('staleDownload');
-    }
-    for (const snapshot of receipt.sheets) {
-      const marks = numericMarks(await this.repository.marks(snapshot.id));
-      const digest = hash(marks.sort((a, b) => `${a.studentId}:${a.componentCode}`.localeCompare(`${b.studentId}:${b.componentCode}`)));
-      await this.repository.updateSheet(snapshot.id, { status: 'exported', teacherUnlocked: false, exportedAt: receipt.downloadedAt, exportHash: digest });
-    }
-    const sheets = await this.repository.sheets(roundId);
-    if (sheets.length && sheets.every(row => row.sheet.status === 'exported')) await this.repository.updateRound(roundId, 'exported');
-    return { locked: rows.length };
+    return { bytes, files, rows: exported, digests };
   }
   async progressCsv(roundId: string) {
     const rows = await this.sheets(roundId), cell = (value: unknown) => `"${String(value ?? '').replace(/"/g, '""').replace(/^\s*[=+@-]/, "'$&")}"`;

@@ -2804,7 +2804,20 @@
         "average": "Average",
         "averageShort": "Avg",
         "loading": "Loading grades...",
-        "noneRecorded": "No grades recorded"
+        "noneRecorded": "No grades recorded",
+        "overallAverage": "Overall average",
+        "classRank": "Class rank",
+        "remark": "Remark",
+        "remarks": {
+          "excellent": "Excellent",
+          "veryGood": "Very good",
+          "good": "Good",
+          "fairlyGood": "Fairly good",
+          "average": "Average",
+          "insufficient": "Insufficient"
+        },
+        "rank": "Rank",
+        "toWorkOn": "To work on"
       },
       "feeDetails": {
         "fee": "Fee",
@@ -3156,6 +3169,7 @@
       "salary": "Salary",
       "compensationMode": "Compensation",
       "assignments": "Assignments",
+      "wholeSchool": "Whole school",
       "status": "Status"
     },
     "filters": {
@@ -4249,7 +4263,11 @@
       "resetChanges": "Reset changes",
       "nothingToSave": "Nothing to save.",
       "unsaved": "Unsaved",
-      "unsavedChanges": "Unsaved grades. Click Save grades to apply them. Drafts stay in this tab for this roster."
+      "unsavedChanges": "Unsaved grades. Click Save grades to apply them. Drafts stay in this tab for this roster.",
+      "autosaving": "Saving…",
+      "autosaved": "Saved",
+      "autosaveFailed": "Not saved. Check the marks and try again.",
+      "retry": "Retry"
     },
     "subtitle": {
       "count": "Students: {{count}}"
@@ -7467,7 +7485,7 @@
     "atMostThreePhoneNumbers": "Enter at most three phone numbers"
   },
   "academic": {
-    "accountantAssignmentOptional": "Cycle assignment is optional. You can assign a cycle later.",
+    "accountantAssignmentOptional": "Choose one or more cycles, or leave it empty for the whole school.",
     "monitorAssignmentHint": "Access is limited to the students, attendance, discipline and grades of these grades' classes, this year and the years after.",
     "deleteWarning": "Linked records are protected. Deleted records cannot be recovered.",
     "classRequired": "Please select a class.",
@@ -7639,7 +7657,7 @@
       "dropFiles": "Drop files or a folder, or",
       "browseFiles": "browse files",
       "browseFolder": "choose folder",
-      "uploadHint": "Empty grade files exported from Massar",
+      "uploadHint": "Grade files exported from Massar, empty or filled: their marks go into the open Contrôles and replace those in School",
       "readFilesFailed": "Could not read the dropped files. Try browsing for them instead.",
       "uploadLimits": "XLSX or ZIP · up to 200 files · 15 MB maximum",
       "clearFiles": "Clear selected files",
@@ -7690,13 +7708,11 @@
     "export": "Prepare export",
     "closeRound": "Close round",
     "exportReview": "{{count}} sheets selected; {{missing}} marks missing. Blanks can be exported.",
-    "exportGate": "Filled export becomes available after a successful import test in Massar.",
     "emptyZip": "Download empty sheets",
     "filledZip": "Download with marks",
     "cancel": "Cancel",
     "select": "Select",
     "student": "Student",
-    "maxMark": "Out of",
     "save": "Save marks",
     "submit": "Submit",
     "reopen": "Reopen for entry",
@@ -7773,19 +7789,19 @@
       "missingMarks": "Complete every mark or justified absence before submitting.",
       "closedYear": "This academic year is closed.",
       "missingHiddenId": "Re-import this class from Massar to fill new students’ hidden identifiers before exporting.",
-      "exportUnverified": "Filled export requires a successful import test in Massar first.",
       "invalidSelection": "Select distinct sheets from one round.",
-      "invalidDownload": "Download the files again before confirming Massar accepted them.",
-      "staleDownload": "Marks changed after this download. Download and send the updated files before confirming.",
       "invalidDueDate": "Choose a due date within this academic year.",
       "invalidStudentDecision": "This student choice no longer matches the check. Check the files again.",
       "notPlanned": "This Contrôle is not in the school's plan. Change the plan in Massar settings.",
       "invalidPlan": "This plan is not valid.",
       "planBelowOpened": "A Contrôle already opened cannot be taken out of the plan.",
-      "subjectUnconfirmed": "This subject comes from last year’s Massar files. Upload this year’s Massar file for it first."
+      "subjectUnconfirmed": "This subject comes from last year’s Massar files. Upload this year’s Massar file for it first.",
+      "controlClosed": "This Contrôle is closed in Massar: its marks can no longer change."
     },
     "flow": {
       "control": "Contrôle {{exam}} — Semester {{term}}",
+      "controlShort": "C{{exam}}-S{{term}}",
+      "activitiesShort": "Act-S{{term}}",
       "semester": "Semester {{term}}",
       "controlNumber": "Contrôle {{exam}}",
       "activities": "Integrated activities",
@@ -7819,16 +7835,11 @@
       "allDone": "Every sheet is complete.",
       "unavailable": "No sheet for this subject",
       "download": "Download for Massar",
-      "downloadCount": "{{count}} sheets will be downloaded in one ZIP.",
+      "downloadCount": "{{count}} sheets will be downloaded in one ZIP and locked. A manager can reopen a sheet to change it.",
       "incomplete": "{{count}} sheets are not full. Download anyway?",
-      "acceptedQuestion": "Did Massar accept the files?",
-      "yes": "Yes",
-      "notYet": "Not yet",
-      "notYetHelp": "Upload the files to Massar, then answer Yes here. Your sheets stay editable.",
       "changedCount": "{{count}} sheets changed — download and send again",
       "settings": "Massar settings",
       "paperTitle": "Continuous assessment marks",
-      "birthDate": "Birth date",
       "saved": "✓ Saved",
       "saving": "Saving…",
       "saveFailed": "Not saved — retry",
@@ -7929,6 +7940,12 @@
       "classChange": "Class: {{from}} → {{to}}",
       "birthDateChange": "Birth date: {{from}} → {{to}}",
       "recordsFixed": "Students corrected from Massar: {{count}}",
+      "marksImported": "Marks taken from the Massar files: {{count}}",
+      "marksReplaced": "Marks replaced by the Massar files: {{count}}",
+      "cycle": {
+        "primary": "Primary",
+        "college": "Middle school"
+      },
       "arabicNameChange": "Arabic name: {{from}} → {{to}}",
       "notInMassarTitle": "In School, not in Massar: {{count}}",
       "notInMassarHelp": "Check them: if they left, record it in Students; otherwise add them in Massar.",
@@ -7956,6 +7973,8 @@
       },
       "printAll": "Print all classes",
       "sideClasses": "Classes",
+      "collapseClasses": "Hide the classes column",
+      "expandClasses": "Show the classes column",
       "classesDone": "{{count}}/{{total}} done",
       "examDates": "Exams {{from}} – {{to}}",
       "examDay": "Exams {{date}}",
@@ -7972,6 +7991,8 @@
       "exportOpen": "Open subject only",
       "exportAll": "All subjects of {{name}}",
       "exportAllReady": "{{count}} files in one zip",
+      "exportControl": "The whole Contrôle, to send to Massar",
+      "exportControlHelp": "{{count}} files in a zip, locked once downloaded",
       "exportAllHelp": "{{count}} files in one zip, {{unconfirmed}} still to confirm"
     }
   }

@@ -46,38 +46,37 @@
 .missingTeachers > div { display:grid; grid-template-columns:minmax(160px,220px) 1fr; gap:16px; align-items:start; }
 .missingTeachers strong { font-size:13px; padding-top:4px; }
 .textButton { padding:0; border:0; background:transparent; color:var(--primary); text-decoration:underline; text-underline-offset:3px; cursor:pointer; text-align:start; }
-.paper { width:100%; max-width:1160px; align-self:center; background:white; color:#18212f; padding:26px; border:1px solid #cbd5e1; border-radius:3px; box-shadow:0 4px 20px #00000008; }
-.paperHeader { display:flex; justify-content:space-between; align-items:center; gap:20px; border-bottom:2px solid #374151; padding-bottom:16px; }
+.paper { width:100%; max-width:1160px; align-self:center; background:var(--card); color:var(--card-foreground,var(--foreground)); padding:26px; border:1px solid var(--border); border-radius:3px; box-shadow:0 4px 20px color-mix(in oklab,var(--foreground) 3%,transparent); }
+.paperHeader { display:flex; justify-content:space-between; align-items:center; gap:20px; border-bottom:2px solid color-mix(in oklab,var(--foreground) 75%,var(--card)); padding-bottom:16px; }
 .paperHeader h2 { font-size:20px; font-weight:600; margin:8px 0 0; }
 .paperHeader img { width:60px; height:60px; object-fit:contain; }
 .paperMeta { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-block:12px; font-size:13px; }
-.paperLine { margin-top:0; padding-bottom:12px; border-bottom:2px solid #374151; align-items:baseline; }
-.desktopSheet { max-height:66vh; border:1px solid #aeb7c4; }
+.paperLine { margin-top:0; padding-bottom:12px; border-bottom:2px solid color-mix(in oklab,var(--foreground) 75%,var(--card)); align-items:baseline; }
+.desktopSheet { max-height:66vh; border:1px solid color-mix(in oklab,var(--foreground) 25%,var(--border)); }
 .paperTable { width:100%; border-collapse:separate; border-spacing:0; font-size:12px; }
 /* The sheet is always right to left, and some cells read left to right (codes, dates):
    borders and the pinned name use fixed sides so every column keeps its line. */
-.paperTable th, .paperTable td { border-left:1px solid #cbd5e1; border-bottom:1px solid #cbd5e1; padding:6px; text-align:center; white-space:nowrap; }
-.paperTable thead th { background:#edf1f6; position:sticky; top:0; z-index:3; white-space:normal; min-width:70px; overflow-wrap:anywhere; }
-.paperTable thead small { display:block; font-size:10px; color:#64748b; font-weight:400; }
+.paperTable th, .paperTable td { border-left:1px solid var(--border); border-bottom:1px solid var(--border); padding:6px; text-align:center; white-space:nowrap; }
+.paperTable thead th { background:color-mix(in oklab,var(--muted) 70%,var(--card)); position:sticky; top:0; z-index:3; white-space:normal; min-width:70px; overflow-wrap:anywhere; }
+.paperTable thead small { display:block; font-size:10px; color:var(--muted-foreground); font-weight:400; }
 /* Fixed identity columns, the same on every subject (MassarPaper's IDENTITY_WIDTH is their sum). */
 .paperTable { table-layout:fixed; }
 .colNumber { width:52px; }
 .colCode { width:132px; }
-.colName { width:260px; }
-.colBirth { width:120px; }
+.colName { width:200px; }
 .colMark { width:112px; }
 /* N°, code and name stay in view while the marks scroll; the sheet is always right to left. */
-.paperTable .stickyNumber, .paperTable .stickyCode, .paperTable .stickyName { position:sticky; z-index:2; background:white; }
+.paperTable .stickyNumber, .paperTable .stickyCode, .paperTable .stickyName { position:sticky; z-index:2; background:var(--card); }
 .paperTable .stickyNumber { right:0; }
 .paperTable .stickyCode { right:52px; }
 .paperTable .stickyName { right:184px; text-align:start; overflow:hidden; text-overflow:ellipsis; }
-.paperTable thead .stickyNumber, .paperTable thead .stickyCode, .paperTable thead .stickyName { z-index:4; background:#edf1f6; }
+.paperTable thead .stickyNumber, .paperTable thead .stickyCode, .paperTable thead .stickyName { z-index:4; background:color-mix(in oklab,var(--muted) 70%,var(--card)); }
 .cellField { min-width:65px; }
-.cellField[data-empty='true'] { background:#fff9df; }
-.cellField .markInput { width:100%; min-width:54px; max-width:100px; border:1px solid transparent; padding:5px; text-align:center; border-radius:3px; background:transparent; color:#18212f; font-size:14px; height:34px; }
-.cellField .markInput:focus { outline:2px solid #2f66c4; background:#eff6ff; }
-.cellField .markInput[aria-invalid='true'] { border-color:#dc2626; background:#fef2f2; color:#991b1b; }
-.cellField .markInput:disabled { opacity:1; background:#f3f4f6; color:#4b5563; }
+.cellField[data-empty='true'] { background:color-mix(in oklab,#facc15 12%,var(--card)); }
+.cellField .markInput { width:100%; min-width:54px; max-width:100px; border:1px solid transparent; padding:5px; text-align:center; border-radius:3px; background:transparent; color:var(--foreground); font-size:14px; height:34px; }
+.cellField .markInput:focus { outline:2px solid var(--ring); background:color-mix(in oklab,var(--ring) 10%,var(--card)); }
+.cellField .markInput[aria-invalid='true'] { border-color:var(--destructive); background:color-mix(in oklab,var(--destructive) 10%,var(--card)); color:color-mix(in oklab,var(--destructive) 70%,var(--foreground)); }
+.cellField .markInput:disabled { opacity:1; background:var(--muted); color:var(--muted-foreground); }
 .invalidMark { display:block; color:var(--destructive,#b91c1c); font-size:11px; }
 .phoneSheet { display:none; }
 .supervisedPaper { display:none; }
@@ -115,11 +114,11 @@
   .paper { padding:16px; }
   .paperHeader h2 { font-size:17px; }
   .paperHeader img { width:42px; height:42px; }
-  .studentPaging { display:flex; justify-content:space-between; align-items:center; gap:8px; padding-block:16px; border-block:1px solid #cbd5e1; }
+  .studentPaging { display:flex; justify-content:space-between; align-items:center; gap:8px; padding-block:16px; border-block:1px solid var(--border); }
   .studentPaging > div { text-align:center; }
-  .studentPaging small { display:block; color:#64748b; font-size:11px; }
-  .phoneComponent { display:grid; grid-template-columns:1fr 130px; gap:12px; align-items:center; padding-block:12px; border-bottom:1px solid #e2e8f0; }
-  .phoneComponent .markInput { border:1px solid #cbd5e1; max-width:none; }
+  .studentPaging small { display:block; color:var(--muted-foreground); font-size:11px; }
+  .phoneComponent { display:grid; grid-template-columns:1fr 130px; gap:12px; align-items:center; padding-block:12px; border-bottom:1px solid var(--border); }
+  .phoneComponent .markInput { border:1px solid var(--input,var(--border)); max-width:none; }
 }
 .page *, .page *::before, .page *::after { box-sizing:border-box; }
 .page button, .page input { font-family:inherit; }
@@ -331,10 +330,11 @@
   .gridHelp { padding:10px 12px; }
 }
 /* Import check: compact, problems first, actions always visible. */
-.importDialog { width:calc(100% - 24px); height:min(820px,calc(100dvh - 32px)); max-height:calc(100dvh - 32px); border-radius:var(--radius); }
+/* As tall as what the check has to say, never taller than the screen: the decisions scroll past that. */
+.importDialog { width:calc(100% - 24px); height:auto; max-height:min(820px,calc(100dvh - 32px)); border-radius:var(--radius); }
 .importDialogHeader { flex-shrink:0; padding:18px 20px 12px; padding-inline-end:44px; }
 .importReview { display:flex; flex:1; flex-direction:column; gap:10px; min-height:0; min-width:0; overflow:hidden; padding:0 20px 16px; font-size:13px; }
-.reviewScroll { flex:1; min-height:0; min-width:0; }
+.reviewScroll { flex:0 1 auto; min-height:0; min-width:0; }
 .reviewDecisions { display:flex; flex-direction:column; gap:10px; padding-inline-end:8px; }
 .reviewStatus { flex-shrink:0; max-height:min(26dvh,220px); }
 .reviewStatusContent { display:flex; flex-direction:column; gap:10px; padding-inline-end:8px; }
@@ -388,7 +388,7 @@
 .fileChips button:hover { background:var(--muted); color:var(--foreground); }
 .fileChips button svg { width:13px; height:13px; }
 @media(max-width:767px) {
-  .importDialog { width:calc(100% - 16px); height:calc(100dvh - 16px); max-height:calc(100dvh - 16px); }
+  .importDialog { width:calc(100% - 16px); max-height:calc(100dvh - 16px); }
   .importDialogHeader { padding:16px 14px 10px; padding-inline-end:44px; }
   .importReview { padding:0 14px 14px; }
   .subjectSelect { width:min(160px,40vw); }
@@ -436,12 +436,12 @@
 .skeletonChip { display:inline-flex; align-items:center; gap:6px; height:38px; padding:0 10px; background:var(--card); border:1px solid var(--border); border-radius:var(--radius); }
 .skeletonRow { display:grid; grid-template-columns:minmax(110px,180px) 1fr; align-items:center; gap:16px; padding:14px 20px; border-block-start:1px solid var(--border); min-height:52px; }
 .skeletonRow[data-head] { background:var(--muted); min-height:0; padding-block:12px; }
-.bone { display:block; flex-shrink:0; border-radius:4px; background:color-mix(in oklab,var(--foreground) 8%,transparent); animation:massarPulse 1.4s ease-in-out infinite; }
+/* Colour and pulse come from NSkeleton, as on every other page; this only sizes and shapes it. */
+.bone { display:block; flex-shrink:0; border-radius:4px; }
 .bone[data-round] { border-radius:999px; }
-@keyframes massarPulse { 50% { opacity:.45; } }
 .skeletonCellStack { display:flex; align-items:center; gap:10px; }
 @keyframes massarFadeIn { from { opacity:0; } to { opacity:1; } }
-@media(prefers-reduced-motion:reduce) { .skeleton, .bone { animation:none; } }
+@media(prefers-reduced-motion:reduce) { .skeleton { animation:none; } }
 @media(max-width:767px) {
   .skeleton .overview { padding-bottom:2px; }
   .skeletonRow[data-head] { display:none; }
@@ -520,6 +520,7 @@
 .controlPicker { display:inline-flex; align-items:stretch; min-width:0; }
 .controlTrigger { display:inline-flex; align-items:center; gap:12px; min-width:230px; padding:6px 12px; border:1px solid var(--primary); border-radius:8px; background:color-mix(in oklab,var(--primary) 8%,var(--card)); color:var(--foreground); text-align:start; cursor:pointer; }
 .controlTrigger > span { display:flex; flex-direction:column; flex:1; min-width:0; }
+.controlTrigger > .triggerShort { display:none; }
 .controlTrigger strong { font-size:13px; font-weight:600; color:var(--primary); white-space:nowrap; }
 .controlTrigger small { font-size:11px; color:var(--muted-foreground); }
 .controlTrigger > svg { width:16px; height:16px; flex-shrink:0; color:var(--primary); }
@@ -542,6 +543,25 @@
 .sideSection:last-child { flex:1; min-height:0; }
 .sideTitle { display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin:0; font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted-foreground); }
 .sideTitle small { font-size:11px; font-weight:500; letter-spacing:0; text-transform:none; }
+/* The column's handle, as on the app's sidebar: always shown in the gap beside it; click or drag. */
+.sideRail { display:none; }
+/* Narrowed, the column keeps every element where it was: the Contrôle, the title, each class's dot and name.
+   What no longer fits is dropped from the end of its row. Wide screens only: a phone has no handle. */
+@media(min-width:768px) {
+  .sheetLayout { --side-width:260px; position:relative; grid-template-columns:var(--side-width) minmax(0,1fr); transition:grid-template-columns .2s ease; }
+  .sheetLayout[data-side='collapsed'] { --side-width:128px; }
+  /* Centred on the column's border line, half over the column and half over the gap. */
+  .sideRail { display:block; position:absolute; inset-block:0; inset-inline-start:calc(var(--side-width) - 7px); z-index:5; width:12px; padding:0; border:0; background:transparent; cursor:ew-resize; touch-action:none; transition:inset-inline-start .2s ease; }
+  .sideRail::after { content:''; position:absolute; top:50%; left:3px; width:6px; height:48px; margin-top:-24px; border-radius:999px; background:color-mix(in oklab,var(--primary) 35%,var(--border)); transition:background-color .15s, height .15s, margin-top .15s; }
+  .sideRail:hover::after, .sideRail:active::after, .sideRail:focus-visible::after { background:var(--primary); height:64px; margin-top:-32px; }
+  .sideRail:focus-visible { outline:none; }
+  /* These sit at the end of their row, so dropping them moves nothing that stays. */
+  .sideColumn[data-collapsed='true'] :is(.sideTitle small, .classStatus, .controlDate, .controlTrigger > svg) { display:none; }
+  .sideColumn[data-collapsed='true'] .controlTrigger strong { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sideColumn[data-collapsed='true'] .controlTrigger > .triggerFull { display:none; }
+  .sideColumn[data-collapsed='true'] .controlTrigger > .triggerShort { display:flex; }
+  .sideColumn[data-collapsed='true'] .classText bdi, .sideColumn[data-collapsed='true'] .sideTitle { white-space:nowrap; }
+}
 .sideColumn .controlPicker { width:100%; }
 .sideColumn .controlTrigger { flex:1; min-width:0; }
 .sheetArea { display:flex; flex-direction:column; gap:8px; min-width:0; }
@@ -564,29 +584,32 @@
 .subjectTab:focus-visible { outline:2px solid var(--ring); outline-offset:-2px; }
 .subjectTab:disabled { opacity:.6; cursor:default; }
 .tabStatus { min-width:34px; padding:1px 6px; border-radius:999px; background:var(--muted); color:var(--muted-foreground); font-size:10.5px; font-weight:600; text-align:center; font-variant-numeric:tabular-nums; }
-.tabStatus[data-status='started'], .tabStatus[data-status='changed_after_export'] { background:color-mix(in oklab,#d97706 14%,transparent); color:#b45309; }
-.tabStatus[data-status='done'], .tabStatus[data-status='exported'] { background:color-mix(in oklab,#16a34a 14%,transparent); color:#15803d; }
-.tabStatus[data-status='late'] { background:color-mix(in oklab,#dc2626 14%,transparent); color:#b91c1c; }
+.tabStatus[data-status='started'], .tabStatus[data-status='changed_after_export'] { background:color-mix(in oklab,#d97706 14%,transparent); color:color-mix(in oklab,#d97706 75%,var(--foreground)); }
+.tabStatus[data-status='done'], .tabStatus[data-status='exported'] { background:color-mix(in oklab,#16a34a 14%,transparent); color:color-mix(in oklab,#16a34a 75%,var(--foreground)); }
+.tabStatus[data-status='late'] { background:color-mix(in oklab,#dc2626 14%,transparent); color:color-mix(in oklab,#dc2626 75%,var(--foreground)); }
 .sheetCard > .paper { padding:0; border:0; border-radius:0; box-shadow:none; background:transparent; }
 .sheetCard .paperLine { justify-content:flex-start; align-items:center; gap:10px; margin:0; padding:8px 14px; border-bottom:1px solid var(--border); font-size:12.5px; color:var(--muted-foreground); }
 /* The line is always right to left and the teacher reads in the interface's direction: a fixed side sends it to the far end. */
 .sheetTeacher { display:inline-flex; align-items:center; gap:6px; margin-right:auto; color:var(--foreground); }
 .sheetTeacher svg { width:14px; height:14px; color:var(--muted-foreground); }
-.sheetCard .desktopSheet { border:0; border-radius:0; background:white; }
+.sheetCard .desktopSheet { border:0; border-radius:0; background:var(--card); }
 .sheetCard .saveBar { padding:6px 12px; border-top:1px solid var(--border); }
 .sheetLoading { margin:0; padding:16px; font-size:13px; color:var(--muted-foreground); }
 /* An empty mark is a field to fill, not a warning: a light box; the tab's percent says what is missing. */
 .sheetCard .cellField[data-empty='true'] { background:transparent; }
-.sheetCard .cellField .markInput:not(:disabled) { border-color:#e2e8f0; background:white; }
-.sheetCard .cellField .markInput:not(:disabled):hover { border-color:#cbd5e1; }
-.sheetCard .cellField .markInput:not(:disabled):focus { border-color:#2f66c4; background:#eff6ff; }
-.sheetCard .cellField .markInput[aria-invalid='true']:not(:disabled) { border-color:#dc2626; background:#fef2f2; }
+.sheetCard .cellField .markInput:not(:disabled) { border-color:var(--input,var(--border)); background:var(--card); }
+.sheetCard .cellField .markInput:not(:disabled):hover { border-color:color-mix(in oklab,var(--foreground) 25%,var(--border)); }
+.sheetCard .cellField .markInput:not(:disabled):focus { border-color:var(--ring); background:color-mix(in oklab,var(--ring) 10%,var(--card)); }
+.sheetCard .cellField .markInput[aria-invalid='true']:not(:disabled) { border-color:var(--destructive); background:color-mix(in oklab,var(--destructive) 10%,var(--card)); }
+/* A student still without a mark: a light orange border, so the gaps stand out while typing. */
+.sheetCard .cellField[data-empty='true'] .markInput:not(:disabled):not(:focus):not([aria-invalid='true']) { border-color:color-mix(in oklab,#f59e0b 45%,var(--border)); }
+.sheetCard .cellField[data-empty='true'] .markInput:not(:disabled):not(:focus):not([aria-invalid='true']):hover { border-color:color-mix(in oklab,#f59e0b 70%,var(--border)); }
 /* On a wide screen the card and the sheet fill the window's height; only the class list and the marks grid scroll. */
 @media(min-width:768px) {
   .scroll:has(.sheetLayout) { display:flex; flex-direction:column; overflow:hidden; padding-bottom:0; }
   .main:has(.sheetLayout) { flex:1; min-height:0; width:100%; }
   .main:has(.sheetLayout) > .sheetLayout { flex:1; min-height:0; grid-template-rows:minmax(0,1fr); }
-  .sheetLayout .sideColumn { position:static; min-height:0; }
+  .sheetLayout .sideColumn { position:relative; min-height:0; }
   .sheetArea { min-height:0; }
   .sheetArea > .sheetCard { flex:1; min-height:0; }
   .sheetCard > .paper { flex:1; min-height:0; display:flex; flex-direction:column; }
@@ -606,7 +629,11 @@
 .sideColumn .controlTrigger strong { white-space:normal; overflow:visible; line-height:1.3; }
 .controlTrigger small { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-.classList { display:flex; flex-direction:column; gap:6px; flex:1; min-height:0; overflow-y:auto; padding:1px; }
+.classScroll { flex:1; min-height:0; min-width:0; }
+.classList { display:flex; flex-direction:column; gap:6px; padding:1px; }
+/* Primary, then collège: a cycle's name opens its classes once both cycles are listed. */
+.cycleTitle { flex-shrink:0; padding:6px 4px 0; font-size:11px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--muted-foreground); }
+.cycleTitle:first-child { padding-top:0; }
 /* Each class wears its own colour: a border, and when open a tint and a thicker edge. */
 .classItem { --class-color:var(--border); display:flex; align-items:center; gap:10px; width:100%; padding:8px 10px; border:1px solid color-mix(in oklab,var(--class-color) 55%,var(--border)); border-inline-start:3px solid var(--class-color); border-radius:var(--radius); background:var(--card); color:var(--foreground); text-align:start; cursor:pointer; transition:background-color .15s, border-color .15s; }
 .classItem:hover:not(:disabled) { background:color-mix(in oklab,var(--class-color) 7%,var(--card)); }
@@ -620,17 +647,28 @@
 .classBar > span[data-status='done'], .classBar > span[data-status='exported'] { background:#16a34a; }
 .classBar > span[data-status='late'] { background:#dc2626; }
 .classStatus { flex-shrink:0; min-width:44px; padding:2px 7px; border-radius:999px; background:var(--muted); color:var(--muted-foreground); font-size:11px; font-weight:600; text-align:center; font-variant-numeric:tabular-nums; }
-.classStatus[data-status='done'] { background:color-mix(in oklab,#16a34a 14%,transparent); color:#15803d; }
-.classStatus[data-status='started'] { background:color-mix(in oklab,#d97706 14%,transparent); color:#b45309; }
-.classStatus[data-status='late'] { background:color-mix(in oklab,#dc2626 14%,transparent); color:#b91c1c; }
+.classStatus[data-status='done'] { background:color-mix(in oklab,#16a34a 14%,transparent); color:color-mix(in oklab,#16a34a 75%,var(--foreground)); }
+.classStatus[data-status='started'] { background:color-mix(in oklab,#d97706 14%,transparent); color:color-mix(in oklab,#d97706 75%,var(--foreground)); }
+.classStatus[data-status='late'] { background:color-mix(in oklab,#dc2626 14%,transparent); color:color-mix(in oklab,#dc2626 75%,var(--foreground)); }
 
 @media(max-width:767px) {
   .sheetLayout { grid-template-columns:minmax(0,1fr); }
   .sideColumn { position:static; }
-  .classList { flex-direction:row; max-height:none; overflow-x:auto; margin:0; scrollbar-width:none; }
-  .classList::-webkit-scrollbar { display:none; }
+  .classList { flex-direction:row; width:max-content; margin:0; }
   .classItem { width:auto; flex-shrink:0; }
+  .cycleTitle { align-self:center; padding:0 2px 0 6px; }
+  .cycleTitle:first-child { padding-inline-start:0; }
   .classBar { display:none; }
   .controlTrigger { min-width:0; flex:1; }
   .controlPicker { flex:1; }
 }
+/* The grid's and the class list's scrollbars show only while the pointer is over them (autoHide="leave"):
+   thin and light, a little thicker under the pointer. The table keeps room under its last row for the horizontal bar. */
+:is(.desktopSheet, .classScroll) :global(.os-scrollbar) { --os-size:8px; --os-padding-perpendicular:2px; --os-handle-perpendicular-size:3px; --os-handle-perpendicular-size-hover:5px; --os-handle-perpendicular-size-active:5px; --os-track-bg:transparent; --os-track-bg-hover:transparent; --os-handle-bg:color-mix(in oklab,var(--foreground) 16%,transparent); --os-handle-bg-hover:color-mix(in oklab,var(--foreground) 26%,transparent); --os-handle-bg-active:color-mix(in oklab,var(--foreground) 32%,transparent); }
+.desktopSheet .paperTable { margin-bottom:12px; }
+/* The sheet reads right to left, yet its vertical bar stays on the right like every other scrollbar in the app
+   (OverlayScrollbars moves it left in RTL); the horizontal bar keeps its right-to-left movement and leaves the corner free. */
+.desktopSheet :global(.os-scrollbar-rtl.os-scrollbar-vertical) { left:auto; right:0; }
+.desktopSheet :global(.os-scrollbar-rtl.os-scrollbar-vertical .os-scrollbar-handle) { left:auto; right:0; }
+.desktopSheet :global(.os-scrollbar-rtl.os-scrollbar-horizontal) { left:0; right:var(--os-size); }
+.desktopSheet :global(.os-scrollbar.os-scrollbar-horizontal.os-scrollbar-cornerless.os-scrollbar-rtl) { right:0; }

@@ -7,6 +7,8 @@ import { useTranslation } from 'najm-i18n/react';
 import { getStaffAvatar } from '../utils/staffAvatar';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { currentAssignmentLabels, formatAssignments } from '../utils/staffAssignments';
+import { useCoversWholeSchool } from '../hooks/useCoversWholeSchool';
+import { WholeSchoolTag } from './WholeSchoolTag';
 import { avatarVersion } from '@/lib/avatarVersion';
 import { PersonCard } from '@/shared/PersonCard';
 import { CompactPersonCard, CompactTag, CompactValue, useCompactPersonCard } from '@/shared/CompactPersonCard';
@@ -46,6 +48,7 @@ const AssignmentsSummary = ({ staff, language }) => {
 const StaffCard = ({ data, details = false }) => {
   const { t, language } = useTranslation();
   const { majorMoney } = useSchoolFormat();
+  const coversWholeSchool = useCoversWholeSchool();
   const staff = data;
   // The details dialog always shows the full card.
   const compact = useCompactPersonCard() && !details;
@@ -104,9 +107,11 @@ const StaffCard = ({ data, details = false }) => {
         icon={MapPinned}
         iconColor="text-muted-foreground"
         label={t('staff.table.assignments')}
-        value={details
-          ? <span className="whitespace-normal break-words">{formatAssignments(staff, language)}</span>
-          : <AssignmentsSummary staff={staff} language={language} />}
+        value={coversWholeSchool(staff)
+          ? <WholeSchoolTag />
+          : details
+            ? <span className="whitespace-normal break-words">{formatAssignments(staff, language)}</span>
+            : <AssignmentsSummary staff={staff} language={language} />}
         {...(details ? { className: 'flex-wrap items-start' } : contactRow)}
       />
 

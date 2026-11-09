@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { MessageSquare } from 'lucide-react';
-import { Input, NAvatar, NBadge, NButton, cn } from 'najm-kit';
+import { Input, NAvatar, NButton, cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { avatarVersion } from '@/lib/avatarVersion';
+import { GradeMarkField } from './GradeMarkField';
+import { GradeStatus } from './GradeStatus';
 
 const percentOf = (obtained, total) => {
   if (obtained == null || obtained === '' || !total) return null;
@@ -17,105 +19,64 @@ interface GradeRosterCardProps {
   canEdit: (row: any) => boolean;
   onEdit: (row: any, columnId: string, value: any) => void;
   onToggleStatus: (row: any) => void;
+  allowFeedback?: boolean;
 }
 
 /**
- * One student's grade on a phone: the same edits as the table's cells, in one
- * compact row so a section fits on a screen or two. Feedback stays folded
- * behind its button until it is opened or already holds text.
+ * One student's grade on a phone: name and status on the left, the mark field
+ * on the right, the same field as the table's (saved on its own, Enter moves
+ * to the next student). Feedback stays folded behind its button until it is
+ * opened or already holds text.
  */
-export default function GradeRosterCard({ data: row, canEdit, onEdit, onToggleStatus }: GradeRosterCardProps) {
+export default function GradeRosterCard({ data: row, canEdit, onEdit, onToggleStatus, allowFeedback = true }: GradeRosterCardProps) {
   const { t } = useTranslation();
   const editable = canEdit(row);
-  const [marks, setMarks] = useState(row.marksObtained ?? '');
   const [feedback, setFeedback] = useState(row.feedback ?? '');
   const [feedbackOpen, setFeedbackOpen] = useState(false);
-  useEffect(() => setMarks(row.marksObtained ?? ''), [row.marksObtained]);
   useEffect(() => setFeedback(row.feedback ?? ''), [row.feedback]);
 
-  const total = row.totalMarks;
-  const invalid = marks !== '' && (Number(marks) < 0 || (total != null && Number(marks) > Number(total)));
-  const percent = percentOf(marks, total);
-  const percentColor = percent == null ? 'text-muted-foreground' : percent >= 75 ? 'text-emerald-600' : percent >= 50 ? 'text-amber-600' : 'text-rose-600';
+  const percent = percentOf(row.marksObtained, row.totalMarks);
+  const percentColor = percent == null ? '' : percent >= 75 ? 'text-emerald-600' : percent >= 50 ? 'text-amber-600' : 'text-rose-600';
   const status = row.status || 'pending';
-  const statusToggles = editable && (status === 'pending' || status === 'missed');
-  const hasMarks = marks !== '';
-  // Before an assessment or exam is chosen there is nothing to enter, so the
-  // card is just the roster line instead of a row of dead inputs.
-  const showMarks = editable || hasMarks;
   const hasFeedback = !!(row.feedback ?? '').trim();
-  const showFeedback = feedbackOpen || hasFeedback;
-  const isUnsaved = row.isUnsaved
-    || String(marks) !== String(row.marksObtained ?? '')
-    || feedback !== (row.feedback ?? '');
-
-  const commitMarks = () => {
-    if (invalid) return;
-    const value = marks === '' ? null : Number(marks);
-    if (value !== (row.marksObtained ?? null)) onEdit(row, 'marksObtained', value);
-  };
-
-  const statusBadge = statusToggles ? (
-    <NButton
-      type="button"
-      variant="ghost"
-      size="sm"
-      className="h-6 shrink-0 rounded-full px-0 hover:bg-transparent"
-      title={status === 'pending' ? t('grades.status.missed') : t('grades.status.pending')}
-      onClick={(event) => { event.stopPropagation(); onToggleStatus(row); }}
-    >
-      <NBadge status={status} />
-    </NButton>
-  ) : isUnsaved ? null : <NBadge status={status} />;
+  const showFeedback = allowFeedback && (feedbackOpen || hasFeedback);
 
   return (
-    <div className="flex flex-col gap-2 px-3 py-2.5">
-      <div className="flex items-center gap-3">
-        <NAvatar src={row.studentImage} fallback={row.studentName} size="md" version={avatarVersion(row.studentImage, row.studentUpdatedAt)} />
+    <div className="flex flex-col gap-2 px-3 py-2">
+      <div className="flex items-center gap-2.5">
+        <NAvatar src={row.studentImage} fallback={row.studentName} size="sm" version={avatarVersion(row.studentImage, row.studentUpdatedAt)} />
         <div className="min-w-0 flex-1">
           <div className="truncate text-sm font-semibold">{row.studentName}</div>
-          <div className="mt-0.5 flex min-w-0 items-center gap-2">
-            <span className="truncate text-xs text-muted-foreground">{row.studentCode}</span>
-            {statusBadge}
-            {isUnsaved ? <span className="text-xs font-medium text-amber-700 dark:text-amber-400">{t('grades.messages.unsaved')}</span> : null}
+          <div className="mt-0.5 flex min-w-0 items-center gap-1.5">
+            {row.studentCode ? <span className="truncate font-mono text-xs text-muted-foreground" dir="ltr">{row.studentCode}</span> : null}
+            {/* A mark says it is graded, and its field's colour how well: only absence needs a tag. */}
+            {status !== 'pending' && status !== 'graded' ? <GradeStatus status={status} editable={editable} onToggle={() => onToggleStatus(row)} /> : null}
+            {percent != null ? <span className={cn('text-xs font-semibold tabular-nums', percentColor)}>{percent}%</span> : null}
           </div>
         </div>
-        {showMarks ? (
-          <div className="flex shrink-0 flex-col items-end gap-1" onClick={(event) => event.stopPropagation()}>
-            <label className="flex items-center gap-1 text-xs">
-              <span className="sr-only">{t('grades.table.marksObtained')}</span>
-              <Input
-                type="number"
-                inputMode="decimal"
-                min={0}
-                max={total ?? undefined}
-                step={0.5}
-                value={marks}
-                disabled={!editable}
-                aria-invalid={invalid}
-                onChange={(event) => setMarks(event.target.value)}
-                onBlur={commitMarks}
-                className={cn('h-9 w-16 px-1 text-center text-base font-semibold', invalid && 'border-destructive')}
-              />
-              {total != null ? <span className="text-muted-foreground">/{total}</span> : null}
-            </label>
-            <div className="flex items-center gap-1">
-              <span className={cn('text-xs font-semibold tabular-nums', percentColor)}>{percent == null ? '—' : `${percent}%`}</span>
-              {editable && !hasFeedback ? (
-                <NButton
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  aria-label={t('grades.table.feedback')}
-                  aria-expanded={feedbackOpen}
-                  title={t('grades.table.feedback')}
-                  className={cn('h-6 w-6 p-0', feedbackOpen ? 'text-primary' : 'text-muted-foreground')}
-                  onClick={() => setFeedbackOpen((open) => !open)}
-                >
-                  <MessageSquare className="h-3.5 w-3.5" />
-                </NButton>
-              ) : null}
-            </div>
+        {editable || row.marksObtained != null ? (
+          <div className="flex shrink-0 items-center gap-1" onClick={(event) => event.stopPropagation()}>
+            <GradeMarkField
+              value={row.marksObtained} total={row.totalMarks} disabled={!editable}
+              label={`${row.studentName} · ${t('grades.table.marksObtained')}`}
+              onChange={(value) => onEdit(row, 'marksObtained', value)}
+            />
+            {/* Always the same width, so every mark field lines up whether or not it can mark an absence. */}
+            {editable ? (
+              <span className="flex size-7 shrink-0 items-center justify-center">
+                {status === 'pending' ? <GradeStatus status={status} editable onToggle={() => onToggleStatus(row)} /> : null}
+              </span>
+            ) : null}
+            {allowFeedback && editable && !hasFeedback ? (
+              <NButton
+                type="button" variant="ghost" size="sm"
+                aria-label={t('grades.table.feedback')} aria-expanded={feedbackOpen} title={t('grades.table.feedback')}
+                className={cn('size-8 p-0', feedbackOpen ? 'text-primary' : 'text-muted-foreground')}
+                onClick={() => setFeedbackOpen((open) => !open)}
+              >
+                <MessageSquare className="size-4" />
+              </NButton>
+            ) : null}
           </div>
         ) : null}
       </div>

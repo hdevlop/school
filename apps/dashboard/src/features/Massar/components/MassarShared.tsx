@@ -1,7 +1,7 @@
 'use client';
 import type { ReactNode } from 'react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NErrorState, NForbiddenState, SelectInput } from 'najm-kit';
+import { NErrorState, NForbiddenState, NSkeleton, SelectInput } from 'najm-kit';
 import { SchoolPageHeader } from '@/components/SchoolPageHeader';
 import { useTranslation } from 'najm-i18n/react';
 import { isAuthorizationError } from '@/services/apiError';
@@ -12,7 +12,8 @@ export function MassarHeader({ title, subtitle, actions }: { title: string; subt
 }
 /** Holds the page's shape while it loads: the card with the Contrôle and the classes, then the sheet. */
 export function MassarLoadingSkeleton({ label }: { label: string }) {
-  const bone = (width: number | string, height: number, round = false) => <span className={styles.bone} data-round={round || undefined} style={{ width, height }} />;
+  // NSkeleton gives the colour and pulse every other page's skeleton has; the module only sizes and shapes it.
+  const bone = (width: number | string, height: number, round = false) => <NSkeleton className={styles.bone} data-round={round || undefined} style={{ width, height }} />;
   return <div className={styles.skeleton} role="status" aria-live="polite" aria-busy="true" data-massar-loading>
     <span className="sr-only">{label}</span>
     <div className={styles.sheetLayout} aria-hidden>

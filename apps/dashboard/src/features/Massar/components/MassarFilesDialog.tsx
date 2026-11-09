@@ -88,8 +88,10 @@ export function MassarFilesDialog({ setup, close }: { setup: MassarSetup; close:
     if (!preview) return;
     setImporting(true);
     try {
-      await action.run(() => massarPost('/imports/commit', { ...data, previewId: preview.previewId, digest: preview.digest, addMissingSheets: true }));
+      const result = await action.run(() => massarPost('/imports/commit', { ...data, previewId: preview.previewId, digest: preview.digest, addMissingSheets: true })) as { importedMarks?: number; replacedMarks?: number } | undefined;
       toast.success(t('massar.flow.classesSaved', { count: preview.classes.length }));
+      if (result?.importedMarks) toast.info(t('massar.flow.marksImported', { count: result.importedMarks }));
+      if (result?.replacedMarks) toast.info(t('massar.flow.marksReplaced', { count: result.replacedMarks }));
       if (data.additions.length) toast.info(t('massar.flow.studentsAdded', { count: data.additions.length }));
       if (data.fixes.length) toast.info(t('massar.flow.recordsFixed', { count: data.fixes.length }));
       close();

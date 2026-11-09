@@ -64,7 +64,7 @@ export class MassarRepository {
     const [row] = await this.db.insert(massarSubjects).values({ ...data, academicYearId: this.year.id }).onConflictDoUpdate({ target: [massarSubjects.academicYearId, massarSubjects.levelId, massarSubjects.code], set: data }).returning(); return row;
   }
   /** A subject from the default model: added only where no file brought it, and to confirm. */
-  async addModelSubject(data: Omit<typeof massarSubjects.$inferInsert, 'academicYearId' | 'confirmed' | 'observedRounds'>) {
+  async addModelSubject(data: Omit<typeof massarSubjects.$inferInsert, 'academicYearId' | 'confirmed'>) {
     await this.db.insert(massarSubjects).values({ ...data, academicYearId: this.year.id, confirmed: false }).onConflictDoNothing();
   }
   /** The latest earlier year's confirmed Massar subjects: the school's own starting model for this year. */
@@ -72,15 +72,34 @@ export class MassarRepository {
     const [previous] = await this.db.select({ id: academicYears.id }).from(academicYears)
       .where(lt(academicYears.reportingStartsOn, this.year.reportingStartsOn)).orderBy(desc(academicYears.reportingStartsOn)).limit(1);
     if (!previous) return [];
-    return this.db.select({ level: massarLevels.code, code: massarSubjects.code, name: massarSubjects.name, components: massarSubjects.components }).from(massarSubjects)
+    return this.db.select({ level: massarLevels.code, code: massarSubjects.code, name: massarSubjects.name, components: massarSubjects.components, rounds: massarSubjects.observedRounds }).from(massarSubjects)
       .innerJoin(massarLevels, eq(massarLevels.id, massarSubjects.levelId))
       .where(and(eq(massarSubjects.academicYearId, previous.id), eq(massarSubjects.confirmed, true)));
+  }
+  /** This year's Massar levels with the subject codes each already has: what the model is compared with. */
+  async levelSubjectCodes() {
+    const [levels, subjects] = await Promise.all([
+      this.db.select({ id: massarLevels.id, code: massarLevels.code }).from(massarLevels).where(eq(massarLevels.academicYearId, this.year.id)),
+      this.db.select({ levelId: massarSubjects.levelId, code: massarSubjects.code }).from(massarSubjects).where(eq(massarSubjects.academicYearId, this.year.id)),
+    ]);
+    return levels.map(level => ({ code: level.code, subjects: new Set(subjects.filter(subject => subject.levelId === level.id).map(subject => subject.code)) }));
   }
   /** A subject's grids still being filled: not sent to Massar, in a Contrôle still open. */
   async subjectOpenSheets(subjectId: string) {
     return this.db.select({ id: massarSheets.id, components: massarSheets.components, term: massarRounds.term, exam: massarRounds.exam, examLabel: massarRounds.examLabel }).from(massarSheets)
       .innerJoin(massarRounds, eq(massarRounds.id, massarSheets.roundId))
       .where(and(eq(massarSheets.academicYearId, this.year.id), eq(massarSheets.massarSubjectId, subjectId), isNull(massarSheets.exportedAt), ne(massarRounds.status, 'closed')));
+  }
+  /** A class's grids of one subject still open to marks: not sent, in a Contrôle not closed. */
+  async openClassSheets(massarClassId: string, massarSubjectId: string) {
+    return this.db.select({ id: massarSheets.id, roster: massarSheets.roster, components: massarSheets.components, status: massarSheets.status, term: massarRounds.term, exam: massarRounds.exam }).from(massarSheets)
+      .innerJoin(massarRounds, eq(massarRounds.id, massarSheets.roundId))
+      .where(and(eq(massarSheets.academicYearId, this.year.id), eq(massarSheets.massarClassId, massarClassId), eq(massarSheets.massarSubjectId, massarSubjectId), isNull(massarSheets.exportedAt), ne(massarRounds.status, 'closed')));
+  }
+  /** The cells of a grid that hold a mark or a justified absence, with what they hold. */
+  async filledCells(sheetId: string) {
+    return this.db.select({ studentId: massarMarks.studentId, componentCode: massarMarks.componentCode, mark: massarMarks.mark, absence: massarMarks.absence }).from(massarMarks)
+      .where(and(eq(massarMarks.academicYearId, this.year.id), eq(massarMarks.sheetId, sheetId), sql`(${massarMarks.mark} is not null or ${massarMarks.absence} = 'justified')`));
   }
   /** Marks entered on a subject's open grids for parts Massar's file does not have. */
   async marksOutside(subjectId: string, codes: string[]) {
@@ -118,7 +137,7 @@ export class MassarRepository {
   }
 
   private sheetQuery() {
-    return this.db.select({ sheet: massarSheets, cls: massarClasses, subject: massarSubjects, level: massarLevels, round: massarRounds, teacherName: staff.name }).from(massarSheets)
+    return this.db.select({ sheet: massarSheets, cls: massarClasses, subject: massarSubjects, level: massarLevels, round: massarRounds, teacherName: staff.name, teacherId: teacherAssignments.teacherId }).from(massarSheets)
       .innerJoin(massarClasses, eq(massarClasses.id, massarSheets.massarClassId)).innerJoin(massarSubjects, eq(massarSubjects.id, massarSheets.massarSubjectId))
       .innerJoin(massarLevels, eq(massarLevels.id, massarClasses.levelId)).innerJoin(massarRounds, eq(massarRounds.id, massarSheets.roundId))
       .leftJoin(teacherAssignments, eq(teacherAssignments.id, massarSheets.teacherAssignmentId)).leftJoin(teachers, eq(teachers.id, teacherAssignments.teacherId)).leftJoin(staff, eq(staff.id, teachers.staffId));
@@ -155,6 +174,25 @@ export class MassarRepository {
   async createRound(data: Omit<typeof massarRounds.$inferInsert, 'academicYearId'>) { return (await this.db.insert(massarRounds).values({ ...data, academicYearId: this.year.id }).onConflictDoNothing().returning())[0]; }
   async updateRound(id: string, status: typeof massarRounds.$inferInsert['status']) { await this.db.update(massarRounds).set({ status }).where(and(eq(massarRounds.academicYearId, this.year.id), eq(massarRounds.id, id))); }
   async updateDueDate(id: string, dueDate: string | null) { await this.db.update(massarRounds).set({ dueDate }).where(and(eq(massarRounds.academicYearId, this.year.id), eq(massarRounds.id, id))); }
+  /**
+   * Point every open, unsent sheet at its class's one School assignment for the subject (none when
+   * there are zero or several), so assigning a teacher in School reaches Massar with no import.
+   * Unscoped on purpose: a teacher's own sheets are found through this link. The revision stays,
+   * since who teaches is not the sheet's content and an open draft must still save.
+   */
+  async relinkTeachers() {
+    await this.db.execute(sql`update massar_sheets sheet set teacher_assignment_id = link.assignment_id
+      from (select candidate.id as sheet_id,
+          (select case when count(*) = 1 then min(assignment.id) end from teacher_assignments assignment
+            where assignment.class_id = cls.class_id and assignment.section_id is not distinct from cls.section_id
+              and assignment.subject_id = subject.subject_id) as assignment_id
+        from massar_sheets candidate
+        join massar_classes cls on cls.id = candidate.massar_class_id
+        join massar_subjects subject on subject.id = candidate.massar_subject_id
+        join massar_rounds round on round.id = candidate.round_id
+        where candidate.academic_year_id = ${this.year.id} and round.status <> 'closed' and candidate.exported_at is null) link
+      where sheet.id = link.sheet_id and sheet.teacher_assignment_id is distinct from link.assignment_id`);
+  }
   async createSheet(data: Omit<typeof massarSheets.$inferInsert, 'academicYearId'>) { await this.db.insert(massarSheets).values({ ...data, academicYearId: this.year.id }).onConflictDoNothing(); }
   async updateSheet(id: string, data: Partial<Pick<typeof massarSheets.$inferInsert, 'status' | 'exportHash' | 'exportedAt' | 'teacherAssignmentId' | 'teacherUnlocked'>>) {
     return (await this.db.update(massarSheets).set({ ...data, revision: sql`${massarSheets.revision} + 1` }).where(and(eq(massarSheets.academicYearId, this.year.id), eq(massarSheets.id, id))).returning())[0];

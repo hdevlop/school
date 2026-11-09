@@ -11,11 +11,13 @@ import { avatarVersion } from '@/lib/avatarVersion';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { getOwnStaffProfileApi } from '@/services/staffApi';
 import { formatAssignments } from '@/features/Staff/utils/staffAssignments';
+import { useCoversWholeSchool } from '@/features/Staff/hooks/useCoversWholeSchool';
 import { accountAvatar, accountRoleLabelKey } from '../config/accountAvatar';
 
 export default function HomeProfileSheet({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const { user } = useAuth();
   const { t, language } = useTranslation();
+  const coversWholeSchool = useCoversWholeSchool();
   const { displayDateOnly } = useSchoolFormat();
   const person = user as typeof user & { gender?: string | null; phone?: string | null; updatedAt?: string | null };
   const image = typeof person?.image === 'string' ? person.image : undefined;
@@ -31,7 +33,7 @@ export default function HomeProfileSheet({ open, onOpenChange }: { open: boolean
   const roleLabel = staff?.role === 'monitor' || accountRole === 'monitor'
     ? t('staff.roles.monitor')
     : staff?.roleLabels?.[language] || staff?.roleLabel || accountRoleLabel;
-  const assignments = formatAssignments(staff, language);
+  const assignments = coversWholeSchool(staff) ? t('staff.table.wholeSchool') : formatAssignments(staff, language);
   const phone = staff?.phone || person?.phone;
 
   // Only what this account's record holds: an administrator with no staff

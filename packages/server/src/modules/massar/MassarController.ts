@@ -6,7 +6,7 @@ import { MassarSheet } from './MassarGuards';
 import { MASSAR_MIME } from './workbook/cells';
 import type { MassarActor } from './MassarValidator';
 import {
-  massarAcceptanceDto, massarClassExportDto, massarCommitDto, massarDueDateDto, massarExportDto, massarIdParam, massarMappingDto, massarMarksDto, massarResolveDto, massarRevisionDto, massarPlanDto, massarRoundDto, massarUploadDto,
+  massarClassExportDto, massarCommitDto, massarDueDateDto, massarExportDto, massarIdParam, massarMappingDto, massarMarksDto, massarResolveDto, massarRevisionDto, massarPlanDto, massarRoundDto, massarUploadDto,
   type MassarCommit, type MassarMappings, type MassarMarksInput, type MassarPlanInput, type MassarResolve, type MassarRoundInput,
 } from './MassarDto';
 import { z } from 'zod';
@@ -102,16 +102,8 @@ export class MassarController {
   @Validate({ params: massarIdParam })
   async downloadRound(@Params('id') id: string) {
     const result = await this.service.downloadRound(id);
-    const response = download(result.bytes, 'massar.zip', 'application/zip');
-    if (result.receipt) response.headers.set('X-Massar-Receipt', result.receipt);
-    return response;
+    return download(result.bytes, 'massar.zip', 'application/zip');
   }
-
-  @Post('/rounds/:id/accept')
-  @CanSchoolWide('manage:massar')
-  @Validate({ params: massarIdParam, body: massarAcceptanceDto })
-  @ResMsg('massar.success.saved')
-  acceptDownload(@Params('id') id: string, @Body() body: { receipt: string }) { return this.service.acceptDownload(id, body.receipt); }
 
   @Post('/rounds/:id/close')
   @CanSchoolWide('manage:massar')
@@ -129,6 +121,11 @@ export class MassarController {
   @Can('read:massar')
   @Validate({ params: massarIdParam })
   async progress(@Params('id') id: string) { return download(await this.service.progressCsv(id), 'massar-progress.csv', 'text/csv; charset=utf-8'); }
+
+  @Get('/grade-sources')
+  @Can('read:massar')
+  @ResMsg('massar.success.loaded')
+  gradeSources() { return this.service.gradeSources(); }
 
   @Get('/sheets')
   @Can('read:massar')

@@ -1,4 +1,4 @@
-import { Service } from '../../najm';
+import { Service, Transaction } from '../../najm';
 import { GradeRepository, type GradeListFilters } from './GradeRepository';
 import { GradeValidator } from './GradeValidator';
 import { AssessmentRepository } from '../assessments/AssessmentRepository';
@@ -8,6 +8,7 @@ import { AcademicSourceService } from '../academicSources/AcademicSourceService'
 import { targetSectionIds } from '../academicSources/academicSourceContext';
 import { ExamRepository } from '../exams/ExamRepository';
 import { StudentEnrollmentRepository } from '../studentEnrollments/StudentEnrollmentRepository';
+import { MassarGradeLink } from '../massar/MassarGradeLink';
 
 function createProgressLogger(label: string, total: number, stepPercent = 10) {
   const stepCount = Math.max(1, Math.ceil(total * stepPercent / 100));
@@ -41,6 +42,9 @@ export class GradeService {
     private examRepository: ExamRepository,
     private sources: AcademicSourceService,
     private enrollments: StudentEnrollmentRepository,
+    // A grade of an exam a Massar grid column stands for changes that cell too, in the same transaction.
+    // Tests that build the service by hand leave it out.
+    private massarGrades?: MassarGradeLink,
   ) { }
 
   private sourceContext(sourceIds: GradeSourceIds) {
@@ -179,16 +183,52 @@ export class GradeService {
     const averagePercentage = totalPossibleMarks > 0
       ? this.round((totalMarksObtained / totalPossibleMarks) * 100)
       : 0;
+    const ranks = await this.ranksInSection(studentId, grades as any[]);
 
     return {
       studentId,
-      subjects,
+      rank: ranks?.overall ?? null,
+      subjects: subjects.map(subject => ({ ...subject, rank: ranks?.bySubject.get(subject.subject?.id) ?? null })),
       totalGrades: grades.length,
       totalMarksObtained: this.round(totalMarksObtained),
       totalPossibleMarks: this.round(totalPossibleMarks),
       averagePercentage,
       gpa: this.percentageToGpa(averagePercentage),
     };
+  }
+
+  /**
+   * The student's place in the section most of their grades come from: overall,
+   * by the same average as the report, and in each subject. Equal averages share
+   * a place; a student without a grade in a subject is not counted in it.
+   */
+  private async ranksInSection(studentId: string, grades: any[]) {
+    const counts = new Map<string, { count: number; name: string }>();
+    for (const grade of grades) {
+      if (!grade.section?.id) continue;
+      const seen = counts.get(grade.section.id) ?? { count: 0, name: [grade.class?.name, grade.section.name].filter(Boolean).join(' ') };
+      counts.set(grade.section.id, { ...seen, count: seen.count + 1 });
+    }
+    const [sectionId, section] = [...counts.entries()].sort((a, b) => b[1].count - a[1].count)[0] ?? [];
+    if (!sectionId) return null;
+    const totals = await this.gradeRepository.sectionTotals(sectionId);
+    const place = (rows: Array<{ studentId: string; obtained: number; possible: number }>) => {
+      const averages = rows.filter(row => row.possible > 0).map(row => ({ studentId: row.studentId, average: this.round(row.obtained / row.possible * 100) }));
+      const own = averages.find(row => row.studentId === studentId);
+      return own ? { position: 1 + averages.filter(row => row.average > own.average).length, total: averages.length } : null;
+    };
+    const students = new Map<string, { studentId: string; obtained: number; possible: number }>();
+    const subjects = new Map<string, Array<{ studentId: string; obtained: number; possible: number }>>();
+    for (const row of totals) {
+      const obtained = Number(row.obtained), possible = Number(row.possible);
+      const student = students.get(row.studentId) ?? { studentId: row.studentId, obtained: 0, possible: 0 };
+      students.set(row.studentId, { ...student, obtained: student.obtained + obtained, possible: student.possible + possible });
+      if (row.subjectId) subjects.set(row.subjectId, [...(subjects.get(row.subjectId) ?? []), { studentId: row.studentId, obtained, possible }]);
+    }
+    const overall = place([...students.values()]);
+    const bySubject = new Map<string, { position: number; total: number }>();
+    for (const [subjectId, rows] of subjects) { const rank = place(rows); if (rank) bySubject.set(subjectId, rank); }
+    return { overall: overall ? { ...overall, className: section!.name } : null, bySubject };
   }
 
   async getCount() {
@@ -206,6 +246,7 @@ export class GradeService {
     return assessment.id;
   }
 
+  @Transaction()
   async create(data: CreateGradeDto, user: { id: string; role?: string; teacherId?: string }) {
     // Check a submitted teacher before any other lookup, then check the actual
     // source teacher too. A caller cannot impersonate a teacher by changing the
@@ -261,9 +302,12 @@ export class GradeService {
       await this.gradeValidator.ensureStudentInExam(gradeDetails.studentId, gradeDetails.examId);
     }
 
-    return await this.gradeRepository.create({ ...gradeDetails, academicYearId: eligibility.academicYearId });
+    const created = await this.gradeRepository.create({ ...gradeDetails, academicYearId: eligibility.academicYearId });
+    if (created?.examId) await this.massarGrades?.fromGrade(created.examId, created.studentId, created, user.id);
+    return created;
   }
 
+  @Transaction()
   async update(id: string, data: UpdateGradeDto, user: { id: string; role?: string; teacherId?: string }) {
     const existing = await this.getById(id);
     await this.gradeValidator.ensureTeacherOwnsSource(user, existing.teacher?.id);
@@ -291,12 +335,17 @@ export class GradeService {
       await this.gradeRepository.update(id, gradeData);
     }
 
-    return await this.getById(id);
+    const updated = await this.getById(id);
+    if (updated?.examId) await this.massarGrades?.fromGrade(updated.examId, updated.studentId, updated, user.id);
+    return updated;
   }
 
+  @Transaction()
   async delete(id: string) {
-    await this.getById(id);
-    return await this.gradeRepository.delete(id);
+    const existing = await this.getById(id);
+    const deleted = await this.gradeRepository.delete(id);
+    if (existing?.examId) await this.massarGrades?.fromGrade(existing.examId, existing.studentId, null, null);
+    return deleted;
   }
 
   async deleteAll() {
@@ -309,9 +358,9 @@ export class GradeService {
   }
 
   async deleteBulk(ids: string[]) {
-    const results = await Promise.all(
-      ids.map((id) => this.delete(id))
-    );
+    // One after the other: each delete is its own transaction, which may also clear a Massar cell.
+    const results = [];
+    for (const id of ids) results.push(await this.delete(id));
     return {
       deletedCount: results.length,
       deletedGrades: results,

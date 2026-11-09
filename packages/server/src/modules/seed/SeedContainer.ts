@@ -312,6 +312,9 @@ import { ExamRepository } from '../exams/ExamRepository';
 import { ExamValidator } from '../exams/ExamValidator';
 
 import { GradeService } from '../grades/GradeService';
+import { MassarGradeLink } from '../massar/MassarGradeLink';
+import { MassarGradeRepository } from '../massar/MassarGradeRepository';
+import { MassarValidator } from '../massar/MassarValidator';
 import { GradeRepository } from '../grades/GradeRepository';
 import { GradeValidator } from '../grades/GradeValidator';
 
@@ -518,7 +521,8 @@ export function configureSeedContainer(seedContainer: Container) {
     AssessmentValidator,
     ExamValidator,
   ]);
-  registerSeedDeps(seedContainer, GradeService, [GradeRepository, GradeValidator, AssessmentRepository, AcademicYearValidator, ExamRepository, AcademicSourceService, StudentEnrollmentRepository]);
+  registerSeedDeps(seedContainer, MassarGradeLink, [MassarGradeRepository, MassarValidator]);
+  registerSeedDeps(seedContainer, GradeService, [GradeRepository, GradeValidator, AssessmentRepository, AcademicYearValidator, ExamRepository, AcademicSourceService, StudentEnrollmentRepository, MassarGradeLink]);
 
   registerSeedDeps(seedContainer, AlertValidator, [
     AlertRepository,

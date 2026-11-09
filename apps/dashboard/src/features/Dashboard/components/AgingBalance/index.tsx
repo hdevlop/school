@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from 'recharts';
+import { CHART_AXIS_TICK_SMALL, CHART_GRID_STROKE, CHART_TOOLTIP_CLASS, compactTick } from '@/shared/chartTheme';
 import { NCard } from 'najm-kit';
 import { AlertTriangle } from 'lucide-react';
 import { cn } from 'najm-kit';
@@ -40,8 +41,8 @@ type AgingTooltipProps = {
 const AgingTooltip = ({ active, payload, majorMoney }: AgingTooltipProps) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white px-3 py-2 rounded shadow-lg border border-gray-200">
-        <p className="text-sm font-semibold text-gray-800">{payload[0].payload.label}</p>
+      <div className={CHART_TOOLTIP_CLASS}>
+        <p className="text-sm font-semibold text-foreground">{payload[0].payload.label}</p>
         <p className="text-sm font-bold">{majorMoney(payload[0].value)}</p>
       </div>
     );
@@ -79,21 +80,22 @@ const AgingBalance: React.FC<AgingBalanceProps> = ({ className = '' }) => {
       <div className="flex flex-col">
         <ResponsiveContainer width="100%" height={250}>
           <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
+            <CartesianGrid strokeDasharray="0" stroke={CHART_GRID_STROKE} vertical={false} />
             <XAxis
               dataKey="label"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#6b7280', fontSize: 11 }}
+              tick={CHART_AXIS_TICK_SMALL}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#6b7280', fontSize: 11 }}
+              tick={CHART_AXIS_TICK_SMALL}
+              tickFormatter={compactTick}
             />
             <Tooltip
               content={(props) => <AgingTooltip {...(props as unknown as AgingTooltipProps)} majorMoney={majorMoney} />}
-              cursor={{ fill: 'rgba(0,0,0,0.04)' }}
+              cursor={{ fill: 'var(--muted)', opacity: 0.6 }}
             />
             <Bar isAnimationActive={false} dataKey="value" radius={[6, 6, 0, 0]}>
               {chartData.map((_, i) => (

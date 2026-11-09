@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { NBadge, NButton } from 'najm-kit';
+import { GradeMarkField } from '../components/GradeMarkField';
+import { GradeStatus } from '../components/GradeStatus';
 import { NAvatar } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { avatarVersion } from '@/lib/avatarVersion';
@@ -15,9 +16,14 @@ const computePercent = (obtained, total) => {
 export const useGradesTableColumns = ({
   canEdit,
   onToggleStatus,
+  onEdit,
+  allowFeedback = true,
 }: {
   canEdit: (row: any) => boolean;
   onToggleStatus: (row: any) => void | Promise<void>;
+  /** A mark typed in its field: saved shortly after, without a button. */
+  onEdit: (row: any, columnId: string, value: unknown) => void | Promise<void>;
+  allowFeedback?: boolean;
 }) => {
   const { t } = useTranslation();
 
@@ -102,22 +108,14 @@ export const useGradesTableColumns = ({
       accessorKey: 'marksObtained',
       header: t('grades.table.marksObtained'),
       enableSorting: false,
-      meta: {
-        editable: canEdit,
-        editor: 'number',
-        min: 0,
-        max: ({ totalMarks }) => totalMarks ?? 100,
-        step: 0.5,
-        validate: (v, row) => {
-          if (v == null || v === '') return null;
-          if (v < 0) return t('grades.validation.marksMin');
-          if (row.totalMarks != null && v > row.totalMarks) return t('grades.validation.marksMax', { max: Number(row.totalMarks) });
-          return null;
-        },
-      },
+      // Always a field, like a Massar grid cell, for whoever may grade the row.
       cell: ({ row }) => {
         const obtained = row.original.marksObtained;
         const total = row.original.totalMarks;
+        if (canEdit(row.original)) return (
+          <GradeMarkField value={obtained} total={total} label={`${row.original.studentName} · ${t('grades.table.marksObtained')}`}
+            onChange={(value) => { void onEdit(row.original, 'marksObtained', value); }} />
+        );
         return (
           <div className="text-sm">
             <span className="font-medium">{obtained ?? '—'}</span>
@@ -142,42 +140,18 @@ export const useGradesTableColumns = ({
       meta: { exportValue: exportStatus(t) },
       header: t('grades.table.status'),
       enableSorting: false,
-      cell: ({ row, getValue }) => {
-        const v = (getValue() as string) || 'pending';
-        const isToggleable = v === 'pending' || v === 'missed';
-        const canToggleStatus = canEdit(row.original) && isToggleable;
-        return (
-          <div className="flex items-center gap-2">
-            {row.original.isUnsaved ? (
-              <span className="text-sm font-medium text-amber-700 dark:text-amber-400">{t('grades.messages.unsaved')}</span>
-            ) : null}
-            {canToggleStatus ? (
-              <NButton
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="h-7 rounded-full px-1 hover:bg-transparent focus-visible:ring-2 focus-visible:ring-ring"
-                title={v === 'pending' ? t('grades.status.missed') : t('grades.status.pending')}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onToggleStatus(row.original);
-                }}
-              >
-                <NBadge status={v} />
-              </NButton>
-            ) : !row.original.isUnsaved ? (
-              <NBadge status={v} />
-            ) : null}
-          </div>
-        );
-      },
+      cell: ({ row, getValue }) => (
+        <div className="flex min-h-7 items-center">
+          <GradeStatus status={getValue() as string} editable={canEdit(row.original)} onToggle={() => onToggleStatus(row.original)} />
+        </div>
+      ),
     },
     {
       accessorKey: 'feedback',
       header: t('grades.table.feedback'),
       enableSorting: false,
       meta: {
-        editable: canEdit,
+        editable: (row) => allowFeedback && canEdit(row),
         editor: 'text',
       },
       cell: ({ getValue }) => {
@@ -188,5 +162,5 @@ export const useGradesTableColumns = ({
         );
       },
     },
-  ], [t, canEdit, onToggleStatus]);
+  ], [t, canEdit, onToggleStatus, onEdit, allowFeedback]);
 };

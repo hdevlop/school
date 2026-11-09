@@ -82,6 +82,13 @@ describe('staff form schemas', () => {
     expect(incomplete.success).toBe(false);
     expect(messagesByPath(incomplete.error!)['assignments.0.cycleId']).toBe(en.staff.validation.cycleRequired);
   });
+
+  // The form picks cycles as a list; none chosen is the whole school, so its dates are not an error.
+  it("keeps an accountant's several cycles, and allows none", () => {
+    const { assignmentStep } = createStaffSchemas(translatorFor('en'));
+    expect(assignmentStep.parse({ role: 'accountant', cycleIds: ['primary', 'college'], assignments: [{}] }).cycleIds).toEqual(['primary', 'college']);
+    expect(assignmentStep.safeParse({ role: 'accountant', cycleIds: [], assignments: [{ startDate: '2026-10-01' }] }).success).toBe(true);
+  });
   it('validates required driver fields on the employment step', () => {
     const { details } = createStaffSchemas(translatorFor('en'), '2026-10-21');
     const result = details.safeParse({ ...validEmployment, role: 'driver' });

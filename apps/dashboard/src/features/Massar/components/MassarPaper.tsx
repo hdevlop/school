@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent, type ClipboardEvent } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { NajmScroll, NButton } from 'najm-kit';
+import { componentLabel } from '../config/componentLabels';
 import { LockKeyhole, UserRound } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { toast } from 'sonner';
@@ -17,8 +18,9 @@ import { buildMassarDocument, type MassarPaperOptions } from '../config/massarDo
 import { MassarLoadError } from './MassarShared';
 import styles from './Massar.module.css';
 
-// Every column has a fixed width, as in Massar's sheet (Massar.module.css): N° 52 + code 132 + name 260 + birth date 120, then 112 per mark.
-const IDENTITY_WIDTH = 564, MARK_WIDTH = 112;
+// Every column has a fixed width (Massar.module.css): N° 52 + code 132 + name 200, then 112 per mark.
+// Unlike Massar's sheet there is no birth date: the marks get the room. The xlsx export keeps it.
+const IDENTITY_WIDTH = 384, MARK_WIDTH = 112;
 function EditablePaper({ data, options, onBusy }: { data: MassarSheetDetail; options: MassarPaperOptions; onBusy: (busy: boolean) => void }) {
   const { t } = useTranslation(), viewer = useViewerRole(), scope = useAcademicYearScope(), client = useQueryClient(), action = useMassarAction();
   const recoveryKey = `massar-draft:${viewer.userId}:${scope.academicYear}:${data.sheet.id}`;
@@ -68,7 +70,8 @@ function EditablePaper({ data, options, onBusy }: { data: MassarSheetDetail; opt
   };
   const field = (row: number, col: number, phone = false) => {
     const student = data.students[row], component = data.components[col], key = cellKey(student.id, component.code), cell = state.cells[key], invalid = !parseCell(cell, data.maxMark);
-    return <div className={styles.cellField} data-empty={!cell.text && cell.absence === 'none'}><input type="text" inputMode="decimal" autoComplete="off" data-row={row} data-col={col} value={cell.absence === 'justified' ? 'مبرر' : cell.text} disabled={!editable} className={styles.markInput} aria-label={`${student.name} · ${component.name}`} aria-invalid={invalid} aria-describedby={invalid ? `invalid-${phone ? 'm' : 'd'}-${row}-${col}` : undefined} onChange={event => update(row, col, event.target.value)} onKeyDown={event => keyboard(event, row, col)} onPaste={event => paste(event, row, col)} />
+    // A mark is typed left to right, as a number is, inside the right-to-left Massar sheet.
+    return <div className={styles.cellField} data-empty={!cell.text && cell.absence === 'none'}><input type="text" inputMode="decimal" autoComplete="off" dir="ltr" data-row={row} data-col={col} value={cell.absence === 'justified' ? 'مبرر' : cell.text} disabled={!editable} className={styles.markInput} aria-label={`${student.name} · ${component.name}`} aria-invalid={invalid} aria-describedby={invalid ? `invalid-${phone ? 'm' : 'd'}-${row}-${col}` : undefined} onChange={event => update(row, col, event.target.value)} onKeyDown={event => keyboard(event, row, col)} onPaste={event => paste(event, row, col)} />
       {invalid && <small className={styles.invalidMark} id={`invalid-${phone ? 'm' : 'd'}-${row}-${col}`}>{t('massar.flow.maxError', { max: data.maxMark })}</small>}
       {phone && <label className={styles.checkbox}><input type="checkbox" checked={cell.absence === 'justified'} disabled={!editable} onChange={event => engine.update({ [key]: { text: '', absence: event.target.checked ? 'justified' : 'none' } })} />{t('massar.justified')}</label>}
     </div>;
@@ -85,17 +88,18 @@ function EditablePaper({ data, options, onBusy }: { data: MassarSheetDetail; opt
         <span className={styles.sheetTeacher} dir="auto"><UserRound aria-hidden /><span dir="auto">{data.sheet.teacherName ?? t('massar.flow.noTeacher')}</span></span>
       </div>
       {/* As in Massar, every column keeps its width on every subject: a one-part subject is one narrow column, and the sheet starts on the right. */}
-      <NajmScroll axis="both" autoHide="scroll" className={styles.desktopSheet}><table className={styles.paperTable} style={{ width: IDENTITY_WIDTH + data.components.length * MARK_WIDTH }}>
-        <colgroup><col className={styles.colNumber} /><col className={styles.colCode} /><col className={styles.colName} /><col className={styles.colBirth} />{data.components.map(component => <col key={component.code} className={styles.colMark} />)}</colgroup>
-        <thead><tr><th className={styles.stickyNumber}><bdi dir="ltr">N°</bdi></th><th className={styles.stickyCode}>Code Massar</th><th className={styles.stickyName}>{t('massar.student')}</th><th>{t('massar.flow.birthDate')}</th>{data.components.map(component => <th key={component.code} dir="auto">{component.name}<small>{t('massar.maxMark')} {data.maxMark}</small></th>)}</tr></thead>
-        <tbody>{data.students.map((student, row) => <tr key={student.id}><td className={styles.stickyNumber}>{student.position + 1}</td><td className={styles.stickyCode} dir="ltr">{student.studentCode}</td><th scope="row" className={styles.stickyName} dir="auto" title={student.name}>{student.name}</th><td dir="ltr">{student.dateOfBirth}</td>{data.components.map((component, col) => <td key={component.code}>{field(row, col)}</td>)}</tr>)}</tbody>
+      <NajmScroll axis="both" autoHide="leave" className={styles.desktopSheet}><table className={styles.paperTable} style={{ width: IDENTITY_WIDTH + data.components.length * MARK_WIDTH }}>
+        <colgroup><col className={styles.colNumber} /><col className={styles.colCode} /><col className={styles.colName} />{data.components.map(component => <col key={component.code} className={styles.colMark} />)}</colgroup>
+        <thead><tr><th className={styles.stickyNumber}><bdi dir="ltr">N°</bdi></th><th className={styles.stickyCode}>Code Massar</th><th className={styles.stickyName}>{t('massar.student')}</th>{data.components.map(component => <th key={component.code} dir="auto" title={component.name}>{componentLabel(component.name)}</th>)}</tr></thead>
+        <tbody>{data.students.map((student, row) => <tr key={student.id}><td className={styles.stickyNumber}>{student.position + 1}</td><td className={styles.stickyCode} dir="ltr">{student.studentCode}</td><th scope="row" className={styles.stickyName} dir="auto" title={student.name}>{student.name}</th>{data.components.map((component, col) => <td key={component.code}>{field(row, col)}</td>)}</tr>)}</tbody>
       </table></NajmScroll>
       <div className={styles.phoneSheet}>{data.students.length > 0 && <><div className={styles.studentPaging}><NButton variant="outline" size="sm" disabled={!studentIndex} onClick={() => setStudentIndex(studentIndex - 1)}>‹</NButton><div><strong dir="auto">{data.students[studentIndex].name}</strong><small dir="ltr">{data.students[studentIndex].studentCode} · {data.students[studentIndex].dateOfBirth}</small><small>{studentIndex + 1} / {data.students.length}</small></div><NButton variant="outline" size="sm" disabled={studentIndex === data.students.length - 1} onClick={() => setStudentIndex(studentIndex + 1)}>›</NButton></div>{data.components.map((component, col) => <div className={styles.phoneComponent} key={component.code}><span dir="auto">{component.name} <small>/{data.maxMark}</small></span>{field(studentIndex, col, true)}</div>)}</>}</div>
     </section>
-    {/* The sheet has no footer: saving is announced to screen readers, and the bar shows only when there is something to do. */}
+    {/* The sheet has no footer: saving is announced to screen readers, and the bar shows only when there is something to do.
+        A save on its way is not: typing a mark never brings the bar up. */}
     <span className="sr-only" role="status">{t(state.error || state.invalid ? 'massar.flow.saveFailed' : state.saving || state.dirty ? 'massar.flow.saving' : 'massar.flow.saved')}</span>
-    {(state.error || state.invalid || !editable || busy || reload) && <div className={styles.saveBar}><span>{t(state.error || state.invalid ? 'massar.flow.saveFailed' : state.saving || state.dirty ? 'massar.flow.saving' : 'massar.flow.saved')} · {t('massar.ui.completed', { count: state.completed, total: data.students.length * data.components.length })}</span>{state.error && <><span>{state.error}</span><NButton size="sm" variant="outline" onClick={() => engine.retry()}>{t('massar.flow.retrySave')}</NButton></>}{state.invalid && <span className={styles.invalidMark}>{t('massar.flow.maxError', { max: data.maxMark })}</span>}{!editable && <span>{t('massar.readOnly')}</span>}
-      {busy && <NButton size="sm" variant="ghost" onClick={() => setReload(true)}>{t('massar.flow.discard')}</NButton>}
+    {(state.error || state.invalid || !editable || reload) && <div className={styles.saveBar}><span>{t(state.error || state.invalid ? 'massar.flow.saveFailed' : state.saving || state.dirty ? 'massar.flow.saving' : 'massar.flow.saved')} · {t('massar.ui.completed', { count: state.completed, total: data.students.length * data.components.length })}</span>{state.error && <><span>{state.error}</span><NButton size="sm" variant="outline" onClick={() => engine.retry()}>{t('massar.flow.retrySave')}</NButton></>}{state.invalid && <span className={styles.invalidMark}>{t('massar.flow.maxError', { max: data.maxMark })}</span>}{!editable && <span>{t('massar.readOnly')}</span>}
+      {state.error && !reload && <NButton size="sm" variant="ghost" onClick={() => setReload(true)}>{t('massar.flow.discard')}</NButton>}
       {reload && <span>{t('massar.flow.discardConfirm')} <NButton size="sm" variant="outline" disabled={state.saving} onClick={() => { discardConfirmed.current = true; engine.discard(); try { sessionStorage.removeItem(recoveryKey); } catch { /* Optional storage. */ } window.location.reload(); }}>{t('massar.flow.reload')}</NButton><NButton size="sm" variant="ghost" onClick={() => setReload(false)}>{t('massar.cancel')}</NButton></span>}
     </div>}
   </>;

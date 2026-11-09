@@ -14,8 +14,26 @@ const runGradesBatch = async (items: Array<any & { id?: string }>) => {
   }));
 };
 
-/** The list this feature's page opens with; the page warm-up asks for the same. */
+/** The year's grades, for the screens that list them all. */
 export const gradeListRead = { resource: 'grades', fetch: gradeApi.getGradesApi } satisfies YearScopedRead;
+
+/**
+ * One exam's or assessment's grades: all the grades roster shows. The whole
+ * year's list is hundreds of kilobytes the roster would filter down to one
+ * section's twenty rows. Under `grades`, so a save's refetch reaches it.
+ */
+export const sourceGradesRead = (sourceType: 'assessment' | 'exam', sourceId: string) => ({
+  resource: 'grades',
+  parts: ['source', sourceType, sourceId],
+  fetch: () => (sourceType === 'assessment' ? gradeApi.getGradesByAssessmentApi(sourceId) : gradeApi.getGradesByExamApi(sourceId)),
+}) satisfies YearScopedRead;
+
+export const useSourceGrades = (sourceType: 'assessment' | 'exam', sourceId: string, enabled: boolean) => {
+  const on = enabled && !!sourceId;
+  const list = useYearScopedList({ ...sourceGradesRead(sourceType, sourceId), enabled: on });
+  // A read that is off is not loading: nothing is coming.
+  return { ...list, isLoading: on && list.isLoading };
+};
 
 export const useGrades = (options?) => {
   const { gradeId, enabled = true } = options || {};
@@ -44,7 +62,10 @@ export const useGrades = (options?) => {
     setIsSubmittingBatch(true);
     try {
       await runGradesBatch(items);
-      await queryClient.refetchQueries({ queryKey: ['grades'] });
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ['grades'] }),
+        queryClient.invalidateQueries({ queryKey: ['massar'] }),
+      ]);
     } finally {
       setIsSubmittingBatch(false);
     }

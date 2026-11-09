@@ -32,7 +32,6 @@ async function cleanFile(data: MassarExport, name: string) {
   return new File([new Uint8Array(zipSync(files))], name, { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 }
 it('imports, merges, generates, owns, edits and exports Massar sheets in the selected year', async () => {
-  const originalVerification = process.env.MASSAR_FILLED_EXPORT_VERIFIED;
   try {
     await db.transaction(async raw => {
       const tx = raw as unknown as typeof db;
@@ -120,16 +119,13 @@ it('imports, merges, generates, owns, edits and exports Massar sheets in the sel
       expect((await run(() => service.sheet(later.id, teacher), teacher)).students).toHaveLength(2);
       const printableArrival = await run(() => service.downloadEmpty(later.id), teacher);
       expect((await readExport(printableArrival.bytes)).students).toHaveLength(2);
-      process.env.MASSAR_FILLED_EXPORT_VERIFIED = 'true';
       await expectRefused(run(() => service.exportSheets([later.id], false)));
       // Importing the same file again does not add the arrival twice.
       const again = await run(() => service.previewUploads([arrivalFile], admin));
       await run(() => service.commit({ ...mappings, previewId: again.previewId, digest: again.digest, addMissingSheets: true }, admin));
       expect((await readExport((await run(() => service.downloadEmpty(later.id), teacher)).bytes)).students).toHaveLength(2);
-      process.env.MASSAR_FILLED_EXPORT_VERIFIED = 'true';
-      const downloaded = await run(() => service.downloadRound(round.id));
       expect((await run(() => service.sheet(own[0].id, teacher), teacher)).canEdit).toBe(true);
-      await run(() => service.acceptDownload(round.id, downloaded.receipt!));
+      await run(() => service.downloadRound(round.id));
       expect((await run(() => service.sheet(own[0].id, admin))).sheet.status).toBe('exported');
       await expectRefused(run(() => service.saveMarks(own[0].id, { revision: 2, marks: [] }, teacher), teacher));
       await run(() => service.reopen(own[0].id, 2));
@@ -190,5 +186,4 @@ it('imports, merges, generates, owns, edits and exports Massar sheets in the sel
       throw rollback;
     });
   } catch (error) { if (error !== rollback) throw error; }
-  finally { if (originalVerification === undefined) delete process.env.MASSAR_FILLED_EXPORT_VERIFIED; else process.env.MASSAR_FILLED_EXPORT_VERIFIED = originalVerification; }
 }, 60000);

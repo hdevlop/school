@@ -25,7 +25,6 @@ export const massarPlanDto = z.object({ primary: examsPerTerm, college: examsPer
   dates: z.array(z.object({ term: z.number().int().min(1).max(2), exam: examsPerTerm, dueDate: z.iso.date().nullable() })).max(2 * MASSAR_MAX_EXAMS_PER_TERM) });
 export type MassarPlanInput = z.infer<typeof massarPlanDto>;
 export const massarRoundDto = z.object({ term: z.number().int().min(1).max(2), exam: z.number().int().min(1).max(4), dueDate: z.iso.date().nullable().optional() });
-export const massarAcceptanceDto = z.object({ receipt: z.string().min(1).max(100000) });
 export const massarMarkDto = z.object({ studentId: z.string().min(1), componentCode: z.string().min(1), mark: z.number().min(0).max(20).nullable(), absence: z.enum(MASSAR_ABSENCE_VALUES) }).superRefine((value, ctx) => {
   if (value.mark !== null && value.absence === 'justified') ctx.addIssue({ code: 'custom', path: ['mark'], message: 'massar.errors.invalidMark' });
 });

@@ -1,8 +1,16 @@
 import { describe, expect, it } from 'bun:test';
-import { buildImportPreview, sameName, similarName } from '../../src/modules/massar/importPreview';
+import { buildImportPreview, proposeSubject, sameName, similarName } from '../../src/modules/massar/importPreview';
 import type { Setup } from '../../src/modules/massar/importPreview';
 import { exportFixture, setupFixture } from './fixtures';
 describe('Massar import preview', () => {
+  it('finds the School subject for the collège subjects, by catalogue code or by name', () => {
+    const catalogue = [{ id: 'svt', code: 'SVT', name: 'Sciences de la vie et de la Terre' }, { id: 'phy', code: 'PHY', name: 'Physique-chimie' },
+      { id: 'pe', code: 'PE', name: 'Éducation physique et sportive' }] as Setup['appSubjects'];
+    expect(['0020', '0023', '0026'].map(code => proposeSubject(catalogue, code, 'x')?.id)).toEqual(['svt', 'phy', 'pe']);
+    // Renamed subjects without a catalogue code: physics never lands on physical education.
+    const renamed = catalogue.map(subject => ({ ...subject, code: null, name: subject.name.toUpperCase() })) as Setup['appSubjects'];
+    expect(['0020', '0023', '0026'].map(code => proposeSubject(renamed, code, 'x')?.id)).toEqual(['svt', 'phy', 'pe']);
+  });
   it('matches only code Massar, proposes app class/section, and offers a different birth date as a fix', async () => {
     const source = await exportFixture(), setup = setupFixture();
     source.students.push({ ...source.students[0], studentCode: 'UNKNOWN', name: 'Synthetic student' });

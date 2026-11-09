@@ -1,7 +1,28 @@
 # Massar grades verification
 
-Implemented 2026-11-06. School grades, assessments, exams and report cards are
-unchanged. Massar uses its own year-scoped records and permission guards.
+Implemented 2026-11-06. Massar uses its own year-scoped records and permission
+guards. Grades can also select components from opened Massar sheets.
+
+## Grades integration (visual review pending)
+
+- Grades → Exam lists all owned Massar sheet components, including components
+  with no separate Planning exam. Repeated names identify the semester and
+  Contrôle. An exactly linked Planning exam has one entry, through its Massar
+  component; unrelated exams remain available.
+- School supplies the displayed names, codes, order and class roster for every
+  subject. Selecting a component changes its marks; Massar membership and dated
+  placements govern editing without replacing the displayed student details.
+  Students who left in the viewed year stay excluded. Changing components keeps
+  the table visible while the next sheet loads and pauses editing until it arrives.
+- Save uses the existing Massar mark route and sheet revision. It updates only
+  the chosen component, preserves zero and blank marks, records missed as a
+  justified absence, and respects the sheet and round locks. Exact Planning
+  exam links use the existing two-way mark synchronization. Feedback remains
+  available for ordinary grades; Massar has no feedback field.
+- Regression cases are in `gradeSources.test.ts` (server) and
+  `massarGradeSources.test.ts` (dashboard). Lint, tests, checks and build are
+  deferred at the owner's request until visual approval; no verification pass
+  is claimed for this integration.
 
 ## Available workflow
 
@@ -156,9 +177,9 @@ bun test packages/server/tests/massar/workbook.test.ts
 
 ## External checks still open
 
-1. Import one generated filled workbook into Massar and verify the marks there.
-   Keep `MASSAR_FILLED_EXPORT_VERIFIED` unset until that succeeds; then set it
-   to `true` in the existing env file and restart the app.
+1. ~~Import one generated filled workbook into Massar and verify the marks there.~~
+   Done 2026-11-08: Massar accepted School's filled files, and the
+   `MASSAR_FILLED_EXPORT_VERIFIED` switch was removed from the code.
 2. Verify a filled student row without a hidden ID. Until then, re-import
    arrivals before filled export. Printable/empty sheets work without re-upload.
 3. Import matching evidence before generating later collège assessments or

@@ -25,7 +25,17 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
   };
 
   const routine: GatedNavItem = { id: '/class-routines', label: tf('navigation.classRoutines', 'Routine'), icon: FEATURE_ICONS.classRoutines, href: '/class-routines', access: 'classRoutines' };
-  const notifications: GatedNavItem = { id: '/notifications', label: t('notifications.inbox'), icon: FEATURE_ICONS.notifications, href: '/notifications' };
+  const communications: GatedNavItem = {
+    id: 'communications',
+    label: t('navigation.communications'),
+    icon: FEATURE_ICONS.notifications,
+    children: [
+      { id: '/notifications', label: t('notifications.inbox'), icon: FEATURE_ICONS.notifications, href: '/notifications' },
+      { id: '/alerts', label: t('navigation.alerts'), icon: FEATURE_ICONS.alerts, href: '/alerts', access: 'alerts' },
+      { id: '/announcements', label: t('navigation.announcements'), icon: FEATURE_ICONS.announcements, href: '/announcements', access: 'announcements' },
+      { id: '/calendar', label: t('navigation.calendar'), icon: FEATURE_ICONS.calendar, href: '/calendar', access: 'calendar' },
+    ],
+  };
   const evaluations: GatedNavItem = {
     id: 'evaluations',
     label: t('navigation.evaluations'),
@@ -46,8 +56,7 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
         href: '/students',
         access: 'students',
       },
-      { id: '/alerts', label: t('navigation.alerts'), icon: FEATURE_ICONS.alerts, href: '/alerts', access: 'alerts' },
-      { id: '/announcements', label: t('navigation.announcements'), icon: FEATURE_ICONS.announcements, href: '/announcements', access: 'announcements' },
+      communications,
       {
         id: 'student-conduct',
         label: t('navigation.studentConductShort'),
@@ -58,9 +67,7 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
         ],
       },
       evaluations,
-      { id: '/calendar', label: t('navigation.calendar'), icon: FEATURE_ICONS.calendar, href: '/calendar', access: 'calendar' },
       routine,
-      notifications,
     ];
   }
 
@@ -92,8 +99,7 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
         { id: '/attendance/staff', label: t('navigation.staffAttendance'), icon: FEATURE_ICONS.staffAttendance, href: '/attendance/staff', access: 'staffAttendance' },
       ],
     },
-    { id: '/alerts', label: t('navigation.alerts'), icon: FEATURE_ICONS.alerts, href: '/alerts', access: 'alerts' },
-    { id: '/announcements', label: t('navigation.announcements'), icon: FEATURE_ICONS.announcements, href: '/announcements', access: 'announcements' },
+    communications,
     {
       id: 'student-conduct',
       label: t('navigation.studentConductShort'),
@@ -106,7 +112,6 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
     evaluations,
     { id: '/grades', label: t('navigation.grades'), icon: FEATURE_ICONS.grades, href: '/grades', access: 'grades' },
     { id: '/massar', label: t('massar.title'), icon: FEATURE_ICONS.massar, href: '/massar', access: 'massarSheets' },
-    { id: '/calendar', label: t('navigation.calendar'), icon: FEATURE_ICONS.calendar, href: '/calendar', access: 'calendar' },
     routine,
     {
       id: 'academic',
@@ -148,7 +153,6 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
         { id: BRANDING_SETTINGS_NAV_ID, label: t('navigation.branding'), icon: ImageIcon, access: 'appearance' },
       ],
     },
-    notifications,
   ];
 };
 

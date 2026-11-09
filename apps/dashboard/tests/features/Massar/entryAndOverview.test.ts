@@ -100,7 +100,7 @@ it('follows Planning: each month with exams is one Contrôle of its semester, th
 });
 it('prints every selected sheet with marks and empty cells, escapes names and refuses active logo URLs', () => {
   const data = { ...detail(), schoolName: '<script>school</script>', sheet: { ...detail().sheet, className: '1APG-1', subjectName: 'Arabic' }, yearLabel: '2026-2027', round: { term: 1, exam: 1 }, students: [{ id: 's1', name: '<Student>', studentCode: 'S1', position: 0 }], marks: [{ studentId: 's1', componentCode: 'a', mark: 0, absence: 'none' }] } as MassarSheetDetail;
-  const html = buildMassarDocument([data, data], { language: 'ar', logo: 'javascript:alert(1)', title: 'Notes', student: 'Student', birthDate: 'DOB', teacher: 'Teacher', maxMark: '/', term: 'Term', exam: 'Exam' });
+  const html = buildMassarDocument([data, data], { language: 'ar', logo: 'javascript:alert(1)', title: 'Notes', student: 'Student', teacher: 'Teacher', term: 'Term', exam: 'Exam' });
   // One A4 sheet per subject; a mark prints with two decimals, as Massar shows it, and an empty part stays blank.
   expect((html.match(/<section class="sheet"/g) ?? [])).toHaveLength(2); expect(html).toContain('<td class="mark" dir="ltr">0.00</td><td class="mark" dir="ltr"></td>');
   expect(html).toContain('@page{size:A4 landscape;margin:0}');

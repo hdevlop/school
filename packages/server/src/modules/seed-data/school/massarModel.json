@@ -940,6 +940,2826 @@
         ],
         "source": "2025/2026"
       }
+    ],
+    "1APIC": [
+      {
+        "code": "0011",
+        "name": "اللغة العربية",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0012",
+        "name": "اللغة الفرنسية",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 5,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الرابع",
+            "components": [
+              {
+                "code": "5",
+                "name": "الفرض الرابع"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 5,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الرابع",
+            "components": [
+              {
+                "code": "5",
+                "name": "الفرض الرابع"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0013",
+        "name": "اللغة الإنجليزية",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0018",
+        "name": "الاجتماعيات",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0019",
+        "name": "الرياضيات",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0020",
+        "name": "علوم الحياة والأرض",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0023",
+        "name": "الفيزياء والكيمياء",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0024",
+        "name": "التربية الإسلامية",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0026",
+        "name": "التربية البدنية",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0030",
+        "name": "المعلوميات",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          }
+        ],
+        "source": "added 2026-11-09: tests as التربية البدنية, until a Massar file confirms"
+      }
+    ],
+    "2APIC": [
+      {
+        "code": "0011",
+        "name": "اللغة العربية",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0012",
+        "name": "اللغة الفرنسية",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 5,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الرابع",
+            "components": [
+              {
+                "code": "5",
+                "name": "الفرض الرابع"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 5,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الرابع",
+            "components": [
+              {
+                "code": "5",
+                "name": "الفرض الرابع"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0013",
+        "name": "اللغة الإنجليزية",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0018",
+        "name": "الاجتماعيات",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0019",
+        "name": "الرياضيات",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0020",
+        "name": "علوم الحياة والأرض",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0023",
+        "name": "الفيزياء والكيمياء",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0024",
+        "name": "التربية الإسلامية",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0026",
+        "name": "التربية البدنية",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0030",
+        "name": "المعلوميات",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          }
+        ],
+        "source": "added 2026-11-09: tests as التربية البدنية, until a Massar file confirms"
+      }
+    ],
+    "3APIC": [
+      {
+        "code": "0011",
+        "name": "اللغة العربية",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0012",
+        "name": "اللغة الفرنسية",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 5,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الرابع",
+            "components": [
+              {
+                "code": "5",
+                "name": "الفرض الرابع"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 5,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الرابع",
+            "components": [
+              {
+                "code": "5",
+                "name": "الفرض الرابع"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0013",
+        "name": "اللغة الإنجليزية",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0018",
+        "name": "الاجتماعيات",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0019",
+        "name": "الرياضيات",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0020",
+        "name": "علوم الحياة والأرض",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0023",
+        "name": "الفيزياء والكيمياء",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0024",
+        "name": "التربية الإسلامية",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 4,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 4,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الأنشطة المندمجة",
+            "components": [
+              {
+                "code": "4",
+                "name": "الأنشطة المندمجة"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0026",
+        "name": "التربية البدنية",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          }
+        ],
+        "source": "2026/2027"
+      },
+      {
+        "code": "0030",
+        "name": "المعلوميات",
+        "components": [
+          {
+            "code": "1",
+            "name": "الفرض الأول"
+          }
+        ],
+        "rounds": [
+          {
+            "term": 1,
+            "exam": 1,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 2,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 1,
+            "exam": 3,
+            "termLabel": "الدورة الأولى",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 1,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الأول",
+            "components": [
+              {
+                "code": "1",
+                "name": "الفرض الأول"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 2,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثاني",
+            "components": [
+              {
+                "code": "2",
+                "name": "الفرض الثاني"
+              }
+            ]
+          },
+          {
+            "term": 2,
+            "exam": 3,
+            "termLabel": "الدورة الثانية",
+            "examLabel": "الفرض الثالث",
+            "components": [
+              {
+                "code": "3",
+                "name": "الفرض الثالث"
+              }
+            ]
+          }
+        ],
+        "source": "added 2026-11-09: tests as التربية البدنية, until a Massar file confirms"
+      }
     ]
   }
 }

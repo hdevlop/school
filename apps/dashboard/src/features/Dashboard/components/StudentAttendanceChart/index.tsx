@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip} from 'recharts';
+import { CHART_AXIS_TICK, CHART_GRID_STROKE, CHART_TOOLTIP_CLASS } from '@/shared/chartTheme';
 import { DeferredChart } from '@/shared/DeferredChart';
 import { NCard } from 'najm-kit';
 import { ClipboardCheck } from 'lucide-react';
@@ -26,8 +27,8 @@ const CustomTooltip = ({ active = null, payload = null, todayAbsent = null, toda
     // Another school year has no today: the server sends no figures for it.
     const isCurrent = payload[0].payload.monthId === businessDate?.slice(0, 7) && todayAbsent != null;
     return (
-      <div className="bg-white px-3 py-2 rounded shadow-lg border border-gray-200">
-        <p className="text-sm font-semibold text-gray-800">{month}</p>
+      <div className={CHART_TOOLTIP_CLASS}>
+        <p className="text-sm font-semibold text-foreground">{month}</p>
         <p className="text-sm" style={{ color: ABSENT_COLOR }}>
           {t('dashboard.attendance.absent')}: <span className="font-bold">{payload[0].value}</span>
         </p>
@@ -37,7 +38,7 @@ const CustomTooltip = ({ active = null, payload = null, todayAbsent = null, toda
           </p>
         )}
         {isCurrent && (
-          <div className="border-t border-gray-100 mt-1 pt-1">
+          <div className="border-t border-border mt-1 pt-1">
             <p className="text-sm" style={{ color: ABSENT_COLOR }}>
               {t('dashboard.attendance.todayAbsent')}: <span className="font-bold">{todayAbsent}</span>
             </p>
@@ -56,11 +57,11 @@ const Legend = ({ t }: { t: (k: string) => string }) => (
   <div className="flex items-center justify-start gap-6 mb-4">
     <div className="flex items-center gap-2">
       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: ABSENT_COLOR }} />
-      <span className="text-sm text-gray-600">{t('dashboard.attendance.absent')}</span>
+      <span className="text-sm text-muted-foreground">{t('dashboard.attendance.absent')}</span>
     </div>
     <div className="flex items-center gap-2">
       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: LATE_COLOR }} />
-      <span className="text-sm text-gray-600">{t('dashboard.attendance.late')}</span>
+      <span className="text-sm text-muted-foreground">{t('dashboard.attendance.late')}</span>
     </div>
   </div>
 );
@@ -128,18 +129,18 @@ export const StudentAttendanceChartCard = ({ className, payload, businessDate, l
           <div className="flex-1 min-h-0">
             <DeferredChart>
               <LineChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
+                <CartesianGrid strokeDasharray="0" stroke={CHART_GRID_STROKE} vertical={false} />
                 <XAxis
                   dataKey="month"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#6b7280', fontSize: 12 }}
+                  tick={CHART_AXIS_TICK}
                   dy={10}
                 />
                 <YAxis
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#6b7280', fontSize: 12 }}
+                  tick={CHART_AXIS_TICK}
                   dx={-10}
                 />
                 <Tooltip content={<CustomTooltip todayAbsent={todayAbsent} todayLate={payload?.todayLate ?? null} businessDate={businessDate} t={t} />} />

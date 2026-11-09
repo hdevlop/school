@@ -17,7 +17,7 @@ mock.module('@/features/AcademicYears/hooks/useViewingAcademicYear', () => ({ us
 mock.module('@/components/SchoolPageHeader', () => ({ SchoolPageHeader: ({ title, subtitle, actions }: any) => <div><h1>{title}</h1><p>{subtitle}</p>{actions}</div> }));
 mock.module('@/features/Massar/components/MassarPaper', () => ({ MassarPaper: ({ id }: any) => <div data-paper={id} /> }));
 mock.module('@/hooks/useSchoolFormat', () => ({ useSchoolToday: () => '2026-11-06' }));
-const setup: MassarSetup = { year: null, yearLabel: '2026-2027', filledExportVerified: false, levels: [], classes: [], subjects: [], enrollments: [], appStudents: [], appClasses: [{ id: 'school-class', name: 'CP' }], appSections: [{ id: 'section', classId: 'school-class', name: 'A' }], appSubjects: [] };
+const setup: MassarSetup = { year: null, yearLabel: '2026-2027', levels: [], classes: [], subjects: [], enrollments: [], appStudents: [], appClasses: [{ id: 'school-class', name: 'CP' }], appSections: [{ id: 'section', classId: 'school-class', name: 'A' }], appSubjects: [] };
 const round = { id: 'round', term: 1, exam: 1, status: 'open' };
 const sheet = { id: 'sheet', roundId: 'round', className: '1APG-1', subjectName: 'العربية', teacherName: 'Salma', missing: 1, total: 2, status: 'in_progress' };
 const unconfirmedSheet = { ...sheet, id: 'sheet-math', subjectName: 'الرياضيات', subjectConfirmed: false };
@@ -47,8 +47,8 @@ assert.match(html, /aria-label="Vue d’ensemble"/); assert.match(html, /data-pa
 assert.match(html, /aria-label="Choisir un contrôle"[^>]*><span><strong>Contrôle 1 — Semestre 1<\/strong><small>Sans date<\/small>/);
 assert.match(html, /<button[^>]*aria-pressed="true"[^>]*><span dir="auto">العربية<\/span><span[^>]*>50%<\/span>/);
 assert.match(html, /<button[^>]*aria-pressed="false"[^>]*><span[^>]*aria-label="À confirmer"><\/span><span dir="auto">الرياضيات<\/span>/);
-// Export (a menu: this subject or the whole class), Print and the download for Massar are icon buttons.
-assert.match(html, /aria-label="Exporter les fichiers Massar \(\.xlsx\)"/); assert.match(html, /aria-label="Imprimer"/); assert.match(html, /aria-label="Télécharger pour Massar"/);
+// One export (a menu: this subject, the whole class, or the whole Contrôle to send to Massar) and Print are icon buttons.
+assert.match(html, /aria-label="Exporter les fichiers Massar \(\.xlsx\)"/); assert.match(html, /aria-label="Imprimer"/); assert.doesNotMatch(html, /aria-label="Télécharger pour Massar"/);
 role = 'teacher'; html = renderToStaticMarkup(<MassarPage />);
 assert.match(html, /data-paper="sheet"/); assert.doesNotMatch(html, /Vue d’ensemble|Télécharger pour Massar|Ajouter des fichiers Massar|Exporter les fichiers Massar/);
 role = 'supervisor'; html = renderToStaticMarkup(<MassarPage />);

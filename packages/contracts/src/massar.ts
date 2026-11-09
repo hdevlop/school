@@ -10,6 +10,13 @@ export type MassarRoundStatus = typeof MASSAR_ROUND_STATUS_VALUES[number];
 export type MassarSheetKind = typeof MASSAR_SHEET_KIND_VALUES[number];
 export interface MassarComponent { code: string; name: string }
 export interface MassarMark { studentId: string; componentCode: string; mark: number | null; absence: MassarAbsence }
+/** A component of an owned, opened sheet that can be selected on Grades. */
+export interface MassarGradeSource {
+  id: string; sheetId: string; componentCode: string; title: string;
+  classId: string; sectionId: string; subjectId: string; teacherId: string | null;
+  totalMarks: number; term: number; exam: number; termLabel: string; examLabel: string;
+  linkedExamId: string | null;
+}
 export interface MassarStudent { id: string; studentCode: string; name: string; dateOfBirth: string; massarStudentId: string | number | null; position: number }
 export interface MassarSheetRow {
   id: string; roundId: string; className: string; subjectName: string; teacherName: string | null;
@@ -31,7 +38,7 @@ export interface MassarMappings {
   subjects: Array<{ level: string; code: string; subjectId: string | null }>;
 }
 export interface MassarSetup {
-  year: { templateReady: boolean } | null; yearLabel: string; filledExportVerified: boolean;
+  year: { templateReady: boolean } | null; yearLabel: string;
   levels: Array<{ id: string; code: string; kind?: MassarSheetKind }>;
   classes: Array<{ id: string; name: string; levelId: string; classId: string | null; sectionId: string | null; unmatchedCodes: string[]; pendingStudents?: MassarPendingStudent[] }>;
   subjects: Array<{ id: string; levelId: string; code: string; name: string; subjectId: string | null; components: MassarComponent[]; observedRounds?: Array<{ term: number; exam: number }>; confirmed?: boolean }>;

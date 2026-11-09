@@ -70,6 +70,7 @@ export function PageWarmup({ navItems }: { navItems: readonly NavItem[] }) {
 
   const role = (user as { role?: string } | null)?.role;
   const canCreateStudents = role !== 'parent' && role !== 'student' && can('create:students');
+  const canReadMassar = can('read:massar');
   const pages = warmupPages(navHrefs(navItems)).join(' ');
   // The registers open on today, kept inside the viewed year; wait for the
   // year's calendar so the day matches the one they will ask for.
@@ -78,7 +79,7 @@ export function PageWarmup({ navItems }: { navItems: readonly NavItem[] }) {
   const ready = yearReady && yearsFetched && pages !== '';
 
   useEffect(() => {
-    const run = [accountScope, academicYear, pages, registerDate, rosterDay, canCreateStudents].join('|');
+    const run = [accountScope, academicYear, pages, registerDate, rosterDay, canCreateStudents, canReadMassar].join('|');
     if (!ready || started.has(run)) return;
     started.add(run);
     let stopped = false;
@@ -88,7 +89,7 @@ export function PageWarmup({ navItems }: { navItems: readonly NavItem[] }) {
       await whenQuiet(client, isStopped, FIRST_QUIET_MS);
       if (stopped) return;
       const { warmPageData } = await import('./pageReads');
-      const context = { client, scope: { accountScope, academicYear }, registerDate, rosterDay, canCreateStudents };
+      const context = { client, scope: { accountScope, academicYear }, registerDate, rosterDay, canCreateStudents, canReadMassar };
       for (const href of pages.split(' ')) {
         if (stopped) return;
         if (href === currentPath.current) continue;
@@ -102,7 +103,7 @@ export function PageWarmup({ navItems }: { navItems: readonly NavItem[] }) {
       stopped = true;
       if (!finished) started.delete(run);
     };
-  }, [ready, client, router, accountScope, academicYear, pages, registerDate, rosterDay, canCreateStudents]);
+  }, [ready, client, router, accountScope, academicYear, pages, registerDate, rosterDay, canCreateStudents, canReadMassar]);
 
   return null;
 }

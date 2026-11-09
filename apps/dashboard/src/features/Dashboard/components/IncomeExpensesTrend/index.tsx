@@ -9,6 +9,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from 'recharts';
+import { CHART_AXIS_TICK, CHART_GRID_STROKE, CHART_INCOME_COLOR, CHART_TOOLTIP_CLASS, compactTick } from '@/shared/chartTheme';
 import { DeferredChart } from '@/shared/DeferredChart';
 import { NCard } from 'najm-kit';
 import { DollarSign } from 'lucide-react';
@@ -35,7 +36,7 @@ const toLabel = (month: string, t: (k: string) => string) => {
   return key ? t(`common.monthsShort.${key}`) : month;
 };
 
-const INCOME_COLOR = '#1e40af';
+const INCOME_COLOR = CHART_INCOME_COLOR;
 const EXPENSES_COLOR = '#f97316';
 
 type TooltipPayloadItem = { value: number | null; payload: { month: string } };
@@ -68,8 +69,8 @@ const TrendTooltip = ({
     // year's same month is not today.
     const isCurrent = showToday && month === t(`common.monthsShort.${CURRENT_MONTH_KEY}`);
     return (
-      <div className="bg-white px-3 py-2 rounded shadow-lg border border-gray-200">
-        <p className="text-sm font-semibold text-gray-800">{month}</p>
+      <div className={CHART_TOOLTIP_CLASS}>
+        <p className="text-sm font-semibold text-foreground">{month}</p>
         <p className="text-sm" style={{ color: INCOME_COLOR }}>
           {incomeLabel}: <span className="font-bold">{majorMoney(payload[0].value ?? 0)}</span>
         </p>
@@ -79,11 +80,11 @@ const TrendTooltip = ({
           </p>
         )}
         {isCurrent && (
-          <div className="border-t border-gray-100 mt-1 pt-1">
-            <p className="text-sm text-gray-700">
+          <div className="border-t border-border mt-1 pt-1">
+            <p className="text-sm text-foreground">
               {t('dashboard.todayIncome')} {incomeLabel}: <span className="font-bold">{majorMoney(todayIncome)}</span>
             </p>
-            <p className="text-sm text-gray-700">
+            <p className="text-sm text-foreground">
               {t('dashboard.todayExpenses')} {expensesLabel}: <span className="font-bold">{majorMoney(todayExpenses)}</span>
             </p>
           </div>
@@ -99,11 +100,11 @@ const TrendLegend = ({ incomeLabel, expensesLabel }: LegendProps) => (
   <div className="flex items-center justify-start gap-6 mb-4">
     <div className="flex items-center gap-2">
       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: INCOME_COLOR }} />
-      <span className="text-sm text-gray-600">{incomeLabel}</span>
+      <span className="text-sm text-muted-foreground">{incomeLabel}</span>
     </div>
     <div className="flex items-center gap-2">
       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: EXPENSES_COLOR }} />
-      <span className="text-sm text-gray-600">{expensesLabel}</span>
+      <span className="text-sm text-muted-foreground">{expensesLabel}</span>
     </div>
   </div>
 );
@@ -163,18 +164,19 @@ const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '
           <div className="flex-1 min-h-0">
             <DeferredChart>
               <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
+                <CartesianGrid strokeDasharray="0" stroke={CHART_GRID_STROKE} vertical={false} />
                 <XAxis
                   dataKey="month"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#6b7280', fontSize: 12 }}
+                  tick={CHART_AXIS_TICK}
                   dy={10}
                 />
                 <YAxis
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#6b7280', fontSize: 12 }}
+                  tick={CHART_AXIS_TICK}
+                  tickFormatter={compactTick}
                   dx={-10}
                 />
                 <Tooltip

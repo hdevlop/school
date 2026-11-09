@@ -14,6 +14,8 @@ interface GradeDraftState {
   drafts: Record<string, GradeDraft>;
   patch: (key: string, studentId: string, patch: GradeDraft[string]) => void;
   clear: (key: string) => void;
+  /** Saved: drop each entry that still holds what was sent; one typed since stays for the next save. */
+  settle: (key: string, saved: GradeDraft) => void;
 }
 
 /** Tab-local drafts survive navigation/reload; only the API owns saved grades. */
@@ -28,6 +30,15 @@ export const createGradeDraftState: StateCreator<GradeDraftState> = (set) => ({
   clear: (key) => set((state) => {
     const drafts = { ...state.drafts };
     delete drafts[key];
+    return { drafts };
+  }),
+  settle: (key, saved) => set((state) => {
+    const current = state.drafts[key];
+    if (!current) return state;
+    const rest = { ...current };
+    for (const [studentId, patch] of Object.entries(saved)) if (JSON.stringify(rest[studentId]) === JSON.stringify(patch)) delete rest[studentId];
+    const drafts = { ...state.drafts };
+    if (Object.keys(rest).length) drafts[key] = rest; else delete drafts[key];
     return { drafts };
   }),
 });

@@ -1022,7 +1022,8 @@
       "salary": "Salaire",
       "compensationMode": "Rémunération",
       "status": "Statut",
-      "assignments": "Affectations"
+      "assignments": "Affectations",
+      "wholeSchool": "Toute l’école"
     },
     "filters": {
       "search": "Rechercher par nom ou code...",
@@ -4352,7 +4353,11 @@
       "resetChanges": "Réinitialiser les modifications",
       "nothingToSave": "Rien à enregistrer.",
       "unsaved": "Non enregistr?",
-      "unsavedChanges": "Notes non enregistrées. Cliquez sur Enregistrer les notes pour les appliquer. Les brouillons restent dans cet onglet pour cette liste."
+      "unsavedChanges": "Notes non enregistrées. Cliquez sur Enregistrer les notes pour les appliquer. Les brouillons restent dans cet onglet pour cette liste.",
+      "autosaving": "Enregistrement…",
+      "autosaved": "Enregistré",
+      "autosaveFailed": "Non enregistré. Vérifiez les notes et réessayez.",
+      "retry": "Réessayer"
     },
     "subtitle": {
       "count": "Élèves : {{count}}"
@@ -5194,7 +5199,20 @@
         "average": "Moyenne",
         "averageShort": "Moy.",
         "loading": "Chargement des notes...",
-        "noneRecorded": "Aucune note enregistrée"
+        "noneRecorded": "Aucune note enregistrée",
+        "overallAverage": "Moyenne générale",
+        "classRank": "Rang dans la classe",
+        "remark": "Appréciation",
+        "remarks": {
+          "excellent": "Excellent",
+          "veryGood": "Très bien",
+          "good": "Bien",
+          "fairlyGood": "Assez bien",
+          "average": "Passable",
+          "insufficient": "Insuffisant"
+        },
+        "rank": "Rang",
+        "toWorkOn": "À travailler"
       },
       "feeDetails": {
         "fee": "Frais",
@@ -6861,7 +6879,7 @@
     "atMostThreePhoneNumbers": "Saisissez au plus trois numéros de téléphone"
   },
   "academic": {
-    "accountantAssignmentOptional": "L’affectation à un cycle est facultative. Vous pourrez l’ajouter plus tard.",
+    "accountantAssignmentOptional": "Choisissez un ou plusieurs cycles, ou laissez vide pour toute l’école.",
     "monitorAssignmentHint": "Accès limité aux élèves, à l’assiduité, à la discipline et aux notes des classes de ces niveaux, cette année comme les suivantes.",
     "deleteWarning": "Les données liées sont protégées. La suppression est définitive.",
     "classRequired": "Veuillez sélectionner une classe.",
@@ -7033,7 +7051,7 @@
       "dropFiles": "Déposez des fichiers ou un dossier, ou",
       "browseFiles": "parcourir les fichiers",
       "browseFolder": "choisir un dossier",
-      "uploadHint": "Fichiers de notes vides exportés de Massar",
+      "uploadHint": "Fichiers de notes exportés de Massar, vides ou remplis : leurs notes vont dans les Contrôles ouverts et remplacent celles de School",
       "readFilesFailed": "Impossible de lire les fichiers déposés. Essayez de les sélectionner avec les liens ci-dessus.",
       "uploadLimits": "XLSX ou ZIP · jusqu’à 200 fichiers · 15 Mo maximum",
       "clearFiles": "Effacer la sélection de fichiers",
@@ -7084,13 +7102,11 @@
     "export": "Préparer un export",
     "closeRound": "Clôturer la session",
     "exportReview": "{{count}} feuilles sélectionnées ; {{missing}} notes manquantes. Les cellules vides peuvent être exportées.",
-    "exportGate": "L’export rempli sera disponible après un essai d’import réussi dans Massar.",
     "emptyZip": "Télécharger les feuilles vierges",
     "filledZip": "Télécharger avec les notes",
     "cancel": "Annuler",
     "select": "Sélectionner",
     "student": "Élève",
-    "maxMark": "Sur",
     "save": "Enregistrer les notes",
     "submit": "Soumettre",
     "reopen": "Rouvrir la saisie",
@@ -7167,19 +7183,19 @@
       "missingMarks": "Complétez chaque note ou absence justifiée avant de soumettre.",
       "closedYear": "Cette année scolaire est clôturée.",
       "missingHiddenId": "Réimportez cette classe depuis Massar pour compléter les identifiants cachés des nouveaux élèves avant l’export.",
-      "exportUnverified": "L’export rempli nécessite d’abord un essai d’import réussi dans Massar.",
       "invalidSelection": "Sélectionnez des feuilles distinctes d’une seule session.",
-      "invalidDownload": "Téléchargez à nouveau les fichiers avant de confirmer leur acceptation par Massar.",
-      "staleDownload": "Des notes ont changé depuis ce téléchargement. Téléchargez et envoyez les fichiers à jour avant de confirmer.",
       "invalidDueDate": "Choisissez une date limite dans cette année scolaire.",
       "invalidStudentDecision": "Ce choix d’élève ne correspond plus à la vérification. Vérifiez à nouveau les fichiers.",
       "notPlanned": "Ce contrôle n'est pas prévu dans le plan de l'école. Modifiez le plan dans les réglages Massar.",
       "invalidPlan": "Ce plan n'est pas valide.",
       "planBelowOpened": "Un contrôle déjà ouvert ne peut pas être retiré du plan.",
-      "subjectUnconfirmed": "Cette matière vient des fichiers Massar de l’an dernier. Importez d’abord son fichier Massar de cette année."
+      "subjectUnconfirmed": "Cette matière vient des fichiers Massar de l’an dernier. Importez d’abord son fichier Massar de cette année.",
+      "controlClosed": "Ce Contrôle est fermé dans Massar : ses notes ne peuvent plus changer."
     },
     "flow": {
       "control": "Contrôle {{exam}} — Semestre {{term}}",
+      "controlShort": "C{{exam}}-S{{term}}",
+      "activitiesShort": "Act-S{{term}}",
       "semester": "Semestre {{term}}",
       "controlNumber": "Contrôle {{exam}}",
       "activities": "Activités intégrées",
@@ -7213,16 +7229,11 @@
       "allDone": "Toutes les feuilles sont complètes.",
       "unavailable": "Pas de feuille pour cette matière",
       "download": "Télécharger pour Massar",
-      "downloadCount": "{{count}} feuilles seront téléchargées dans un ZIP.",
+      "downloadCount": "{{count}} feuilles seront téléchargées dans un ZIP et verrouillées. Un responsable peut rouvrir une feuille pour la modifier.",
       "incomplete": "{{count}} feuilles sont incomplètes. Télécharger quand même ?",
-      "acceptedQuestion": "Massar a-t-il accepté les fichiers ?",
-      "yes": "Oui",
-      "notYet": "Pas encore",
-      "notYetHelp": "Envoyez les fichiers à Massar, puis répondez Oui ici. Les feuilles restent modifiables.",
       "changedCount": "{{count}} feuilles modifiées — téléchargez et envoyez à nouveau",
       "settings": "Réglages Massar",
       "paperTitle": "Notes du contrôle continu",
-      "birthDate": "Date de naissance",
       "saved": "✓ Enregistré",
       "saving": "Enregistrement…",
       "saveFailed": "Non enregistré — réessayer",
@@ -7323,6 +7334,12 @@
       "classChange": "Classe : {{from}} → {{to}}",
       "birthDateChange": "Naissance : {{from}} → {{to}}",
       "recordsFixed": "Élèves corrigés selon Massar : {{count}}",
+      "marksImported": "Notes reprises des fichiers Massar : {{count}}",
+      "marksReplaced": "Notes remplacées par les fichiers Massar : {{count}}",
+      "cycle": {
+        "primary": "Primaire",
+        "college": "Collège"
+      },
       "arabicNameChange": "Nom arabe : {{from}} → {{to}}",
       "notInMassarTitle": "Dans School, absents de Massar : {{count}}",
       "notInMassarHelp": "À vérifier : s'ils sont partis, enregistrez-le dans Élèves ; sinon ajoutez-les dans Massar.",
@@ -7350,6 +7367,8 @@
       },
       "printAll": "Imprimer toutes les classes",
       "sideClasses": "Classes",
+      "collapseClasses": "Masquer la colonne des classes",
+      "expandClasses": "Afficher la colonne des classes",
       "classesDone": "{{count}}/{{total}} terminées",
       "examDates": "Examens du {{from}} au {{to}}",
       "examDay": "Examens le {{date}}",
@@ -7366,6 +7385,8 @@
       "exportOpen": "La matière ouverte seulement",
       "exportAll": "Toutes les matières de {{name}}",
       "exportAllReady": "{{count}} fichiers dans un zip",
+      "exportControl": "Tout le Contrôle, à envoyer à Massar",
+      "exportControlHelp": "{{count}} fichiers dans un zip, verrouillés une fois téléchargés",
       "exportAllHelp": "{{count}} fichiers dans un zip, dont {{unconfirmed}} à confirmer"
     }
   }

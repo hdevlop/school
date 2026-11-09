@@ -520,25 +520,27 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                   <div className="min-h-[220px] flex-1">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={dashboard.attendanceChart} margin={{ top: 8, right: 14, left: -14, bottom: 0 }} barGap={4} barCategoryGap="30%">
-                        <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
+                        <CartesianGrid vertical={false} stroke="var(--border)" strokeDasharray="3 3" />
                         <XAxis
                           dataKey="month"
                           axisLine={false}
                           tickLine={false}
-                          tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+                          tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
                         />
                         <YAxis
                           allowDecimals={false}
                           axisLine={false}
                           tickLine={false}
-                          tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+                          tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
                         />
                         <Tooltip
-                          cursor={{ fill: 'hsl(var(--muted))', opacity: 0.4 }}
+                          cursor={{ fill: 'var(--muted)', opacity: 0.4 }}
                           formatter={(value, name) => [value ?? 0, name]}
                           contentStyle={{
                             borderRadius: 'var(--radius)',
-                            borderColor: 'hsl(var(--border))',
+                            borderColor: 'var(--border)',
+                            backgroundColor: 'var(--popover)',
+                            color: 'var(--popover-foreground)',
                             fontSize: 12,
                           }}
                         />

@@ -52,7 +52,7 @@ export const isSidebarPermission = (name: string) => name.startsWith('sidebar:')
 /** Stable navigation identities; labels and role access stay in the app. */
 export const SIDEBAR_ORDER_IDS = [
   'financial', 'attendance', 'student-conduct', 'evaluations', 'academic', 'massar', '/massar/rounds', '/massar/setup',
-  'transport', 'access-control', 'appearance', '/exam-planning',
+  'transport', 'access-control', 'appearance', 'communications', '/exam-planning',
   ...SIDEBAR_ENTRIES.map((entry) => entry[1]),
 ] as const;
 export type SidebarOrderId = typeof SIDEBAR_ORDER_IDS[number];

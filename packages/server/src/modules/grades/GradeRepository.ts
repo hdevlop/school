@@ -150,6 +150,25 @@ export class GradeRepository {
       .where(this.readCondition(...filters));
   }
 
+  /**
+   * Every student's marks and possible marks in one section this year, per
+   * subject, to place one student among them. Read past ownership on purpose: only the rank leaves
+   * the service, so a parent sees their child's place, never another child's marks.
+   */
+  async sectionTotals(sectionId: string) {
+    return this.db.select({
+      studentId: grades.studentId,
+      subjectId: teacherAssignments.subjectId,
+      obtained: sql<string>`sum(${grades.marksObtained})`,
+      possible: sql<string>`sum(coalesce(${assessments.totalMarks}, ${exams.totalMarks}))`,
+    }).from(grades)
+      .leftJoin(assessments, eq(grades.assessmentId, assessments.id))
+      .leftJoin(exams, eq(grades.examId, exams.id))
+      .innerJoin(teacherAssignments, sql`${teacherAssignments.id} = coalesce(${assessments.teacherAssignmentId}, ${exams.teacherAssignmentId})`)
+      .where(and(gradeInReportingYear(this.year), eq(teacherAssignments.sectionId, sectionId)))
+      .groupBy(grades.studentId, teacherAssignments.subjectId);
+  }
+
   // The year's grades the user may read, optionally for one student, section,
   // subject or teacher. A filtered list reads newest source first; the whole
   // year, newest grade first.

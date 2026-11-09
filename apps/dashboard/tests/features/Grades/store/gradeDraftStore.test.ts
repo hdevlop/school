@@ -16,6 +16,20 @@ describe('grade draft isolation', () => {
     expect(store.getState().drafts[key]?.student.marksObtained).toBe(15);
   });
 
+  it('settles only what an autosave sent, keeping a mark typed during the save', () => {
+    const store = createStore(createGradeDraftState);
+    const key = gradeDraftKey('account', '2026-2027', 'exam', 'exam', 'A');
+    store.getState().patch(key, 'one', { marksObtained: 12, status: 'graded' });
+    store.getState().patch(key, 'two', { marksObtained: 8, status: 'graded' });
+    const sent = store.getState().drafts[key];
+    // While the save runs, student two's mark is corrected.
+    store.getState().patch(key, 'two', { marksObtained: 9 });
+    store.getState().settle(key, sent);
+    expect(store.getState().drafts[key]).toEqual({ two: { marksObtained: 9, status: 'graded' } });
+    store.getState().settle(key, store.getState().drafts[key]);
+    expect(store.getState().drafts[key]).toBeUndefined();
+  });
+
   it('merges marks and feedback, then clears only the saved roster', () => {
     const store = createStore(createGradeDraftState);
     store.getState().patch('first', 'student', { marksObtained: 15 });

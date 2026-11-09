@@ -14,6 +14,8 @@ const SUBJECT_WORDS: Record<string, string[]> = {
   '0011': ['arab', 'عربي', 'العربية'], '0012': ['franc', 'french', 'الفرنسية'], '0013': ['angl', 'english', 'ingl', 'الإنجليزية', 'الانجليزية'],
   '0019': ['math', 'الرياضيات'], '0034': ['scien', 'eveil', 'العلمي', 'العلوم'], '0024': ['islam', 'الإسلامية', 'الاسلامية'],
   '1000': ['artist', 'arts', 'plasti', 'الفنية'], '0018': ['social', 'histoire', 'geograph', 'الاجتماعيات'], '0030': ['informat', 'robot', 'comput', 'المعلوميات'],
+  // Collège. "physi" alone would also fit physical education.
+  '0020': ['svt', 'vie et de la terre', 'biolog', 'الحياة والأرض'], '0023': ['chimi', 'chemis', 'الفيزياء'], '0026': ['sport', 'البدنية'],
 };
 /**
  * A name's consonant outline, comparable across alphabets: طهري and TAHRI both
@@ -40,7 +42,8 @@ export const similarName = (a: string, b: string) => {
   return short.length > 0 && short.every(word => long.includes(word));
 };
 /** School's default catalogue code for each Massar subject code: "scien" alone fits two School subjects. */
-const SCHOOL_CODES: Record<string, string> = { '0011': 'AR', '0012': 'FR', '0013': 'ENG', '0018': 'HG', '0019': 'MATH', '0024': 'EI', '0030': 'INFO', '0034': 'SCI', '1000': 'ART' };
+const SCHOOL_CODES: Record<string, string> = { '0011': 'AR', '0012': 'FR', '0013': 'ENG', '0018': 'HG', '0019': 'MATH', '0024': 'EI', '0030': 'INFO', '0034': 'SCI', '1000': 'ART',
+  '0020': 'SVT', '0023': 'PHY', '0026': 'PE' };
 type AppSubject = Setup['appSubjects'][number];
 export function proposeSubject(appSubjects: AppSubject[], code: string, name: string) {
   const exact = appSubjects.find(subject => normalizeName(subject.name) === normalizeName(name) || subject.code === code)
@@ -156,5 +159,5 @@ export function buildImportPreview(files: ImportedFile[], setup: Setup, refused:
   });
   return { accepted, preview: { classes, subjects, refused: rejected,
     missingClasses: setup.appClasses.filter(cls => !setup.classes.some(mapped => mapped.classId === cls.id) && !classes.some(mapped => mapped.classId === cls.id)).map(cls => cls.name),
-    hasCleanTemplate: !!setup.year?.templateFileId || accepted.some(file => file.data.clean), acceptedCount: accepted.length } };
+    hasCleanTemplate: !!setup.year?.templateFileId || accepted.some(file => file.data.clean && !file.data.termRounds), acceptedCount: accepted.length } };
 }

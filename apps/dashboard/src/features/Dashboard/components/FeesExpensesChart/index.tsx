@@ -2,6 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { CHART_AXIS_TICK, CHART_GRID_STROKE, CHART_INCOME_COLOR, CHART_TOOLTIP_CLASS } from '@/shared/chartTheme';
 import { NCard } from 'najm-kit';
 import { DollarSign } from 'lucide-react';
 import { cn } from 'najm-kit';
@@ -36,14 +37,14 @@ const FeesExpensesChart = ({ className = '' }) => {
     [t],
   );
 
-  const incomeColor = '#1e40af';
+  const incomeColor = CHART_INCOME_COLOR;
   const expensesColor = '#f97316';
 
   const CustomTooltip = ({ active = null, payload = null }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white px-3 py-2 rounded shadow-lg border border-gray-200">
-          <p className="text-sm font-semibold text-gray-800">{payload[0].payload.month}</p>
+        <div className={CHART_TOOLTIP_CLASS}>
+          <p className="text-sm font-semibold text-foreground">{payload[0].payload.month}</p>
           <p className="text-sm" style={{ color: incomeColor }}>
             {incomeLabel}: <span className="font-bold">{payload[0].value}</span>
           </p>
@@ -62,11 +63,11 @@ const FeesExpensesChart = ({ className = '' }) => {
     <div className="flex items-center justify-start gap-6 mb-4">
       <div className="flex items-center gap-2">
         <div className="w-3 h-3 rounded-full" style={{ backgroundColor: incomeColor }}></div>
-        <span className="text-sm text-gray-600">{incomeLabel}</span>
+        <span className="text-sm text-muted-foreground">{incomeLabel}</span>
       </div>
       <div className="flex items-center gap-2">
         <div className="w-3 h-3 rounded-full" style={{ backgroundColor: expensesColor }}></div>
-        <span className="text-sm text-gray-600">{expensesLabel}</span>
+        <span className="text-sm text-muted-foreground">{expensesLabel}</span>
       </div>
     </div>
   );
@@ -83,18 +84,18 @@ const FeesExpensesChart = ({ className = '' }) => {
         <CustomLegend />
         <ResponsiveContainer width="100%" height={250}>
           <LineChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
+            <CartesianGrid strokeDasharray="0" stroke={CHART_GRID_STROKE} vertical={false} />
             <XAxis
               dataKey="month"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#6b7280', fontSize: 12 }}
+              tick={CHART_AXIS_TICK}
               dy={10}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#6b7280', fontSize: 12 }}
+              tick={CHART_AXIS_TICK}
               domain={[0, 200]}
               ticks={[0, 50, 100, 150, 200]}
               dx={-10}

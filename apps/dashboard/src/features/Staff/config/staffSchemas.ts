@@ -77,6 +77,8 @@ export const createStaffSchemas = (t: T, today = new Date().toISOString().slice(
     classIds: z.array(z.string()).optional(),
     // Monitor-only: grades by class name, likewise one assignment each.
     classNames: z.array(z.string()).optional(),
+    // Accountant-only: any number of cycles, each one assignment sharing the dates and notes.
+    cycleIds: z.array(z.string()).optional(),
   });
 
   const driverDetails = z.object({
@@ -116,7 +118,8 @@ export const createStaffSchemas = (t: T, today = new Date().toISOString().slice(
       if ((data.role === 'driver' || data.role === 'busAssistant') && (!data.assignments?.length || data.assignments.some((item) => !item.vehicleId))) {
         issue(ctx, ['assignments', 0, 'vehicleId'], t('staff.validation.vehicleRequired'));
       }
-      if (data.role === 'accountant' && data.assignments?.some((item) => !item.cycleId
+      // The form picks cycles in `cycleIds`; with none chosen the dates name nothing and are not sent.
+      if (data.role === 'accountant' && data.cycleIds === undefined && data.assignments?.some((item) => !item.cycleId
         && Object.values(item).some(value => value !== undefined && value !== null && value !== ''))) {
         issue(ctx, ['assignments', 0, 'cycleId'], t('staff.validation.cycleRequired'));
       }

@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from 'recharts';
+import { CHART_AXIS_TICK_SMALL, CHART_GRID_STROKE, CHART_TOOLTIP_CLASS } from '@/shared/chartTheme';
 import { NCard } from 'najm-kit';
 import { BarChart2 } from 'lucide-react';
 import { NSkeletonChart } from 'najm-kit';
@@ -42,12 +43,12 @@ const CustomTooltip = ({ active, payload, majorMoney, t }: any) => {
   if (active && payload?.length) {
     const d = payload[0].payload as ClassRow;
     return (
-      <div className="bg-white px-3 py-2 rounded shadow border border-gray-200 text-sm space-y-1">
-        <p className="font-semibold text-gray-800">{d.className}</p>
-        <p className="text-gray-600">{t('reports.collection.due')} : <span className="font-medium">{majorMoney(d.due)}</span></p>
-        <p className="text-gray-600">{t('reports.collection.paid')} : <span className="font-medium text-green-600">{majorMoney(d.paid)}</span></p>
-        <p className="text-gray-600">{t('reports.collection.rate')} : <span className="font-medium" style={{ color: rateColor(d.rate) }}>{d.rate.toFixed(1)}%</span></p>
-        <p className="text-gray-400">{t('reports.collection.students', { count: d.studentCount })}</p>
+      <div className={`${CHART_TOOLTIP_CLASS} text-sm space-y-1`}>
+        <p className="font-semibold text-foreground">{d.className}</p>
+        <p className="text-muted-foreground">{t('reports.collection.due')} : <span className="font-medium">{majorMoney(d.due)}</span></p>
+        <p className="text-muted-foreground">{t('reports.collection.paid')} : <span className="font-medium text-green-600">{majorMoney(d.paid)}</span></p>
+        <p className="text-muted-foreground">{t('reports.collection.rate')} : <span className="font-medium" style={{ color: rateColor(d.rate) }}>{d.rate.toFixed(1)}%</span></p>
+        <p className="text-muted-foreground">{t('reports.collection.students', { count: d.studentCount })}</p>
       </div>
     );
   }
@@ -82,18 +83,18 @@ const CollectionByClassChart: React.FC<Props> = ({ academicYear, className = '' 
       <div className="flex flex-col h-full gap-3">
         <ResponsiveContainer width="100%" height={220}>
           <BarChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
+            <CartesianGrid strokeDasharray="0" stroke={CHART_GRID_STROKE} vertical={false} />
             <XAxis
               dataKey="className"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#6b7280', fontSize: 11 }}
+              tick={CHART_AXIS_TICK_SMALL}
               dy={6}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#6b7280', fontSize: 11 }}
+              tick={CHART_AXIS_TICK_SMALL}
               domain={[0, 100]}
               tickFormatter={(v) => `${v}%`}
               dx={-4}

@@ -1,7 +1,8 @@
 import type { MassarSheetDetail } from '@sms/contracts';
 import { CLASS_DOCUMENT_COLORS } from '@/features/Assessments/planning/planningModel';
+import { componentLabel } from './componentLabels';
 
-export type MassarPaperOptions = { language: string; logo?: string | null; title: string; student: string; birthDate: string; teacher: string; maxMark: string; term: string; exam: string };
+export type MassarPaperOptions = { language: string; logo?: string | null; title: string; student: string; teacher: string; term: string; exam: string };
 const e = (value: unknown) => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
 
 /** Branding URLs are data, never markup or active URI schemes; the print window needs them absolute. */
@@ -12,8 +13,10 @@ function safeUrl(value: string | null | undefined, origin: string) {
 
 // A4 landscape with a 7mm margin all round, held by the page itself (a print dialog set to no margins keeps it): 283mm of width.
 // the marks share what is left, never wider than 26mm nor narrower than 10mm.
-const PAGE_WIDTH = 283, IDENTITY = { number: 9, code: 28, name: 58, birth: 24 }, MARK_MAX = 26, MARK_MIN = 10;
-const IDENTITY_WIDTH = IDENTITY.number + IDENTITY.code + IDENTITY.name + IDENTITY.birth;
+// Widths in mm: a Massar code is about 17mm at 9.5pt and the longest names about 30mm in bold 10pt
+// (a longer one ends with …); the rest of the page goes to the marks.
+const PAGE_WIDTH = 283, IDENTITY = { number: 9, code: 22, name: 40 }, MARK_MAX = 26, MARK_MIN = 10;
+const IDENTITY_WIDTH = IDENTITY.number + IDENTITY.code + IDENTITY.name;
 
 const mark = (data: MassarSheetDetail, studentId: string, code: string) => {
   const found = data.marks.find(item => item.studentId === studentId && item.componentCode === code);
@@ -21,8 +24,9 @@ const mark = (data: MassarSheetDetail, studentId: string, code: string) => {
 };
 
 /**
- * The printed sheet follows Massar's: right to left, N°, code, name and birth
- * date, then one column per part. A header names the school, the Contrôle and
+ * The printed sheet follows Massar's: right to left, N°, code and name, then
+ * one column per part. The birth date is left out so the marks get the room;
+ * the xlsx export to Massar keeps it. A header names the school, the Contrôle and
  * the class in its colour; the teacher signs at the bottom.
  */
 export function buildMassarDocument(sheets: MassarSheetDetail[], options: MassarPaperOptions) {
@@ -42,12 +46,12 @@ export function buildMassarDocument(sheets: MassarSheetDetail[], options: Massar
         ${logo ? `<img src="${e(logo)}" alt="">` : `<div class="school" dir="auto">${e(data.schoolName)}</div>`}
       </header>
       <table style="width:${width}mm">
-        <colgroup><col style="width:${IDENTITY.number}mm"><col style="width:${IDENTITY.code}mm"><col style="width:${IDENTITY.name}mm"><col style="width:${IDENTITY.birth}mm">${data.components.map(() => `<col style="width:${markWidth}mm">`).join('')}</colgroup>
+        <colgroup><col style="width:${IDENTITY.number}mm"><col style="width:${IDENTITY.code}mm"><col style="width:${IDENTITY.name}mm">${data.components.map(() => `<col style="width:${markWidth}mm">`).join('')}</colgroup>
         <thead><tr>
-          <th>ر.ت<small dir="ltr">N°</small></th><th>رقم التلميذ<small>Code Massar</small></th><th>إسم التلميذ<small dir="auto">${e(options.student)}</small></th><th>تاريخ الإزدياد<small dir="auto">${e(options.birthDate)}</small></th>
-          ${data.components.map(component => `<th class="part" dir="auto">${e(component.name)}<small>النقطة / ${data.maxMark}</small></th>`).join('')}
+          <th>ر.ت<small dir="ltr">N°</small></th><th>رقم التلميذ<small>Code Massar</small></th><th>إسم التلميذ<small dir="auto">${e(options.student)}</small></th>
+          ${data.components.map(component => `<th class="part" dir="auto">${e(componentLabel(component.name))}</th>`).join('')}
         </tr></thead>
-        <tbody>${data.students.map(student => `<tr><td class="number">${student.position + 1}</td><td dir="ltr">${e(student.studentCode)}</td><td class="name" dir="auto">${e(student.name)}</td><td dir="ltr">${e(student.dateOfBirth)}</td>${data.components.map(component => `<td class="mark" dir="ltr">${e(mark(data, student.id, component.code))}</td>`).join('')}</tr>`).join('')}</tbody>
+        <tbody>${data.students.map(student => `<tr><td class="number">${student.position + 1}</td><td dir="ltr">${e(student.studentCode)}</td><td class="name" dir="auto">${e(student.name)}</td>${data.components.map(component => `<td class="mark" dir="ltr">${e(mark(data, student.id, component.code))}</td>`).join('')}</tr>`).join('')}</tbody>
       </table>
       <footer><span>توقيع الأستاذ(ة): <i></i></span><span class="latin" dir="auto">${e(data.schoolName)} · <bdi>${e(data.sheet.className)}</bdi> · ${e(data.sheet.subjectName)} · <bdi>${e(data.yearLabel)}</bdi></span></footer>
     </section>`;

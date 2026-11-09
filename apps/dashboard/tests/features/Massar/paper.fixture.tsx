@@ -19,7 +19,7 @@ mock.module('@/features/Users/hooks/useViewerRole', () => ({ useViewerRole: () =
 mock.module('@/features/AcademicYears/hooks/useYearScopedQuery', () => ({ useAcademicYearScope: () => ({ academicYear: '2026-2027' }) }));
 mock.module('@/features/Massar/hooks/useMassar', () => ({ useMassarRead: () => ({ data: detail, error: null }), useMassarAction: () => ({ run: () => {}, pending: false }), massarPut: () => {}, massarPost: () => {} }));
 const { MassarPaper } = await import('@/features/Massar/components/MassarPaper');
-const options = { language: 'ar', title: 'Notes', student: 'Student', birthDate: 'DOB', teacher: 'Teacher', maxMark: '/', term: 'Term', exam: 'Exam' };
+const options = { language: 'ar', title: 'Notes', student: 'Student', teacher: 'Teacher', maxMark: '/', term: 'Term', exam: 'Exam' };
 const html = () => renderToStaticMarkup(<MassarPaper id="sheet" options={options} onBusy={() => {}} />);
 const teacher = html();
 assert.match(teacher, /dir="rtl"/); assert.match(teacher, /01-01-2018/); assert.match(teacher, /value="مبرر"/);

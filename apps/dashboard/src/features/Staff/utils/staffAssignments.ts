@@ -1,3 +1,5 @@
+import { isSchoolWideRole } from '@/shared/pageAccess';
+
 export const formatAssignment = (assignment: any, language = 'en') => {
   if (!assignment) return '-';
 
@@ -37,3 +39,15 @@ export const currentAssignmentLabels = (staff: any, language = 'en'): string[] =
 
 export const formatAssignments = (staff: any, language = 'en') =>
   currentAssignmentLabels(staff, language).join(', ') || '-';
+
+// A job title that signs in with a school-wide role (registrar, secretary, ...) reads every class, so
+// having no assignment means the whole school, not nothing. One with an assignment (an accountant's
+// cycle) keeps it. The access role decides, not the title's code: a custom title can use any role.
+// An accountant following every active cycle also covers the whole school.
+export const coversWholeSchool = (staff: any, activeCycleIds?: string[]) => {
+  const current = (Array.isArray(staff?.assignments) ? staff.assignments : []).filter((assignment) => assignment.current !== false);
+  if (!current.length) return isSchoolWideRole(staff?.accessRole);
+  if (!activeCycleIds?.length || current.some((assignment) => assignment.type !== 'accountant')) return false;
+  const followed = new Set(current.map((assignment) => assignment.cycleId));
+  return activeCycleIds.every((id) => followed.has(id));
+};

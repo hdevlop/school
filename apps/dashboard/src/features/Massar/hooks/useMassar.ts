@@ -3,11 +3,16 @@ import { useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { api, fileRequest, formApi } from '@/services/http';
-import { useAcademicYearScope, useYearScopedDetail } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useAcademicYearScope, useYearScopedDetail, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 
+/** A Massar read; the page warm-up builds the same one, so a warmed answer lands under the key the page reads. */
+export const massarRead = (path: string) => ({
+  resource: 'massar', parts: [path], fetch: async () => (await api.get(`/massar${path}`)).data,
+}) satisfies YearScopedRead;
+
 export function useMassarRead<T>(path: string, enabled = true, pollMs = 0) {
-  const read = useYearScopedDetail({ resource: 'massar', parts: [path], fetch: async () => (await api.get(`/massar${path}`)).data, enabled });
+  const read = useYearScopedDetail({ ...massarRead(path), enabled });
   const { refetch, academicYear } = read;
   useEffect(() => {
     if (!enabled || !pollMs || !academicYear) return;
@@ -40,5 +45,4 @@ export async function downloadMassar(path: string, data?: unknown, fallback = 'm
   // or the file is saved under a random id with no extension.
   document.body.append(link); link.click(); link.remove();
   setTimeout(() => URL.revokeObjectURL(url), 40_000);
-  return response.headers.get('X-Massar-Receipt');
 }

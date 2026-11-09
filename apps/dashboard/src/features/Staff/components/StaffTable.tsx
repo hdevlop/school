@@ -21,6 +21,8 @@ import { StaffCardSkeleton } from '@/shared/PersonCardSkeleton';
 import ManageScopesDialog from './ManageScopesDialog';
 import ManageRolesDialog from './ManageRolesDialog';
 import { formatAssignments } from '../utils/staffAssignments';
+import { useCoversWholeSchool } from '../hooks/useCoversWholeSchool';
+import { WholeSchoolTag } from './WholeSchoolTag';
 import { getStaffAvatar } from '../utils/staffAvatar';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useRememberedTableMode } from '@/hooks/useRememberedTableMode';
@@ -49,6 +51,7 @@ const STAFF_LIST_EXCLUDED_ROLES = new Set(['teacher']);
 
 const StaffTable = () => {
   const { t, language } = useTranslation();
+  const coversWholeSchool = useCoversWholeSchool();
   const { can, role } = useViewerRole();
   const canCreate = can('create:staff');
   const canUpdate = can('update:staff');
@@ -268,7 +271,7 @@ const StaffTable = () => {
       cell: ({ row }) => (
         <div className="flex max-w-56 items-center gap-1 truncate text-slate-600">
           <MapPinned className="h-3 w-3 shrink-0" />
-          <span className="truncate">{formatAssignments(row.original, language)}</span>
+          {coversWholeSchool(row.original) ? <WholeSchoolTag /> : <span className="truncate">{formatAssignments(row.original, language)}</span>}
         </div>
       ),
     },
@@ -298,7 +301,7 @@ const StaffTable = () => {
         return <Badge className={`border-transparent text-white shadow-sm ${tone}`}>{status ? t(`staff.status.${status}`) : t('common.notSpecified')}</Badge>;
       },
     },
-  ], [t, language, majorMoney]);
+  ], [t, language, majorMoney, coversWholeSchool]);
 
   const roleOptions = useMemo(() => {
     return (activeStaffRoles || [])

@@ -2,18 +2,22 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import type { GradeDraft } from '../store/gradeDraftStore';
 import { toast } from 'sonner';
 import { useAuth } from 'najm-auth/client/react';
-import { isSchoolWideRole } from '@/shared/pageAccess';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
-import { NPageHeaderActions, NTabs, NErrorState, NForbiddenState, NEmptyState, useMediaQuery } from 'najm-kit';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import GradesHeader from './GradesHeader';
 import GradeRosterCard from './GradeRosterCard';
 import { useTeacherOverview } from '@/features/Dashboard/hooks/useTeacherDashboard';
-import { ClipboardList, FileText } from 'lucide-react';
-import { useGrades } from '../hooks/useGrades';
-import { useStudentsOnDate } from '@/features/Students/hooks/useStudents';
+import { LoaderCircle } from 'lucide-react';
+import { useGrades, useSourceGrades } from '../hooks/useGrades';
+import { useMassarGrades } from '../hooks/useMassarGrades';
+import { examSourcesWithMassar, massarMarkFromGrade, massarSourceLabels } from '../config/massarGradeSources';
+import { studentListRead, useStudentsOnDate } from '@/features/Students/hooks/useStudents';
+import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { isStudentDisabled } from '@/features/Students/config/studentActivity';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { useSubjects } from '@/features/Subjects/hooks/useSubjects';
@@ -31,6 +35,8 @@ import { EMPTY_GRADE_DRAFT, gradeDraftKey, useGradeDraftStore } from '../store/g
 import { GradeRosterCardSkeleton } from '@/shared/PersonCardSkeleton';
 
 const PASS_THRESHOLD = 50;
+/** How long typing must pause before the roster saves: time to type "12.5" at an ordinary pace. */
+const AUTOSAVE_DELAY_MS = 1500;
 type GradeSourceType = 'assessment' | 'exam';
 
 const computePercent = (obtained, total) => {
@@ -46,20 +52,6 @@ const getSourceSectionId = (source) => source?.sectionId || source?.section?.id 
 const getSourceSubjectId = (source) => source?.subjectId || source?.subject?.id || '';
 const getSourceTeacherId = (source) => source?.teacherId || source?.teacher?.id || '';
 
-const teacherMatchesAcademicFilter = (teacher, filters: { classId: string; sectionId: string; subjectId: string }) => {
-  const assignments = Array.isArray(teacher?.assignments) ? teacher.assignments : [];
-  if (!filters.classId && !filters.sectionId && !filters.subjectId) return true;
-
-  return assignments.some((assignment) => {
-    const subjectIds = Array.isArray(assignment?.subjectIds) ? assignment.subjectIds : [];
-    const sectionIds = Array.isArray(assignment?.sectionIds) ? assignment.sectionIds : [];
-    const matchesClass = !filters.classId || assignment?.classId === filters.classId;
-    const matchesSection = !filters.sectionId || sectionIds.includes(filters.sectionId);
-    const matchesSubject = !filters.subjectId || subjectIds.includes(filters.subjectId);
-    return matchesClass && matchesSection && matchesSubject;
-  });
-};
-
 const resolveGradeStatus = (marksObtained, fallback = 'pending') => {
   if (fallback === 'missed') return 'missed';
   return marksObtained == null || marksObtained === '' ? 'pending' : 'graded';
@@ -70,31 +62,39 @@ function GradesTableForYear() {
   const { can } = useViewerRole();
   const { user } = useAuth();
   const role = (user as any)?.role;
-  // A school-wide role grades for the teacher it picks; a teacher for themselves.
-  const isAdminOrPrincipal = isSchoolWideRole(role);
+  // Every exam belongs to one teacher assignment: a grade is given under the
+  // exam's teacher, so class, section and subject are all there is to choose.
   const isTeacher = role === 'teacher';
 
-  const { grades, error: gradesError, submitGrades, isSubmittingBatch, isGradesLoading } = useGrades();
+  // Saving goes through useGrades; its whole-year list is never read here.
+  const { submitGrades, isSubmittingBatch } = useGrades({ enabled: false });
   const { classes, isClassesLoading } = useClasses();
   const { sections, isSectionsLoading } = useSections();
   const { subjects, isSubjectsLoading } = useSubjects();
-  const { teachers, isTeachersLoading } = useTeachers();
-  const { assessments, isAssessmentsLoading } = useAssessments();
+  const { teachers } = useTeachers();
+  const { assessments, isAssessmentsLoading } = useAssessments({ enabled: false });
   const { exams, isExamsLoading } = useExams();
 
-  const [classId, setClassId] = useState('');
+  const [classId, setClassId] = useState('all');
+  const isAllClasses = classId === 'all';
   const [sectionId, setSectionId] = useState('');
   const [subjectId, setSubjectId] = useState('');
-  const [teacherId, setTeacherId] = useState('');
-  const [sourceType, setSourceType] = useState<GradeSourceType>('assessment');
+  // Exams only for now; retain the source namespace used by existing drafts.
+  const [sourceType] = useState<GradeSourceType>('exam');
   const [sourceId, setSourceId] = useState('');
+  const massar = useMassarGrades(sourceId, sourceType === 'exam' && can('read:massar'));
+  // A Massar source is read from its grid; only School's own exams have grades to read.
+  const isSchoolSource = sourceType === 'assessment' || (exams || []).some((exam) => exam.id === sourceId);
+  const { data: grades, error: gradesError, isLoading: isGradesLoading } = useSourceGrades(sourceType, sourceId, isSchoolSource && !massar.source);
+  const examSources = useMemo(() => examSourcesWithMassar(exams || [], massar.sources.data || []), [exams, massar.sources.data]);
+  const massarLabels = useMemo(() => massarSourceLabels(massar.sources.data || []), [massar.sources.data]);
+  const isSubmitting = isSubmittingBatch || massar.isSaving;
 
   const yearKey = useViewingYearKey();
   const draftKey = gradeDraftKey(user?.id ?? '', yearKey, sourceType, sourceId, sectionId);
   const draft = useGradeDraftStore((state) => state.drafts[draftKey] ?? EMPTY_GRADE_DRAFT);
   const patchDraft = useGradeDraftStore((state) => state.patch);
-  const clearDraft = useGradeDraftStore((state) => state.clear);
-  const resetDraft = useCallback(() => clearDraft(draftKey), [clearDraft, draftKey]);
+  const settleDraft = useGradeDraftStore((state) => state.settle);
   useEffect(() => { void useGradeDraftStore.persist?.rehydrate(); }, []);
 
   // A teacher grades only what they teach: their own assignments narrow the
@@ -107,37 +107,30 @@ function GradesTableForYear() {
   }, [isTeacher, teachers, ownOverview]);
 
   const classOptions = useMemo(
-    () => (classes || [])
-      .filter((c) => !ownAssignments || ownAssignments.some((a) => a.classId === c.id))
-      .map((c) => ({ value: c.id, label: c.name })),
-    [classes, ownAssignments]
+    () => [
+      { value: 'all', label: t('fees.filters.allClasses') },
+      ...(classes || [])
+        .filter((c) => !ownAssignments || ownAssignments.some((a) => a.classId === c.id))
+        .map((c) => ({ value: c.id, label: c.name })),
+    ],
+    [classes, ownAssignments, t]
   );
   const sectionOptions = useMemo(
     () => (sections || [])
-      .filter((s) => !classId || s.classId === classId)
+      .filter((s) => !classId || isAllClasses || s.classId === classId)
       .filter((s) => !ownAssignments || ownAssignments.some((a) => a.classId === s.classId && a.sectionIds?.includes(s.id)))
       .map((s) => ({ value: s.id, label: s.name })),
-    [sections, classId, ownAssignments]
+    [sections, classId, isAllClasses, ownAssignments]
   );
 
-  // Auto-select a default class (first one that has sections) on mount so the
-  // roster is populated and NTable's filter header renders — matches the
-  // Attendance roster flow instead of dead-ending on an empty table.
-  useEffect(() => {
-    if (classId || isClassesLoading || !classOptions.length) return;
-    const classWithSections = classOptions.find((option) =>
-      (sections || []).some((s) => s.classId === option.value)
-    );
-    setClassId((classWithSections ?? classOptions[0]).value);
-  }, [classOptions, sections, isClassesLoading, classId]);
-
   // Keep the selected section valid for the current class, falling back to the
-  // first available section when the current choice no longer applies.
+  // first available section. The overview includes every section.
   useEffect(() => {
-    setSectionId((current) =>
-      sectionOptions.some((o) => o.value === current) ? current : (sectionOptions[0]?.value ?? '')
-    );
-  }, [classId, sectionOptions]);
+    setSectionId((current) => {
+      if (isAllClasses) return '';
+      return sectionOptions.some((o) => o.value === current) ? current : (sectionOptions[0]?.value ?? '');
+    });
+  }, [isAllClasses, sectionOptions]);
 
   // Changing what the roster is about invalidates whichever assessment or exam
   // was chosen for it.
@@ -150,27 +143,22 @@ function GradesTableForYear() {
   // teacher were still empty discarded it on the spot. Only a deliberate change
   // clears the source now; the internal corrections keep the plain setters.
   const clearSource = useCallback(() => setSourceId(''), []);
-  const selectClass = useCallback((value: string) => { setClassId(value); clearSource(); }, [clearSource]);
+  const selectClass = useCallback((value: string) => { setClassId(value); setSectionId(''); clearSource(); }, [clearSource]);
   const selectSection = useCallback((value: string) => { setSectionId(value); clearSource(); }, [clearSource]);
   const selectSubject = useCallback((value: string) => { setSubjectId(value); clearSource(); }, [clearSource]);
-  const selectTeacher = useCallback((value: string) => { setTeacherId(value); clearSource(); }, [clearSource]);
-  const selectSourceType = useCallback((value: GradeSourceType) => {
-    setSourceType(value);
-    clearSource();
-  }, [clearSource]);
 
   // Drafts stay attached to their source and section when filters change.
   const subjectOptions = useMemo(
     () => (subjects || [])
       .filter((s) => !ownAssignments || ownAssignments.some((a) =>
-        (!classId || a.classId === classId)
+        (!classId || isAllClasses || a.classId === classId)
         && (!sectionId || a.sectionIds?.includes(sectionId))
         && a.subjectIds?.includes(s.id)))
       .map((s) => ({
         value: s.id,
         label: s.code || s.name,
       })),
-    [subjects, ownAssignments, classId, sectionId]
+    [subjects, ownAssignments, classId, isAllClasses, sectionId]
   );
 
   // A teacher opens on a subject they teach in the chosen section.
@@ -180,72 +168,62 @@ function GradesTableForYear() {
       subjectOptions.some((option) => option.value === current) ? current : (subjectOptions[0]?.value ?? '')
     );
   }, [ownAssignments, subjectOptions]);
-  const teacherOptions = useMemo(
-    () => (teachers || [])
-      .filter((tc) => teacherMatchesAcademicFilter(tc, { classId, sectionId, subjectId }))
-      .map((tc) => ({
-        value: tc.id,
-        label: tc.name || tc.email || tc.id,
-      })),
-    [teachers, classId, sectionId, subjectId]
-  );
-
-  useEffect(() => {
-    if (!teacherId) return;
-    if (!teacherOptions.some((option) => option.value === teacherId)) {
-      setTeacherId('');
-    }
-  }, [teacherId, teacherOptions]);
-
   const sourceOptions = useMemo(
     () => {
-      const list = sourceType === 'assessment' ? (assessments || []) : (exams || []);
+      const list = sourceType === 'assessment' ? (assessments || []) : examSources;
       return list
         .filter((item) => !classId || getSourceClassId(item) === classId)
         .filter((item) => !sectionId || getSourceSectionId(item) === sectionId)
         .filter((item) => !subjectId || getSourceSubjectId(item) === subjectId)
-        .filter((item) => !teacherId || getSourceTeacherId(item) === teacherId)
         .map((item) => ({
           value: item.id,
-          label: `${item.title}${item.totalMarks ? ` /${item.totalMarks}` : ''}`,
+          label: massarLabels.get(item.id) ?? item.title,
         }));
     },
-    [assessments, exams, sourceType, classId, sectionId, subjectId, teacherId]
+    [assessments, examSources, massarLabels, sourceType, classId, sectionId, subjectId]
   );
 
   const selectedSource = useMemo(
     () => {
-      const list = sourceType === 'assessment' ? (assessments || []) : (exams || []);
+      const list = sourceType === 'assessment' ? (assessments || []) : examSources;
       return list.find((item) => item.id === sourceId) || null;
     },
-    [assessments, exams, sourceType, sourceId]
+    [assessments, examSources, sourceType, sourceId]
   );
 
-  // With a viewing year, a chosen source's roster is the students placed in
-  // the section on its date, the placement the server checks when saving.
-  const { students, error: studentsError, isStudentsLoading } = useStudentsOnDate(selectedSource?.date);
+  // School owns the displayed roster, names, codes and order for every subject.
+  // The source's dated roster and Massar membership govern editing only.
+  const { data: students, error: studentsError, isLoading: isStudentsLoading } = useYearScopedList(studentListRead);
+  const { students: eligibleStudents, error: eligibilityError, isStudentsLoading: isEligibilityLoading } = useStudentsOnDate(selectedSource?.date);
+  const isMassarSheetLoading = !!massar.source && massar.sheet.isLoading;
+  const isRosterUpdating = !!selectedSource && (isEligibilityLoading || isMassarSheetLoading);
+  const isTableLoading = (!massar.source && isGradesLoading) || isStudentsLoading;
+  const massarSheet = massar.source && massar.sheet.data?.sheet.id === massar.source.sheetId ? massar.sheet.data : null;
+  const rosterError = (sourceType === 'exam' ? massar.sources.error : null)
+    ?? (massar.source ? massar.sheet.error : gradesError) ?? studentsError ?? eligibilityError;
 
   useEffect(() => {
     if (!selectedSource) return;
     const selectedClassId = getSourceClassId(selectedSource);
     const selectedSectionId = getSourceSectionId(selectedSource);
     const selectedSubjectId = getSourceSubjectId(selectedSource);
-    const selectedTeacherId = getSourceTeacherId(selectedSource);
 
     if (selectedClassId && !classId) setClassId(selectedClassId);
     if (selectedSectionId && !sectionId) setSectionId(selectedSectionId);
     if (selectedSubjectId && !subjectId) setSubjectId(selectedSubjectId);
-    if (isAdminOrPrincipal && selectedTeacherId && !teacherId) {
-      setTeacherId(selectedTeacherId);
-    }
   }, [selectedSource]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const baseRoster = useMemo(() => {
-    if (!sectionId) return [];
-    const list = (students || []).filter((s) => s.sectionId === sectionId);
+    if (!isAllClasses && !sectionId) return [];
+    const list = (students || []).filter((s) => {
+      if (isStudentDisabled(s)) return false;
+      if (!isAllClasses) return s.sectionId === sectionId;
+      return !ownAssignments || ownAssignments.some((a) =>
+        a.classId === s.classId && a.sectionIds?.includes(s.sectionId));
+    });
 
     const gradesByStudent = new Map<string, any>();
-    if (sourceId) {
+    if (sourceId && !massar.source) {
       for (const g of grades || []) {
         const matchesSource = sourceType === 'assessment'
           ? g.assessmentId === sourceId
@@ -253,16 +231,20 @@ function GradesTableForYear() {
         if (matchesSource) gradesByStudent.set(g.studentId, g);
       }
     }
+    const massarMarks = new Map((massarSheet?.marks ?? [])
+      .filter(mark => mark.componentCode === massar.source?.componentCode)
+      .map(mark => [mark.studentId, mark]));
 
-    const ctxTeacherId = isAdminOrPrincipal
-      ? (getSourceTeacherId(selectedSource) || teacherId)
-      : getSourceTeacherId(selectedSource);
+    const ctxTeacherId = getSourceTeacherId(selectedSource);
 
     return list.map((s) => {
       const g = gradesByStudent.get(s.id);
+      const mark = massarMarks.get(s.id);
+      const hasMassarMark = !!mark && (mark.mark !== null || mark.absence === 'justified');
+      const massarRowId = `${sourceId}:${s.id}`;
       return {
-        rowId: g?.id || `new-${s.id}`,
-        gradeId: g?.id || null,
+        rowId: s.id,
+        gradeId: massar.source ? (hasMassarMark ? massarRowId : null) : g?.id || null,
         studentId: s.id,
         studentName: s.name,
         studentCode: s.studentCode,
@@ -272,29 +254,19 @@ function GradesTableForYear() {
         phone: s.phone,
         className: s.class?.name,
         sectionName: s.section?.name,
-        marksObtained: g?.marksObtained ?? null,
-        status: g?.status ?? 'pending',
+        marksObtained: massar.source ? mark?.mark ?? null : g?.marksObtained ?? null,
+        status: massar.source ? (mark?.absence === 'justified' ? 'missed' : mark?.mark != null ? 'graded' : 'pending') : g?.status ?? 'pending',
         feedback: g?.feedback ?? '',
         assessmentId: sourceType === 'assessment' ? (sourceId || null) : null,
-        examId: sourceType === 'exam' ? (sourceId || null) : null,
-        classId: getSourceClassId(selectedSource) || classId || null,
+        examId: sourceType === 'exam' && !massar.source ? (sourceId || null) : null,
+        classId: getSourceClassId(selectedSource) || s.classId || (isAllClasses ? null : classId) || null,
         sectionId: s.sectionId || sectionId || null,
         subjectId: getSourceSubjectId(selectedSource) || subjectId || null,
         teacherId: ctxTeacherId || null,
         totalMarks: selectedSource?.totalMarks ?? null,
       };
     });
-  }, [students, classId, sectionId, grades, sourceId, sourceType, selectedSource, teacherId, isAdminOrPrincipal, subjectId]);
-
-  // Overlay any pending draft edits on top of the saved roster so the table
-  // reflects unsaved changes immediately.
-  const roster = useMemo(
-    () => baseRoster.map((r) => {
-      const d = draft[r.studentId];
-      return d ? { ...r, ...d, isUnsaved: true } : { ...r, isUnsaved: false };
-    }),
-    [baseRoster, draft]
-  );
+  }, [students, classId, isAllClasses, sectionId, ownAssignments, grades, sourceId, sourceType, selectedSource, subjectId, massar.source, massarSheet]);
 
   const stats = useMemo(() => {
     const withGrade = baseRoster.filter((r) => r.gradeId);
@@ -313,49 +285,89 @@ function GradesTableForYear() {
     return { total, passing, highest, lowest, passRate };
   }, [baseRoster]);
 
-  const canEdit = (row) =>
-    can(row.gradeId ? 'update:grades' : 'create:grades') &&
-    !isSubmittingBatch &&
-    !!sourceId &&
-    (!!row.assessmentId || !!row.examId) &&
-    !!row.classId &&
-    !!row.sectionId &&
-    !!row.subjectId &&
-    !!row.teacherId;
+  const isMassarSource = !!massar.source;
+  const editableRow = useCallback((row) => {
+    // Saving does not lock the fields: what is typed meanwhile waits in the draft for the next save.
+    if (isStudentsLoading || isEligibilityLoading || isMassarSheetLoading || rosterError || !selectedSource) return false;
+    if (isMassarSource) return can('update:massar-marks') && !!massarSheet?.canEdit
+      && massarSheet.students.some(student => student.id === row.studentId);
+    return can(row.gradeId ? 'update:grades' : 'create:grades') && !isGradesLoading
+      && (!!row.assessmentId || !!row.examId) && !!row.classId && !!row.sectionId && !!row.subjectId && !!row.teacherId
+      && (eligibleStudents || []).some(student => student.id === row.studentId && student.sectionId === row.sectionId);
+  }, [isStudentsLoading, isEligibilityLoading, isMassarSheetLoading, rosterError, selectedSource, isMassarSource, can, massarSheet, isGradesLoading, eligibleStudents]);
+  // The columns must not change while marks are typed or saved: a new cell
+  // function is a new component to the table, which would remount the field
+  // and drop the focus after each keystroke. So every callback they take is
+  // stable, and each row carries whether it may be edited.
+  const canEdit = useCallback((row) => !!row?.editable, []);
+
+  // Overlay any pending draft edits on top of the saved roster so the table
+  // reflects unsaved changes immediately.
+  const roster = useMemo(
+    () => baseRoster.map((r) => {
+      const d = draft[r.studentId];
+      const editable = editableRow(r);
+      return d ? { ...r, ...d, isUnsaved: true, editable } : { ...r, isUnsaved: false, editable };
+    }),
+    [baseRoster, draft, editableRow]
+  );
 
   const applyDraft = useCallback((studentId: string, patch: Record<string, any>) => {
     patchDraft(draftKey, studentId, patch);
   }, [patchDraft, draftKey]);
 
-  const handleCellEdit = async (row, columnId, value) => {
+  const handleCellEdit = useCallback(async (row, columnId, value) => {
+    if (!canEdit(row)) return;
     if (columnId === 'marksObtained') {
       applyDraft(row.studentId, { marksObtained: value, status: resolveGradeStatus(value) });
-    } else if (columnId === 'feedback') {
+    } else if (columnId === 'feedback' && !isMassarSource) {
       applyDraft(row.studentId, { feedback: value });
     }
-  };
+  }, [canEdit, applyDraft, isMassarSource]);
 
-  const handleStatusToggle = (row) => {
+  const handleStatusToggle = useCallback((row) => {
+    if (!canEdit(row)) return;
     const currentStatus = row.status || 'pending';
     if (currentStatus !== 'pending' && currentStatus !== 'missed') return;
     const nextStatus = currentStatus === 'pending' ? 'missed' : 'pending';
     applyDraft(row.studentId, { status: nextStatus });
-  };
+  }, [canEdit, applyDraft]);
 
   const hasChanges = Object.keys(draft).length > 0;
-  const canSubmit = !!sourceId && (can('create:grades') || can('update:grades'));
+  const canSubmit = !!selectedSource && !isStudentsLoading && !isEligibilityLoading && !isMassarSheetLoading && !rosterError && !isSubmitting
+    && (massar.source ? can('update:massar-marks') && !!massarSheet?.canEdit
+      : !isGradesLoading && (can('create:grades') || can('update:grades')));
 
-  const handleSubmit = async () => {
-    if (!canSubmit) {
-      toast.error(t('grades.errors.selectSource'));
+  // The draft a save failed on: not retried until something changes, or Retry.
+  const [failedDraft, setFailedDraft] = useState<GradeDraft | null>(null);
+  const saveFailed = (err: any, snapshot: GradeDraft) => {
+    setFailedDraft(snapshot);
+    toast.error(err?.response?.data?.message || err?.message || t('grades.errors.saveFailed'));
+  };
+
+  /** Saves what the draft holds now; anything typed meanwhile is saved next. */
+  const saveDraft = async (snapshot: GradeDraft) => {
+    if (!canSubmit) return;
+
+    if (massar.source && massarSheet) {
+      const componentCode = massar.source.componentCode;
+      const marks = baseRoster.filter(row => snapshot[row.studentId] && editableRow(row))
+        .map(row => massarMarkFromGrade(row.studentId, componentCode, { ...row, ...snapshot[row.studentId] }));
+      if (!marks.length) { settleDraft(draftKey, snapshot); return; }
+      try {
+        await massar.save({ sheetId: massar.source.sheetId, revision: massarSheet.sheet.revision, marks });
+        settleDraft(draftKey, snapshot);
+      } catch (err: any) {
+        saveFailed(err, snapshot);
+      }
       return;
     }
 
-    const payloads = Object.keys(draft)
+    const payloads = Object.keys(snapshot)
       .map((studentId) => baseRoster.find((r) => r.studentId === studentId))
-      .filter((base): base is any => !!base && canEdit(base))
+      .filter((base): base is any => !!base && editableRow(base))
       .map((base) => {
-        const merged = { ...base, ...draft[base.studentId] };
+        const merged = { ...base, ...snapshot[base.studentId] };
         const payload: any = {
           studentId: merged.studentId,
           assessmentId: merged.assessmentId,
@@ -372,67 +384,50 @@ function GradesTableForYear() {
         return payload;
       });
 
-    if (payloads.length === 0) {
-      toast.info(t('grades.messages.nothingToSave'));
-      return;
-    }
+    if (payloads.length === 0) { settleDraft(draftKey, snapshot); return; }
 
     try {
       await submitGrades(payloads);
-      toast.success(t('grades.success.saved'));
-      resetDraft();
+      settleDraft(draftKey, snapshot);
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || err?.message || t('grades.errors.saveFailed'));
+      saveFailed(err, snapshot);
     }
   };
 
-  const columns = useGradesTableColumns({ canEdit, onToggleStatus: handleStatusToggle });
-  const renderRosterCard = (props: any) => (
-    <GradeRosterCard {...props} canEdit={canEdit} onEdit={handleCellEdit} onToggleStatus={handleStatusToggle} />
-  );
-  // The server cannot know the screen width: offering cards only after mount
-  // keeps the first client render equal to the server's table, then phones
-  // switch to cards.
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  // Below `md` NTable shows only its first filter and folds the rest behind a
-  // button. On a phone that one visible picker is the assessment or exam:
-  // class and section are already chosen for the teacher, and nothing can be
-  // graded until a source is picked.
-  const isPhone = useMediaQuery('(max-width: 767px)');
+  // No Save button: a change is saved once typing pauses. Each save waits for the
+  // previous one and its reload, so a new grade is never created twice and a
+  // Massar grid always gets its latest revision.
+  const waitingToSave = hasChanges && draft !== failedDraft;
+  useEffect(() => {
+    if (!waitingToSave || isSubmitting || !canSubmit) return;
+    const timer = setTimeout(() => { void saveDraft(draft); }, AUTOSAVE_DELAY_MS);
+    return () => clearTimeout(timer);
+  });
+
+  const columns = useGradesTableColumns({ canEdit, onToggleStatus: handleStatusToggle, onEdit: handleCellEdit, allowFeedback: !isMassarSource });
+  // Stable for the same reason as the columns: a new render function is a new
+  // card component, which would remount the mark field after each keystroke.
+  const renderRosterCard = useCallback((props: any) => (
+    <GradeRosterCard {...props} canEdit={canEdit} onEdit={handleCellEdit} onToggleStatus={handleStatusToggle} allowFeedback={!isMassarSource} />
+  ), [canEdit, handleCellEdit, handleStatusToggle, isMassarSource]);
+  // On a phone every filter stays on screen, three to a row: class, section
+  // and subject, then the exam on a row of its own, where its long Massar
+  // name fits, then the student search.
   const gradeFilters = useGradesTableFilters({
-    classId, sectionId, subjectId, teacherId,
+    classId, isAllClasses, sectionId, subjectId,
     // The filter row is the deliberate half: every change made here drops the
     // chosen assessment or exam with it.
     setClassId: selectClass,
     setSectionId: selectSection,
     setSubjectId: selectSubject,
-    setTeacherId: selectTeacher,
     sourceType, sourceId, setSourceId, sourceOptions,
-    classOptions, sectionOptions, subjectOptions, teacherOptions,
-    isClassesLoading, isSectionsLoading, isSubjectsLoading, isTeachersLoading,
-    isSourceLoading: sourceType === 'assessment' ? isAssessmentsLoading : isExamsLoading,
-    isAdminOrPrincipal,
+    classOptions, sectionOptions, subjectOptions,
+    isClassesLoading, isSectionsLoading, isSubjectsLoading,
+    isSourceLoading: sourceType === 'assessment' ? isAssessmentsLoading : isExamsLoading || (can('read:massar') && massar.sources.isLoading),
   });
-  const rawFilters = useMemo(
-    () => (isPhone
-      ? [...gradeFilters.filter((f) => f.name === 'source'), ...gradeFilters.filter((f) => f.name !== 'source')]
-      : gradeFilters),
-    [gradeFilters, isPhone]
-  );
-  // The class, section and subject pickers sit behind the filter button on a
-  // phone, so say which roster is on screen: "Quiz 1" names an assessment in
-  // several sections.
-  const phoneContext = isPhone
-    ? [
-      classOptions.find((o) => o.value === classId)?.label,
-      sectionOptions.find((o) => o.value === sectionId)?.label,
-      subjectOptions.find((o) => o.value === subjectId)?.label,
-    ].filter(Boolean).join(' · ')
-    : '';
   const noDataText = !classId
     ? t('grades.toolbar.selectClass')
-    : !sectionId
+    : !isAllClasses && !sectionId
       ? t('grades.toolbar.selectSection')
       : t('grades.toolbar.noStudents');
 
@@ -441,69 +436,52 @@ function GradesTableForYear() {
       <NPageHeader
         icon={FEATURE_ICONS.grades}
         title={t('grades.messages.pageTitle')}
-        subtitle={isCountUnknown(gradesError ?? studentsError, roster, isGradesLoading || isStudentsLoading) ? undefined : `${t('grades.subtitle.count', { count: stats.total })}${selectedSource ? ` · ${selectedSource.title}` : ''}`}
+        subtitle={isCountUnknown(rosterError, roster, isTableLoading) ? undefined : `${t('grades.subtitle.count', { count: stats.total })}${selectedSource ? ` · ${selectedSource.title}` : ''}${massar.source ? ` · ${massar.source.termLabel} · ${massar.source.examLabel}` : ''}`}
       >
         <NPageHeaderActions>
-          <div className="flex min-w-0 flex-wrap items-center justify-end gap-2">
-            <NTabs
-              value={sourceType}
-              onValueChange={(value) => selectSourceType(value as GradeSourceType)}
-              color="primary"
-              classNames={{
-                list: 'h-9 rounded-md bg-primary/10 p-0.5',
-                trigger: 'group h-8 rounded px-3 text-xs font-medium data-[state=active]:text-primary-foreground',
-              }}
-              styles={{
-                activeTrigger: {
-                  backgroundColor: 'var(--primary)',
-                  color: 'var(--primary-foreground)',
-                },
-              }}
-              // On phones only the selected label expands; every tab keeps its
-              // accessible name when collapsed to an icon.
-              items={[
-                { value: 'assessment', label: <span className="max-sm:group-data-[state=inactive]:sr-only">{t('grades.form.assessment')}</span>, icon: ClipboardList, content: null },
-                { value: 'exam', label: <span className="max-sm:group-data-[state=inactive]:sr-only">{t('grades.toolbar.exam')}</span>, icon: FileText, content: null },
-              ]}
-            />
-          </div>
+          {isRosterUpdating ? (
+            <span role="status" className="flex items-center gap-2 text-xs text-muted-foreground">
+              <LoaderCircle aria-hidden="true" className="size-3.5 animate-spin" />
+              <span className="sr-only">{t('common.loading')}</span>
+            </span>
+          ) : null}
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
       </NPageHeader>
 
       <NTable
         exportTitle={t('grades.messages.pageTitle')}
-        className='min-h-0 flex-1'
+        // NTable knows a phone only once it has measured the screen, so its first
+        // frame is the table skeleton; a phone then shows cards. Hiding that table
+        // skeleton below md leaves one skeleton, the cards'.
+        className='min-h-0 flex-1 max-md:[&_[data-testid=ntable-loading-skeleton]:has(table)]:invisible'
         data={roster}
         columns={columns}
-        filters={rawFilters}
-        // On a phone the stats and Save take their own full-width row under
-        // the picker instead of hugging the right edge.
+        filters={gradeFilters}
+        // On a phone the save status and stats take their own full-width row
+        // under the filters instead of hugging the right edge.
         classNames={{
           header: 'max-md:gap-y-2 max-md:[&>div:has(>.grades-stats)]:w-full',
           tableHeader: '[&_th:has(.grade-student-name-column)]:w-[28%]',
         }}
         // Highest, lowest and pass rate describe one assessment or exam; with
         // none chosen they would only read as dashes and 0%.
-        headerSlot={(phoneContext || sourceId) ? (
+        headerSlot={sourceId ? (
           <div className="grades-stats flex w-full flex-col gap-2">
-            {phoneContext ? <p className="truncate px-1 text-xs text-muted-foreground">{phoneContext}</p> : null}
-            {sourceId ? (
-              <GradesHeader
-                stats={stats}
-                hasChanges={hasChanges}
-                isSubmitting={isSubmittingBatch}
-                onSubmit={handleSubmit}
-                onReset={resetDraft}
-                canSubmit={canSubmit}
-                submitTitle={canSubmit ? t('grades.toolbar.save') : t('grades.toolbar.selectSource')}
-              />
+            {massar.source && massarSheet && !massarSheet.canEdit ? (
+              <p role="status" className="text-xs text-muted-foreground">{t('massar.readOnly')}</p>
             ) : null}
+            <GradesHeader
+              stats={stats}
+              failed={hasChanges && draft === failedDraft}
+              onRetry={() => { setFailedDraft(null); }}
+            />
           </div>
         ) : undefined}
         onCellEdit={handleCellEdit}
-        loading={isGradesLoading || isStudentsLoading}
-        error={hasFailedToLoad(gradesError ?? studentsError, roster) ? gradesError ?? studentsError : null}
+        loading={isTableLoading}
+        error={(sourceType === 'exam' ? massar.sources.error : null) || (massar.source ? massar.sheet.error : null)
+          || (hasFailedToLoad(rosterError, roster) ? rosterError : null)}
         renderError={(currentError) => (
           isAuthorizationError(currentError)
             ? <NForbiddenState surface="panel" />
@@ -513,7 +491,7 @@ function GradesTableForYear() {
         showViewToggle={false}
         defaultMode='table'
         renderCardSkeleton={GradeRosterCardSkeleton}
-        renderCard={mounted ? renderRosterCard : undefined}
+        renderCard={renderRosterCard}
         dynamicHeight={true}
         renderEmpty={() => (
           <NEmptyState

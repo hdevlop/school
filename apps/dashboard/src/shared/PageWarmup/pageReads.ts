@@ -17,7 +17,7 @@ import { examListRead } from '@/features/Exams/hooks/useExams';
 import { expenseListRead } from '@/features/Financial/Expenses/hooks/useExpenses';
 import { feeListRead, feeSummaryRead } from '@/features/Financial/Fees/hooks/useFees';
 import { resolveFeeRosterSelection } from '@/features/Financial/Fees/utils/feeRosterSelection';
-import { gradeListRead } from '@/features/Grades/hooks/useGrades';
+import { massarRead } from '@/features/Massar/hooks/useMassar';
 import { parentListRead } from '@/features/Parents/hooks/useParents';
 import { sectionListRead } from '@/features/Sections/hooks/useSections';
 import { studentListRead, studentsOnDateRead } from '@/features/Students/hooks/useStudents';
@@ -36,6 +36,8 @@ export type WarmupContext = {
   rosterDay: string | undefined;
   /** The students page reads fee types only for someone who can add a student. */
   canCreateStudents: boolean;
+  /** The grades page lists Massar's exams only for someone who can read Massar. */
+  canReadMassar: boolean;
 };
 
 // An answer this recent is not asked for again: the page on screen, or an
@@ -84,7 +86,11 @@ const PAGE_READS: Record<string, Warm> = {
     ...(context.canCreateStudents ? feeTypes(context) : []),
   ],
   '/fees': feesPage,
-  '/grades': reads(subjects, classesAndSections, year(gradeListRead), year(teacherListRead), year(assessmentListRead), year(examListRead), year(studentListRead)),
+  // Grades are read per exam once one is picked; the pickers and the roster are what open.
+  '/grades': (context) => [
+    ...reads(subjects, classesAndSections, year(teacherListRead), year(examListRead), year(studentListRead))(context),
+    ...(context.canReadMassar ? year(massarRead('/grade-sources'))(context) : []),
+  ],
   '/attendance/staff': (context) => [
     ...entityList(`staff-attendance-roster:${context.registerDate}`, () => getStaffAttendanceRosterApi(context.registerDate))(context),
     ...entityList('staff-roles-active', getActiveStaffRolesApi)(context),

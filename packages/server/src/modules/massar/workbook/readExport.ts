@@ -18,7 +18,18 @@ export interface MassarExport {
   className: string; termLabel: string; examLabel: string; subjectName: string; yearLabel: string;
   level: string; maxMark: number; kind: MassarSheetKind; components: MassarComponent[];
   students: ExportStudent[]; clean: boolean;
+  /**
+   * A collège file exported for the whole term (exam 0, no exam label) holds
+   * every test of the term, one column each, coded with the test's own round
+   * number (#1#, #2#, #3#, #5# الفرض الرابع, #4# الأنشطة المندمجة). Each entry
+   * is what a single-test export of that round would say. `components` then
+   * describes the first test only; the students' marks cover every test, each
+   * coded with its test's number.
+   */
+  termRounds?: Array<{ exam: number; examLabel: string; components: MassarComponent[] }>;
 }
+/** Teacher notes (#100#) sit beside the tests in a whole-term export: the only column without a mark. */
+const MARK_HEADER = 'النقطة';
 /** Inspect size before inflating; both upload archives and workbooks are untrusted zip files. */
 export function unpack(bytes: Uint8Array, maxBytes = 40 * 1024 * 1024) {
   let total = 0, entries = 0;
@@ -56,25 +67,28 @@ export async function readExport(bytes: Uint8Array): Promise<MassarExport> {
   const level = /^(\dAP(?:G|IC))-\d+$/.exec(className)?.[1];
   const kind = level?.includes('APIC') ? 'exam' : 'components';
   const term = Number(header.term), exam = Number(header.exam), yearId = Number(header.yearId);
-  if (!level || ![1, 2].includes(term) || !Number.isInteger(exam) || exam < 1 || exam > 9 ||
+  const wholeTerm = kind === 'exam' && exam === 0 && !text(MASSAR_CELLS.examLabel).trim();
+  if (!level || ![1, 2].includes(term) || !Number.isInteger(exam) || (!wholeTerm && (exam < 1 || exam > 9)) ||
     !Number.isInteger(yearId) || yearId < 1 || !/^\d{4}\/\d{4}$/.test(text('D13')) ||
-    !['schoolCode', 'classGuid', 'levelCode', 'levelLabel', 'subjectName', 'termLabel', 'examLabel'].every(key => String(header[key] ?? '').length)) {
+    !['schoolCode', 'classGuid', 'levelCode', 'levelLabel', 'subjectName', 'termLabel', ...(wholeTerm ? [] : ['examLabel'])].every(key => String(header[key] ?? '').length)) {
     throw new MassarWorkbookError('invalidHeader');
   }
   const subjectCode = /^#([^#]+)#$/.exec(text('K5'))?.[1];
   if (!subjectCode) throw new MassarWorkbookError('invalidHeader');
-  const components: MassarComponent[] = [];
-  for (let i = 0; i < MAX_COMPONENTS; i++) {
+  const components: Array<MassarComponent & { col: number }> = [];
+  for (let i = 0, found = 0; i < MAX_COMPONENTS; i++) {
     const col = FIRST_COMPONENT_COLUMN + i * 2;
     const codeValue = scalar(xlsx.getCell(15, col).value);
     const name = scalar(xlsx.getCell(16, col).value);
     if (codeValue === null && name === null) continue;
     const code = /^#([^#]+)#$/.exec(String(codeValue))?.[1];
     if (!code || typeof name !== 'string' || !name.length || scalar(xlsx.getCell(16, col + 1).value) !== name ||
-      components.some(component => component.code === code) || i !== components.length) throw new MassarWorkbookError('invalidComponents');
-    components.push({ code, name });
+      components.some(component => component.code === code) || i !== found++) throw new MassarWorkbookError('invalidComponents');
+    if (wholeTerm && scalar(xlsx.getCell(17, col).value) !== MARK_HEADER) continue;
+    if (wholeTerm && !/^[1-9]$/.test(code)) throw new MassarWorkbookError('invalidComponents');
+    components.push({ code, name, col });
   }
-  if (!components.length || (kind === 'exam' && components.length !== 1)) throw new MassarWorkbookError('invalidComponents');
+  if (!components.length || (kind === 'exam' && !wholeTerm && components.length !== 1)) throw new MassarWorkbookError('invalidComponents');
   const maxMark = kind === 'exam' ? 20 : 10;
   const students: ExportStudent[] = [], seen = new Set<string>();
   for (let row = FIRST_STUDENT_ROW; row <= xlsx.worksheet.rowCount; row++) {
@@ -82,17 +96,19 @@ export async function readExport(bytes: Uint8Array): Promise<MassarExport> {
     if (code === null || code === '') continue;
     if (students.length >= MAX_STUDENTS || typeof code !== 'string' || seen.has(code) || !scalar(xlsx.getCell(row, 4).value)) throw new MassarWorkbookError('invalidRoster');
     seen.add(code);
-    const marks = components.map((component, index) => {
-      const col = FIRST_COMPONENT_COLUMN + index * 2;
+    const marks = components.map(({ code: componentCode, col }) => {
       const raw = scalar(xlsx.getCell(row, col).value), absenceValue = scalar(xlsx.getCell(row, col + 1).value);
       const mark = raw === null || raw === '' ? null : Number(raw);
       const absence: MassarAbsence = absenceValue === 'مبرر' ? 'justified' : 'none';
       if ((absenceValue !== null && !['', ' ', 'مبرر'].includes(String(absenceValue))) ||
         (mark !== null && (!Number.isFinite(mark) || mark < 0 || mark > maxMark || absence === 'justified'))) throw new MassarWorkbookError('invalidMark');
-      return { componentCode: component.code, mark, absence };
+      return { componentCode, mark, absence };
     });
     students.push({ studentCode: code, massarStudentId: scalar(xlsx.getCell(row, 2).value) || null,
       name: String(scalar(xlsx.getCell(row, 4).value)), dateOfBirth: String(scalar(xlsx.getCell(row, 6).value) ?? ''), marks });
   }
-  return { ...header, className, subjectCode, level, kind, term, exam, yearId, maxMark, components, students, clean } as MassarExport;
+  const read = components.map(({ code, name }) => ({ code, name }));
+  if (!wholeTerm) return { ...header, className, subjectCode, level, kind, term, exam, yearId, maxMark, components: read, students, clean } as MassarExport;
+  const termRounds = read.map(component => ({ exam: Number(component.code), examLabel: component.name, components: [component] }));
+  return { ...header, examLabel: '', className, subjectCode, level, kind, term, exam, yearId, maxMark, components: termRounds[0].components, students, clean, termRounds } as MassarExport;
 }
