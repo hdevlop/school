@@ -223,21 +223,35 @@ function GradesTableForYear() {
   const sourceOfOption = useCallback((value: string) => value.startsWith(MASSAR_SHEET_OPTION)
     ? filteredSources.find((item) => 'sheetId' in item && item.sheetId === value.slice(MASSAR_SHEET_OPTION.length))?.id ?? ''
     : value, [filteredSources]);
-  const pickOptions = isSheet ? sheetOptions : sourceOptions;
+  // A desktop that reads Massar shows Massar's grid and nothing else: its grid
+  // already has every part, so there is no exam to pick, only a Contrôle when a
+  // subject has several. Exam Planning's own exams are
+  // not Massar parts; they stay on the phone's list. Without Massar, a desktop
+  // keeps the exam list.
+  const gridOnly = isSheet && can('read:massar');
+  const contrôleOptions = useMemo(
+    () => sheetOptions.filter((option) => option.value.startsWith(MASSAR_SHEET_OPTION)),
+    [sheetOptions]
+  );
+  const pickOptions = !isSheet ? sourceOptions : gridOnly ? contrôleOptions : sheetOptions;
   const selectSheetOption = useCallback((value: string) => setSourceId(sourceOfOption(value)), [sourceOfOption]);
 
-  // Nothing to pick: the only exam for this class, section and subject, or on a
-  // desktop its only Massar Contrôle, whose grid then opens straight away.
-  const onlyOption = !sectionId || isAllClasses ? ''
-    : pickOptions.length === 1 ? pickOptions[0].value
-      : isSheet && subjectId ? (() => {
-        const contrôles = pickOptions.filter((option) => option.value.startsWith(MASSAR_SHEET_OPTION));
-        return contrôles.length === 1 ? contrôles[0].value : '';
-      })() : '';
-  const onlySourceId = onlyOption ? sourceOfOption(onlyOption) : '';
+  // Nothing to pick: on a grid-only desktop the subject's newest Contrôle (the
+  // list runs oldest to newest, see examSourcesWithMassar), the one being filled
+  // in, whose grid opens straight away; otherwise the only exam for this class,
+  // section and subject.
+  const defaultOption = !sectionId || isAllClasses ? ''
+    : gridOnly ? (subjectId ? contrôleOptions.at(-1)?.value ?? '' : '')
+      : pickOptions.length === 1 ? pickOptions[0].value : '';
+  const defaultSourceId = defaultOption ? sourceOfOption(defaultOption) : '';
   useEffect(() => {
-    if (onlySourceId) setSourceId((current) => current || onlySourceId);
-  }, [onlySourceId]);
+    if (!defaultSourceId) return;
+    // A grid-only desktop keeps a chosen Contrôle, and replaces anything else
+    // (a Planning exam picked on the phone before the screen widened).
+    setSourceId((current) => (gridOnly
+      ? (filteredSources.some((item) => item.id === current && 'sheetId' in item) ? current : defaultSourceId)
+      : current || defaultSourceId));
+  }, [defaultSourceId, gridOnly, filteredSources]);
 
   const selectedSource = useMemo(
     () => {
@@ -511,7 +525,7 @@ function GradesTableForYear() {
   // one of School's exams.
   const massarSheetId = isSheet && massar.source ? massar.source.sheetId : null;
   const sheetError = massarSheetId ? null : tableError;
-  const examSheet: GradeExamSheetProps | null = isSheet && !massarSheetId && selectedSource && !isAllClasses && sectionId && !sheetError
+  const examSheet: GradeExamSheetProps | null = isSheet && !gridOnly && !massarSheetId && selectedSource && !isAllClasses && sectionId && !sheetError
     && (isTableLoading || roster.length > 0) ? {
       title: selectedSource.title,
       total: selectedSource.totalMarks ?? null,
@@ -534,9 +548,21 @@ function GradesTableForYear() {
         ? t('grades.toolbar.selectClass')
         : !sectionId
           ? t('grades.toolbar.selectSection')
-          : !selectedSource ? t('grades.toolbar.selectSource') : t('grades.toolbar.noStudents')}
+          : gridOnly && !subjectId
+            ? t('grades.toolbar.selectSubject')
+            : gridOnly && massar.sources.isLoading
+              ? t('common.loading')
+              : gridOnly && contrôleOptions.length === 0
+                ? t('grades.toolbar.noMassarSheet')
+                : !selectedSource ? t('grades.toolbar.selectSource') : t('grades.toolbar.noStudents')}
     />
   );
+  // The grid-only desktop's list holds Contrôles only, and shows only when the
+  // subject has several: by the end of the year that is one short list, where
+  // a button per Contrôle would fill the row.
+  const sheetFilters = gridOnly && !(subjectId && contrôleOptions.length > 1)
+    ? gradeFilters.filter((filter) => filter.name !== 'source')
+    : gradeFilters;
   // Massar's grid knows only its own Arabic names; the Latin one comes from School.
   const latinNames = useMemo(() => new Map<string, string>((students || []).map((s) => [s.id, s.name])), [students]);
   // The grid names the Contrôle, not the one part a phone's list would open on.
@@ -562,7 +588,7 @@ function GradesTableForYear() {
 
       {isSheet ? (
         <GradesSheet
-          filters={gradeFilters}
+          filters={sheetFilters}
           massarSheetId={massarSheetId}
           exam={examSheet}
           placeholder={sheetPlaceholder}

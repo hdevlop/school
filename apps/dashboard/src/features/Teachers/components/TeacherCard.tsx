@@ -13,7 +13,7 @@ import { avatarVersion } from '@/lib/avatarVersion';
 import { PersonCard } from '@/shared/PersonCard';
 import { CompactPersonCard, CompactTag, CompactValue, useCompactPersonCard } from '@/shared/CompactPersonCard';
 
-const VISIBLE_SUBJECTS = 3;
+const VISIBLE_SUBJECTS = 2;
 const TAG = 'rounded-full bg-primary/10 font-medium text-primary ring-1 ring-inset ring-primary/20';
 const PENDING = 'bg-amber-100 font-medium text-amber-900 ring-1 ring-inset ring-amber-300 dark:bg-amber-950 dark:text-amber-200 dark:ring-amber-700';
 
@@ -29,8 +29,12 @@ const TeacherCard = ({ data }) => {
    const { subjects = [] } = useSubjects();
 
    // The subjects this teacher teaches this year, as the staff card shows a role.
-   const subjectNames = [...new Set((teacher.assignments ?? []).flatMap(assignment => assignment.subjectIds ?? []))]
-      .map(id => subjects.find(subject => subject.id === id)?.name).filter(Boolean);
+   const taught = [...new Set((teacher.assignments ?? []).flatMap(assignment => assignment.subjectIds ?? []))]
+      .map(id => subjects.find(subject => subject.id === id)).filter(Boolean);
+   const subjectNames = taught.map(subject => subject.name);
+   // A card's tag row is narrow: one subject reads in full, several by their
+   // codes (AR, EI…, as the Notes filters name them), so two always fit.
+   const subjectTags = taught.length > 1 ? taught.map(subject => subject.code || subject.name) : subjectNames;
    const hiddenSubjects = subjectNames.length - VISIBLE_SUBJECTS;
 
    const getClassName = (classId) => {
@@ -85,16 +89,22 @@ const TeacherCard = ({ data }) => {
          {...cardProps}
          avatar={<NAvatar src={teacher?.image} fallback={teacher.name} size="lg" version={avatarVersion(teacher?.image, teacher?.updatedAt)} />}
          name={teacher.name}
+         // One row whatever the number of subjects, so every card has the same
+         // shape: the first two subjects, "+N" for the others (all of them in
+         // the tooltip), and the pending access on the same line. The subjects
+         // shorten when the row runs out of room; "+N" never does.
          meta={(
-            <>
+            <span className="flex min-w-0 flex-nowrap items-center gap-1" title={subjectNames.join(', ') || undefined}>
                {subjectNames.length ? (
-                  <span className="flex flex-wrap gap-1" title={subjectNames.join(', ')}>
-                     {subjectNames.slice(0, VISIBLE_SUBJECTS).map(name => <NBadge key={name} className={TAG}>{name}</NBadge>)}
-                     {hiddenSubjects > 0 && <NBadge className={TAG}><bdi dir="ltr">+{hiddenSubjects}</bdi></NBadge>}
-                  </span>
-               ) : teacher.specialization && <NBadge className={TAG}>{teacher.specialization}</NBadge>}
-               {teacher.loginStatus === 'pending' && <NBadge className={`w-fit ${PENDING}`}>{t('staff.invitation.accessPending')}</NBadge>}
-            </>
+                  <>
+                     {subjectTags.slice(0, VISIBLE_SUBJECTS).map(tag => (
+                        <NBadge key={tag} className={`min-w-0 shrink truncate ${TAG}`}><span className="truncate">{tag}</span></NBadge>
+                     ))}
+                     {hiddenSubjects > 0 && <NBadge className={`shrink-0 ${TAG}`}><bdi dir="ltr">+{hiddenSubjects}</bdi></NBadge>}
+                  </>
+               ) : teacher.specialization && <NBadge className={`min-w-0 shrink truncate ${TAG}`}><span className="truncate">{teacher.specialization}</span></NBadge>}
+               {teacher.loginStatus === 'pending' && <NBadge className={`shrink-0 ${PENDING}`}>{t('staff.invitation.accessPending')}</NBadge>}
+            </span>
          )}
       >
          {/* NCardInfo truncates to the card width, so a long email

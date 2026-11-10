@@ -2611,8 +2611,8 @@
     "teachers": {
       "create": "¿Crear este profesor?",
       "update": "¿Actualizar este profesor?",
-      "delete": "¿Eliminar este profesor? Esta acción no se puede deshacer. Se eliminarán permanentemente el docente, su cuenta de acceso y sus asignaciones docentes de todos los cursos escolares.",
-      "bulkDelete": "¿Eliminar estos profesores? Esta acción no se puede deshacer. Se eliminarán permanentemente los docentes seleccionados, sus cuentas de acceso y sus asignaciones docentes de todos los cursos escolares.",
+      "delete": "¿Eliminar este docente? Esta acción no se puede deshacer. Se eliminarán permanentemente el docente, su cuenta de acceso, sus asignaciones docentes y todo lo que registró (exámenes, notas de los alumnos, evaluaciones, asistencia, clases del horario) de todos los cursos escolares.",
+      "bulkDelete": "¿Eliminar estos docentes? Esta acción no se puede deshacer. Se eliminarán permanentemente los docentes seleccionados, sus cuentas de acceso, sus asignaciones docentes y todo lo que registraron (exámenes, notas de los alumnos, evaluaciones, asistencia, clases del horario) de todos los cursos escolares.",
       "deleteAll": "¿Eliminar todos los profesores? Esta acción no se puede deshacer.",
       "assignSubject": "¿Asignar esta materia al profesor?",
       "unassignSubject": "¿Desasignar esta materia del profesor?",
@@ -3711,6 +3711,8 @@
       "passRate": "Tasa de aprobados",
       "save": "Guardar notas",
       "selectSource": "Seleccione primero una evaluación o examen",
+      "selectSubject": "Elige una asignatura para abrir su cuadrícula de Massar.",
+      "noMassarSheet": "Todavía no hay cuadrícula de Massar para esta clase y asignatura.",
       "exam": "Examen",
       "selectExam": "Seleccionar examen",
       "searchExam": "Buscar examen",
@@ -5264,7 +5266,6 @@
   "teachers": {
     "errors": {
       "hasAssignmentHistory": "Este docente tiene asignaciones de clase en un curso escolar. Elimínelas antes de borrar al docente",
-      "hasRecordedHistory": "Este docente tiene evaluaciones, exámenes, registros de asistencia o clases en un horario. Desactívelo para conservar estos registros.",
       "invitationEmailRequired": "El correo es obligatorio para enviar el enlace de activación del profesor",
       "notFound": "Docente no encontrado",
       "datedRosterUnreviewed": "Las listas fechadas de un docente requieren un historial de asignaciones revisado",
@@ -5282,7 +5283,15 @@
     },
     "dialogs": {
       "deleteWarning": "Se eliminarán permanentemente el docente, su cuenta de acceso y sus asignaciones docentes de todos los cursos escolares.",
-      "bulkDeleteWarning": "Se eliminarán permanentemente los docentes seleccionados, sus cuentas de acceso y sus asignaciones docentes de todos los cursos escolares.",
+      "bulkDeleteWarning": "Se eliminarán permanentemente los docentes seleccionados, sus cuentas de acceso, sus asignaciones docentes y todo lo que registraron (exámenes, notas de los alumnos, evaluaciones, asistencia, clases del horario) de todos los cursos escolares.",
+      "deleteHistory": "También se borrará todo lo que registró en todos los cursos escolares: {{list}}.",
+      "history": {
+        "exams": "exámenes",
+        "assessments": "evaluaciones",
+        "grades": "notas de alumnos",
+        "attendance": "registros de asistencia",
+        "lessons": "clases del horario"
+      },
       "bulkDeleteItemName": "elemento",
       "createButton": "Crear",
       "createTitle": "Crear",
@@ -6365,19 +6374,20 @@
     },
     "list": {
       "button": "Solicitudes de registro",
-      "title": "Solicitudes de registro de docentes",
       "empty": "No hay solicitudes pendientes.",
       "approve": "Aprobar",
       "reject": "Rechazar",
       "rejectConfirm": "¿Eliminar esta solicitud?",
-      "failed": "No se ha podido procesar esta solicitud."
+      "failed": "No se ha podido procesar esta solicitud.",
+      "receivedOn": "Recibida el {{date}}",
+      "details": "Detalles"
     },
     "errors": {
       "notFound": "Esta solicitud ya no existe."
     },
     "notification": {
-      "title": "Nuevo registro de docente",
-      "body": "Un docente ha pedido unirse al centro. Abre la página Docentes para revisar la solicitud."
+      "title": "Nueva solicitud de docente",
+      "body": "{{name}} ha pedido unirse al centro."
     },
     "success": {
       "received": "Solicitud recibida.",

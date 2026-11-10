@@ -3450,8 +3450,8 @@
     "teachers": {
       "create": "Créer cet enseignant ?",
       "update": "Mettre à jour cet enseignant ?",
-      "delete": "Supprimer cet enseignant ? Cette action est irréversible. Cet enseignant, son compte de connexion et ses affectations pédagogiques de toutes les années scolaires seront supprimés définitivement.",
-      "bulkDelete": "Supprimer ces enseignants ? Cette action est irréversible. Les enseignants sélectionnés, leurs comptes de connexion et leurs affectations pédagogiques de toutes les années scolaires seront supprimés définitivement.",
+      "delete": "Supprimer cet enseignant ? Cette action est irréversible. Cet enseignant, son compte de connexion, ses affectations pédagogiques et tout ce qu’il a enregistré (examens, notes des élèves, évaluations, présences, cours de l’emploi du temps) de toutes les années scolaires seront supprimés définitivement.",
+      "bulkDelete": "Supprimer ces enseignants ? Cette action est irréversible. Les enseignants sélectionnés, leurs comptes de connexion, leurs affectations pédagogiques et tout ce qu’ils ont enregistré (examens, notes des élèves, évaluations, présences, cours de l’emploi du temps) de toutes les années scolaires seront supprimés définitivement.",
       "deleteAll": "Supprimer tous les enseignants ? Cette action est irréversible.",
       "assignSubject": "Attribuer cette matière à l'enseignant ?",
       "unassignSubject": "Retirer cette matière à l'enseignant ?",
@@ -4469,6 +4469,8 @@
       "passRate": "Taux de réussite",
       "save": "Enregistrer les notes",
       "selectSource": "Sélectionnez d’abord une évaluation ou un examen",
+      "selectSubject": "Choisissez une matière pour ouvrir sa grille Massar.",
+      "noMassarSheet": "Pas encore de grille Massar pour cette classe et cette matière.",
       "exam": "Examen",
       "selectExam": "Sélectionner un examen",
       "searchExam": "Rechercher un examen",
@@ -5365,7 +5367,6 @@
   "teachers": {
     "errors": {
       "hasAssignmentHistory": "Cet enseignant a des affectations de classe dans une année scolaire. Retirez-les avant de le supprimer",
-      "hasRecordedHistory": "Cet enseignant a des évaluations, examens, présences ou cours dans un emploi du temps. Désactivez-le pour conserver ces données.",
       "invitationEmailRequired": "L’e-mail est requis pour envoyer le lien d’activation de l’enseignant",
       "notFound": "Enseignant introuvable",
       "datedRosterUnreviewed": "Les listes datées d'un enseignant exigent un historique d'affectations vérifié",
@@ -5383,7 +5384,15 @@
     },
     "dialogs": {
       "deleteWarning": "Cet enseignant, son compte de connexion et ses affectations pédagogiques de toutes les années scolaires seront supprimés définitivement.",
-      "bulkDeleteWarning": "Les enseignants sélectionnés, leurs comptes de connexion et leurs affectations pédagogiques de toutes les années scolaires seront supprimés définitivement.",
+      "bulkDeleteWarning": "Les enseignants sélectionnés, leurs comptes de connexion, leurs affectations pédagogiques et tout ce qu’ils ont enregistré (examens, notes des élèves, évaluations, présences, cours de l’emploi du temps) de toutes les années scolaires seront supprimés définitivement.",
+      "deleteHistory": "Tout ce qu’il a enregistré, toutes années confondues, sera aussi effacé : {{list}}.",
+      "history": {
+        "exams": "examens",
+        "assessments": "évaluations",
+        "grades": "notes d’élèves",
+        "attendance": "présences",
+        "lessons": "cours de l’emploi du temps"
+      },
       "bulkDeleteItemName": "élément",
       "createButton": "Créer",
       "createTitle": "Créer",
@@ -6466,19 +6475,20 @@
     },
     "list": {
       "button": "Demandes d'inscription",
-      "title": "Demandes d'inscription des enseignants",
       "empty": "Aucune demande en attente.",
       "approve": "Approuver",
       "reject": "Refuser",
       "rejectConfirm": "Supprimer cette demande ?",
-      "failed": "Cette demande n'a pas pu être traitée."
+      "failed": "Cette demande n'a pas pu être traitée.",
+      "receivedOn": "Reçue le {{date}}",
+      "details": "Détails"
     },
     "errors": {
       "notFound": "Cette demande n'existe plus."
     },
     "notification": {
-      "title": "Nouvelle inscription d'enseignant",
-      "body": "Un enseignant a demandé à rejoindre l'établissement. Ouvrez la page Enseignants pour examiner la demande."
+      "title": "Nouvelle inscription d’enseignant",
+      "body": "{{name}} demande à rejoindre l’établissement."
     },
     "success": {
       "received": "Demande reçue.",

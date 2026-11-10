@@ -15,14 +15,15 @@ describe('teacher sign-up form', () => {
     expect(Object.keys(schema.shape)).not.toContain('assignments');
   });
 
+  it('asks nothing about subjects or experience: the school settles them after approval', () => {
+    for (const field of ['specialization', 'yearsOfExperience', 'academicDegrees']) {
+      expect(Object.keys(schema.shape)).not.toContain(field);
+    }
+  });
+
   it('refuses each missing required answer', () => {
     for (const field of Object.keys(required) as Array<keyof typeof required>) {
       expect(schema.safeParse({ ...required, [field]: '' }).success).toBe(false);
     }
-  });
-
-  it('reads an empty experience as not given', () => {
-    expect(schema.parse({ ...required, yearsOfExperience: '' }).yearsOfExperience).toBeUndefined();
-    expect(schema.parse({ ...required, yearsOfExperience: '4' }).yearsOfExperience).toBe(4);
   });
 });

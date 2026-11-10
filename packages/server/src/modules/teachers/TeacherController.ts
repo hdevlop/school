@@ -176,6 +176,15 @@ export class TeacherController {
     return this.teacherService.update(id, body);
   }
 
+  @Get('/:id/deletion-impact')
+  @CanDelete()
+  @Validate({ params: teacherIdParam })
+  @McpTool({ description: 'Count what deleting a teacher would erase with them in every year: exams, assessments, student grades, attendance records and timetable lessons', readOnly: true })
+  @ResMsg('teachers.success.retrieved')
+  async getDeletionImpact(@Params('id') id: string) {
+    return this.teacherService.deletionImpact(id);
+  }
+
   @Delete('/bulk')
   @CanDelete()
   @Validate(deleteBulkTeacherDto)

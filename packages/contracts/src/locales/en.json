@@ -3486,7 +3486,6 @@
       "cinExists": "A teacher with this CIN already exists",
       "emailExists": "A teacher with this email already exists",
       "hasAssignmentHistory": "This teacher has class assignments in a school year. Remove those assignments before deleting the teacher",
-      "hasRecordedHistory": "This teacher has assessments, exams, attendance or timetable records. Deactivate the teacher instead to keep these records.",
       "datedRosterUnreviewed": "Dated teacher rosters require reviewed assignment history",
       "dateOutsideYear": "Date is outside the academic year reporting interval",
       "assignmentNotFound": "Assignment not found",
@@ -3596,7 +3595,15 @@
       "updateButton": "Update Teacher",
       "deleteButton": "Delete Teacher",
       "deleteWarning": "The teacher, their login account and teaching assignments in all school years will be permanently deleted.",
-      "bulkDeleteWarning": "The selected teachers, their login accounts and teaching assignments in all school years will be permanently deleted.",
+      "bulkDeleteWarning": "The selected teachers, their login accounts, teaching assignments and everything they recorded (exams, student grades, assessments, attendance, timetable lessons) in all school years will be permanently deleted.",
+      "deleteHistory": "Everything they recorded in all school years will be erased too: {{list}}.",
+      "history": {
+        "exams": "exams",
+        "assessments": "assessments",
+        "grades": "student grades",
+        "attendance": "attendance records",
+        "lessons": "timetable lessons"
+      },
       "bulkDeleteItemName": "{{count}} teacher(s)"
     },
     "table": {
@@ -4422,6 +4429,8 @@
       "passRate": "Pass rate",
       "save": "Save grades",
       "selectSource": "Select an assessment or exam first",
+      "selectSubject": "Choose a subject to open its Massar grid.",
+      "noMassarSheet": "No Massar grid for this class and subject yet.",
       "exam": "Exam",
       "selectExam": "Select exam",
       "searchExam": "Search exam",
@@ -6189,8 +6198,8 @@
     "teachers": {
       "create": "Create this teacher?",
       "update": "Update this teacher?",
-      "delete": "Delete this teacher? This action cannot be undone. The teacher, their login account and teaching assignments in all school years will be permanently deleted.",
-      "bulkDelete": "Delete these teachers? This action cannot be undone. The selected teachers, their login accounts and teaching assignments in all school years will be permanently deleted.",
+      "delete": "Delete this teacher? This action cannot be undone. The teacher, their login account, teaching assignments and everything they recorded (exams, student grades, assessments, attendance, timetable lessons) in all school years will be permanently deleted.",
+      "bulkDelete": "Delete these teachers? This action cannot be undone. The selected teachers, their login accounts, teaching assignments and everything they recorded (exams, student grades, assessments, attendance, timetable lessons) in all school years will be permanently deleted.",
       "deleteAll": "Delete all teachers? This action cannot be undone.",
       "assignSubject": "Assign this subject to the teacher?",
       "unassignSubject": "Unassign this subject from the teacher?",
@@ -7072,19 +7081,20 @@
     },
     "list": {
       "button": "Sign-up requests",
-      "title": "Teacher sign-up requests",
       "empty": "No requests waiting.",
       "approve": "Approve",
       "reject": "Reject",
       "rejectConfirm": "Remove this request?",
-      "failed": "This request could not be processed."
+      "failed": "This request could not be processed.",
+      "receivedOn": "Received on {{date}}",
+      "details": "Details"
     },
     "errors": {
       "notFound": "This request no longer exists."
     },
     "notification": {
       "title": "New teacher sign-up",
-      "body": "A teacher has asked to join the school. Open the Teachers page to review the request."
+      "body": "{{name}} asked to join the school."
     },
     "success": {
       "received": "Request received.",

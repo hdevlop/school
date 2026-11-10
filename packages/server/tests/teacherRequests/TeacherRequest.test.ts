@@ -12,7 +12,7 @@ const valid = { name: 'Youssef Idrissi', email: 'youssef@gmail.com', phone: '212
 const stored = { ...valid, id: 'request', gender: null, specialization: 'Maths', yearsOfExperience: 4, academicDegrees: null };
 
 function harness(overrides: { created?: object | undefined; createTeacher?: () => Promise<object> } = {}) {
-  const create = mock(async () => ('created' in overrides ? overrides.created : { id: 'request' }));
+  const create = mock(async () => ('created' in overrides ? overrides.created : { id: 'request', name: valid.name }));
   const remove = mock(async () => {});
   const emit = mock(async () => {});
   const createTeacher = mock(overrides.createTeacher ?? (async () => ({ id: 'teacher', emailSent: true })));
@@ -52,7 +52,13 @@ describe('public teacher sign-up', () => {
     const { service, create, emit } = harness();
     expect(await service.create({ ...valid, specialization: '', website: '' })).toEqual({ received: true });
     expect(create).toHaveBeenCalledWith({ ...valid, specialization: null, academicDegrees: null });
-    expect(emit).toHaveBeenCalledWith('teacherRequest.created', { id: 'request', language: 'fr' });
+    expect(emit).toHaveBeenCalledWith('teacherRequest.created', { id: 'request', name: valid.name, language: 'fr' });
+  });
+
+  it('names the teacher in the notification', async () => {
+    const { service, notify } = harness();
+    await service.notify({ id: 'request', name: valid.name, language: 'fr' });
+    expect(notify).toHaveBeenCalledWith(expect.objectContaining({ id: 'request', body: expect.stringContaining(valid.name) }));
   });
 
   it('answers a second request for the same address exactly like the first, and stays silent', async () => {

@@ -44,9 +44,14 @@ export class TeacherValidator {
     if (await this.teacherRepository.hasAnyAssignments(id)) Err(409, this.tt('hasAssignmentHistory'));
   }
 
+  /**
+   * An administrator may delete any teacher: what the teacher recorded is
+   * erased with them (TeacherService.delete), after a confirmation that counts
+   * it (TeacherService.deletionImpact). Anyone else may delete only a teacher
+   * who never had an assignment.
+   */
   async ensureDeletionAllowed(id: string, actorRole?: string) {
     if (actorRole !== 'admin') return this.ensureNoAssignmentHistory(id);
-    if (await this.teacherRepository.hasRecordedHistory(id)) Err(409, this.tt('hasRecordedHistory'));
   }
 
   async ensureUserIdUnique(id: string) {

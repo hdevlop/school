@@ -311,12 +311,21 @@ export class TeacherService {
   async delete(id: string, actorRole?: string) {
     const teacher = await this.teacherValidator.ensureExists(id);
     await this.teacherValidator.ensureDeletionAllowed(id, actorRole);
-    // The teacher FK removes teaching assignments in every year. This and the
+    // An administrator's deletion takes what the teacher recorded with it, in
+    // every year (the confirmation counted it, see deletionImpact). Then the
+    // teacher FK removes teaching assignments in every year. All of it and the
     // linked staff/login deletion share the transaction; a refusal rolls it all back.
+    if (actorRole === 'admin') await this.teacherRepository.eraseRecordedHistory(id);
     const deletedTeacher = await this.teacherRepository.delete(id);
     if (teacher.staffId) await this.staffService.delete(teacher.staffId);
     this.storage.delete('teachers', `${id}_avatar.png`).catch(() => {});
     return deletedTeacher;
+  }
+
+  /** What deleting this teacher erases with them, in every year, for the confirmation to state. */
+  async deletionImpact(id: string) {
+    await this.teacherValidator.ensureExists(id);
+    return this.teacherRepository.recordedHistory(id);
   }
 
   @Transaction()

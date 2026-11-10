@@ -10,6 +10,9 @@ export interface TeacherRequestRow {
   phone: string;
   cin: string;
   address: string;
+  gender: string | null;
+  /** When the request arrived. */
+  createdAt: string | null;
   specialization: string | null;
   yearsOfExperience: number | null;
   academicDegrees: string | null;

@@ -1,5 +1,5 @@
 import { DB } from '../../database/db';
-import { teachers, users, teacherAssignments, sections, subjects, students, classes, staff, studentEnrollments, studentEnrollmentPlacements, assessments, exams, attendance, routineEntries } from '../../database/schema';
+import { teachers, users, teacherAssignments, sections, subjects, students, classes, staff, studentEnrollments, studentEnrollmentPlacements, assessments, exams, attendance, routineEntries, grades } from '../../database/schema';
 import { Repository } from '../../najm';
 import { getBusinessDateOnly } from '../../shared/businessDate';
 import { Owned, type OwnedWhere } from '../../auth';
@@ -500,21 +500,48 @@ export class TeacherRepository {
     return !!row;
   }
 
-  /** Shared identity deletion affects every year, including references outside the selected year. */
-  async hasRecordedHistory(id: string) {
+  /**
+   * The records a teacher's assignments hold in every year: what deleting the
+   * teacher erases with them. Shared identity deletion affects every year, so
+   * nothing here reads the selected one.
+   */
+  private historyScope(id: string) {
     const assignmentIds = this.db.select({ id: teacherAssignments.id }).from(teacherAssignments)
       .where(eq(teacherAssignments.teacherId, id));
-    const references = await Promise.all([
-      this.db.select({ id: assessments.id }).from(assessments)
-        .where(inArray(assessments.teacherAssignmentId, assignmentIds)).limit(1),
-      this.db.select({ id: exams.id }).from(exams)
-        .where(inArray(exams.teacherAssignmentId, assignmentIds)).limit(1),
-      this.db.select({ id: routineEntries.id }).from(routineEntries)
-        .where(inArray(routineEntries.teacherAssignmentId, assignmentIds)).limit(1),
-      this.db.select({ id: attendance.id }).from(attendance)
-        .where(or(eq(attendance.teacherId, id), inArray(attendance.teacherAssignmentId, assignmentIds))).limit(1),
+    return {
+      assignmentIds,
+      examIds: this.db.select({ id: exams.id }).from(exams).where(inArray(exams.teacherAssignmentId, assignmentIds)),
+      assessmentIds: this.db.select({ id: assessments.id }).from(assessments).where(inArray(assessments.teacherAssignmentId, assignmentIds)),
+    };
+  }
+
+  /** How many of each record deleting this teacher erases, in every year. */
+  async recordedHistory(id: string) {
+    const { assignmentIds, examIds, assessmentIds } = this.historyScope(id);
+    const total = async (query: Promise<Array<{ n: number }>>) => Number((await query)[0]?.n ?? 0);
+    const [examCount, assessmentCount, gradeCount, attendanceCount, lessonCount] = await Promise.all([
+      total(this.db.select({ n: count() }).from(exams).where(inArray(exams.teacherAssignmentId, assignmentIds))),
+      total(this.db.select({ n: count() }).from(assessments).where(inArray(assessments.teacherAssignmentId, assignmentIds))),
+      total(this.db.select({ n: count() }).from(grades).where(or(inArray(grades.examId, examIds), inArray(grades.assessmentId, assessmentIds)))),
+      total(this.db.select({ n: count() }).from(attendance).where(or(eq(attendance.teacherId, id), inArray(attendance.teacherAssignmentId, assignmentIds)))),
+      total(this.db.select({ n: count() }).from(routineEntries).where(inArray(routineEntries.teacherAssignmentId, assignmentIds))),
     ]);
-    return references.some(rows => rows.length > 0);
+    return { exams: examCount, assessments: assessmentCount, grades: gradeCount, attendance: attendanceCount, lessons: lessonCount };
+  }
+
+  /**
+   * Erases what a teacher recorded, in every year, so the teacher can be
+   * deleted: their exams and assessments with the students' grades, their
+   * attendance (its history goes with it) and their timetable lessons. Run
+   * inside the deletion's transaction, before the teacher row.
+   */
+  async eraseRecordedHistory(id: string) {
+    const { assignmentIds, examIds, assessmentIds } = this.historyScope(id);
+    await this.db.delete(grades).where(or(inArray(grades.examId, examIds), inArray(grades.assessmentId, assessmentIds)));
+    await this.db.delete(exams).where(inArray(exams.teacherAssignmentId, assignmentIds));
+    await this.db.delete(assessments).where(inArray(assessments.teacherAssignmentId, assignmentIds));
+    await this.db.delete(attendance).where(or(eq(attendance.teacherId, id), inArray(attendance.teacherAssignmentId, assignmentIds)));
+    await this.db.delete(routineEntries).where(inArray(routineEntries.teacherAssignmentId, assignmentIds));
   }
 
   // ========================================

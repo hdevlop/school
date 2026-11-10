@@ -29,16 +29,17 @@ export class TeacherRequestService {
       specialization: data.specialization || null,
       academicDegrees: data.academicDegrees || null,
     });
-    if (row) await this.events.emit('teacherRequest.created', { id: row.id, language: this.i18n.getCurrentLanguage() as SchoolLocale });
+    if (row) await this.events.emit('teacherRequest.created', { id: row.id, name: row.name, language: this.i18n.getCurrentLanguage() as SchoolLocale });
     return { received: true };
   }
 
+  /** Each notification names its teacher, so several requests read as several people. */
   @On('teacherRequest.created')
-  async notify(input: { id: string; language: SchoolLocale }) {
+  async notify(input: { id: string; name: string; language: SchoolLocale }) {
     await this.notifications.createTeacherRequestNotification({
       id: input.id,
       title: schoolI18n.translate(input.language, 'teacherRequests.notification.title'),
-      body: schoolI18n.translate(input.language, 'teacherRequests.notification.body'),
+      body: schoolI18n.translate(input.language, 'teacherRequests.notification.body', { name: input.name }),
     });
   }
 

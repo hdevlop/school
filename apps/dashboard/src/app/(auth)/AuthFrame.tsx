@@ -31,7 +31,11 @@ export function AuthFrame({ children }: { readonly children: ReactNode }) {
   const { t } = useTranslation();
 
   return (
-    <div className="relative min-h-svh w-full overflow-hidden bg-background">
+    // The root layout's body is one screen tall and never scrolls (the dashboard
+    // shell scrolls inside itself), so the frame scrolls its own content: a long
+    // form, such as a teacher's sign-up on a phone, reaches its submit button.
+    // The artwork stays put behind it.
+    <div className="relative h-svh w-full overflow-hidden bg-background">
       {/* Mirrored under `dir="rtl"`: the form moves to the other side of the
           page, and the pale field has to follow it. Dimmed rather than tinted
           in dark mode — this is light-key artwork, and at full strength it
@@ -49,35 +53,37 @@ export function AuthFrame({ children }: { readonly children: ReactNode }) {
       {/* `text-foreground` is not inherited from the document: nothing above
           this point sets a themed text colour, so bare text inside the frame
           would render black on a dark page. */}
-      <div className="relative z-10 mx-auto flex min-h-svh w-full max-w-[1600px] flex-col text-foreground lg:flex-row">
-        <section className="flex w-full flex-col items-center justify-center px-6 py-10 sm:px-10 lg:w-[47%] lg:shrink-0 lg:px-14 xl:px-20">
-          <div className="flex w-full max-w-[380px] flex-col">
-            <div className="mb-8 flex justify-center">
-              <NThemeImage
-                slot="authLogo"
-                className="h-32 w-32 shrink-0 object-contain sm:h-40 sm:w-40"
-                alt={t('landing.nav.website')}
-              />
+      <div className="relative z-10 h-full overflow-y-auto overscroll-contain">
+        <div className="mx-auto flex min-h-full w-full max-w-[1600px] flex-col text-foreground lg:flex-row">
+          <section className="flex w-full flex-col items-center justify-center px-6 py-10 sm:px-10 lg:w-[47%] lg:shrink-0 lg:px-14 xl:px-20">
+            <div className="flex w-full max-w-[380px] flex-col">
+              <div className="mb-8 flex justify-center">
+                <NThemeImage
+                  slot="authLogo"
+                  className="h-32 w-32 shrink-0 object-contain sm:h-40 sm:w-40"
+                  alt={t('landing.nav.website')}
+                />
+              </div>
+  
+              {children}
+  
+              <Link href="/" className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground"><ArrowLeft size={16} className="rtl:-scale-x-100" />{t('landing.nav.website')}</Link>
+  
+              <p className="mt-8 text-center text-xs text-muted-foreground">
+                © {new Date().getFullYear()}. {t('landing.footer.rights')}
+              </p>
             </div>
-
-            {children}
-
-            <Link href="/" className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground"><ArrowLeft size={16} className="rtl:-scale-x-100" />{t('landing.nav.website')}</Link>
-
-            <p className="mt-8 text-center text-xs text-muted-foreground">
-              © {new Date().getFullYear()}. {t('landing.footer.rights')}
-            </p>
-          </div>
-        </section>
-
-        <aside aria-hidden className="relative hidden flex-1 items-center justify-center px-8 py-10 lg:flex">
-          <ReliableThemeImage
-            slot="authHeroImage"
-            alt=""
-            loading="lazy"
-            className="max-h-[86svh] w-auto max-w-full object-contain"
-          />
-        </aside>
+          </section>
+  
+          <aside aria-hidden className="relative hidden flex-1 items-center justify-center px-8 py-10 lg:flex">
+            <ReliableThemeImage
+              slot="authHeroImage"
+              alt=""
+              loading="lazy"
+              className="max-h-[86svh] w-auto max-w-full object-contain"
+            />
+          </aside>
+        </div>
       </div>
     </div>
   );

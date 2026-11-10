@@ -20,6 +20,14 @@ export const getTeacherByCinApi = async (cin) => {
   return res.data
 }
 
+/** What deleting this teacher would erase with them, in every year. */
+export type TeacherDeletionImpact = { exams: number; assessments: number; grades: number; attendance: number; lessons: number }
+export const getTeacherDeletionImpactApi = async (id: string): Promise<TeacherDeletionImpact> => {
+  const res = await api.get(`/teachers/${id}/deletion-impact`)
+  // The server's envelope carries the counts in `data`.
+  return res.data.data
+}
+
 export const getTeacherClassesApi = async (id) => {
   const res = await api.get(`/teachers/${id}/classes`)
   return res.data

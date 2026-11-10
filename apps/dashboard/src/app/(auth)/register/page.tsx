@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { NForm, NButton, FormInput } from 'najm-kit'
-import { Award, BookOpen, GraduationCap, IdCard, Loader2, Mail, MapPin, Phone, Send, User, UserRound } from 'lucide-react'
+import { IdCard, Loader2, Mail, MapPin, Phone, Send, User, UserRound } from 'lucide-react'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useTranslation } from 'najm-i18n/react'
@@ -54,20 +54,17 @@ const Register = () => {
         <NForm
           id='register-form'
           schema={schema}
-          defaultValues={{ name: '', email: '', phone: '', cin: '', address: '', specialization: '', yearsOfExperience: '', academicDegrees: '', website: '' }}
+          defaultValues={{ name: '', email: '', phone: '', cin: '', address: '', website: '' }}
           onSubmit={(values: TeacherRequestFormValues) => mutation.mutateAsync(values).catch(() => undefined)}
         >
           <FormInput name='name' type='text' formLabel={t('teachers.form.fullName')} placeholder={t('teachers.form.fullNamePlaceholder')} variant='default' icon={User} required />
           <FormInput name='email' type='text' autoComplete='email' formLabel={t('teacherRequests.form.gmail')} placeholder={t('teacherRequests.form.gmailPlaceholder')} variant='default' icon={Mail} required />
           <FormInput name='phone' type='phone' formLabel={t('teachers.form.phone')} placeholder={t('teachers.form.phonePlaceholder')} variant='default' icon={Phone} defaultCountry='ma' required />
-          <FormInput name='cin' type='text' formLabel={t('teachers.form.cin')} placeholder={t('teachers.form.cinPlaceholder')} variant='default' icon={IdCard} required />
-          <FormInput name='address' type='textarea' formLabel={t('teachers.form.address')} placeholder={t('teachers.form.addressPlaceholder')} variant='default' icon={MapPin} required />
-          <FormInput name='specialization' type='text' formLabel={t('teachers.form.specialization')} placeholder={t('teachers.form.specializationPlaceholder')} variant='default' icon={BookOpen} />
           <div className='grid grid-cols-2 gap-3'>
+            <FormInput name='cin' type='text' formLabel={t('teachers.form.cin')} placeholder={t('teachers.form.cinPlaceholder')} variant='default' icon={IdCard} required />
             <FormInput name='gender' type='select' formLabel={t('teachers.form.gender')} items={genderOptions} variant='default' icon={UserRound} />
-            <FormInput name='yearsOfExperience' type='number' formLabel={t('teachers.form.yearsOfExperience')} variant='default' icon={Award} />
           </div>
-          <FormInput name='academicDegrees' type='text' formLabel={t('teachers.form.academicDegrees')} variant='default' icon={GraduationCap} />
+          <FormInput name='address' type='textarea' formLabel={t('teachers.form.address')} placeholder={t('teachers.form.addressPlaceholder')} variant='default' icon={MapPin} required />
           {/* Hidden from people: a robot that fills it in is ignored by the server. */}
           <div className='sr-only' aria-hidden='true'>
             <FormInput name='website' type='text' formLabel={t('visitRequests.form.website')} tabIndex={-1} autoComplete='off' />

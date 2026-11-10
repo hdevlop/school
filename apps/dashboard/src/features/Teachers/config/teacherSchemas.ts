@@ -124,10 +124,11 @@ export type TeacherFullFormValues = z.input<TeacherSchemas['full']>;
  * as the full form. Employment terms and classes stay with the school.
  */
 export const createTeacherRequestSchema = (t: T) => {
-  const { personal, professional } = createTeacherSchemas(t);
+  // Who the teacher is and how to reach them; their subjects and experience are
+  // settled with the school after approval, on the teacher's record.
+  const { personal } = createTeacherSchemas(t);
   return z.object({
     ...personal.pick({ name: true, email: true, phone: true, cin: true, address: true, gender: true }).shape,
-    ...professional.pick({ specialization: true, yearsOfExperience: true, academicDegrees: true }).shape,
     website: z.string().optional(),
   });
 };

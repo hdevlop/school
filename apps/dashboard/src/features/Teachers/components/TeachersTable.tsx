@@ -27,7 +27,7 @@ import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { deleteTeacherApi } from '@/services/teacherApi';
+import { deleteTeacherApi, getTeacherDeletionImpactApi } from '@/services/teacherApi';
 import { deleteSelection } from '@/shared/deleteSelection';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
@@ -111,10 +111,32 @@ function TeachersTable() {
     });
   };
 
-  const handleDelete = (teacher) => {
+  // An administrator may delete any teacher, and what the teacher recorded goes
+  // with them: the confirmation counts it first, so nothing is erased unseen.
+  const deletionWarning = async (teacher) => {
+    if (role !== 'admin') return t('common.deleteConfirm');
+    const impact = await withAcademicYear(viewingYear, () => getTeacherDeletionImpactApi(teacher.id));
+    const list = (['exams', 'grades', 'assessments', 'attendance', 'lessons'] as const)
+      .filter((key) => impact[key] > 0)
+      .map((key) => `${t(`teachers.dialogs.history.${key}`)} (${impact[key]})`)
+      .join(' · ');
+    return list
+      ? `${t('teachers.dialogs.deleteWarning')} ${t('teachers.dialogs.deleteHistory', { list })}`
+      : t('teachers.dialogs.deleteWarning');
+  };
+
+  const handleDelete = async (teacher) => {
+    let warningText: string;
+    try {
+      warningText = await deletionWarning(teacher);
+    } catch (error: any) {
+      // Without the count there is no honest warning, so nothing opens.
+      toast.error(error?.response?.data?.message ?? error?.message ?? t('common.feedback.errorTitle'));
+      return;
+    }
     confirmDelete({
       title: t('common.delete'),
-      warningText: t(role === 'admin' ? 'teachers.dialogs.deleteWarning' : 'common.deleteConfirm'),
+      warningText,
       cancelText: t('common.cancel'),
       itemName: teacher.name,
       confirmText: t('teachers.dialogs.deleteButton'),
