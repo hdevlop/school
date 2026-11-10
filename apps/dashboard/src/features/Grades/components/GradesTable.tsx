@@ -6,7 +6,7 @@ import type { GradeDraft } from '../store/gradeDraftStore';
 import { toast } from 'sonner';
 import { useAuth } from 'najm-auth/client/react';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
-import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, useMediaQuery } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import GradesHeader from './GradesHeader';
 import GradeRosterCard from './GradeRosterCard';
@@ -15,6 +15,7 @@ import { LoaderCircle } from 'lucide-react';
 import { useGrades, useSourceGrades } from '../hooks/useGrades';
 import { useMassarGrades } from '../hooks/useMassarGrades';
 import { examSourcesWithMassar, massarMarkFromGrade, massarSourceLabels } from '../config/massarGradeSources';
+import { compareMassarOrder } from '../config/massarRosterOrder';
 import { studentListRead, useStudentsOnDate } from '@/features/Students/hooks/useStudents';
 import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { isStudentDisabled } from '@/features/Students/config/studentActivity';
@@ -33,8 +34,11 @@ import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useTranslation } from 'najm-i18n/react';
 import { EMPTY_GRADE_DRAFT, gradeDraftKey, useGradeDraftStore } from '../store/gradeDraftStore';
 import { GradeRosterCardSkeleton } from '@/shared/PersonCardSkeleton';
+import GradesSheet, { type GradeExamSheetProps } from './GradesSheet';
 
 const PASS_THRESHOLD = 50;
+/** On a desktop the exam filter picks a Massar Contrôle, whose parts the sheet shows side by side. */
+const MASSAR_SHEET_OPTION = 'massar-sheet:';
 /** How long typing must pause before the roster saves: time to type "12.5" at an ordinary pace. */
 const AUTOSAVE_DELAY_MS = 1500;
 type GradeSourceType = 'assessment' | 'exam';
@@ -65,6 +69,11 @@ function GradesTableForYear() {
   // Every exam belongs to one teacher assignment: a grade is given under the
   // exam's teacher, so class, section and subject are all there is to choose.
   const isTeacher = role === 'teacher';
+  // A desktop grades on a Massar sheet, from the width Massar's own sheet starts at; a phone keeps the roster list.
+  // Read as false before the screen is known, so a phone's first paint is already its list.
+  const isSheet = useMediaQuery('(min-width: 768px)');
+  // Massar's grid has marks typed and not yet saved: its filters wait.
+  const [sheetBusy, setSheetBusy] = useState(false);
 
   // Saving goes through useGrades; its whole-year list is never read here.
   const { submitGrades, isSubmittingBatch } = useGrades({ enabled: false });
@@ -75,7 +84,8 @@ function GradesTableForYear() {
   const { assessments, isAssessmentsLoading } = useAssessments({ enabled: false });
   const { exams, isExamsLoading } = useExams();
 
-  const [classId, setClassId] = useState('all');
+  // A teacher has no "All classes": the page opens on one of their own (below).
+  const [classId, setClassId] = useState(() => (isTeacher ? '' : 'all'));
   const isAllClasses = classId === 'all';
   const [sectionId, setSectionId] = useState('');
   const [subjectId, setSubjectId] = useState('');
@@ -107,14 +117,22 @@ function GradesTableForYear() {
   }, [isTeacher, teachers, ownOverview]);
 
   const classOptions = useMemo(
-    () => [
-      { value: 'all', label: t('fees.filters.allClasses') },
-      ...(classes || [])
+    () => {
+      const own = (classes || [])
         .filter((c) => !ownAssignments || ownAssignments.some((a) => a.classId === c.id))
-        .map((c) => ({ value: c.id, label: c.name })),
-    ],
-    [classes, ownAssignments, t]
+        .map((c) => ({ value: c.id, label: c.name }));
+      // A teacher grades one class at a time, among those they teach.
+      return isTeacher ? own : [{ value: 'all', label: t('fees.filters.allClasses') }, ...own];
+    },
+    [classes, ownAssignments, isTeacher, t]
   );
+
+  // A teacher opens straight on their first class; its first section and
+  // subject follow (below), so there is nothing to pick before grading.
+  useEffect(() => {
+    if (!isTeacher) return;
+    setClassId((current) => (classOptions.some((o) => o.value === current) ? current : (classOptions[0]?.value ?? '')));
+  }, [isTeacher, classOptions]);
   const sectionOptions = useMemo(
     () => (sections || [])
       .filter((s) => !classId || isAllClasses || s.classId === classId)
@@ -168,24 +186,55 @@ function GradesTableForYear() {
       subjectOptions.some((option) => option.value === current) ? current : (subjectOptions[0]?.value ?? '')
     );
   }, [ownAssignments, subjectOptions]);
-  const sourceOptions = useMemo(
-    () => {
-      const list = sourceType === 'assessment' ? (assessments || []) : examSources;
-      return list
-        .filter((item) => !classId || getSourceClassId(item) === classId)
-        .filter((item) => !sectionId || getSourceSectionId(item) === sectionId)
-        .filter((item) => !subjectId || getSourceSubjectId(item) === subjectId)
-        .map((item) => ({
-          value: item.id,
-          label: massarLabels.get(item.id) ?? item.title,
-        }));
-    },
-    [assessments, examSources, massarLabels, sourceType, classId, sectionId, subjectId]
+  const filteredSources = useMemo(
+    () => (sourceType === 'assessment' ? (assessments || []) : examSources)
+      .filter((item) => !classId || getSourceClassId(item) === classId)
+      .filter((item) => !sectionId || getSourceSectionId(item) === sectionId)
+      .filter((item) => !subjectId || getSourceSubjectId(item) === subjectId),
+    [assessments, examSources, sourceType, classId, sectionId, subjectId]
   );
+  // With no subject chosen, every subject's Contrôle had the same name ("الدورة
+  // الأولى · الفرض الأول" once per subject), so each option leads with its
+  // subject, as the subject filter names it.
+  const subjectLabels = useMemo(() => new Map((subjects || []).map((s) => [s.id, s.code || s.name])), [subjects]);
+  const withSubject = useCallback((item, label: string) => (subjectId
+    ? label
+    : [subjectLabels.get(getSourceSubjectId(item)), label].filter(Boolean).join(' · ')), [subjectId, subjectLabels]);
+  const sourceOptions = useMemo(
+    () => filteredSources.map((item) => ({
+      value: item.id,
+      label: withSubject(item, massarLabels.get(item.id) ?? item.title),
+    })),
+    [filteredSources, massarLabels, withSubject]
+  );
+  // A desktop grades a Massar Contrôle on its full grid, every part side by
+  // side, so its list offers each Contrôle once; a phone lists the parts one by
+  // one. School's exams stay one by one on both.
+  const sheetOptions = useMemo(() => {
+    const seen = new Set<string>();
+    return filteredSources.flatMap((item) => {
+      if (!('sheetId' in item)) return [{ value: item.id, label: withSubject(item, item.title) }];
+      if (seen.has(item.sheetId)) return [];
+      seen.add(item.sheetId);
+      return [{ value: `${MASSAR_SHEET_OPTION}${item.sheetId}`, label: withSubject(item, `${item.termLabel} · ${item.examLabel}`) }];
+    });
+  }, [filteredSources, withSubject]);
+  // A Contrôle stands for its first part: a phone's roster list opens on that part.
+  const sourceOfOption = useCallback((value: string) => value.startsWith(MASSAR_SHEET_OPTION)
+    ? filteredSources.find((item) => 'sheetId' in item && item.sheetId === value.slice(MASSAR_SHEET_OPTION.length))?.id ?? ''
+    : value, [filteredSources]);
+  const pickOptions = isSheet ? sheetOptions : sourceOptions;
+  const selectSheetOption = useCallback((value: string) => setSourceId(sourceOfOption(value)), [sourceOfOption]);
 
-  // Only one exam for this class, section and subject (a subject with no parts
-  // in one Contrôle): it is the one to grade, so nobody has to pick it.
-  const onlySourceId = sectionId && !isAllClasses && sourceOptions.length === 1 ? sourceOptions[0].value : '';
+  // Nothing to pick: the only exam for this class, section and subject, or on a
+  // desktop its only Massar Contrôle, whose grid then opens straight away.
+  const onlyOption = !sectionId || isAllClasses ? ''
+    : pickOptions.length === 1 ? pickOptions[0].value
+      : isSheet && subjectId ? (() => {
+        const contrôles = pickOptions.filter((option) => option.value.startsWith(MASSAR_SHEET_OPTION));
+        return contrôles.length === 1 ? contrôles[0].value : '';
+      })() : '';
+  const onlySourceId = onlyOption ? sourceOfOption(onlyOption) : '';
   useEffect(() => {
     if (onlySourceId) setSourceId((current) => current || onlySourceId);
   }, [onlySourceId]);
@@ -198,8 +247,9 @@ function GradesTableForYear() {
     [assessments, examSources, sourceType, sourceId]
   );
 
-  // School owns the displayed roster, names, codes and order for every subject.
-  // The source's dated roster and Massar membership govern editing only.
+  // School owns the displayed roster, names and codes for every subject; the
+  // rows follow Massar's order. The source's dated roster and Massar membership
+  // govern editing only.
   const { data: students, error: studentsError, isLoading: isStudentsLoading } = useYearScopedList(studentListRead);
   const { students: eligibleStudents, error: eligibilityError, isStudentsLoading: isEligibilityLoading } = useStudentsOnDate(selectedSource?.date);
   const isMassarSheetLoading = !!massar.source && massar.sheet.isLoading;
@@ -244,7 +294,7 @@ function GradesTableForYear() {
 
     const ctxTeacherId = getSourceTeacherId(selectedSource);
 
-    return list.map((s) => {
+    return list.sort(compareMassarOrder).map((s) => {
       const g = gradesByStudent.get(s.id);
       const mark = massarMarks.get(s.id);
       const hasMassarMark = !!mark && (mark.mark !== null || mark.absence === 'justified');
@@ -254,6 +304,7 @@ function GradesTableForYear() {
         gradeId: massar.source ? (hasMassarMark ? massarRowId : null) : g?.id || null,
         studentId: s.id,
         studentName: s.name,
+        studentArabicName: s.arabicName || s.massarName || '',
         studentCode: s.studentCode,
         studentImage: s.image,
         studentUpdatedAt: s.updatedAt,
@@ -289,7 +340,7 @@ function GradesTableForYear() {
       if (lowest == null || pct < lowest) lowest = pct;
     }
     const passRate = withGrade.length > 0 ? Math.round((passing / withGrade.length) * 100) : 0;
-    return { total, passing, highest, lowest, passRate };
+    return { total, graded: withGrade.length, passing, highest, lowest, passRate };
   }, [baseRoster]);
 
   const isMassarSource = !!massar.source;
@@ -338,6 +389,12 @@ function GradesTableForYear() {
     if (currentStatus !== 'pending' && currentStatus !== 'missed') return;
     const nextStatus = currentStatus === 'pending' ? 'missed' : 'pending';
     applyDraft(row.studentId, { status: nextStatus });
+  }, [canEdit, applyDraft]);
+
+  // The sheet's "A" key, as on Massar's: the student was absent, whatever mark the cell held.
+  const handleMarkAbsent = useCallback((row) => {
+    if (!canEdit(row)) return;
+    applyDraft(row.studentId, { marksObtained: null, status: 'missed' });
   }, [canEdit, applyDraft]);
 
   const hasChanges = Object.keys(draft).length > 0;
@@ -427,7 +484,10 @@ function GradesTableForYear() {
     setClassId: selectClass,
     setSectionId: selectSection,
     setSubjectId: selectSubject,
-    sourceType, sourceId, setSourceId, sourceOptions,
+    sourceType,
+    sourceId: isSheet && selectedSource && 'sheetId' in selectedSource ? `${MASSAR_SHEET_OPTION}${selectedSource.sheetId}` : sourceId,
+    setSourceId: isSheet ? selectSheetOption : setSourceId,
+    sourceOptions: pickOptions,
     classOptions, sectionOptions, subjectOptions,
     isClassesLoading, isSectionsLoading, isSubjectsLoading,
     isSourceLoading: sourceType === 'assessment' ? isAssessmentsLoading : isExamsLoading || (can('read:massar') && massar.sources.isLoading),
@@ -437,13 +497,57 @@ function GradesTableForYear() {
     : !isAllClasses && !sectionId
       ? t('grades.toolbar.selectSection')
       : t('grades.toolbar.noStudents');
+  const hasFailedSave = hasChanges && draft === failedDraft;
+  const tableError = (sourceType === 'exam' ? massar.sources.error : null) || (massar.source ? massar.sheet.error : null)
+    || (hasFailedToLoad(rosterError, roster) ? rosterError : null);
+  const renderTableError = (currentError: unknown) => (
+    isAuthorizationError(currentError)
+      ? <NForbiddenState surface="panel" />
+      : <NErrorState surface="panel" />
+  );
+
+  // The desktop sheet: Massar's own full grid for a Massar Contrôle (it reads,
+  // checks and saves its marks itself), or the same grid with one column for
+  // one of School's exams.
+  const massarSheetId = isSheet && massar.source ? massar.source.sheetId : null;
+  const sheetError = massarSheetId ? null : tableError;
+  const examSheet: GradeExamSheetProps | null = isSheet && !massarSheetId && selectedSource && !isAllClasses && sectionId && !sheetError
+    && (isTableLoading || roster.length > 0) ? {
+      title: selectedSource.title,
+      total: selectedSource.totalMarks ?? null,
+      meta: [classOptions.find((o) => o.value === classId)?.label, sectionOptions.find((o) => o.value === sectionId)?.label].filter(Boolean).join(' · '),
+      passRate: stats.graded > 0 ? `${stats.passRate}%` : null,
+      rows: roster,
+      loading: isTableLoading,
+      allowFeedback: !isMassarSource,
+      onEdit: handleCellEdit,
+      onAbsent: handleMarkAbsent,
+      onToggleStatus: handleStatusToggle,
+      failed: hasFailedSave,
+      onRetry: () => { setFailedDraft(null); },
+    } : null;
+  const sheetPlaceholder = sheetError ? renderTableError(sheetError) : (
+    <NEmptyState
+      surface="panel"
+      icon={FEATURE_ICONS.grades}
+      title={isAllClasses || !classId
+        ? t('grades.toolbar.selectClass')
+        : !sectionId
+          ? t('grades.toolbar.selectSection')
+          : !selectedSource ? t('grades.toolbar.selectSource') : t('grades.toolbar.noStudents')}
+    />
+  );
+  // Massar's grid knows only its own Arabic names; the Latin one comes from School.
+  const latinNames = useMemo(() => new Map<string, string>((students || []).map((s) => [s.id, s.name])), [students]);
+  // The grid names the Contrôle, not the one part a phone's list would open on.
+  const subtitleTitle = selectedSource && !massarSheetId ? ` · ${selectedSource.title}` : '';
 
   return (
     <div className='flex flex-col gap-2 w-full h-full min-h-0'>
       <NPageHeader
         icon={FEATURE_ICONS.grades}
         title={t('grades.messages.pageTitle')}
-        subtitle={isCountUnknown(rosterError, roster, isTableLoading) ? undefined : `${t('grades.subtitle.count', { count: stats.total })}${selectedSource ? ` · ${selectedSource.title}` : ''}${massar.source ? ` · ${massar.source.termLabel} · ${massar.source.examLabel}` : ''}`}
+        subtitle={isCountUnknown(rosterError, roster, isTableLoading) ? undefined : `${t('grades.subtitle.count', { count: stats.total })}${subtitleTitle}${massar.source ? ` · ${massar.source.termLabel} · ${massar.source.examLabel}` : ''}`}
       >
         <NPageHeaderActions>
           {isRosterUpdating ? (
@@ -456,6 +560,17 @@ function GradesTableForYear() {
         </NPageHeaderActions>
       </NPageHeader>
 
+      {isSheet ? (
+        <GradesSheet
+          filters={gradeFilters}
+          massarSheetId={massarSheetId}
+          exam={examSheet}
+          placeholder={sheetPlaceholder}
+          busy={sheetBusy}
+          onBusy={setSheetBusy}
+          latinNames={latinNames}
+        />
+      ) : (
       <NTable
         exportTitle={t('grades.messages.pageTitle')}
         // NTable knows a phone only once it has measured the screen, so its first
@@ -480,20 +595,15 @@ function GradesTableForYear() {
             ) : null}
             <GradesHeader
               stats={stats}
-              failed={hasChanges && draft === failedDraft}
+              failed={hasFailedSave}
               onRetry={() => { setFailedDraft(null); }}
             />
           </div>
         ) : undefined}
         onCellEdit={handleCellEdit}
         loading={isTableLoading}
-        error={(sourceType === 'exam' ? massar.sources.error : null) || (massar.source ? massar.sheet.error : null)
-          || (hasFailedToLoad(rosterError, roster) ? rosterError : null)}
-        renderError={(currentError) => (
-          isAuthorizationError(currentError)
-            ? <NForbiddenState surface="panel" />
-            : <NErrorState surface="panel" />
-        )}
+        error={tableError}
+        renderError={renderTableError}
         showAddButton={false}
         showViewToggle={false}
         defaultMode='table'
@@ -516,6 +626,7 @@ function GradesTableForYear() {
           />
         )}
       />
+      )}
     </div>
   );
 }

@@ -16,8 +16,8 @@ The detail lives in reference files. Read **only** the one the task needs
 
 ## Always
 
-- Najm source is read-only reference at `C:\Users\hdevlop\Desktop\najm\packages\<pkg>\src`
-  (DI in `C:\Users\hdevlop\Desktop\diject\src`). Never read `node_modules/najm-*`,
+- Najm source is read-only reference at `%USERPROFILE%\Desktop\najm\packages\<pkg>\src`
+  (DI in `%USERPROFILE%\Desktop\diject\src`). Never read `node_modules/najm-*`,
   and never make School consume the local source; School pins published versions.
 - `CLAUDE.md` → Framework Contracts overrides any generic Najm example.
 - Live data work uses internal MCP or REST only — never browser automation.

@@ -49,8 +49,14 @@ export class StudentService {
   }
 
   async getAll(onDate?: string) {
-    if (onDate) this.studentValidator.ensureRosterDateWithinYear(onDate, this.year);
-    return this.studentRepository.getAll({ onDate });
+    if (onDate) {
+      this.studentValidator.ensureRosterDateWithinYear(onDate, this.year);
+      return this.studentRepository.getAll({ onDate });
+    }
+    const list = await this.studentRepository.getAll({});
+    const placements = await this.studentRepository.getMassarPlacements(list.map((student) => student.id));
+    const byStudent = new Map(placements.map(({ studentId, ...placement }) => [studentId, placement]));
+    return list.map((student) => ({ ...student, ...byStudent.get(student.id) }));
   }
 
   async getById(id: string) {

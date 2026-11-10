@@ -490,7 +490,7 @@
       "authInitFailed": "Authentication initialization failed",
       "loginFailed": "Login failed. Please try again.",
       "tooManyAttempts": "Too many attempts. Please wait a moment and try again.",
-      "resetLinkInvalid": "This link is invalid or has already been used. Ask for a new one.",
+      "resetLinkInvalid": "This link is no longer valid: it was already used, it expired, or a newer email replaced it. Use the latest email you received, or ask for a new link.",
       "setPasswordFailed": "Could not set your password. The link may have expired.",
       "setupSessionExpired": "Could not set your password. The setup session may have expired.",
       "registerFailed": "Could not create your account. Please try again.",
@@ -4339,6 +4339,7 @@
       "reportTitle": "Student Grade Report"
     },
     "table": {
+      "arabicName": "Arabic name",
       "selectAll": "Select all",
       "selectRow": "Select row",
       "student": "Student",

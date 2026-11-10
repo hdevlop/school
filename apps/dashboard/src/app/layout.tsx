@@ -44,6 +44,22 @@ const robotoMono = localFont({
   preload: false,
 })
 
+// Lora has no Arabic letters, so Arabic names fell back to Windows' Arial,
+// whose Arabic smears when a bold weight is faked. Elements marked lang="ar"
+// use this instead (globals.css). It covers Arabic letters only, so Latin text
+// in the same element stays in Lora, and it has no Arial stand-in of its own.
+const naskh = localFont({
+  src: [
+    { path: './fonts/NotoNaskhArabic-400.woff2', weight: '400' },
+    { path: './fonts/NotoNaskhArabic-700.woff2', weight: '700' },
+  ],
+  display: 'swap',
+  variable: '--font-arabic',
+  preload: false,
+  adjustFontFallback: false,
+  declarations: [{ prop: 'unicode-range', value: 'U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200E' }],
+})
+
 export default async function RootLayout({ children,}: Readonly<{children: React.ReactNode;}>) {
 
   const snapshot = await loadUiSnapshot();
@@ -63,7 +79,7 @@ export default async function RootLayout({ children,}: Readonly<{children: React
       lang={preferences.language}
       suppressHydrationWarning
     >
-      <body suppressHydrationWarning className={`${lora.className} ${lora.variable} ${robotoMono.variable} antialiased  h-screen w-screen overflow-hidden`}>
+      <body suppressHydrationWarning className={`${lora.className} ${lora.variable} ${robotoMono.variable} ${naskh.variable} antialiased  h-screen w-screen overflow-hidden`}>
         {signedIn && <AuthBootRefresh nonce={nonce} />}
         <AppProviders snapshot={snapshot} sidebarOrderSeed={sidebarOrderSeed}>
           {/* The active year's label comes from the per-request School

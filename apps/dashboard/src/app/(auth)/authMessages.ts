@@ -6,10 +6,22 @@ type T = (key: string) => string;
  * The auth pages' schemas take `t`, so their validation reads in the page's
  * language instead of English.
  */
-/** Min 8 matches the server's reset and credential-setup password rule. */
+/** The server's rule (`passwordSchema` in authConfig.ts): 8 characters, a letter and a number, any case. */
+export const strongPasswordSchema = (t: T) =>
+  z.string()
+    .min(8, { message: t('auth.validation.passwordMinLength') })
+    .regex(/[a-zA-Z]/, { message: t('auth.validation.passwordLetter') })
+    .regex(/\d/, { message: t('auth.validation.passwordNumber') });
+
+/**
+ * A new password from an invitation, reset or first-login link: the server's
+ * rule, checked here first. With only the length checked, "abcdefgh" reached
+ * the server, which refused it with a 400 that the page reads as a dead link,
+ * so the person was told to ask for a new link when the password was the issue.
+ */
 export const newPasswordSchema = (t: T) =>
   z.object({
-    newPassword: z.string().min(8, { message: t('auth.validation.passwordMinLength') }),
+    newPassword: strongPasswordSchema(t),
     confirmPassword: z.string().min(8, { message: t('auth.validation.confirmPasswordRequired') }),
   }).refine((data) => data.newPassword === data.confirmPassword, {
     message: t('auth.validation.passwordsMismatch'),
@@ -17,13 +29,6 @@ export const newPasswordSchema = (t: T) =>
   });
 
 export const emailSchema = (t: T) => z.string().email({ message: t('auth.validation.emailInvalid') });
-
-/** The server's rule (`passwordSchema` in authConfig.ts): 8 characters, a letter and a number, any case. */
-export const strongPasswordSchema = (t: T) =>
-  z.string()
-    .min(8, { message: t('auth.validation.passwordMinLength') })
-    .regex(/[a-zA-Z]/, { message: t('auth.validation.passwordLetter') })
-    .regex(/\d/, { message: t('auth.validation.passwordNumber') });
 
 type AuthFailure = { status?: number; message?: string; body?: unknown; response?: { status?: number; data?: { message?: string; code?: string } } };
 

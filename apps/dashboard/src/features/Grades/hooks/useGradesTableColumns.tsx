@@ -29,6 +29,19 @@ export const useGradesTableColumns = ({
 
   return useMemo(() => [
     {
+      accessorKey: 'studentArabicName',
+      header: t('grades.table.arabicName'),
+      enableSorting: false,
+      cell: ({ row }) => {
+        const arabicName = row.original.studentArabicName;
+        return arabicName ? (
+          <bdi lang="ar" className="font-normal text-sm">{arabicName}</bdi>
+        ) : (
+          <span className="text-gray-400">—</span>
+        );
+      },
+    },
+    {
       id: 'studentCode',
       accessorKey: 'studentCode',
       header: t('grades.table.studentCode'),
@@ -67,7 +80,8 @@ export const useGradesTableColumns = ({
         if (!needle) return true;
         const name = String(row.original?.studentName ?? '').toLowerCase();
         const code = String(row.original?.studentCode ?? '').toLowerCase();
-        return name.includes(needle) || code.includes(needle);
+        const arabicName = String(row.original?.studentArabicName ?? '');
+        return name.includes(needle) || code.includes(needle) || arabicName.includes(needle);
       },
     },
     {

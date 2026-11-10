@@ -50,6 +50,10 @@ export const authConfig = () =>
     passwordSchema: defaultCredentialSetupPasswordSchema,
     // "Continue with Google" for accounts the school created: a Google account
     // joins the School account with its Google-verified email. Google creates
-    // no account, and a pending or inactive account still cannot sign in.
+    // no account. An invited account still pending is activated by it when the
+    // Google email is the invited one and the invitation is the latest unused
+    // one (najm-auth OAuthService.acceptInvitation); that uses up the emailed
+    // link, which then says it is no longer valid. Any other pending or
+    // inactive account still cannot sign in.
     ...(googleSignInEnabled() ? { oauth: { google: { allowSignup: false, autoLinkVerifiedEmail: true } } } : {}),
   });

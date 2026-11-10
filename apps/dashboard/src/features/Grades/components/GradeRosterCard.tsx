@@ -47,12 +47,18 @@ export default function GradeRosterCard({ data: row, canEdit, onEdit, onToggleSt
         <NAvatar src={row.studentImage} fallback={row.studentName} size="sm" version={avatarVersion(row.studentImage, row.studentUpdatedAt)} />
         <div className="min-w-0 flex-1">
           <div className="truncate text-sm font-semibold">{row.studentName}</div>
-          <div className="mt-0.5 flex min-w-0 items-center gap-1.5">
-            {row.studentCode ? <span className="truncate font-mono text-xs text-muted-foreground" dir="ltr">{row.studentCode}</span> : null}
-            {/* A mark says it is graded, and its field's colour how well: only absence needs a tag. */}
-            {status !== 'pending' && status !== 'graded' ? <GradeStatus status={status} editable={editable} onToggle={() => onToggleStatus(row)} /> : null}
-            {percent != null ? <span className={cn('text-xs font-semibold tabular-nums', percentColor)}>{percent}%</span> : null}
-          </div>
+          {/* Both names: the Arabic one as Massar writes it, at a regular weight. */}
+          {row.studentArabicName ? (
+            <div className="truncate text-sm leading-6"><bdi lang="ar" dir="rtl">{row.studentArabicName}</bdi></div>
+          ) : null}
+          {/* No Massar code on a phone: the two names say who it is, and the line keeps only what the mark adds.
+              A mark says it is graded, and its field's colour how well: only absence needs a tag. */}
+          {(status !== 'pending' && status !== 'graded') || percent != null ? (
+            <div className="mt-0.5 flex min-w-0 items-center gap-1.5">
+              {status !== 'pending' && status !== 'graded' ? <GradeStatus status={status} editable={editable} onToggle={() => onToggleStatus(row)} /> : null}
+              {percent != null ? <span className={cn('text-xs font-semibold tabular-nums', percentColor)}>{percent}%</span> : null}
+            </div>
+          ) : null}
         </div>
         {editable || row.marksObtained != null ? (
           <div className="flex shrink-0 items-center gap-1" onClick={(event) => event.stopPropagation()}>

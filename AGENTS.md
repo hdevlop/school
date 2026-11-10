@@ -201,7 +201,7 @@ states that drift apart — so do not add one without changing the plan first.
 
 ### Local Najm Package Sources
 
-- Load the `najm` skill, then read Najm internals from the source at `C:\Users\hdevlop\Desktop\najm\packages\<package>\src`; diject's source is `C:\Users\hdevlop\Desktop\diject\src`. Do not read or grep `node_modules/najm-*` or `node_modules/diject`.
+- Load the `najm` skill, then read Najm internals from the source at `%USERPROFILE%\Desktop\najm\packages\<package>\src`; diject's source is `%USERPROFILE%\Desktop\diject\src`. Do not read or grep `node_modules/najm-*` or `node_modules/diject`.
 - That source is what School runs only while each package's version there matches the root pin. Compare them whenever a pin changes, and report a mismatch instead of falling back to `node_modules`.
 - The Desktop checkouts are **read-only** reference. Never make School consume them: no workspace link, no `file:` dependency, no copied source, no tarball. School upgrades only by pinning a published version.
 - Najm versions are exact pins in the root `package.json` with a matching `overrides` block. Read the versions there rather than assuming, and never widen a pin to a range. `scripts/tests/najm-pins.test.mjs` checks that every workspace declares the same pins.

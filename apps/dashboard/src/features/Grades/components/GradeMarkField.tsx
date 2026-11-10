@@ -16,9 +16,16 @@ const shown = (value: unknown) => (value === null || value === undefined || valu
  * out of range is outlined and kept back. Enter and the up and down arrows
  * move between students.
  */
-export function GradeMarkField({ value, total, disabled, label, onChange }: {
+export function GradeMarkField({ value, total, disabled, label, onChange, inputClassName, onAbsent }: {
   value: unknown; total: number | null | undefined; disabled?: boolean; label: string;
   onChange: (value: number | null) => void;
+  /**
+   * A cell drawn by its sheet (the desktop's Massar-style grid): the sheet's
+   * look replaces the field's, and its column header gives the scale.
+   */
+  inputClassName?: string;
+  /** The "A" key marks the student absent, as on a Massar sheet. */
+  onAbsent?: () => void;
 }) {
   const { t } = useTranslation();
   const [text, setText] = useState(shown(value));
@@ -73,12 +80,25 @@ export function GradeMarkField({ value, total, disabled, label, onChange }: {
     const fields = [...document.querySelectorAll<HTMLInputElement>('input[data-grade-mark]:not(:disabled)')];
     fields[fields.indexOf(event.currentTarget) + step]?.focus();
   };
+  const keyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (onAbsent && event.key.toLowerCase() === 'a' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+      event.preventDefault();
+      // What was being typed is dropped, or leaving the field would send it over the absence.
+      clearTimeout(timer.current);
+      pending.current = null;
+      onAbsent();
+      return;
+    }
+    move(event);
+  };
 
   return (
     <div className="flex items-center gap-1.5">
       <input
         type="text" inputMode="decimal" autoComplete="off" data-grade-mark
-        className={cn(
+        // A mark is typed left to right, as a number is, inside a right-to-left sheet.
+        dir={inputClassName ? 'ltr' : undefined}
+        className={inputClassName ?? cn(
           'h-9 w-20 rounded-md border border-input bg-background text-center text-sm font-medium tabular-nums text-foreground outline-none transition focus:ring-2 focus:ring-primary/15 disabled:opacity-70',
           remark ? GRADE_REMARK_FIELD_STYLES[remark] : 'focus:border-primary',
           'aria-invalid:border-destructive aria-invalid:bg-destructive/5',
@@ -88,9 +108,9 @@ export function GradeMarkField({ value, total, disabled, label, onChange }: {
         onFocus={event => { setFocused(true); event.currentTarget.select(); }}
         onBlur={leave}
         onChange={event => update(event.target.value)}
-        onKeyDown={move}
+        onKeyDown={keyDown}
       />
-      {total != null && <span className="text-xs text-muted-foreground">/ {Number(total)}</span>}
+      {!inputClassName && total != null && <span className="text-xs text-muted-foreground">/ {Number(total)}</span>}
     </div>
   );
 }

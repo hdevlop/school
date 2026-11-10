@@ -490,7 +490,7 @@
       "authInitFailed": "Échec de l'initialisation de l'authentification",
       "loginFailed": "Échec de la connexion. Veuillez réessayer.",
       "tooManyAttempts": "Trop de tentatives. Patientez un instant puis réessayez.",
-      "resetLinkInvalid": "Ce lien est invalide ou a déjà été utilisé. Demandez-en un nouveau.",
+      "resetLinkInvalid": "Ce lien n’est plus valide : il a déjà été utilisé, il a expiré ou un e-mail plus récent l’a remplacé. Utilisez le dernier e-mail reçu ou demandez un nouveau lien.",
       "setPasswordFailed": "Impossible de définir votre mot de passe. Le lien a peut-être expiré.",
       "setupSessionExpired": "Impossible de définir votre mot de passe. La session de configuration a peut-être expiré.",
       "registerFailed": "Impossible de créer votre compte. Veuillez réessayer.",
@@ -4441,6 +4441,7 @@
       "pending": "En attente"
     },
     "table": {
+      "arabicName": "Nom en arabe",
       "class": "Classe",
       "feedback": "Retour",
       "gender": "Genre",

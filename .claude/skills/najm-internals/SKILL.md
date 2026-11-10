@@ -13,8 +13,8 @@ Answer it from the source, then stop.
 
 ## Where to look
 
-- Najm packages: `C:\Users\hdevlop\Desktop\najm\packages\<pkg>\src`
-- diject (DI): `C:\Users\hdevlop\Desktop\diject\src`
+- Najm packages: `%USERPROFILE%\Desktop\najm\packages\<pkg>\src`
+- diject (DI): `%USERPROFILE%\Desktop\diject\src`
 - School's pins: the root `package.json` of the School repo (dependencies and
   `overrides`). Compare a pin with the `version` in the Desktop package's
   `package.json`; report any mismatch, because the Desktop source may then

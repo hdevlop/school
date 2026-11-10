@@ -490,7 +490,7 @@
       "authInitFailed": "Falló la inicialización de la autenticación",
       "loginFailed": "No se pudo iniciar sesión. Inténtalo de nuevo.",
       "tooManyAttempts": "Demasiados intentos. Espera un momento e inténtalo de nuevo.",
-      "resetLinkInvalid": "Este enlace no es válido o ya se ha utilizado. Solicita uno nuevo.",
+      "resetLinkInvalid": "Este enlace ya no es válido: ya se utilizó, caducó o un correo más reciente lo sustituyó. Usa el último correo que recibiste o solicita un enlace nuevo.",
       "setPasswordFailed": "No se pudo establecer tu contraseña. Es posible que el enlace haya caducado.",
       "setupSessionExpired": "No se pudo establecer tu contraseña. Es posible que la sesión de configuración haya caducado.",
       "registerFailed": "No se pudo crear tu cuenta. Inténtalo de nuevo.",
@@ -3683,6 +3683,7 @@
       "pending": "Pendiente"
     },
     "table": {
+      "arabicName": "Nombre en árabe",
       "class": "Clase",
       "feedback": "Comentarios",
       "gender": "Género",

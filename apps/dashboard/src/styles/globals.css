@@ -21,6 +21,13 @@ body {
   @apply font-sans;
 }
 
+/* Arabic names, marked lang="ar", in Noto Naskh Arabic (loaded in the layout).
+   Matches the attribute only, so an Arabic interface (lang on <html>) keeps its font. */
+body [lang="ar"] {
+  font-family: var(--font-arabic), var(--font-lora), serif;
+  font-synthesis-weight: none;
+}
+
 /* Let page content and header titles give way to controls inside the shell. */
 .dashboard-content > *,
 .dashboard-content [data-slot="page-header"] {

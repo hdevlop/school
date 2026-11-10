@@ -3,6 +3,7 @@ import {
   students, classes, sections, users, parents, studentParents, studentEnrollments,
   studentEnrollmentPlacements, attendance, disciplineIncidents, behaviorRewards,
   fees, feeInstallments, payments, paymentAllocations, studentCreditLots,
+  massarClasses, massarEnrollments,
 } from '../../database/schema';
 import { Repository, t } from '../../najm';
 import { Owned, type OwnedWhere } from '../../auth';
@@ -161,6 +162,28 @@ export class StudentRepository {
             AND later.valid_from > ${studentEnrollmentPlacements.validFrom})`,
       ))
       .orderBy(desc(students.createdAt), studentEnrollments.id, desc(studentEnrollmentPlacements.validFrom));
+  }
+
+  /**
+   * Where Massar lists these students this year. Takes ids from an owned read
+   * rather than scoping again, so it can only describe rows already returned.
+   */
+  async getMassarPlacements(studentIds: string[]) {
+    if (!studentIds.length) return [];
+    return this.db
+      .select({
+        studentId: massarEnrollments.studentId,
+        massarClassName: massarClasses.name,
+        massarPosition: massarEnrollments.position,
+        massarName: massarEnrollments.name,
+      })
+      .from(massarEnrollments)
+      .innerJoin(massarClasses, eq(massarClasses.id, massarEnrollments.massarClassId))
+      .where(and(
+        eq(massarEnrollments.academicYearId, this.year.id),
+        isNull(massarEnrollments.leftOn),
+        inArray(massarEnrollments.studentId, studentIds),
+      ));
   }
 
   /** The student's identity and current class, through ownership; no year. */

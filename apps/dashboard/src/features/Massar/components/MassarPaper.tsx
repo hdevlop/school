@@ -21,7 +21,9 @@ import styles from './Massar.module.css';
 // Every column has a fixed width (Massar.module.css): N° 52 + code 132 + name 200, then 112 per mark.
 // Unlike Massar's sheet there is no birth date: the marks get the room. The xlsx export keeps it.
 const IDENTITY_WIDTH = 384, MARK_WIDTH = 112;
-function EditablePaper({ data, options, onBusy }: { data: MassarSheetDetail; options: MassarPaperOptions; onBusy: (busy: boolean) => void }) {
+/** School's Latin name of each student, by id: Notes shows it under Massar's Arabic name. */
+type LatinNames = ReadonlyMap<string, string>;
+function EditablePaper({ data, options, onBusy, latinNames }: { data: MassarSheetDetail; options: MassarPaperOptions; onBusy: (busy: boolean) => void; latinNames?: LatinNames }) {
   const { t } = useTranslation(), viewer = useViewerRole(), scope = useAcademicYearScope(), client = useQueryClient(), action = useMassarAction();
   const recoveryKey = `massar-draft:${viewer.userId}:${scope.academicYear}:${data.sheet.id}`;
   const [engine] = useState(() => {
@@ -91,7 +93,7 @@ function EditablePaper({ data, options, onBusy }: { data: MassarSheetDetail; opt
       <NajmScroll axis="both" autoHide="leave" className={styles.desktopSheet}><table className={styles.paperTable} style={{ width: IDENTITY_WIDTH + data.components.length * MARK_WIDTH }}>
         <colgroup><col className={styles.colNumber} /><col className={styles.colCode} /><col className={styles.colName} />{data.components.map(component => <col key={component.code} className={styles.colMark} />)}</colgroup>
         <thead><tr><th className={styles.stickyNumber}><bdi dir="ltr">N°</bdi></th><th className={styles.stickyCode}>Code Massar</th><th className={styles.stickyName}>{t('massar.student')}</th>{data.components.map(component => <th key={component.code} dir="auto" title={component.name}>{componentLabel(component.name)}</th>)}</tr></thead>
-        <tbody>{data.students.map((student, row) => <tr key={student.id}><td className={styles.stickyNumber}>{student.position + 1}</td><td className={styles.stickyCode} dir="ltr">{student.studentCode}</td><th scope="row" className={styles.stickyName} dir="auto" title={student.name}>{student.name}</th>{data.components.map((component, col) => <td key={component.code}>{field(row, col)}</td>)}</tr>)}</tbody>
+        <tbody>{data.students.map((student, row) => <tr key={student.id}><td className={styles.stickyNumber}>{student.position + 1}</td><td className={styles.stickyCode} dir="ltr">{student.studentCode}</td><th scope="row" className={styles.stickyName} dir="auto" title={[student.name, latinNames?.get(student.id)].filter(Boolean).join(' · ')}>{latinNames?.get(student.id) ? <><bdi lang="ar" dir="rtl" className="block truncate">{student.name}</bdi><bdi dir="ltr" className={styles.latinName}>{latinNames.get(student.id)}</bdi></> : student.name}</th>{data.components.map((component, col) => <td key={component.code}>{field(row, col)}</td>)}</tr>)}</tbody>
       </table></NajmScroll>
       <div className={styles.phoneSheet}>{data.students.length > 0 && <><div className={styles.studentPaging}><NButton variant="outline" size="sm" disabled={!studentIndex} onClick={() => setStudentIndex(studentIndex - 1)}>‹</NButton><div><strong dir="auto">{data.students[studentIndex].name}</strong><small dir="ltr">{data.students[studentIndex].studentCode} · {data.students[studentIndex].dateOfBirth}</small><small>{studentIndex + 1} / {data.students.length}</small></div><NButton variant="outline" size="sm" disabled={studentIndex === data.students.length - 1} onClick={() => setStudentIndex(studentIndex + 1)}>›</NButton></div>{data.components.map((component, col) => <div className={styles.phoneComponent} key={component.code}><span dir="auto">{component.name} <small>/{data.maxMark}</small></span>{field(studentIndex, col, true)}</div>)}</>}</div>
     </section>
@@ -104,7 +106,7 @@ function EditablePaper({ data, options, onBusy }: { data: MassarSheetDetail; opt
     </div>}
   </>;
 }
-export function MassarPaper({ id, options, onBusy }: { id: string; options: MassarPaperOptions; onBusy: (busy: boolean) => void }) {
+export function MassarPaper({ id, options, onBusy, latinNames }: { id: string; options: MassarPaperOptions; onBusy: (busy: boolean) => void; latinNames?: LatinNames }) {
   const query = useMassarRead<MassarSheetDetail>(`/sheets/${encodeURIComponent(id)}`, true, 15000), { t } = useTranslation();
-  return query.error ? <MassarLoadError error={query.error} retry={query.refetch} /> : !query.data ? <p role="status" className={styles.sheetLoading}>{t('massar.loading')}</p> : <EditablePaper key={id} data={query.data} options={options} onBusy={onBusy} />;
+  return query.error ? <MassarLoadError error={query.error} retry={query.refetch} /> : !query.data ? <p role="status" className={styles.sheetLoading}>{t('massar.loading')}</p> : <EditablePaper key={id} data={query.data} options={options} onBusy={onBusy} latinNames={latinNames} />;
 }

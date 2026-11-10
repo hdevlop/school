@@ -2,7 +2,7 @@
 
 najm-api is a TypeScript decorator-based web framework built on Hono.js. It provides dependency injection (via `diject`), 40+ parameter decorators, guards, transactions, events, i18n, MCP support, and CLI tooling. Targets Bun runtime with Node.js fallback.
 
-**Local source (read-only reference):** `C:\Users\hdevlop\Desktop\najm`
+**Local source (read-only reference):** `%USERPROFILE%\Desktop\najm`
 
 Consult it to understand internals. Never make School consume it: no workspace
 link, no `file:` dependency, no copied source, no tarball. School upgrades only
@@ -19,7 +19,7 @@ permission, not a role; year-scoped controllers are registered in
 
 ## Package Overview
 
-All packages live under `C:\Users\hdevlop\Desktop\najm\packages/`:
+All packages live under `%USERPROFILE%\Desktop\najm\packages/`:
 
 | Package | Purpose |
 |---|---|

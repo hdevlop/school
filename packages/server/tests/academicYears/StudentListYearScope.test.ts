@@ -72,10 +72,29 @@ describe('normal student list year scope', () => {
   it('lists the enrollments of the resolved year', async () => {
     const calls: unknown[] = [];
     const service = studentService(
-      { getAll: async (filters: unknown) => { calls.push(filters); return [{ id: 'student-1' }]; } },
+      {
+        getAll: async (filters: unknown) => { calls.push(filters); return [{ id: 'student-1' }]; },
+        getMassarPlacements: async () => [],
+      },
     );
     expect<unknown>(await service.getAll()).toEqual([{ id: 'student-1' }]);
     expect(calls).toEqual([{ onDate: undefined }]);
+  });
+
+  it('adds where Massar lists a student, only for the students the owned list returned', async () => {
+    const asked: unknown[] = [];
+    const service = studentService({
+      getAll: async () => [{ id: 'student-1' }, { id: 'student-2' }],
+      getMassarPlacements: async (ids: string[]) => {
+        asked.push(ids);
+        return [{ studentId: 'student-2', massarClassName: '3APIC-1', massarPosition: 4, massarName: 'name' }];
+      },
+    });
+    expect<unknown>(await service.getAll()).toEqual([
+      { id: 'student-1' },
+      { id: 'student-2', massarClassName: '3APIC-1', massarPosition: 4, massarName: 'name' },
+    ]);
+    expect(asked).toEqual([['student-1', 'student-2']]);
   });
 });
 

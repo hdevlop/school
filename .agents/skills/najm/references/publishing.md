@@ -11,7 +11,7 @@ najm-storage → najm-email → najm-auth → najm-cli
 ## Commands
 
 ```bash
-cd C:\Users\hdevlop\Desktop\najm
+cd ~/Desktop/najm
 
 bun run build              # All packages (turbo parallel)
 bun run build:<name>       # Single package

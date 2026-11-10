@@ -17,8 +17,8 @@ the one the task needs (paths are from the repository root):
 
 ## Always
 
-- Najm source is read-only reference at `C:\Users\hdevlop\Desktop\najm\packages\<pkg>\src`
-  (DI in `C:\Users\hdevlop\Desktop\diject\src`). Send open-ended source questions to
+- Najm source is read-only reference at `%USERPROFILE%\Desktop\najm\packages\<pkg>\src`
+  (DI in `%USERPROFILE%\Desktop\diject\src`). Send open-ended source questions to
   `najm-internals` rather than exploring here; read a source file directly only
   when you already know which function to check. Never read `node_modules/najm-*`,
   and never make School consume the local source; School pins published versions.
