@@ -154,6 +154,34 @@ export class ClassRoutineRepository {
     return schedule;
   }
 
+  /**
+   * Who teaches a lesson: the teacher it names, else the teacher assigned to
+   * the timetable's section for the lesson's subject (the earliest assignment
+   * when several share it). A timetable built or imported with subjects alone
+   * still reaches each teacher's Planning, and follows the Teachers page when
+   * an assignment changes. Needs `routine_entries` and `routine_schedules` in
+   * the query, and `teacher_assignments` joined on the lesson's own assignment.
+   */
+  private lessonTeacherId() {
+    return sql<string | null>`coalesce(${teacherAssignments.teacherId}, (
+      select section_assignment.teacher_id from teacher_assignments section_assignment
+      where section_assignment.section_id = ${routineSchedules.sectionId}
+        and section_assignment.subject_id = ${routineEntries.subjectId}
+        and section_assignment.teacher_id is not null
+      order by section_assignment.created_at, section_assignment.id
+      limit 1))`;
+  }
+
+  /** The assignment a new lesson takes by default: the same teacher lessonTeacherId reads. */
+  async defaultAssignmentFor(sectionId: string, subjectId: string) {
+    const [row] = await this.db.select({ id: teacherAssignments.id })
+      .from(teacherAssignments)
+      .where(and(eq(teacherAssignments.sectionId, sectionId), eq(teacherAssignments.subjectId, subjectId), sql`${teacherAssignments.teacherId} is not null`))
+      .orderBy(asc(teacherAssignments.createdAt), asc(teacherAssignments.id))
+      .limit(1);
+    return row?.id ?? null;
+  }
+
   async getEntries(scheduleId: string) {
     return this.db.select({
       id: routineEntries.id,
@@ -172,9 +200,10 @@ export class ClassRoutineRepository {
       subjectCode: subjects.code,
     })
       .from(routineEntries)
+      .innerJoin(routineSchedules, eq(routineEntries.scheduleId, routineSchedules.id))
       .innerJoin(subjects, eq(routineEntries.subjectId, subjects.id))
       .leftJoin(teacherAssignments, eq(routineEntries.teacherAssignmentId, teacherAssignments.id))
-      .leftJoin(teachers, eq(teacherAssignments.teacherId, teachers.id))
+      .leftJoin(teachers, eq(teachers.id, this.lessonTeacherId()))
       .leftJoin(staff, eq(teachers.staffId, staff.id))
       .where(eq(routineEntries.scheduleId, scheduleId));
   }
@@ -439,8 +468,9 @@ export class ClassRoutineRepository {
 
   // A named year: the teacher dashboard reads the active year's week.
   async getTeacherScheduleIds(teacherId: string, academicYear: string) {
+    // The same teacher a timetable shows on the lesson (lessonTeacherId).
     const conditions = [
-      eq(teacherAssignments.teacherId, teacherId),
+      sql`${this.lessonTeacherId()} = ${teacherId}`,
       inArray(routineSchedules.status, ['draft', 'published']),
     ];
     conditions.push(eq(routineSchedules.academicYear, academicYear));
@@ -453,7 +483,7 @@ export class ClassRoutineRepository {
     })
       .from(routineEntries)
       .innerJoin(routineSchedules, eq(routineEntries.scheduleId, routineSchedules.id))
-      .innerJoin(teacherAssignments, eq(routineEntries.teacherAssignmentId, teacherAssignments.id))
+      .leftJoin(teacherAssignments, eq(routineEntries.teacherAssignmentId, teacherAssignments.id))
       .where(and(...conditions))
       .orderBy(
         sql`case when ${routineSchedules.status} = 'published' then 0 else 1 end`,

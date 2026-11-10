@@ -60,10 +60,14 @@ export default function RoutineEntryForm({
     ...subjectTeachers.map((item) => ({ value: item.id, label: item.teacherName })),
   ];
 
-  // A teacher stays on the lesson only while they teach its subject here.
+  // A teacher stays on the lesson only while they teach its subject here;
+  // otherwise the teacher assigned to the subject in this section is chosen,
+  // so the lesson reaches their Planning. "No teacher" stays one click away.
   const changeSubject = (next: string) => {
     const kept = assignmentOptions.some((item) => item.id === form.getValues('teacherAssignmentId') && item.subjectId === next);
-    if (!kept) form.setValue('teacherAssignmentId', NO_TEACHER);
+    if (kept) return;
+    const assigned = assignmentOptions.find((item) => item.subjectId === next);
+    form.setValue('teacherAssignmentId', assigned?.id ?? NO_TEACHER);
   };
 
   const submit = (values: z.output<typeof schema>) => onSubmit({

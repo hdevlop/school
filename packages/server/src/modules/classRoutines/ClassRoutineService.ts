@@ -266,7 +266,9 @@ export class ClassRoutineService {
             dayOfWeek: lesson.day,
             periodId: periodAt(lesson.period),
             subjectId: subject.id,
-            teacherAssignmentId: assignment?.id ?? null,
+            // A file that names no teacher takes the section's assigned one
+            // (addEntry); a named teacher not assigned here is left off and counted.
+            teacherAssignmentId: assignment?.id ?? (lesson.teacher ? null : undefined),
             roomNumber: lesson.roomNumber,
             notes: lesson.notes,
             contentGroups: lesson.contentGroups,
@@ -284,7 +286,29 @@ export class ClassRoutineService {
     return { routines: plans.length, lessons, duties, teachersNotAssigned };
   }
 
+  /**
+   * A lesson that does not say who teaches it (`teacherAssignmentId` left out,
+   * as an import of subjects alone does) is saved with the teacher assigned to
+   * the section for its subject, so it reaches that teacher's Planning. When
+   * that teacher is already busy then, the lesson is saved without a teacher
+   * rather than refused. `null` is a deliberate "no teacher" and is kept.
+   */
   async addEntry(scheduleId: string, data: CreateRoutineEntryDto) {
+    if (data.teacherAssignmentId === undefined) {
+      const schedule = await this.validator.ensureSchedule(scheduleId);
+      const assigned = await this.repository.defaultAssignmentFor(schedule.sectionId, data.subjectId);
+      if (assigned) {
+        try {
+          return await this.createEntry(scheduleId, { ...data, teacherAssignmentId: assigned });
+        } catch {
+          // Busy elsewhere at that time, or any other refusal: the plain lesson below decides.
+        }
+      }
+    }
+    return this.createEntry(scheduleId, data);
+  }
+
+  private async createEntry(scheduleId: string, data: CreateRoutineEntryDto) {
     await this.validator.validateEntry(scheduleId, data);
     const entry = await this.repository.createEntry({
       scheduleId,
