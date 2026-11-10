@@ -2,7 +2,8 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 
-import { NPageHeader, NPageHeaderActions, cn } from 'najm-kit';
+import { NPageHeaderActions, cn } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
 
 import { useAuth } from 'najm-auth/client/react';
 import FinanceKpis from './components/FinanceKpis';

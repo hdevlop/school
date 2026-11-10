@@ -1,7 +1,7 @@
 'use client';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CalendarClock, Check, ChevronDown, FileSpreadsheet, FileUp, FolderArchive, LayoutList, Plus, Printer, Send, Upload } from 'lucide-react';
+import { CalendarClock, Check, ChevronDown, FileSpreadsheet, FileText, FileUp, Files, FolderArchive, Layers, LayoutList, Plus, Printer, School, Send, Upload } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, NajmScroll, NButton, NDialog, NEmptyState, NSheet } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useNThemeBrandingSlot } from 'najm-theme/react';
@@ -111,11 +111,22 @@ function MassarContent() {
     await action.run(() => downloadMassar(`/rounds/${round.id}/download`, {}, 'massar.zip'));
     setDownloadOpen(false);
   };
-  const print = async (all = false) => {
-    const chosen = all ? sheets : subjects;
+  // Print one sheet, the class, every class of its level (1APG-1, 1APG-2…), or every class.
+  const levelOf = (name: string) => name.replace(/-\d+$/, ''), level = levelOf(className);
+  const levelSheets = sheets.filter(item => levelOf(item.className) === level);
+  const printChoices = [
+    { key: 'open', icon: FileText, label: t('massar.flow.printOpen'), detail: sheet?.subjectName, chosen: sheet ? [sheet] : [] },
+    { key: 'class', icon: Files, label: t('massar.flow.printClass', { name: className }), chosen: subjects },
+    { key: 'level', icon: Layers, label: t('massar.flow.printLevel', { level }), chosen: levelSheets },
+    { key: 'all', icon: School, label: t('massar.flow.printAll'), chosen: sheets },
+  ];
+  const print = async (chosen: MassarSheetRow[]) => {
+    if (!chosen.length) return;
     setPrintPending(true);
     try { await action.run(async () => {
-      const details = await Promise.all(chosen.map(async sheet => (await api.get(`/massar/sheets/${encodeURIComponent(sheet.id)}`)).data.data as MassarSheetDetail));
+      // A few at a time: a whole Contrôle is well over a hundred sheets.
+      const details: MassarSheetDetail[] = [];
+      for (let start = 0; start < chosen.length; start += 6) details.push(...await Promise.all(chosen.slice(start, start + 6).map(async sheet => (await api.get(`/massar/sheets/${encodeURIComponent(sheet.id)}`)).data.data as MassarSheetDetail)));
       if (!await printPlanningDocument(buildMassarDocument(details, options))) toast.error(t('insurance.popupBlocked'));
     }); } finally { setPrintPending(false); }
   };
@@ -172,7 +183,20 @@ function MassarContent() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>}
-          <NButton variant="outline" size="icon" aria-label={t('insurance.print')} title={t('insurance.print')} disabled={busy || printPending || !subjects.length} loading={printPending} onClick={() => print()}>{!printPending && <Printer className="size-4" aria-hidden="true" />}</NButton>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <NButton variant="outline" size="icon" aria-label={t('insurance.print')} title={t('insurance.print')} disabled={busy || printPending || !sheets.length} loading={printPending}>{!printPending && <Printer className="size-4" aria-hidden="true" />}</NButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-80">
+              {printChoices.map(({ key, icon: Icon, label, detail, chosen }, index) => <Fragment key={key}>
+                {index === 2 && <DropdownMenuSeparator />}
+                <DropdownMenuItem className={styles.controlOption} disabled={!chosen.length} onSelect={() => void print(chosen)}>
+                  <span className={styles.controlCheck}><Icon aria-hidden /></span>
+                  <span><strong><bdi>{label}</bdi></strong><small>{detail ? <><bdi>{detail}</bdi> · </> : null}{t('massar.flow.printSheets', { count: chosen.length })}</small></span>
+                </DropdownMenuItem>
+              </Fragment>)}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>;
   return <div className={styles.page} data-massar-page="main">
     <MassarHeader title={t('massar.title')} subtitle={error || loading ? undefined : configured ? manager && setup ? t('massar.flow.loaded', { count: setup.classes.length, subjects: t('massar.flow.subjectCount', { count: new Set(setup.subjects.map(subject => subject.code)).size }) }) : undefined : t('massar.flow.notSetUp')} actions={<div className={styles.actions}>
@@ -263,7 +287,7 @@ function MassarContent() {
       </>}
     </div></main>
     {canOverview && <NSheet open={overviewOpen} onOpenChange={setOverviewOpen} icon={LayoutList} title={t('massar.flow.overview')} description={round ? label(round) : undefined} width={overviewWidth}
-      footer={<div className="flex justify-end"><NButton variant="outline" leftIcon={Printer} disabled={busy || printPending || !sheets.length} loading={printPending} onClick={() => print(true)}>{t('massar.flow.printAll')}</NButton></div>}>
+      footer={<div className="flex justify-end"><NButton variant="outline" leftIcon={Printer} disabled={busy || printPending || !sheets.length} loading={printPending} onClick={() => print(sheets)}>{t('massar.flow.printAll')}</NButton></div>}>
       <MassarOverview sheets={sheets} blocked={blocked} select={select} disabled={busy} fix={manager ? name => { setOverviewOpen(false); setWaitingClass(name); } : undefined} />
     </NSheet>}
     {filesOpen && manager && setup && <MassarFilesDialog setup={setup} close={() => setFilesOpen(false)} />}

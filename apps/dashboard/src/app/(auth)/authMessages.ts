@@ -18,11 +18,11 @@ export const newPasswordSchema = (t: T) =>
 
 export const emailSchema = (t: T) => z.string().email({ message: t('auth.validation.emailInvalid') });
 
+/** The server's rule (`passwordSchema` in authConfig.ts): 8 characters, a letter and a number, any case. */
 export const strongPasswordSchema = (t: T) =>
   z.string()
     .min(8, { message: t('auth.validation.passwordMinLength') })
-    .regex(/[A-Z]/, { message: t('auth.validation.passwordUppercase') })
-    .regex(/[a-z]/, { message: t('auth.validation.passwordLowercase') })
+    .regex(/[a-zA-Z]/, { message: t('auth.validation.passwordLetter') })
     .regex(/\d/, { message: t('auth.validation.passwordNumber') });
 
 type AuthFailure = { status?: number; message?: string; body?: unknown; response?: { status?: number; data?: { message?: string; code?: string } } };

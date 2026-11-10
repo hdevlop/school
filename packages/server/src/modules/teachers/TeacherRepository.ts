@@ -12,6 +12,8 @@ export const teacherSelect = {
   id: teachers.id,
   staffId: teachers.staffId,
   userId: staff.userId,
+  // 'pending' until the invitation is approved: the list offers to send it, as Staff does.
+  loginStatus: users.status,
   cin: staff.cin,
   name: staff.name,
   email: users.email,

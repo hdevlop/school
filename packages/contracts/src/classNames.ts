@@ -71,6 +71,7 @@ export function toArabicClassAbbreviation(name: string): string {
 const academicClassOrder: readonly string[] = [
   'PS', 'MS', 'GS', ...SCHOOL_CLASS_NAMES.map(item => item.app), 'TC', '1BAC', '2BAC',
 ];
+const classNameCollator = new Intl.Collator('fr', { numeric: true });
 
 /** The preceding level for a register fallback; custom and first levels have none. */
 export function previousClassName(name: string): string | null {
@@ -88,7 +89,7 @@ export function compareClassNames(left: string, right: string): number {
   const rightIndex = academicClassOrder.indexOf(rightName);
   return (leftIndex < 0 ? academicClassOrder.length : leftIndex)
     - (rightIndex < 0 ? academicClassOrder.length : rightIndex)
-    || leftName.localeCompare(rightName, 'fr', { numeric: true });
+    || classNameCollator.compare(leftName, rightName);
 }
 
 /** Exact names take priority if old data contains both names as separate classes. */

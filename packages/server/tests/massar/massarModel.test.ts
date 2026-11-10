@@ -60,7 +60,7 @@ describe('Massar default model', () => {
       levelSubjectCodes: async () => [{ code: '1APIC', subjects: known }],
       previousYearSubjects: async () => [],
       lock: async () => {},
-      relinkTeachers: async () => {}, sheets: async () => [], completedMarkCounts: async () => [],
+      relinkTeachers: async () => {}, sheetRosters: async () => [], activeRosters: async () => new Map(), sheets: async () => [], completedMarkCounts: async () => [],
     };
     const service = new MassarService(repository as any, new MassarValidator(), {} as any, {} as any, {} as any) as any;
     service.year = { id: 'year', status: 'active' };

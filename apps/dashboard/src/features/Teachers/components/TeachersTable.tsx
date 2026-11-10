@@ -42,7 +42,6 @@ function TeachersTable() {
   const { canReset, resetItems, openReset } = useResetLogin();
   const router = useRouter();
   const columns = useTeachersTableColumns();
-  const rawFilters = useTeachersTableFilters();
 
   const {
     teachers,
@@ -54,6 +53,7 @@ function TeachersTable() {
     isTeachersLoading,
     isDeleting
   } = useTeachers();
+  const { filters, filteredTeachers } = useTeachersTableFilters(teachers);
 
   const { classes } = useClasses();
   const { subjects } = useSubjects();
@@ -133,7 +133,7 @@ function TeachersTable() {
   const rowMenu = (teacher) => [
     { label: t('common.view'), icon: Eye, onSelect: () => handleView(teacher) },
     { label: t('common.edit'), permission: 'update:teachers', icon: Pencil, onSelect: () => handleEdit(teacher) },
-    ...resetItems(teacher.userId),
+    ...resetItems(teacher.userId, { invitationApproval: teacher.loginStatus === 'pending' }),
     { label: t('common.delete'), permission: 'delete:teachers', icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(teacher) },
   ];
 
@@ -161,6 +161,7 @@ function TeachersTable() {
   return (
     <div data-list-loading={isTeachersLoading || undefined} className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
+        mobileBack
         icon={FEATURE_ICONS.teachers}
         title={t('navigation.teachers')}
         subtitle={isCountUnknown(error, teachers, isTeachersLoading) ? undefined : t('teachers.subtitle.count', { count: total })}
@@ -176,10 +177,11 @@ function TeachersTable() {
         dataActions
         toolbarActionDisplay="settings"
         headerSlot={<TablePrintButton loading={isTeachersLoading} />}
-        data={teachers}
+        data={filteredTeachers}
+        isFilteredEmpty={filteredTeachers.length === 0 && !!teachers?.length}
         getRowId={(teacher) => teacher.id}
         columns={columns}
-        filters={rawFilters}
+        filters={filters}
         onCreate={handleAddClick}
         onView={handleView}
         onEdit={handleEdit}
@@ -198,6 +200,7 @@ function TeachersTable() {
         loadingText={t('common.loading')}
         renderCard={TeacherCard}
         renderCardSkeleton={TeacherCardSkeleton}
+        classNames={{ cards: 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5' }}
         addButtonText={t('teachers.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState

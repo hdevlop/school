@@ -10,6 +10,7 @@ import { resetSchoolApi } from '@/services/backupApi';
 import { useBackupDownload } from '../hooks/useBackupDownload';
 import { BackupDownloadStatus } from './BackupDownloadStatus';
 import { BackupStep, BackupSteps } from './BackupSteps';
+import { BackupWarningDialog } from './BackupWarningDialog';
 
 const canMaskText = () => typeof CSS !== 'undefined' && CSS.supports('-webkit-text-security', 'disc');
 
@@ -26,6 +27,7 @@ export function ResetSchoolDialog({ open, onOpenChange }: {
   const backup = useBackupDownload();
   const savingCurrent = backup.downloading;
   const [currentSaved, setCurrentSaved] = useState(false);
+  const [confirmWithoutBackup, setConfirmWithoutBackup] = useState(false);
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [typed, setTyped] = useState('');
@@ -41,6 +43,7 @@ export function ResetSchoolDialog({ open, onOpenChange }: {
   const close = () => {
     if (busy) return;
     setCurrentSaved(false); setPassword(''); setShowPassword(false); setTyped(''); setError(null);
+    setConfirmWithoutBackup(false);
     onOpenChange(false);
   };
 
@@ -50,6 +53,7 @@ export function ResetSchoolDialog({ open, onOpenChange }: {
 
   const reset = async () => {
     if (!ready) return;
+    setConfirmWithoutBackup(false);
     setResetting(true);
     setError(null);
     try {
@@ -65,6 +69,12 @@ export function ResetSchoolDialog({ open, onOpenChange }: {
     // The reset ended every session, this one included.
     await auth.client.logout().catch(() => undefined);
     window.location.replace('/login');
+  };
+
+  const requestReset = () => {
+    if (!ready) return;
+    if (!currentSaved) { setConfirmWithoutBackup(true); return; }
+    void reset();
   };
 
   return (
@@ -86,20 +96,18 @@ export function ResetSchoolDialog({ open, onOpenChange }: {
           </div>
         </div>
 
-        <div className="grid gap-3 rounded-lg border p-3 text-sm">
-          <div className="grid gap-1">
-            <p className="font-medium">{t('settings.backup.reset.stepDownload')}</p>
-            <p className="text-xs leading-relaxed text-muted-foreground">{t('settings.backup.reset.stepDownloadHint')}</p>
-          </div>
-          <NButton className="w-full sm:w-fit" type="button" variant="outline" loading={savingCurrent} disabled={resetting} onClick={saveCurrent}
-            leftIcon={currentSaved ? <Check className="h-4 w-4 text-emerald-600" aria-hidden /> : <Download className="h-4 w-4" aria-hidden />}>
-            {currentSaved ? t('settings.backup.restore.safetyDone') : t('settings.backup.download.action')}
-          </NButton>
-          {savingCurrent && <BackupDownloadStatus progress={backup.progress} />}
-        </div>
-
         <BackupSteps>
-          <BackupStep number={1} done={Boolean(password)} title={t('settings.backup.reset.password')} hint={t('settings.backup.reset.passwordHint')} htmlFor="reset-password">
+          <BackupStep number={1} done={currentSaved} title={t('settings.backup.reset.stepDownload')} hint={t('settings.backup.reset.stepDownloadHint')}>
+            <div>
+              <NButton type="button" variant="outline" loading={savingCurrent} disabled={resetting} onClick={saveCurrent}
+                leftIcon={currentSaved ? <Check className="h-4 w-4" aria-hidden /> : <Download className="h-4 w-4" aria-hidden />}>
+                {currentSaved ? t('settings.backup.restore.safetyDone') : t('settings.backup.download.action')}
+              </NButton>
+            </div>
+            {savingCurrent && <div className="col-span-2"><BackupDownloadStatus progress={backup.progress} /></div>}
+          </BackupStep>
+
+          <BackupStep number={2} done={Boolean(password)} title={t('settings.backup.reset.password')} hint={t('settings.backup.reset.passwordHint')} htmlFor="reset-password">
             <div className="relative w-0 min-w-full">
               {/*
                 Typed on purpose every time. A real password input makes the browser treat the page as a
@@ -119,14 +127,14 @@ export function ResetSchoolDialog({ open, onOpenChange }: {
             </div>
           </BackupStep>
 
-          <BackupStep number={2} done={confirmed} htmlFor="reset-confirm" hint={t('settings.backup.reset.confirmHint')}
+          <BackupStep number={3} done={confirmed} htmlFor="reset-confirm" hint={t('settings.backup.reset.confirmHint')}
             title={<>{confirmBefore}<code className="rounded bg-destructive/10 px-1.5 py-0.5 font-mono text-xs font-semibold text-destructive"><bdi>{word}</bdi></code>{confirmAfter}</>}>
             <Input className="w-0 min-w-full" id="reset-confirm" value={typed} disabled={resetting} autoComplete="off" spellCheck={false} placeholder={word} onChange={(event) => setTyped(event.target.value)} />
           </BackupStep>
 
-          <BackupStep number={3} done={false} last>
+          <BackupStep number={4} done={false} last>
             <div>
-              <NButton type="button" variant="destructive" loading={resetting} disabled={!ready} onClick={reset} leftIcon={<Trash2 className="h-4 w-4" aria-hidden />}>{t('settings.backup.reset.submit')}</NButton>
+              <NButton type="button" variant="destructive" loading={resetting} disabled={!ready} onClick={requestReset} leftIcon={<Trash2 className="h-4 w-4" aria-hidden />}>{t('settings.backup.reset.submit')}</NButton>
             </div>
           </BackupStep>
         </BackupSteps>
@@ -138,6 +146,7 @@ export function ResetSchoolDialog({ open, onOpenChange }: {
         )}
         {resetting && <p role="status" className="text-sm text-muted-foreground">{t('settings.backup.reset.resetting')}</p>}
 
+        <BackupWarningDialog open={open && confirmWithoutBackup} onOpenChange={setConfirmWithoutBackup} onConfirm={reset} />
       </DialogContent>
     </Dialog>
   );

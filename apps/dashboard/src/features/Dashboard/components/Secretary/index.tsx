@@ -1,7 +1,8 @@
 'use client';
 
 import { CalendarDays } from 'lucide-react';
-import { NajmScroll, NButton, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions } from 'najm-kit';
+import { NajmScroll, NButton, NErrorState, NForbiddenState, NPageHeaderActions } from 'najm-kit';
+import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { FEATURE_ICONS } from '@/shared/featureIcons';

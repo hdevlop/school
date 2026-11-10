@@ -101,6 +101,7 @@ const TeacherView: React.FC<TeacherViewProps> = ({ teacherId }) => {
     <NajmScroll axis="y" className="h-full min-h-0 w-full flex-1">
     <div className="flex min-h-full min-w-0 flex-col gap-2 fit:h-full">
       <NPageHeader
+        mobileBack
         icon={FEATURE_ICONS.teachers}
         title={name ?? t('dashboard.teacher.title')}
         subtitle={t('dashboard.teacher.profileSubtitle')}
@@ -112,7 +113,7 @@ const TeacherView: React.FC<TeacherViewProps> = ({ teacherId }) => {
             size="sm"
             onClick={() => router.push('/teachers')}
             aria-label={t('dashboard.teacher.backToTeachers')}
-            className="gap-2"
+            className="gap-2 max-md:hidden"
           >
             <ArrowLeft className="size-4 rtl:rotate-180" />
             <span className="max-sm:hidden">{t('dashboard.teacher.backToTeachers')}</span>

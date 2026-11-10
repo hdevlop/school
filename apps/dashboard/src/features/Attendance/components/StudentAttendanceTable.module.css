@@ -1,3 +1,30 @@
+.toolbar > div:has(> :global([data-roster-filters])) {
+  flex: 1 1 100%;
+  margin-inline-start: 0;
+}
+
+.toolbar :global([data-roster-filters]) {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  /* Search, filters, roster actions and Najm's settings share one line, with
+     one wrapping container owning their layout; the search takes the room left. */
+  .toolbar {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .toolbar > div:has(> :global([data-roster-filters])),
+  .toolbar :global([data-roster-filters]) {
+    display: contents;
+  }
+
+  .toolbar > :global([data-ntable-controls]) {
+    order: 4;
+  }
+}
+
 @media (max-width: 1023px) {
   /* The assistant stays above this screen's bottom action bar. */
   :global(body):has(.screen [data-roster-mobile-submit]) :global(.school-chatbot) > button {

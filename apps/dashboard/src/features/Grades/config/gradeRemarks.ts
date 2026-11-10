@@ -26,6 +26,11 @@ export const GRADE_REMARK_FIELD_STYLES: Record<GradeRemark, string> = {
   average: 'border-orange-400 bg-orange-50 dark:border-orange-600 dark:bg-orange-950/40',
   insufficient: 'border-rose-400 bg-rose-50 dark:border-rose-600 dark:bg-rose-950/40',
 };
+/** The same hues as a solid fill, for a bar that shows how much of the scale the mark covers. */
+export const GRADE_REMARK_BAR_STYLES: Record<GradeRemark, string> = {
+  excellent: 'bg-emerald-500', veryGood: 'bg-sky-500', good: 'bg-violet-500',
+  fairlyGood: 'bg-yellow-500', average: 'bg-orange-500', insufficient: 'bg-rose-500',
+};
 /** The badge colour underneath, for anything that reads the colour name rather than the style. */
 export const GRADE_REMARK_COLORS: Record<GradeRemark, BadgeColor> = {
   excellent: 'success', veryGood: 'success', good: 'info', fairlyGood: 'info', average: 'warning', insufficient: 'destructive',

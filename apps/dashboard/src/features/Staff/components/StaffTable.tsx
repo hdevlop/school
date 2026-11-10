@@ -346,6 +346,7 @@ const StaffTable = () => {
   return (
     <div data-list-loading={isStaffLoading || undefined} className="flex flex-col gap-2 w-full h-full">
       <NPageHeader
+        mobileBack
         icon={FEATURE_ICONS.staff}
         title={t('navigation.staff')}
         subtitle={isCountUnknown(isError ? error : null, rows, isStaffLoading) ? undefined : t('staff.subtitle.count', { count: rows.length })}

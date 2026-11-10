@@ -10,6 +10,7 @@ import { NFormSectionHeader as FormHeader } from 'najm-kit';
 import { Briefcase, IdCard, User, UserRound, Mail, Activity, UserPlus, BookOpen, Award, Calendar, Wallet, Landmark, Clock, GraduationCap, Phone, MapPin, Loader2 } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
 import { createTeacherSchemas } from '../config/teacherSchemas'
+import { groupTeacherAssignments } from '../config/teacherAssignments'
 import {
   buildGenderOptions,
   buildEmploymentTypeOptionsFor,
@@ -55,7 +56,7 @@ export const getTeacherProfessionalDefaultValues = (teacher = null) => ({
 })
 
 export const getTeacherAssignmentsDefaultValues = (teacher = null) => ({
-   assignments: teacher?.assignments ?? []
+   assignments: groupTeacherAssignments(teacher?.assignments ?? [])
 })
 
 const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeacher }) => {
@@ -258,6 +259,7 @@ export const PersonalInfoContent = ({ requireEmail = true }) => {
                       formLabel={t('teachers.form.address')}
                       placeholder={t('teachers.form.addressPlaceholder')}
                       icon={MapPin}
+                      required={true}
                    />
                 </div>
             </div>

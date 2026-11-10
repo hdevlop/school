@@ -183,6 +183,13 @@ function GradesTableForYear() {
     [assessments, examSources, massarLabels, sourceType, classId, sectionId, subjectId]
   );
 
+  // Only one exam for this class, section and subject (a subject with no parts
+  // in one Contrôle): it is the one to grade, so nobody has to pick it.
+  const onlySourceId = sectionId && !isAllClasses && sourceOptions.length === 1 ? sourceOptions[0].value : '';
+  useEffect(() => {
+    if (onlySourceId) setSourceId((current) => current || onlySourceId);
+  }, [onlySourceId]);
+
   const selectedSource = useMemo(
     () => {
       const list = sourceType === 'assessment' ? (assessments || []) : examSources;

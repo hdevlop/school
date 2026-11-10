@@ -1,14 +1,16 @@
 import { PermissionButton } from '@/components/PermissionButton';
 import { Label } from 'najm-kit';
-import { NAvatar, NButton, useNSidebar } from 'najm-kit';
-import { CreditCard, Menu } from 'lucide-react';
+import { NAvatar, NButton } from 'najm-kit';
+import { ArrowLeft, CreditCard } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { SCHOOL_HOME_PATH } from '@/najm.config';
 import { useTranslation } from 'najm-i18n/react';
 import { HeaderActionsMenu } from '@/components/HeaderActionsMenu';
 
 export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) => {
 
    const { student, alerts, assignment } = studentFees;
-   const sidebar = useNSidebar();
+   const router = useRouter();
    const { t } = useTranslation();
 
    return (
@@ -16,18 +18,17 @@ export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) 
 
          {/* Left: Avatar + Info */}
          <div className="flex basis-full items-center gap-3 min-w-0 xl:basis-auto xl:flex-1">
-            {/* This header stands in for NPageHeader on the standalone
-                /students/[id]/fees route, so it carries the mobile sidebar
-                trigger the page header would otherwise provide. */}
+            {/* The standalone fees view has the same mobile Home arrow as the page headers. */}
             <NButton
                type="button"
                variant="ghost"
                size="icon"
-               className="-ms-1 lg:hidden"
-               aria-label={t('navigation.openSidebar')}
-               onClick={() => sidebar?.openMobile()}
+               className="-ms-1 md:hidden"
+               aria-label={t('mobileHome.title')}
+               title={t('mobileHome.title')}
+               onClick={() => router.push(SCHOOL_HOME_PATH)}
             >
-               <Menu className="h-5 w-5" />
+               <ArrowLeft className="h-5 w-5 rtl:rotate-180" aria-hidden />
             </NButton>
 
             <NAvatar

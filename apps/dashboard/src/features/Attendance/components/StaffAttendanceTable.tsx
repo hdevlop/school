@@ -111,10 +111,6 @@ function StaffAttendanceTable() {
     () => filterRoster(staff || [], { search, status }, roster.getStatus),
     [staff, search, status, roster.getStatus],
   );
-  const resetFilters = () => {
-    setSearch('');
-    setStatus('');
-  };
   const total = staffRows.length;
   // The print menu picks the marks, so it prints every staff member whatever
   // the search and status filters show.
@@ -136,6 +132,7 @@ function StaffAttendanceTable() {
           placeholder header left the page without any text until every list
           had loaded, and mounting the real one then refetched its menus. */}
       <NPageHeader
+        mobileBack
         icon={FEATURE_ICONS.staffAttendance}
         title={t('navigation.staffAttendance')}
         subtitle={isCountUnknown(staffError, staffRows, isStaffLoading || isAttendanceLoading || isStaffRolesLoading) ? undefined : t('attendance.subtitle.staffCount', { count: total })}
@@ -144,7 +141,7 @@ function StaffAttendanceTable() {
         )}
       >
         <NPageHeaderActions>
-          <RosterStats stats={roster.stats} loading={isRosterLoading} />
+          <RosterStats stats={roster.stats} loading={isRosterLoading} className="lg:hidden" />
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
       </NPageHeader>
@@ -152,8 +149,6 @@ function StaffAttendanceTable() {
       <RosterFilters
         loading={isRosterLoading}
         filters={filters}
-        onReset={resetFilters}
-        canReset={!!search || !!status}
       >
         <RosterHeader
           loading={isRosterLoading}
@@ -170,8 +165,6 @@ function StaffAttendanceTable() {
           isSubmitting={isSubmittingRoster}
           stats={roster.stats}
           onSubmit={roster.handleSubmit}
-          onMarkAllPresent={() => roster.markAllAs('present')}
-          canMarkAllPresent={canSubmit}
           canSubmit={canSubmit}
         />
       </RosterFilters>
@@ -217,9 +210,7 @@ function StaffAttendanceTable() {
       {canEdit && <RosterMobileSubmit
         count={roster.submissionCount}
         onSubmit={roster.handleSubmit}
-        onMarkAllPresent={() => roster.markAllAs('present')}
         canSubmit={canSubmit}
-        canMarkAllPresent={canSubmit}
         isSubmitting={isSubmittingRoster}
         loading={isRosterLoading}
       />}

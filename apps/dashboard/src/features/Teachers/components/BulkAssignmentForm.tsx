@@ -9,28 +9,32 @@ import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { createTeacherSchemas } from '../config/teacherSchemas'
+import { subjectsForTeacherClass } from '../config/teacherAssignments'
 
 // ==================== COMPONENTS ====================
 
 const AssignmentItem = ({ classes, subjects }) => {
    const { t } = useTranslation()
-   const { setValue } = useFormContext()
+   const { getValues, setValue } = useFormContext()
    const prefix = usePrefix()
    const prevClassIdRef = useRef(null)
 
    const selectedClassId = useWatch({ name: `${prefix}.classId` })
+   const selectedSubjectIds = useWatch({ name: `${prefix}.subjectIds` }) ?? []
 
    const classOptions = classes.map(cls => ({
       value: cls.id,
       label: cls.name
    }))
 
-   const subjectOptions = subjects.map(sbj => ({
+   const selectedClass = classes.find(cls => cls.id === selectedClassId)
+   const availableSubjectIds = new Set(subjectsForTeacherClass(subjects, selectedClass?.level).map(subject => subject.id))
+   // Previously saved assignments stay readable until the administrator changes
+   // them. Removing an old selection keeps it out of the new subject choices.
+   const subjectOptions = subjects.filter(subject => availableSubjectIds.has(subject.id) || selectedSubjectIds.includes(subject.id)).map(sbj => ({
       value: sbj.id,
       label: sbj.name
    }))
-
-   const selectedClass = classes.find(cls => cls.id === selectedClassId)
 
    const sectionOptions = selectedClass?.sections?.map(section => ({
       value: section.id,
@@ -40,9 +44,15 @@ const AssignmentItem = ({ classes, subjects }) => {
    useEffect(() => {
       if (prevClassIdRef.current !== null && prevClassIdRef.current !== selectedClassId) {
          setValue(`${prefix}.sectionIds`, [])
+         const allowed = new Set(subjectsForTeacherClass(subjects, selectedClass?.level).map(subject => subject.id))
+         const unavailable = new Set(subjects.filter(subject => !allowed.has(subject.id)).map(subject => subject.id))
+         const currentSubjects: string[] = getValues(`${prefix}.subjectIds`) ?? []
+         if (currentSubjects.some(id => unavailable.has(id))) {
+            setValue(`${prefix}.subjectIds`, currentSubjects.filter(id => !unavailable.has(id)))
+         }
       }
       prevClassIdRef.current = selectedClassId
-   }, [selectedClassId, prefix, setValue])
+   }, [selectedClassId, selectedClass?.level, subjects, prefix, getValues, setValue])
 
    return (
       <div className='space-y-3'>
@@ -76,6 +86,7 @@ const AssignmentItem = ({ classes, subjects }) => {
             items={subjectOptions}
             placeholder={t('teachers.form.subjectsPlaceholder')}
             icon={BookOpen}
+            disabled={!selectedClassId}
             required={true}
          />
       </div>

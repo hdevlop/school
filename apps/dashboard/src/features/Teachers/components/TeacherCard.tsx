@@ -7,10 +7,15 @@ import { NCardInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useRouter } from 'next/navigation';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
+import { useSubjects } from '@/features/Subjects/hooks/useSubjects';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { avatarVersion } from '@/lib/avatarVersion';
 import { PersonCard } from '@/shared/PersonCard';
 import { CompactPersonCard, CompactTag, CompactValue, useCompactPersonCard } from '@/shared/CompactPersonCard';
+
+const VISIBLE_SUBJECTS = 3;
+const TAG = 'rounded-full bg-primary/10 font-medium text-primary ring-1 ring-inset ring-primary/20';
+const PENDING = 'bg-amber-100 font-medium text-amber-900 ring-1 ring-inset ring-amber-300 dark:bg-amber-950 dark:text-amber-200 dark:ring-amber-700';
 
 const TeacherCard = ({ data }) => {
    const { t } = useTranslation();
@@ -21,6 +26,12 @@ const TeacherCard = ({ data }) => {
 
    const { viewingYear } = useViewingAcademicYear();
    const { classes = [] } = useClasses({ enabled: !!viewingYear });
+   const { subjects = [] } = useSubjects();
+
+   // The subjects this teacher teaches this year, as the staff card shows a role.
+   const subjectNames = [...new Set((teacher.assignments ?? []).flatMap(assignment => assignment.subjectIds ?? []))]
+      .map(id => subjects.find(subject => subject.id === id)?.name).filter(Boolean);
+   const hiddenSubjects = subjectNames.length - VISIBLE_SUBJECTS;
 
    const getClassName = (classId) => {
       const classItem = classes.find(c => c.id === classId);
@@ -56,8 +67,12 @@ const TeacherCard = ({ data }) => {
             {...cardProps}
             avatar={<NAvatar src={teacher?.image} fallback={teacher.name} size="md" version={avatarVersion(teacher?.image, teacher?.updatedAt)} />}
             name={teacher.name}
+            trailing={teacher.loginStatus === 'pending' && <NBadge className={`shrink-0 ${PENDING}`}>{t('staff.invitation.accessPending')}</NBadge>}
             details={[
-               teacher.specialization && <CompactTag>{teacher.specialization}</CompactTag>,
+               subjectNames.length ? <span key="subjects" className="flex min-w-0 shrink-0 items-center gap-1">
+                  <CompactTag>{subjectNames[0]}</CompactTag>
+                  {subjectNames.length > 1 && <CompactTag><bdi dir="ltr">+{subjectNames.length - 1}</bdi></CompactTag>}
+               </span> : teacher.specialization && <CompactTag>{teacher.specialization}</CompactTag>,
                classNames !== '-' ? <span className="min-w-0 truncate">{classNames}</span>
                   : teacher.phone && <CompactValue>{teacher.phone}</CompactValue>,
             ]}
@@ -70,10 +85,16 @@ const TeacherCard = ({ data }) => {
          {...cardProps}
          avatar={<NAvatar src={teacher?.image} fallback={teacher.name} size="lg" version={avatarVersion(teacher?.image, teacher?.updatedAt)} />}
          name={teacher.name}
-         meta={teacher.specialization && (
-            <NBadge className="rounded-full bg-primary/10 text-primary ring-1 ring-inset ring-primary/20">
-               {teacher.specialization}
-            </NBadge>
+         meta={(
+            <>
+               {subjectNames.length ? (
+                  <span className="flex flex-wrap gap-1" title={subjectNames.join(', ')}>
+                     {subjectNames.slice(0, VISIBLE_SUBJECTS).map(name => <NBadge key={name} className={TAG}>{name}</NBadge>)}
+                     {hiddenSubjects > 0 && <NBadge className={TAG}><bdi dir="ltr">+{hiddenSubjects}</bdi></NBadge>}
+                  </span>
+               ) : teacher.specialization && <NBadge className={TAG}>{teacher.specialization}</NBadge>}
+               {teacher.loginStatus === 'pending' && <NBadge className={`w-fit ${PENDING}`}>{t('staff.invitation.accessPending')}</NBadge>}
+            </>
          )}
       >
          {/* NCardInfo truncates to the card width, so a long email

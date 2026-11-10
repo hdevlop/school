@@ -17,6 +17,7 @@ import {
   rolePermissionsTable,
   credentialSetupSessionsTable,
   credentialSetupRequirementsTable,
+  oauthAccountsTable,
   Owned, ownershipCondition, join, where, when, ownedIds, own as najmOwn,
   ScopeContext, OwnershipToken,
   Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, PermissionGuard,
@@ -40,6 +41,7 @@ export {
   rolePermissionsTable,
   credentialSetupSessionsTable,
   credentialSetupRequirementsTable,
+  oauthAccountsTable,
 };
 
 // Shared ownership engine from najm-auth; `own` below applies School's roles.

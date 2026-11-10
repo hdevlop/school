@@ -24,7 +24,7 @@ function fixture(status = 'not_started') {
     hiddenIds: async () => [], previousYearSubjects: async () => [], addModelSubject: async () => {},
     // Planning gives the ready class exams in October and the college class in October to December: Contrôles 1 to 3 of semester 1.
     planningMonths: async () => [{ classId: 'school-ready', months: { '2026-10': [{ date: '2026-10-20' }] } }, { classId: 'school-college', months: { '2026-10': [{ date: '2026-10-21' }], '2026-11': [{ date: '2026-11-18' }], '2026-12': [{ date: '2026-12-16' }] } }] as Array<{ classId: string; months: Record<string, Array<{ date?: string }>> }>,
-    relinkTeachers: async () => {}, levelSubjectCodes: async () => [], updateSheet: async (_id: string, data: any) => { Object.assign(row.sheet, data); row.sheet.revision++; return row.sheet; },
+    relinkTeachers: async () => {}, sheetRosters: async () => [], activeRosters: async () => new Map(), levelSubjectCodes: async () => [], updateSheet: async (_id: string, data: any) => { Object.assign(row.sheet, data); row.sheet.revision++; return row.sheet; },
     yearConfig: async () => ({ schoolCode: 'SYNTHETIC-SCHOOL', massarYearId: 19, schoolName: 'Synthetic school', academy: 'Synthetic academy', direction: 'Synthetic direction', templateFileId: 'template.xlsx' }),
     sheets: async () => [row], completedMarkCounts: async () => [{ sheetId: row.sheet.id, completed: marks.filter(mark => mark.mark !== null || mark.absence === 'justified').length }], updateRound: async (_id: string, status: string) => { row.round.status = status; },
   };
@@ -46,7 +46,7 @@ describe('Massar waiting class', () => {
       pendingStudents: [{ studentCode: 'F200000009', name: 'تلميذ منتظر', dateOfBirth: '14-01-2019', massarStudentId: null, position: 0 }] }] } as any;
     setup.appStudents.push({ ...setup.appStudents[0], id: 'school-pupil', studentCode: '8800009/26', name: 'WAITING PUPIL', dateOfBirth: '2019-01-14', sectionId: 'section-b' });
     const calls: string[] = [];
-    const repository = { lock: async () => {}, setup: async () => setup, sheets: async () => [], relinkTeachers: async () => {}, allRoundsForManagement: async () => [], planningMonths: async () => [] };
+    const repository = { lock: async () => {}, setup: async () => setup, sheets: async () => [], relinkTeachers: async () => {}, sheetRosters: async () => [], activeRosters: async () => new Map(), allRoundsForManagement: async () => [], planningMonths: async () => [] };
     const students = { update: async (id: string, data: object) => { calls.push(`update ${id} ${JSON.stringify(data)}`); }, create: async (data: { studentCode: string; gender: string }) => { calls.push(`create ${data.studentCode} ${data.gender}`); } };
     const enrollments = { placeFromSource: async (id: string, place: { sectionId: string }) => { calls.push(`place ${id} ${place.sectionId}`); } };
     const service = new MassarService(repository as any, new MassarValidator(), {} as any, students as any, enrollments as any);
@@ -111,7 +111,7 @@ describe('Marks a Massar file already holds', () => {
       // A filled cell is "student:code:mark"; no mark stands for a justified absence.
       filledCells: async (id: string) => (filled[id] ?? []).map(cell => { const [studentId, componentCode, mark] = cell.split(':'); return { studentId, componentCode, mark: mark || null, absence: mark ? 'none' : 'justified' }; }),
       saveMarks: async (id: string, marks: unknown[]) => { saved[id] = marks; },
-      updateSheet: async (id: string, data: { status: string }) => { statuses[id] = data.status; },
+      updateSheet: async (id: string, data: { status?: string }) => { statuses[id] = data.status ?? 'new revision'; },
     };
     const service = new MassarService(repository as any, new MassarValidator(), {} as any, {} as any, {} as any);
     return { run: (files: unknown[]) => (service as any).marksFromFiles(files, registrar) as Promise<{ added: number; replaced: number }>, saved, statuses };
@@ -135,7 +135,8 @@ describe('Marks a Massar file already holds', () => {
     const primary = importer('components', [{ id: 'primary', term: 1, exam: 1, status: 'in_progress', components: [{ code: '1001' }] }]);
     expect(await primary.run([{ className: '1APIC-1', level: '1APIC', subjectCode: '0012', term: 1, exam: 1, students: [student('S1', [['1001', 8], ['9999', 5]])] }])).toEqual({ added: 1, replaced: 0 });
     expect(primary.saved).toEqual({ primary: [{ studentId: 'student-1', componentCode: '1001', mark: 8, absence: 'none' }] });
-    expect(primary.statuses).toEqual({});
+    // The status stays, but the revision moves on: a grid open on screen shows the file's marks at once.
+    expect(primary.statuses).toEqual({ primary: 'new revision' });
   });
 });
 describe('Massar sheet workflow', () => {
@@ -193,6 +194,25 @@ describe('Massar sheet workflow', () => {
     await refused(planService([]).savePlan({ primary: 2, college: 2, dates: [{ term: 1, exam: 1, dueDate: '2030-01-01' }] }), 422); // Outside the year.
     await refused(planService([], 'closed').savePlan({ primary: 2, college: 3, dates: [] }), 409);
     expect(getTransactionalMethods(MassarService).map(method => method.propertyKey)).toContain('savePlan');
+  });
+  it('gives every grid, sent or not, the class as it is now, and leaves an unchanged one alone', async () => {
+    const { service, repository, row } = fixture();
+    const arrival = { id: 'student-2', studentCode: 'SYNTHETIC2', name: 'Late arrival', dateOfBirth: '02-02-2018', massarStudentId: 'hidden-2', position: 1 };
+    const same = { ...row.sheet.roster[0] }, reordered = Object.fromEntries(Object.entries(same).reverse()); // jsonb returns its own key order.
+    const replaced: Array<[string, string[], string | undefined]> = [];
+    Object.assign(repository, {
+      sheetRosters: async () => [{ id: 'open', massarClassId: 'class-1', roster: [reordered], status: 'in_progress' }, { id: 'sent', massarClassId: 'class-1', roster: [same], status: 'exported' },
+        { id: 'unchanged', massarClassId: 'class-2', roster: [reordered], status: 'exported' }],
+      activeRosters: async () => new Map([['class-1', [same, arrival]], ['class-2', [same]]]),
+      replaceSheetRoster: async (id: string, roster: Array<{ id: string }>, status?: string) => { replaced.push([id, roster.map(student => student.id), status]); },
+    });
+    await service.sheets('round-1');
+    expect(replaced).toEqual([['open', ['student-1', 'student-2'], undefined], ['sent', ['student-1', 'student-2'], 'changed_after_export']]);
+  });
+  it('counts only the marks of students still on the grid', () => {
+    const { row } = fixture();
+    const marks = [{ studentId: 'student-1', componentCode: '1001', mark: 8, absence: 'none' }, { studentId: 'withdrawn', componentCode: '1001', mark: 9, absence: 'none' }] as any;
+    expect(summarizeSheet(row as any, marks)).toMatchObject({ total: 1, missing: 0 });
   });
   it('lists progress using aggregate counts without reading mark records', async () => {
     const { service, repository } = fixture();

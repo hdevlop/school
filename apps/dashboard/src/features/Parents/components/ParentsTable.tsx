@@ -66,10 +66,11 @@ function ParentsTable() {
     isCreating,
     isDeleting
   } = useParents();
-  const filteredParents = useMemo(() => (parents || []).filter((parent) =>
+  const sortedParents = useMemo(() => [...(parents || [])].sort(compareParentActivity), [parents]);
+  const filteredParents = useMemo(() => sortedParents.filter((parent) =>
     matchesAnyChild(parent.childPlacements, scope.classId, scope.sectionId)
-      && matchesParent(parent)).sort(compareParentActivity),
-  [parents, scope.classId, scope.sectionId, matchesParent]);
+      && matchesParent(parent)),
+  [sortedParents, scope.classId, scope.sectionId, matchesParent]);
 
   const { openDialog, confirmDelete } = useDialog();
 

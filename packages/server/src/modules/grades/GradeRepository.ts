@@ -152,8 +152,8 @@ export class GradeRepository {
 
   /**
    * Every student's marks and possible marks in one section this year, per
-   * subject, to place one student among them. Read past ownership on purpose: only the rank leaves
-   * the service, so a parent sees their child's place, never another child's marks.
+   * subject, to place one student among them. Read past ownership on purpose: only the rank and
+   * the class's mean leave the service, so a parent sees their child's place, never another child's marks.
    */
   async sectionTotals(sectionId: string) {
     return this.db.select({

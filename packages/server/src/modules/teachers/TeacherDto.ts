@@ -18,7 +18,7 @@ const teacherPersonalSchema = z.object({
   cin: cinField,
   email: emailField,
   phone: phoneField,
-  address: addressField,
+  address: addressField.unwrap().trim().min(1, 'Address is required'),
   gender: genderEnum.optional(),
   emergencyContact: nameField.optional(),
   emergencyPhone: phoneField.optional(),

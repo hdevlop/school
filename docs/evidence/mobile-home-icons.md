@@ -6,7 +6,7 @@ Generated with the built-in imagegen tool, then copied unchanged into School. No
 - One square RGBA atlas, exactly six columns by six rows; real alpha transparency is preserved.
 - Dimensions: 1254 by 1254 pixels, 209 by 209 pixels per cell.
 - File size: 1,373,044 bytes. SHA-256: `7bf72eb8c4bae7e2ae7ad3a9cceb44088100b7e3a6e79a808ca3431fc1f8612e`.
-- Served asset: `apps/dashboard/public/images/home/feature-icons-v2.webp`, the same atlas resized with sharp (Lanczos) to 864 by 864 pixels (144 per cell, enough for 48-pixel tiles at 3x) and encoded as WebP (quality 82, alpha quality 90): about 183 KB instead of 1.37 MB. Nothing else was changed.
+- Served asset: `apps/dashboard/public/images/home/feature-icons-v3.webp`, made from the original 1254-pixel PNG atlas (`feature-icons-v1.png`, in git history before 4509c8e). The generated Parents illustration (cell 13) reached about 8% of a cell into Staff (cell 14), so each tile showed a strip of the other: v3 re-cuts the atlas. Every opaque shape belongs to the cell holding most of its pixels; a cell's shapes are scaled down only when they do not fit with a 4% margin, then centred in their cell. The atlas is then resized with sharp (Lanczos) to 864 by 864 pixels (144 per cell, enough for 48-pixel tiles at 3x) and encoded as WebP (quality 82, alpha quality 90): about 167 KB.
 - Cell order: `apps/dashboard/src/features/Home/config/homeIllustrations.ts`.
 - The Home uses CSS background positioning; the bitmap is not cropped, recoloured, or edited in code.
 - The original draft had a Home illustration in its final cell. The targeted imagegen edit below replaces that cell with Alerts for the final atlas.

@@ -23,7 +23,7 @@ the page hydrates. If that read fails, the browser asks for the order as before
 and the cards appear once it answers. See [phone startup](../evidence/phone-startup.md).
 
 The generated 36-icon transparent atlas lives at
-`apps/dashboard/public/images/home/feature-icons-v2.webp`. Its exact generation
+`apps/dashboard/public/images/home/feature-icons-v3.webp`. Its exact generation
 and edit prompts are recorded in [the icon evidence](../evidence/mobile-home-icons.md).
 
 ## Permissions

@@ -16,8 +16,6 @@ test.each([false, true])('attendance controls remain available with an empty reg
           { name: 'date', label: 'Date', type: 'date', placeholder: 'Date', value: '2026-10-07', onChange: () => {} },
           { name: 'search', label: 'Search', type: 'text', placeholder: 'Name or code', value: '', onChange: () => {} },
         ]}
-        canReset
-        onReset={() => {}}
       >
         <span>Attendance summary</span>
       </RosterFilters>
@@ -33,7 +31,6 @@ test.each([false, true])('attendance controls remain available with an empty reg
   expect(markup).toContain('aria-label="Class"');
   expect(markup).toContain('aria-label="Date"');
   expect(markup).toContain('aria-label="Search"');
-  expect(markup).toContain('Reset filters');
   expect(markup).toContain('Attendance summary');
   expect(markup).toContain(isFilteredEmpty ? 'No matching students' : 'Empty section');
 });
@@ -51,15 +48,12 @@ test('loading replaces every filter, count and action with non-interactive place
           { name: 'search', label: 'Search', type: 'text', placeholder: 'Search name or code', value: '', onChange: noop },
           { name: 'status', label: 'Status', type: 'select', placeholder: 'All statuses', value: '', onChange: noop },
         ]}
-        canReset
-        onReset={noop}
       >
         <RosterHeader
           loading
           hasChanges={false}
           stats={{ total: 0, present: 0, absent: 0, late: 0, unmarked: 0 }}
           onSubmit={noop}
-          onMarkAllPresent={noop}
           print={<button type="button">Print attendance</button>}
         />
       </RosterFilters>
@@ -67,7 +61,7 @@ test('loading replaces every filter, count and action with non-interactive place
   );
   expect(markup).toContain('aria-busy="true"');
   expect(markup.match(/data-roster-loading-filter=/g)).toHaveLength(5);
-  for (const action of ['reset', 'mark-all', 'print', 'submit']) {
+  for (const action of ['print', 'submit']) {
     expect(markup).toContain(`data-roster-loading-action="${action}"`);
   }
   expect(markup).toContain('data-roster-loading-counts');

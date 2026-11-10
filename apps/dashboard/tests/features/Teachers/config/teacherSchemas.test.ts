@@ -17,6 +17,7 @@ const personal = {
   cin: 'AB123456',
   email: 'youssef@example.com',
   phone: '212600000000',
+  address: '12 Rue Hassan II, Rabat',
   emergencyPhone: '212611111111',
 };
 
@@ -27,6 +28,19 @@ const assignments = {
 };
 
 describe('teacherPersonalSchema', () => {
+  it.each([undefined, '', '   '])('requires an address when creating or editing (%j)', address => {
+    for (const requireEmail of [true, false]) {
+      const schemas = createTeacherSchemas(english, { requireEmail });
+      expect(schemas.personal.safeParse({ ...personal, address }).success).toBe(false);
+      expect(schemas.full.safeParse({ ...personal, ...professional, ...assignments, address }).success).toBe(false);
+    }
+  });
+
+  it('trims the address and keeps the length limit', () => {
+    expect(teacherPersonalSchema.parse({ ...personal, address: '  Rabat  ' }).address).toBe('Rabat');
+    expect(teacherPersonalSchema.safeParse({ ...personal, address: 'A'.repeat(501) }).success).toBe(false);
+  });
+
   it('requires email for a new invitation, while allowing an existing phone-only profile', () => {
     expect(teacherPersonalSchema.safeParse({ ...personal, email: '' }).success).toBe(false);
     expect(teacherPersonalSchema.safeParse({ ...personal, email: '   ' }).success).toBe(false);

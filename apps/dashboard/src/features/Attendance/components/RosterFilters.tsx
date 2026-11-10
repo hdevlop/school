@@ -1,8 +1,8 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { ComboboxInput, DateInput, NButton, NSkeleton, SelectInput, TextInput, cn, useCardViewport } from 'najm-kit';
-import { RotateCcw, Search } from 'lucide-react';
+import { ComboboxInput, DateInput, NSkeleton, SelectInput, TextInput, cn, useCardViewport } from 'najm-kit';
+import { Search } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { parseISO } from 'date-fns';
 
@@ -32,10 +32,8 @@ function RosterFilterInput({ filter, compact = false, loading = false }: { filte
   return <SelectInput value={filter.value} onChange={filter.onChange} items={filter.options ?? []} placeholder={filter.placeholder} ariaLabel={filter.label} disabled={filter.disabled} showIcon={false} className="w-full" />;
 }
 
-export default function RosterFilters({ filters, onReset, canReset, children, loading = false }: {
+export default function RosterFilters({ filters, children, loading = false }: {
   filters: RosterFilter[];
-  onReset: () => void;
-  canReset: boolean;
   children: ReactNode;
   loading?: boolean;
 }) {
@@ -46,45 +44,41 @@ export default function RosterFilters({ filters, onReset, canReset, children, lo
   const statuses = filters.filter((filter) => filter.name === 'status');
   const scope = filters.filter((filter) => filter !== date && filter.type !== 'text' && filter.name !== 'status');
   const [first, second, ...more] = scope;
-  const resetLabel = t('attendance.roster.resetFilters');
 
-  // Search gets the first full-width row. Scope controls share the next row,
-  // with date and status together underneath on phones.
+  // Phones: search on its own row, scope controls on the next, date and status
+  // together underneath. Desktop: one line, the counts and actions at its end.
   return (
-    <section aria-label={t('common.table.filterRegion')} aria-busy={loading || undefined} className="grid shrink-0 grid-cols-2 items-center gap-2 lg:flex lg:flex-wrap">
+    <section data-roster-filters aria-label={t('common.table.filterRegion')} aria-busy={loading || undefined} className="grid shrink-0 grid-cols-2 items-center gap-2 lg:flex lg:flex-wrap">
       {searches.map((filter) => (
-        <div key={filter.name} className={cn('col-span-2 min-w-0 lg:w-full', filter.className)}>
+        <div key={filter.name} className={cn('col-span-2 min-w-0 lg:w-72', filter.className)}>
           <RosterFilterInput filter={filter} loading={loading} />
         </div>
       ))}
       {first && (
-        <div className={cn('min-w-0 lg:w-56', first.className)}>
+        <div className={cn('min-w-0 lg:w-48', first.className)}>
           <RosterFilterInput filter={first} loading={loading} />
         </div>
       )}
       {second && (
-        <div className={cn('min-w-0 lg:w-56', second.className)}>
+        <div className={cn('min-w-0 lg:w-48', second.className)}>
           <RosterFilterInput filter={second} loading={loading} />
         </div>
       )}
       {more.map((filter) => (
-        <div key={filter.name} className={cn('col-span-2 min-w-0 lg:w-56', filter.className)}>
+        <div key={filter.name} className={cn('col-span-2 min-w-0 lg:w-48', filter.className)}>
           <RosterFilterInput filter={filter} loading={loading} />
         </div>
       ))}
       {date && (
-        <div className={cn('min-w-0 lg:w-56', date.className)}>
+        <div className={cn('min-w-0 lg:w-48', date.className)}>
           <RosterFilterInput filter={date} compact={compact} loading={loading} />
         </div>
       )}
       {statuses.map((filter) => (
-        <div key={filter.name} className={cn('min-w-0 lg:w-56', filter.className)}>
+        <div key={filter.name} className={cn('min-w-0 lg:w-48', filter.className)}>
           <RosterFilterInput filter={filter} loading={loading} />
         </div>
       ))}
-      {loading ? <NSkeleton data-roster-loading-action="reset" className="hidden size-10 shrink-0 lg:order-1 lg:ms-auto lg:flex" /> : <NButton variant="outline" onClick={onReset} disabled={!canReset} aria-label={resetLabel} title={resetLabel} className="hidden h-10 w-10 shrink-0 p-0 lg:order-1 lg:ms-auto lg:flex">
-        <RotateCcw className="h-4 w-4" />
-      </NButton>}
       {children}
     </section>
   );

@@ -17,6 +17,8 @@ export const schoolApp = defineNajmApp({
       '/forgot-password',
       '/reset-password',
       '/change-password',
+      // Google sign-in lands here to finish the session it opened.
+      '/auth/oauth/callback',
       '/manifest.webmanifest',
     ],
     protectedRoutes: ['/:path*'],

@@ -50,7 +50,8 @@ export const createTeacherSchemas = (t: T, { requireEmail = true } = {}) => {
     t('validationMessages.dateMustBeInYyyyMmDdMmDd'),
   );
   const cinField = z.string().min(7, t('validationMessages.cinMustBeAtLeast7Characters')).max(20, t('validationMessages.cinTooLong'));
-  const addressField = z.string().max(500, t('validationMessages.addressTooLong')).optional();
+  const addressField = z.string().trim().min(1, t('validationMessages.addressIsRequired'))
+    .max(500, t('validationMessages.addressTooLong'));
   const validNumber = () => z.number({ error: t('validationMessages.mustBeAValidNumber') });
 
   /** Step 1 — who they are. */

@@ -5,6 +5,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
+import { SCHOOL_HOME_PATH } from '@/najm.config';
 import { NajmScroll, NButton, NEmptyState, NErrorState, NForbiddenState, NLoadingState, NPageHeaderActions, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
 import { AlertTriangle, ArrowLeft, Bus, CalendarCheck, DollarSign, GraduationCap, Pencil, User } from 'lucide-react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
@@ -16,6 +17,7 @@ import AttendanceTab from './Attendance';
 import GradesTab from './Grades';
 import LeftSidebar from './LeftSidebar';
 import SectionTitle from './SectionTitle';
+import MobileHeader from './MobileHeader';
 import { useStudentProfile } from '@/features/Students/hooks/useStudentProfile';
 import { useTranslation } from 'najm-i18n/react';
 import TransportTab from './Transport';
@@ -134,6 +136,11 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
   return (
     <NajmScroll axis="y" className="h-full min-h-0 w-full flex-1">
     <div className="flex min-h-full min-w-0 flex-col gap-2 fit:h-full">
+      {/* Below md, where the page header shows the menu button: a back arrow and who the student is. */}
+      <div className="md:hidden">
+        <MobileHeader student={student} onBack={() => router.push(SCHOOL_HOME_PATH)} onEdit={student && !isStudentLoading && canEdit ? handleEdit : undefined} />
+      </div>
+      <div className="max-md:hidden">
       <NPageHeader
         icon={FEATURE_ICONS.students}
         title={student?.name ?? t('students.profile.detailsTitle')}
@@ -165,6 +172,7 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
           </NButton>
         </NPageHeaderActions>
       </NPageHeader>
+      </div>
 
       {/* A refused or missing record is not an empty student: without this the
           tabs draw "Unknown", no absences and a zero balance. */}

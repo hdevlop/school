@@ -17,12 +17,13 @@ type StudentListRow = Parameters<typeof isStudentDisabled>[0] & {
   class?: { name?: string | null } | null;
   section?: { name?: string | null } | null;
 };
+const studentListCollator = new Intl.Collator('fr', { numeric: true });
 
 /** Current students first, then PS → MS → GS and the following levels. */
 export const compareStudentListRows = (left: StudentListRow, right: StudentListRow) =>
   compareStudentActivity(left, right)
   || compareClassNames(left.class?.name ?? '', right.class?.name ?? '')
-  || (left.section?.name ?? '').localeCompare(right.section?.name ?? '', 'fr', { numeric: true })
-  || (left.name ?? '').localeCompare(right.name ?? '', 'fr', { numeric: true });
+  || studentListCollator.compare(left.section?.name ?? '', right.section?.name ?? '')
+  || studentListCollator.compare(left.name ?? '', right.name ?? '');
 import { compareClassNames } from '@sms/contracts';
 import { INACTIVE_ROW_CLASS } from '@/shared/inactiveRow';

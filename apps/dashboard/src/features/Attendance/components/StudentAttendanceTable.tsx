@@ -237,11 +237,6 @@ function StudentAttendanceTableForYear() {
     () => filterRoster(filteredStudents, { search, status }, roster.getStatus),
     [filteredStudents, search, status, roster.getStatus],
   );
-  const resetFilters = () => {
-    setSelectedClassId('all');
-    setSearch('');
-    setStatus('');
-  };
   // The print menu picks the marks, so it prints the whole class or section
   // whatever the search and status filters show. One section names its class
   // in the sheet's header, so only the whole school needs a class column.
@@ -410,6 +405,7 @@ function StudentAttendanceTableForYear() {
           had loaded (3.5 s on a JHL phone), and mounting the real one then
           refetched its menus' settings and unread count. */}
       <NPageHeader
+        mobileBack
         icon={FEATURE_ICONS.studentAttendance}
         title={t('navigation.studentAttendance')}
         subtitle={isCountUnknown(studentsError, filteredStudents, isStudentsLoading || isSectionsLoading || isClassesLoading) ? undefined : t('attendance.subtitle.studentCount', { count: filteredStudents.length })}
@@ -418,40 +414,37 @@ function StudentAttendanceTableForYear() {
         )}
       >
         <NPageHeaderActions>
-          <RosterStats stats={roster.stats} loading={isRosterLoading} />
+          <RosterStats stats={roster.stats} loading={isRosterLoading} className="lg:hidden" />
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
       </NPageHeader>
 
-      <RosterFilters
-        loading={isRosterLoading}
-        filters={filters}
-        onReset={resetFilters}
-        canReset={!isAllClasses || !!search || !!status}
-      >
-        <RosterHeader
-          loading={isRosterLoading}
-          showMobileSubmit={false}
-          showStats={false}
-          print={(
-            <RosterPrintMenu
-              counts={roster.stats}
-              onPrint={printRoster}
-              disabled={filteredStudents.length === 0 || isStudentsLoading || isAttendanceLoading || !!attendanceError || !!studentsError}
-            />
-          )}
-          hasChanges={roster.hasChanges}
-          isSubmitting={isSubmitting}
-          stats={roster.stats}
-          onSubmit={roster.handleSubmit}
-          onMarkAllPresent={() => roster.markAllAs('present')}
-          canMarkAllPresent={canMark && filteredStudents.length > 0 && !isRosterLoading && !attendanceError && !studentsError}
-          canSubmit={canSubmit && !isRosterLoading && !attendanceError && !studentsError}
-          submitTitle={submitTitle}
-        />
-      </RosterFilters>
-
       <NTable<any>
+        headerSlot={(
+          <RosterFilters
+            loading={isRosterLoading}
+            filters={filters}
+          >
+            <RosterHeader
+              loading={isRosterLoading}
+              showMobileSubmit={false}
+              showStats={false}
+              print={(
+                <RosterPrintMenu
+                  counts={roster.stats}
+                  onPrint={printRoster}
+                  disabled={filteredStudents.length === 0 || isStudentsLoading || isAttendanceLoading || !!attendanceError || !!studentsError}
+                />
+              )}
+              hasChanges={roster.hasChanges}
+              isSubmitting={isSubmitting}
+              stats={roster.stats}
+              onSubmit={roster.handleSubmit}
+              canSubmit={canSubmit && !isRosterLoading && !attendanceError && !studentsError}
+              submitTitle={submitTitle}
+            />
+          </RosterFilters>
+        )}
         showExportButton
         exportTitle={`${t('attendance.roster.studentTitle')} - ${roster.selectedDate}`}
         showPrintButton={false}
@@ -465,7 +458,7 @@ function StudentAttendanceTableForYear() {
         isFilteredEmpty={filteredStudents.length > 0 && visibleStudents.length === 0}
         columns={columns}
         loading={isRosterLoading}
-        classNames={{ tableHeader: isRosterLoading ? ROSTER_LOADING_TABLE_HEADER : undefined }}
+        classNames={{ header: styles.toolbar, tableHeader: isRosterLoading ? ROSTER_LOADING_TABLE_HEADER : undefined }}
         error={attendanceError || (hasFailedToLoad(studentsError, filteredStudents) ? studentsError : null)}
         renderError={(currentError) => (
           isAuthorizationError(currentError)
@@ -497,9 +490,7 @@ function StudentAttendanceTableForYear() {
       {canEdit && <RosterMobileSubmit
         count={roster.submissionCount}
         onSubmit={roster.handleSubmit}
-        onMarkAllPresent={() => roster.markAllAs('present')}
         canSubmit={canSubmit && !isRosterLoading && !attendanceError && !studentsError}
-        canMarkAllPresent={canMark && filteredStudents.length > 0 && !isRosterLoading && !attendanceError && !studentsError}
         isSubmitting={isSubmitting}
         loading={isRosterLoading}
       />}

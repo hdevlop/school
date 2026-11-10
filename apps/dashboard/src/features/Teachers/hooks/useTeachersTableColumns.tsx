@@ -16,7 +16,12 @@ export const useTeachersTableColumns = () => {
       header: t('teachers.table.name'),
       cell: ({ row }) => {
         const teacher = row.original;
-        return <NAvatar src={teacher?.image} title={teacher.name} size='sm' version={avatarVersion(teacher?.image, teacher?.updatedAt)} />;
+        return (
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <NAvatar src={teacher?.image} title={teacher.name} size='sm' version={avatarVersion(teacher?.image, teacher?.updatedAt)} />
+            {teacher.loginStatus === 'pending' && <NBadge className="bg-amber-100 font-medium text-amber-900 ring-1 ring-inset ring-amber-300 dark:bg-amber-950 dark:text-amber-200 dark:ring-amber-700">{t('staff.invitation.accessPending')}</NBadge>}
+          </div>
+        );
       },
       enableSorting: true,
     },

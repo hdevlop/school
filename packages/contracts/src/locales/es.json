@@ -382,6 +382,21 @@
     }
   },
   "auth": {
+    "oauth": {
+      "or": "o",
+      "continueWithGoogle": "Continuar con Google",
+      "finishing": "Completando el inicio de sesión con Google…",
+      "backToLogin": "Volver a iniciar sesión",
+      "errors": {
+        "oauth_signup_disabled": "Ninguna cuenta usa esta dirección de Google. Inicia sesión con tu contraseña o pide al colegio que añada esta dirección de Gmail a tu cuenta.",
+        "oauth_account_link_required": "Esta dirección de Google pertenece a una cuenta que aún no está vinculada. Inicia sesión con tu contraseña.",
+        "oauth_account_inactive": "Tu cuenta aún no está activa. Abre el correo de invitación o contacta con el colegio.",
+        "oauth_credential_setup_required": "Inicia sesión primero con tu contraseña temporal y elige tu propia contraseña.",
+        "oauth_access_denied": "Se canceló el inicio de sesión con Google.",
+        "oauth_state_invalid": "El inicio de sesión con Google tardó demasiado o se abrió en otra pestaña. Inténtalo de nuevo.",
+        "failed": "No se pudo iniciar sesión con Google. Inténtalo de nuevo."
+      }
+    },
     "page": {
       "logoutPending": "Cerrando sesión…",
       "logoutFailed": "No se pudo cerrar la sesión. Inténtalo de nuevo.",
@@ -514,8 +529,7 @@
       "confirmPasswordRequired": "Confirma tu contraseña",
       "passwordsMismatch": "Las contraseñas no coinciden",
       "fullNameRequired": "Introduce tu nombre completo",
-      "passwordUppercase": "La contraseña debe contener al menos una letra mayúscula",
-      "passwordLowercase": "La contraseña debe contener al menos una letra minúscula",
+      "passwordLetter": "La contraseña debe contener al menos una letra",
       "passwordNumber": "La contraseña debe contener al menos un número"
     },
     "users": {
@@ -2141,12 +2155,9 @@
       "noAssignments": "Sin asignaciones de profesores",
       "noStudents": "No se encontraron alumnos.",
       "noStudentsInSection": "No se encontraron alumnos en la sección seleccionada.",
-      "resetFilters": "Restablecer filtros",
       "search": "Buscar",
       "submitError": "Error al guardar la asistencia",
-      "unmarked": "Sin registrar",
-      "markAllPresent": "Marcar todos presentes",
-      "markAllPresentShort": "Todos presentes"
+      "unmarked": "Sin registrar"
     }
   },
   "fees": {
@@ -4492,6 +4503,11 @@
         "downloading": "Descargando: {{percent}} %",
         "downloadingSize": "Descargando: {{size}} MB"
       },
+      "withoutBackup": {
+        "title": "Guarda una copia de seguridad antes de continuar",
+        "description": "No has descargado una copia de los datos actuales. Guarda una primero para poder recuperar los datos sustituidos o eliminados por esta operación. ¿Quieres continuar sin copia de seguridad?",
+        "continue": "Continuar sin copia de seguridad"
+      },
       "restore": {
         "title": "Restaurar una copia de seguridad",
         "description": "Reemplaza todos los datos actuales del centro por una copia de seguridad creada con esta versión de la aplicación. Se cierra la sesión de todos.",
@@ -4500,7 +4516,7 @@
         "file": "Archivo de copia de seguridad (.zip)",
         "madeOn": "Creada el {{date}}",
         "safetyTitle": "Descargar los datos actuales",
-        "safetyDescription": "Guarda una copia del centro tal como está ahora, por si necesitas volver atrás.",
+        "safetyDescription": "Descarga una copia de los datos actuales antes de restaurar para poder recuperarlos. Puedes continuar sin descargarla.",
         "safetyDone": "Datos actuales descargados.",
         "confirm": "Escribe {{word}} para confirmar",
         "confirmWord": "RESTAURAR",
@@ -5063,7 +5079,11 @@
           "insufficient": "Insuficiente"
         },
         "rank": "Puesto",
-        "toWorkOn": "Por reforzar"
+        "toWorkOn": "Por reforzar",
+        "aboveClass": "{{diff}} por encima de la media de la clase ({{average}})",
+        "belowClass": "{{diff}} por debajo de la media de la clase ({{average}})",
+        "levelWithClass": "Igual a la media de la clase ({{average}})",
+        "vsClass": "{{diff}} respecto a la clase"
       },
       "feeDetails": {
         "fee": "Cuota",
@@ -5085,7 +5105,15 @@
         "oldestUnpaid": "Cuota impagada más antigua",
         "assignedFees": "Cuotas asignadas",
         "feesWithInstallments": "{{fees}} cuota(s) con {{installments}} plazo(s) en total",
-        "lastPayment": "Último pago"
+        "lastPayment": "Último pago",
+        "balanceDue": "Saldo pendiente",
+        "overdueAlert": "{{count}} plazo(s) impagado(s) · {{amount}}",
+        "overdueSince": "Vencido desde el {{date}} ({{count}} día{{plural}})",
+        "callHint": "Llamar a {{name}}",
+        "remindHint": "Escribir a {{name}} por WhatsApp",
+        "reminderMessage": "Hola {{parent}}, le recordamos que {{count}} plazo(s) de las cuotas de {{student}} están vencidos, por un total de {{amount}}. Le rogamos regularizar lo antes posible. Gracias.",
+        "settled": "Saldado",
+        "allSettled": "Todas las cuotas están saldadas"
       }
     },
     "title": "Título",
@@ -7265,6 +7293,10 @@
         "save": "Guardar"
       },
       "printAll": "Imprimir todas las clases",
+      "printOpen": "Solo la asignatura abierta",
+      "printClass": "Todas las asignaturas de {{name}}",
+      "printLevel": "Todas las asignaturas de las clases {{level}}",
+      "printSheets": "{{count}} hojas",
       "sideClasses": "Clases",
       "collapseClasses": "Ocultar la columna de clases",
       "expandClasses": "Mostrar la columna de clases",

@@ -15,7 +15,7 @@ import { teachers, teacherAssignments } from '../teachers/teacherSchema';
 import { examPlanning } from '../examPlanning/ExamPlanningSchema';
 import { massarClasses, massarEnrollments, massarImports, massarLevels, massarMarks, massarRounds, massarSheets, massarSubjects, massarYears } from './massarSchema';
 import { MassarSheet } from './MassarGuards';
-import type { MassarComponent, MassarMark } from '@sms/contracts';
+import type { MassarComponent, MassarMark, MassarSheetStatus, MassarStudent } from '@sms/contracts';
 
 @Repository()
 export class MassarRepository {
@@ -155,7 +155,9 @@ export class MassarRepository {
     return this.db.select({ sheetId: massarMarks.sheetId, completed: sql<number>`count(*)::integer` }).from(massarMarks)
       .innerJoin(massarSheets, eq(massarSheets.id, massarMarks.sheetId))
       .where(and(this.ownedWhere(), eq(massarSheets.academicYearId, this.year.id), eq(massarMarks.academicYearId, this.year.id),
-        roundId ? eq(massarSheets.roundId, roundId) : undefined, sql`(${massarMarks.mark} is not null or ${massarMarks.absence} = 'justified')`))
+        roundId ? eq(massarSheets.roundId, roundId) : undefined, sql`(${massarMarks.mark} is not null or ${massarMarks.absence} = 'justified')`,
+        // A student who left the grid keeps their marks, but they no longer count towards it.
+        sql`exists (select 1 from jsonb_array_elements(${massarSheets.roster}) as listed where listed->>'id' = ${massarMarks.studentId})`))
       .groupBy(massarMarks.sheetId);
   }
   async hiddenIds(sheetId: string) {
@@ -203,13 +205,29 @@ export class MassarRepository {
       target: [massarMarks.sheetId, massarMarks.studentId, massarMarks.componentCode], set: { mark: sql`excluded.mark`, absence: sql`excluded.absence`, updatedBy: actorId, updatedAt: sql`CURRENT_TIMESTAMP` },
     });
   }
-  async activeRoster(classId: string) {
-    const rows = await this.db.select({ id: students.id, studentCode: students.studentCode, name: massarEnrollments.name, dateOfBirth: massarEnrollments.dateOfBirth, massarStudentId: massarEnrollments.massarStudentId, numeric: massarEnrollments.massarStudentIdNumeric, position: massarEnrollments.position })
+  async activeRoster(classId: string) { return (await this.activeRosters(classId)).get(classId) ?? []; }
+  /** Each Massar class's students as a grid lists them, in Massar's order; one class, or all of them. */
+  async activeRosters(classId?: string) {
+    const rows = await this.db.select({ classId: massarEnrollments.massarClassId, id: students.id, studentCode: students.studentCode, name: massarEnrollments.name, dateOfBirth: massarEnrollments.dateOfBirth, massarStudentId: massarEnrollments.massarStudentId, numeric: massarEnrollments.massarStudentIdNumeric, position: massarEnrollments.position })
       .from(massarEnrollments).innerJoin(students, eq(students.id, massarEnrollments.studentId))
       // A sheet follows the Students view: a student withdrawn there, or no longer enrolled this year, is not on it.
       .innerJoin(studentEnrollments, and(eq(studentEnrollments.studentId, students.id), eq(studentEnrollments.academicYearId, this.year.id), isNull(studentEnrollments.leftOn)))
-      .where(and(eq(massarEnrollments.academicYearId, this.year.id), eq(massarEnrollments.massarClassId, classId), isNull(massarEnrollments.leftOn))).orderBy(massarEnrollments.position, students.studentCode);
-    return rows.map(({ numeric, ...row }) => ({ ...row, massarStudentId: numeric && row.massarStudentId !== null ? Number(row.massarStudentId) : row.massarStudentId }));
+      .where(and(eq(massarEnrollments.academicYearId, this.year.id), classId ? eq(massarEnrollments.massarClassId, classId) : undefined, isNull(massarEnrollments.leftOn))).orderBy(massarEnrollments.position, students.studentCode);
+    const rosters = new Map<string, MassarStudent[]>();
+    for (const { classId: owner, numeric, ...row } of rows) {
+      const list = rosters.get(owner) ?? [];
+      list.push({ ...row, massarStudentId: numeric && row.massarStudentId !== null ? Number(row.massarStudentId) : row.massarStudentId });
+      rosters.set(owner, list);
+    }
+    return rosters;
+  }
+  /** Every grid of the year with the student list it was given. */
+  async sheetRosters() {
+    return this.db.select({ id: massarSheets.id, massarClassId: massarSheets.massarClassId, roster: massarSheets.roster, status: massarSheets.status }).from(massarSheets).where(eq(massarSheets.academicYearId, this.year.id));
+  }
+  /** A grid takes its class's current students; marks stay with each student. */
+  async replaceSheetRoster(id: string, roster: MassarStudent[], status?: MassarSheetStatus) {
+    await this.db.update(massarSheets).set({ roster, ...(status ? { status } : {}), revision: sql`${massarSheets.revision} + 1` }).where(and(eq(massarSheets.academicYearId, this.year.id), eq(massarSheets.id, id)));
   }
   async clearForSeedReset() {
     for (const table of [massarMarks, massarSheets, massarRounds, massarEnrollments, massarImports, massarSubjects, massarClasses, massarLevels, massarYears]) await this.db.delete(table);

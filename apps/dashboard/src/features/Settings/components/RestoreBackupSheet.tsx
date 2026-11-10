@@ -13,11 +13,12 @@ import { useBackupDownload } from '../hooks/useBackupDownload';
 import { BACKUP_CONTENT_TABLES, readBackupManifest } from '../utils/backupFiles';
 import { BackupDownloadStatus, BackupRestoreStatus } from './BackupDownloadStatus';
 import { BackupStep, BackupSteps } from './BackupSteps';
+import { BackupWarningDialog } from './BackupWarningDialog';
 
 /**
  * Replaces the whole school with a backup. The file is checked and described
- * first; the current data must be downloaded (when the viewer may) and a word
- * typed before the restore is sent. Everyone is signed out afterwards.
+ * first; a backup of the current data is recommended but optional. A word must
+ * be typed before the restore is sent. Everyone is signed out afterwards.
  */
 export function RestoreBackupSheet({ open, onOpenChange, canDownload }: {
   open: boolean;
@@ -33,6 +34,7 @@ export function RestoreBackupSheet({ open, onOpenChange, canDownload }: {
   const backup = useBackupDownload();
   const savingCurrent = backup.downloading;
   const [currentSaved, setCurrentSaved] = useState(false);
+  const [confirmWithoutBackup, setConfirmWithoutBackup] = useState(false);
   const [typed, setTyped] = useState('');
   const [restoring, setRestoring] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<BackupTransferProgress | null>(null);
@@ -40,10 +42,11 @@ export function RestoreBackupSheet({ open, onOpenChange, canDownload }: {
   const word = t('settings.backup.restore.confirmWord');
   const confirmed = typed.trim().toLocaleUpperCase() === word.toLocaleUpperCase();
   const [confirmBefore, confirmAfter] = t('settings.backup.restore.confirm', { word: '|' }).split('|');
-  const ready = Boolean(file && manifest) && (currentSaved || !canDownload) && confirmed && !busy;
+  const ready = Boolean(file && manifest) && confirmed && !busy;
 
   const reset = () => {
     setFile(null); setManifest(null); setError(null); setCurrentSaved(false); setTyped('');
+    setConfirmWithoutBackup(false);
   };
   const close = () => {
     if (busy) return;
@@ -68,6 +71,7 @@ export function RestoreBackupSheet({ open, onOpenChange, canDownload }: {
 
   const restore = async () => {
     if (!file || !ready) return;
+    setConfirmWithoutBackup(false);
     setRestoring(true);
     setUploadProgress({ loaded: 0, total: file.size });
     setError(null);
@@ -85,6 +89,12 @@ export function RestoreBackupSheet({ open, onOpenChange, canDownload }: {
     window.location.replace('/login');
   };
 
+  const requestRestore = () => {
+    if (!ready) return;
+    if (!currentSaved) { setConfirmWithoutBackup(true); return; }
+    void restore();
+  };
+
   return (
     <FileImportDialog
       open={open}
@@ -93,7 +103,7 @@ export function RestoreBackupSheet({ open, onOpenChange, canDownload }: {
       fileLabel={t('settings.backup.restore.file')}
       accept=".zip,application/zip" fileIcon={FileArchive}
       file={file} onFile={choose} busy={busy} reading={reading} saving={restoring} disabled={false}
-      canSubmit={ready} onSubmit={restore} error={error}
+      canSubmit={ready} onSubmit={requestRestore} error={error}
       submitLabel={t('settings.backup.restore.submit')} destructive hideFooter hideUploadWhenSelected
       notice={<NAlert tone="warning" icon={TriangleAlert} description={t('settings.backup.restore.warning')} />}
     >
@@ -139,13 +149,14 @@ export function RestoreBackupSheet({ open, onOpenChange, canDownload }: {
 
           <BackupStep number={canDownload ? 3 : 2} done={false} last>
             <div className="w-0 min-w-full">
-              <NButton className="w-full" type="button" variant="destructive" loading={restoring} disabled={!ready} onClick={restore}>{t('settings.backup.restore.submit')}</NButton>
+              <NButton className="w-full" type="button" variant="destructive" loading={restoring} disabled={!ready} onClick={requestRestore}>{t('settings.backup.restore.submit')}</NButton>
             </div>
           </BackupStep>
         </BackupSteps>}
 
         {restoring && <BackupRestoreStatus progress={uploadProgress} />}
       </div>
+      <BackupWarningDialog open={open && confirmWithoutBackup} onOpenChange={setConfirmWithoutBackup} onConfirm={restore} />
     </FileImportDialog>
   );
 }

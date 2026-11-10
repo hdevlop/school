@@ -312,7 +312,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
             size="sm"
             onClick={() => router.push('/parents')}
             aria-label={text('backToParents')}
-            className="gap-2"
+            className="gap-2 max-md:hidden"
           >
             <ArrowLeft className="size-4 rtl:rotate-180" />
             <span className="max-sm:hidden">{text('backToParents')}</span>

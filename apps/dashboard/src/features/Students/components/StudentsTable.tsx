@@ -326,6 +326,7 @@ function StudentsTable() {
   return (
     <div data-list-loading={isStudentsLoading || undefined} className='flex flex-col gap-2 w-full h-full min-h-0' onPointerDownCapture={focusTableForKeyboard}>
       <NPageHeader
+        mobileBack
         icon={FEATURE_ICONS.students}
         title={title}
         subtitle={isCountUnknown(error, students, isStudentsLoading) ? undefined : [

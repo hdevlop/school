@@ -382,6 +382,21 @@
     }
   },
   "auth": {
+    "oauth": {
+      "or": "ou",
+      "continueWithGoogle": "Continuer avec Google",
+      "finishing": "Connexion avec Google en cours…",
+      "backToLogin": "Retour à la connexion",
+      "errors": {
+        "oauth_signup_disabled": "Aucun compte n'utilise cette adresse Google. Connectez-vous avec votre mot de passe, ou demandez à l'école d'indiquer cette adresse Gmail sur votre compte.",
+        "oauth_account_link_required": "Cette adresse Google appartient à un compte qui n'y est pas encore lié. Connectez-vous avec votre mot de passe.",
+        "oauth_account_inactive": "Votre compte n'est pas encore actif. Ouvrez l'e-mail d'invitation ou contactez l'école.",
+        "oauth_credential_setup_required": "Connectez-vous d'abord avec votre mot de passe temporaire et choisissez votre propre mot de passe.",
+        "oauth_access_denied": "La connexion avec Google a été annulée.",
+        "oauth_state_invalid": "La connexion avec Google a pris trop de temps ou a été ouverte dans un autre onglet. Veuillez réessayer.",
+        "failed": "Impossible de se connecter avec Google. Veuillez réessayer."
+      }
+    },
     "page": {
       "logoutPending": "Déconnexion…",
       "logoutFailed": "Impossible de vous déconnecter. Réessayez.",
@@ -514,8 +529,7 @@
       "confirmPasswordRequired": "Veuillez confirmer votre mot de passe",
       "passwordsMismatch": "Les mots de passe ne correspondent pas",
       "fullNameRequired": "Veuillez saisir votre nom complet",
-      "passwordUppercase": "Le mot de passe doit contenir au moins une lettre majuscule",
-      "passwordLowercase": "Le mot de passe doit contenir au moins une lettre minuscule",
+      "passwordLetter": "Le mot de passe doit contenir au moins une lettre",
       "passwordNumber": "Le mot de passe doit contenir au moins un chiffre"
     },
     "users": {
@@ -1250,6 +1264,11 @@
         "downloading": "Téléchargement : {{percent}} %",
         "downloadingSize": "Téléchargement : {{size}} Mo"
       },
+      "withoutBackup": {
+        "title": "Sauvegardez vos données avant de continuer",
+        "description": "Vous n'avez pas téléchargé de sauvegarde des données actuelles. Faites-en une d'abord pour pouvoir récupérer les données remplacées ou supprimées par cette opération. Voulez-vous continuer sans sauvegarde ?",
+        "continue": "Continuer sans sauvegarde"
+      },
       "restore": {
         "title": "Restaurer une sauvegarde",
         "description": "Remplace toutes les données actuelles de l'établissement par une sauvegarde créée par cette version de l'application. Tout le monde est déconnecté.",
@@ -1258,7 +1277,7 @@
         "file": "Fichier de sauvegarde (.zip)",
         "madeOn": "Créée le {{date}}",
         "safetyTitle": "Télécharger les données actuelles",
-        "safetyDescription": "Gardez une sauvegarde de l'établissement tel qu'il est maintenant, au cas où il faudrait revenir en arrière.",
+        "safetyDescription": "Téléchargez une sauvegarde des données actuelles avant la restauration pour pouvoir les récupérer. Vous pouvez continuer sans sauvegarde.",
         "safetyDone": "Données actuelles téléchargées.",
         "confirm": "Tapez {{word}} pour confirmer",
         "confirmWord": "RESTAURER",
@@ -2829,12 +2848,9 @@
       "noAssignments": "Aucune affectation d’enseignant",
       "noStudents": "Aucun élève trouvé.",
       "noStudentsInSection": "Aucun élève trouvé dans la section sélectionnée.",
-      "resetFilters": "Réinitialiser les filtres",
       "search": "Rechercher",
       "submitError": "Échec de l'enregistrement de la présence",
-      "unmarked": "Non renseigné",
-      "markAllPresent": "Marquer tout le monde présent",
-      "markAllPresentShort": "Tous présents"
+      "unmarked": "Non renseigné"
     }
   },
   "expenses": {
@@ -5212,7 +5228,11 @@
           "insufficient": "Insuffisant"
         },
         "rank": "Rang",
-        "toWorkOn": "À travailler"
+        "toWorkOn": "À travailler",
+        "aboveClass": "{{diff}} au-dessus de la moyenne de classe ({{average}})",
+        "belowClass": "{{diff}} en dessous de la moyenne de classe ({{average}})",
+        "levelWithClass": "Égale à la moyenne de classe ({{average}})",
+        "vsClass": "{{diff}} par rapport à la classe"
       },
       "feeDetails": {
         "fee": "Frais",
@@ -5234,7 +5254,15 @@
         "oldestUnpaid": "Plus ancienne échéance impayée",
         "assignedFees": "Frais attribués",
         "feesWithInstallments": "{{fees}} frais avec {{installments}} échéance(s) au total",
-        "lastPayment": "Dernier paiement"
+        "lastPayment": "Dernier paiement",
+        "balanceDue": "Reste à payer",
+        "overdueAlert": "{{count}} échéance(s) impayée(s) · {{amount}}",
+        "overdueSince": "Retard depuis le {{date}} ({{count}} jour{{plural}})",
+        "callHint": "Appeler {{name}}",
+        "remindHint": "Écrire à {{name}} sur WhatsApp",
+        "reminderMessage": "Bonjour {{parent}}, nous vous rappelons que {{count}} échéance(s) des frais de {{student}} sont en retard, pour un total de {{amount}}. Merci de régulariser dès que possible.",
+        "settled": "Soldé",
+        "allSettled": "Tous les frais sont réglés"
       }
     },
     "title": "Titre",
@@ -7366,6 +7394,10 @@
         "save": "Enregistrer"
       },
       "printAll": "Imprimer toutes les classes",
+      "printOpen": "La matière ouverte seulement",
+      "printClass": "Toutes les matières de {{name}}",
+      "printLevel": "Toutes les matières des classes {{level}}",
+      "printSheets": "{{count}} feuilles",
       "sideClasses": "Classes",
       "collapseClasses": "Masquer la colonne des classes",
       "expandClasses": "Afficher la colonne des classes",

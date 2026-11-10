@@ -177,7 +177,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
         closeOnNavigate
       />
 
-      <div className={cn('dashboard-content flex min-w-0 flex-1 flex-col h-full min-h-0', isHome ? 'gap-0 lg:gap-2 lg:px-2 lg:pt-2 lg:pb-2' : 'gap-2 px-3 pt-2 pb-2 lg:px-2')}>
+      <div className={cn('dashboard-content flex min-w-0 flex-1 flex-col h-full min-h-0', isHome ? 'gap-0 lg:gap-2 lg:px-2 lg:pt-2 lg:pb-2' : 'gap-2 p-2 lg:px-2')}>
         <ViewingYearBanner />
         <PushPromptBanner />
         <div className="flex min-h-0 flex-1 flex-col">

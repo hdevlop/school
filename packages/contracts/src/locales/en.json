@@ -382,6 +382,21 @@
     }
   },
   "auth": {
+    "oauth": {
+      "or": "or",
+      "continueWithGoogle": "Continue with Google",
+      "finishing": "Finishing sign-in with Google…",
+      "backToLogin": "Back to sign in",
+      "errors": {
+        "oauth_signup_disabled": "No account uses this Google address. Sign in with your password, or ask the school to set this Gmail address on your account.",
+        "oauth_account_link_required": "This Google address belongs to an account that is not linked yet. Sign in with your password.",
+        "oauth_account_inactive": "Your account is not active yet. Open the invitation email, or ask the school.",
+        "oauth_credential_setup_required": "Sign in with your temporary password first and choose your own password.",
+        "oauth_access_denied": "Google sign-in was cancelled.",
+        "oauth_state_invalid": "Google sign-in took too long or was opened in another tab. Please try again.",
+        "failed": "Could not sign in with Google. Please try again."
+      }
+    },
     "page": {
       "logoutPending": "Signing out…",
       "logoutFailed": "Could not sign out. Please try again.",
@@ -514,8 +529,7 @@
       "confirmPasswordRequired": "Please confirm your password",
       "passwordsMismatch": "Passwords do not match",
       "fullNameRequired": "Please enter your full name",
-      "passwordUppercase": "Password must contain at least one uppercase letter",
-      "passwordLowercase": "Password must contain at least one lowercase letter",
+      "passwordLetter": "Password must contain at least one letter",
       "passwordNumber": "Password must contain at least one number"
     },
     "users": {
@@ -1458,6 +1472,11 @@
         "downloading": "Downloading: {{percent}}%",
         "downloadingSize": "Downloading: {{size}} MB"
       },
+      "withoutBackup": {
+        "title": "Save a backup before continuing",
+        "description": "You have not downloaded a backup of the current data. Save one first so you can recover any data replaced or deleted by this operation. Do you want to continue without a backup?",
+        "continue": "Continue without backup"
+      },
       "restore": {
         "title": "Restore from a backup",
         "description": "Replaces all of the school's current data with a backup made by this version of the app. Everyone is signed out.",
@@ -1466,7 +1485,7 @@
         "file": "Backup file (.zip)",
         "madeOn": "Made on {{date}}",
         "safetyTitle": "Download the current data",
-        "safetyDescription": "Keep a backup of the school as it is now, in case you need to go back.",
+        "safetyDescription": "Download a backup of the current data before restoring in case you need to recover it. You can continue without one.",
         "safetyDone": "Current data downloaded.",
         "confirm": "Type {{word}} to confirm",
         "confirmWord": "RESTORE",
@@ -2817,7 +2836,11 @@
           "insufficient": "Insufficient"
         },
         "rank": "Rank",
-        "toWorkOn": "To work on"
+        "toWorkOn": "To work on",
+        "aboveClass": "{{diff}} above the class average ({{average}})",
+        "belowClass": "{{diff}} below the class average ({{average}})",
+        "levelWithClass": "Level with the class average ({{average}})",
+        "vsClass": "{{diff}} vs the class"
       },
       "feeDetails": {
         "fee": "Fee",
@@ -2839,7 +2862,15 @@
         "oldestUnpaid": "Oldest unpaid installment",
         "assignedFees": "Assigned Fees",
         "feesWithInstallments": "{{fees}} fee(s) with {{installments}} total installment(s)",
-        "lastPayment": "Last payment"
+        "lastPayment": "Last payment",
+        "balanceDue": "Balance due",
+        "overdueAlert": "{{count}} overdue installment(s) · {{amount}}",
+        "overdueSince": "Overdue since {{date}} ({{count}} day{{plural}})",
+        "callHint": "Call {{name}}",
+        "remindHint": "Message {{name}} on WhatsApp",
+        "reminderMessage": "Hello {{parent}}, this is a reminder that {{count}} installment(s) of {{student}}'s fees are overdue, totalling {{amount}}. Please settle them at your earliest convenience. Thank you.",
+        "settled": "Settled",
+        "allSettled": "All fees are settled"
       }
     },
     "title": "Title",
@@ -6030,11 +6061,8 @@
       "noAssignments": "No teacher assignments",
       "noStudents": "No students found.",
       "noStudentsInSection": "No students found in the selected section.",
-      "resetFilters": "Reset filters",
       "search": "Search",
-      "unmarked": "Not recorded",
-      "markAllPresent": "Mark all present",
-      "markAllPresentShort": "All present"
+      "unmarked": "Not recorded"
     }
   },
   "behaviorRewards": {
@@ -7972,6 +8000,10 @@
         "save": "Save"
       },
       "printAll": "Print all classes",
+      "printOpen": "Open subject only",
+      "printClass": "All subjects of {{name}}",
+      "printLevel": "All subjects of every {{level}} class",
+      "printSheets": "{{count}} sheets",
       "sideClasses": "Classes",
       "collapseClasses": "Hide the classes column",
       "expandClasses": "Show the classes column",

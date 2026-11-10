@@ -1,4 +1,12 @@
 @media (width < 768px) {
+  .withBack {
+    position: relative;
+  }
+
+  .withBack :global([data-slot='page-header-sidebar-trigger']) {
+    display: none;
+  }
+
   .header :global([data-slot='page-header-main']) {
     grid-template-columns: 2.25rem minmax(0, 1fr) auto;
     gap: 0.25rem;

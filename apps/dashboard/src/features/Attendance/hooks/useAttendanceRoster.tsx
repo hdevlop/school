@@ -172,20 +172,6 @@ export const useAttendanceRoster = ({
     setStudentPending({ scope: '', items: {} });
   }, [setSelectedDate]);
 
-  const markAllAs = useCallback((status: RosterStatus) => {
-    if (kind === 'student') {
-      setStudentPending(previous => ({ scope: studentScope, items: stageStudentRoster(roster,
-        previous.scope === studentScope ? previous.items : {}, savedStudentMarks, studentRosterContext,
-        Object.fromEntries(roster.map(person => [person.id, status]))) }));
-      return;
-    }
-    setDraft((prev) => {
-      const next = { ...prev };
-      roster.forEach((p) => { next[p.id] = status; });
-      return next;
-    });
-  }, [roster, kind, studentScope, savedStudentMarks, studentRosterContext]);
-
   const resetDraft = useCallback(() => { setDraft({}); setDetailDraft({}); setStudentPending({ scope: '', items: {} }); }, []);
 
   const handleSubmit = useCallback(async () => {
@@ -253,7 +239,6 @@ export const useAttendanceRoster = ({
     shiftDate,
     goToDate,
     goToToday,
-    markAllAs,
     resetDraft,
     handleSubmit,
   };

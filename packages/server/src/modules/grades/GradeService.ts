@@ -199,8 +199,9 @@ export class GradeService {
 
   /**
    * The student's place in the section most of their grades come from: overall,
-   * by the same average as the report, and in each subject. Equal averages share
-   * a place; a student without a grade in a subject is not counted in it.
+   * by the same average as the report, and in each subject, with the class's mean
+   * percentage beside it. Equal averages share a place; a student without a grade
+   * in a subject is not counted in it.
    */
   private async ranksInSection(studentId: string, grades: any[]) {
     const counts = new Map<string, { count: number; name: string }>();
@@ -215,7 +216,10 @@ export class GradeService {
     const place = (rows: Array<{ studentId: string; obtained: number; possible: number }>) => {
       const averages = rows.filter(row => row.possible > 0).map(row => ({ studentId: row.studentId, average: this.round(row.obtained / row.possible * 100) }));
       const own = averages.find(row => row.studentId === studentId);
-      return own ? { position: 1 + averages.filter(row => row.average > own.average).length, total: averages.length } : null;
+      if (!own) return null;
+      // The class's mean only with three students or more: with two, it and the student's own would give away the other's.
+      const classAverage = averages.length >= 3 ? this.round(averages.reduce((sum, row) => sum + row.average, 0) / averages.length) : null;
+      return { position: 1 + averages.filter(row => row.average > own.average).length, total: averages.length, classAverage };
     };
     const students = new Map<string, { studentId: string; obtained: number; possible: number }>();
     const subjects = new Map<string, Array<{ studentId: string; obtained: number; possible: number }>>();
@@ -226,7 +230,7 @@ export class GradeService {
       if (row.subjectId) subjects.set(row.subjectId, [...(subjects.get(row.subjectId) ?? []), { studentId: row.studentId, obtained, possible }]);
     }
     const overall = place([...students.values()]);
-    const bySubject = new Map<string, { position: number; total: number }>();
+    const bySubject = new Map<string, { position: number; total: number; classAverage: number | null }>();
     for (const [subjectId, rows] of subjects) { const rank = place(rows); if (rank) bySubject.set(subjectId, rank); }
     return { overall: overall ? { ...overall, className: section!.name } : null, bySubject };
   }

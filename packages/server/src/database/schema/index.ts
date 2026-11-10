@@ -1,6 +1,7 @@
 export {
   credentialSetupRequirementsTable as credentialSetupRequirements,
   credentialSetupSessionsTable as credentialSetupSessions,
+  oauthAccountsTable as oauthAccounts,
   permissionsTable as permissions,
   rolePermissionsTable as rolePermissions,
   rolesTable as roles,

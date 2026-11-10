@@ -4,7 +4,7 @@ import { StorageService } from 'najm-storage';
 import { Inject, LoggerService, Service, Transaction, TransactionService } from '../../najm';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
-import { massarPlanningControls, type MassarComponent, type MassarGradeSource, type MassarMark, type MassarSheetDetail, type MassarSheetRow } from '@sms/contracts';
+import { massarPlanningControls, type MassarComponent, type MassarGradeSource, type MassarMark, type MassarSheetDetail, type MassarSheetRow, type MassarStudent } from '@sms/contracts';
 import { MassarRepository } from './MassarRepository';
 import { MassarValidator, mayManageMassar, type MassarActor } from './MassarValidator';
 import { buildImportPreview, pendingWithSuggestions, proposeSubject, sameName, type ImportedFile, type RefusedFile, type Setup } from './importPreview';
@@ -42,8 +42,11 @@ export function mergeObservedRounds(current: ObservedRound[], source: MassarExpo
   return [...current.filter(round => round.term !== source.term || (!source.termRounds && !seen.some(item => item.exam === round.exam))), ...seen];
 }
 export const sheetComponents =(kind: string, components: MassarComponent[], round: MassarRoundInput & { examLabel: string }) => kind === 'exam' ? [{ code: String(round.exam), name: round.examLabel }] : components;
+/** A roster's content, whatever key order the database returns it in. */
+export const rosterKey = (roster: MassarStudent[]) => JSON.stringify(roster.map(student => [student.id, student.studentCode, student.name, student.dateOfBirth, student.massarStudentId, student.position]));
 export function summarizeSheet(row: Sheet, marks: MassarMark[] | number): MassarSheetRow {
-  const completed = typeof marks === 'number' ? marks : marks.filter(mark => mark.mark !== null || mark.absence === 'justified').length;
+  const listed = new Set(row.sheet.roster.map(student => student.id));
+  const completed = typeof marks === 'number' ? marks : marks.filter(mark => listed.has(mark.studentId) && (mark.mark !== null || mark.absence === 'justified')).length;
   const total = row.sheet.roster.length * row.sheet.components.length;
   const dueDate = row.round.dueDate ?? null;
   return { id: row.sheet.id, roundId: row.sheet.roundId, className: row.cls.name, subjectName: row.subject.name, subjectConfirmed: row.subject.confirmed, teacherName: row.teacherName, status: row.sheet.status, revision: row.sheet.revision, total, missing: total - completed, termLabel: row.round.termLabel, examLabel: row.round.examLabel, roundStatus: row.round.status, dueDate, late: !!dueDate && dueDate < getBusinessDateOnly() && total > completed && row.sheet.status !== 'exported' };
@@ -269,6 +272,7 @@ export class MassarService {
     await this.applyModel();
     await this.refreshAssignments();
     if (data.addMissingSheets) await this.addMissingSheets();
+    else await this.syncRosters();
     const importedMarks = await this.marksFromFiles(accepted.map(file => file.data), actor);
     await this.repository.consumePreview(preview.id);
     await this.transactions.afterCommit(() => this.removeStoredFiles([preview.fileId, ...(setup.year?.templateFileId && setup.year.templateFileId !== templateFileId ? [setup.year.templateFileId] : [])]));
@@ -306,7 +310,8 @@ export class MassarService {
         if (!marks.length) continue;
         await this.repository.saveMarks(sheet.id, marks, actor.id);
         await this.grades?.fromMassar(sheet.id, marks, actor.id);
-        if (sheet.status === 'not_started') await this.repository.updateSheet(sheet.id, { status: 'in_progress' });
+        // Always a new revision: a grid open on screen takes the file's marks only from a newer one.
+        await this.repository.updateSheet(sheet.id, sheet.status === 'not_started' ? { status: 'in_progress' } : {});
         counts.added += marks.length - replaced; counts.replaced += replaced;
       }
     }
@@ -420,8 +425,23 @@ export class MassarService {
         }
       }
     }
+    await this.syncRosters();
     // New grids meet their exams: marks on either side come together.
     await this.grades?.reconcile(null);
+  }
+  /**
+   * Every grid lists its class as it is now, not as it was when the grid was
+   * made: a student an import or a linked pending student brings in is added,
+   * one withdrawn in Students is dropped. Marks stay with the student and come
+   * back if they return. A sent grid whose list changed must be sent again.
+   */
+  private async syncRosters() {
+    const [sheets, rosters] = await Promise.all([this.repository.sheetRosters(), this.repository.activeRosters()]);
+    for (const sheet of sheets) {
+      const roster = rosters.get(sheet.massarClassId) ?? [];
+      if (rosterKey(roster) === rosterKey(sheet.roster)) continue;
+      await this.repository.replaceSheetRoster(sheet.id, roster, sheet.status === 'exported' ? 'changed_after_export' : undefined);
+    }
   }
   async rounds(actor: MassarActor) { return mayManageMassar(actor) ? this.repository.allRoundsForManagement() : this.repository.rounds(); }
   async blockedClasses(roundId: string) {
@@ -478,6 +498,8 @@ export class MassarService {
       if (await this.modelHasNewSubjects()) await this.applyModelToOpenRounds();
       // A teacher assigned in School since the sheets were made shows here (and finds their sheets) at once.
       await this.repository.relinkTeachers();
+      // So does a student who joined or left a class.
+      await this.syncRosters();
     }
     const [rows, counts] = await Promise.all([this.repository.sheets(roundId), this.repository.completedMarkCounts(roundId)]);
     const completed = new Map(counts.map(row => [row.sheetId, row.completed]));
@@ -499,7 +521,7 @@ export class MassarService {
     });
   }
   async sheet(id: string, actor: MassarActor): Promise<MassarSheetDetail> {
-    if (this.year.status !== 'closed') await this.repository.relinkTeachers();
+    if (this.year.status !== 'closed') { await this.repository.relinkTeachers(); await this.syncRosters(); }
     const row = await this.requireSheet(id), marks = numericMarks(await this.repository.marks(id)), manager = mayManageMassar(actor);
     const config = await this.repository.yearConfig();
     return { sheet: summarizeSheet(row, marks), round: row.round, components: row.sheet.components, maxMark: row.level.maxMark, students: row.sheet.roster, marks,
