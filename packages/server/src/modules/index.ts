@@ -47,5 +47,6 @@ export * from './roleAccess';
 export * from './seed';
 export * from './landing';
 export * from './visitRequests';
+export * from './teacherRequests';
 export * from './backup';
 export * from './massar';

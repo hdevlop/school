@@ -12,16 +12,23 @@ import { matchPermission } from 'najm-auth/client';
 export class PersonalNotificationRepository {
   declare db: DB;
 
-  async createForVisitRequest(input: { id: string; title: string; body: string }) {
+  createForVisitRequest(input: { id: string; title: string; body: string }) {
+    return this.createForPermission('read:visit-requests', { sourceKey: `visit-request:${input.id}`, topic: 'visitRequest.created', title: input.title, body: input.body, href: '/visit-requests' });
+  }
+
+  createForTeacherRequest(input: { id: string; title: string; body: string }) {
+    return this.createForPermission('create:teachers', { sourceKey: `teacher-request:${input.id}`, topic: 'teacherRequest.created', title: input.title, body: input.body, href: '/teachers' });
+  }
+
+  /** One notification for every active account whose role holds this permission. */
+  private async createForPermission(permission: string, notification: { sourceKey: string; topic: string; title: string; body: string; href: string }) {
     const grants = await this.db.select({ userId: usersTable.id, permission: permissionsTable.name })
       .from(usersTable).innerJoin(rolePermissionsTable, eq(usersTable.roleId, rolePermissionsTable.roleId))
       .innerJoin(permissionsTable, eq(rolePermissionsTable.permissionId, permissionsTable.id))
       .where(eq(usersTable.status, 'active'));
-    const recipients = [...new Set(grants.filter(row => matchPermission([row.permission], 'read:visit-requests')).map(row => row.userId))];
+    const recipients = [...new Set(grants.filter(row => matchPermission([row.permission], permission)).map(row => row.userId))];
     if (!recipients.length) return [];
-    return this.db.insert(notifications).values(recipients.map(recipientUserId => ({ recipientUserId,
-      sourceKey: `visit-request:${input.id}`, topic: 'visitRequest.created', title: input.title, body: input.body, href: '/visit-requests',
-    }))).onConflictDoNothing().returning();
+    return this.db.insert(notifications).values(recipients.map(recipientUserId => ({ recipientUserId, ...notification }))).onConflictDoNothing().returning();
   }
 
   async listMine(userId: string, input: { limit: number; unread?: boolean }) {

@@ -403,12 +403,12 @@
       "loginTitle": "Welcome back!",
       "loginSubtitle": "Sign in to continue your learning journey",
       "forgotPassword": "Forgot password?",
-      "noAccount": "Don't have an account?",
-      "signUp": "Sign up",
-      "registerTitle": "Create your account",
-      "registerSubtitle": "Join your school and pick up where the class is",
-      "registerSubmit": "Create account",
-      "registerPending": "Creating account...",
+      "noAccount": "New teacher?",
+      "signUp": "Request an account",
+      "registerTitle": "Teacher sign-up",
+      "registerSubtitle": "Fill in your details and the school will review them. Use your Gmail address so you can sign in with Google once approved.",
+      "registerSubmit": "Send my request",
+      "registerPending": "Sending...",
       "haveAccount": "Already have an account?",
       "signIn": "Sign in",
       "forgotTitle": "Password recovery",
@@ -7060,6 +7060,36 @@
     "news": {
       "title": "Latest news & events",
       "description": "Celebrations, outings, competitions and everyday moments of school life, shared by our team so families can follow what happens on campus."
+    }
+  },
+  "teacherRequests": {
+    "form": {
+      "gmail": "Gmail address",
+      "gmailPlaceholder": "name@gmail.com",
+      "failed": "We could not send your request. Check your details and try again.",
+      "receivedTitle": "Request sent",
+      "receivedBody": "Thank you. Once the school approves your request, you will receive an email and can sign in with Google using this address."
+    },
+    "list": {
+      "button": "Sign-up requests",
+      "title": "Teacher sign-up requests",
+      "empty": "No requests waiting.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "rejectConfirm": "Remove this request?",
+      "failed": "This request could not be processed."
+    },
+    "errors": {
+      "notFound": "This request no longer exists."
+    },
+    "notification": {
+      "title": "New teacher sign-up",
+      "body": "A teacher has asked to join the school. Open the Teachers page to review the request."
+    },
+    "success": {
+      "received": "Request received.",
+      "loaded": "Requests loaded.",
+      "rejected": "Request rejected."
     }
   },
   "visitRequests": {

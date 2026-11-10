@@ -1,60 +1,47 @@
 'use client'
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { z } from 'zod'
 import { NForm, NButton, FormInput } from 'najm-kit'
-import { Loader2, UserPlus } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { Award, BookOpen, GraduationCap, IdCard, Loader2, Mail, MapPin, Phone, Send, User, UserRound } from 'lucide-react'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { auth } from '@/najm.auth'
 import { useTranslation } from 'najm-i18n/react'
+import { buildGenderOptions } from '@/features/Teachers/config/teacherOptions'
+import { createTeacherRequestSchema, type TeacherRequestFormValues } from '@/features/Teachers/config/teacherSchemas'
+import { createTeacherRequestApi } from '@/services/teacherRequestApi'
 import { AuthHeading } from '../AuthHeading'
-import { authErrorMessage, emailSchema, strongPasswordSchema } from '../authMessages'
-
-// Mirrors najm-auth's `registerDto` password rule exactly. Restating it here is
-// what lets the browser reject a weak password before the round trip; the
-// server stays the authority and re-checks the same rule.
-const registerSchema = (t: (key: string) => string) => z.object({
-  name: z.string().trim().min(2, { message: t('auth.validation.fullNameRequired') }).max(100),
-  email: emailSchema(t),
-  password: strongPasswordSchema(t),
-  confirmPassword: z.string().min(8, { message: t('auth.validation.confirmPasswordRequired') }),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: t('auth.validation.passwordsMismatch'),
-  path: ['confirmPassword'],
-})
-
-type RegisterValues = z.infer<ReturnType<typeof registerSchema>>
+import { authErrorMessage } from '../authMessages'
 
 /**
- * Self-service account creation against najm-auth's public `/auth/register`.
- *
- * Registration issues no session and grants no role — the account arrives
- * unverified with nothing attached to it, so an administrator still has to give
- * it a role before it can reach anything in the dashboard. That is why this page
- * hands over to /login rather than to the dashboard.
+ * A teacher's request to join the school. Sending it creates no account: the
+ * request waits on the Teachers page, and approving it creates the teacher and
+ * the invitation that lets them sign in with Google under this address.
  */
 const Register = () => {
   const { t } = useTranslation()
-  const schema = useMemo(() => registerSchema(t), [t])
-  const router = useRouter()
+  const schema = useMemo(() => createTeacherRequestSchema(t), [t])
+  const genderOptions = useMemo(() => buildGenderOptions(t), [t])
+  const [received, setReceived] = useState(false)
 
   const mutation = useMutation({
-    mutationFn: (values: RegisterValues) => auth.client.register({
-      name: values.name,
-      email: values.email,
-      password: values.password,
-    }),
-    onSuccess: () => {
-      toast.success(t('auth.success.register'))
-      router.replace('/login')
-    },
+    mutationFn: createTeacherRequestApi,
+    onSuccess: () => setReceived(true),
     onError: (error) => {
-      toast.error(authErrorMessage(error, t, 'auth.errors.registerFailed'))
+      toast.error(authErrorMessage(error, t, 'teacherRequests.form.failed'))
     },
   })
+
+  if (received) {
+    return (
+      <div className='flex w-full flex-col'>
+        <AuthHeading title={t('teacherRequests.form.receivedTitle')} subtitle={t('teacherRequests.form.receivedBody')} />
+        <Link href='/login' className='text-center text-sm font-medium text-tertiary hover:underline'>
+          {t('auth.page.signIn')}
+        </Link>
+      </div>
+    )
+  }
 
   return (
     <div className='flex w-full flex-col'>
@@ -67,46 +54,24 @@ const Register = () => {
         <NForm
           id='register-form'
           schema={schema}
-          defaultValues={{ name: '', email: '', password: '', confirmPassword: '' }}
-          onSubmit={(values: RegisterValues) => mutation.mutateAsync(values).catch(() => undefined)}
+          defaultValues={{ name: '', email: '', phone: '', cin: '', address: '', specialization: '', yearsOfExperience: '', academicDegrees: '', website: '' }}
+          onSubmit={(values: TeacherRequestFormValues) => mutation.mutateAsync(values).catch(() => undefined)}
         >
-          <FormInput
-            name='name'
-            type='text'
-            formLabel={t('auth.form.fullName')}
-            placeholder={t('auth.form.fullNamePlaceholder')}
-            variant='default'
-            icon='User'
-          />
-
-          <FormInput
-            name='email'
-            type='text'
-            formLabel={t('auth.form.email')}
-            placeholder={t('auth.form.emailPlaceholder')}
-            variant='default'
-            icon='Mail'
-          />
-
-          <FormInput
-            name='password'
-            type='password'
-            autoComplete='new-password'
-            formLabel={t('auth.form.password')}
-            placeholder={t('auth.form.passwordPlaceholder')}
-            variant='default'
-            icon='Lock'
-          />
-
-          <FormInput
-            name='confirmPassword'
-            type='password'
-            autoComplete='new-password'
-            formLabel={t('auth.form.confirmPassword')}
-            placeholder={t('auth.form.confirmPasswordPlaceholder')}
-            variant='default'
-            icon='Lock'
-          />
+          <FormInput name='name' type='text' formLabel={t('teachers.form.fullName')} placeholder={t('teachers.form.fullNamePlaceholder')} variant='default' icon={User} required />
+          <FormInput name='email' type='text' autoComplete='email' formLabel={t('teacherRequests.form.gmail')} placeholder={t('teacherRequests.form.gmailPlaceholder')} variant='default' icon={Mail} required />
+          <FormInput name='phone' type='phone' formLabel={t('teachers.form.phone')} placeholder={t('teachers.form.phonePlaceholder')} variant='default' icon={Phone} defaultCountry='ma' required />
+          <FormInput name='cin' type='text' formLabel={t('teachers.form.cin')} placeholder={t('teachers.form.cinPlaceholder')} variant='default' icon={IdCard} required />
+          <FormInput name='address' type='textarea' formLabel={t('teachers.form.address')} placeholder={t('teachers.form.addressPlaceholder')} variant='default' icon={MapPin} required />
+          <FormInput name='specialization' type='text' formLabel={t('teachers.form.specialization')} placeholder={t('teachers.form.specializationPlaceholder')} variant='default' icon={BookOpen} />
+          <div className='grid grid-cols-2 gap-3'>
+            <FormInput name='gender' type='select' formLabel={t('teachers.form.gender')} items={genderOptions} variant='default' icon={UserRound} />
+            <FormInput name='yearsOfExperience' type='number' formLabel={t('teachers.form.yearsOfExperience')} variant='default' icon={Award} />
+          </div>
+          <FormInput name='academicDegrees' type='text' formLabel={t('teachers.form.academicDegrees')} variant='default' icon={GraduationCap} />
+          {/* Hidden from people: a robot that fills it in is ignored by the server. */}
+          <div className='sr-only' aria-hidden='true'>
+            <FormInput name='website' type='text' formLabel={t('visitRequests.form.website')} tabIndex={-1} autoComplete='off' />
+          </div>
         </NForm>
 
         <NButton
@@ -122,7 +87,7 @@ const Register = () => {
             </>
           ) : (
             <>
-              <UserPlus />
+              <Send />
               {t('auth.page.registerSubmit')}
             </>
           )}

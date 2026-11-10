@@ -76,4 +76,8 @@ export class PersonalNotificationService {
   async createVisitRequestNotification(input: { id: string; title: string; body: string }) {
     return this.repository.createForVisitRequest(input);
   }
+
+  async createTeacherRequestNotification(input: { id: string; title: string; body: string }) {
+    return this.repository.createForTeacherRequest(input);
+  }
 }

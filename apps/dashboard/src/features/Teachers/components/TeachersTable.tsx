@@ -14,6 +14,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { announceInvitation } from '@/shared/invitationNotice';
 import TeacherForm from './TeacherForm';
+import { TeacherRequestsButton } from './TeacherRequests';
 import { useTeachers } from '../hooks/useTeachers';
 import { useTranslation } from 'najm-i18n/react';
 import TeacherCard from './TeacherCard';
@@ -167,6 +168,7 @@ function TeachersTable() {
         subtitle={isCountUnknown(error, teachers, isTeachersLoading) ? undefined : t('teachers.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
+          {canCreate && <TeacherRequestsButton />}
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
       </NPageHeader>

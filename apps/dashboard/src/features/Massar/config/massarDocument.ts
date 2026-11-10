@@ -17,6 +17,11 @@ function safeUrl(value: string | null | undefined, origin: string) {
 // (a longer one ends with …); the rest of the page goes to the marks.
 const PAGE_WIDTH = 283, IDENTITY = { number: 9, code: 22, name: 40 }, MARK_MAX = 26, MARK_MIN = 10;
 const IDENTITY_WIDTH = IDENTITY.number + IDENTITY.code + IDENTITY.name;
+// One page holds 27 students at the usual row height, 25 when long part names wrap in narrow columns.
+// A bigger class gets the compact sheet, whose rows stay tall enough to write a mark in by hand. A class
+// too big even for that keeps its usual rows on two pages, rather than a few names alone on the second.
+const USUAL_STUDENTS = 25, COMPACT_STUDENTS = 38;
+const isCompact = (students: number) => students > USUAL_STUDENTS && students <= COMPACT_STUDENTS;
 
 const mark = (data: MassarSheetDetail, studentId: string, code: string) => {
   const found = data.marks.find(item => item.studentId === studentId && item.componentCode === code);
@@ -40,19 +45,19 @@ export function buildMassarDocument(sheets: MassarSheetDetail[], options: Massar
     // Values are escaped here; the class reads left to right inside the Arabic line.
     const info: Array<[string, string]> = [['المؤسسة', e(data.schoolName)], ['السنة الدراسية', e(data.yearLabel.replace('-', '/'))], ['الدورة', `${e(data.round.termLabel)} · ${e(data.round.examLabel)}`],
       ['القسم', `<bdi dir="ltr">${e(data.sheet.className)}</bdi> · ${e(data.levelLabel)}`], ['المادة', e(data.sheet.subjectName)], ['الأستاذ(ة)', e(data.sheet.teacherName ?? '—')]];
-    return `<section class="sheet" dir="rtl" style="--accent:${accent};--pale:${pale}">
+    return `<section class="sheet${isCompact(data.students.length) ? ' compact' : ''}" dir="rtl" style="--accent:${accent};--pale:${pale}">
       <header class="head">
         <dl class="info">${info.map(([label, value]) => `<div${label === 'المادة' ? ' class="subject"' : ''}><dt>${label}</dt><dd>${value}</dd></div>`).join('')}</dl>
         ${logo ? `<img src="${e(logo)}" alt="">` : `<div class="school" dir="auto">${e(data.schoolName)}</div>`}
       </header>
-      <table style="width:${width}mm">
+      <div class="grid"><table style="width:${width}mm">
         <colgroup><col style="width:${IDENTITY.number}mm"><col style="width:${IDENTITY.code}mm"><col style="width:${IDENTITY.name}mm">${data.components.map(() => `<col style="width:${markWidth}mm">`).join('')}</colgroup>
         <thead><tr>
           <th>ر.ت<small dir="ltr">N°</small></th><th>رقم التلميذ<small>Code Massar</small></th><th>إسم التلميذ<small dir="auto">${e(options.student)}</small></th>
           ${data.components.map(component => `<th class="part" dir="auto">${e(componentLabel(component.name))}</th>`).join('')}
         </tr></thead>
         <tbody>${data.students.map(student => `<tr><td class="number">${student.position + 1}</td><td dir="ltr">${e(student.studentCode)}</td><td class="name" dir="auto">${e(student.name)}</td>${data.components.map(component => `<td class="mark" dir="ltr">${e(mark(data, student.id, component.code))}</td>`).join('')}</tr>`).join('')}</tbody>
-      </table>
+      </table></div>
       <footer><span>توقيع الأستاذ(ة): <i></i></span><span class="latin" dir="auto">${e(data.schoolName)} · <bdi>${e(data.sheet.className)}</bdi> · ${e(data.sheet.subjectName)} · <bdi>${e(data.yearLabel)}</bdi></span></footer>
     </section>`;
   }).join('');
@@ -78,7 +83,10 @@ export function buildMassarDocument(sheets: MassarSheetDetail[], options: Massar
     td.number{color:#5d6a80}td.mark{font-weight:700}tbody tr:nth-child(even) td{background:#f7f9fc}
     footer{display:flex;justify-content:space-between;align-items:flex-end;gap:10mm;margin-top:auto;padding-top:4mm;font:10pt MassarArabic,serif;color:#3b475a}
     footer i{display:inline-block;width:60mm;border-bottom:0.6pt dotted #6b778c;margin-right:2mm}footer .latin{font:8pt MassarLatin,sans-serif;color:#8090a5}
+    /* A big class: a tighter header, and rows that start small and share whatever height the page has left. */
+    .compact{height:210mm}.compact .head{margin-bottom:2mm}.compact .head img{height:15mm}.compact .grid{flex:1 1 auto}.compact table{height:100%;font-size:9pt}
+    .compact th{padding:.9mm 1mm}.compact td{height:4.2mm;line-height:1.1}.compact td.name{font-size:9.5pt;line-height:1.1}.compact footer{padding-top:2mm}
     @page{size:A4 landscape;margin:0}
-    @media print{body{background:#fff;padding:0}.sheet{width:auto;max-width:none;min-height:209mm;padding:7mm;margin:0;box-shadow:none;break-after:page}.sheet:last-child{break-after:auto}}
+    @media print{body{background:#fff;padding:0}.sheet{width:auto;max-width:none;min-height:209mm;padding:7mm;margin:0;box-shadow:none;break-after:page}.sheet:last-child{break-after:auto}.compact{height:209mm}}
   </style></head><body>${pages}</body></html>`;
 }

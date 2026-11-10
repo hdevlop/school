@@ -403,12 +403,12 @@
       "loginTitle": "Bon retour !",
       "loginSubtitle": "Connectez-vous pour poursuivre votre parcours",
       "forgotPassword": "Mot de passe oublié ?",
-      "noAccount": "Vous n'avez pas de compte ?",
-      "signUp": "S'inscrire",
-      "registerTitle": "Créez votre compte",
-      "registerSubtitle": "Rejoignez votre établissement et reprenez le cours",
-      "registerSubmit": "Créer le compte",
-      "registerPending": "Création du compte...",
+      "noAccount": "Nouvel enseignant ?",
+      "signUp": "Demander un compte",
+      "registerTitle": "Inscription enseignant",
+      "registerSubtitle": "Renseignez vos informations, l'établissement les examinera. Utilisez votre adresse Gmail pour vous connecter avec Google une fois approuvé.",
+      "registerSubmit": "Envoyer ma demande",
+      "registerPending": "Envoi...",
       "haveAccount": "Vous avez déjà un compte ?",
       "signIn": "Se connecter",
       "forgotTitle": "Récupération du mot de passe",
@@ -6454,6 +6454,36 @@
     "news": {
       "title": "Actualités et événements",
       "description": "Fêtes, sorties, concours et moments de la vie scolaire, partagés par notre équipe pour que les familles suivent ce qui se passe à l’école."
+    }
+  },
+  "teacherRequests": {
+    "form": {
+      "gmail": "Adresse Gmail",
+      "gmailPlaceholder": "nom@gmail.com",
+      "failed": "Nous n'avons pas pu envoyer votre demande. Vérifiez vos informations et réessayez.",
+      "receivedTitle": "Demande envoyée",
+      "receivedBody": "Merci. Une fois votre demande approuvée par l'établissement, vous recevrez un e-mail et pourrez vous connecter avec Google à cette adresse."
+    },
+    "list": {
+      "button": "Demandes d'inscription",
+      "title": "Demandes d'inscription des enseignants",
+      "empty": "Aucune demande en attente.",
+      "approve": "Approuver",
+      "reject": "Refuser",
+      "rejectConfirm": "Supprimer cette demande ?",
+      "failed": "Cette demande n'a pas pu être traitée."
+    },
+    "errors": {
+      "notFound": "Cette demande n'existe plus."
+    },
+    "notification": {
+      "title": "Nouvelle inscription d'enseignant",
+      "body": "Un enseignant a demandé à rejoindre l'établissement. Ouvrez la page Enseignants pour examiner la demande."
+    },
+    "success": {
+      "received": "Demande reçue.",
+      "loaded": "Demandes chargées.",
+      "rejected": "Demande refusée."
     }
   },
   "visitRequests": {

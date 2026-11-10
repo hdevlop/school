@@ -38,6 +38,7 @@ import { StudentRouteController } from '../modules/transport/studentRoutes/Stude
 import { StudentController } from '../modules/students/StudentController';
 import { InsuranceController } from '../modules/insurance/InsuranceController';
 import { TeacherController } from '../modules/teachers/TeacherController';
+import { TeacherRequestApprovalController } from '../modules/teacherRequests/TeacherRequestApprovalController';
 import { StudentEnrollmentController } from '../modules/studentEnrollments/StudentEnrollmentController';
 import { VehicleAssignmentController } from '../modules/transport/vehicleAssignments/VehicleAssignmentController';
 
@@ -64,6 +65,7 @@ export const yearScopedModules = {
   students: StudentController,
   insurance: InsuranceController,
   teachers: TeacherController,
+  'teacher-request-approvals': TeacherRequestApprovalController,
   'student-enrollments': StudentEnrollmentController,
   alerts: AlertController,
   announcements: AnnouncementController,

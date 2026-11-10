@@ -212,6 +212,7 @@ export {
 export { schoolLanding } from '../../modules/landing/LandingSchema';
 export { examPlanning } from '../../modules/examPlanning/ExamPlanningSchema';
 export { visitRequests, visitRequestStatusEnum } from '../../modules/visitRequests/VisitRequestSchema';
+export { teacherRequests } from '../../modules/teacherRequests/TeacherRequestSchema';
 // Chatbot settings and sessions belong to najm-chatbot; RAG tables come
 // from najm-rag below.
 export {

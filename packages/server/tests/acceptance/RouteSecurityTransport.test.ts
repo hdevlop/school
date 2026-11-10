@@ -30,9 +30,11 @@ const { server } = await import('../../src/index');
 // registration and password recovery; OAuth, which najm-auth answers with 404
 // for a provider School has not configured; the sign-in page's appearance and
 // branding; health probes; and cron triggers that check FINANCIAL_CRON_SECRET
-// themselves. Public school visit enquiries: POST /api/visit-requests.
+// themselves. Public school visit enquiries: POST /api/visit-requests. Public
+// teacher sign-ups, which create no account: POST /api/teacher-requests.
 const PUBLIC_ROUTES = [
   'POST /api/visit-requests',
+  'POST /api/teacher-requests',
   'GET /api/appearance',
   'GET /api/auth/credential-setup/setup',
   'GET /api/auth/me',

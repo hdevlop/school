@@ -403,12 +403,12 @@
       "loginTitle": "¡Bienvenido de nuevo!",
       "loginSubtitle": "Inicia sesión para continuar tu aprendizaje",
       "forgotPassword": "¿Olvidaste tu contraseña?",
-      "noAccount": "¿No tienes una cuenta?",
-      "signUp": "Regístrate",
-      "registerTitle": "Crea tu cuenta",
-      "registerSubtitle": "Únete a tu centro y retoma la clase donde va",
-      "registerSubmit": "Crear cuenta",
-      "registerPending": "Creando la cuenta...",
+      "noAccount": "¿Eres docente nuevo?",
+      "signUp": "Solicitar una cuenta",
+      "registerTitle": "Registro de docentes",
+      "registerSubtitle": "Completa tus datos y el centro los revisará. Usa tu dirección de Gmail para entrar con Google cuando te aprueben.",
+      "registerSubmit": "Enviar mi solicitud",
+      "registerPending": "Enviando...",
       "haveAccount": "¿Ya tienes una cuenta?",
       "signIn": "Inicia sesión",
       "forgotTitle": "Recuperación de contraseña",
@@ -6353,6 +6353,36 @@
     "news": {
       "title": "Últimas noticias y eventos",
       "description": "Celebraciones, salidas, concursos y momentos de la vida escolar, compartidos por nuestro equipo para que las familias sigan lo que pasa en el colegio."
+    }
+  },
+  "teacherRequests": {
+    "form": {
+      "gmail": "Dirección de Gmail",
+      "gmailPlaceholder": "nombre@gmail.com",
+      "failed": "No hemos podido enviar tu solicitud. Revisa tus datos e inténtalo de nuevo.",
+      "receivedTitle": "Solicitud enviada",
+      "receivedBody": "Gracias. Cuando el centro apruebe tu solicitud, recibirás un correo electrónico y podrás entrar con Google usando esta dirección."
+    },
+    "list": {
+      "button": "Solicitudes de registro",
+      "title": "Solicitudes de registro de docentes",
+      "empty": "No hay solicitudes pendientes.",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "rejectConfirm": "¿Eliminar esta solicitud?",
+      "failed": "No se ha podido procesar esta solicitud."
+    },
+    "errors": {
+      "notFound": "Esta solicitud ya no existe."
+    },
+    "notification": {
+      "title": "Nuevo registro de docente",
+      "body": "Un docente ha pedido unirse al centro. Abre la página Docentes para revisar la solicitud."
+    },
+    "success": {
+      "received": "Solicitud recibida.",
+      "loaded": "Solicitudes cargadas.",
+      "rejected": "Solicitud rechazada."
     }
   },
   "visitRequests": {

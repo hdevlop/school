@@ -118,3 +118,17 @@ export type TeacherPersonalFormValues = z.input<TeacherSchemas['personal']>;
 export type TeacherProfessionalFormValues = z.input<TeacherSchemas['professional']>;
 export type TeacherAssignmentFormValues = z.input<TeacherSchemas['assignment']>;
 export type TeacherFullFormValues = z.input<TeacherSchemas['full']>;
+
+/**
+ * The public sign-up page: what a teacher can answer alone, under the same rules
+ * as the full form. Employment terms and classes stay with the school.
+ */
+export const createTeacherRequestSchema = (t: T) => {
+  const { personal, professional } = createTeacherSchemas(t);
+  return z.object({
+    ...personal.pick({ name: true, email: true, phone: true, cin: true, address: true, gender: true }).shape,
+    ...professional.pick({ specialization: true, yearsOfExperience: true, academicDegrees: true }).shape,
+    website: z.string().optional(),
+  });
+};
+export type TeacherRequestFormValues = z.input<ReturnType<typeof createTeacherRequestSchema>>;
