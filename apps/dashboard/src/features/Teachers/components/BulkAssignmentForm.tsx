@@ -2,33 +2,43 @@
 
 import { useEffect, useRef, useMemo } from 'react'
 import { BookOpen, User, GraduationCap, Layers } from 'lucide-react'
-import { DynamicArray, NForm, usePrefix } from 'najm-kit';
+import { DynamicArray, NButton, NForm, usePrefix } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { createTeacherSchemas } from '../config/teacherSchemas'
-import { subjectsForTeacherClass } from '../config/teacherAssignments'
+import { expandTeacherAssignments, parseTeacherSectionKey, subjectsForTeacherClasses, teacherSectionKey } from '../config/teacherAssignments'
 
 // ==================== COMPONENTS ====================
+
+const EMPTY_IDS: string[] = []
 
 const AssignmentItem = ({ classes, subjects }) => {
    const { t } = useTranslation()
    const { getValues, setValue } = useFormContext()
    const prefix = usePrefix()
-   const prevClassIdRef = useRef(null)
+   const prevClassIdsRef = useRef<string[] | null>(null)
 
-   const selectedClassId = useWatch({ name: `${prefix}.classId` })
-   const selectedSubjectIds = useWatch({ name: `${prefix}.subjectIds` }) ?? []
+   const selectedClassIds: string[] = useWatch({ name: `${prefix}.classIds` }) ?? EMPTY_IDS
+   const selectedSubjectIds: string[] = useWatch({ name: `${prefix}.subjectIds` }) ?? EMPTY_IDS
+   const selectedClassKey = selectedClassIds.join('|')
 
    const classOptions = classes.map(cls => ({
       value: cls.id,
       label: cls.name
    }))
 
-   const selectedClass = classes.find(cls => cls.id === selectedClassId)
-   const availableSubjectIds = new Set(subjectsForTeacherClass(subjects, selectedClass?.level).map(subject => subject.id))
+   // In the order the classes were chosen, so each class's sections stay together.
+   const selectedClasses = useMemo(
+      () => selectedClassIds.map(id => classes.find(cls => cls.id === id)).filter(Boolean),
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- selectedClassKey stands for selectedClassIds
+      [classes, selectedClassKey],
+   )
+   const allClassesSelected = classes.length > 0 && classes.every(cls => selectedClassIds.includes(cls.id))
+
+   const availableSubjectIds = new Set(subjectsForTeacherClasses(subjects, selectedClasses.map(cls => cls.level)).map(subject => subject.id))
    // Previously saved assignments stay readable until the administrator changes
    // them. Removing an old selection keeps it out of the new subject choices.
    const subjectOptions = subjects.filter(subject => availableSubjectIds.has(subject.id) || selectedSubjectIds.includes(subject.id)).map(sbj => ({
@@ -36,36 +46,63 @@ const AssignmentItem = ({ classes, subjects }) => {
       label: sbj.name
    }))
 
-   const sectionOptions = selectedClass?.sections?.map(section => ({
-      value: section.id,
-      label: section.name
-   })) ?? []
+   // With several classes, a section is named with its class: "CP · A".
+   const sectionOptions = selectedClasses.flatMap(cls => (cls.sections ?? []).map(section => ({
+      value: teacherSectionKey(cls.id, section.id),
+      label: selectedClasses.length > 1 ? `${cls.name} · ${section.name}` : section.name
+   })))
 
+   // A class the administrator adds arrives with all its sections, which they
+   // narrow; a class removed takes its sections with it. Loaded values are left
+   // as they are.
    useEffect(() => {
-      if (prevClassIdRef.current !== null && prevClassIdRef.current !== selectedClassId) {
-         setValue(`${prefix}.sectionIds`, [])
-         const allowed = new Set(subjectsForTeacherClass(subjects, selectedClass?.level).map(subject => subject.id))
-         const unavailable = new Set(subjects.filter(subject => !allowed.has(subject.id)).map(subject => subject.id))
+      const previous = prevClassIdsRef.current
+      prevClassIdsRef.current = selectedClassIds
+      if (previous === null) return
+
+      const added = selectedClassIds.filter(id => !previous.includes(id))
+      const removed = new Set(previous.filter(id => !selectedClassIds.includes(id)))
+      if (added.length === 0 && removed.size === 0) return
+
+      const currentSections: string[] = getValues(`${prefix}.sectionIds`) ?? []
+      const kept = currentSections.filter(key => !removed.has(parseTeacherSectionKey(key)?.classId ?? ''))
+      const addedSections = added.flatMap(id => (classes.find(cls => cls.id === id)?.sections ?? []).map(section => teacherSectionKey(id, section.id)))
+      setValue(`${prefix}.sectionIds`, [...new Set([...kept, ...addedSections])], { shouldValidate: currentSections.length > 0 || addedSections.length > 0 })
+
+      if (added.length > 0) {
+         const allowed = new Set(subjectsForTeacherClasses(subjects, selectedClasses.map(cls => cls.level)).map(subject => subject.id))
          const currentSubjects: string[] = getValues(`${prefix}.subjectIds`) ?? []
-         if (currentSubjects.some(id => unavailable.has(id))) {
-            setValue(`${prefix}.subjectIds`, currentSubjects.filter(id => !unavailable.has(id)))
+         if (currentSubjects.some(id => !allowed.has(id))) {
+            setValue(`${prefix}.subjectIds`, currentSubjects.filter(id => allowed.has(id)))
          }
       }
-      prevClassIdRef.current = selectedClassId
-   }, [selectedClassId, selectedClass?.level, subjects, prefix, getValues, setValue])
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- selectedClassKey stands for selectedClassIds
+   }, [selectedClassKey, selectedClasses, classes, subjects, prefix, getValues, setValue])
+
+   const toggleAllClasses = () => {
+      setValue(`${prefix}.classIds`, allClassesSelected ? [] : classes.map(cls => cls.id), { shouldDirty: true, shouldValidate: true })
+   }
 
    return (
       <div className='space-y-3'>
          <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
-            <FormInput
-               name='classId'
-               type='select'
-               formLabel={t('teachers.form.class')}
-               items={classOptions}
-               placeholder={t('teachers.form.classPlaceholder')}
-               icon={GraduationCap}
-               required={true}
-            />
+            <div className='space-y-1'>
+               <FormInput
+                  name='classIds'
+                  type='multiselect'
+                  formLabel={t('teachers.form.classes')}
+                  items={classOptions}
+                  placeholder={t('teachers.form.classesPlaceholder')}
+                  icon={GraduationCap}
+                  maxDisplay={4}
+                  required={true}
+               />
+               {classes.length > 1 && (
+                  <NButton type='button' variant='link' size='sm' className='h-auto px-0' onClick={toggleAllClasses}>
+                     {allClassesSelected ? t('teachers.form.clearClasses') : t('teachers.form.allClasses')}
+                  </NButton>
+               )}
+            </div>
 
             <FormInput
                name='sectionIds'
@@ -74,7 +111,8 @@ const AssignmentItem = ({ classes, subjects }) => {
                items={sectionOptions}
                placeholder={t('teachers.form.sectionsPlaceholder')}
                icon={Layers}
-               disabled={!selectedClassId}
+               maxDisplay={6}
+               disabled={selectedClassIds.length === 0}
                required={true}
             />
          </div>
@@ -86,7 +124,7 @@ const AssignmentItem = ({ classes, subjects }) => {
             items={subjectOptions}
             placeholder={t('teachers.form.subjectsPlaceholder')}
             icon={BookOpen}
-            disabled={!selectedClassId}
+            disabled={selectedClassIds.length === 0}
             required={true}
          />
       </div>
@@ -98,7 +136,7 @@ export const AssignmentFormContent = ({ classes, subjects }) => {
 
    const handleAddAssignment = (append) => {
       append({
-         classId: '',
+         classIds: [],
          sectionIds: [],
          subjectIds: [],
       })
@@ -137,7 +175,7 @@ const BulkAssignmentForm = ({  classes = [], subjects = [], teachers = [] }) => 
    }
 
    const handleSubmit = async (assignmentData) => {
-      pop(assignmentData)
+      pop({ ...assignmentData, assignments: expandTeacherAssignments(assignmentData.assignments ?? []) })
    }
 
    const teacherOptions = teachers.map((teacher) => ({

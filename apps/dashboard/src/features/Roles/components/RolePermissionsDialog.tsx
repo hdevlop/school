@@ -288,9 +288,9 @@ function PermissionEditor({ role, actions, initialSnapshot, latestSnapshot, save
       </TabsContent>
       <TabsContent value="sidebar">
         <RoleSidebarEditor items={navigationItems} order={sidebarOrder} visibleKeys={sidebarKeys} eligibility={sidebarEligibility}
-          viewer={viewer} locked={locked} saving={isSaving} dirty={dirty}
+          viewer={viewer} locked={locked} saving={isSaving}
           onOrderChange={(order) => { setSidebarOrder(order); setReview(false); setFailure(null); }}
-          onVisibilityChange={updateVisibility} onSave={() => setReview(true)} />
+          onVisibilityChange={updateVisibility} />
       </TabsContent>
       </Tabs>
       {!review && failureFeedback}

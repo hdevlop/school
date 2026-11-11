@@ -10,7 +10,7 @@ import { NFormSectionHeader as FormHeader } from 'najm-kit';
 import { Briefcase, IdCard, User, UserRound, Mail, Activity, UserPlus, BookOpen, Award, Calendar, Wallet, Landmark, Clock, GraduationCap, Phone, MapPin, Loader2 } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
 import { createTeacherSchemas } from '../config/teacherSchemas'
-import { groupTeacherAssignments } from '../config/teacherAssignments'
+import { expandTeacherAssignments, groupTeacherAssignments } from '../config/teacherAssignments'
 import {
   buildGenderOptions,
   buildEmploymentTypeOptionsFor,
@@ -116,7 +116,9 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
       }
 
       setIsSubmitting(true)
-      const submission = Promise.resolve().then(() => onSubmitTeacher(data))
+      // The form groups classes on one line; the API stores one row per class.
+      const payload = { ...data, assignments: expandTeacherAssignments(data.assignments ?? []) }
+      const submission = Promise.resolve().then(() => onSubmitTeacher(payload))
       submissionPromiseRef.current = submission
 
       try {

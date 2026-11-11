@@ -51,14 +51,19 @@ export const isSidebarPermission = (name: string) => name.startsWith('sidebar:')
 
 /** Stable navigation identities; labels and role access stay in the app. */
 export const SIDEBAR_ORDER_IDS = [
-  'financial', 'attendance', 'student-conduct', 'evaluations', 'academic', 'massar', '/massar/rounds', '/massar/setup',
+  // `/massar` and `/massar-settings` are the menu's Massar pages; the older
+  // `/massar/...` ids stay accepted for orders saved before they replaced them.
+  'financial', 'attendance', 'student-conduct', 'evaluations', 'academic', 'massar', '/massar', '/massar-settings', '/massar/rounds', '/massar/setup',
   'transport', 'access-control', 'appearance', 'communications', '/exam-planning',
   ...SIDEBAR_ENTRIES.map((entry) => entry[1]),
 ] as const;
 export type SidebarOrderId = typeof SIDEBAR_ORDER_IDS[number];
 
+/** Every Massar page follows the one Massar sidebar preference. */
+const MASSAR_PAGE_IDS: ReadonlySet<string> = new Set(['/massar', '/massar-settings', '/massar/rounds', '/massar/setup']);
+
 export function sidebarKeyForItem(itemId: string): SidebarKey | undefined {
-  if (itemId === '/massar/rounds' || itemId === '/massar/setup') return 'massar';
+  if (MASSAR_PAGE_IDS.has(itemId)) return 'massar';
   const pageId = itemId === '/exam-planning' || itemId === '/assessment-planning' ? '/exams' : itemId;
   return SIDEBAR_ENTRIES.find((entry) => entry[1] === pageId)?.[0];
 }

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { matchPermission } from 'najm-auth/client';
-import { SIDEBAR_CONFIGURED_PERMISSION } from '@sms/contracts/access-control';
-import { createSidebarItems } from '@/shared/schoolNavigation';
+import { SIDEBAR_CONFIGURED_PERMISSION, SIDEBAR_ORDER_IDS, sidebarKeyForItem } from '@sms/contracts/access-control';
+import { createNavigationItems, createSidebarItems } from '@/shared/schoolNavigation';
 import { PAGE_ACCESS } from '@/shared/pageAccess';
 
 const viewer = (role: string, permissions: string[]) => ({ role, can: (name: string) => matchPermission(permissions, name) });
@@ -75,5 +75,24 @@ describe('independent sidebar visibility', () => {
     expect(navigation).not.toContain('/students');
     expect(navigation).not.toContain('/notifications');
     expect(PAGE_ACCESS.students(user)).toBe(true);
+  });
+});
+
+describe('saved sidebar order', () => {
+  // The roles screen saves the order of every item it shows; the API accepts
+  // only SIDEBAR_ORDER_IDS, so an item missing there makes every save fail.
+  const everyId = (role: string) => ids(createNavigationItems((key) => key, viewer(role, ['*']), true) as ReturnType<typeof createSidebarItems>);
+
+  it('accepts every menu item the dashboard can show', () => {
+    const accepted = new Set<string>(SIDEBAR_ORDER_IDS);
+    for (const role of ['admin', 'teacher', 'parent', 'student', 'secretary']) {
+      expect(everyId(role).filter((id) => !accepted.has(id)), role).toEqual([]);
+    }
+  });
+
+  it('puts every Massar page under the Massar sidebar choice', () => {
+    const massarPages = everyId('admin').filter((id) => id.startsWith('/massar'));
+    expect(massarPages).toEqual(expect.arrayContaining(['/massar', '/massar-settings']));
+    for (const id of massarPages) expect(sidebarKeyForItem(id), id).toBe('massar');
   });
 });

@@ -3,12 +3,13 @@
 import { DndContext, KeyboardSensor, PointerSensor, closestCenter, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { ArrowDown, ArrowUp, ChevronDown, GripVertical, RotateCcw, Save, Settings } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronDown, EyeOff, GripVertical, ListRestart, Settings } from 'lucide-react';
 import { Button, Checkbox, cn, surfaceBorderClasses } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { orderSidebarItems, sidebarItemIds, sidebarKeyForItem, sidebarPermission, type SidebarKey, type SidebarOrderId } from '@sms/contracts/access-control';
 import type { GatedNavItem } from '@/shared/schoolNavigation';
 import type { PageViewer } from '@/shared/pageAccess';
+import { hiddenSidebarPageCount, mergeSidebarReorder, reachableSidebarItems } from '../config/sidebarLayout';
 
 type Props = {
   items: GatedNavItem[];
@@ -18,10 +19,8 @@ type Props = {
   viewer: PageViewer;
   locked: boolean;
   saving: boolean;
-  dirty: boolean;
   onOrderChange: (order: SidebarOrderId[]) => void;
   onVisibilityChange: (keys: SidebarKey[], visible: boolean) => void;
-  onSave: () => void;
 };
 
 type RowVisibility = { checked: boolean | 'indeterminate'; disabled: boolean; eligible: boolean; toggle: (visible: boolean) => void };
@@ -89,7 +88,7 @@ function SidebarList({ items, disabled, visibility, onChange }: {
   );
 }
 
-export default function RoleSidebarEditor({ items, order, visibleKeys, eligibility, viewer, locked, saving, dirty, onOrderChange, onVisibilityChange, onSave }: Props) {
+export default function RoleSidebarEditor({ items, order, visibleKeys, eligibility, viewer, locked, saving, onOrderChange, onVisibilityChange }: Props) {
   const { t } = useTranslation();
   const ordered = orderSidebarItems(items, order);
   const visibility = (item: GatedNavItem): RowVisibility => {
@@ -105,18 +104,24 @@ export default function RoleSidebarEditor({ items, order, visibleKeys, eligibili
     };
   };
   const settings = visibility({ id: 'settings:preferences', label: t('navigation.settings') });
+  // Pages the role cannot open are left out; reordering keeps their places.
+  const shown = reachableSidebarItems(ordered, (page) => visibility(page).eligible);
+  const hidden = hiddenSidebarPageCount(ordered, shown);
   return (
     <div className="space-y-4">
-      <p className="text-sm leading-relaxed text-muted-foreground">{t('roleAccess.layout.help')}</p>
-      <SidebarList items={ordered} disabled={saving} visibility={visibility} onChange={(items) => onOrderChange(sidebarItemIds(items))} />
+      {/* Saving and discarding are the header actions, shared with the permissions tab. */}
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0 flex-1 space-y-1 text-sm leading-relaxed text-muted-foreground">
+          <p>{t('roleAccess.layout.help')}</p>
+          {hidden > 0 && <p className="flex items-center gap-1.5 text-xs"><EyeOff aria-hidden="true" className="size-3.5 shrink-0" />{t('roleAccess.layout.hiddenPages', { count: hidden })}</p>}
+        </div>
+        <Button variant="outline" size="sm" className="shrink-0" leftIcon={ListRestart} disabled={saving || !order.length} onClick={() => onOrderChange([])}>{t('roleAccess.layout.reset')}</Button>
+      </div>
+      <SidebarList items={shown} disabled={saving} visibility={visibility} onChange={(items) => onOrderChange(sidebarItemIds(mergeSidebarReorder(ordered, items)))} />
       <div className={cn('flex items-center gap-3 rounded-lg bg-muted/30 p-3', surfaceBorderClasses())}>
         <Checkbox checked={settings.checked} disabled={settings.disabled} aria-label={`${t('navigation.settings')}: ${t('roleAccess.sidebar')}`} onCheckedChange={(checked) => settings.toggle(checked === true)} />
         <Settings aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
         <div><p className="text-sm font-medium">{t('navigation.settings')}</p><p className="mt-0.5 text-xs text-muted-foreground">{t('roleAccess.layout.footer')}</p></div>
-      </div>
-      <div className={cn('sticky bottom-0 flex flex-wrap items-center justify-between gap-2 bg-background py-3 pe-14', surfaceBorderClasses(true, 'top'))}>
-        <Button variant="outline" leftIcon={RotateCcw} disabled={saving || !order.length} onClick={() => onOrderChange([])}>{t('roleAccess.layout.reset')}</Button>
-        <Button leftIcon={Save} disabled={saving || !dirty} onClick={onSave}>{t('common.save')}</Button>
       </div>
     </div>
   );

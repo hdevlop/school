@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { EMPLOYMENT_TYPE_VALUES, GENDER_VALUES, TEACHER_STATUS_VALUES } from '@sms/contracts';
+import { classesWithoutSection } from './teacherAssignments';
 
 type T = (key: string) => string;
 
@@ -84,11 +85,20 @@ export const createTeacherSchemas = (t: T, { requireEmail = true } = {}) => {
     academicDegrees: z.string().max(500, t('validationMessages.academicDegreesDescriptionTooLong')).optional(),
   });
 
-  /** One line of "this teacher teaches these subjects to these sections". */
+  /**
+   * One line of "this teacher teaches these subjects to these sections", across
+   * one class or several. Sections are `teacherSectionKey(classId, sectionId)`,
+   * and every chosen class needs one: `expandTeacherAssignments` turns the line
+   * into the API's one row per class.
+   */
   const assignment = z.object({
-    classId: z.string().min(1, t('validationMessages.classIsRequired')),
+    classIds: z.array(z.string()).min(1, t('validationMessages.classIsRequired')),
     sectionIds: z.array(z.string()).min(1, t('validationMessages.atLeastOneSectionIsRequired')),
     subjectIds: z.array(z.string()).min(1, t('validationMessages.atLeastOneSubjectIsRequired')),
+  }).superRefine((value, ctx) => {
+    if (value.sectionIds.length > 0 && classesWithoutSection(value).length > 0) {
+      ctx.addIssue({ code: 'custom', path: ['sectionIds'], message: t('validationMessages.atLeastOneSectionPerClass') });
+    }
   });
 
   /** The bulk assignment dialog: it is opened to assign, so it needs one line. */

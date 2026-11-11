@@ -24,7 +24,7 @@ const personal = {
 const professional = { hireDate: '2021-09-01' };
 
 const assignments = {
-  assignments: [{ classId: 'cls1', sectionIds: ['sec1'], subjectIds: ['sub1'] }],
+  assignments: [{ classIds: ['cls1'], sectionIds: ['cls1::sec1'], subjectIds: ['sub1'] }],
 };
 
 describe('teacherPersonalSchema', () => {
@@ -115,9 +115,19 @@ describe('assignmentsSchema', () => {
   it('needs at least one class, section and subject per assignment', () => {
     expect(assignmentsSchema.safeParse(assignments).success).toBe(true);
     expect(
-      assignmentsSchema.safeParse({ assignments: [{ classId: 'cls1', sectionIds: [], subjectIds: ['sub1'] }] })
+      assignmentsSchema.safeParse({ assignments: [{ classIds: ['cls1'], sectionIds: [], subjectIds: ['sub1'] }] })
         .success,
     ).toBe(false);
+  });
+
+  it('covers several classes in one line, each with at least one of its sections', () => {
+    const line = { classIds: ['cp', 'ce1'], subjectIds: ['science'] };
+    expect(assignmentsSchema.safeParse({ assignments: [{ ...line, sectionIds: ['cp::a', 'ce1::b'] }] }).success).toBe(true);
+
+    const result = assignmentsSchema.safeParse({ assignments: [{ ...line, sectionIds: ['cp::a', 'cp::b'] }] });
+    expect(result.success).toBe(false);
+    expect(result.error?.issues[0]?.path).toEqual(['assignments', 0, 'sectionIds']);
+    expect(result.error?.issues[0]?.message).toBe('Choose at least one section for every class');
   });
 
   it('needs one line in the bulk dialog, and says so about assignments', () => {
