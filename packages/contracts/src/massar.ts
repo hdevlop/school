@@ -85,6 +85,26 @@ export interface MassarImportPreview extends MassarMappings {
  */
 export interface MassarPlan { primary: number; college: number; dates: Array<{ term: number; exam: number; dueDate: string | null }> }
 export const MASSAR_DEFAULT_PLAN: MassarPlan = { primary: 2, college: 3, dates: [] };
+/**
+ * How each student's statement (بيان نقط المراقبة) prints, for the year: the
+ * subjects' order, by name (one not listed follows, in the Massar tabs' order),
+ * each subject's coefficient in the general average (1 when not set, 0 leaves it
+ * out), and what is added to the marks. A subject's average is the plain mean of
+ * its entered parts; the subject rank is by that average, and the rank by general
+ * average, both within the class.
+ */
+export interface MassarStatementSettings {
+  order: string[]; coefficients: Record<string, number>;
+  subjectAverage: boolean; subjectRank: boolean; generalAverage: boolean; rank: boolean;
+  /** A remark in the ملاحظات column from each subject's mark (ممتاز … ضعيف), printed in a handwriting font. */
+  remarks: boolean;
+  /** A column with each subject's coefficient, instead of a note under the subject. */
+  coefficientColumn: boolean;
+}
+export const MASSAR_DEFAULT_STATEMENT: MassarStatementSettings = { order: [], coefficients: {}, subjectAverage: false, subjectRank: false, generalAverage: false, rank: false, remarks: false, coefficientColumn: false };
+/** Stored settings with any switch they predate filled in, off. */
+export const withStatementDefaults = (stored: Partial<MassarStatementSettings> | null | undefined): MassarStatementSettings => ({ ...MASSAR_DEFAULT_STATEMENT, ...stored });
+export const MASSAR_MAX_COEFFICIENT = 10;
 export const MASSAR_MAX_EXAMS_PER_TERM = 3;
 /**
  * The year's Contrôles, read from Planning: in each semester, every month with

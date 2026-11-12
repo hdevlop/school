@@ -2,6 +2,9 @@ These fonts are loaded only by assessment planning documents.
 
 - Carlito Regular and Bold: https://github.com/google/fonts/tree/main/ofl/carlito
   (SIL Open Font License, included in OFL.txt).
+- Aref Ruqaa Regular: https://github.com/google/fonts/tree/main/ofl/arefruqaa
+  (SIL Open Font License, the same license text as OFL.txt), for the handwritten
+  remarks on Massar student statements.
 - FreeSerif Regular and Bold: GNU FreeFont 20120503,
   https://ftp.gnu.org/gnu/freefont/freefont-ttf-20120503.zip
   (GNU GPL with the font embedding exception; license included in FreeFont-COPYING.txt).

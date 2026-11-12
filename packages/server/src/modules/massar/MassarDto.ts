@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { GENDER_VALUES, MASSAR_ABSENCE_VALUES, MASSAR_MAX_EXAMS_PER_TERM } from '@sms/contracts';
+import { GENDER_VALUES, MASSAR_ABSENCE_VALUES, MASSAR_MAX_COEFFICIENT, MASSAR_MAX_EXAMS_PER_TERM } from '@sms/contracts';
 import type { MassarMark } from '@sms/contracts';
 
 export const massarIdParam = z.object({ id: z.string().min(1).max(100) });
@@ -24,6 +24,20 @@ const examsPerTerm = z.number().int().min(1).max(MASSAR_MAX_EXAMS_PER_TERM);
 export const massarPlanDto = z.object({ primary: examsPerTerm, college: examsPerTerm,
   dates: z.array(z.object({ term: z.number().int().min(1).max(2), exam: examsPerTerm, dueDate: z.iso.date().nullable() })).max(2 * MASSAR_MAX_EXAMS_PER_TERM) });
 export type MassarPlanInput = z.infer<typeof massarPlanDto>;
+const subjectName = z.string().trim().min(1).max(200);
+/** How each student's statement prints; a school has a few dozen subject names across its levels. */
+export const massarStatementDto = z.object({
+  order: z.array(subjectName).max(200),
+  coefficients: z.record(subjectName, z.number().min(0).max(MASSAR_MAX_COEFFICIENT)).refine(value => Object.keys(value).length <= 1000),
+  // The subject rank came later: a page that predates it saves it off.
+  subjectAverage: z.boolean(), subjectRank: z.boolean().default(false), generalAverage: z.boolean(), rank: z.boolean(), remarks: z.boolean().default(false), coefficientColumn: z.boolean().default(false),
+});
+export type MassarStatementInput = z.infer<typeof massarStatementDto>;
+/** What is stored: each subject once in the order, and only the coefficients that differ from 1. */
+export function normalizeStatement(data: MassarStatementInput): MassarStatementInput {
+  const coefficients = Object.fromEntries(Object.entries(data.coefficients).map(([name, value]) => [name, Math.round(value * 100) / 100]).filter(([, value]) => value !== 1));
+  return { order: [...new Set(data.order)], coefficients, subjectAverage: data.subjectAverage, subjectRank: data.subjectRank, generalAverage: data.generalAverage, rank: data.rank, remarks: data.remarks, coefficientColumn: data.coefficientColumn };
+}
 export const massarRoundDto = z.object({ term: z.number().int().min(1).max(2), exam: z.number().int().min(1).max(4), dueDate: z.iso.date().nullable().optional() });
 export const massarMarkDto = z.object({ studentId: z.string().min(1), componentCode: z.string().min(1), mark: z.number().min(0).max(20).nullable(), absence: z.enum(MASSAR_ABSENCE_VALUES) }).superRefine((value, ctx) => {
   if (value.mark !== null && value.absence === 'justified') ctx.addIssue({ code: 'custom', path: ['mark'], message: 'massar.errors.invalidMark' });

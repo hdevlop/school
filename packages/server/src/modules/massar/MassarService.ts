@@ -4,7 +4,7 @@ import { StorageService } from 'najm-storage';
 import { Inject, LoggerService, Service, Transaction, TransactionService } from '../../najm';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
-import { massarPlanningControls, type MassarComponent, type MassarGradeSource, type MassarMark, type MassarSheetDetail, type MassarSheetRow, type MassarStudent } from '@sms/contracts';
+import { massarPlanningControls, withStatementDefaults, type MassarComponent, type MassarGradeSource, type MassarMark, type MassarSheetDetail, type MassarSheetRow, type MassarStudent } from '@sms/contracts';
 import { MassarRepository } from './MassarRepository';
 import { MassarValidator, mayManageMassar, type MassarActor } from './MassarValidator';
 import { buildImportPreview, pendingWithSuggestions, proposeSubject, sameName, type ImportedFile, type RefusedFile, type Setup } from './importPreview';
@@ -15,11 +15,13 @@ import { StudentEnrollmentService } from '../studentEnrollments/StudentEnrollmen
 import { readExport, unpack, MassarWorkbookError, type MassarExport } from './workbook/readExport';
 import { writeSheet } from './workbook/writeSheet';
 import { MASSAR_MIME } from './workbook/cells';
-import type { MassarCommit, MassarMappings, MassarMarksInput, MassarPlanInput, MassarResolve, MassarRoundInput } from './MassarDto';
+import { normalizeStatement, type MassarCommit, type MassarMappings, type MassarMarksInput, type MassarPlanInput, type MassarResolve, type MassarRoundInput, type MassarStatementInput } from './MassarDto';
 import { getBusinessDateOnly } from '../../shared/businessDate';
 import { resolveRoundLabels } from './roundLabels';
 
 const NAMESPACE = 'massar';
+/** When the sheet list last brought every grid of a year up to date (teachers, rosters, new subjects), by year id. */
+const FULL_REFRESH = new Map<string, number>(), FULL_REFRESH_MS = 60_000;
 const hash = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 type Sheet = NonNullable<Awaited<ReturnType<MassarRepository['sheetById']>>>;
 type PreviewPayload = { files: ImportedFile[]; template: string | null; base: string };
@@ -85,7 +87,7 @@ export class MassarService {
     // Planning decides which Contrôles exist; Massar setup only adds a due date.
     const planned = config ? massarPlanningControls(planning).map(({ term, exam, examFrom, examTo }) => ({ term, exam, examFrom, examTo,
       dueDate: config.plan?.dates.find(date => date.term === term && date.exam === exam)?.dueDate ?? null })) : [];
-    return { configured: !!config, hasRounds: rounds.length > 0, planned, plan: config?.plan ?? null };
+    return { configured: !!config, hasRounds: rounds.length > 0, planned, plan: config?.plan ?? null, statement: config ? withStatementDefaults(config.statement) : null };
   }
   async previewUploads(uploads: File[], actor: MassarActor) {
     this.writable();
@@ -435,8 +437,8 @@ export class MassarService {
    * one withdrawn in Students is dropped. Marks stay with the student and come
    * back if they return. A sent grid whose list changed must be sent again.
    */
-  private async syncRosters() {
-    const [sheets, rosters] = await Promise.all([this.repository.sheetRosters(), this.repository.activeRosters()]);
+  private async syncRosters(classId?: string) {
+    const [sheets, rosters] = await Promise.all([this.repository.sheetRosters(classId), this.repository.activeRosters(classId)]);
     for (const sheet of sheets) {
       const roster = rosters.get(sheet.massarClassId) ?? [];
       if (rosterKey(roster) === rosterKey(sheet.roster)) continue;
@@ -486,6 +488,14 @@ export class MassarService {
     await this.repository.savePlan({ primary: data.primary, college: data.college, dates: data.dates.flatMap(date => date.dueDate ? [{ term: date.term, exam: date.exam, dueDate: date.dueDate }] : []) });
     return { saved: true };
   }
+  /** How each student's statement prints this year: the order and coefficients of its subjects, and what it adds. */
+  @Transaction()
+  async saveStatement(data: MassarStatementInput) {
+    this.writable(); await this.repository.lock();
+    if (!await this.repository.yearConfig()) this.validator.refuse('setupRequired');
+    await this.repository.saveStatement(normalizeStatement(data));
+    return { saved: true };
+  }
   @Transaction()
   async changeDueDate(id: string, dueDate: string | null) {
     this.writable(); await this.repository.lock(); this.ensureDueDate(dueDate);
@@ -493,7 +503,10 @@ export class MassarService {
     await this.repository.updateDueDate(id, dueDate); return { saved: true };
   }
   async sheets(roundId?: string) {
-    if (this.year.status !== 'closed') {
+    // The list is polled every few seconds by every open Massar page: the full pass over every grid of the
+    // year runs at most once a minute per year, so the database is free for the sheets being opened.
+    if (this.year.status !== 'closed' && Date.now() - (FULL_REFRESH.get(this.year.id) ?? 0) >= FULL_REFRESH_MS) {
+      FULL_REFRESH.set(this.year.id, Date.now());
       // A subject the default model gained since this year was set up gets its grids in the open Contrôles.
       if (await this.modelHasNewSubjects()) await this.applyModelToOpenRounds();
       // A teacher assigned in School since the sheets were made shows here (and finds their sheets) at once.
@@ -521,9 +534,15 @@ export class MassarService {
     });
   }
   async sheet(id: string, actor: MassarActor): Promise<MassarSheetDetail> {
-    if (this.year.status !== 'closed') { await this.repository.relinkTeachers(); await this.syncRosters(); }
-    const row = await this.requireSheet(id), marks = numericMarks(await this.repository.marks(id)), manager = mayManageMassar(actor);
-    const config = await this.repository.yearConfig();
+    // Only this grid is brought up to date (its teacher, its class's students): it is read on every subject
+    // tab and polled while open, and re-checking every grid of the year each time made opening one slow.
+    // The sheet list still brings every grid up to date.
+    if (this.year.status !== 'closed') {
+      const before = await this.requireSheet(id);
+      await Promise.all([this.repository.relinkTeachers(id), this.syncRosters(before.sheet.massarClassId)]);
+    }
+    const [row, stored, config] = await Promise.all([this.requireSheet(id), this.repository.marks(id), this.repository.yearConfig()]);
+    const marks = numericMarks(stored), manager = mayManageMassar(actor);
     return { sheet: summarizeSheet(row, marks), round: row.round, components: row.sheet.components, maxMark: row.level.maxMark, students: row.sheet.roster, marks,
       schoolName: config?.schoolName ?? '', levelLabel: row.level.label, yearLabel: this.year.label,
       canEdit: this.year.status !== 'closed' && row.round.status !== 'closed' && (manager || actor.role === 'teacher') && row.sheet.status !== 'exported' && (row.sheet.status !== 'changed_after_export' || row.sheet.teacherUnlocked), canReopen: manager && this.year.status !== 'closed' && row.round.status !== 'closed' && row.sheet.status === 'exported' };

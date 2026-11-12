@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { boolean, check, date, index, integer, jsonb, numeric, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
-import type { MassarComponent, MassarPlan, MassarRoundStatus, MassarSheetKind, MassarSheetStatus, MassarAbsence, MassarStudent } from '@sms/contracts';
+import type { MassarComponent, MassarPlan, MassarRoundStatus, MassarSheetKind, MassarSheetStatus, MassarAbsence, MassarStatementSettings, MassarStudent } from '@sms/contracts';
 import { actionByRef, idField, timestamps } from '../../database/shared';
 import { academicYears } from '../academicYears/AcademicYearSchema';
 import { classes } from '../classes/classSchema';
@@ -16,6 +16,8 @@ export const massarYears = pgTable('massar_years', {
   templateFileId: text('template_file_id').notNull(), importedAt: timestamp('imported_at', { mode: 'string' }).defaultNow().notNull(), importedBy: actionByRef('imported_by'),
   // The school's Contrôles of the year; see MassarPlan.
   plan: jsonb('plan').$type<MassarPlan>().notNull().default({ primary: 2, college: 3, dates: [] }),
+  // How each student's statement prints; see MassarStatementSettings.
+  statement: jsonb('statement').$type<MassarStatementSettings>().notNull().default({ order: [], coefficients: {}, subjectAverage: false, subjectRank: false, generalAverage: false, rank: false, remarks: false, coefficientColumn: false }),
 }, table => [uniqueIndex('massar_year_unique').on(table.academicYearId)]);
 export const massarLevels = pgTable('massar_levels', {
   id: idField(12), academicYearId: yearRef(), code: text('code').notNull(), label: text('label').notNull(),

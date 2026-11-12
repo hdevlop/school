@@ -6,8 +6,8 @@ import { MassarSheet } from './MassarGuards';
 import { MASSAR_MIME } from './workbook/cells';
 import type { MassarActor } from './MassarValidator';
 import {
-  massarClassExportDto, massarCommitDto, massarDueDateDto, massarExportDto, massarIdParam, massarMappingDto, massarMarksDto, massarResolveDto, massarRevisionDto, massarPlanDto, massarRoundDto, massarUploadDto,
-  type MassarCommit, type MassarMappings, type MassarMarksInput, type MassarPlanInput, type MassarResolve, type MassarRoundInput,
+  massarClassExportDto, massarCommitDto, massarDueDateDto, massarExportDto, massarIdParam, massarMappingDto, massarMarksDto, massarResolveDto, massarRevisionDto, massarPlanDto, massarRoundDto, massarStatementDto, massarUploadDto,
+  type MassarCommit, type MassarMappings, type MassarMarksInput, type MassarPlanInput, type MassarResolve, type MassarRoundInput, type MassarStatementInput,
 } from './MassarDto';
 import { z } from 'zod';
 
@@ -90,6 +90,12 @@ export class MassarController {
   @Validate(massarPlanDto)
   @ResMsg('massar.success.saved')
   savePlan(@Body() body: MassarPlanInput) { return this.service.savePlan(body); }
+
+  @Put('/statement')
+  @CanSchoolWide('manage:massar')
+  @Validate(massarStatementDto)
+  @ResMsg('massar.success.saved')
+  saveStatement(@Body() body: MassarStatementInput) { return this.service.saveStatement(body); }
 
   @Put('/rounds/:id/due-date')
   @CanSchoolWide('manage:massar')

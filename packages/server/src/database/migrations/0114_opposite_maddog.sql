@@ -1,0 +1,1 @@
+ALTER TABLE "massar_years" ADD COLUMN "statement" jsonb DEFAULT '{"order":[],"coefficients":{},"subjectAverage":false,"generalAverage":false,"rank":false}'::jsonb NOT NULL;

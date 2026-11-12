@@ -1,0 +1,1 @@
+ALTER TABLE "massar_years" ALTER COLUMN "statement" SET DEFAULT '{"order":[],"coefficients":{},"subjectAverage":false,"subjectRank":false,"generalAverage":false,"rank":false,"remarks":false,"coefficientColumn":false}'::jsonb;

@@ -78,6 +78,11 @@
 .studentPaging strong { font-family:var(--font-arabic),var(--font-sans,ui-sans-serif,system-ui,sans-serif); font-weight:400; font-size:15px; }
 /* School's Latin name under the Arabic one (Notes), lined up with it on the right of the cell. */
 .latinName { display:block; overflow:hidden; text-overflow:ellipsis; text-align:end; font-size:11px; line-height:1.3; color:var(--muted-foreground); }
+/* The picked student, whose statement Print offers: a light orange row, sticky cells included. */
+.paperTable[data-pick] tbody tr { cursor:pointer; }
+.paperTable tbody tr[data-selected] > td, .paperTable tbody tr[data-selected] > th { background:#fff1e0; }
+.paperTable tbody tr[data-selected] > .stickyNumber { box-shadow:inset -3px 0 0 #f59e0b; }
+.paperTable tbody tr[data-selected] > .stickyName { font-weight:600; }
 .paperTable thead .stickyNumber, .paperTable thead .stickyCode, .paperTable thead .stickyName { z-index:4; background:color-mix(in oklab,var(--muted) 70%,var(--card)); }
 .cellField { min-width:65px; }
 .cellField[data-empty='true'] { background:color-mix(in oklab,#facc15 12%,var(--card)); }
@@ -522,6 +527,114 @@
 .planRows { list-style:none; margin:0; padding:6px 0 0; }
 .planRows > li { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:6px 14px; border-top:1px solid var(--border); font-size:13px; }
 .planRows .input { width:170px; height:32px; }
+/* Réglages Massar, one tab each: matching, the year's Contrôles, the student statements. */
+.tabCount { display:inline-grid; place-items:center; min-width:18px; height:18px; padding:0 5px; border-radius:9px; background:var(--muted); color:var(--muted-foreground); font-size:11px; font-weight:600; font-variant-numeric:tabular-nums; }
+.tabCount[data-tone='warning'] { background:color-mix(in oklab,#d97706 16%,var(--card)); color:#b45309; }
+.tabIntro { margin:0; font-size:13px; color:var(--muted-foreground); max-width:95ch; }
+/* Réglages takes the screen's whole width, as the sheets do. */
+.main.settings { max-width:none; padding-bottom:12px; }
+.settings .planPanel { margin-top:0; }
+/* In Réglages the explanation wraps beside the title and the save button keeps its place at the end. */
+.settings .planHead { flex-wrap:nowrap; align-items:flex-start; }
+.settings .planHead > span:first-child { flex:1; min-width:0; line-height:1.5; }
+.settings .planHead > button { flex-shrink:0; }
+.settings .settingsPanel { height:min(calc(100dvh - 230px),760px); }
+/* Réglages: what is set here in a column on the side, the open part beside it. */
+.settingsLayout { display:grid; grid-template-columns:232px minmax(0,1fr); gap:16px; align-items:start; min-width:0; }
+.settingsNav { position:sticky; top:0; display:flex; flex-direction:column; gap:2px; padding:8px; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); }
+.settingsNavItem { display:flex; align-items:center; gap:9px; width:100%; min-height:38px; padding:7px 10px; border:0; border-radius:8px; background:transparent; color:var(--muted-foreground); font-size:13px; font-weight:500; text-align:start; cursor:pointer; transition:background-color .15s, color .15s; }
+.settingsNavItem:hover { background:color-mix(in oklab,var(--muted) 65%,transparent); color:var(--foreground); }
+.settingsNavItem:focus-visible { outline:2px solid var(--ring); outline-offset:1px; }
+.settingsNavItem[aria-current='page'] { background:color-mix(in oklab,var(--primary) 10%,var(--card)); color:var(--primary); font-weight:600; }
+.settingsNavItem[data-open='true'] { color:var(--foreground); font-weight:600; }
+.settingsNavItem > svg { width:16px; height:16px; flex-shrink:0; }
+.settingsNavItem > span:first-of-type { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.settingsSubnav { display:flex; flex-direction:column; gap:1px; margin-block:1px 2px; margin-inline-start:18px; padding-inline-start:8px; border-inline-start:1px solid var(--border); }
+.settingsSubnav .settingsNavItem { min-height:32px; padding:5px 9px; font-size:12.5px; }
+.settingsSubnav .settingsNavItem > svg { width:14px; height:14px; }
+.dirtyDot { width:7px; height:7px; border-radius:50%; background:#d97706; flex-shrink:0; }
+.settingsContent { min-width:0; }
+.settingsStack { display:flex; flex-direction:column; gap:12px; min-width:0; }
+.statementTitle { display:flex; align-items:center; gap:6px; min-width:0; margin:0; font-size:13px; font-weight:500; color:var(--muted-foreground); }
+.statementTitle > svg { width:15px; height:15px; flex-shrink:0; }
+.statementTitle > svg:first-child { color:var(--primary); }
+.statementTitle strong { color:var(--foreground); font-weight:600; }
+@media(max-width:900px) {
+  .settingsLayout { grid-template-columns:minmax(0,1fr); gap:12px; }
+  .settingsNav { position:static; flex-direction:row; align-items:center; overflow-x:auto; padding:4px; }
+  .settingsNavItem { width:auto; flex-shrink:0; }
+  .settingsSubnav { flex-direction:row; margin:0; padding-inline-start:4px; border-inline-start:1px solid var(--border); }
+}
+/* The statement: one small tab each (what it adds, order, coefficients, preview), one save bar beside them. */
+.statementEditor { display:flex; flex-direction:column; min-width:0; gap:0; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); overflow:hidden; }
+.statementBar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px 12px; padding:8px 10px; border-bottom:1px solid var(--border); background:color-mix(in oklab,var(--muted) 45%,var(--card)); }
+.statementSave { display:flex; align-items:center; gap:6px; margin-inline-start:auto; }
+.unsaved { font-size:12px; color:#b45309; }
+.statementPanel { display:flex; flex-direction:column; gap:10px; min-width:0; margin:0; padding:12px 14px 14px; }
+.panelHelp { margin:0; font-size:12px; line-height:1.5; color:var(--muted-foreground); }
+.panelNote { margin:0; padding:7px 10px; border-radius:6px; font-size:12px; color:#92400e; background:color-mix(in oklab,#f59e0b 12%,var(--card)); }
+/* What the statement adds: a menu of checkboxes over the preview, each kept as it is clicked. */
+.contentTrigger { display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 8px 0 10px; border:1px solid var(--border); border-radius:7px; background:var(--card); font-size:12.5px; font-weight:550; color:var(--foreground); cursor:pointer; transition:border-color .15s, background-color .15s; }
+.contentTrigger:hover, .contentTrigger[data-state='open'] { border-color:color-mix(in oklab,var(--primary) 45%,var(--border)); background:color-mix(in oklab,var(--primary) 5%,var(--card)); }
+.contentTrigger > svg { width:14px; height:14px; flex-shrink:0; color:var(--muted-foreground); }
+.contentTrigger > svg:first-child { color:var(--primary); }
+.contentOption { align-items:flex-start; }
+.contentOption > span:last-child { display:flex; flex-direction:column; gap:1px; min-width:0; }
+.contentOption strong { font-size:13px; font-weight:600; }
+.contentOption small { font-size:11.5px; line-height:1.4; color:var(--muted-foreground); }
+.barSelect { width:120px; }
+/* The order reads down each column, then on to the next. */
+.orderColumns { columns:260px 3; column-gap:8px; list-style:none; margin:0; padding:0; }
+.orderColumns > li { display:flex; align-items:center; gap:8px; min-height:38px; margin-bottom:6px; padding:3px 4px; padding-inline-start:8px; border:1px solid var(--border); border-radius:8px; break-inside:avoid; }
+.orderColumns > li:hover { background:color-mix(in oklab,var(--muted) 45%,transparent); }
+.orderNumber { display:grid; place-items:center; flex-shrink:0; width:22px; height:22px; border-radius:50%; background:var(--muted); color:var(--muted-foreground); font-size:11px; font-weight:600; font-variant-numeric:tabular-nums; }
+/* A name and its levels sit on the page's side, next to the number, whatever the name's own direction. */
+.orderName { display:flex; flex-direction:column; align-items:flex-start; flex:1; min-width:0; line-height:1.25; }
+.orderName > bdi { max-width:100%; font-size:13px; font-weight:550; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.orderName > small { max-width:100%; font-size:10.5px; color:var(--muted-foreground); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+/* The level's coefficients beside the preview: 1 unless set, kept on leaving the field. */
+.previewLayout { flex:1; min-height:0; display:grid; grid-template-columns:clamp(320px,26vw,400px) minmax(0,1fr); grid-template-rows:minmax(0,1fr); gap:10px; }
+.coefficientSide { display:flex; flex-direction:column; gap:8px; min-height:0; overflow:auto; padding:10px; border:1px solid var(--border); border-radius:8px; background:var(--card); }
+.coefficientSide h3 { display:flex; align-items:center; gap:6px; margin:0; font-size:13px; font-weight:600; }
+.coefficientSide h3 > svg { width:14px; height:14px; flex-shrink:0; color:var(--primary); }
+.coefficientSide h3 small { margin-inline-start:auto; padding:1px 7px; border-radius:999px; background:var(--muted); font-size:11px; font-weight:600; color:var(--muted-foreground); }
+.coefficientList { display:flex; flex-direction:column; gap:6px; margin:0; padding:0; list-style:none; }
+.coefficientList > li { display:flex; align-items:center; gap:8px; min-height:48px; padding:5px 6px; border:1px solid var(--border); border-radius:8px; background:var(--card); transition:border-color .12s, box-shadow .12s, opacity .12s; }
+.coefficientList > li[data-changed='true'] { border-color:color-mix(in oklab,var(--primary) 45%,var(--border)); background:color-mix(in oklab,var(--primary) 5%,var(--card)); }
+.coefficientList > li[data-dragging='true'] { opacity:.45; }
+.coefficientList > li[data-over='true'] { border-color:var(--primary); box-shadow:0 0 0 1px var(--primary); }
+.coefficientList label { display:flex; align-items:center; gap:8px; flex:1; min-width:0; cursor:text; }
+.coefficientList bdi { min-width:0; font-size:14px; font-weight:550; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.dragHandle { display:grid; place-items:center; flex-shrink:0; width:20px; height:26px; padding:0; border:0; border-radius:5px; background:none; color:var(--muted-foreground); cursor:grab; }
+.dragHandle:hover, .dragHandle:focus-visible { background:var(--muted); color:var(--foreground); }
+.dragHandle:active { cursor:grabbing; }
+.dragHandle > svg { width:14px; height:14px; }
+/* The field's auto margin follows the page's direction, so a name sits on the page's side whatever its own. */
+.coefficientList .input { flex-shrink:0; width:62px; height:34px; margin-inline-start:auto; padding:4px 6px; font-size:14px; text-align:center; }
+.moveButtons { display:flex; flex-direction:column; flex-shrink:0; }
+.moveButtons > button { height:18px; }
+@media(max-width:900px) {
+  .previewLayout { grid-template-columns:minmax(0,1fr); grid-template-rows:auto; }
+  .coefficientSide { max-height:260px; }
+}
+/* The preview fills the screen below the header; the page scrolls inside it. */
+/* Aperçu takes exactly the room under the header, whatever the shell around it: the page does not scroll, only the statement in its frame. */
+@media(min-width:901px) {
+  .main.settings[data-fill='true'] { height:100%; }
+  .main.settings[data-fill='true'] .settingsLayout { flex:1; min-height:0; grid-template-rows:minmax(0,1fr); align-items:stretch; }
+  .main.settings[data-fill='true'] .settingsNav { align-self:start; }
+  .main.settings[data-fill='true'] .settingsContent { display:flex; flex-direction:column; min-height:0; }
+  .main.settings[data-fill='true'] .settingsContent > div:not([hidden]) { display:flex; flex-direction:column; flex:1; min-height:0; }
+  .main.settings[data-fill='true'] .statementEditor { flex:1; min-height:0; }
+}
+.statementEditor[data-section='preview'] .statementPanel { flex:1; min-height:0; padding:10px; }
+.previewFrame { flex:1; min-height:0; overflow:auto; border-radius:8px; background:#e9edf2; }
+@media(max-width:900px) { .previewFrame { flex:none; height:70dvh; } }
+.previewFrame iframe { max-width:860px; margin-inline:auto; border:0; border-radius:0; }
+@media(max-width:767px) {
+  .statementSave { width:100%; justify-content:flex-end; }
+  .settings .planHead { flex-wrap:wrap; }
+}
 
 /* One bar above the sheet: the Contrôle picker, then Overview and Print. */
 .topBar { display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
@@ -535,6 +648,23 @@
 .controlTrigger:disabled { opacity:.6; cursor:default; }
 .controlTrigger:focus-visible { outline:2px solid var(--ring); outline-offset:2px; }
 .controlPicker:has(.controlDate) .controlTrigger { border-start-end-radius:0; border-end-end-radius:0; }
+/* Print: two titled columns split by a vertical rule; groups inside a column split by a horizontal one; counts at the end. */
+.printMenu { display:grid; grid-template-columns:minmax(0,1fr); width:min(320px,calc(100vw - 24px)); }
+.printMenu[data-columns='2'] { grid-template-columns:minmax(0,1fr) 1px minmax(0,1fr); width:min(700px,calc(100vw - 24px)); }
+.printColumn { display:flex; flex-direction:column; min-width:0; padding:6px; }
+.printDivider { align-self:stretch; width:1px; background:var(--border); }
+.printTitle { display:flex; align-items:center; gap:6px; margin:-6px -6px 4px; padding:9px 14px 8px; border-bottom:1px solid var(--border); background:color-mix(in oklab,var(--muted) 45%,transparent); font-size:11px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--muted-foreground); }
+.printTitle > svg { width:13px; height:13px; }
+.printItem { display:flex; align-items:center; gap:10px; min-height:44px; padding:6px 8px; }
+.printItem > svg { width:16px; height:16px; flex-shrink:0; color:var(--primary); }
+.printItem > span:nth-of-type(1) { display:flex; flex:1; flex-direction:column; min-width:0; }
+.printItem strong { font-size:13px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.printItem small { font-size:11px; color:var(--muted-foreground); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.printCount { flex-shrink:0; min-width:24px; padding:1px 7px; border-radius:999px; background:var(--muted); font-size:11px; font-weight:600; font-variant-numeric:tabular-nums; text-align:center; color:var(--muted-foreground); }
+@media(max-width:640px) {
+  .printMenu[data-columns='2'] { grid-template-columns:minmax(0,1fr); }
+  .printDivider { width:auto; height:1px; }
+}
 .controlOption { display:flex; align-items:center; gap:8px; }
 .controlOption > span:last-child { display:flex; flex-direction:column; min-width:0; }
 .controlOption strong { font-size:13px; font-weight:500; }

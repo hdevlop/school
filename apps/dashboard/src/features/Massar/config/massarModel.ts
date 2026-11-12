@@ -5,6 +5,23 @@ import { isValidMassarMark } from '@sms/contracts';
 export const classCycle = (name: string): 'primary' | 'college' => /^\dAPIC-/i.test(name) ? 'college' : 'primary';
 /** Primary before collège, then by level and section. */
 export const classOrder = (a: string, b: string) => Number(classCycle(a) === 'college') - Number(classCycle(b) === 'college') || a.localeCompare(b, 'en', { numeric: true });
+/**
+ * Levels as a short line: consecutive levels of a cycle become a range
+ * (1APG, 2APG … 6APG, 1APIC, 2APIC → "1APG–6APG · 1APIC–2APIC"), a gap starts a new one.
+ */
+export function levelRanges(codes: readonly string[]) {
+  const groups = new Map<string, number[]>(), others: string[] = [];
+  for (const code of [...new Set(codes)].sort((a, b) => classOrder(`${a}-1`, `${b}-1`))) {
+    const match = /^(\d+)(\D.*)$/.exec(code);
+    if (match) groups.set(match[2], [...(groups.get(match[2]) ?? []), Number(match[1])]); else others.push(code);
+  }
+  const parts = [...groups.entries()].flatMap(([suffix, numbers]) => {
+    const runs: Array<[number, number]> = [];
+    for (const number of numbers) { const last = runs.at(-1); if (last && number === last[1] + 1) last[1] = number; else runs.push([number, number]); }
+    return runs.map(([from, to]) => from === to ? `${from}${suffix}` : `${from}${suffix}–${to}${suffix}`);
+  });
+  return [...parts, ...others].join(' · ');
+}
 /** How much is entered, as a percent that never says 0% once a mark exists, nor 100% while one is missing. */
 export const progressPercent = (filled: number, total: number) => !total || !filled ? 0 : filled >= total ? 100 : Math.min(99, Math.max(1, Math.round(filled / total * 100)));
 export function sheetState(sheet: MassarSheetRow) {

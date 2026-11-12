@@ -1,12 +1,12 @@
 'use client';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CalendarClock, Check, ChevronDown, FileSpreadsheet, FileText, FileUp, Files, FolderArchive, Layers, LayoutList, Plus, Printer, School, Send, Upload } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, NajmScroll, NButton, NDialog, NEmptyState, NSheet } from 'najm-kit';
+import { CalendarClock, Check, ChevronDown, FileSpreadsheet, FileText, FileUp, Files, FolderArchive, GraduationCap, Layers, LayoutList, Plus, Printer, School, Send, Upload, UserRound, Users } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, NajmScroll, NButton, NDialog, NEmptyState, NSheet } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useNThemeBrandingSlot } from 'najm-theme/react';
 import { toast } from 'sonner';
-import type { MassarRound, MassarSetup, MassarSheetDetail, MassarSheetRow } from '@sms/contracts';
+import type { MassarRound, MassarSetup, MassarSheetDetail, MassarSheetRow, MassarStatementSettings } from '@sms/contracts';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { CLASS_DOCUMENT_COLORS } from '@/features/Assessments/planning/planningModel';
@@ -16,9 +16,10 @@ import { api } from '@/services/http';
 import { downloadMassar, massarPost, massarPut, useMassarAction, useMassarRead } from '../hooks/useMassar';
 import { classCycle, classOrder, classState, controlList, nextRound, progressPercent, sheetState, type PlannedRound } from '../config/massarModel';
 import { buildMassarDocument, type MassarPaperOptions } from '../config/massarDocument';
+import { buildStudentStatementDocument } from '../config/studentStatementDocument';
 import { MassarHeader, MassarLoadError, MassarLoadingSkeleton } from './MassarShared';
 import { MassarOverview } from './MassarOverview';
-import { MassarPaper } from './MassarPaper';
+import { MassarPaper, type SelectedStudent } from './MassarPaper';
 import { MassarFilesDialog } from './MassarFilesDialog';
 import { MassarWaitingDialog } from './MassarWaitingDialog';
 import { MassarWaitingPanel } from './MassarWaitingPanel';
@@ -29,13 +30,15 @@ function MassarContent() {
   const router = useRouter();
   const { t, language } = useTranslation(), viewer = useViewerRole(), action = useMassarAction(), logo = useNThemeBrandingSlot('authLogo');
   const manager = viewer.isSchoolWide && viewer.can('manage:massar'), canOverview = manager || viewer.role === 'supervisor';
-  const availability = useMassarRead<{ configured: boolean; hasRounds: boolean; planned?: PlannedRound[] }>('/availability', true, 15000);
+  const availability = useMassarRead<{ configured: boolean; hasRounds: boolean; planned?: PlannedRound[]; statement?: MassarStatementSettings | null }>('/availability', true, 15000);
   const setupQuery = useMassarRead<MassarSetup>('/setup', manager), roundsQuery = useMassarRead<MassarRound[]>('/rounds', true, 15000);
   const [pickedRound, setRound] = useState(''), [pickedClass, setClass] = useState<string | null>(null), [pickedSheet, setSheet] = useState('');
   const [filesOpen, setFilesOpen] = useState(false), [opening, setOpening] = useState(false), [downloadOpen, setDownloadOpen] = useState(false);
   const [busy, setBusy] = useState(false), [printPending, setPrintPending] = useState(false), [proposed, setProposed] = useState({ term: 1, exam: 1, dueDate: '' });
   const [dueEditOpen, setDueEditOpen] = useState(false), [dateDraft, setDateDraft] = useState('');
   const [waitingClass, setWaitingClass] = useState(''), [overviewOpen, setOverviewOpen] = useState(false);
+  // The students picked on the sheet, kept with their class: another class has no such students.
+  const [picked, setPicked] = useState<{ className: string; students: SelectedStudent[] } | null>(null);
   const rounds = [...(roundsQuery.data ?? [])].sort((a, b) => a.term - b.term || a.exam - b.exam);
   const round = rounds.find(round => round.id === pickedRound) ?? rounds.at(-1);
   const sheetsQuery = useMassarRead<MassarSheetRow[]>(`/sheets?roundId=${encodeURIComponent(round?.id ?? '')}`, !!round, 10000);
@@ -120,16 +123,46 @@ function MassarContent() {
     { key: 'level', icon: Layers, label: t('massar.flow.printLevel', { level }), chosen: levelSheets },
     { key: 'all', icon: School, label: t('massar.flow.printAll'), chosen: sheets },
   ];
-  const print = async (chosen: MassarSheetRow[]) => {
+  // The same sheets print as Massar papers (one per subject) or as each student's statement (one per student).
+  const print = async (chosen: MassarSheetRow[], build: (details: MassarSheetDetail[]) => string = details => buildMassarDocument(details, options)) => {
     if (!chosen.length) return;
     setPrintPending(true);
     try { await action.run(async () => {
       // A few at a time: a whole Contrôle is well over a hundred sheets.
       const details: MassarSheetDetail[] = [];
       for (let start = 0; start < chosen.length; start += 6) details.push(...await Promise.all(chosen.slice(start, start + 6).map(async sheet => (await api.get(`/massar/sheets/${encodeURIComponent(sheet.id)}`)).data.data as MassarSheetDetail)));
-      if (!await printPlanningDocument(buildMassarDocument(details, options))) toast.error(t('insurance.popupBlocked'));
+      if (!await printPlanningDocument(build(details))) toast.error(t('insurance.popupBlocked'));
     }); } finally { setPrintPending(false); }
   };
+  // بيان نقط المراقبة: every subject of a student's class on one page. Only for those who see every
+  // subject of a class: a teacher's sheets are their own subjects, and a statement missing the others
+  // would look complete.
+  const pickedHere = picked?.className === className ? picked.students : [];
+  // A click outside the sheet, or Escape, lets the students go. Print and the subject tabs keep them:
+  // they are how the picked students' statements are reached. Escape closing a menu closes only the menu.
+  const hasPicked = pickedHere.length > 0;
+  useEffect(() => {
+    if (!hasPicked) return;
+    const outside = (event: PointerEvent) => { if (!(event.target as Element | null)?.closest?.('table[data-pick], [data-keep-selection]')) setPicked(null); };
+    const escape = (event: KeyboardEvent) => { if (event.key === 'Escape' && !document.querySelector('[role="menu"], [role="dialog"]')) setPicked(null); };
+    document.addEventListener('pointerdown', outside);
+    document.addEventListener('keydown', escape);
+    return () => { document.removeEventListener('pointerdown', outside); document.removeEventListener('keydown', escape); };
+  }, [hasPicked]);
+  // A click picks one student; Ctrl/⌘ + click adds one, or takes it off again.
+  const pickStudent = (student: SelectedStudent, toggle: boolean) => setPicked({
+    className,
+    students: !toggle ? [student] : pickedHere.some(item => item.id === student.id) ? pickedHere.filter(item => item.id !== student.id) : [...pickedHere, student],
+  });
+  const statementChoices = canOverview ? [
+    { key: 'student', icon: UserRound, label: !pickedHere.length ? t('massar.flow.statements.pickStudent') : pickedHere.length === 1 ? t('massar.flow.statements.student', { name: pickedHere[0].name }) : t('massar.flow.statements.students', { count: pickedHere.length }),
+      chosen: pickedHere.length ? subjects : [], studentIds: pickedHere.map(item => item.id) },
+    { key: 'class', icon: Users, label: t('massar.flow.statements.class', { name: className }), chosen: subjects },
+    { key: 'level', icon: Layers, label: t('massar.flow.statements.level', { level }), chosen: levelSheets },
+    { key: 'all', icon: GraduationCap, label: t('massar.flow.statements.all'), chosen: sheets },
+  ] : [];
+  // One student's page is still ranked among the whole class, so every subject of the class is read.
+  const printStatements = (chosen: MassarSheetRow[], studentIds?: string[]) => print(chosen, details => buildStudentStatementDocument(details, { language, logo, title: t('massar.flow.statements.title'), settings: availability.data?.statement, studentIds }));
   const empty = (title: string, description?: string, button?: React.ReactNode) => <div className={styles.emptyWrap}><NEmptyState surface="panel" icon={FEATURE_ICONS.massar} title={t(title)} description={description ? t(description) : undefined} action={button} /></div>;
   const addFiles = <NButton leftIcon={Upload} onClick={() => setFilesOpen(true)}>{t('massar.flow.upload')}</NButton>;
   const controlPicker = controls.length > 0 ? <div className={styles.controlPicker}>
@@ -185,16 +218,37 @@ function MassarContent() {
           </DropdownMenu>}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <NButton variant="outline" size="icon" aria-label={t('insurance.print')} title={t('insurance.print')} disabled={busy || printPending || !sheets.length} loading={printPending}>{!printPending && <Printer className="size-4" aria-hidden="true" />}</NButton>
+              <NButton data-keep-selection variant="outline" size="icon" aria-label={t('insurance.print')} title={t('insurance.print')} disabled={busy || printPending || !sheets.length} loading={printPending}>{!printPending && <Printer className="size-4" aria-hidden="true" />}</NButton>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-80">
-              {printChoices.map(({ key, icon: Icon, label, detail, chosen }, index) => <Fragment key={key}>
-                {index === 2 && <DropdownMenuSeparator />}
-                <DropdownMenuItem className={styles.controlOption} disabled={!chosen.length} onSelect={() => void print(chosen)}>
-                  <span className={styles.controlCheck}><Icon aria-hidden /></span>
-                  <span><strong><bdi>{label}</bdi></strong><small>{detail ? <><bdi>{detail}</bdi> · </> : null}{t('massar.flow.printSheets', { count: chosen.length })}</small></span>
-                </DropdownMenuItem>
-              </Fragment>)}
+            {/* Two titled columns, side by side: the Massar papers (one per subject), then each student's statement (one per student). */}
+            <DropdownMenuContent data-keep-selection align="end" className="w-auto max-w-[calc(100vw-24px)] p-0">
+              <div className={styles.printMenu} data-columns={statementChoices.length > 0 ? 2 : 1}>
+              <DropdownMenuGroup className={styles.printColumn}>
+                <DropdownMenuLabel className={styles.printTitle}><Files aria-hidden />{t('massar.flow.printTitle')}</DropdownMenuLabel>
+                {printChoices.map(({ key, icon: Icon, label, detail, chosen }, index) => <Fragment key={key}>
+                  {index === 2 && <DropdownMenuSeparator />}
+                  <DropdownMenuItem className={styles.printItem} disabled={!chosen.length} onSelect={() => void print(chosen)}>
+                    <Icon aria-hidden />
+                    <span><strong><bdi>{label}</bdi></strong>{detail && <small><bdi>{detail}</bdi></small>}</span>
+                    <span className={styles.printCount} dir="ltr" title={t('massar.flow.printSheets', { count: chosen.length })}>{chosen.length}</span>
+                  </DropdownMenuItem>
+                </Fragment>)}
+              </DropdownMenuGroup>
+              {statementChoices.length > 0 && <>
+                <div className={styles.printDivider} role="separator" aria-orientation="vertical" />
+                <DropdownMenuGroup className={styles.printColumn}>
+                  <DropdownMenuLabel className={styles.printTitle}><UserRound aria-hidden />{t('massar.flow.statements.title')}</DropdownMenuLabel>
+                  {statementChoices.map(({ key, icon: Icon, label, chosen, studentIds }, index) => <Fragment key={key}>
+                    {index === 1 && <DropdownMenuSeparator />}
+                    <DropdownMenuItem className={styles.printItem} disabled={!chosen.length} onSelect={() => void printStatements(chosen, studentIds)}>
+                      <Icon aria-hidden />
+                      <span><strong><bdi>{label}</bdi></strong><small>{key === 'student' && !chosen.length ? t('massar.flow.statements.pickHelp') : t(studentIds?.length === 1 ? 'massar.flow.statements.studentHelp' : 'massar.flow.statements.help', { count: new Set(chosen.map(sheet => sheet.subjectName)).size })}</small></span>
+                      {key === 'student' && studentIds && studentIds.length > 0 && <span className={styles.printCount} dir="ltr">{studentIds.length}</span>}
+                    </DropdownMenuItem>
+                  </Fragment>)}
+                </DropdownMenuGroup>
+              </>}
+              </div>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>;
@@ -268,7 +322,7 @@ function MassarContent() {
         {blocked.some(cls => cls.className === className) ? <MassarWaitingPanel className={className} count={blocked.find(cls => cls.className === className)!.unmatchedCount} cls={setup?.classes.find(cls => cls.name === className)} fix={manager ? () => setWaitingClass(className) : undefined} /> : sheet && <>
           {/* One card, like the classes beside it: the class's subjects as tabs (right to left, as the sheet reads), then the sheet. */}
           <div className={styles.sheetCard}>
-            <div className={styles.subjectTabs} dir="rtl" role="group" aria-label={t('massar.subject')}>
+            <div data-keep-selection className={styles.subjectTabs} dir="rtl" role="group" aria-label={t('massar.subject')}>
               {subjects.map(subject => {
                 const status = sheetState(subject), percent = progressPercent(subject.total - subject.missing, subject.total);
                 const full = t(`massar.flow.status.${status}`, { count: subject.total - subject.missing, total: subject.total });
@@ -279,7 +333,8 @@ function MassarContent() {
                 </button>;
               })}
             </div>
-            <MassarPaper key={`${round?.id}:${sheet.id}`} id={sheet.id} options={options} onBusy={setBusy} />
+            <MassarPaper key={`${round?.id}:${sheet.id}`} id={sheet.id} options={options} onBusy={setBusy}
+              selected={pickedHere.map(item => item.id)} onSelect={pickStudent} />
           </div>
         </>}
         </div>

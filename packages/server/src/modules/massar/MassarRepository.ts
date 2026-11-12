@@ -47,6 +47,7 @@ export class MassarRepository {
     return { year: yearRows[0] ?? null, yearLabel: this.year.label, levels, classes: mappedClasses, subjects: mappedSubjects, enrollments, appClasses, appSections, appSubjects, appStudents, assignments };
   }
   async savePlan(plan: NonNullable<typeof massarYears.$inferInsert['plan']>) { await this.db.update(massarYears).set({ plan }).where(eq(massarYears.academicYearId, this.year.id)); }
+  async saveStatement(statement: NonNullable<typeof massarYears.$inferInsert['statement']>) { await this.db.update(massarYears).set({ statement }).where(eq(massarYears.academicYearId, this.year.id)); }
   /** The year's Planning, every class: when each Contrôle's exams take place. */
   async planningMonths() { return this.db.select({ classId: examPlanning.classId, months: examPlanning.months }).from(examPlanning).where(eq(examPlanning.academicYearId, this.year.id)); }
   async yearConfig() { return (await this.db.select().from(massarYears).where(eq(massarYears.academicYearId, this.year.id)))[0]; }
@@ -182,7 +183,8 @@ export class MassarRepository {
    * Unscoped on purpose: a teacher's own sheets are found through this link. The revision stays,
    * since who teaches is not the sheet's content and an open draft must still save.
    */
-  async relinkTeachers() {
+  /** Every open grid's teacher from School's assignments; one grid when `sheetId` is given. */
+  async relinkTeachers(sheetId?: string) {
     await this.db.execute(sql`update massar_sheets sheet set teacher_assignment_id = link.assignment_id
       from (select candidate.id as sheet_id,
           (select case when count(*) = 1 then min(assignment.id) end from teacher_assignments assignment
@@ -192,7 +194,7 @@ export class MassarRepository {
         join massar_classes cls on cls.id = candidate.massar_class_id
         join massar_subjects subject on subject.id = candidate.massar_subject_id
         join massar_rounds round on round.id = candidate.round_id
-        where candidate.academic_year_id = ${this.year.id} and round.status <> 'closed' and candidate.exported_at is null) link
+        where candidate.academic_year_id = ${this.year.id} and round.status <> 'closed' and candidate.exported_at is null${sheetId ? sql` and candidate.id = ${sheetId}` : sql``}) link
       where sheet.id = link.sheet_id and sheet.teacher_assignment_id is distinct from link.assignment_id`);
   }
   async createSheet(data: Omit<typeof massarSheets.$inferInsert, 'academicYearId'>) { await this.db.insert(massarSheets).values({ ...data, academicYearId: this.year.id }).onConflictDoNothing(); }
@@ -221,9 +223,10 @@ export class MassarRepository {
     }
     return rosters;
   }
-  /** Every grid of the year with the student list it was given. */
-  async sheetRosters() {
-    return this.db.select({ id: massarSheets.id, massarClassId: massarSheets.massarClassId, roster: massarSheets.roster, status: massarSheets.status }).from(massarSheets).where(eq(massarSheets.academicYearId, this.year.id));
+  /** Every grid of the year (or of one class) with the student list it was given. */
+  async sheetRosters(classId?: string) {
+    return this.db.select({ id: massarSheets.id, massarClassId: massarSheets.massarClassId, roster: massarSheets.roster, status: massarSheets.status }).from(massarSheets)
+      .where(and(eq(massarSheets.academicYearId, this.year.id), classId ? eq(massarSheets.massarClassId, classId) : undefined));
   }
   /** A grid takes its class's current students; marks stay with each student. */
   async replaceSheetRoster(id: string, roster: MassarStudent[], status?: MassarSheetStatus) {

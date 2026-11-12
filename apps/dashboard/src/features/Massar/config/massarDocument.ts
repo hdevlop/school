@@ -3,12 +3,23 @@ import { CLASS_DOCUMENT_COLORS } from '@/features/Assessments/planning/planningM
 import { componentLabel } from './componentLabels';
 
 export type MassarPaperOptions = { language: string; logo?: string | null; title: string; student: string; teacher: string; term: string; exam: string };
-const e = (value: unknown) => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
+export const escapeHtml = (value: unknown) => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
+const e = escapeHtml;
 
 /** Branding URLs are data, never markup or active URI schemes; the print window needs them absolute. */
-function safeUrl(value: string | null | undefined, origin: string) {
+export function safeUrl(value: string | null | undefined, origin: string) {
   if (!value) return '';
   try { const url = new URL(value, origin); return ['https:', 'http:'].includes(url.protocol) ? url.href : ''; } catch { return ''; }
+}
+
+/** The printed papers' fonts, served with the planning documents: Carlito for Latin text, FreeSerif for Arabic. */
+export function massarFontFaces(origin: string) {
+  const fonts = e(safeUrl('/fonts/assessment-planning/', origin));
+  return `@font-face{font-family:MassarLatin;src:url('${fonts}Carlito-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+    @font-face{font-family:MassarLatin;src:url('${fonts}Carlito-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
+    @font-face{font-family:MassarArabic;src:url('${fonts}FreeSerif.ttf') format('truetype');font-weight:400;font-display:swap}
+    @font-face{font-family:MassarArabic;src:url('${fonts}FreeSerifBold.ttf') format('truetype');font-weight:700;font-display:swap}
+    @font-face{font-family:MassarHand;src:url('${fonts}ArefRuqaa-Regular.ttf') format('truetype');font-weight:400;font-display:block}`;
 }
 
 // A4 landscape with a 7mm margin all round, held by the page itself (a print dialog set to no margins keeps it): 283mm of width.
@@ -23,7 +34,8 @@ const IDENTITY_WIDTH = IDENTITY.number + IDENTITY.code + IDENTITY.name;
 const USUAL_STUDENTS = 25, COMPACT_STUDENTS = 38;
 const isCompact = (students: number) => students > USUAL_STUDENTS && students <= COMPACT_STUDENTS;
 
-const mark = (data: MassarSheetDetail, studentId: string, code: string) => {
+/** A mark as printed: two decimals, مبرر for a justified absence, and nothing when none is entered (never 0). */
+export const massarMarkText = (data: MassarSheetDetail, studentId: string, code: string) => {
   const found = data.marks.find(item => item.studentId === studentId && item.componentCode === code);
   return found?.absence === 'justified' ? 'مبرر' : found?.mark === null || found?.mark === undefined ? '' : Number(found.mark).toFixed(2);
 };
@@ -36,7 +48,7 @@ const mark = (data: MassarSheetDetail, studentId: string, code: string) => {
  */
 export function buildMassarDocument(sheets: MassarSheetDetail[], options: MassarPaperOptions) {
   const origin = typeof window === 'undefined' ? 'http://localhost' : window.location.origin;
-  const logo = safeUrl(options.logo, origin), fonts = safeUrl('/fonts/assessment-planning/', origin);
+  const logo = safeUrl(options.logo, origin);
   const pages = sheets.map(data => {
     const level = Number(/^([1-6])AP/i.exec(data.sheet.className)?.[1] ?? 5), [accent, pale] = CLASS_DOCUMENT_COLORS[level - 1];
     const markWidth = Math.max(MARK_MIN, Math.min(MARK_MAX, Math.floor((PAGE_WIDTH - IDENTITY_WIDTH) / Math.max(1, data.components.length) * 10) / 10));
@@ -56,16 +68,13 @@ export function buildMassarDocument(sheets: MassarSheetDetail[], options: Massar
           <th>ر.ت<small dir="ltr">N°</small></th><th>رقم التلميذ<small>Code Massar</small></th><th>إسم التلميذ<small dir="auto">${e(options.student)}</small></th>
           ${data.components.map(component => `<th class="part" dir="auto">${e(componentLabel(component.name))}</th>`).join('')}
         </tr></thead>
-        <tbody>${data.students.map(student => `<tr><td class="number">${student.position + 1}</td><td dir="ltr">${e(student.studentCode)}</td><td class="name" dir="auto">${e(student.name)}</td>${data.components.map(component => `<td class="mark" dir="ltr">${e(mark(data, student.id, component.code))}</td>`).join('')}</tr>`).join('')}</tbody>
+        <tbody>${data.students.map(student => `<tr><td class="number">${student.position + 1}</td><td dir="ltr">${e(student.studentCode)}</td><td class="name" dir="auto">${e(student.name)}</td>${data.components.map(component => `<td class="mark" dir="ltr">${e(massarMarkText(data, student.id, component.code))}</td>`).join('')}</tr>`).join('')}</tbody>
       </table></div>
       <footer><span>توقيع الأستاذ(ة): <i></i></span><span class="latin" dir="auto">${e(data.schoolName)} · <bdi>${e(data.sheet.className)}</bdi> · ${e(data.sheet.subjectName)} · <bdi>${e(data.yearLabel)}</bdi></span></footer>
     </section>`;
   }).join('');
   return `<!doctype html><html lang="${e(options.language)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${e(options.title)}</title><style>
-    @font-face{font-family:MassarLatin;src:url('${e(fonts)}Carlito-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
-    @font-face{font-family:MassarLatin;src:url('${e(fonts)}Carlito-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
-    @font-face{font-family:MassarArabic;src:url('${e(fonts)}FreeSerif.ttf') format('truetype');font-weight:400;font-display:swap}
-    @font-face{font-family:MassarArabic;src:url('${e(fonts)}FreeSerifBold.ttf') format('truetype');font-weight:700;font-display:swap}
+    ${massarFontFaces(origin)}
     *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}html{color-scheme:light}
     body{margin:0;padding:16px;background:#e9edf2;color:#1f2a3a;font:10pt/1.3 MassarLatin,MassarArabic,Calibri,Arial,sans-serif}
     .sheet{display:flex;flex-direction:column;width:297mm;max-width:100%;min-height:210mm;margin:0 auto 16px;padding:7mm;background:#fff;box-shadow:0 2px 9px #0001}
