@@ -1,6 +1,6 @@
 import { expect, it } from 'bun:test';
 import { MASSAR_DEFAULT_STATEMENT, type MassarSheetDetail } from '@sms/contracts';
-import { buildStudentStatementDocument, classRanks, generalAverage, orderSubjects, previewStatementSheets, statementRowHeight, studentStatements } from '@/features/Massar/config/studentStatementDocument';
+import { buildStudentStatementDocument, classRanks, generalAverage, orderSubjects, previewStatementSheets, REMARKS, remarkBand, remarkLanguage, statementRowHeight, studentRemark, studentStatements } from '@/features/Massar/config/studentStatementDocument';
 
 const student = (id: string, position: number) => ({ id, name: `تلميذ ${id}`, studentCode: `F${id}`, dateOfBirth: '2016-01-01', massarStudentId: null, position });
 const sheet = (className: string, subjectName: string, components: Array<[string, string]>, students: ReturnType<typeof student>[], marks: MassarSheetDetail['marks'] = []) => ({
@@ -155,4 +155,27 @@ it('shares the page between the rows, within a hand-writable height', () => {
   expect(statementRowHeight(25)).toBeCloseTo(8);
   expect(statementRowHeight(25, 18)).toBeCloseTo(7.3);
   expect(statementRowHeight(60)).toBe(6);
+});
+
+it('writes remarks by band, in the subject language, varied between students but stable on reprint', () => {
+  expect([9, 8, 7, 6, 5, 4.9, null].map(mark => remarkBand(mark, 10))).toEqual([0, 1, 2, 3, 4, 5, null]);
+  expect(remarkBand(18, 20)).toBe(0);
+  expect([remarkLanguage('اللغة الفرنسية'), remarkLanguage('اللغة الإنجليزية')]).toEqual(['fr', 'en']);
+  // Subjects taught in Arabic are always remarked in Arabic.
+  for (const subject of ['اللغة العربية', 'التربية الإسلامية', 'الاجتماعيات', 'التاريخ والجغرافيا']) expect(remarkLanguage(subject, '5APG-1')).toBe('ar');
+  // Any other subject's teacher mostly writes in French (about 9 in 10), else Arabic; the same for that subject of that class.
+  const classes = ['1', '2', '3', '4', '5', '6'].flatMap(level => [`${level}APG-1`, `${level}APG-2`, `${level}APG-3`]);
+  const others = ['الرياضيات', 'النشاط العلمي', 'التربية البدنية', 'التربية الفنية', 'المعلوميات'].flatMap(subject => classes.map(cls => remarkLanguage(subject, cls)));
+  const frenchShare = others.filter(language => language === 'fr').length / others.length;
+  expect(frenchShare).toBeGreaterThan(0.75);
+  expect(others).toContain('ar');
+  expect(remarkLanguage('الرياضيات', '1APG-1')).toBe(remarkLanguage('الرياضيات', '1APG-1'));
+  expect(studentRemark(8.5, 10, 'اللغة الفرنسية', 'a')).toBe(studentRemark(8.5, 10, 'اللغة الفرنسية', 'a'));
+  expect(studentRemark(null, 10, 'الرياضيات', 'a')).toBe('');
+  const french = new Set(Array.from({ length: 30 }, (_, index) => studentRemark(8.5, 10, 'اللغة الفرنسية', `s${index}`)));
+  expect(french.size).toBeGreaterThan(1);
+  for (const remark of french) expect(REMARKS.fr[1]).toContain(remark);
+  // On one page, two subjects in the same band get two different wordings.
+  const used = new Set<string>();
+  expect(studentRemark(9.5, 10, 'الرياضيات', 'a', used)).not.toBe(studentRemark(9.5, 10, 'النشاط العلمي', 'a', used));
 });

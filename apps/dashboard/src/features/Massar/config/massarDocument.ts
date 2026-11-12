@@ -19,7 +19,10 @@ export function massarFontFaces(origin: string) {
     @font-face{font-family:MassarLatin;src:url('${fonts}Carlito-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
     @font-face{font-family:MassarArabic;src:url('${fonts}FreeSerif.ttf') format('truetype');font-weight:400;font-display:swap}
     @font-face{font-family:MassarArabic;src:url('${fonts}FreeSerifBold.ttf') format('truetype');font-weight:700;font-display:swap}
-    @font-face{font-family:MassarHand;src:url('${fonts}ArefRuqaa-Regular.ttf') format('truetype');font-weight:400;font-display:block}`;
+    @font-face{font-family:MassarHand;src:url('${fonts}ArefRuqaa-Regular.ttf') format('truetype');font-weight:400;font-display:block}
+    @font-face{font-family:MassarPenKalam;src:url('${fonts}Kalam-Regular.ttf') format('truetype');font-weight:400;font-display:block}
+    @font-face{font-family:MassarPenCaveat;src:url('${fonts}Caveat.ttf') format('truetype');font-weight:400 700;font-display:block}
+    @font-face{font-family:MassarPenReenie;src:url('${fonts}ReenieBeanie.ttf') format('truetype');font-weight:400;font-display:block}`;
 }
 
 // A4 landscape with a 7mm margin all round, held by the page itself (a print dialog set to no margins keeps it): 283mm of width.

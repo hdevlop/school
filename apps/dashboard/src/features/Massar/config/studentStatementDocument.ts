@@ -120,12 +120,94 @@ const fixed = (value: number | null) => value === null ? '—' : value.toFixed(2
  * a remarks cell per subject left for the teacher's hand. The general average and the rank
  * in the class follow the table when the school asks for them.
  */
-/** The remark a teacher writes for a mark, by its share of the maximum (/10 primary, /20 collège); none without a mark. */
-export function remarkFor(mark: number | null, maxMark: number) {
-  if (mark === null || !maxMark) return '';
+/** A mark's band by its share of the maximum (/10 primary, /20 collège): 0 ممتاز (≥90%) … 5 ضعيف (<50%); none without a mark. */
+export function remarkBand(mark: number | null, maxMark: number) {
+  if (mark === null || !maxMark) return null;
   const share = mark / maxMark;
-  return share >= 0.9 ? 'ممتاز' : share >= 0.8 ? 'حسن جدا' : share >= 0.7 ? 'حسن' : share >= 0.6 ? 'مستحسن' : share >= 0.5 ? 'متوسط' : 'ضعيف';
+  return share >= 0.9 ? 0 : share >= 0.8 ? 1 : share >= 0.7 ? 2 : share >= 0.6 ? 3 : share >= 0.5 ? 4 : 5;
 }
+/** The plain word for a band, as the scale names it. */
+export function remarkFor(mark: number | null, maxMark: number) {
+  const band = remarkBand(mark, maxMark);
+  return band === null ? '' : REMARKS.ar[band][0];
+}
+
+type RemarkLanguage = 'ar' | 'fr' | 'en';
+/**
+ * What teachers write, band by band, in the subject's own language: the same band reads differently
+ * from one student to the next (حسن جدا, T. Bien, Très bon travail…), as on a statement filled by hand.
+ */
+export const REMARKS: Record<RemarkLanguage, readonly (readonly string[])[]> = {
+  ar: [
+    ['ممتاز', 'ممتاز، واصل', 'عمل ممتاز', 'نتيجة ممتازة', 'أحسنت، ممتاز', 'ممتاز، تلميذ مجتهد', 'عمل متميز', 'نتائج مشرفة، واصل', 'ممتاز، أهنئك'],
+    ['حسن جدا', 'عمل جيد جدا', 'حسن جدا، واصل', 'نتيجة جيدة جدا', 'حسن جدا، تلميذ نشيط', 'مجهود جيد جدا', 'حسن جدا، استمر', 'أداء جيد جدا'],
+    ['حسن', 'عمل حسن', 'نتيجة حسنة', 'جيد، واصل', 'حسن، يمكنك الأفضل', 'مجهود حسن', 'حسن، استمر', 'عمل جيد'],
+    ['مستحسن', 'مستحسن، يمكنك الأفضل', 'عمل مقبول', 'مستحسن، واصل المجهود', 'نتيجة مقبولة', 'لا بأس، واصل', 'مستحسن، ضاعف المجهود', 'مقبول، يمكنك التحسن'],
+    ['متوسط', 'متوسط، ابذل مجهودا', 'يحتاج إلى مجهود', 'نتيجة متوسطة', 'متوسط، يمكنك الأفضل', 'عليك بالمراجعة', 'متوسط، ضاعف المجهود', 'يحتاج إلى مزيد من العمل'],
+    ['ضعيف', 'ضعيف، يجب الاجتهاد', 'عليك بذل مجهود أكبر', 'نتيجة ضعيفة', 'غير كاف', 'ضعيف، عليك بالمراجعة', 'يحتاج إلى دعم', 'ضعيف، ينبغي المثابرة'],
+  ],
+  fr: [
+    ['Excellent', 'Excellent travail', 'Bravo !', 'Félicitations', 'Excellent, continue', 'Excellent élève', 'Travail remarquable', 'Bravo, continue ainsi', 'Résultats excellents'],
+    ['T. Bien', 'Très bien', 'Très bon travail', 'T. Bien – élève actif', 'T. Bien, continue', 'Très bon élève', 'Très bien, bravo', 'Très bons résultats'],
+    ['Bien', 'Bon travail', 'Bien, continue', 'Bon élève', 'Bien – élève sérieux', 'Bons résultats', 'Bien, peut mieux faire', 'Bon travail, continue'],
+    ['Assez bien', 'A. Bien', 'Peut mieux faire', 'Assez bien, continue', 'Travail correct', 'A. Bien, persévère', 'Résultats corrects', 'Assez bien, encourageant'],
+    ['Passable', 'Moyen', 'Des efforts à faire', 'Résultats moyens', 'Passable, travaille plus', 'Moyen, peut mieux faire', 'Doit fournir plus d’efforts', 'Travail irrégulier'],
+    ['Insuffisant', 'Faible', 'Travail insuffisant', 'Doit travailler davantage', 'Résultats insuffisants', 'Faible, révise tes leçons', 'Manque de travail', 'Des efforts sont nécessaires'],
+  ],
+  en: [
+    ['Excellent', 'Excellent work', 'Outstanding', 'Well done!', 'Excellent, keep it up', 'Brilliant work', 'Outstanding results'],
+    ['V. Good', 'Very good', 'Very good work', 'V. Good, keep it up', 'Very good student', 'Very good results', 'Great work'],
+    ['Good', 'Good work', 'Good, keep it up', 'Good effort', 'Good results', 'Good, can do better'],
+    ['Fairly good', 'Fair', 'Can do better', 'Fair work', 'Satisfactory', 'Fairly good, keep trying'],
+    ['Average', 'Needs more effort', 'Must try harder', 'Average work', 'Could do better', 'Needs to revise more'],
+    ['Weak', 'Poor', 'Must work harder', 'Insufficient', 'Needs support', 'Poor results'],
+  ],
+};
+/** A small stable hash: the same student and subject get the same remark on every print. */
+function hashOf(text: string) {
+  let hash = 2166136261;
+  for (let index = 0; index < text.length; index++) hash = Math.imul(hash ^ text.charCodeAt(index), 16777619);
+  return hash >>> 0;
+}
+/** Subjects taught in Arabic: Arabic, Islamic education, social studies (history, geography, citizenship), the Quran. */
+const ARABIC_SUBJECT = /عربي|[إا]سلامي|اجتماعي|تاريخ|جغرافي|مواطن|قرآن|قران/;
+/**
+ * The language a subject's teacher writes remarks in: English for English, Arabic for the subjects taught
+ * in Arabic, French for French. Any other subject's teacher mostly writes in French (about 9 in 10), else
+ * in Arabic: one or the other for that subject of that class, on every student's statement.
+ */
+export function remarkLanguage(subject: string, className = ''): RemarkLanguage {
+  if (/[إا]نجليز|[إا]نكليز|english|anglais/i.test(subject)) return 'en';
+  if (ARABIC_SUBJECT.test(subject)) return 'ar';
+  if (/فرنس|french|fran[cç]ais/i.test(subject)) return 'fr';
+  return hashOf(`lang|${className}|${subject}`) % 10 === 0 ? 'ar' : 'fr';
+}
+/**
+ * The remark one student gets in one subject: the band's wording picked by student and subject, so a
+ * class's statements do not all repeat the same word, yet a reprint writes the same thing.
+ */
+export function studentRemark(mark: number | null, maxMark: number, subject: string, studentId: string, used?: Set<string>, className = '') {
+  const band = remarkBand(mark, maxMark);
+  if (band === null) return '';
+  const choices = REMARKS[remarkLanguage(subject, className)][band], start = hashOf(`${studentId}|${subject}`);
+  // On one page, a wording already written for another subject gives way to the next one, while any is left.
+  const offset = Array.from({ length: choices.length }, (_, step) => step).find(step => !used?.has(choices[(start + step) % choices.length])) ?? 0;
+  const remark = choices[(start + offset) % choices.length];
+  used?.add(remark);
+  return remark;
+}
+/**
+ * Each subject is written by its own teacher: one pen (handwriting and ink) for that subject on every
+ * student's statement, a different one from subject to subject. Arabic is always written in Ruqaa.
+ */
+const PENS = [
+  { latin: 'MassarPenKalam', size: 14, ink: '#1e3a8a' },
+  { latin: 'MassarPenCaveat', size: 17, ink: '#1f2937' },
+  { latin: 'MassarPenReenie', size: 18, ink: '#1d4ed8' },
+  { latin: 'MassarPenKalam', size: 14, ink: '#111827' },
+  { latin: 'MassarPenCaveat', size: 17, ink: '#1e40af' },
+] as const;
+export const remarkPen = (subject: string, className: string) => PENS[hashOf(`${className}|${subject}`) % PENS.length];
 
 export function buildStudentStatementDocument(sheets: MassarSheetDetail[], options: StudentStatementOptions) {
   const origin = typeof window === 'undefined' ? 'http://localhost' : window.location.origin;
@@ -148,11 +230,15 @@ export function buildStudentStatementDocument(sheets: MassarSheetDetail[], optio
     const share = columns.reduce((sum, [, weight]) => sum + weight, 0);
     const rows = statement.units.reduce((sum, unit) => sum + Math.max(1, unit.parts.length), 0);
     const rankedMost = Math.max(0, ...statement.units.map(unit => unit.ranked));
+    const written = new Set<string>();
     const units = statement.units.map((unit, index) => {
       const parts = unit.parts.length ? unit.parts : [{ name: '', mark: '' }], span = singlePart ? '' : ` rowspan="${parts.length}"`;
-      // Written by hand from the subject's average (its mark when it has one part), each line at its own slight slant.
-      const remark = settings.remarks ? remarkFor(unit.average, statement.maxMark) : '';
-      const note = remark ? `<span class="hand" style="--tilt:${[-2, 1, -1, 2][index % 4]}deg">${remark}</span>` : '';
+      // Written by hand from the subject's average (its mark when it has one part): in the subject's language,
+      // with that subject's teacher's pen, each line at its own slight slant.
+      const remark = settings.remarks ? studentRemark(unit.average, statement.maxMark, unit.subject, statement.student.id, written, statement.className) : '';
+      const pen = remarkPen(unit.subject, statement.className), latin = remarkLanguage(unit.subject, statement.className) !== 'ar';
+      const style = `--tilt:${[-2, 1, -1, 2][index % 4]}deg;--ink:${pen.ink}${latin ? `;font-family:${pen.latin},cursive;font-size:${pen.size}pt` : ''}`;
+      const note = remark ? `<span class="hand"${latin ? ' dir="ltr"' : ''} style="${style}">${e(remark)}</span>` : '';
       // The coefficient has its own column, or else one other than 1 is said under the subject, so the general average can be checked by hand.
       const subject = `${e(unit.subject)}${result && !showCoefficient && unit.coefficient !== 1 ? `<small>المعامل <bdi dir="ltr">${e(unit.coefficient)}</bdi></small>` : ''}`;
       const coefficient = showCoefficient ? `<td class="coefficient"${span} dir="ltr">${e(unit.coefficient)}</td>` : '';
@@ -209,7 +295,8 @@ export function buildStudentStatementDocument(sheets: MassarSheetDetail[], optio
     td.coefficient{font:700 11pt MassarLatin,sans-serif;color:#3b475a;background:#fbfcfe}
     td.rank{font:700 11.5pt MassarLatin,sans-serif;color:#1f2a3a}td.rank small{font-weight:400;font-size:9pt;color:#6b778c}
     /* A remark as a teacher writes it: Ruqaa, in blue ink, not quite level. */
-    td.note .hand{display:inline-block;font:16pt/1.1 MassarHand,MassarArabic,serif;color:#1e3a8a;transform:rotate(var(--tilt,-1deg))}
+    /* Ruqaa's strokes are thick: smaller than the Latin pens, never thickened, so both read as the same pen weight. */
+    td.note .hand{display:inline-block;max-width:100%;font:400 13pt/1.1 MassarHand,MassarArabic,serif;font-synthesis:none;color:var(--ink,#1e3a8a);transform:rotate(var(--tilt,-1deg))}
     /* The general average and the rank: one line under the table, as a class council reads them. */
     .result{display:flex;justify-content:flex-start;gap:4mm;margin:4mm 0 0}.result div{display:flex;align-items:baseline;gap:2mm;padding:2mm 4mm;border:0.8pt solid var(--accent);border-radius:1.5mm;background:var(--pale)}
     .result dd{margin:0;font:700 14pt MassarLatin,sans-serif;color:var(--accent)}.result small{font-weight:400;font-size:9.5pt;color:#5d6a80}
