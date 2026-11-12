@@ -28,6 +28,11 @@ import { PageWarmup } from '@/shared/PageWarmup';
 
 // Every page opens inside this shell, so these download only when first shown:
 // a phone starting up should not pay for an assistant or settings it may not open.
+/**
+ * The assistant's button on the home pages (the dashboard, and Home on a phone). Hidden for now, on
+ * desktop and mobile alike; set back to true to bring it back. Nothing of the chatbot is downloaded meanwhile.
+ */
+const CHATBOT_SHOWN = false;
 const YearScopedChatbot = dynamic(() => import('@/features/Chat/components/YearScopedChatbot').then((module) => module.YearScopedChatbot), { ssr: false });
 const ThemeSettingsSheets = dynamic(() => import('@/features/Settings/components/ThemeSettingsSheets').then((module) => module.ThemeSettingsSheets), { ssr: false });
 const SchoolSettingsSheet = dynamic(() => import('@/features/Settings/components/SchoolSettingsSheet').then((module) => module.SchoolSettingsSheet), { ssr: false });
@@ -189,7 +194,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
       <PageWarmup navItems={navItems} />
 
 
-      {accessToken && (pathname === '/dashboard' || isHome) && (
+      {CHATBOT_SHOWN && accessToken && (pathname === '/dashboard' || isHome) && (
         <YearScopedChatbot
           className="school-chatbot"
           settingsApiPath="/api/ai-settings"
