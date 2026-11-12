@@ -17,7 +17,9 @@ import { examListRead } from '@/features/Exams/hooks/useExams';
 import { expenseListRead } from '@/features/Financial/Expenses/hooks/useExpenses';
 import { feeListRead, feeSummaryRead } from '@/features/Financial/Fees/hooks/useFees';
 import { resolveFeeRosterSelection } from '@/features/Financial/Fees/utils/feeRosterSelection';
+import type { MassarRound, MassarSheetRow } from '@sms/contracts';
 import { massarRead } from '@/features/Massar/hooks/useMassar';
+import { classOrder } from '@/features/Massar/config/massarModel';
 import { parentListRead } from '@/features/Parents/hooks/useParents';
 import { sectionListRead } from '@/features/Sections/hooks/useSections';
 import { studentListRead, studentsOnDateRead } from '@/features/Students/hooks/useStudents';
@@ -38,6 +40,8 @@ export type WarmupContext = {
   canCreateStudents: boolean;
   /** The grades page lists Massar's exams only for someone who can read Massar. */
   canReadMassar: boolean;
+  /** The Massar page reads the year's setup only for someone who manages Massar. */
+  canManageMassar: boolean;
 };
 
 // An answer this recent is not asked for again: the page on screen, or an
@@ -74,7 +78,24 @@ const feesPage: Warm = (context) => {
   return [classes, sections, list, allClasses, ...feeTypes(context), ...year(feeSummaryRead())(context)];
 };
 
+// The Massar page opens on the latest Contrôle, its first class and that class's first subject:
+// the same choice is made here, so the sheet on screen when it opens is already read.
+const massarPage: Warm = (context) => {
+  const rounds = year(massarRead('/rounds'))(context)[0];
+  const opening = rounds.then(async (answer) => {
+    const list = ((answer as { data?: MassarRound[] } | undefined)?.data ?? []);
+    const latest = [...list].sort((a, b) => a.term - b.term || a.exam - b.exam).at(-1);
+    if (!latest) return undefined;
+    const answered = await year(massarRead(`/sheets?roundId=${encodeURIComponent(latest.id)}`))(context)[0] as { data?: MassarSheetRow[] } | undefined;
+    const sheets = answered?.data ?? [], firstClass = [...new Set(sheets.map((sheet) => sheet.className))].sort(classOrder)[0];
+    const first = sheets.find((sheet) => sheet.className === firstClass);
+    return first ? year(massarRead(`/sheets/${encodeURIComponent(first.id)}`))(context)[0] : undefined;
+  });
+  return [rounds, opening, ...year(massarRead('/availability'))(context), ...(context.canManageMassar ? year(massarRead('/setup'))(context) : [])];
+};
+
 const PAGE_READS: Record<string, Warm> = {
+  '/massar': massarPage,
   '/attendance/students': (context) => [
     ...classesAndSections(context),
     ...year(studentAttendanceListRead)(context),

@@ -1,13 +1,15 @@
 import type { NavItem } from 'najm-kit';
 
 /**
- * The pages a school opens most in a day, most used first: the registers, the
- * student list, fees and marks. Each has its opening reads in `pageReads.ts`.
+ * The pages a school opens most in a day, most used first: Massar, the
+ * registers, the student list, fees and marks. Each has its opening reads in `pageReads.ts`.
  * The warm-up keeps those the account's own sidebar lists, so a role is
  * warmed only for pages it can open: a teacher gets the register, students
  * and marks, a parent their children and the school's news, an accountant fees.
  */
 export const WARMUP_PRIORITY = [
+  // Massar first: in a Contrôle's weeks it is opened all day, and its first sheet is the slowest to arrive.
+  '/massar',
   '/attendance/students',
   '/students',
   '/fees',
