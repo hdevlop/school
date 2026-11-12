@@ -96,7 +96,11 @@ function GradesTableForYear() {
   // A Massar source is read from its grid; only School's own exams have grades to read.
   const isSchoolSource = sourceType === 'assessment' || (exams || []).some((exam) => exam.id === sourceId);
   const { data: grades, error: gradesError, isLoading: isGradesLoading } = useSourceGrades(sourceType, sourceId, isSchoolSource && !massar.source);
-  const examSources = useMemo(() => examSourcesWithMassar(exams || [], massar.sources.data || []), [exams, massar.sources.data]);
+  // Once the year has Massar parts, the exam list is Massar's only, on a phone as on a desktop: School's
+  // own exams beside them only repeated them under near names (Orthographe beside Orthographe/Dictée).
+  // A year without Massar keeps School's exams.
+  const massarParts = massar.sources.data;
+  const examSources = useMemo(() => examSourcesWithMassar(massarParts?.length ? [] : exams || [], massarParts || []), [exams, massarParts]);
   const massarLabels = useMemo(() => massarSourceLabels(massar.sources.data || []), [massar.sources.data]);
   const isSubmitting = isSubmittingBatch || massar.isSaving;
 
