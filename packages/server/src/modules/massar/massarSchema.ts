@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { boolean, check, date, index, integer, jsonb, numeric, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
+import { MASSAR_REMARK_MAX_LENGTH } from '@sms/contracts';
 import type { MassarComponent, MassarPlan, MassarRoundStatus, MassarSheetKind, MassarSheetStatus, MassarAbsence, MassarStatementSettings, MassarStudent } from '@sms/contracts';
 import { actionByRef, idField, timestamps } from '../../database/shared';
 import { academicYears } from '../academicYears/AcademicYearSchema';
@@ -66,6 +67,13 @@ export const massarMarks = pgTable('massar_marks', {
   studentId: text('student_id').notNull().references(() => students.id, { onDelete: 'restrict' }), componentCode: text('component_code').notNull(),
   mark: numeric('mark'), absence: text('absence').$type<MassarAbsence>().notNull().default('none'), updatedBy: actionByRef('updated_by'), ...timestamps,
 }, table => [uniqueIndex('massar_mark_unique').on(table.sheetId, table.studentId, table.componentCode), check('massar_mark_check', sql`(${table.mark} is null or ${table.mark} between 0 and 20) and (${table.absence} = 'none' or (${table.absence} = 'justified' and ${table.mark} is null))`)]);
+
+/** A teacher's remark on one student for a grid's subject and Contrôle. An empty remark is no row. */
+export const massarRemarks = pgTable('massar_remarks', {
+  id: idField(12), academicYearId: yearRef(), sheetId: text('sheet_id').notNull().references(() => massarSheets.id, { onDelete: 'restrict' }),
+  studentId: text('student_id').notNull().references(() => students.id, { onDelete: 'restrict' }),
+  remark: text('remark').notNull(), updatedBy: actionByRef('updated_by'), ...timestamps,
+}, table => [uniqueIndex('massar_remark_unique').on(table.sheetId, table.studentId), check('massar_remark_length', sql`char_length(${table.remark}) between 1 and ${sql.raw(String(MASSAR_REMARK_MAX_LENGTH))}`)]);
 
 /** Only opaque ids are returned to the client; preview contents stay in restricted storage. */
 export const massarImports = pgTable('massar_imports', {

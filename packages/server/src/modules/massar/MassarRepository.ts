@@ -13,7 +13,7 @@ import { studentEnrollments, studentEnrollmentPlacements } from '../studentEnrol
 import { staff } from '../staff/staffSchema';
 import { teachers, teacherAssignments } from '../teachers/teacherSchema';
 import { examPlanning } from '../examPlanning/ExamPlanningSchema';
-import { massarClasses, massarEnrollments, massarImports, massarLevels, massarMarks, massarRounds, massarSheets, massarSubjects, massarYears } from './massarSchema';
+import { massarClasses, massarEnrollments, massarImports, massarLevels, massarMarks, massarRemarks, massarRounds, massarSheets, massarSubjects, massarYears } from './massarSchema';
 import { MassarSheet } from './MassarGuards';
 import type { MassarComponent, MassarMark, MassarSheetStatus, MassarStudent } from '@sms/contracts';
 
@@ -157,6 +157,22 @@ export class MassarRepository {
       .innerJoin(massarSheets, eq(massarSheets.id, massarMarks.sheetId))
       .where(and(this.ownedWhere(), eq(massarSheets.academicYearId, this.year.id), eq(massarMarks.academicYearId, this.year.id), sheetId ? eq(massarMarks.sheetId, sheetId) : undefined));
   }
+  /** A grid's remarks, behind the same ownership as its marks. */
+  async remarks(sheetId: string) {
+    return this.db.select({ studentId: massarRemarks.studentId, remark: massarRemarks.remark }).from(massarRemarks)
+      .innerJoin(massarSheets, eq(massarSheets.id, massarRemarks.sheetId))
+      .where(and(this.ownedWhere(), eq(massarSheets.academicYearId, this.year.id), eq(massarRemarks.academicYearId, this.year.id), eq(massarRemarks.sheetId, sheetId)));
+  }
+  /** Writes one student's remark on a grid; an empty one removes it. */
+  async saveRemark(sheetId: string, studentId: string, remark: string, actorId: string) {
+    if (!remark) {
+      await this.db.delete(massarRemarks).where(and(eq(massarRemarks.academicYearId, this.year.id), eq(massarRemarks.sheetId, sheetId), eq(massarRemarks.studentId, studentId)));
+      return;
+    }
+    await this.db.insert(massarRemarks).values({ sheetId, studentId, remark, academicYearId: this.year.id, updatedBy: actorId }).onConflictDoUpdate({
+      target: [massarRemarks.sheetId, massarRemarks.studentId], set: { remark, updatedBy: actorId, updatedAt: sql`CURRENT_TIMESTAMP` },
+    });
+  }
   async completedMarkCounts(roundId?: string) {
     return this.db.select({ sheetId: massarMarks.sheetId, completed: sql<number>`count(*)::integer` }).from(massarMarks)
       .innerJoin(massarSheets, eq(massarSheets.id, massarMarks.sheetId))
@@ -238,6 +254,6 @@ export class MassarRepository {
     await this.db.update(massarSheets).set({ roster, ...(status ? { status } : {}), revision: sql`${massarSheets.revision} + 1` }).where(and(eq(massarSheets.academicYearId, this.year.id), eq(massarSheets.id, id)));
   }
   async clearForSeedReset() {
-    for (const table of [massarMarks, massarSheets, massarRounds, massarEnrollments, massarImports, massarSubjects, massarClasses, massarLevels, massarYears]) await this.db.delete(table);
+    for (const table of [massarRemarks, massarMarks, massarSheets, massarRounds, massarEnrollments, massarImports, massarSubjects, massarClasses, massarLevels, massarYears]) await this.db.delete(table);
   }
 }

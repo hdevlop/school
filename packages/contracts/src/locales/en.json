@@ -1284,10 +1284,6 @@
     "toggleTheme": "Toggle color theme",
     "toggleFullscreen": "Toggle fullscreen",
     "menuData": "Data",
-    "menuAlerts": "Alerts",
-    "menuDark": "Dark",
-    "menuLight": "Light",
-    "menuFullscreen": "Full",
     "create": "Create",
     "update": "Update",
     "actions": "Actions",
@@ -4481,7 +4477,20 @@
     "validation": {
       "marksMin": "Must be 0 or more",
       "marksMax": "Cannot exceed {{max}}"
-    }
+    },
+    "studentMenu": {
+      "markAbsent": "Mark absent",
+      "undoAbsent": "Undo absence",
+      "clearMark": "Clear the mark",
+      "addRemark": "Add a remark",
+      "editRemark": "Edit the remark",
+      "remark": "Remark",
+      "remarkPlaceholder": "The teacher's remark for this subject…",
+      "suggestions": "Suggestions",
+      "remarkSaved": "Remark saved",
+      "remarkRemoved": "Remark removed"
+    },
+    "paperPreview": "Sheet preview"
   },
   "exams": {
     "subtitle": {
@@ -7929,7 +7938,8 @@
       "invalidPlan": "This plan is not valid.",
       "planBelowOpened": "A Contrôle already opened cannot be taken out of the plan.",
       "subjectUnconfirmed": "This subject comes from last year’s Massar files. Upload this year’s Massar file for it first.",
-      "controlClosed": "This Contrôle is closed in Massar: its marks can no longer change."
+      "controlClosed": "This Contrôle is closed in Massar: its marks can no longer change.",
+      "invalidRemark": "This student is not on this sheet."
     },
     "flow": {
       "control": "Contrôle {{exam}} — Semester {{term}}",

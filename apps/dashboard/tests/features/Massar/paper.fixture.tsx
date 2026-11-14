@@ -11,7 +11,7 @@ const detail: MassarSheetDetail = {
   round: { id: 'round', term: 1, exam: 1, status: 'open', termLabel: '', examLabel: '' },
   students: [{ id: 'student', name: 'Synthetic learner', studentCode: 'SYNTHETIC', position: 0, dateOfBirth: '01-01-2018', massarStudentId: 1 }],
   components: [{ code: 'a', name: 'القراءة' }, { code: 'b', name: 'الكتابة' }], maxMark: 10,
-  schoolName: 'Synthetic school', yearLabel: '2026-2027', levelLabel: 'Primary', marks: [{ studentId: 'student', componentCode: 'a', mark: null, absence: 'justified' }], canEdit: true, canReopen: false,
+  schoolName: 'Synthetic school', yearLabel: '2026-2027', levelLabel: 'Primary', marks: [{ studentId: 'student', componentCode: 'a', mark: null, absence: 'justified' }], remarks: [], canEdit: true, canReopen: false,
 };
 mock.module('najm-i18n/react', () => ({ useTranslation: () => ({ language: 'ar', t: (key: string, params?: any) => translate(translations, 'ar', key, params) }) }));
 mock.module('@tanstack/react-query', () => ({ useQueryClient: () => ({ invalidateQueries: async () => {} }) }));

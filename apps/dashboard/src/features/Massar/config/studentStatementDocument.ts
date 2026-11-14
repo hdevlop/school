@@ -153,6 +153,7 @@ export function previewStatementSheets(setup: Pick<MassarSetup, 'levels' | 'subj
     maxMark,
     students: [student],
     marks: subject.components.map((component, j) => ({ studentId: student.id, componentCode: component.code, mark: sampleMark(i, j), absence: 'none' as const })),
+    remarks: [],
     // Réglages knows a level by its code only, which the class name already says.
     canEdit: false, canReopen: false, schoolName: '', levelLabel: '', yearLabel: setup.yearLabel,
   }));

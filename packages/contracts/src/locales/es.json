@@ -1396,10 +1396,6 @@
     "toggleTheme": "Cambiar el tema de color",
     "toggleFullscreen": "Alternar pantalla completa",
     "menuData": "Datos",
-    "menuAlerts": "Alertas",
-    "menuDark": "Oscuro",
-    "menuLight": "Claro",
-    "menuFullscreen": "Ampliar",
     "create": "Crear",
     "update": "Actualizar",
     "actions": "Acciones",
@@ -3739,7 +3735,20 @@
     "validation": {
       "marksMin": "Debe ser 0 o más",
       "marksMax": "No puede superar {{max}}"
-    }
+    },
+    "studentMenu": {
+      "markAbsent": "Marcar ausente",
+      "undoAbsent": "Anular la ausencia",
+      "clearMark": "Borrar la nota",
+      "addRemark": "Añadir una observación",
+      "editRemark": "Editar la observación",
+      "remark": "Observación",
+      "remarkPlaceholder": "La observación del docente para esta asignatura…",
+      "suggestions": "Sugerencias",
+      "remarkSaved": "Observación guardada",
+      "remarkRemoved": "Observación eliminada"
+    },
+    "paperPreview": "Vista previa de la hoja"
   },
   "parents": {
     "family": {
@@ -7222,7 +7231,8 @@
       "invalidPlan": "Este plan no es válido.",
       "planBelowOpened": "Un control ya abierto no puede quitarse del plan.",
       "subjectUnconfirmed": "Esta asignatura viene de los archivos Massar del año pasado. Importe primero su archivo Massar de este año.",
-      "controlClosed": "Este Contrôle está cerrado en Massar: sus notas ya no pueden cambiar."
+      "controlClosed": "Este Contrôle está cerrado en Massar: sus notas ya no pueden cambiar.",
+      "invalidRemark": "Este alumno no figura en esta hoja."
     },
     "flow": {
       "control": "Control {{exam}} — Semestre {{term}}",

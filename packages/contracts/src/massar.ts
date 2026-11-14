@@ -10,6 +10,13 @@ export type MassarRoundStatus = typeof MASSAR_ROUND_STATUS_VALUES[number];
 export type MassarSheetKind = typeof MASSAR_SHEET_KIND_VALUES[number];
 export interface MassarComponent { code: string; name: string }
 export interface MassarMark { studentId: string; componentCode: string; mark: number | null; absence: MassarAbsence }
+/**
+ * A teacher's remark (ملاحظة) on one student for a subject in one Contrôle: one per sheet and student,
+ * whichever part it was written from. School keeps it for its own reports; it is never sent to Massar.
+ */
+export interface MassarRemark { studentId: string; remark: string }
+/** The longest remark a teacher can write: a sentence or two, as fits a statement's ملاحظات cell. */
+export const MASSAR_REMARK_MAX_LENGTH = 300;
 /** A component of an owned, opened sheet that can be selected on Grades. */
 export interface MassarGradeSource {
   id: string; sheetId: string; componentCode: string; title: string;
@@ -30,7 +37,7 @@ export interface MassarRound { id: string; term: number; exam: number; termLabel
 export interface MassarBlockedClass { className: string; unmatchedCount: number }
 export interface MassarSheetDetail {
   sheet: MassarSheetRow; round: MassarRound; components: MassarComponent[]; maxMark: number;
-  students: MassarStudent[]; marks: MassarMark[]; canEdit: boolean; canReopen: boolean;
+  students: MassarStudent[]; marks: MassarMark[]; remarks: MassarRemark[]; canEdit: boolean; canReopen: boolean;
   schoolName: string; levelLabel: string; yearLabel: string;
 }
 export interface MassarMappings {

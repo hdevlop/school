@@ -17,7 +17,7 @@ import { MassarValidator, mayManageMassar, type MassarActor, type MassarEntry } 
 import { MassarGradeLink } from './MassarGradeLink';
 import {
   normalizeStatement,
-  type MassarCommit, type MassarMappings, type MassarMarksInput, type MassarPlanInput, type MassarResolve, type MassarRoundInput, type MassarStatementInput,
+  type MassarCommit, type MassarMappings, type MassarMarksInput, type MassarPlanInput, type MassarRemarkInput, type MassarResolve, type MassarRoundInput, type MassarStatementInput,
 } from './MassarDto';
 import {
   buildImportPreview, pendingWithSuggestions, proposeSubject, sameName,
@@ -194,12 +194,13 @@ export class MassarService {
     return round;
   }
 
-  private async ownedOpenSheet(id: string, revision: number, actor: MassarActor, entry: MassarEntry = 'massar') {
+  /** A grid the actor may write now; `revision` null for a write that cannot conflict with the grid's marks. */
+  private async ownedOpenSheet(id: string, revision: number | null, actor: MassarActor, entry: MassarEntry = 'massar') {
     this.writable();
     const row = await this.requireSheet(id);
     if (row.round.status === 'closed') this.validator.refuse('locked');
     this.validator.ensureWriter(actor, row.sheet, mayManageMassar(actor), entry);
-    if (row.sheet.revision !== revision) this.validator.refuse('staleSheet');
+    if (revision !== null && row.sheet.revision !== revision) this.validator.refuse('staleSheet');
     return row;
   }
 
@@ -973,7 +974,7 @@ export class MassarService {
       await this.refreshGrids({ sheetId: id, massarClassId: before.sheet.massarClassId });
     }
 
-    const [row, stored, config] = await Promise.all([this.requireSheet(id), this.repository.marks(id), this.repository.yearConfig()]);
+    const [row, stored, remarks, config] = await Promise.all([this.requireSheet(id), this.repository.marks(id), this.repository.remarks(id), this.repository.yearConfig()]);
     const marks = numericMarks(stored);
     const manager = mayManageMassar(actor);
     const { status, teacherUnlocked } = row.sheet;
@@ -987,6 +988,7 @@ export class MassarService {
       maxMark: row.level.maxMark,
       students: row.sheet.roster,
       marks,
+      remarks,
       schoolName: config?.schoolName ?? '',
       levelLabel: row.level.label,
       yearLabel: this.year.label,
@@ -1042,6 +1044,18 @@ export class MassarService {
     await this.repository.saveMarks(id, data.marks, actor.id);
     await this.grades?.fromMassar(id, data.marks, actor.id);
     return this.repository.updateSheet(id, { status: row.sheet.exportedAt ? 'changed_after_export' : 'in_progress' });
+  }
+
+  /**
+   * A teacher's remark on one student, for the grid's subject and Contrôle. It is School's own and never
+   * exported, so it leaves the grid's status and revision alone; it follows the marks' locks all the same.
+   */
+  @Transaction()
+  async saveRemark(id: string, data: MassarRemarkInput, actor: MassarActor, entry: MassarEntry = 'massar') {
+    const row = await this.ownedOpenSheet(id, null, actor, entry);
+    this.validator.ensureRemarkStudent(data.studentId, row.sheet.roster);
+    await this.repository.saveRemark(id, data.studentId, data.remark, actor.id);
+    return { studentId: data.studentId, remark: data.remark };
   }
 
   @Transaction()

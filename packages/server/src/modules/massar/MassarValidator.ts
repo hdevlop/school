@@ -18,6 +18,10 @@ export class MassarValidator {
     if (entry === 'massar' && !manager && actor.role !== 'teacher') this.refuse('readOnly', 403);
     if (sheet.status === 'exported' || sheet.status === 'changed_after_export' && !sheet.teacherUnlocked) this.refuse('locked');
   }
+  /** A remark is for a student the grid lists. */
+  ensureRemarkStudent(studentId: string, roster: MassarStudent[]) {
+    if (!roster.some(student => student.id === studentId)) this.refuse('invalidRemark', 422);
+  }
   ensureMarks(data: MassarMarksInput, roster: MassarStudent[], components: MassarComponent[], maxMark: number) {
     const seen = new Set<string>();
     for (const mark of data.marks) {

@@ -1410,10 +1410,6 @@
     "toggleTheme": "تبديل نمط الألوان",
     "toggleFullscreen": "تبديل ملء الشاشة",
     "menuData": "البيانات",
-    "menuAlerts": "التنبيهات",
-    "menuDark": "داكن",
-    "menuLight": "فاتح",
-    "menuFullscreen": "تكبير",
     "create": "إنشاء",
     "update": "تحديث",
     "actions": "الإجراءات",
@@ -3753,7 +3749,20 @@
     "validation": {
       "marksMin": "يجب أن تكون 0 أو أكثر",
       "marksMax": "لا يمكن أن تتجاوز {{max}}"
-    }
+    },
+    "studentMenu": {
+      "markAbsent": "تسجيل الغياب",
+      "undoAbsent": "إلغاء الغياب",
+      "clearMark": "مسح النقطة",
+      "addRemark": "إضافة ملاحظة",
+      "editRemark": "تعديل الملاحظة",
+      "remark": "ملاحظة",
+      "remarkPlaceholder": "ملاحظة الأستاذ(ة) في هذه المادة…",
+      "suggestions": "اقتراحات",
+      "remarkSaved": "تم حفظ الملاحظة",
+      "remarkRemoved": "تم حذف الملاحظة"
+    },
+    "paperPreview": "معاينة الورقة"
   },
   "parents": {
     "family": {
@@ -7236,7 +7245,8 @@
       "invalidPlan": "هذه الخطة غير صالحة.",
       "planBelowOpened": "لا يمكن حذف فرض مفتوح من الخطة.",
       "subjectUnconfirmed": "هذه المادة مأخوذة من ملفات مسار للسنة الماضية. استوردوا أولا ملف مسار الخاص بها لهذه السنة.",
-      "controlClosed": "هذه المراقبة مغلقة في مسار: لم يعد بالإمكان تغيير نقطها."
+      "controlClosed": "هذه المراقبة مغلقة في مسار: لم يعد بالإمكان تغيير نقطها.",
+      "invalidRemark": "هذا التلميذ غير مدرج في هذه الورقة."
     },
     "flow": {
       "control": "الفرض {{exam}} — الدورة {{term}}",
