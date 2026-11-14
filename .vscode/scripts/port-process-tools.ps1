@@ -28,30 +28,54 @@ function Get-ListeningPortEntries {
     [int[]]$FilterPorts
   )
 
-  $entries = foreach ($line in (netstat -ano)) {
-    if ($line -match '^\s*TCP\s+(?<address>.+):(?<port>\d+)\s+\S+\s+(?<state>\S+)\s+(?<pid>\d+)\s*$') {
-      if ($Matches.state -cne "LISTENING") {
-        continue
-      }
+  # TCP comes from the API, not from netstat's text. Windows can report a dev
+  # server's listening socket with a state it cannot name: netstat then prints
+  # it as FIN_WAIT_1, or leaves it out, while the server still answers. So a
+  # listener is a socket with no remote end, whatever its state, except:
+  #  - Bound: a socket reserved for an outgoing connection;
+  #  - an ephemeral port (49152 and up) the same process also connects from,
+  #    which this machine reports the same way for outgoing connections.
+  # A listener's accepted connections share its own, lower port, so they never
+  # hide it.
+  $tcp = @(Get-NetTCPConnection -ErrorAction SilentlyContinue)
+  $connectsFrom = @{}
+  foreach ($connection in $tcp) {
+    if ($connection.RemotePort -ne 0) {
+      $connectsFrom["$($connection.OwningProcess):$($connection.LocalPort)"] = $true
+    }
+  }
 
-      $port = [int]$Matches.port
+  $tcpEntries = foreach ($connection in $tcp) {
+    $port = [int]$connection.LocalPort
+    $owner = [int]$connection.OwningProcess
 
-      if ($FilterPorts.Count -gt 0 -and $FilterPorts -notcontains $port) {
-        continue
-      }
-
-      if ([int]$Matches.pid -gt 0) {
-        [PSCustomObject]@{
-          Protocol = "TCP"
-          Address = $Matches.address.Trim()
-          Port = $port
-          ProcessId = [int]$Matches.pid
-        }
-      }
-
+    if ($connection.RemotePort -ne 0 -or $connection.RemoteAddress -notin @('0.0.0.0', '::')) {
       continue
     }
 
+    if ([string]$connection.State -eq 'Bound') {
+      continue
+    }
+
+    if ($port -ge 49152 -and $connectsFrom.ContainsKey("${owner}:${port}")) {
+      continue
+    }
+
+    if ($FilterPorts.Count -gt 0 -and $FilterPorts -notcontains $port) {
+      continue
+    }
+
+    if ($owner -gt 0) {
+      [PSCustomObject]@{
+        Protocol = "TCP"
+        Address = [string]$connection.LocalAddress
+        Port = $port
+        ProcessId = $owner
+      }
+    }
+  }
+
+  $udpEntries = foreach ($line in (netstat -ano)) {
     if ($line -match '^\s*UDP\s+(?<address>.+):(?<port>\d+)\s+\S+\s+(?<pid>\d+)\s*$') {
       $port = [int]$Matches.port
 
@@ -70,8 +94,10 @@ function Get-ListeningPortEntries {
     }
   }
 
+  # One row per protocol, port and process: IPv4 and IPv6 listeners are one port.
   return @(
-    $entries |
+    @($tcpEntries) + @($udpEntries) |
+      Where-Object { $_ } |
       Sort-Object Protocol, Port, ProcessId -Unique
   )
 }
@@ -155,5 +181,57 @@ function Get-ProcessSnapshot {
     IsTargetDevProcess = $isTargetDevProcess
     MatchSource = $matchSource
     SkipReason = $skipReason
+  }
+}
+
+# The top of the dev tree a port owner belongs to: its parents while they are
+# dev tools of this session too (bun run dev -> next.exe -> node next dev ->
+# the server that holds the port). The first other parent, such as the
+# terminal's shell, ends the climb and is never stopped.
+function Get-DevTreeRoot {
+  param(
+    [Parameter(Mandatory = $true)]
+    [int]$ProcessId
+  )
+
+  $root = Get-CimInstance Win32_Process -Filter "ProcessId = $ProcessId" -ErrorAction SilentlyContinue
+  if (-not $root) {
+    return $ProcessId
+  }
+
+  $seen = @{ [int]$root.ProcessId = $true }
+  while ($root.ParentProcessId -and -not $seen.ContainsKey([int]$root.ParentProcessId)) {
+    $parent = Get-CimInstance Win32_Process -Filter "ProcessId = $($root.ParentProcessId)" -ErrorAction SilentlyContinue
+    # A parent that started after its child is a new process reusing a dead parent's id.
+    if (-not $parent -or $parent.CreationDate -gt $root.CreationDate) {
+      break
+    }
+
+    if (-not (Get-ProcessSnapshot -ProcessId ([int]$parent.ProcessId)).IsTargetDevProcess) {
+      break
+    }
+
+    $seen[[int]$parent.ProcessId] = $true
+    $root = $parent
+  }
+
+  return [int]$root.ProcessId
+}
+
+# Stops a dev tree whole. Windows does not end a process's children with it, so
+# stopping only the port's owner left `next dev`, the bun launchers and the
+# Turbopack workers running.
+function Stop-DevProcessTree {
+  param(
+    [Parameter(Mandatory = $true)]
+    [int]$ProcessId
+  )
+
+  $output = & taskkill.exe /PID $ProcessId /T /F 2>&1
+  $succeeded = $LASTEXITCODE -eq 0 -or -not (Get-Process -Id $ProcessId -ErrorAction SilentlyContinue)
+
+  return [PSCustomObject]@{
+    Succeeded = $succeeded
+    Output = ($output | Out-String).Trim()
   }
 }

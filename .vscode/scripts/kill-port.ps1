@@ -65,15 +65,25 @@ if ($skippedProcessEntries.Count -gt 0) {
 
 $failedProcessIds = @()
 
-foreach ($processId in $targetProcessIds) {
-  try {
-    Stop-Process -Id $processId -Force -ErrorAction Stop
-    Write-Host "Stopped PID $processId." -ForegroundColor Green
-  } catch {
-    Write-Warning "Could not stop PID ${processId}: $($_.Exception.Message)"
-    $failedProcessIds += $processId
+# Each port owner is stopped with its whole dev tree (see Get-DevTreeRoot).
+$treeRoots = @(
+  $targetProcessIds |
+    ForEach-Object { Get-DevTreeRoot -ProcessId $_ } |
+    Sort-Object -Unique
+)
+
+foreach ($rootId in $treeRoots) {
+  $result = Stop-DevProcessTree -ProcessId $rootId
+  if ($result.Succeeded) {
+    Write-Host "Stopped the dev tree of PID $rootId." -ForegroundColor Green
+  } else {
+    Write-Warning "Could not stop the dev tree of PID ${rootId}: $($result.Output)"
+    $failedProcessIds += $rootId
   }
 }
+
+# taskkill returns before Windows has released every socket.
+Start-Sleep -Milliseconds 500
 
 $remainingProcessIds = @(
   Get-ListeningPortEntries -FilterPorts @($Port) |

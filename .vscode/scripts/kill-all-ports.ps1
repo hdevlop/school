@@ -2,7 +2,10 @@ param(
   [ValidateRange(1, 65535)]
   [int[]]$Ports,
 
-  [switch]$Force
+  [switch]$Force,
+
+  # Lists what would be stopped and stops nothing.
+  [switch]$DryRun
 )
 
 . "$PSScriptRoot\port-process-tools.ps1"
@@ -79,6 +82,28 @@ if ($targetProcessIds.Count -eq 0) {
   exit 0
 }
 
+# Each port owner is stopped with its whole dev tree (see Get-DevTreeRoot).
+$treeRoots = @(
+  $targetProcessIds |
+    ForEach-Object { Get-DevTreeRoot -ProcessId $_ } |
+    Sort-Object -Unique
+)
+
+Write-Host ""
+Write-Host "Dev trees to stop, from the top:"
+foreach ($rootId in $treeRoots) {
+  $rootSnapshot = Get-ProcessSnapshot -ProcessId $rootId
+  $commandLine = $rootSnapshot.CommandLine
+  if ($commandLine.Length -gt 120) { $commandLine = $commandLine.Substring(0, 120) + "..." }
+  Write-Host "  PID $rootId ($($rootSnapshot.ProcessName)): $commandLine"
+}
+
+if ($DryRun) {
+  Write-Host ""
+  Write-Host "Dry run: nothing was stopped."
+  exit 0
+}
+
 if (-not $Force) {
   Write-Warning "This only stops matching dev-tool processes in your current session."
   $confirmation = Read-Host "Type KILL DEV PORTS to continue"
@@ -91,15 +116,18 @@ if (-not $Force) {
 
 $failedProcessIds = @()
 
-foreach ($processId in $targetProcessIds) {
-  try {
-    Stop-Process -Id $processId -Force -ErrorAction Stop
-    Write-Host "Stopped PID $processId." -ForegroundColor Green
-  } catch {
-    Write-Warning "Could not stop PID ${processId}: $($_.Exception.Message)"
-    $failedProcessIds += $processId
+foreach ($rootId in $treeRoots) {
+  $result = Stop-DevProcessTree -ProcessId $rootId
+  if ($result.Succeeded) {
+    Write-Host "Stopped the dev tree of PID $rootId." -ForegroundColor Green
+  } else {
+    Write-Warning "Could not stop the dev tree of PID ${rootId}: $($result.Output)"
+    $failedProcessIds += $rootId
   }
 }
+
+# taskkill returns before Windows has released every socket.
+Start-Sleep -Milliseconds 500
 
 $remainingEntries = @(Get-ListeningPortEntries -FilterPorts $filterPorts)
 $remainingTargetEntries = @(
