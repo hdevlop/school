@@ -231,6 +231,18 @@ export class AlertRepository {
     return alert;
   }
 
+  /**
+   * Trusted maintenance: a notice about the installation itself, shared by
+   * every year and read by staff with school-wide reads. No request, so no
+   * selected year and no author.
+   */
+  async createSystemNotice(data: { title: string; message: string; priority: 'high' | 'critical' }) {
+    const [created] = await this.db.insert(alerts)
+      .values({ ...data, type: 'system', status: 'active', academicYearId: null })
+      .returning({ id: alerts.id });
+    return created;
+  }
+
   async update(id: string, data) {
     const [updatedAlert] = await this.db
       .update(alerts)

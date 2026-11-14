@@ -1,5 +1,6 @@
 import * as values from './enums';
 import { MASSAR_ABSENCE_VALUES, MASSAR_SHEET_STATUS_VALUES, MASSAR_ROUND_STATUS_VALUES, MASSAR_SHEET_KIND_VALUES } from './massar';
+import { HOMEWORK_ATTACHMENT_KIND_VALUES } from './homework';
 
 /**
  * Generic lookup over every shared tuple, for the places that need to reach an
@@ -16,6 +17,7 @@ export const enumValues = {
   massarSheetStatus: MASSAR_SHEET_STATUS_VALUES,
   massarRoundStatus: MASSAR_ROUND_STATUS_VALUES,
   massarSheetKind: MASSAR_SHEET_KIND_VALUES,
+  homeworkAttachmentKind: HOMEWORK_ATTACHMENT_KIND_VALUES,
   userType: values.USER_TYPE_VALUES,
   userStatus: values.USER_STATUS_VALUES,
   tokenStatus: values.TOKEN_STATUS_VALUES,

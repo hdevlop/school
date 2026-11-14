@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { BookOpen, Users, BarChart3, Clock, Award, Calendar, CalendarCheck2, ClipboardCheck, ArrowUpRight } from 'lucide-react';
+import { BookOpen, Users, BarChart3, Clock, Award, Calendar, CalendarCheck2, ClipboardCheck, ArrowUpRight, HardDrive, Hourglass } from 'lucide-react';
 import { FormInput, NButton } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { ROUTINE_DAYS } from '@sms/contracts/routines';
@@ -124,6 +124,26 @@ const AcademicSection: React.FC<{ activeYear?: string | null; onLeave?: () => vo
           formLabel={t('settings.academic.defaultExamDuration')}
           icon={Clock}
           placeholder="120"
+          required={true}
+        />
+      </SettingsGroup>
+
+      <SettingsGroup title={t('settings.editor.groups.homeworkFiles.title')} description={t('settings.editor.groups.homeworkFiles.description')}>
+        <FormInput
+          name="homeworkQuotaMb"
+          type="number"
+          formLabel={t('settings.academic.homeworkQuotaMb')}
+          icon={HardDrive}
+          placeholder="500"
+          required={true}
+        />
+
+        <FormInput
+          name="homeworkRetentionDays"
+          type="number"
+          formLabel={t('settings.academic.homeworkRetentionDays')}
+          icon={Hourglass}
+          placeholder="180"
           required={true}
         />
       </SettingsGroup>

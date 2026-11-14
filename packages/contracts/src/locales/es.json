@@ -965,6 +965,12 @@
       "filterByStatus": "Filtrar por estado...",
       "filterByType": "Filtrar por tipo...",
       "filterByPriority": "Filtrar por prioridad..."
+    },
+    "storage": {
+      "lowTitle": "Queda poco espacio en disco",
+      "lowMessage": "Solo queda libre el {{percent}} % del disco que guarda los archivos subidos ({{free}} GB de {{total}} GB). Libera espacio antes de que las subidas empiecen a fallar.",
+      "criticalTitle": "El espacio en disco está casi agotado",
+      "criticalMessage": "Solo queda libre el {{percent}} % del disco que guarda los archivos subidos ({{free}} GB de {{total}} GB). Las subidas y las copias de seguridad pueden fallar en cualquier momento."
     }
   },
   "validation": {
@@ -1659,7 +1665,8 @@
     "closeSidebar": "Cerrar menú",
     "collapseSidebar": "Contraer",
     "expandSidebar": "Expandir",
-    "insurance": "Seguro"
+    "insurance": "Seguro",
+    "homework": "Deberes"
   },
   "backup": {
     "success": {
@@ -2811,6 +2818,10 @@
     },
     "classRoutines": {
       "create": "¿Crear este horario?"
+    },
+    "homework": {
+      "create": "¿Publicar estos deberes?",
+      "update": "¿Actualizar estos deberes?"
     }
   },
   "announcements": {
@@ -4585,7 +4596,8 @@
         "attendance": "Registros de asistencia",
         "grades": "Notas",
         "files": "Archivos subidos"
-      }
+      },
+      "homeworkNote": "Las fotos y los archivos de los deberes no se incluyen: caducan por sí solos. El texto de cada deber sí."
     },
     "receipts": {
       "title": "Recibos de pago",
@@ -4674,6 +4686,10 @@
         "officialIdentity": {
           "title": "Licencia del centro",
           "description": "Datos de la licencia impresos en los documentos oficiales."
+        },
+        "homeworkFiles": {
+          "title": "Archivos de deberes",
+          "description": "Cuánto puede guardar cada profesor y cuánto tiempo se conserva un archivo. El texto de los deberes se conserva siempre."
         }
       },
       "generalTab": "Sistema",
@@ -4712,7 +4728,9 @@
       "gradingPeriods": "Períodos de calificación",
       "maxClassSize": "Tamaño máximo de clase",
       "minimumPassingGrade": "Nota mínima de aprobación",
-      "title": "Ajustes académicos"
+      "title": "Ajustes académicos",
+      "homeworkQuotaMb": "Espacio por profesor y año (MB)",
+      "homeworkRetentionDays": "Conservar los archivos tras la fecha de entrega (días)"
     },
     "clear": {
       "button": "Confirmar",
@@ -6149,6 +6167,10 @@
     "documents": {
       "title": "No hay documentos subidos",
       "description": "Sube un documento para empezar."
+    },
+    "homework": {
+      "title": "Aún no hay deberes",
+      "description": "Publica los primeros deberes de una clase."
     }
   },
   "academicSources": {
@@ -7440,6 +7462,113 @@
       "exportControl": "Todo el Contrôle, para enviar a Massar",
       "exportControlHelp": "{{count}} archivos en un zip, bloqueados al descargarlos",
       "exportAllHelp": "{{count}} archivos en un zip, {{unconfirmed}} por confirmar"
+    }
+  },
+  "homework": {
+    "subtitle": {
+      "count": "Total: {{count}}"
+    },
+    "form": {
+      "details": "Deberes",
+      "context": "Clase y asignatura",
+      "dates": "Fechas",
+      "title": "Título",
+      "titlePlaceholder": "Ejercicios 4 y 5, pág. 32",
+      "content": "Detalles",
+      "contentPlaceholder": "Qué hay que hacer y traer (opcional)",
+      "class": "Clase",
+      "classPlaceholder": "Seleccionar clase",
+      "section": "Secciones",
+      "sectionPlaceholder": "Seleccionar secciones",
+      "searchSections": "Buscar secciones...",
+      "noSections": "No se encontraron secciones",
+      "subject": "Asignatura",
+      "subjectPlaceholder": "Seleccionar asignatura",
+      "subSubject": "Subasignatura",
+      "subSubjectPlaceholder": "Elegir la subasignatura (opcional)",
+      "teacher": "Profesor",
+      "teacherPlaceholder": "Seleccionar profesor",
+      "date": "Dados el",
+      "dueOn": "Para el",
+      "attachments": "Fotos y archivos",
+      "attachmentsHint": "Hasta {{max}} archivos. Las fotos se reducen antes de enviarse; un PDF puede pesar hasta {{pdf}} MB.",
+      "addFiles": "Añadir archivos",
+      "takePhoto": "Tomar una foto",
+      "preparing": "Preparando las fotos…",
+      "removeFile": "Quitar",
+      "tooManyFiles": "Unos deberes admiten como máximo {{max}} archivos."
+    },
+    "dialogs": {
+      "createTitle": "Publicar deberes",
+      "createButton": "Publicar",
+      "viewTitle": "Deberes",
+      "editTitle": "Editar deberes",
+      "updateButton": "Guardar",
+      "deleteButton": "Eliminar"
+    },
+    "table": {
+      "title": "Título",
+      "subject": "Asignatura",
+      "teacher": "Profesor",
+      "class": "Clase",
+      "section": "Sección",
+      "date": "Dados el",
+      "dueOn": "Para el",
+      "attachments": "Archivos",
+      "seen": "Visto por los padres"
+    },
+    "card": {
+      "givenOn": "Dados el",
+      "dueOn": "Para el",
+      "noDueDate": "Sin fecha de entrega",
+      "seenCount": "{{seen}} de {{total}}",
+      "seenByParents": "Visto por los padres",
+      "markSeen": "Marcar como visto",
+      "seenOn": "Visto el {{date}}",
+      "child": "Para"
+    },
+    "attachments": {
+      "title": "Fotos y archivos",
+      "photo": "Foto",
+      "pdf": "Documento PDF",
+      "open": "Abrir",
+      "purged": "Archivo eliminado tras su periodo de conservación",
+      "unavailable": "Archivo no disponible"
+    },
+    "success": {
+      "retrieved": "Deberes obtenidos correctamente",
+      "created": "Deberes publicados",
+      "updated": "Deberes actualizados",
+      "deleted": "Deberes eliminados",
+      "attached": "Archivos añadidos",
+      "detached": "Archivo quitado",
+      "acknowledged": "Marcado como visto"
+    },
+    "errors": {
+      "notFound": "Deberes no encontrados",
+      "writeNotAllowed": "Solo un profesor o la administración del centro pueden publicar o cambiar deberes",
+      "noTeacherRecord": "Tu cuenta no está vinculada a una ficha de profesor",
+      "teacherRequired": "Se requiere un profesor",
+      "notAssigned": "El profesor no imparte esta asignatura en todas las secciones seleccionadas",
+      "outsideSelectedYear": "Las secciones de los deberes deben pertenecer al año escolar seleccionado",
+      "yearCannotChange": "Unos deberes no pueden pasar a otro año escolar",
+      "dueBeforeGiven": "La fecha de entrega no puede ser anterior al día en que se dan los deberes",
+      "contentTooLong": "Los detalles son demasiado largos",
+      "assessmentMismatch": "La evaluación vinculada debe ser del mismo profesor y de la misma asignatura",
+      "subSubjectMismatch": "Esta subasignatura no se imparte en la asignatura elegida para esta clase",
+      "parentOnly": "Solo un padre o una madre puede marcar los deberes como vistos",
+      "notYourChild": "Estos deberes no se dieron a este alumno",
+      "noFile": "Elige al menos un archivo",
+      "tooManyFiles": "Unos deberes admiten como máximo {{max}} archivos",
+      "imageTooLarge": "Una foto no puede superar {{max}} MB",
+      "pdfTooLarge": "Un PDF no puede superar {{max}} MB",
+      "storedImageTooLarge": "Esta foto sigue superando {{max}} MB después de reducirla. Tómala de nuevo más cerca de la página.",
+      "unsupportedFile": "Solo se pueden adjuntar fotos (JPEG, PNG, WebP) y archivos PDF",
+      "quotaExceeded": "Este profesor ha usado los {{max}} MB permitidos para archivos de deberes este año. El texto aún se puede publicar.",
+      "attachmentNotFound": "Archivo no encontrado",
+      "attachmentPurged": "Este archivo se eliminó tras su periodo de conservación",
+      "attachmentMissing": "Este archivo ya no está disponible",
+      "uploadFailed": "Los deberes se guardaron, pero sus archivos no. Edítalos para añadirlos de nuevo."
     }
   }
 }

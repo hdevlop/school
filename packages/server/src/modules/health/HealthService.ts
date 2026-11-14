@@ -2,6 +2,7 @@ import { Service } from '../../najm';
 import { db } from '../../database/db';
 import { sql } from 'drizzle-orm';
 import { CacheService } from 'najm-cache';
+import { readStorageSpace } from './storageSpace';
 
 type ReadinessProbe = () => Promise<unknown>;
 
@@ -43,6 +44,11 @@ export class HealthService {
       cache: () => this.cache.verifyReady(),
       database: () => db.execute(sql`select 1`),
     });
+  }
+
+  /** Free and total bytes of the disk that holds uploaded files; null when it cannot be read. */
+  async getStorageSpace() {
+    return readStorageSpace();
   }
 
   async ping() {

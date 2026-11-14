@@ -47,6 +47,7 @@ const routeViews: Record<string, string[]> = {
   '/announcements': ['Announcements/components/AnnouncementsTable'],
   '/discipline': ['Discipline/components/DisciplineTable'],
   '/behavior-rewards': ['BehaviorRewards/components/BehaviorRewardsTable'],
+  '/homework': ['Homework/components/HomeworkTable'],
   '/assessments': ['Assessments/components/AssessmentsTable'],
   '/exams': ['Exams/components/ExamsTable'],
   '/exam-planning': ['Exams/planning/ExamPlanningPage'],

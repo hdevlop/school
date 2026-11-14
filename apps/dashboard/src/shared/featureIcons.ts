@@ -23,6 +23,7 @@ import {
   LayoutGrid,
   ReceiptText,
   Megaphone,
+  NotebookPen,
   Receipt,
   School,
   Settings,
@@ -81,6 +82,7 @@ export const FEATURE_ICONS = {
   discipline: ShieldAlert,
   behaviorRewards: Award,
 
+  homework: NotebookPen,
   assessments: ClipboardList,
   evaluations: ClipboardList,
   assessmentPlanning: CalendarRange,

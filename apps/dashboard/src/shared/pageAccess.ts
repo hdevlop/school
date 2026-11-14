@@ -43,6 +43,7 @@ export const PAGE_ACCESS = {
   announcements: can('read:announcements'),
   discipline: can('read:discipline'),
   behaviorRewards: can('read:behavior-rewards'),
+  homework: can('read:homework'),
   assessments: can('read:assessments'),
   exams: can('read:exams'),
   grades: can('read:grades'),

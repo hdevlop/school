@@ -462,6 +462,30 @@
     "action": "delete"
   },
   {
+    "name": "create:homework",
+    "description": "Permission to post homework for a class",
+    "resource": "homework",
+    "action": "create"
+  },
+  {
+    "name": "read:homework",
+    "description": "Permission to view homework",
+    "resource": "homework",
+    "action": "read"
+  },
+  {
+    "name": "update:homework",
+    "description": "Permission to edit homework and its attachments",
+    "resource": "homework",
+    "action": "update"
+  },
+  {
+    "name": "delete:homework",
+    "description": "Permission to delete homework",
+    "resource": "homework",
+    "action": "delete"
+  },
+  {
     "name": "create:attendance",
     "description": "Permission to create attendance records",
     "resource": "attendance",

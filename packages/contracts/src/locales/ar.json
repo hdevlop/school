@@ -976,6 +976,12 @@
       "filterByStatus": "تصفية بالحالة...",
       "filterByType": "تصفية بالنوع...",
       "filterByPriority": "تصفية بالأولوية..."
+    },
+    "storage": {
+      "lowTitle": "مساحة القرص منخفضة",
+      "lowMessage": "لم يبقَ سوى {{percent}}٪ من المساحة الحرة على القرص الذي يحفظ الملفات المرفوعة ({{free}} غيغابايت من {{total}} غيغابايت). حرّر بعض المساحة قبل أن يتعذر رفع الملفات.",
+      "criticalTitle": "مساحة القرص توشك على النفاد",
+      "criticalMessage": "لم يبقَ سوى {{percent}}٪ من المساحة الحرة على القرص الذي يحفظ الملفات المرفوعة ({{free}} غيغابايت من {{total}} غيغابايت). قد يتعذر رفع الملفات وإنشاء النسخ الاحتياطية في أي لحظة."
     }
   },
   "validation": {
@@ -1673,7 +1679,8 @@
     "closeSidebar": "إغلاق القائمة",
     "collapseSidebar": "طي",
     "expandSidebar": "توسيع",
-    "insurance": "التأمين"
+    "insurance": "التأمين",
+    "homework": "الواجبات المنزلية"
   },
   "backup": {
     "success": {
@@ -2825,6 +2832,10 @@
     },
     "classRoutines": {
       "create": "هل تريد إنشاء هذا الجدول الزمني؟"
+    },
+    "homework": {
+      "create": "هل تريد نشر هذا الواجب؟",
+      "update": "هل تريد تحديث هذا الواجب؟"
     }
   },
   "announcements": {
@@ -4599,7 +4610,8 @@
         "attendance": "سجلات الحضور",
         "grades": "النقط",
         "files": "الملفات المرفوعة"
-      }
+      },
+      "homeworkNote": "لا تشمل النسخة صور الواجبات وملفاتها لأنها تُحذف تلقائياً بعد مدة، لكنها تشمل نص كل واجب."
     },
     "receipts": {
       "title": "وصولات الأداء",
@@ -4688,6 +4700,10 @@
         "officialIdentity": {
           "title": "ترخيص المؤسسة",
           "description": "بيانات الترخيص المطبوعة على الوثائق الرسمية."
+        },
+        "homeworkFiles": {
+          "title": "ملفات الواجبات",
+          "description": "المساحة المتاحة لكل أستاذ ومدة حفظ الملف. يُحفظ نص الواجب دائماً."
         }
       },
       "generalTab": "النظام",
@@ -4726,7 +4742,9 @@
       "gradingPeriods": "فترات التقييم",
       "maxClassSize": "الحجم الأقصى للقسم",
       "minimumPassingGrade": "الحد الأدنى للنجاح",
-      "title": "الإعدادات الدراسية"
+      "title": "الإعدادات الدراسية",
+      "homeworkQuotaMb": "المساحة لكل أستاذ في السنة (ميغابايت)",
+      "homeworkRetentionDays": "حفظ الملفات بعد تاريخ التسليم (بالأيام)"
     },
     "clear": {
       "button": "تأكيد",
@@ -6163,6 +6181,10 @@
     "documents": {
       "title": "لا توجد وثائق مرفوعة",
       "description": "ارفع وثيقة للبدء."
+    },
+    "homework": {
+      "title": "لا توجد واجبات بعد",
+      "description": "انشر أول واجب لأحد الأقسام."
     }
   },
   "academicSources": {
@@ -7454,6 +7476,113 @@
       "exportControl": "المراقبة كاملة، للإرسال إلى مسار",
       "exportControlHelp": "{{count}} ملفات في ملف zip، تُقفل بعد تنزيلها",
       "exportAllHelp": "{{count}} ملفات في ملف zip واحد، منها {{unconfirmed}} للتأكيد"
+    }
+  },
+  "homework": {
+    "subtitle": {
+      "count": "المجموع: {{count}}"
+    },
+    "form": {
+      "details": "الواجب",
+      "context": "القسم والمادة",
+      "dates": "التواريخ",
+      "title": "العنوان",
+      "titlePlaceholder": "التمرينان 4 و5 ص. 32",
+      "content": "التفاصيل",
+      "contentPlaceholder": "المطلوب إنجازه وإحضاره (اختياري)",
+      "class": "المستوى",
+      "classPlaceholder": "اختر المستوى",
+      "section": "الأقسام",
+      "sectionPlaceholder": "اختر الأقسام",
+      "searchSections": "ابحث عن قسم...",
+      "noSections": "لا توجد أقسام",
+      "subject": "المادة",
+      "subjectPlaceholder": "اختر المادة",
+      "subSubject": "المادة الفرعية",
+      "subSubjectPlaceholder": "اختر المادة الفرعية (اختياري)",
+      "teacher": "الأستاذ",
+      "teacherPlaceholder": "اختر الأستاذ",
+      "date": "أُعطي يوم",
+      "dueOn": "ليوم",
+      "attachments": "الصور والملفات",
+      "attachmentsHint": "{{max}} ملفات على الأكثر. تُصغَّر الصور قبل الإرسال، ولا يتجاوز ملف PDF {{pdf}} ميغابايت.",
+      "addFiles": "إضافة ملفات",
+      "takePhoto": "التقاط صورة",
+      "preparing": "جارٍ تجهيز الصور…",
+      "removeFile": "إزالة",
+      "tooManyFiles": "يضم الواجب {{max}} ملفات على الأكثر."
+    },
+    "dialogs": {
+      "createTitle": "نشر واجب",
+      "createButton": "نشر",
+      "viewTitle": "الواجب",
+      "editTitle": "تعديل الواجب",
+      "updateButton": "حفظ",
+      "deleteButton": "حذف"
+    },
+    "table": {
+      "title": "العنوان",
+      "subject": "المادة",
+      "teacher": "الأستاذ",
+      "class": "المستوى",
+      "section": "القسم",
+      "date": "أُعطي يوم",
+      "dueOn": "ليوم",
+      "attachments": "الملفات",
+      "seen": "اطّلع عليه الآباء"
+    },
+    "card": {
+      "givenOn": "أُعطي يوم",
+      "dueOn": "ليوم",
+      "noDueDate": "بدون تاريخ تسليم",
+      "seenCount": "{{seen}} من {{total}}",
+      "seenByParents": "اطّلع عليه الآباء",
+      "markSeen": "تأكيد الاطلاع",
+      "seenOn": "تم الاطلاع يوم {{date}}",
+      "child": "خاص بـ"
+    },
+    "attachments": {
+      "title": "الصور والملفات",
+      "photo": "صورة",
+      "pdf": "مستند PDF",
+      "open": "فتح",
+      "purged": "حُذف الملف بعد انتهاء مدة حفظه",
+      "unavailable": "الملف غير متاح"
+    },
+    "success": {
+      "retrieved": "تم جلب الواجبات بنجاح",
+      "created": "تم نشر الواجب",
+      "updated": "تم تحديث الواجب",
+      "deleted": "تم حذف الواجب",
+      "attached": "تمت إضافة الملفات",
+      "detached": "تمت إزالة الملف",
+      "acknowledged": "تم تأكيد الاطلاع"
+    },
+    "errors": {
+      "notFound": "الواجب غير موجود",
+      "writeNotAllowed": "لا ينشر الواجبات أو يعدّلها إلا أستاذ أو إدارة المؤسسة",
+      "noTeacherRecord": "حسابك غير مرتبط بملف أستاذ",
+      "teacherRequired": "الأستاذ مطلوب",
+      "notAssigned": "الأستاذ لا يدرّس هذه المادة في كل الأقسام المختارة",
+      "outsideSelectedYear": "يجب أن تنتمي أقسام الواجب إلى السنة الدراسية المحددة",
+      "yearCannotChange": "لا يمكن نقل الواجب إلى سنة دراسية أخرى",
+      "dueBeforeGiven": "لا يمكن أن يسبق تاريخ التسليم يوم إعطاء الواجب",
+      "contentTooLong": "التفاصيل طويلة جداً",
+      "assessmentMismatch": "يجب أن يكون الفرض المرتبط للأستاذ نفسه وفي المادة نفسها",
+      "subSubjectMismatch": "هذه المادة الفرعية لا تُدرَّس ضمن المادة المختارة في هذا القسم",
+      "parentOnly": "لا يؤكد الاطلاع على الواجب إلا وليّ الأمر",
+      "notYourChild": "لم يُعطَ هذا الواجب لهذا الطفل",
+      "noFile": "اختر ملفاً واحداً على الأقل",
+      "tooManyFiles": "يضم الواجب {{max}} ملفات على الأكثر",
+      "imageTooLarge": "لا يمكن أن يتجاوز حجم الصورة {{max}} ميغابايت",
+      "pdfTooLarge": "لا يمكن أن يتجاوز حجم ملف PDF {{max}} ميغابايت",
+      "storedImageTooLarge": "ما زال حجم هذه الصورة يتجاوز {{max}} ميغابايت بعد تصغيرها. التقطها من جديد من مسافة أقرب.",
+      "unsupportedFile": "لا يمكن إرفاق سوى الصور (JPEG وPNG وWebP) وملفات PDF",
+      "quotaExceeded": "استعمل هذا الأستاذ {{max}} ميغابايت المسموح بها لملفات الواجبات هذه السنة. ما زال نشر النص ممكناً.",
+      "attachmentNotFound": "الملف غير موجود",
+      "attachmentPurged": "حُذف هذا الملف بعد انتهاء مدة حفظه",
+      "attachmentMissing": "هذا الملف لم يعد متاحاً",
+      "uploadFailed": "تم حفظ الواجب دون ملفاته. عدّله لإضافتها من جديد."
     }
   }
 }

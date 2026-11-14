@@ -555,3 +555,4 @@ export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, MaintenanceService, [MaintenanceRepository, MaintenanceValidator]);
 }
 export { MassarRepository } from '../massar/MassarRepository';
+export { HomeworkRepository } from '../homework/HomeworkRepository';

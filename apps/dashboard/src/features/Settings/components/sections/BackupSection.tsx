@@ -30,6 +30,7 @@ const BackupSection: React.FC = () => {
   return (
     <>
     <SettingsGroup title={t('settings.backup.title')} description={t('settings.backup.description')} className="sm:grid-cols-1">
+      <p className="text-xs leading-relaxed text-muted-foreground">{t('settings.backup.homeworkNote')}</p>
       <div className="flex flex-wrap gap-2">
         {canDownload && (
           <NButton type="button" loading={backup.downloading} onClick={download} leftIcon={<Download className="h-4 w-4" aria-hidden />}>

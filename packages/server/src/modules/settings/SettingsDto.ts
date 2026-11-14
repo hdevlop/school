@@ -79,6 +79,11 @@ const settingsSchema = z.object({
 
   maintenanceMode: z.boolean().optional(),
   autoBackup: z.boolean().optional(),
+
+  // Homework files share one disk with other installations. 0 MB stops new
+  // files; the text of a homework is never limited.
+  homeworkQuotaMb: num().int().min(0).max(10000).optional(),
+  homeworkRetentionDays: num().int().min(7).max(3650).optional(),
 });
 
 export const createSettingsDto = settingsSchema.extend({ id: z.string().min(1).optional() });

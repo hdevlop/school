@@ -25,6 +25,7 @@ export const SIDEBAR_ENTRIES = [
   ['announcements', '/announcements', 'navigation.announcements'],
   ['discipline', '/discipline', 'navigation.discipline'],
   ['behavior-rewards', '/behavior-rewards', 'navigation.behaviorRewardsShort'],
+  ['homework', '/homework', 'navigation.homework'],
   ['assessments', '/assessments', 'navigation.assessments'],
   ['exams', '/exams', 'navigation.exams'],
   ['grades', '/grades', 'navigation.grades'],

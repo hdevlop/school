@@ -318,6 +318,9 @@ describe('the monitor role migration', () => {
     if (migrated.includes('read:classes')) migrated.push('read:class-routines');
     // 0096 grants the dashboard to every role that opened it by role.
     migrated.push('read:dashboard');
+    // Homework (0119) is a new default, not a moved guard: no migration grants
+    // it, and an existing database adopts it once with `bun run seed:role-permissions`.
+    migrated.push('read:homework');
     expect(migrated.sort()).toEqual([...grants].sort());
   });
 

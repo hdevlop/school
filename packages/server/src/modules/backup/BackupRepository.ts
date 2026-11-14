@@ -209,6 +209,15 @@ export class BackupRepository {
     return Number(row?.count ?? 0);
   }
 
+  /**
+   * A backup leaves homework files out (BACKUP_EXCLUDED_FILE_NAMESPACES), so
+   * after a restore none of them exists. Marking the attachments purged keeps
+   * the homework text, frees each teacher's quota and shows the file as removed.
+   */
+  async markExcludedFilesPurged() {
+    await this.db.execute(sql`UPDATE homework_attachments SET purged_at = now() WHERE purged_at IS NULL`);
+  }
+
   /** Points every serial and identity counter past the restored rows. */
   async resetSequences() {
     await this.db.execute(sql`

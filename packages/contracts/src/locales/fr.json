@@ -1321,7 +1321,8 @@
         "attendance": "Présences",
         "grades": "Notes",
         "files": "Fichiers déposés"
-      }
+      },
+      "homeworkNote": "Les photos et fichiers des devoirs ne sont pas inclus : ils expirent d’eux-mêmes. Le texte de chaque devoir l’est."
     },
     "receipts": {
       "title": "Reçus de paiement",
@@ -1410,6 +1411,10 @@
         "officialIdentity": {
           "title": "Autorisation de l’établissement",
           "description": "Références de l’autorisation imprimées sur les documents officiels."
+        },
+        "homeworkFiles": {
+          "title": "Fichiers des devoirs",
+          "description": "L’espace accordé à chaque enseignant et la durée de conservation d’un fichier. Le texte d’un devoir est toujours conservé."
         }
       },
       "generalTab": "Système",
@@ -1578,7 +1583,9 @@
       "gradingPeriods": "Périodes de notation",
       "maxClassSize": "Taille max de classe",
       "minimumPassingGrade": "Note minimale de réussite",
-      "title": "Paramètres scolaires"
+      "title": "Paramètres scolaires",
+      "homeworkQuotaMb": "Espace par enseignant et par année (Mo)",
+      "homeworkRetentionDays": "Conserver les fichiers après la date de remise (jours)"
     },
     "school": {
       "namePlaceholder": "Mon école",
@@ -1764,6 +1771,12 @@
     },
     "card": {
       "alertInfo": "Informations d'Alerte"
+    },
+    "storage": {
+      "lowTitle": "L’espace disque est faible",
+      "lowMessage": "Il ne reste que {{percent}} % d’espace libre sur le disque des fichiers envoyés ({{free}} Go sur {{total}} Go). Libérez de l’espace avant que les envois n’échouent.",
+      "criticalTitle": "L’espace disque est presque épuisé",
+      "criticalMessage": "Il ne reste que {{percent}} % d’espace libre sur le disque des fichiers envoyés ({{free}} Go sur {{total}} Go). Les envois et les sauvegardes peuvent échouer à tout moment."
     }
   },
   "validation": {
@@ -2307,7 +2320,8 @@
     "closeSidebar": "Fermer le menu",
     "collapseSidebar": "Réduire",
     "expandSidebar": "Développer",
-    "insurance": "Assurance"
+    "insurance": "Assurance",
+    "homework": "Devoirs"
   },
   "backup": {
     "success": {
@@ -3650,6 +3664,10 @@
     },
     "classRoutines": {
       "create": "Créer cet emploi du temps ?"
+    },
+    "homework": {
+      "create": "Publier ce devoir ?",
+      "update": "Mettre à jour ce devoir ?"
     }
   },
   "announcements": {
@@ -6250,6 +6268,10 @@
     "documents": {
       "title": "Aucun document téléversé",
       "description": "Téléversez un document pour commencer."
+    },
+    "homework": {
+      "title": "Aucun devoir pour le moment",
+      "description": "Publiez le premier devoir d’une classe."
     }
   },
   "academicSources": {
@@ -7541,6 +7563,113 @@
       "exportControl": "Tout le Contrôle, à envoyer à Massar",
       "exportControlHelp": "{{count}} fichiers dans un zip, verrouillés une fois téléchargés",
       "exportAllHelp": "{{count}} fichiers dans un zip, dont {{unconfirmed}} à confirmer"
+    }
+  },
+  "homework": {
+    "subtitle": {
+      "count": "Total : {{count}}"
+    },
+    "form": {
+      "details": "Devoir",
+      "context": "Classe et matière",
+      "dates": "Dates",
+      "title": "Titre",
+      "titlePlaceholder": "Exercices 4 et 5 p. 32",
+      "content": "Détails",
+      "contentPlaceholder": "Ce qu’il faut faire et apporter (facultatif)",
+      "class": "Classe",
+      "classPlaceholder": "Choisir la classe",
+      "section": "Sections",
+      "sectionPlaceholder": "Choisir les sections",
+      "searchSections": "Rechercher une section...",
+      "noSections": "Aucune section trouvée",
+      "subject": "Matière",
+      "subjectPlaceholder": "Choisir la matière",
+      "subSubject": "Sous-matière",
+      "subSubjectPlaceholder": "Choisir la sous-matière (facultatif)",
+      "teacher": "Enseignant",
+      "teacherPlaceholder": "Choisir l’enseignant",
+      "date": "Donné le",
+      "dueOn": "Pour le",
+      "attachments": "Photos et fichiers",
+      "attachmentsHint": "{{max}} fichiers au plus. Les photos sont réduites avant l’envoi ; un PDF peut peser jusqu’à {{pdf}} Mo.",
+      "addFiles": "Ajouter des fichiers",
+      "takePhoto": "Prendre une photo",
+      "preparing": "Préparation des photos…",
+      "removeFile": "Retirer",
+      "tooManyFiles": "Un devoir contient {{max}} fichiers au plus."
+    },
+    "dialogs": {
+      "createTitle": "Publier un devoir",
+      "createButton": "Publier",
+      "viewTitle": "Devoir",
+      "editTitle": "Modifier le devoir",
+      "updateButton": "Enregistrer",
+      "deleteButton": "Supprimer"
+    },
+    "table": {
+      "title": "Titre",
+      "subject": "Matière",
+      "teacher": "Enseignant",
+      "class": "Classe",
+      "section": "Section",
+      "date": "Donné le",
+      "dueOn": "Pour le",
+      "attachments": "Fichiers",
+      "seen": "Vu par les parents"
+    },
+    "card": {
+      "givenOn": "Donné le",
+      "dueOn": "Pour le",
+      "noDueDate": "Sans date de remise",
+      "seenCount": "{{seen}} sur {{total}}",
+      "seenByParents": "Vu par les parents",
+      "markSeen": "Marquer comme vu",
+      "seenOn": "Vu le {{date}}",
+      "child": "Pour"
+    },
+    "attachments": {
+      "title": "Photos et fichiers",
+      "photo": "Photo",
+      "pdf": "Document PDF",
+      "open": "Ouvrir",
+      "purged": "Fichier supprimé après sa durée de conservation",
+      "unavailable": "Fichier indisponible"
+    },
+    "success": {
+      "retrieved": "Devoirs récupérés avec succès",
+      "created": "Devoir publié",
+      "updated": "Devoir mis à jour",
+      "deleted": "Devoir supprimé",
+      "attached": "Fichiers ajoutés",
+      "detached": "Fichier retiré",
+      "acknowledged": "Marqué comme vu"
+    },
+    "errors": {
+      "notFound": "Devoir introuvable",
+      "writeNotAllowed": "Seuls un enseignant ou l’administration de l’école peuvent publier ou modifier un devoir",
+      "noTeacherRecord": "Votre compte n’est lié à aucune fiche d’enseignant",
+      "teacherRequired": "Un enseignant est requis",
+      "notAssigned": "L’enseignant n’enseigne pas cette matière dans toutes les sections choisies",
+      "outsideSelectedYear": "Les sections du devoir doivent appartenir à l’année scolaire sélectionnée",
+      "yearCannotChange": "Un devoir ne peut pas changer d’année scolaire",
+      "dueBeforeGiven": "La date de remise ne peut pas précéder le jour où le devoir est donné",
+      "contentTooLong": "Les détails sont trop longs",
+      "assessmentMismatch": "L’évaluation liée doit être du même enseignant et de la même matière",
+      "subSubjectMismatch": "Cette sous-matière n’est pas enseignée dans la matière choisie pour cette classe",
+      "parentOnly": "Seul un parent peut marquer un devoir comme vu",
+      "notYourChild": "Ce devoir n’a pas été donné à cet enfant",
+      "noFile": "Choisissez au moins un fichier",
+      "tooManyFiles": "Un devoir contient {{max}} fichiers au plus",
+      "imageTooLarge": "Une photo ne peut pas dépasser {{max}} Mo",
+      "pdfTooLarge": "Un PDF ne peut pas dépasser {{max}} Mo",
+      "storedImageTooLarge": "Cette photo dépasse encore {{max}} Mo après réduction. Reprenez-la de plus près.",
+      "unsupportedFile": "Seuls les photos (JPEG, PNG, WebP) et les fichiers PDF peuvent être joints",
+      "quotaExceeded": "Cet enseignant a utilisé les {{max}} Mo autorisés pour les fichiers de devoirs cette année. Le texte peut toujours être publié.",
+      "attachmentNotFound": "Fichier introuvable",
+      "attachmentPurged": "Ce fichier a été supprimé après sa durée de conservation",
+      "attachmentMissing": "Ce fichier n’est plus disponible",
+      "uploadFailed": "Le devoir est enregistré, mais pas ses fichiers. Modifiez-le pour les ajouter de nouveau."
     }
   }
 }

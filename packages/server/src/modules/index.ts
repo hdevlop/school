@@ -21,6 +21,7 @@ export * from './classRoutines';
 export * from './attendance';
 export * from './discipline';
 export * from './assessments';
+export * from './homework';
 export * from './exams';
 export * from './examPlanning';
 export * from './grades';

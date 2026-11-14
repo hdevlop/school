@@ -28,6 +28,7 @@ import { AttendanceService } from '../attendance/AttendanceService';
 import { ExamService } from '../exams/ExamService';
 import { ExamPlanningRepository } from '../examPlanning/ExamPlanningRepository';
 import { MassarRepository } from '../massar/MassarRepository';
+import { HomeworkRepository } from '../homework/HomeworkRepository';
 import { AnnouncementService } from '../announcements/AnnouncementService';
 import { AnnouncementRepository } from '../announcements/AnnouncementRepository';
 import { EventService as SchoolEventService } from '../events/EventService';
@@ -91,6 +92,7 @@ export class SeedService {
     private examService: ExamService,
     private examPlanningRepository: ExamPlanningRepository,
     private massarRepository: MassarRepository,
+    private homeworkRepository: HomeworkRepository,
     private announcementService: AnnouncementService,
     private announcementRepository: AnnouncementRepository,
     private schoolEventService: SchoolEventService,
@@ -179,6 +181,7 @@ export class SeedService {
    */
   async clearAllData() {
     await this.massarRepository.clearForSeedReset();
+    await this.homeworkRepository.clearForSeedReset();
     await this.allocationService.clearForSeedReset();
     await this.paymentService.clearForSeedReset();
     await this.payrollService.deleteAll();

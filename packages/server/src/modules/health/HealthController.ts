@@ -21,12 +21,17 @@ export class HealthController {
   @Get('/status')
   @RawResponse()
   async getStatus() {
-    const readiness = await this.healthService.getReadiness();
+    const [readiness, storage] = await Promise.all([
+      this.healthService.getReadiness(),
+      this.healthService.getStorageSpace(),
+    ]);
     return Response.json(
       {
         checks: readiness.checks,
         service: 'school',
         status: readiness.ready ? 'ready' : 'not_ready',
+        // Uploads share one disk with other installations; this is that disk.
+        storage,
         version: '0.1.0',
       },
       {

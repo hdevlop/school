@@ -11,6 +11,7 @@ import {
   BACKUP_VERSION,
   backupFilePath,
   backupTableEntry,
+  isBackedUpFile,
   type BackupManifest,
 } from '@sms/contracts/backup';
 import { storageBasePath } from '../../config/storageConfig';
@@ -155,6 +156,9 @@ export class BackupService {
     await this.backupRepository.checkConstraintsNow();
     await this.backupRepository.resetSequences();
     await this.backupRepository.runMigrations(plan.upgrade);
+    // The archive holds no homework files, and the swap below removes the
+    // current ones: their attachments read as removed, not as broken images.
+    await this.backupRepository.markExcludedFilesPurged();
     const restoredUsers = await this.backupRepository.userIds();
     await this.swapFiles(staged);
     return { userIds: [...new Set([...before.userIds, ...restoredUsers])], families: before.families };
@@ -211,7 +215,10 @@ export class BackupService {
     for (const entry of entries) {
       if (!entry.isFile()) continue;
       const path = join(entry.parentPath, entry.name);
-      const name = `${BACKUP_FILES_PREFIX}${relative(root, path).split(sep).join('/')}`;
+      const stored = relative(root, path).split(sep).join('/');
+      // Homework files expire and are large: the archive keeps the text only.
+      if (!isBackedUpFile(stored)) continue;
+      const name = `${BACKUP_FILES_PREFIX}${stored}`;
       if (!backupFilePath(name)) continue;
       const data = await readFile(path);
       writer.file(name, data);

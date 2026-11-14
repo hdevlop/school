@@ -47,6 +47,10 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
     ],
   };
 
+  // What the class has to do at home. Its own entry, beside the evaluations
+  // it is not: homework carries no marks.
+  const homework: GatedNavItem = { id: '/homework', label: t('navigation.homework'), icon: FEATURE_ICONS.homework, href: '/homework', access: 'homework' };
+
   if (isFamily && !allFeatures) {
     return [
       {
@@ -56,6 +60,7 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
         href: '/students',
         access: 'students',
       },
+      homework,
       communications,
       {
         id: 'student-conduct',
@@ -109,6 +114,7 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
         { id: '/behavior-rewards', label: t('navigation.behaviorRewardsShort'), icon: FEATURE_ICONS.behaviorRewards, href: '/behavior-rewards', access: 'behaviorRewards' },
       ],
     },
+    homework,
     evaluations,
     { id: '/grades', label: t('navigation.grades'), icon: FEATURE_ICONS.grades, href: '/grades', access: 'grades' },
     { id: '/massar', label: t('massar.title'), icon: FEATURE_ICONS.massar, href: '/massar', access: 'massarSheets' },

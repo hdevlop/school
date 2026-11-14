@@ -2,12 +2,28 @@ import { sql, type AnyColumn, type SQL } from 'drizzle-orm';
 import { managesSection } from '../staff/monitorScope';
 
 /** The columns an academic source (an assessment or an exam) is dated and targeted by. */
-type DatedAcademicSource = {
+export type DatedAcademicSource = {
   date: AnyColumn;
   academicYearId: AnyColumn;
   sectionIds: AnyColumn;
   teacherAssignmentId: AnyColumn;
 };
+
+/**
+ * The `enrollment` and `placement` rows that put a student in one of the
+ * source's target sections on its date. For a query that joins
+ * student_enrollments as `enrollment` and student_enrollment_placements as
+ * `placement`, so a count or a list of those students uses the same rule as
+ * the ownership checks below.
+ */
+export const inTargetSectionOnSourceDate = (source: DatedAcademicSource) => sql`placement.valid_from <= ${source.date}
+    and (placement.valid_to is null or placement.valid_to > ${source.date})
+    and (enrollment.left_on is null or enrollment.left_on > ${source.date})
+    and (enrollment.academic_year_id = ${source.academicYearId}
+      or ${source.academicYearId} is null)
+    and coalesce(${source.sectionIds}, jsonb_build_array(
+      (select section_id from teacher_assignments where id = ${source.teacherAssignmentId})
+    )) @> jsonb_build_array(placement.section_id)`;
 
 // A student chosen by `who` occupied a target section on the source's date.
 // The current students.section_id projection cannot answer a historical read,
@@ -19,14 +35,7 @@ const placedOn = (source: DatedAcademicSource, who: SQL, throughParent: boolean)
   ${throughParent ? sql`join student_parents link on link.student_id = student.id
     join parents parent on parent.id = link.parent_id` : sql``}
   where ${who}
-    and placement.valid_from <= ${source.date}
-    and (placement.valid_to is null or placement.valid_to > ${source.date})
-    and (enrollment.left_on is null or enrollment.left_on > ${source.date})
-    and (enrollment.academic_year_id = ${source.academicYearId}
-      or ${source.academicYearId} is null)
-    and coalesce(${source.sectionIds}, jsonb_build_array(
-      (select section_id from teacher_assignments where id = ${source.teacherAssignmentId})
-    )) @> jsonb_build_array(placement.section_id)
+    and ${inTargetSectionOnSourceDate(source)}
 )`;
 
 /** The reader's student (or, for a parent, one of their children) sat in a target section on the source's date. */

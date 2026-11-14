@@ -14,6 +14,7 @@ import { EventController } from '../modules/events/EventController';
 import { OperationsDashboardController } from '../modules/dashboard/operations/OperationsDashboardController';
 import { ParentProfileController } from '../modules/profiles/ParentProfileController';
 import { AssessmentController } from '../modules/assessments/AssessmentController';
+import { HomeworkController } from '../modules/homework/HomeworkController';
 import { StudentProfileController } from '../modules/profiles/StudentProfileController';
 import { TeacherProfileController } from '../modules/profiles/TeacherProfileController';
 import { AttendanceController } from '../modules/attendance/AttendanceController';
@@ -83,6 +84,7 @@ export const yearScopedModules = {
   parents: ParentController,
   'parent-profile': ParentProfileController,
   assessments: AssessmentController,
+  homework: HomeworkController,
   'student-profile': StudentProfileController,
   'teacher-profile': TeacherProfileController,
   attendance: AttendanceController,

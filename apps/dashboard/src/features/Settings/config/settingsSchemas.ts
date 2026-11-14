@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { NAJM_CURRENCIES, NAJM_TIME_ZONES } from 'najm-kit/server';
-import { CALENDAR_SYSTEM_VALUES, DEFAULT_RECEIPT_LANGUAGE, RECEIPT_LANGUAGES, SCHOOL_DEFAULT_DATE_FORMAT, SCHOOL_DEFAULT_TIME_FORMAT } from '@sms/contracts';
+import { CALENDAR_SYSTEM_VALUES, DEFAULT_RECEIPT_LANGUAGE, HOMEWORK_DEFAULT_QUOTA_MB, HOMEWORK_DEFAULT_RETENTION_DAYS, RECEIPT_LANGUAGES, SCHOOL_DEFAULT_DATE_FORMAT, SCHOOL_DEFAULT_TIME_FORMAT } from '@sms/contracts';
 import { parseSchoolYearLabel } from '@sms/contracts/academic-years';
 import { schoolI18n } from '@sms/contracts/locales';
 import { DEFAULT_TEACHING_DAYS, ROUTINE_DAYS } from '@sms/contracts/routines';
@@ -9,7 +9,7 @@ import { schoolApp, SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
 import { SETTINGS_DATE_FORMAT_VALUES, SETTINGS_TIME_FORMAT_VALUES } from './dateTimeFormats';
 export { SETTINGS_DATE_FORMAT_VALUES, SETTINGS_TIME_FORMAT_VALUES } from './dateTimeFormats';
 
-type T = (key: string) => string;
+type T = (key: string, params?: Record<string, unknown>) => string;
 
 const numberField = (schema: z.ZodNumber): any =>
   z.preprocess((value) => {
@@ -88,6 +88,11 @@ export const createSettingsSchemas = (t: T) => {
     minimumPassingGrade: numberField(z.number({ error: t('validationMessages.mustBeAValidNumber') }).min(0, t('validationMessages.minimumPassingGradeMustBeNonNegative')).max(100, t('validationMessages.minimumPassingGradeCannotExceed100'))).default(60.00),
     defaultExamDuration: numberField(z.number({ error: t('validationMessages.mustBeAValidNumber') }).int(t('validationMessages.defaultExamDurationMustBeInMinutes')).min(15, t('validationMessages.examDurationMustBeAtLeast15Minutes')).max(480, t('validationMessages.examDurationCannotExceed480Minutes'))).default(120),
     calendarSystem: z.enum(CALENDAR_SYSTEM_VALUES).default('SEMESTER'),
+    // The same bounds as SettingsDto. 0 MB stops new homework files.
+    homeworkQuotaMb: numberField(z.number({ error: t('validationMessages.mustBeAValidNumber') }).int(t('validationMessages.mustBeAnInteger'))
+      .min(0, t('validationMessages.mustBeAtLeast', { value: 0 })).max(10000, t('validationMessages.cannotExceed', { value: 10000 }))).default(HOMEWORK_DEFAULT_QUOTA_MB),
+    homeworkRetentionDays: numberField(z.number({ error: t('validationMessages.mustBeAValidNumber') }).int(t('validationMessages.mustBeAnInteger'))
+      .min(7, t('validationMessages.mustBeAtLeast', { value: 7 })).max(3650, t('validationMessages.cannotExceed', { value: 3650 }))).default(HOMEWORK_DEFAULT_RETENTION_DAYS),
     teachingDays: z.array(z.enum(ROUTINE_DAYS)).min(1).max(7)
       .refine((days) => new Set(days).size === days.length, t('validationMessages.teachingDaysMustBeUnique'))
       .transform((days) => ROUTINE_DAYS.filter((day) => days.includes(day))).default(DEFAULT_TEACHING_DAYS),

@@ -25,6 +25,7 @@ import {
   ExamService,
   ExamPlanningRepository,
   MassarRepository,
+  HomeworkRepository,
   AttendanceService,
   AlertRepository,
   AnnouncementRepository,
@@ -47,6 +48,8 @@ type ResetOptions = { includeAcademic?: boolean };
 
 export async function clearDemoData(server: Server, { includeAcademic = false }: ResetOptions = {}) {
   await (await server.container.resolve(MassarRepository)).clearForSeedReset();
+  // Before teachers and assessments: homework points at a teacher's assignment.
+  await (await server.container.resolve(HomeworkRepository)).clearForSeedReset();
   const allocationService = await server.container.resolve(AllocationService);
   const paymentService = await server.container.resolve(PaymentService);
   const installmentService = await server.container.resolve(InstallmentService);

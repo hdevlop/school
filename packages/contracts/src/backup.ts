@@ -19,6 +19,20 @@ export const MAX_BACKUP_BYTES = 512 * 1024 * 1024;
  */
 export const BACKUP_EXCLUDED_TABLES = ['tokens', 'credential_setup_sessions'] as const;
 
+/**
+ * Storage folders left out of a backup. Homework photos expire on their own
+ * and would soon outgrow MAX_BACKUP_BYTES, which a restore refuses; the text of
+ * each homework is in the database and is kept. After a restore those files
+ * are gone, and their attachments are marked as removed.
+ */
+export const BACKUP_EXCLUDED_FILE_NAMESPACES = ['homework'] as const;
+
+/** Whether a stored file, by its path inside the storage folder, belongs in a backup. */
+export function isBackedUpFile(path: string): boolean {
+  const folder = path.split('/')[0]?.toLowerCase() ?? '';
+  return !(BACKUP_EXCLUDED_FILE_NAMESPACES as readonly string[]).includes(folder);
+}
+
 export type BackupManifest = {
   format: typeof BACKUP_FORMAT;
   version: typeof BACKUP_VERSION;

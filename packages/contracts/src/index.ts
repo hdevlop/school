@@ -22,4 +22,5 @@ export * from './examPlanningJson';
 export * from './routineJson';
 export type { StudentFinancialImport, FinancialImportDateCorrection, FinancialImportDatePreview } from './financialImport';
 export * from './massar';
+export * from './homework';
 export * from './subjectNames';

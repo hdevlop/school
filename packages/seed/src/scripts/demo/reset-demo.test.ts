@@ -12,7 +12,7 @@ async function recordReset(includeAcademic?: boolean, failOn?: string) {
       'DriverService', 'ParentService', 'SettingsService', 'AcademicYearRepository',
       'AcademicYearTransitionRepository', 'AcademicYearMigrationIssueRepository',
       'ExpenseService', 'GradeService', 'AssessmentService', 'ExamService',
-      'ExamPlanningRepository', 'MassarRepository',
+      'ExamPlanningRepository', 'MassarRepository', 'HomeworkRepository',
       'AttendanceService', 'AlertRepository', 'AnnouncementRepository', 'EventService',
       'RefuelService', 'MaintenanceService', 'DisciplineService', 'BehaviorRewardService',
       'ClassRoutineService', 'RolloverService', 'SectionService', 'ClassService',

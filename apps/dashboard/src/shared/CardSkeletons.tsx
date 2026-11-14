@@ -175,6 +175,7 @@ export const SubjectCardSkeleton = () => <RecordCardSkeleton rows={2} />;
 export const FeeTypeCardSkeleton = () => <RecordCardSkeleton rows={2} />;
 export const ExamCardSkeleton = () => <RecordCardSkeleton rows={4} badge />;
 export const AssessmentCardSkeleton = () => <RecordCardSkeleton rows={4} badge />;
+export const HomeworkCardSkeleton = () => <RecordCardSkeleton rows={4} />;
 export const AnnouncementCardSkeleton = () => <RecordCardSkeleton rows={4} badge />;
 export const ExpenseCardSkeleton = () => <RecordCardSkeleton rows={3} badge />;
 export const VehicleCardSkeleton = () => <RecordCardSkeleton rows={3} />;

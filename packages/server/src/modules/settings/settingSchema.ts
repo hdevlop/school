@@ -4,7 +4,7 @@ import { idField, timestamps } from '../../database/shared';
 import { getEnumValues } from '../../shared/enums';
 import { academicYears } from '../academicYears/AcademicYearSchema';
 import { DEFAULT_TEACHING_DAYS, type RoutineDay } from '@sms/contracts/routines';
-import { DEFAULT_RECEIPT_LANGUAGE, type ReceiptLanguage } from '@sms/contracts';
+import { DEFAULT_RECEIPT_LANGUAGE, HOMEWORK_DEFAULT_QUOTA_MB, HOMEWORK_DEFAULT_RETENTION_DAYS, type ReceiptLanguage } from '@sms/contracts';
 
 export const calendarSystemEnum = pgEnum('calendarSystem', getEnumValues('calendarSystem'));
 export const languageEnum = pgEnum('language', getEnumValues('language'));
@@ -75,5 +75,13 @@ export const settings = pgTable('settings', {
   lunchBreakDuration: integer('lunch_break_duration').default(30),
   maintenanceMode: boolean('maintenance_mode').default(false),
   autoBackup: boolean('auto_backup').default(true),
+  // Homework files share the disk with every installation on the host.
+  // MB of live attachments one teacher may hold in one academic year.
+  homeworkQuotaMb: integer('homework_quota_mb').notNull().default(HOMEWORK_DEFAULT_QUOTA_MB),
+  // Days after the due date (or the given date) that a homework file is kept.
+  homeworkRetentionDays: integer('homework_retention_days').notNull().default(HOMEWORK_DEFAULT_RETENTION_DAYS),
+  // The free-space level (20 or 10 percent) admins were last alerted about;
+  // null once space recovers, so each level alerts once.
+  storageAlertLevel: integer('storage_alert_level'),
   ...timestamps,
 });

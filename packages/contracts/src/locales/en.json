@@ -1529,7 +1529,8 @@
         "attendance": "Attendance records",
         "grades": "Grades",
         "files": "Uploaded files"
-      }
+      },
+      "homeworkNote": "Homework photos and files are not included: they expire on their own. The text of each homework is."
     },
     "receipts": {
       "title": "Payment receipts",
@@ -1618,6 +1619,10 @@
         "officialIdentity": {
           "title": "School license",
           "description": "License details printed on official documents."
+        },
+        "homeworkFiles": {
+          "title": "Homework files",
+          "description": "How much each teacher may store and how long a file is kept. The text of a homework is always kept."
         }
       },
       "generalTab": "System",
@@ -1726,7 +1731,9 @@
       "calendarSystem": "Calendar System",
       "attendanceMode": "Attendance Mode",
       "attendanceModeDaily": "Daily (first period locks, later teachers correct)",
-      "attendanceModePerClass": "Per class (each teacher records independently)"
+      "attendanceModePerClass": "Per class (each teacher records independently)",
+      "homeworkQuotaMb": "Storage per teacher and year (MB)",
+      "homeworkRetentionDays": "Keep files after the due date (days)"
     },
     "calendarSystem": {
       "SEMESTER": "Semester",
@@ -5555,7 +5562,8 @@
     "closeSidebar": "Close sidebar",
     "collapseSidebar": "Collapse",
     "expandSidebar": "Expand",
-    "insurance": "Insurance"
+    "insurance": "Insurance",
+    "homework": "Homework"
   },
   "backup": {
     "success": {
@@ -6424,6 +6432,10 @@
     },
     "classRoutines": {
       "create": "Create this timetable?"
+    },
+    "homework": {
+      "create": "Post this homework?",
+      "update": "Update this homework?"
     }
   },
   "events": {
@@ -6590,6 +6602,12 @@
       "retrieved": "Alert retrieved successfully",
       "statusUpdated": "Alert status updated successfully",
       "updated": "Alert updated successfully"
+    },
+    "storage": {
+      "lowTitle": "Disk space is low",
+      "lowMessage": "Only {{percent}}% of the disk that holds uploaded files is free ({{free}} GB of {{total}} GB). Free some space before uploads start to fail.",
+      "criticalTitle": "Disk space is almost used up",
+      "criticalMessage": "Only {{percent}}% of the disk that holds uploaded files is free ({{free}} GB of {{total}} GB). Uploads and backups can fail at any moment."
     }
   },
   "auditLog": {
@@ -6856,6 +6874,10 @@
     "documents": {
       "title": "No documents uploaded",
       "description": "Upload a document to get started."
+    },
+    "homework": {
+      "title": "No homework yet",
+      "description": "Post the first homework for a class."
     }
   },
   "academicSources": {
@@ -8147,6 +8169,113 @@
       "exportControl": "The whole Contrôle, to send to Massar",
       "exportControlHelp": "{{count}} files in a zip, locked once downloaded",
       "exportAllHelp": "{{count}} files in one zip, {{unconfirmed}} still to confirm"
+    }
+  },
+  "homework": {
+    "subtitle": {
+      "count": "Total: {{count}}"
+    },
+    "form": {
+      "details": "Homework",
+      "context": "Class and subject",
+      "dates": "Dates",
+      "title": "Title",
+      "titlePlaceholder": "Exercises 4 and 5, p. 32",
+      "content": "Details",
+      "contentPlaceholder": "What to do and what to bring (optional)",
+      "class": "Class",
+      "classPlaceholder": "Select class",
+      "section": "Sections",
+      "sectionPlaceholder": "Select sections",
+      "searchSections": "Search sections...",
+      "noSections": "No sections found",
+      "subject": "Subject",
+      "subjectPlaceholder": "Select subject",
+      "subSubject": "Sub-subject",
+      "subSubjectPlaceholder": "Choose the sub-subject (optional)",
+      "teacher": "Teacher",
+      "teacherPlaceholder": "Select teacher",
+      "date": "Given on",
+      "dueOn": "Due on",
+      "attachments": "Photos and files",
+      "attachmentsHint": "Up to {{max}} files. Photos are reduced before they are sent; a PDF may weigh up to {{pdf}} MB.",
+      "addFiles": "Add files",
+      "takePhoto": "Take a photo",
+      "preparing": "Preparing the photos…",
+      "removeFile": "Remove",
+      "tooManyFiles": "A homework holds at most {{max}} files."
+    },
+    "dialogs": {
+      "createTitle": "Post homework",
+      "createButton": "Post",
+      "viewTitle": "Homework",
+      "editTitle": "Edit homework",
+      "updateButton": "Save",
+      "deleteButton": "Delete"
+    },
+    "table": {
+      "title": "Title",
+      "subject": "Subject",
+      "teacher": "Teacher",
+      "class": "Class",
+      "section": "Section",
+      "date": "Given on",
+      "dueOn": "Due on",
+      "attachments": "Files",
+      "seen": "Seen by parents"
+    },
+    "card": {
+      "givenOn": "Given on",
+      "dueOn": "Due on",
+      "noDueDate": "No due date",
+      "seenCount": "{{seen}} of {{total}}",
+      "seenByParents": "Seen by parents",
+      "markSeen": "Mark as seen",
+      "seenOn": "Seen on {{date}}",
+      "child": "For"
+    },
+    "attachments": {
+      "title": "Photos and files",
+      "photo": "Photo",
+      "pdf": "PDF document",
+      "open": "Open",
+      "purged": "File removed after its keeping period",
+      "unavailable": "File unavailable"
+    },
+    "success": {
+      "retrieved": "Homework retrieved successfully",
+      "created": "Homework posted",
+      "updated": "Homework updated",
+      "deleted": "Homework deleted",
+      "attached": "Files added",
+      "detached": "File removed",
+      "acknowledged": "Marked as seen"
+    },
+    "errors": {
+      "notFound": "Homework not found",
+      "writeNotAllowed": "Only a teacher or the school administration can post or change homework",
+      "noTeacherRecord": "Your account is not linked to a teacher record",
+      "teacherRequired": "A teacher is required",
+      "notAssigned": "The teacher does not teach this subject in every selected section",
+      "outsideSelectedYear": "The homework's sections must belong to the selected school year",
+      "yearCannotChange": "A homework cannot move to another school year",
+      "dueBeforeGiven": "The due date cannot be before the day the homework is given",
+      "contentTooLong": "The details are too long",
+      "assessmentMismatch": "The linked assessment must be one the same teacher gave for the same subject",
+      "subSubjectMismatch": "This sub-subject is not taught in the chosen subject for this class",
+      "parentOnly": "Only a parent can mark homework as seen",
+      "notYourChild": "This homework was not given to this child",
+      "noFile": "Choose at least one file",
+      "tooManyFiles": "A homework holds at most {{max}} files",
+      "imageTooLarge": "A photo cannot exceed {{max}} MB",
+      "pdfTooLarge": "A PDF cannot exceed {{max}} MB",
+      "storedImageTooLarge": "This photo is still larger than {{max}} MB after it was reduced. Take it again closer to the page.",
+      "unsupportedFile": "Only photos (JPEG, PNG, WebP) and PDF files can be attached",
+      "quotaExceeded": "This teacher has used the {{max}} MB allowed for homework files this year. The text can still be posted.",
+      "attachmentNotFound": "File not found",
+      "attachmentPurged": "This file was removed after its keeping period",
+      "attachmentMissing": "This file is no longer available",
+      "uploadFailed": "The homework was saved, but its files were not. Edit it to add them again."
     }
   }
 }

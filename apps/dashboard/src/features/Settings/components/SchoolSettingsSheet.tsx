@@ -11,7 +11,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { normalizeLocationValue } from 'najm-kit/location';
 import { schoolI18n } from '@sms/contracts/locales';
 import { DEFAULT_TEACHING_DAYS } from '@sms/contracts/routines';
-import { DEFAULT_RECEIPT_LANGUAGE } from '@sms/contracts';
+import { DEFAULT_RECEIPT_LANGUAGE, HOMEWORK_DEFAULT_QUOTA_MB, HOMEWORK_DEFAULT_RETENTION_DAYS } from '@sms/contracts';
 
 import { schoolApp, SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
 import SchoolSection from './sections/SchoolSection';
@@ -59,6 +59,8 @@ function settingsFormDefaults(settings: AdminSettings) {
     maxClassSize: Number(settings?.maxClassSize ?? 34),
     minimumPassingGrade: Number(settings?.minimumPassingGrade ?? 60),
     defaultExamDuration: Number(settings?.defaultExamDuration ?? 120),
+    homeworkQuotaMb: Number(settings?.homeworkQuotaMb ?? HOMEWORK_DEFAULT_QUOTA_MB),
+    homeworkRetentionDays: Number(settings?.homeworkRetentionDays ?? HOMEWORK_DEFAULT_RETENTION_DAYS),
     calendarSystem: settings?.calendarSystem || 'SEMESTER' as const,
     teachingDays: [...(settings?.teachingDays ?? DEFAULT_TEACHING_DAYS)],
     gradingPeriods: Number(settings?.gradingPeriods ?? 4),

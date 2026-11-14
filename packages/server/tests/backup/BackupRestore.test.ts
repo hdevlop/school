@@ -42,6 +42,7 @@ function restoreHarness(installed = 300, failure?: { at: number; error: Error })
     },
     checkConstraintsNow: async () => { effects.push('constraints'); },
     resetSequences: async () => { effects.push('sequences'); },
+    markExcludedFilesPurged: async () => { effects.push('purge-excluded-files'); },
     userIds: async () => ['restored-user'],
   };
   const service = new BackupService(repository as never, new BackupValidator(), {} as never);
@@ -62,7 +63,9 @@ describe('backup restore', () => {
       'lock', 'drop', 'migrate:100', 'migrate:200',
       // The rows the migrations seeded give way to the backup's, the session table included.
       'truncate:users,permissions,tokens', 'insert:permissions', 'insert:users',
-      'constraints', 'sequences', 'migrate:300', 'files',
+      'constraints', 'sequences', 'migrate:300',
+      // Homework files are not in the archive: their attachments are marked removed before the swap.
+      'purge-excluded-files', 'files',
     ]);
     expect(signedIn.userIds).toEqual(['current-user', 'restored-user']);
   });
@@ -71,7 +74,7 @@ describe('backup restore', () => {
     const h = restoreHarness();
     await h.service.replaceDatabase(h.archive, { ...manifest, migration: { ...manifest.migration, createdAt: 300 } }, migrations, 'staged');
     expect(h.effects.slice(1, 5)).toEqual(['drop', 'migrate:100', 'migrate:200', 'migrate:300']);
-    expect(h.effects.slice(-3)).toEqual(['constraints', 'sequences', 'files']);
+    expect(h.effects.slice(-4)).toEqual(['constraints', 'sequences', 'purge-excluded-files', 'files']);
   });
 
   it('refuses under the lock, before dropping anything, when a deploy moved the database on', async () => {
