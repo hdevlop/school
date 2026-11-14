@@ -28,7 +28,6 @@ export function LandingHero({ stats, language, defaultLanguage, programs }: {
           <span className="landing-hero-title-line"><em className="landing-hero-curiosity">{t('landing.hero.titleAccent')}</em> {t('landing.hero.titleEveryday')}</span>
         </h1>
         <div className="landing-cta-row">
-          <a href="#contact" className="landing-button landing-hero-button">{t('landing.hero.visit')}<span><ArrowRight className="landing-arrow" size={15} aria-hidden /></span></a>
           <InstallAppButton androidApk={androidApkPath({ ANDROID_APP_PACKAGE: process.env.ANDROID_APP_PACKAGE }, publicFileExists)} />
           {programs && <a href="#programs" className="landing-hero-programs">{t('landing.hero.programs')}<ArrowRight className="landing-arrow" size={16} aria-hidden /></a>}
         </div>
