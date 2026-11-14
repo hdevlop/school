@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import sharp from 'sharp';
-import { pwaIconSize, renderPwaIcon } from '@/lib/pwaIcon';
+import { pwaIcon, pwaIconSize, renderPwaIcon } from '@/lib/pwaIcon';
 
 describe('install icons', () => {
   it.each(['256.png', 'constructor', '__proto__', '../192.png', '192.svg', '192.png?url=https://outside.example'])('rejects unsupported filenames: %s', (file) => {
@@ -23,5 +23,24 @@ describe('install icons', () => {
     expect(pixel(0, 0)).toEqual([255, 255, 255]);
     expect(pixel(0, 96)).toEqual([255, 0, 0]);
     expect(pixel(191, 96)).toEqual([255, 0, 0]);
+  });
+});
+
+describe('maskable install icons', () => {
+  it.each(['maskable-192.png', 'maskable-512.png'])('is served at %s', (file) => {
+    expect(pwaIcon(file)?.maskable).toBe(true);
+  });
+
+  it('keeps the whole logo inside the safe circle, on white', async () => {
+    const input = await sharp({ create: { width: 100, height: 100, channels: 4, background: '#ff0000' } }).png().toBuffer();
+    const png = await renderPwaIcon(input, 512, { maskable: true });
+    const { data, info } = await sharp(png).raw().toBuffer({ resolveWithObject: true });
+    expect([info.width, info.height]).toEqual([512, 512]);
+    const pixel = (x: number, y: number) => [...data.subarray((y * info.width + x) * info.channels, (y * info.width + x) * info.channels + 3)];
+    expect(pixel(256, 256)).toEqual([255, 0, 0]);
+    // Every red pixel lies within the circle of radius 0.4 × 512 around the centre.
+    for (let y = 0; y < 512; y += 4) for (let x = 0; x < 512; x += 4) {
+      if (pixel(x, y)[1] === 0) expect(Math.hypot(x - 256, y - 256)).toBeLessThanOrEqual(0.4 * 512);
+    }
   });
 });

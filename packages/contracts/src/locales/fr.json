@@ -6413,7 +6413,12 @@
       "android": "Ouvrez cette page dans Chrome. Dans le menu du navigateur, choisissez Installer l’application ou Ajouter à l’écran d’accueil, puis confirmez.",
       "mac": "Dans Safari, choisissez Fichier → Ajouter au Dock. Dans Chrome ou Edge, utilisez l’icône d’installation dans la barre d’adresse ou le menu du navigateur.",
       "desktop": "Dans Chrome ou Edge, utilisez l’icône d’installation dans la barre d’adresse ou choisissez Installer l’application dans le menu du navigateur.",
-      "unavailable": "Si l’option d’installation n’apparaît pas, l’application est peut-être déjà installée. Sinon, ouvrez cette page dans un navigateur compatible, hors navigation privée."
+      "unavailable": "Si l’option d’installation n’apparaît pas, l’application est peut-être déjà installée. Sinon, ouvrez cette page dans un navigateur compatible, hors navigation privée.",
+      "apkAction": "Télécharger l'app Android",
+      "apkDescription": "Le téléchargement a commencé. Ensuite :",
+      "apkStep1": "Ouvrez le fichier téléchargé, depuis la notification ou vos Téléchargements.",
+      "apkStep2": "Si le téléphone le demande, autorisez l'installation depuis cette source, puis revenez.",
+      "apkStep3": "Appuyez sur Installer, puis Ouvrir. Connectez-vous une fois, c'est prêt."
     },
     "meta": {
       "tagline": "Chaque élève peut briller",

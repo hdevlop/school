@@ -7019,7 +7019,12 @@
       "android": "Open this page in Chrome. In the browser menu, choose Install app or Add to Home screen, then confirm.",
       "mac": "In Safari, choose File → Add to Dock. In Chrome or Edge, use the install icon in the address bar or the browser menu.",
       "desktop": "In Chrome or Edge, use the install icon in the address bar or choose Install app from the browser menu.",
-      "unavailable": "If the install option is missing, the app may already be installed. Otherwise, open this page in a supported browser outside private browsing."
+      "unavailable": "If the install option is missing, the app may already be installed. Otherwise, open this page in a supported browser outside private browsing.",
+      "apkAction": "Download the Android app",
+      "apkDescription": "The download has started. Then:",
+      "apkStep1": "Open the downloaded file, from the notification or your Downloads.",
+      "apkStep2": "If your phone asks, allow installing apps from this source, then go back.",
+      "apkStep3": "Tap Install, then Open. Sign in once and you're done."
     },
     "meta": {
       "tagline": "Where every student shines",

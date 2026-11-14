@@ -17,11 +17,11 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     display: 'standalone',
     background_color: '#ffffff',
     theme_color: '#000000',
-    icons: [192, 512].map((size) => ({
-      src: `/app-icons/${size}.png`,
+    icons: (['any', 'maskable'] as const).flatMap((purpose) => [192, 512].map((size) => ({
+      src: `/app-icons/${purpose === 'maskable' ? 'maskable-' : ''}${size}.png`,
       sizes: `${size}x${size}`,
       type: 'image/png',
-      purpose: 'any',
-    })),
+      purpose,
+    }))),
   }
 }

@@ -4,6 +4,11 @@ import { LANDING_HERO_FALLBACK, type LandingContent, type LandingText } from '@s
 import { schoolI18n, type SchoolLocale, type SchoolTranslationKey } from '@sms/contracts/locales';
 import { LandingImage } from './LandingImage';
 import { InstallAppButton } from './InstallAppButton';
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import { androidApkPath } from '@/lib/androidAssetLinks';
+
+const publicFileExists = (href: string) => existsSync(path.join(process.cwd(), 'public', href));
 
 export function LandingHero({ stats, language, defaultLanguage, programs }: {
   stats: LandingContent['stats'];
@@ -24,7 +29,7 @@ export function LandingHero({ stats, language, defaultLanguage, programs }: {
         </h1>
         <div className="landing-cta-row">
           <a href="#contact" className="landing-button landing-hero-button">{t('landing.hero.visit')}<span><ArrowRight className="landing-arrow" size={15} aria-hidden /></span></a>
-          <InstallAppButton />
+          <InstallAppButton androidApk={androidApkPath({ ANDROID_APP_PACKAGE: process.env.ANDROID_APP_PACKAGE }, publicFileExists)} />
           {programs && <a href="#programs" className="landing-hero-programs">{t('landing.hero.programs')}<ArrowRight className="landing-arrow" size={16} aria-hidden /></a>}
         </div>
         <svg className="landing-hero-scribble" viewBox="0 0 80 90" fill="none" aria-hidden="true" focusable="false">

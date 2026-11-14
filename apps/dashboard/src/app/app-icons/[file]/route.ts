@@ -1,11 +1,11 @@
 import { loadUiSnapshot } from '@/najm.server';
-import { pwaIconSize, renderPwaIcon } from '@/lib/pwaIcon';
+import { pwaIcon, renderPwaIcon } from '@/lib/pwaIcon';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(_request: Request, { params }: { params: Promise<{ file: string }> }) {
-  const size = pwaIconSize((await params).file);
-  if (!size) return new Response(null, { status: 404 });
+  const icon = pwaIcon((await params).file);
+  if (!icon) return new Response(null, { status: 404 });
 
   const { branding } = await loadUiSnapshot();
   const source = branding.slots.authLogo ?? branding.slots.sidebarLogoCollapsed;
@@ -17,7 +17,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ fil
   const { server } = await import('@sms/server');
   const image = await server.fetch(new Request(`http://school.internal${source}`));
   if (!image.ok) return new Response(null, { status: 502 });
-  const png = await renderPwaIcon(new Uint8Array(await image.arrayBuffer()), size);
+  const png = await renderPwaIcon(new Uint8Array(await image.arrayBuffer()), icon.size, { maskable: icon.maskable });
   return new Response(new Uint8Array(png), {
     headers: {
       'Content-Type': 'image/png',

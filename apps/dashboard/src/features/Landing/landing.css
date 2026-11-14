@@ -417,6 +417,71 @@
   cursor: wait;
   opacity: .6;
 }
+.landing-apk-button {
+  gap: 10px;
+  padding-block: 6px;
+  padding-inline: 6px 8px;
+}
+.landing-apk-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--landing-accent);
+  color: #fff;
+}
+.landing-hero-button.landing-apk-button>.landing-apk-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--landing-accent);
+  color: #fff;
+}
+.landing-hero-button.landing-apk-button>.landing-apk-tag {
+  width: auto;
+  height: auto;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid currentColor;
+  color: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  line-height: 1;
+}
+.landing-apk-icon-title {
+  width: 28px;
+  height: 28px;
+  background: var(--landing-accent,var(--primary));
+}
+.landing-apk-steps {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.landing-apk-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.landing-apk-steps li>span {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--landing-tint,color-mix(in srgb,var(--primary) 12%,transparent));
+  color: var(--landing-accent,var(--primary));
+  font-size: 12px;
+  font-weight: 700;
+}
 .landing-hero-scribble {
   position: absolute;
   inset-inline-end: 2px;

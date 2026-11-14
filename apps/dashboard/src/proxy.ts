@@ -22,6 +22,6 @@ export default async function schoolProxy(request: Request) {
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|images|storage|.*\\.(?:css|js|map|json|txt|xml|ico|png|jpg|jpeg|gif|webp|svg|woff|woff2|ttf|webmanifest)$).*)',
+    '/((?!api|_next/static|_next/image|images|storage|.*\\.(?:css|js|map|json|txt|xml|ico|png|jpg|jpeg|gif|webp|svg|woff|woff2|ttf|webmanifest|apk)$).*)',
   ],
 };
