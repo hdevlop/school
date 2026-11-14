@@ -80,3 +80,6 @@ apps/dashboard/playwright/.auth/
 /work/visualizations/*
 !/work/visualizations/assessment-planning.html
 !/work/visualizations/assessment-planning-preview.html
+
+# Local analysis output (scratch notes, not part of the app)
+/outputs/
