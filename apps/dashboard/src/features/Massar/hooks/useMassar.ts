@@ -6,13 +6,20 @@ import { api, fileRequest, formApi } from '@/services/http';
 import { useAcademicYearScope, useYearScopedDetail, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 
+/**
+ * Where a grid is read and written: Massar's own pages (behind Massar's permissions), or
+ * Notes, which reaches the same grids behind its own (read:grades, update:grades).
+ */
+export type MassarApi = '/massar' | '/massar-grades';
+
 /** A Massar read; the page warm-up builds the same one, so a warmed answer lands under the key the page reads. */
-export const massarRead = (path: string) => ({
-  resource: 'massar', parts: [path], fetch: async () => (await api.get(`/massar${path}`)).data,
+export const massarRead = (path: string, base: MassarApi = '/massar') => ({
+  // Notes' reads keep their own keys, still under 'massar' so a saved mark refreshes both.
+  resource: 'massar', parts: [base === '/massar' ? path : `${base}${path}`], fetch: async () => (await api.get(`${base}${path}`)).data,
 }) satisfies YearScopedRead;
 
-export function useMassarRead<T>(path: string, enabled = true, pollMs = 0) {
-  const read = useYearScopedDetail({ ...massarRead(path), enabled });
+export function useMassarRead<T>(path: string, enabled = true, pollMs = 0, base: MassarApi = '/massar') {
+  const read = useYearScopedDetail({ ...massarRead(path, base), enabled });
   const { refetch, academicYear } = read;
   useEffect(() => {
     if (!enabled || !pollMs || !academicYear) return;
@@ -31,7 +38,7 @@ export function useMassarAction() {
   return { run: mutation.mutateAsync, pending: mutation.isPending, ready: scope.ready };
 }
 export const massarPost = async (path: string, data?: unknown) => (await api.post(`/massar${path}`, data)).data.data;
-export const massarPut = async (path: string, data: unknown) => (await api.put(`/massar${path}`, data)).data.data;
+export const massarPut = async (path: string, data: unknown, base: MassarApi = '/massar') => (await api.put(`${base}${path}`, data)).data.data;
 export async function previewMassar(files: File[]) {
   const data = Object.fromEntries(files.map((file, index) => [`upload${index}`, file]));
   return (await formApi.post('/massar/imports/preview', data)).data.data;

@@ -1,6 +1,6 @@
 import type { MassarSheetDetail } from '@sms/contracts';
-import { CLASS_DOCUMENT_COLORS } from '@/features/Assessments/planning/planningModel';
 import { componentLabel } from './componentLabels';
+import { massarClassColors } from './massarModel';
 
 export type MassarPaperOptions = { language: string; logo?: string | null; title: string; student: string; teacher: string; term: string; exam: string };
 export const escapeHtml = (value: unknown) => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
@@ -53,7 +53,7 @@ export function buildMassarDocument(sheets: MassarSheetDetail[], options: Massar
   const origin = typeof window === 'undefined' ? 'http://localhost' : window.location.origin;
   const logo = safeUrl(options.logo, origin);
   const pages = sheets.map(data => {
-    const level = Number(/^([1-6])AP/i.exec(data.sheet.className)?.[1] ?? 5), [accent, pale] = CLASS_DOCUMENT_COLORS[level - 1];
+    const [accent, pale] = massarClassColors(data.sheet.className);
     const markWidth = Math.max(MARK_MIN, Math.min(MARK_MAX, Math.floor((PAGE_WIDTH - IDENTITY_WIDTH) / Math.max(1, data.components.length) * 10) / 10));
     const width = IDENTITY_WIDTH + markWidth * data.components.length;
     // What a teacher's paper needs, two rows of three; no title block, the page starts with what identifies the sheet.

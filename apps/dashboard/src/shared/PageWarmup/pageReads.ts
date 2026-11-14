@@ -38,8 +38,6 @@ export type WarmupContext = {
   rosterDay: string | undefined;
   /** The students page reads fee types only for someone who can add a student. */
   canCreateStudents: boolean;
-  /** The grades page lists Massar's exams only for someone who can read Massar. */
-  canReadMassar: boolean;
   /** The Massar page reads the year's setup only for someone who manages Massar. */
   canManageMassar: boolean;
 };
@@ -110,7 +108,8 @@ const PAGE_READS: Record<string, Warm> = {
   // Grades are read per exam once one is picked; the pickers and the roster are what open.
   '/grades': (context) => [
     ...reads(subjects, classesAndSections, year(teacherListRead), year(examListRead), year(studentListRead))(context),
-    ...(context.canReadMassar ? year(massarRead('/grade-sources'))(context) : []),
+    // Notes reads Massar's parts behind its own permission, which opening the page already took.
+    ...year(massarRead('/sources', '/massar-grades'))(context),
   ],
   '/attendance/staff': (context) => [
     ...entityList(`staff-attendance-roster:${context.registerDate}`, () => getStaffAttendanceRosterApi(context.registerDate))(context),

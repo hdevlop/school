@@ -5,6 +5,7 @@ import { ComboboxInput, NajmScroll, NButton, SelectInput, cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useNThemeBrandingSlot } from 'najm-theme/react';
 import { MassarPaper } from '@/features/Massar/components/MassarPaper';
+import { NOTES_MASSAR_API } from '../hooks/useMassarGrades';
 import type { MassarPaperOptions } from '@/features/Massar/config/massarDocument';
 import styles from '@/features/Massar/components/Massar.module.css';
 import { GradeMarkField } from './GradeMarkField';
@@ -94,7 +95,7 @@ export default function GradesSheet({ filters, massarSheetId, exam, placeholder,
       {massarSheetId ? (
         <div className={cn(styles.sheetArea, 'flex-1')}>
           <div className={styles.sheetCard}>
-            <MassarPaper key={massarSheetId} id={massarSheetId} options={options} onBusy={onBusy} latinNames={latinNames} />
+            <MassarPaper key={massarSheetId} id={massarSheetId} options={options} onBusy={onBusy} latinNames={latinNames} api={NOTES_MASSAR_API} />
           </div>
         </div>
       ) : exam ? <GradeExamSheet {...exam} /> : placeholder}

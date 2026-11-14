@@ -1,8 +1,14 @@
 import type { MassarMark, MassarRound, MassarSheetRow } from '@sms/contracts';
 import { isValidMassarMark } from '@sms/contracts';
+import { CLASS_DOCUMENT_COLORS } from '@/features/Assessments/planning/planningModel';
 
 /** Massar's cycle of a class: collège classes are nAPIC-n, primary nAPG-n. */
 export const classCycle = (name: string): 'primary' | 'college' => /^\dAPIC-/i.test(name) ? 'college' : 'primary';
+/**
+ * A Massar class's colours, [accent, pale], by its level number: 1APG and 1APIC share the first.
+ * The class list, the Massar papers and the statements all use these, so a class reads the same everywhere.
+ */
+export const massarClassColors = (className: string) => CLASS_DOCUMENT_COLORS[Number(/^([1-6])AP/i.exec(className)?.[1] ?? 5) - 1];
 /** Primary before collège, then by level and section. */
 export const classOrder = (a: string, b: string) => Number(classCycle(a) === 'college') - Number(classCycle(b) === 'college') || a.localeCompare(b, 'en', { numeric: true });
 /**

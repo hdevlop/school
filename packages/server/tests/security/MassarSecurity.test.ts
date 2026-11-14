@@ -20,7 +20,8 @@ it('seeds the same Massar permissions for existing school roles as the migration
   expect(permissionsData.map(permission => permission.name)).toEqual(expect.arrayContaining(['read:massar','manage:massar','update:massar-marks']));
   for (const role of rolePermissionsData) {
     if (['admin','principal','registrar'].includes(role.roleName)) expect(role.permissions).toContain('manage:massar');
-    if (role.roleName === 'teacher') { expect(role.permissions).toContain('update:massar-marks'); expect(role.permissions).not.toContain('manage:massar'); }
+    // A teacher grades Massar's parts in Notes, behind Notes' own permissions: no Massar permission by default.
+    if (role.roleName === 'teacher') { expect(role.permissions).toEqual(expect.arrayContaining(['read:grades','update:grades'])); expect(role.permissions.filter(name => name.includes('massar'))).toEqual([]); }
     if (role.roleName === 'supervisor') { expect(role.permissions).toContain('read:massar'); expect(role.permissions).not.toContain('update:massar-marks'); }
   }
 });

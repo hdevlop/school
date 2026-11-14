@@ -1,5 +1,6 @@
-import { expect, it } from 'bun:test';
+import { describe, expect, it } from 'bun:test';
 import { buildMassarDocument } from '@/features/Massar/config/massarDocument';
+import { massarClassColors } from '@/features/Massar/config/massarModel';
 
 const printed = (students: number) => buildMassarDocument([{
   sheet: { id: 'sheet', revision: 1, className: '2APG-2', subjectName: 'Arabic' }, schoolName: 'School', yearLabel: '2026-2027', levelLabel: 'Level',
@@ -17,4 +18,13 @@ it('compacts a class that would spill onto a second page, and only that class', 
 
 it('prints every student of a compact sheet', () => {
   expect(printed(32).match(/<td class="number">/g)).toHaveLength(32);
+});
+
+describe('massarClassColors', () => {
+  it('colours a class by its level number, primary and collège alike', () => {
+    expect(massarClassColors('1APIC-1')).toEqual(massarClassColors('1APG-2'));
+    expect(massarClassColors('2APIC-1')).toEqual(massarClassColors('2APG-1'));
+    expect(massarClassColors('2APIC-1')).not.toEqual(massarClassColors('1APIC-1'));
+    expect(massarClassColors('CP')).toEqual(massarClassColors('5APG-1'));
+  });
 });

@@ -245,10 +245,7 @@
       "read:announcements",
       "read:events",
       "read:assessments",
-      "read:exams",
-      "read:massar",
-      "update:massar-marks",
-      "sidebar:massar"
+      "read:exams"
     ]
   },
   {

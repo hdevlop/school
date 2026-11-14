@@ -24,7 +24,7 @@ function fixture(status = 'not_started') {
     hiddenIds: async () => [], previousYearSubjects: async () => [], addModelSubject: async () => {},
     // Planning gives the ready class exams in October and the college class in October to December: Contrôles 1 to 3 of semester 1.
     planningMonths: async () => [{ classId: 'school-ready', months: { '2026-10': [{ date: '2026-10-20' }] } }, { classId: 'school-college', months: { '2026-10': [{ date: '2026-10-21' }], '2026-11': [{ date: '2026-11-18' }], '2026-12': [{ date: '2026-12-16' }] } }] as Array<{ classId: string; months: Record<string, Array<{ date?: string }>> }>,
-    relinkTeachers: async () => {}, sheetRosters: async () => [], activeRosters: async () => new Map(), levelSubjectCodes: async () => [], updateSheet: async (_id: string, data: any) => { Object.assign(row.sheet, data); row.sheet.revision++; return row.sheet; },
+    tryLock: async () => true, relinkTeachers: async () => {}, sheetRosters: async () => [], activeRosters: async () => new Map(), levelSubjectCodes: async () => [], updateSheet: async (_id: string, data: any) => { Object.assign(row.sheet, data); row.sheet.revision++; return row.sheet; },
     yearConfig: async () => ({ schoolCode: 'SYNTHETIC-SCHOOL', massarYearId: 19, schoolName: 'Synthetic school', academy: 'Synthetic academy', direction: 'Synthetic direction', templateFileId: 'template.xlsx' }),
     sheets: async () => [row], completedMarkCounts: async () => [{ sheetId: row.sheet.id, completed: marks.filter(mark => mark.mark !== null || mark.absence === 'justified').length }], updateRound: async (_id: string, status: string) => { row.round.status = status; },
   };
@@ -46,7 +46,7 @@ describe('Massar waiting class', () => {
       pendingStudents: [{ studentCode: 'F200000009', name: 'تلميذ منتظر', dateOfBirth: '14-01-2019', massarStudentId: null, position: 0 }] }] } as any;
     setup.appStudents.push({ ...setup.appStudents[0], id: 'school-pupil', studentCode: '8800009/26', name: 'WAITING PUPIL', dateOfBirth: '2019-01-14', sectionId: 'section-b' });
     const calls: string[] = [];
-    const repository = { lock: async () => {}, setup: async () => setup, sheets: async () => [], relinkTeachers: async () => {}, sheetRosters: async () => [], activeRosters: async () => new Map(), allRoundsForManagement: async () => [], planningMonths: async () => [] };
+    const repository = { lock: async () => {}, setup: async () => setup, sheets: async () => [], tryLock: async () => true, relinkTeachers: async () => {}, sheetRosters: async () => [], activeRosters: async () => new Map(), allRoundsForManagement: async () => [], planningMonths: async () => [] };
     const students = { update: async (id: string, data: object) => { calls.push(`update ${id} ${JSON.stringify(data)}`); }, create: async (data: { studentCode: string; gender: string }) => { calls.push(`create ${data.studentCode} ${data.gender}`); } };
     const enrollments = { placeFromSource: async (id: string, place: { sectionId: string }) => { calls.push(`place ${id} ${place.sectionId}`); } };
     const service = new MassarService(repository as any, new MassarValidator(), {} as any, students as any, enrollments as any);
@@ -273,6 +273,14 @@ describe('Massar sheet workflow', () => {
     await fixture('submitted').service.saveMarks('sheet-1', { revision: 0, marks: [] }, teacher);
     for (const actor of [teacher, registrar]) for (const status of ['exported', 'changed_after_export']) await expect(fixture(status).service.saveMarks('sheet-1', { revision: 0, marks: [] }, actor)).rejects.toThrow();
     for (const role of ['supervisor','monitor','parent','student']) await expect(fixture().service.saveMarks('sheet-1', { revision: 0, marks: [] }, { id: 'reader', role, permissions: ['update:massar-marks'] })).rejects.toThrow();
+  });
+  it('lets Notes grade with its own permission and no Massar permission, still locked once sent', async () => {
+    const grader = { id: 'teacher-user', role: 'teacher', permissions: ['read:grades', 'update:grades'] };
+    expect((await fixture().service.sheet('sheet-1', grader, 'notes')).canEdit).toBe(true);
+    expect((await fixture().service.sheet('sheet-1', { ...grader, permissions: ['read:grades'] }, 'notes')).canEdit).toBe(false);
+    const good = { studentId: 'student-1', componentCode: '1001', mark: 7, absence: 'none' as const };
+    expect((await fixture().service.saveMarks('sheet-1', { revision: 0, marks: [good] }, grader, 'notes')).status).toBe('in_progress');
+    for (const status of ['exported', 'changed_after_export']) await expect(fixture(status).service.saveMarks('sheet-1', { revision: 0, marks: [] }, grader, 'notes')).rejects.toThrow();
   });
   it('reopens explicitly, retains the export record, and requires re-export after editing', async () => {
     const { service, row } = fixture('exported'); row.sheet.exportedAt = '2026-11-06T00:00:00Z';

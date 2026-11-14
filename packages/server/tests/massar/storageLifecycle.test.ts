@@ -25,7 +25,7 @@ async function importFixture() {
     previewById: async (id: string, actorId: string) => { const preview = previews.get(id); return preview?.actorId === actorId ? preview : undefined; },
     consumePreview: async (id: string) => { previews.delete(id); },
     saveYear: async () => {}, saveLevel: async () => ({ id: 'level' }), saveClass: async () => ({ id: 'class' }),
-    subjectForImport: async () => undefined, saveSubject: async () => {}, saveEnrollment: async () => {}, sheets: async () => [], relinkTeachers: async () => {}, sheetRosters: async () => [], activeRosters: async () => new Map(),
+    subjectForImport: async () => undefined, saveSubject: async () => {}, saveEnrollment: async () => {}, sheets: async () => [], tryLock: async () => true, relinkTeachers: async () => {}, sheetRosters: async () => [], activeRosters: async () => new Map(),
   };
   const storage = {
     save: async (_namespace: string, id: string, bytes: Buffer) => { objects.set(id, bytes); },

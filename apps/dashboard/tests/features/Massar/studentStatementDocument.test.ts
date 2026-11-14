@@ -1,6 +1,7 @@
 import { expect, it } from 'bun:test';
 import { MASSAR_DEFAULT_STATEMENT, type MassarSheetDetail } from '@sms/contracts';
-import { buildStudentStatementDocument, classRanks, generalAverage, orderSubjects, previewStatementSheets, REMARKS, remarkBand, remarkLanguage, statementRowHeight, studentRemark, studentStatements } from '@/features/Massar/config/studentStatementDocument';
+import { buildStudentStatementDocument, classRanks, generalAverage, orderSubjects, previewStatementSheets, statementRowHeight, studentStatements } from '@/features/Massar/config/studentStatementDocument';
+import { REMARKS, remarkBand, remarkLanguage, studentRemark } from '@/features/Massar/config/statementRemarks';
 
 const student = (id: string, position: number) => ({ id, name: `تلميذ ${id}`, studentCode: `F${id}`, dateOfBirth: '2016-01-01', massarStudentId: null, position });
 const sheet = (className: string, subjectName: string, components: Array<[string, string]>, students: ReturnType<typeof student>[], marks: MassarSheetDetail['marks'] = []) => ({

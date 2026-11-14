@@ -92,7 +92,7 @@ function GradesTableForYear() {
   // Exams only for now; retain the source namespace used by existing drafts.
   const [sourceType] = useState<GradeSourceType>('exam');
   const [sourceId, setSourceId] = useState('');
-  const massar = useMassarGrades(sourceId, sourceType === 'exam' && can('read:massar'));
+  const massar = useMassarGrades(sourceId, sourceType === 'exam' && can('read:grades'));
   // A Massar source is read from its grid; only School's own exams have grades to read.
   const isSchoolSource = sourceType === 'assessment' || (exams || []).some((exam) => exam.id === sourceId);
   const { data: grades, error: gradesError, isLoading: isGradesLoading } = useSourceGrades(sourceType, sourceId, isSchoolSource && !massar.source);
@@ -232,7 +232,7 @@ function GradesTableForYear() {
   // subject has several. Exam Planning's own exams are
   // not Massar parts; they stay on the phone's list. Without Massar, a desktop
   // keeps the exam list.
-  const gridOnly = isSheet && can('read:massar');
+  const gridOnly = isSheet && !!massarParts?.length;
   const contrôleOptions = useMemo(
     () => sheetOptions.filter((option) => option.value.startsWith(MASSAR_SHEET_OPTION)),
     [sheetOptions]
@@ -365,7 +365,7 @@ function GradesTableForYear() {
   const editableRow = useCallback((row) => {
     // Saving does not lock the fields: what is typed meanwhile waits in the draft for the next save.
     if (isStudentsLoading || isEligibilityLoading || isMassarSheetLoading || rosterError || !selectedSource) return false;
-    if (isMassarSource) return can('update:massar-marks') && !!massarSheet?.canEdit
+    if (isMassarSource) return can('update:grades') && !!massarSheet?.canEdit
       && massarSheet.students.some(student => student.id === row.studentId);
     return can(row.gradeId ? 'update:grades' : 'create:grades') && !isGradesLoading
       && (!!row.assessmentId || !!row.examId) && !!row.classId && !!row.sectionId && !!row.subjectId && !!row.teacherId
@@ -417,7 +417,7 @@ function GradesTableForYear() {
 
   const hasChanges = Object.keys(draft).length > 0;
   const canSubmit = !!selectedSource && !isStudentsLoading && !isEligibilityLoading && !isMassarSheetLoading && !rosterError && !isSubmitting
-    && (massar.source ? can('update:massar-marks') && !!massarSheet?.canEdit
+    && (massar.source ? can('update:grades') && !!massarSheet?.canEdit
       : !isGradesLoading && (can('create:grades') || can('update:grades')));
 
   // The draft a save failed on: not retried until something changes, or Retry.
@@ -508,7 +508,7 @@ function GradesTableForYear() {
     sourceOptions: pickOptions,
     classOptions, sectionOptions, subjectOptions,
     isClassesLoading, isSectionsLoading, isSubjectsLoading,
-    isSourceLoading: sourceType === 'assessment' ? isAssessmentsLoading : isExamsLoading || (can('read:massar') && massar.sources.isLoading),
+    isSourceLoading: sourceType === 'assessment' ? isAssessmentsLoading : isExamsLoading || (can('read:grades') && massar.sources.isLoading),
   });
   const noDataText = !classId
     ? t('grades.toolbar.selectClass')

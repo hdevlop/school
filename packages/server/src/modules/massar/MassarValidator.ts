@@ -5,12 +5,17 @@ import { matchPermission } from 'najm-auth/client';
 import type { MassarMarksInput } from './MassarDto';
 
 export type MassarActor = { id: string; role?: string; permissions?: string[] };
+/**
+ * Where a grid is written from. Massar's own page lets a manager or the sheet's teacher write;
+ * Notes lets whoever its route allowed (update:grades), within the same sheet ownership.
+ */
+export type MassarEntry = 'massar' | 'notes';
 export function mayManageMassar(actor: MassarActor) { return !!actor.role && SCHOOL_WIDE_ROLES.includes(actor.role) && matchPermission(actor.permissions ?? [], 'manage:massar'); }
 @Service()
 export class MassarValidator {
   refuse(key: string, status = 409): never { return Err(status, t(`massar.errors.${key}`)); }
-  ensureWriter(actor: MassarActor, sheet: { status: string; teacherUnlocked?: boolean }, manager: boolean) {
-    if (!manager && actor.role !== 'teacher') this.refuse('readOnly', 403);
+  ensureWriter(actor: MassarActor, sheet: { status: string; teacherUnlocked?: boolean }, manager: boolean, entry: MassarEntry = 'massar') {
+    if (entry === 'massar' && !manager && actor.role !== 'teacher') this.refuse('readOnly', 403);
     if (sheet.status === 'exported' || sheet.status === 'changed_after_export' && !sheet.teacherUnlocked) this.refuse('locked');
   }
   ensureMarks(data: MassarMarksInput, roster: MassarStudent[], components: MassarComponent[], maxMark: number) {

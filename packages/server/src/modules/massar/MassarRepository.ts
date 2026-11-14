@@ -25,6 +25,11 @@ export class MassarRepository {
 
   /** All mutations share a year lock, within the service transaction. */
   async lock() { await this.db.select({ id: academicYears.id }).from(academicYears).where(eq(academicYears.id, this.year.id)).for('update'); }
+  /** The same lock without waiting for it: false while another request holds it. */
+  async tryLock() {
+    const rows = await this.db.select({ id: academicYears.id }).from(academicYears).where(eq(academicYears.id, this.year.id)).for('update', { skipLocked: true });
+    return rows.length > 0;
+  }
 
   async setup() {
     const academicYearId = this.year.id;

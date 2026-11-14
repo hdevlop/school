@@ -11,7 +11,7 @@ import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { useAcademicYearScope } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { PlanningPreview } from '@/features/Assessments/planning/PlanningPreview';
-import { massarPut, massarPost, useMassarRead, useMassarAction } from '../hooks/useMassar';
+import { massarPut, massarPost, useMassarRead, useMassarAction, type MassarApi } from '../hooks/useMassar';
 import { MassarDraft, cellKey } from '../config/MassarDraft';
 import { parseCell, pastedCells, nextCell } from '../config/massarModel';
 import { buildMassarDocument, type MassarPaperOptions } from '../config/massarDocument';
@@ -29,20 +29,21 @@ type LatinNames = ReadonlyMap<string, string>;
  */
 export type SelectedStudent = { id: string; name: string };
 type Selection = { selected?: readonly string[]; onSelect?: (student: SelectedStudent, toggle: boolean) => void };
-function EditablePaper({ data, options, onBusy, latinNames, selected, onSelect }: { data: MassarSheetDetail; options: MassarPaperOptions; onBusy: (busy: boolean) => void; latinNames?: LatinNames } & Selection) {
+function EditablePaper({ data, options, onBusy, latinNames, selected, onSelect, api }: { data: MassarSheetDetail; options: MassarPaperOptions; onBusy: (busy: boolean) => void; latinNames?: LatinNames; api: MassarApi } & Selection) {
   const { t } = useTranslation(), viewer = useViewerRole(), scope = useAcademicYearScope(), client = useQueryClient(), action = useMassarAction();
   const recoveryKey = `massar-draft:${viewer.userId}:${scope.academicYear}:${data.sheet.id}`;
   // A mouse press focuses a field before its click: the click decides (Ctrl adds), the focus only follows the keyboard.
   const pressing = useRef(false);
   const [engine] = useState(() => {
-    const draft = new MassarDraft(data, (revision, marks) => withAcademicYear(scope.academicYear, () => massarPut(`/sheets/${data.sheet.id}/marks`, { revision, marks })));
+    const draft = new MassarDraft(data, (revision, marks) => withAcademicYear(scope.academicYear, () => massarPut(`/sheets/${data.sheet.id}/marks`, { revision, marks }, api)));
     try { draft.restore(JSON.parse(sessionStorage.getItem(recoveryKey) ?? 'null')); } catch { /* Storage is optional. */ }
     return draft;
   });
   const state = useSyncExternalStore(engine.subscribe, engine.snapshot, engine.snapshot);
   const [studentIndex, setStudentIndex] = useState(0), [reload, setReload] = useState(false);
   const discardConfirmed = useRef(false);
-  const editable = data.canEdit && viewer.can('update:massar-marks');
+  // Notes grades with its own permission; Massar's page with Massar's.
+  const editable = data.canEdit && viewer.can(api === '/massar' ? 'update:massar-marks' : 'update:grades');
   const busy = state.dirty || state.saving;
   useEffect(() => { engine.activate(); return () => engine.dispose(); }, [engine]);
   useEffect(() => {
@@ -117,7 +118,7 @@ function EditablePaper({ data, options, onBusy, latinNames, selected, onSelect }
     </div>}
   </>;
 }
-export function MassarPaper({ id, options, onBusy, latinNames, selected, onSelect }: { id: string; options: MassarPaperOptions; onBusy: (busy: boolean) => void; latinNames?: LatinNames } & Selection) {
-  const query = useMassarRead<MassarSheetDetail>(`/sheets/${encodeURIComponent(id)}`, true, 15000), { t } = useTranslation();
-  return query.error ? <MassarLoadError error={query.error} retry={query.refetch} /> : !query.data ? <p role="status" className={styles.sheetLoading}>{t('massar.loading')}</p> : <EditablePaper key={id} data={query.data} options={options} onBusy={onBusy} latinNames={latinNames} selected={selected} onSelect={onSelect} />;
+export function MassarPaper({ id, options, onBusy, latinNames, selected, onSelect, api = '/massar' }: { id: string; options: MassarPaperOptions; onBusy: (busy: boolean) => void; latinNames?: LatinNames; api?: MassarApi } & Selection) {
+  const query = useMassarRead<MassarSheetDetail>(`/sheets/${encodeURIComponent(id)}`, true, 15000, api), { t } = useTranslation();
+  return query.error ? <MassarLoadError error={query.error} retry={query.refetch} /> : !query.data ? <p role="status" className={styles.sheetLoading}>{t('massar.loading')}</p> : <EditablePaper key={id} data={query.data} options={options} onBusy={onBusy} latinNames={latinNames} selected={selected} onSelect={onSelect} api={api} />;
 }

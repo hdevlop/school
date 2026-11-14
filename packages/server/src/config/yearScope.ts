@@ -1,5 +1,6 @@
 import { ChatController } from 'najm-chatbot';
 import { MassarController } from '../modules/massar/MassarController';
+import { MassarGradesController } from '../modules/massar/MassarGradesController';
 import { AlertController } from '../modules/alerts/AlertController';
 import { AnnouncementController } from '../modules/announcements/AnnouncementController';
 import { BehaviorRewardController } from '../modules/behaviorRewards/BehaviorRewardController';
@@ -50,6 +51,7 @@ import { VehicleAssignmentController } from '../modules/transport/vehicleAssignm
  */
 export const yearScopedModules = {
   massar: MassarController,
+  'massar-grades': MassarGradesController,
   'payment-allocations': AllocationController,
   'student-credits': CreditController,
   expenses: ExpenseController,

@@ -59,7 +59,7 @@ describe('Massar default model', () => {
     const repository = {
       levelSubjectCodes: async () => [{ code: '1APIC', subjects: known }],
       previousYearSubjects: async () => [],
-      lock: async () => {},
+      tryLock: async () => true,
       relinkTeachers: async () => {}, sheetRosters: async () => [], activeRosters: async () => new Map(), sheets: async () => [], completedMarkCounts: async () => [],
     };
     const service = new MassarService(repository as any, new MassarValidator(), {} as any, {} as any, {} as any) as any;
@@ -68,5 +68,22 @@ describe('Massar default model', () => {
     await service.sheets('round');
     await service.sheets('round');
     expect(applied).toBe(1);
+  });
+  it('skips the refresh while an import holds the year, and does it on the next read', async () => {
+    let free = false, relinked = 0;
+    const repository = {
+      levelSubjectCodes: async () => [],
+      tryLock: async () => free,
+      relinkTeachers: async () => { relinked++; }, sheetRosters: async () => [], activeRosters: async () => new Map(), sheets: async () => [], completedMarkCounts: async () => [],
+    };
+    const service = new MassarService(repository as any, new MassarValidator(), {} as any, {} as any, {} as any) as any;
+    service.year = { id: 'busy-year', status: 'active' };
+    expect(await service.sheets('round')).toEqual([]);
+    expect(relinked).toBe(0);
+    free = true;
+    await service.sheets('round');
+    expect(relinked).toBe(1);
+    await service.sheets('round');
+    expect(relinked).toBe(1); // At most once a minute.
   });
 });
