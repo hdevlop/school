@@ -1,10 +1,9 @@
 .screen { min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior: contain; background: #f3f8fe; color: var(--foreground); font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; scrollbar-width: none; }
 .screen::-webkit-scrollbar { display: none; }
 .content { display: flex; flex-direction: column; gap: 18px; width: 100%; max-width: 600px; margin-inline: auto; padding: 22px 20px max(84px, env(safe-area-inset-bottom)); }
-.header, .headerLeft, .headerActions { display: flex; align-items: center; }
+.header, .headerLeft { display: flex; align-items: center; }
 .header { justify-content: space-between; gap: 8px; }
 .headerLeft { min-width: 0; gap: 8px; }
-.headerActions { flex-shrink: 0; gap: 2px; }
 .menuButton { width: 28px; height: 36px; padding: 0; flex-shrink: 0; }
 .greeting { min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: clamp(16px, 4.8vw, 20px); font-weight: 750; line-height: 1.4; letter-spacing: -0.5px; }
 .profile { display: flex; align-items: center; gap: 12px; min-height: 76px; padding: 11px 12px; border: 1px solid #e7edf6; border-radius: 16px; background: #fff; box-shadow: 0 2px 12px rgb(54 88 130 / 3%); }

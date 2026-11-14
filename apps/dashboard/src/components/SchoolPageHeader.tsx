@@ -1,6 +1,6 @@
 'use client';
 
-import { Children, cloneElement, isValidElement, type ComponentProps, type ReactNode } from 'react';
+import { Children, cloneElement, Fragment, isValidElement, type ComponentProps, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import {
@@ -30,6 +30,20 @@ function MobileBackButton() {
   );
 }
 
+/**
+ * Whether the actions hold anything but the global controls, which the phone
+ * menu leaves out: alone, they would open an empty menu.
+ */
+function hasPageActions(node: ReactNode): boolean {
+  return Children.toArray(node).some((child) => {
+    if (!isValidElement<{ children?: ReactNode }>(child)) return true;
+    // Flagged rather than imported: the header stays free of alerts and year code.
+    if ((child.type as { globalActions?: boolean }).globalActions) return false;
+    if (child.type === NPageHeaderActions || child.type === Fragment) return hasPageActions(child.props.children);
+    return true;
+  });
+}
+
 /** Keeps every page's existing actions together behind one control on phones. */
 export function SchoolPageHeader({ mobileActions, mobileBack = true, ...props }: HeaderProps) {
   const featureActions = useFeatureActions();
@@ -53,7 +67,9 @@ export function SchoolPageHeader({ mobileActions, mobileBack = true, ...props }:
       {...headerProps}
       compactActions={
         <>
-          <HeaderActionsMenu contentClassName="md:hidden">{mobileActions}{actions}</HeaderActionsMenu>
+          <HeaderActionsMenu contentClassName="md:hidden" hasOwnActions={hasPageActions(mobileActions) || hasPageActions(actions)}>
+            {mobileActions}{actions}
+          </HeaderActionsMenu>
         </>
       }
     />

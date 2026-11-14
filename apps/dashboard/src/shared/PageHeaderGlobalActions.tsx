@@ -26,3 +26,6 @@ export default function PageHeaderGlobalActions() {
     </>
   );
 }
+
+/** The phone's ⋮ menu leaves these out (see SchoolPageHeader). */
+PageHeaderGlobalActions.globalActions = true;

@@ -59,7 +59,7 @@ export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) 
                   )}
                </div>
             </div>
-            <div className="md:hidden"><HeaderActionsMenu>{null}</HeaderActionsMenu></div>
+            <div className="md:hidden"><HeaderActionsMenu hasOwnActions={false}>{null}</HeaderActionsMenu></div>
          </div>
 
          {/* Below lg the summary strip and the Pay bar under the fees carry the

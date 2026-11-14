@@ -137,7 +137,7 @@ function StaffAttendanceTable() {
         title={t('navigation.staffAttendance')}
         subtitle={isCountUnknown(staffError, staffRows, isStaffLoading || isAttendanceLoading || isStaffRolesLoading) ? undefined : t('attendance.subtitle.staffCount', { count: total })}
         compactActions={(
-          <HeaderActionsMenu contentClassName="md:hidden"><PageHeaderGlobalActions /></HeaderActionsMenu>
+          <HeaderActionsMenu contentClassName="md:hidden" hasOwnActions={false}><PageHeaderGlobalActions /></HeaderActionsMenu>
         )}
       >
         <NPageHeaderActions>

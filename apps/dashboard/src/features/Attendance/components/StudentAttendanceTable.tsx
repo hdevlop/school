@@ -410,7 +410,7 @@ function StudentAttendanceTableForYear() {
         title={t('navigation.studentAttendance')}
         subtitle={isCountUnknown(studentsError, filteredStudents, isStudentsLoading || isSectionsLoading || isClassesLoading) ? undefined : t('attendance.subtitle.studentCount', { count: filteredStudents.length })}
         compactActions={(
-          <HeaderActionsMenu contentClassName="md:hidden"><PageHeaderGlobalActions /></HeaderActionsMenu>
+          <HeaderActionsMenu contentClassName="md:hidden" hasOwnActions={false}><PageHeaderGlobalActions /></HeaderActionsMenu>
         )}
       >
         <NPageHeaderActions>
