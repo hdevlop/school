@@ -1597,6 +1597,20 @@
       "finance": "Finanzas",
       "communication": "Comunicación",
       "administration": "Administración"
+    },
+    "profile": {
+      "staffCard": "Tarjeta del personal",
+      "classes": "Clases",
+      "students": "Alumnos",
+      "hoursPerWeek": "Horas / semana",
+      "statsLoadFailed": "No se pudieron cargar tus cifras de este año.",
+      "contact": "Contacto",
+      "preferences": "Preferencias",
+      "copyEmail": "Copiar correo",
+      "copyPhone": "Copiar teléfono",
+      "copied": "Copiado",
+      "copyFailed": "No se pudo copiar",
+      "language": "Idioma"
     }
   },
   "navigation": {

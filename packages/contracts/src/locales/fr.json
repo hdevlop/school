@@ -2250,6 +2250,20 @@
       "finance": "Finances",
       "communication": "Communication",
       "administration": "Administration"
+    },
+    "profile": {
+      "staffCard": "Carte du personnel",
+      "classes": "Classes",
+      "students": "Élèves",
+      "hoursPerWeek": "Heures / semaine",
+      "statsLoadFailed": "Vos chiffres de l’année n’ont pas pu être chargés.",
+      "contact": "Contact",
+      "preferences": "Préférences",
+      "copyEmail": "Copier l’e-mail",
+      "copyPhone": "Copier le numéro",
+      "copied": "Copié",
+      "copyFailed": "Copie impossible",
+      "language": "Langue"
     }
   },
   "navigation": {

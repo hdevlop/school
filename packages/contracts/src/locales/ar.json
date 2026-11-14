@@ -1611,6 +1611,20 @@
       "finance": "المالية",
       "communication": "التواصل",
       "administration": "الإدارة"
+    },
+    "profile": {
+      "staffCard": "بطاقة الموظف",
+      "classes": "الأقسام",
+      "students": "التلاميذ",
+      "hoursPerWeek": "ساعة / أسبوع",
+      "statsLoadFailed": "تعذّر تحميل أرقامك لهذه السنة.",
+      "contact": "التواصل",
+      "preferences": "التفضيلات",
+      "copyEmail": "نسخ البريد الإلكتروني",
+      "copyPhone": "نسخ رقم الهاتف",
+      "copied": "تم النسخ",
+      "copyFailed": "تعذّر النسخ",
+      "language": "اللغة"
     }
   },
   "navigation": {

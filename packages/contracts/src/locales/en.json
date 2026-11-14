@@ -5512,6 +5512,20 @@
       "finance": "Finance",
       "communication": "Communication",
       "administration": "Administration"
+    },
+    "profile": {
+      "staffCard": "Staff card",
+      "classes": "Classes",
+      "students": "Students",
+      "hoursPerWeek": "Hours / week",
+      "statsLoadFailed": "Your figures for this year could not be loaded.",
+      "contact": "Contact",
+      "preferences": "Preferences",
+      "copyEmail": "Copy email",
+      "copyPhone": "Copy phone number",
+      "copied": "Copied",
+      "copyFailed": "Could not copy",
+      "language": "Language"
     }
   },
   "navigation": {
