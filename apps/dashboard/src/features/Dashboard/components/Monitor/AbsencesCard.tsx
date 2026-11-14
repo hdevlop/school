@@ -8,7 +8,7 @@ import { NAvatar, NBadge, NCard, NCardAction, NEmptyState, NSkeleton, NajmScroll
 import { useTranslation } from 'najm-i18n/react';
 import type { MonitorDashboardAbsence } from '@sms/contracts/monitor-dashboard';
 import { MONITOR_DASHBOARD_LINKS, sectionAttendanceHref } from '../../config/monitorDashboardLinks';
-import { CardLink, SCROLL_CARD, SCROLL_LIST } from '../Teacher/shared';
+import { CardLink, SCROLL_CARD, SCROLL_LIST, CARD_EMPTY } from '../Teacher/shared';
 
 const VISIBLE_ABSENCES = 5;
 
@@ -74,7 +74,7 @@ const AbsencesCard = ({ absences, schoolDay, loading, error, onRetry, className 
         <NEmptyState
           icon={FEATURE_ICONS.studentAttendance}
           title={t(schoolDay === false ? 'dashboard.monitor.absences.noSchool' : 'dashboard.monitor.absences.empty')}
-          className="py-4"
+          className={CARD_EMPTY}
         />
       )}
     </NCard>

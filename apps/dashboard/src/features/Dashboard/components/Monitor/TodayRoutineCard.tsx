@@ -8,7 +8,7 @@ import type { MonitorDashboardOverview } from '@sms/contracts/monitor-dashboard'
 import { useRoutineDetails, useRoutineList } from '@/features/ClassRoutines/hooks/useClassRoutines';
 import { selectRoutineSchedules } from '@/features/ClassRoutines/utils/selectRoutineSchedules';
 import { MONITOR_DASHBOARD_LINKS } from '../../config/monitorDashboardLinks';
-import { CardLink, SCROLL_CARD } from '../Teacher/shared';
+import { CardLink, SCROLL_CARD, CARD_EMPTY } from '../Teacher/shared';
 
 type TodayRoutineCardProps = {
   overview: MonitorDashboardOverview | undefined;
@@ -88,7 +88,7 @@ const TodayRoutineCard = ({ overview, loading, error, onRetry }: TodayRoutineCar
           </ol>
         </NajmScroll>
       ) : (
-        <NEmptyState icon={CalendarDays} title={t('dashboard.teacher.schedule.empty')} className="py-4" />
+        <NEmptyState icon={CalendarDays} title={t('dashboard.teacher.schedule.empty')} className={CARD_EMPTY} />
       )}
     </NCard>
   );

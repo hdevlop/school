@@ -9,7 +9,7 @@ import { useTranslation } from 'najm-i18n/react';
 import type { TeacherDashboardAssessment } from '@sms/contracts/teacher-dashboard';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { TEACHER_DASHBOARD_LINKS } from '../../config/teacherDashboardLinks';
-import { CardLink, IconTile, type Tone, FILL_CARD } from './shared';
+import { CardLink, IconTile, type Tone, FILL_CARD, CARD_EMPTY } from './shared';
 
 const ROW_TONES: Tone[] = ['primary', 'warning', 'info', 'success'];
 
@@ -84,7 +84,7 @@ const AssessmentsCard = ({ assessments, loading, error, onRetry, className }: As
           })}
         </ul>
       ) : (
-        <NEmptyState icon={FEATURE_ICONS.assessments} title={t('dashboard.teacher.assessments.empty')} className="py-4" />
+        <NEmptyState icon={FEATURE_ICONS.assessments} title={t('dashboard.teacher.assessments.empty')} className={CARD_EMPTY} />
       )}
     </NCard>
   );

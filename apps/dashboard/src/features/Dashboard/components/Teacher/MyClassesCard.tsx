@@ -9,7 +9,7 @@ import { useTranslation } from 'najm-i18n/react';
 import type { TeacherDashboardClass } from '@sms/contracts/teacher-dashboard';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { TEACHER_DASHBOARD_LINKS } from '../../config/teacherDashboardLinks';
-import { CardLink, SCROLL_CARD, SCROLL_LIST } from './shared';
+import { CardLink, SCROLL_CARD, SCROLL_LIST, CARD_EMPTY } from './shared';
 
 const VISIBLE_CLASSES = 5;
 
@@ -96,7 +96,7 @@ const MyClassesCard = ({ classes, loading, error, onRetry, className }: MyClasse
           </ul>
         </NajmScroll>
       ) : (
-        <NEmptyState icon={FEATURE_ICONS.classes} title={t('dashboard.teacher.classes.empty')} className="py-4" />
+        <NEmptyState icon={FEATURE_ICONS.classes} title={t('dashboard.teacher.classes.empty')} className={CARD_EMPTY} />
       )}
     </NCard>
   );

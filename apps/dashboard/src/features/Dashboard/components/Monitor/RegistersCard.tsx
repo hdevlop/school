@@ -9,7 +9,7 @@ import { useTranslation } from 'najm-i18n/react';
 import type { MonitorDashboardSection } from '@sms/contracts/monitor-dashboard';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { MONITOR_DASHBOARD_LINKS, sectionAttendanceHref } from '../../config/monitorDashboardLinks';
-import { CardLink, SCROLL_CARD, SCROLL_LIST } from '../Teacher/shared';
+import { CardLink, SCROLL_CARD, SCROLL_LIST, CARD_EMPTY } from '../Teacher/shared';
 
 const VISIBLE_SECTIONS = 5;
 
@@ -98,7 +98,7 @@ const RegistersCard = ({ sections, loading, error, onRetry, emptyText, className
           </ul>
         </NajmScroll>
       ) : (
-        <NEmptyState icon={FEATURE_ICONS.sections} title={emptyText ?? t('dashboard.monitor.registers.empty')} className="py-4" />
+        <NEmptyState icon={FEATURE_ICONS.sections} title={emptyText ?? t('dashboard.monitor.registers.empty')} className={CARD_EMPTY} />
       )}
     </NCard>
   );

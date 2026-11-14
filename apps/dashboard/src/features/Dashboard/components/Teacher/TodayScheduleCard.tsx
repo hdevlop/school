@@ -8,7 +8,7 @@ import { NBadge, NButton, NCard, NCardAction, NEmptyState, NSkeleton, NajmScroll
 import { useTranslation } from 'najm-i18n/react';
 import type { TeacherDashboardSession, TeacherSessionStatus } from '@sms/contracts/teacher-dashboard';
 import { TEACHER_DASHBOARD_LINKS, lessonAttendanceHref, splitMinutes } from '../../config/teacherDashboardLinks';
-import { CardLink, IconTile, SCROLL_CARD, SCROLL_LIST } from './shared';
+import { CardLink, IconTile, SCROLL_CARD, SCROLL_LIST, CARD_EMPTY } from './shared';
 
 type TodayScheduleCardProps = {
   sessions: TeacherDashboardSession[] | undefined;
@@ -150,7 +150,7 @@ const TodayScheduleCard = ({ sessions, nextSession, loading, error, onRetry, cla
           </NajmScroll>
         </div>
       ) : (
-        <NEmptyState icon={FEATURE_ICONS.classRoutines} title={t('dashboard.teacher.schedule.empty')} className="py-4" />
+        <NEmptyState icon={FEATURE_ICONS.classRoutines} title={t('dashboard.teacher.schedule.empty')} className={CARD_EMPTY} />
       )}
     </NCard>
   );

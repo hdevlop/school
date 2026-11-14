@@ -10,7 +10,7 @@ import type { MonitorDashboardIncident } from '@sms/contracts/monitor-dashboard'
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { SEVERITY_COLORS, severityClassName } from '@/features/Discipline/disciplineConstants';
 import { MONITOR_DASHBOARD_LINKS } from '../../config/monitorDashboardLinks';
-import { CardLink, FILL_CARD, IconTile } from '../Teacher/shared';
+import { CardLink, FILL_CARD, IconTile, CARD_EMPTY } from '../Teacher/shared';
 
 type IncidentsCardProps = {
   incidents: MonitorDashboardIncident[] | undefined;
@@ -76,7 +76,7 @@ const IncidentsCard = ({ incidents, loading, error, onRetry, className }: Incide
           ))}
         </ul>
       ) : (
-        <NEmptyState icon={FEATURE_ICONS.discipline} title={t('dashboard.monitor.incidents.empty')} className="py-4" />
+        <NEmptyState icon={FEATURE_ICONS.discipline} title={t('dashboard.monitor.incidents.empty')} className={CARD_EMPTY} />
       )}
     </NCard>
   );
