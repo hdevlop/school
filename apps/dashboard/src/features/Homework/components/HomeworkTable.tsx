@@ -36,7 +36,8 @@ function HomeworkTable() {
   const handleAddClick = () => {
     openDialog({
       title: t('homework.dialogs.createTitle'),
-      children: <HomeworkForm />,
+      // A new homework is for the class and section the list is filtered to.
+      children: <HomeworkForm place={{ classId: scope.classId, sectionId: scope.sectionId }} />,
       primaryButton: {
         form: 'homework-form',
         text: t('homework.dialogs.createButton'),
@@ -80,6 +81,13 @@ function HomeworkTable() {
   };
 
   const total = homework?.length ?? 0;
+  // An empty list, filtered or not, offers to publish one to whoever may.
+  const addAction = mayWrite ? (
+    <PermissionButton permission="create:homework" size="sm" onClick={handleAddClick}>
+      <Plus className="h-4 w-4" />
+      {t('homework.dialogs.createButton')}
+    </PermissionButton>
+  ) : undefined;
 
   return (
     <div className='flex flex-col gap-2 w-full h-full min-h-0'>
@@ -121,20 +129,17 @@ function HomeworkTable() {
             icon={FEATURE_ICONS.homework}
             title={scope.hasSelection ? t('emptyStates.filtered.title') : t('emptyStates.homework.title')}
             description={scope.hasSelection ? t('emptyStates.filtered.description') : isFamily ? t('emptyStates.familyDescription') : t('emptyStates.homework.description')}
-            action={scope.hasSelection || !mayWrite ? undefined : (
-              <PermissionButton permission="create:homework" size="sm" onClick={handleAddClick}>
-                <Plus className="h-4 w-4" />
-                {t('homework.dialogs.createButton')}
-              </PermissionButton>
-            )}
+            action={addAction}
           />
         )}
+        // Nothing for the chosen class or section is often what a teacher is about to change.
         renderFilteredEmpty={() => (
           <NEmptyState
             surface="panel"
             icon={FEATURE_ICONS.homework}
             title={t('emptyStates.filtered.title')}
             description={t('emptyStates.filtered.description')}
+            action={addAction}
           />
         )}
         defaultMode='table'

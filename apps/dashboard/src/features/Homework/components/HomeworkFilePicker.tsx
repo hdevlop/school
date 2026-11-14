@@ -120,22 +120,24 @@ const HomeworkFilePicker = ({ homeworkId, stored, removedIds, onRemovedIdsChange
         </div>
       )}
 
-      <div className="flex flex-wrap items-center gap-2">
-        <NButton type="button" variant="outline" size="sm" disabled={preparing || slots === 0} onClick={() => fileInput.current?.click()}>
-          <Paperclip className="h-4 w-4" aria-hidden />
-          {t('homework.form.addFiles')}
+      {/* One row on every screen: on a phone the two buttons share the width, each label cut short if it must. */}
+      <div className="flex flex-nowrap items-center gap-2">
+        <NButton type="button" variant="outline" size="sm" className="min-w-0 flex-1 sm:flex-none" disabled={preparing || slots === 0} onClick={() => fileInput.current?.click()}>
+          <Paperclip className="h-4 w-4 shrink-0" aria-hidden />
+          <span className="truncate">{t('homework.form.addFiles')}</span>
         </NButton>
-        <NButton type="button" variant="outline" size="sm" disabled={preparing || slots === 0} onClick={() => cameraInput.current?.click()}>
-          <Camera className="h-4 w-4" aria-hidden />
-          {t('homework.form.takePhoto')}
+        <NButton type="button" variant="outline" size="sm" className="min-w-0 flex-1 sm:flex-none" disabled={preparing || slots === 0} onClick={() => cameraInput.current?.click()}>
+          <Camera className="h-4 w-4 shrink-0" aria-hidden />
+          <span className="truncate">{t('homework.form.takePhoto')}</span>
         </NButton>
-        {preparing && (
-          <span className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
-            {t('homework.form.preparing')}
-          </span>
-        )}
       </div>
+      {/* Its own line, so the buttons keep the row. */}
+      {preparing && (
+        <span className="flex items-center gap-1 text-xs text-muted-foreground">
+          <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
+          {t('homework.form.preparing')}
+        </span>
+      )}
       <p className="text-xs leading-relaxed text-muted-foreground">
         {t('homework.form.attachmentsHint', { max: HOMEWORK_LIMITS.attachments, pdf: Math.round(HOMEWORK_LIMITS.pdfBytes / (1024 * 1024)) })}
       </p>
