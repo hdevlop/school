@@ -13,7 +13,9 @@ import { useFees } from "@/features/Financial/Fees/hooks/useFees";
 import MultiFeesPayment from "@/features/Financial/Payment/components/MultiFeesPayment";
 import { openPaymentDialog } from '@/features/Financial/Payment/utils/openPaymentDialog';
 import { PaymentRecordedPrompt } from "@/features/Financial/Payment/components/ReceiptPrint/PaymentRecordedPrompt";
-import { CreditCard, Receipt, History, FileText, Tag, Plus } from "lucide-react";
+import { CreditCard, Receipt, History, FileText, Tag, Plus, UsersRound } from "lucide-react";
+import { useStudentFamily } from "@/features/Financial/Payment/hooks/useStudentFamily";
+import { useFamilyPayment } from "@/features/Financial/Payment/hooks/useFamilyPayment";
 import { PaymentHistory } from "./paymentHistory";
 import { Documents } from "./documents";
 import { FeesOverview } from "./feeOverview";
@@ -189,6 +191,13 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
     message: overdueCount > 0 ? t('fees.studentView.overdue', { count: overdueCount }) : '',
   };
   const { openDialog } = useDialog();
+  // Brothers and sisters paid by the same parent: one visit, one receipt.
+  const family = useStudentFamily(studentId);
+  const { openFamilyPayment } = useFamilyPayment();
+  const siblingNames = (family?.children || [])
+    .filter((child: any) => child.id !== studentId)
+    .map((child: any) => child.name)
+    .join(', ');
   const resetPayment = usePaymentStore((state) => state.reset);
   const selectInstallments = usePaymentStore((state) => state.selectInstallments);
   const setPaymentDetails = usePaymentStore((state) => state.setPaymentDetails);
@@ -456,6 +465,27 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
               {t('fees.historyView.otherYearDebt', { year, count })}
             </button>
           ))}
+        </div>
+      )}
+
+      {family && (
+        <div
+          role="status"
+          className="flex shrink-0 flex-wrap items-center justify-between gap-2 rounded-md border border-border bg-muted px-3 py-2 text-sm text-foreground"
+        >
+          <span className="flex min-w-0 items-center gap-2">
+            <UsersRound className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <span className="truncate">{t('payments.family.siblings', { names: siblingNames })}</span>
+          </span>
+          <PermissionButton permission="create:payments"
+            size="sm"
+            variant="outline"
+            onClick={() => openFamilyPayment(family.parent, family.children)}
+            className="gap-2 font-semibold"
+          >
+            <UsersRound className="h-4 w-4" />
+            {t('payments.family.openForSiblings')}
+          </PermissionButton>
         </div>
       )}
 

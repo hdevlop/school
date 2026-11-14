@@ -93,6 +93,8 @@ function checkHarness(payment: object | null, locked: object[] = [installment], 
   const calls: string[] = [];
   const service = new PaymentService(
     {
+      // The unlocked read that finds a family receipt's other payments.
+      getById: async () => payment ?? undefined,
       getByIdForUpdate: async () => { calls.push('lock-payment'); return payment; },
       update: async () => { calls.push('update'); },
     } as any,

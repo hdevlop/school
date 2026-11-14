@@ -27,7 +27,7 @@ import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewin
 function PaymentsTable({studentId}) {
   const { t } = useTranslation();
   const { currency } = useSchoolFormat();
-  const { printReceipt, isReceiptLoading } = usePrintReceipt();
+  const { printReceipt, printFamilyReceipt, isReceiptLoading } = usePrintReceipt();
   const { viewingYear } = useViewingAcademicYear();
   // The per-student history includes every year. Only the school-wide list
   // returns the portion of each receipt allocated to a selected fee year.
@@ -53,7 +53,16 @@ function PaymentsTable({studentId}) {
   const isLoading = studentId ? isStudentPaymentsLoading : isPaymentsLoading;
   const error = studentId ? studentPaymentsError : paymentsError;
 
+  // A child's payment on a family receipt prints the receipt the parent was handed.
+  const familyNote = (payment) => payment.familyReceiptId
+    ? t('payments.family.sharedReceiptNote', { receiptNumber: payment.familyReceiptNumber ?? '' })
+    : undefined;
+
   const handlePrint = (payment) => {
+    if (payment.familyReceiptId) {
+      printFamilyReceipt({ familyReceiptId: payment.familyReceiptId, currency });
+      return;
+    }
     printReceipt({
       paymentId: payment.id,
       receiptNumber: payment.receiptNumber ?? payment.id,
@@ -89,7 +98,7 @@ function PaymentsTable({studentId}) {
   // chrome, unstyled and unreachable on some phones.
   const askReason = (payment, kind: 'bounce' | 'void') => openDialog({
     title: t(kind === 'bounce' ? 'financialOperations.bounceTitle' : 'payments.dialogs.voidPayment'),
-    description: [payment.receiptNumber, payment.checkNumber].filter(Boolean).join(' · '),
+    description: familyNote(payment) ?? [payment.receiptNumber, payment.checkNumber].filter(Boolean).join(' · '),
     children: <CheckReasonForm label={t(kind === 'bounce' ? 'financialOperations.bounceReason' : 'financialOperations.voidReason')} />,
     width: 'md',
     primaryButton: {
@@ -125,6 +134,9 @@ function PaymentsTable({studentId}) {
       children: (
         <div className="flex flex-col gap-4">
           <PaymentCard data={payment} feeYear={feeYear} />
+          {familyNote(payment) && (
+            <p className="rounded-md border border-border bg-muted px-3 py-2 text-xs text-muted-foreground">{familyNote(payment)}</p>
+          )}
           {payment.status === 'completed' && (
             <NButton
               variant="outline"
@@ -159,6 +171,7 @@ function PaymentsTable({studentId}) {
     let savedPayment: any;
     await openDialog({
       title: `${t('payments.dialogs.editTitle')} - ${payment.receiptNumber}`,
+      description: familyNote(payment),
       children: <PaymentEditForm payment={payment} />,
       primaryButton: {
         form: 'payment-form',

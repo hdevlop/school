@@ -13,8 +13,19 @@ export interface ReceiptItem {
   dueDates?: string[];
 }
 
+/** One child's part of a family receipt. */
+export interface ReceiptChild {
+  studentName: string;
+  studentCode: string;
+  amount: number;
+  items: ReceiptItem[];
+}
+
 export interface ReceiptData {
   language?: ReceiptLanguage;
+  /** A family receipt: the parent who paid, and each child's part. */
+  payerName?: string;
+  children?: ReceiptChild[];
   receiptNumber: string;
   paymentDate: string;
   studentName: string;
@@ -90,22 +101,43 @@ export function buildReceiptHtml(data: ReceiptData) {
     }
     return `<span class="installment-period">${escapeHtml(dates)}</span>`;
   };
+  const children = data.children?.length ? data.children : null;
   const items = data.items ?? [];
-  const receiptYear = data.feeYear || items.map((item) => item.academicYear).filter(Boolean).sort().at(-1);
-  const creditCents = data.items !== undefined
+  const allItems = children ? children.flatMap((child) => child.items) : items;
+  const receiptYear = data.feeYear || allItems.map((item) => item.academicYear).filter(Boolean).sort().at(-1);
+  // A family receipt is each child's installments exactly: change is handed back, never kept.
+  const creditCents = !children && data.items !== undefined
     ? Math.max(0, Math.round(data.amount * 100) - items.reduce((sum, item) => sum + Math.round(item.amount * 100), 0))
     : 0;
-  const breakdown = items.length ? `
+  const breakdownTable = (rows: ReceiptItem[]) => rows.length ? `
     <table class="breakdown" aria-label="${escapeHtml(text.details)}">
       <colgroup><col class="fee-column" /><col /><col /></colgroup>
       <thead><tr><th scope="col">${escapeHtml(text.feeType)}</th><th scope="col" class="money">${escapeHtml(text.paid)}</th><th scope="col" class="money">${escapeHtml(text.remaining)}</th></tr></thead>
-      <tbody>${items.map((item) => `<tr>
+      <tbody>${rows.map((item) => `<tr>
         <td><span class="fee-name" dir="auto">${escapeHtml(item.feeTypeLabels?.[language]?.trim() || item.feeType)}</span>${periods(item)}${item.academicYear && item.academicYear !== receiptYear ? ` <bdi class="fee-year" dir="ltr">${escapeHtml(item.academicYear)}</bdi>` : ''}</td>
         <td class="money"><bdi>${escapeHtml(money(item.amount))}</bdi></td>
         <td class="money"><bdi>${escapeHtml(money(item.remainingAmount))}</bdi></td>
       </tr>`).join('')}</tbody>
     </table>` : '';
+  const studentSection = (name: string, code: string) => `
+  <section class="section student" aria-label="${escapeHtml(text.student)}">
+    <div>${label(text.student)}
+    <p class="student-name" dir="auto">${escapeHtml(name)}</p>
+    </div>${code ? `<div>${label(text.studentCode)}<p class="student-code"><bdi dir="ltr">${escapeHtml(code)}</bdi></p></div>` : ''}
+  </section>`;
   const credit = creditCents > 0 ? `<p class="credit">${escapeHtml(text.unallocatedCredit)} <bdi>${escapeHtml(money(creditCents / 100))}</bdi></p>` : '';
+  const paymentFields = `
+  <section class="section fields" aria-label="${escapeHtml(text.paymentSection)}">
+    ${data.payerName ? `<div class="receipt-year">${field(text.payer, data.payerName)}</div>` : ''}
+    ${field(text.paymentDate, paymentDate, 'ltr')}
+    ${field(text.paymentMethod, method)}
+    ${receiptYear ? `<div class="receipt-year">${field(text.schoolYear, receiptYear, 'ltr')}</div>` : ''}
+  </section>`;
+  const body = children
+    ? `${paymentFields}${children.map((child) => `<div class="child">${studentSection(child.studentName, child.studentCode)}
+    ${breakdownTable(child.items)}
+    <p class="subtotal">${escapeHtml(text.subtotal)} <bdi>${escapeHtml(money(child.amount))}</bdi></p></div>`).join('')}`
+    : `${studentSection(data.studentName, data.studentCode)}${paymentFields}${breakdownTable(items)}${credit}`;
   const details = [
     data.feeYear && data.yearAllocatedAmount !== undefined
       ? field(text.yearAmount, money(data.yearAllocatedAmount))
@@ -174,6 +206,8 @@ export function buildReceiptHtml(data: ReceiptData) {
     .fee-year { display: block; font-size: 6.5pt; }
     .installment-period { display: block; font-size: 7pt; }
     .credit { text-align: end; font-size: 7pt; margin-top: 1mm; }
+    .subtotal { text-align: end; font-size: 7.5pt; font-weight: 700; margin-bottom: 1mm; }
+    .child { break-inside: avoid; }
     .total { padding: 1.5mm 0; border-bottom: 1.5px solid #000; break-inside: avoid; }
     .total-line { display: flex; justify-content: space-between; align-items: baseline; gap: 2mm; }
     .amount-figure { font-size: 15pt; line-height: 1.1; font-weight: 700; font-variant-numeric: tabular-nums; }
@@ -206,20 +240,7 @@ export function buildReceiptHtml(data: ReceiptData) {
     <p class="receipt-number">${escapeHtml(text.number)} <bdi dir="ltr">${escapeHtml(data.receiptNumber)}</bdi></p>
   </div>
 
-  <section class="section student" aria-label="${escapeHtml(text.student)}">
-    <div>${label(text.student)}
-    <p class="student-name" dir="auto">${escapeHtml(data.studentName)}</p>
-    </div>${data.studentCode ? `<div>${label(text.studentCode)}<p class="student-code"><bdi dir="ltr">${escapeHtml(data.studentCode)}</bdi></p></div>` : ''}
-  </section>
-
-  <section class="section fields" aria-label="${escapeHtml(text.paymentSection)}">
-    ${field(text.paymentDate, paymentDate, 'ltr')}
-    ${field(text.paymentMethod, method)}
-    ${receiptYear ? `<div class="receipt-year">${field(text.schoolYear, receiptYear, 'ltr')}</div>` : ''}
-  </section>
-
-  ${breakdown}
-  ${credit}
+  ${body}
 
   <section class="total" aria-label="${escapeHtml(text.amountPaid)}">
     <div class="total-line">${label(text.amountPaid)}

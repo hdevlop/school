@@ -1,6 +1,6 @@
 import { Service, Transaction, Events, EventService } from '../../../najm';
 import { PaymentRepository } from './PaymentRepository';
-import { PaymentValidator, computeIdempotencyHash } from './PaymentValidator';
+import { PaymentValidator, computeFamilyIdempotencyHash, computeIdempotencyHash } from './PaymentValidator';
 import { pickProps } from '../../../shared';
 import { generateReceiptNumber } from '../utils';
 import { AllocationService } from '../allocations/AllocationService';
@@ -13,6 +13,7 @@ import { formatDateOnly } from '../utils/dateOnly';
 import { fromCents, toCents } from '../utils/money';
 import { getBusinessDate } from '../../../shared/businessDate';
 import type {
+  CreateFamilyPaymentDto,
   CreatePaymentDto,
   UpdatePaymentDto,
   CheckStatusDto,
@@ -246,6 +247,7 @@ export class PaymentService {
     processedBy?: string,
     idempotencyHash: string | null = null,
     settledOn?: string,
+    familyReceiptId?: string,
   ) {
     const isCheck = data.paymentMethod === 'check';
     // Only an imported cheque the source already cashed starts settled; any other cheque waits for the bank.
@@ -265,6 +267,7 @@ export class PaymentService {
       statusChangedAt: new Date().toISOString(),
       transactionRef: data.transactionRef ?? null,
       receiptNumber: data.receiptNumber?.trim() || generateReceiptNumber(),
+      familyReceiptId: familyReceiptId ?? null,
       status: initialStatus,
       processedBy: processedBy,
       idempotencyKey: data.idempotencyKey ?? null,
@@ -346,6 +349,122 @@ export class PaymentService {
     return result.payment;
   }
 
+  /**
+   * One parent paying for several children. Every child gets an ordinary
+   * payment, written by the same path as `record`, all under one family
+   * receipt and one transaction: a refusal for any child records nothing.
+   */
+  async recordFamily(data: CreateFamilyPaymentDto, processedBy?: string) {
+    let result: Awaited<ReturnType<PaymentService['recordFamilyTransaction']>>;
+    try {
+      result = await this.recordFamilyTransaction(data, processedBy);
+    } catch (error) {
+      if (!data.idempotencyKey || !isUniqueViolation(error)) throw error;
+      const existing = await this.paymentValidator.findFamilyByIdempotencyKey(
+        data.idempotencyKey,
+        computeFamilyIdempotencyHash(data),
+      );
+      if (!existing) throw error;
+      result = { receipt: existing, recorded: [], replayed: true };
+    }
+    for (const recorded of result.recorded) this.events.emit('payment.recorded', recorded);
+    return this.getFamilyReceipt(result.receipt.id);
+  }
+
+  @Transaction()
+  private async recordFamilyTransaction(data: CreateFamilyPaymentDto, processedBy?: string) {
+    const idempotencyHash = data.idempotencyKey ? computeFamilyIdempotencyHash(data) : null;
+    if (data.idempotencyKey) {
+      const existing = await this.paymentValidator.findFamilyByIdempotencyKey(data.idempotencyKey, idempotencyHash!);
+      if (existing) return { receipt: existing, recorded: [], replayed: true };
+    }
+
+    await this.paymentValidator.validateFamily(data.parentId, data.children.map((child) => child.studentId));
+
+    const receipt = await this.paymentRepository.createFamilyReceipt({
+      receiptNumber: generateReceiptNumber(),
+      parentId: data.parentId,
+      processedBy: processedBy ?? null,
+      idempotencyKey: data.idempotencyKey ?? null,
+      idempotencyHash,
+    });
+
+    const recorded: Array<Awaited<ReturnType<PaymentService['createRecordedPayment']>>> = [];
+    for (const [index, child] of data.children.entries()) {
+      const allocations = child.allocations as Array<{ feeId: string; number: number; amount: number }>;
+      const amountCents = allocations.reduce((sum, allocation) => sum + toCents(allocation.amount), 0);
+      const payment: CreatePaymentDto = {
+        studentId: child.studentId,
+        amount: Number(fromCents(amountCents)),
+        paymentMethod: data.paymentMethod,
+        paymentDate: data.paymentDate,
+        checkNumber: data.checkNumber ?? null,
+        checkDueDate: data.checkDueDate ?? null,
+        checkBank: data.checkBank ?? null,
+        transactionRef: data.transactionRef ?? null,
+        notes: data.notes ?? null,
+        // Each child's own number names the family receipt it belongs to.
+        receiptNumber: `${receipt.receiptNumber}-${index + 1}`,
+        allocations,
+        autoAllocate: false,
+        keepRemainderAsCredit: false,
+      };
+      await this.paymentValidator.validate(payment);
+      if (payment.paymentMethod === 'check') {
+        await this.paymentValidator.ensureCheckNumberUnique(payment.studentId, payment.checkNumber);
+      }
+      recorded.push(await this.createRecordedPayment(payment, allocations, processedBy, null, undefined, receipt.id));
+    }
+
+    return { receipt, recorded, replayed: false };
+  }
+
+  /** The family receipt with each child's payment and receipt lines. */
+  async getFamilyReceipt(id: string) {
+    const receipt = await this.paymentValidator.checkFamilyReceiptExists(id);
+    const members = await this.paymentRepository.getByFamilyReceipt(id);
+    const memberPayments = await Promise.all(members.map(async (payment) => ({
+      ...payment,
+      receiptItems: await this.paymentRepository.getReceiptItems(payment.id),
+    })));
+    // Method, date, cheque and status are written once for all and change
+    // together, so the first payment speaks for the receipt.
+    const first = memberPayments[0];
+    return {
+      ...receipt,
+      amount: fromCents(memberPayments.reduce((sum, payment) => sum + toCents(payment.amount), 0)),
+      status: first?.status ?? null,
+      paymentDate: first?.paymentDate ?? null,
+      paymentMethod: first?.paymentMethod ?? null,
+      checkNumber: first?.checkNumber ?? null,
+      checkDueDate: first?.checkDueDate ?? null,
+      checkBank: first?.checkBank ?? null,
+      transactionRef: first?.transactionRef ?? null,
+      notes: first?.notes ?? null,
+      payments: memberPayments,
+    };
+  }
+
+  /**
+   * The payments an action on `id` must change: itself, or every payment on
+   * its family receipt, locked in one sorted order so two actions on
+   * different children of one receipt cannot deadlock.
+   */
+  private async familyMemberIds(id: string) {
+    const payment = await this.paymentRepository.getById(id);
+    if (!payment?.familyReceiptId) return [id];
+    return this.paymentRepository.getFamilyMemberIdsForUpdate(payment.familyReceiptId);
+  }
+
+  private async applyToFamily<T>(id: string, action: (memberId: string) => Promise<T>) {
+    let primary: T | undefined;
+    for (const memberId of await this.familyMemberIds(id)) {
+      const result = await action(memberId);
+      if (memberId === id) primary = result;
+    }
+    return primary as T;
+  }
+
   async recordBulk(payments: CreatePaymentDto[], processedBy?: string) {
     const results = [];
     for (const p of payments) {
@@ -355,8 +474,18 @@ export class PaymentService {
     return { count: results.length, items: results };
   }
 
+  /** An edit to one child's payment on a family receipt edits them all. */
   @Transaction()
   async update(id: string, data: UpdatePaymentDto, actorId?: string) {
+    const current = await this.paymentRepository.getById(id);
+    if (!current?.familyReceiptId) return this.updateOne(id, data, actorId);
+    this.paymentValidator.ensureFamilyEditable(current, data);
+    // Each payment keeps its own number; an unchanged one is not written again.
+    const { receiptNumber: _unchanged, ...shared } = data;
+    return this.applyToFamily(id, (memberId) => this.updateOne(memberId, shared, actorId));
+  }
+
+  private async updateOne(id: string, data: UpdatePaymentDto, actorId?: string) {
     await this.paymentValidator.validate(data, id);
     const previous = this.paymentValidator.ensureLockedPayment(await this.paymentRepository.getByIdForUpdate(id));
     if (previous.paymentMethod === 'check' && data.paymentMethod === 'cash') {
@@ -437,8 +566,13 @@ export class PaymentService {
     return this.paymentValidator.ensureHardDeleteDisabled();
   }
 
+  /** Refunding one child's payment on a family receipt refunds the whole receipt. */
   @Transaction()
   async refund(id: string, reason?: string, actorId?: string) {
+    return this.applyToFamily(id, (memberId) => this.refundOne(memberId, reason, actorId));
+  }
+
+  private async refundOne(id: string, reason?: string, actorId?: string) {
     const payment = this.paymentValidator.ensureLockedPayment(await this.paymentRepository.getByIdForUpdate(id));
     this.paymentValidator.ensureRefundable(payment.status);
     const previous = { ...payment };
@@ -463,8 +597,13 @@ export class PaymentService {
     return updated;
   }
 
+  /** A family receipt is voided whole: the parent was handed one receipt. */
   @Transaction()
   async voidPayment(id: string, dto: VoidPaymentDto, actorId?: string) {
+    return this.applyToFamily(id, (memberId) => this.voidOne(memberId, dto, actorId));
+  }
+
+  private async voidOne(id: string, dto: VoidPaymentDto, actorId?: string) {
     const payment = this.paymentValidator.ensureLockedPayment(await this.paymentRepository.getByIdForUpdate(id));
     this.paymentValidator.ensureVoidable(payment.status);
     const previous = { ...payment };
@@ -491,8 +630,13 @@ export class PaymentService {
     return updated;
   }
 
+  /** One cheque paid the whole family receipt: it is deposited, cashed or bounced for every child. */
   @Transaction()
   async updateCheckStatus(id: string, dto: CheckStatusDto, actorId?: string) {
+    return this.applyToFamily(id, (memberId) => this.updateCheckStatusOne(memberId, dto, actorId));
+  }
+
+  private async updateCheckStatusOne(id: string, dto: CheckStatusDto, actorId?: string) {
     const payment = this.paymentValidator.ensureLockedPayment(await this.paymentRepository.getByIdForUpdate(id));
     this.paymentValidator.ensureCheckTransition(payment, dto.status);
     const previous = { ...payment };

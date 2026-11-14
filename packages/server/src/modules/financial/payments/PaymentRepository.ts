@@ -1,6 +1,6 @@
 import { Repository } from '../../../najm';
-import { eq, ne, desc, and, sql, count, isNotNull } from 'drizzle-orm';
-import { fees, feeTypes, feeInstallments, paymentAllocations, payments, students, users } from '../../../database/schema';
+import { eq, ne, desc, and, asc, sql, count, isNotNull, inArray } from 'drizzle-orm';
+import { familyReceipts, fees, feeTypes, feeInstallments, parents, paymentAllocations, payments, studentParents, students, users } from '../../../database/schema';
 import { DB } from '../../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
 import { formatDateOnly } from '../utils/dateOnly';
@@ -39,6 +39,8 @@ export class PaymentRepository {
         voidedBy: payments.voidedBy,
         transactionRef: payments.transactionRef,
         receiptNumber: payments.receiptNumber,
+        familyReceiptId: payments.familyReceiptId,
+        familyReceiptNumber: familyReceipts.receiptNumber,
         status: payments.status,
         processedBy: payments.processedBy,
         notes: payments.notes,
@@ -64,6 +66,7 @@ export class PaymentRepository {
     return this.db
       .select(columns)
       .from(payments)
+      .leftJoin(familyReceipts, eq(payments.familyReceiptId, familyReceipts.id))
       .leftJoin(processorUsers, eq(payments.processedBy, processorUsers.id))
       .leftJoin(students, eq(payments.studentId, students.id))
       .leftJoin(studentUsers, eq(students.userId, studentUsers.id));
@@ -90,6 +93,7 @@ export class PaymentRepository {
       .select({ ...columns, yearAllocatedAmount: yearAllocations.amount })
       .from(payments)
       .innerJoin(yearAllocations, eq(yearAllocations.paymentId, payments.id))
+      .leftJoin(familyReceipts, eq(payments.familyReceiptId, familyReceipts.id))
       .leftJoin(processorUsers, eq(payments.processedBy, processorUsers.id))
       .leftJoin(students, eq(payments.studentId, students.id))
       .leftJoin(studentUsers, eq(students.userId, studentUsers.id))
@@ -392,6 +396,76 @@ export class PaymentRepository {
   }
 
   async clearForSeedReset() {
-    return await this.db.delete(payments).returning();
+    const deleted = await this.db.delete(payments).returning();
+    await this.db.delete(familyReceipts);
+    return deleted;
+  }
+
+  // ========================================
+  // FAMILY RECEIPTS
+  // ========================================
+
+  async createFamilyReceipt(data: typeof familyReceipts.$inferInsert) {
+    const [receipt] = await this.db.insert(familyReceipts).values(data).returning();
+    return receipt;
+  }
+
+  async getFamilyReceiptByIdempotencyKey(key: string) {
+    const [receipt] = await this.db
+      .select()
+      .from(familyReceipts)
+      .where(and(eq(familyReceipts.idempotencyKey, key), isNotNull(familyReceipts.idempotencyKey)))
+      .limit(1);
+    return receipt || null;
+  }
+
+  async getFamilyReceiptById(id: string) {
+    const [receipt] = await this.db
+      .select({
+        id: familyReceipts.id,
+        receiptNumber: familyReceipts.receiptNumber,
+        parentId: familyReceipts.parentId,
+        processedBy: familyReceipts.processedBy,
+        createdAt: familyReceipts.createdAt,
+        parent: { id: parents.id, name: parents.name, phone: parents.phone },
+      })
+      .from(familyReceipts)
+      .leftJoin(parents, eq(familyReceipts.parentId, parents.id))
+      .where(eq(familyReceipts.id, id))
+      .limit(1);
+    return receipt || null;
+  }
+
+  /** The children's payments on one family receipt, in the order they were written. */
+  async getByFamilyReceipt(familyReceiptId: string) {
+    return await this.buildPaymentQuery()
+      .where(eq(payments.familyReceiptId, familyReceiptId))
+      .orderBy(asc(payments.receiptNumber));
+  }
+
+  /** Locks every payment on the receipt, in one stable order, before any of them changes. */
+  async getFamilyMemberIdsForUpdate(familyReceiptId: string) {
+    const rows = await this.db
+      .select({ id: payments.id })
+      .from(payments)
+      .where(eq(payments.familyReceiptId, familyReceiptId))
+      .orderBy(asc(payments.id))
+      .for('update');
+    return rows.map((row) => row.id);
+  }
+
+  async parentExists(parentId: string) {
+    const [parent] = await this.db.select({ id: parents.id }).from(parents).where(eq(parents.id, parentId)).limit(1);
+    return Boolean(parent);
+  }
+
+  /** Which of these students are linked to the parent. */
+  async getStudentIdsLinkedToParent(parentId: string, studentIds: string[]) {
+    if (studentIds.length === 0) return [];
+    const rows = await this.db
+      .select({ studentId: studentParents.studentId })
+      .from(studentParents)
+      .where(and(eq(studentParents.parentId, parentId), inArray(studentParents.studentId, studentIds)));
+    return [...new Set(rows.map((row) => row.studentId))];
   }
 }

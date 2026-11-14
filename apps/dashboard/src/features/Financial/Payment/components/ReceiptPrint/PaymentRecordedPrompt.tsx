@@ -9,23 +9,31 @@ import { usePrintReceipt } from './usePrintReceipt';
 
 interface PaymentRecordedPromptProps {
   /** The payment row the record endpoint returned (no student or processor join). */
-  payment: any;
+  payment?: any;
   /** Fallback name and code if the full payment cannot be read. */
   student?: { name?: string; studentCode?: string };
+  /** The family receipt the family payment endpoint returned, instead of `payment`. */
+  familyReceipt?: any;
 }
 
 // Shown once a payment is saved, so the cashier can hand over the receipt
 // without looking the payment up again. A check is only receipted once it
 // completes, as in the payments table and the Documents tab.
-export const PaymentRecordedPrompt = ({ payment, student }: PaymentRecordedPromptProps) => {
+export const PaymentRecordedPrompt = ({ payment, student, familyReceipt }: PaymentRecordedPromptProps) => {
   const { t } = useTranslation();
   const { pop } = useDialog();
   const { currency, majorMoney } = useSchoolFormat();
-  const { printReceipt, isReceiptLoading } = usePrintReceipt();
-  const receiptNumber = payment.receiptNumber ?? payment.id;
-  const canPrint = payment.status === 'completed';
+  const { printReceipt, printFamilyReceipt, isReceiptLoading } = usePrintReceipt();
+  const recorded = familyReceipt ?? payment;
+  const receiptNumber = recorded.receiptNumber ?? recorded.id;
+  const canPrint = recorded.status === 'completed';
+  const childCount = Array.isArray(familyReceipt?.payments) ? familyReceipt.payments.length : 0;
 
   const handlePrint = () => {
+    if (familyReceipt) {
+      printFamilyReceipt({ familyReceiptId: familyReceipt.id, currency });
+      return;
+    }
     printReceipt({
       paymentId: payment.id,
       receiptNumber,
@@ -48,7 +56,10 @@ export const PaymentRecordedPrompt = ({ payment, student }: PaymentRecordedPromp
         <p className="font-semibold text-foreground">
           {t('payments.dialogs.receiptNumber', { receiptNumber })}
         </p>
-        <p className="text-sm text-muted-foreground">{majorMoney(payment.amount)}</p>
+        <p className="text-sm text-muted-foreground">{majorMoney(recorded.amount)}</p>
+        {childCount > 0 && (
+          <p className="text-sm text-muted-foreground">{t('payments.family.childrenPaid', { number: childCount })}</p>
+        )}
         {!canPrint && (
           <p className="text-sm text-muted-foreground">{t('payments.dialogs.receiptAfterCheck')}</p>
         )}

@@ -25,6 +25,9 @@ export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
    const isInsufficientCash = change < 0 && cashReceived > 0;
    const isCash = paymentMethod === 'cash';
    const amountToRecord = selectedCount > 0 ? debtSelected : cashReceived;
+   // A family payment's lines are told apart by child: brothers and sisters
+   // share a surname and usually the same fee, so the child leads, one per row.
+   const isFamily = Object.values(selectedInstallments).some((inst: any) => inst.studentName);
 
    return (
       <div className={`flex flex-col gap-3 ${compact ? '' : 'min-h-0 flex-1'}`}>
@@ -99,13 +102,18 @@ export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
                         className={compact ? '' : 'min-h-0 flex-1'}
                         options={{ scrollbars: { theme: 'os-theme-light', autoHide: 'never', clickScroll: true } }}
                      >
-                        <div className={`grid content-start gap-2 ${compact ? 'grid-cols-1' : 'grid-cols-1 pr-3 sm:grid-cols-2'}`}>
+                        <div className={`grid content-start gap-2 ${compact || isFamily ? 'grid-cols-1 pr-3' : 'grid-cols-1 pr-3 sm:grid-cols-2'}`}>
                            {Object.values(selectedInstallments).map((inst: any) => (
                               <div key={inst.id} className="bg-gray-800/50 rounded-lg p-2 border border-gray-700 flex items-center justify-between gap-2">
                                  <div className="flex min-w-0 items-center gap-2">
                                     <Label className="text-2xl">{inst.feeIcon}</Label>
                                     <div className='flex min-w-0 flex-col gap-[0.5]'>
-                                       <Label className="block truncate text-sm font-medium text-white" title={`${inst.feeName} #${inst.number}`}>
+                                       {inst.studentName && (
+                                          <Label className="block truncate text-sm font-semibold text-white" title={inst.studentName}>
+                                             {inst.studentName}
+                                          </Label>
+                                       )}
+                                       <Label className={`block truncate ${inst.studentName ? 'text-xs text-gray-300' : 'text-sm font-medium text-white'}`} title={`${inst.feeName} #${inst.number}`}>
                                           {inst.feeName} #{inst.number}
                                        </Label>
                                        <Label className="text-xs text-gray-400 block whitespace-nowrap">{displayDateOnly(inst.dueDate)}</Label>

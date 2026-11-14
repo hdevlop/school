@@ -4044,7 +4044,12 @@
       "noInstallmentsMatched": "لا توجد أقساط مطابقة للتخصيصات المطلوبة",
       "installmentNotFoundForFee": "القسط رقم {{number}} غير موجود للرسوم {{feeId}}",
       "allocationExceedsAvailable": "التخصيص بمبلغ {{amount}} يتجاوز المتاح {{available}} للقسط رقم {{number}}",
-      "idempotencyKeyConflict": "استُخدم مفتاح عدم التكرار هذا لدفعة أخرى"
+      "idempotencyKeyConflict": "استُخدم مفتاح عدم التكرار هذا لدفعة أخرى",
+      "familyParentNotFound": "ولي الأمر غير موجود.",
+      "familyStudentNotLinked": "يجب أن يكون كل طفل في الوصل العائلي مرتبطًا بولي الأمر هذا.",
+      "familyReceiptNotFound": "الوصل العائلي غير موجود.",
+      "familyMethodChangeNeedsNewReceipt": "هذا الأداء جزء من وصل عائلي. لاستبدال الشيك، ألغِ الوصل العائلي وسجّل الأداء من جديد.",
+      "familyReceiptNumberFixed": "لا يمكن تغيير رقم وصل أداء ينتمي إلى وصل عائلي."
     },
     "filters": {
       "filterByPaymentMethod": "تصفية حسب طريقة الدفع",
@@ -4135,6 +4140,23 @@
       "checkNumberRequired": "أدخل رقم الشيك",
       "checkDueDateRequired": "أدخل تاريخ استحقاق الشيك",
       "paymentDateRequired": "أدخل تاريخ الدفع"
+    },
+    "family": {
+      "title": "أداء عائلي",
+      "open": "أداء عائلي",
+      "openForSiblings": "الأداء عن العائلة",
+      "subtitle": "{{parent}} · الأطفال: {{number}}",
+      "selectChildren": "اختر ما يؤديه كل طفل",
+      "payAllDue": "كل المستحق لجميع الأطفال ({{amount}})",
+      "payAllOverdue": "كل المتأخرات لجميع الأطفال ({{amount}})",
+      "childSelected": "المحدد: {{amount}}",
+      "nothingDue": "لا شيء للأداء هذه السنة",
+      "loadFailed": "تعذر تحميل رسوم هذا الطفل.",
+      "noChildren": "لا يوجد أطفال مرتبطون بولي الأمر هذا.",
+      "receiptNumber": "وصل عائلي {{receiptNumber}}",
+      "childrenPaid": "الأطفال المؤدى عنهم: {{number}}",
+      "sharedReceiptNote": "وصل عائلي {{receiptNumber}}: الإلغاء أو الاسترجاع أو تغيير الشيك يسري على جميع أطفال هذا الوصل.",
+      "siblings": "الإخوة والأخوات: {{names}}"
     }
   },
   "reports": {
@@ -6610,7 +6632,9 @@
       "debitCard": "بطاقة سحب",
       "online": "دفع إلكتروني",
       "mobilePayment": "دفع هاتفي"
-    }
+    },
+    "payer": "الأداء من طرف",
+    "subtotal": "المجموع الفرعي"
   },
   "validationMessages": {
     "unknownBirthplaceId": "اختر مكان ازدياد صالحا.",
@@ -6864,7 +6888,10 @@
     "schoolAddressRequired": "عنوان المدرسة مطلوب",
     "examPlanningMonth": "الشهر أو التواريخ غير صالحة أو معرّفات الامتحانات مكررة",
     "examPlanningJsonLimit": "حجم ملف JSON يتجاوز 5 ميغابايت",
-    "atMostThreePhoneNumbers": "أدخل ثلاثة أرقام هاتف على الأكثر"
+    "atMostThreePhoneNumbers": "أدخل ثلاثة أرقام هاتف على الأكثر",
+    "familyChildRequired": "اختر طفلًا واحدًا على الأقل للأداء عنه",
+    "familyTooManyChildren": "عدد كبير جدًا من الأطفال في وصل واحد",
+    "familyDuplicateChild": "لا يمكن أن يظهر الطفل إلا مرة واحدة في الوصل"
   },
   "academic": {
     "accountantAssignmentOptional": "اختر سلكًا دراسيًا أو أكثر، أو اتركه فارغًا للمدرسة كاملة.",

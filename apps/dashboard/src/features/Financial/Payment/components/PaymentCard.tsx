@@ -28,6 +28,11 @@ const PaymentCard = ({ data, feeYear }: { data: any; feeYear?: string }) => {
           <Label className="text-sm text-gray-500">
             {payment.receiptNumber || t('common.notAvailable')}
           </Label>
+          {payment.familyReceiptNumber && (
+            <Label className="text-xs text-muted-foreground">
+              {t('payments.family.receiptNumber', { receiptNumber: payment.familyReceiptNumber })}
+            </Label>
+          )}
         </div>
         <NBadge status={payment.status} />
       </div>

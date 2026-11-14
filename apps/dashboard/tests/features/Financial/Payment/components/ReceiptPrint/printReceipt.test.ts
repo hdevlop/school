@@ -217,3 +217,38 @@ it('closes the unused window and does not print an incomplete receipt when the d
   expect(closed).toBe(true);
   expect(printed).toBe(false);
 });
+
+// One parent paying for several children is handed one receipt: who paid, each
+// child with their own lines and subtotal, and one total.
+it('prints a family receipt with the payer, each child and one total, escaped, in both languages', () => {
+  const children = [
+    { studentName: 'Amine <b>', studentCode: 'S1', amount: 1500, items: [
+      { feeType: 'Scolarité', academicYear: '2026-2027', amount: 1500, remainingAmount: 0 },
+    ] },
+    { studentName: 'سلمى', studentCode: 'S2', amount: 1200, items: [
+      { feeType: 'Transport', academicYear: '2026-2027', amount: 1200, remainingAmount: 300 },
+    ] },
+  ];
+  for (const language of ['fr', 'ar'] as const) {
+    const html = buildReceiptHtml({ ...input, language, studentName: '', studentCode: '', amount: 2700, payerName: 'Fatima & co', children });
+    const money = (amount: number) => `${new Intl.NumberFormat(language === 'ar' ? 'ar-MA' : 'fr-MA',
+      { maximumFractionDigits: 0, numberingSystem: 'latn' }).format(amount)} dh`;
+    expect(html).toContain('Fatima &amp; co');
+    expect(html).toContain(language === 'ar' ? 'الأداء من طرف' : 'Payé par');
+    expect(html).toContain('Amine &lt;b&gt;');
+    expect(html).toContain('سلمى');
+    expect(html.match(/class="section student"/g)).toHaveLength(2);
+    expect(html.match(/<table class="breakdown"/g)).toHaveLength(2);
+    expect(html.match(/class="subtotal"/g)).toHaveLength(2);
+    expect(html).toContain(`class="amount-figure" dir="${language === 'ar' ? 'rtl' : 'ltr'}">${money(2700)}`);
+    expect(html).not.toContain('class="credit"');
+    expect(html.match(/2026-2027/g)).toHaveLength(1);
+  }
+});
+
+it('keeps a single child receipt free of family fields', () => {
+  const html = buildReceiptHtml(input);
+  expect(html).not.toContain('Payé par');
+  expect(html).not.toContain('class="subtotal"');
+  expect(html.match(/class="section student"/g)).toHaveLength(1);
+});

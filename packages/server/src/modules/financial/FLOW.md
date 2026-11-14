@@ -187,6 +187,17 @@ Same logic, but no student/parent creation. `FeeService.create()` is called dire
 3. For each touched fee, recompute `fee.paidAmount` and `fee.status` via `recalculations.ts`.
 4. Refund of an over-allocation is handled by creating a negative allocation or leaving residual on the payment (TBD per policy).
 
+### 4.4.1 Family Payment (one parent, several children, one receipt)
+
+`POST /payments/family` (`PaymentService.recordFamily`) takes a `parentId`, the shared payment fields (method, date, cheque, reference, notes) and `children: [{ studentId, allocations }]`.
+
+1. Every child must be linked to the parent (`student_parents`), else nothing is written.
+2. One `family_receipts` row holds the receipt number handed to the parent, the payer and the idempotency key. It stores no method, date, cheque or status: those live on the payments.
+3. Each child gets an ordinary payment through the same `createRecordedPayment` path as `record`, with `familyReceiptId` set, `amount` = the sum of that child's allocations and `receiptNumber` = `<family number>-<n>`. Balances, credit, ownership and audit stay per student.
+4. All of it is one transaction. There is no remainder credit: change is handed back at the desk.
+
+Acting on any child's payment acts on the whole receipt: void, refund, cheque deposit/complete/bounce and edits are applied to every payment of the family receipt, locked in id order (`applyToFamily`). Replacing a family cheque with cash, or renumbering one child's payment, is refused: void the family receipt and record it again. `GET /payments/family/:id` returns the receipt with each child's payment and receipt lines; the dashboard prints it as one receipt with a block per child.
+
 ### 4.5 Status Lifecycle
 
 ```

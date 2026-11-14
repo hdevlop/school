@@ -4,7 +4,9 @@ import { PaymentService } from './PaymentService';
 import { CanSchoolWide } from '../../../auth';
 import {
   checkStatusDto,
+  createFamilyPaymentDto,
   createPaymentDto,
+  familyReceiptIdParam,
   monthlyRevenueQueryDto,
   paymentIdParam,
   feeIdParam,
@@ -16,6 +18,7 @@ import {
   updatePaymentDto,
   voidPaymentDto,
   type CheckStatusDto,
+  type CreateFamilyPaymentDto,
   type CreatePaymentDto,
   type MonthlyRevenueQueryDto,
   type RefundPaymentDto,
@@ -144,6 +147,15 @@ export class PaymentController {
     return this.paymentService.getByStudent(studentId);
   }
 
+  @Get('/family/:id')
+  @CanSchoolWide('read:payments')
+  @Validate({ params: familyReceiptIdParam })
+  @McpTool({ description: 'Get a family receipt (one parent paying for several children) with each child payment and its receipt lines', readOnly: true })
+  @ResMsg('fees.success.paymentsRetrieved')
+  async getFamilyReceipt(@Params('id') id: string) {
+    return this.paymentService.getFamilyReceipt(id);
+  }
+
   @Get('/fee/:feeId')
   @CanSchoolWide('read:payments')
   @Validate({ params: feeIdParam })
@@ -169,6 +181,16 @@ export class PaymentController {
   @ResMsg('fees.success.paymentRecorded')
   async record(@Body() body: CreatePaymentDto, @User() user: { id: string }) {
     return this.paymentService.record(body, user.id);
+  }
+
+  @Post('/family')
+  @CanSchoolWide('create:payments')
+  @Validate(createFamilyPaymentDto)
+  @McpTool({ description: 'Record one payment by a parent for several of their children, with one family receipt. Each child gets its own payment with explicit installment allocations; the whole receipt is refused if any child is not linked to the parent.', confirm: { level: 'warning', message: 'confirm.payments.record' } })
+  @ResMsg('fees.success.paymentRecorded')
+  // Not `recordFamily`: no tool name may begin another (`payments_record`).
+  async payFamily(@Body() body: CreateFamilyPaymentDto, @User() user: { id: string }) {
+    return this.paymentService.recordFamily(body, user.id);
   }
 
   @Put('/:id')

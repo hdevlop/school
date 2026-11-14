@@ -120,6 +120,7 @@ export {
   paymentRef,
   paymentStatusEnum,
 } from '../../modules/financial/payments/paymentSchema';
+export { familyReceipts, familyReceiptRef } from '../../modules/financial/payments/familyReceiptSchema';
 export {
   payslips,
   payslipRef,

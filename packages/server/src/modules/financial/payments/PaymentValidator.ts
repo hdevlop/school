@@ -79,6 +79,28 @@ export function computeIdempotencyHash(payload: Record<string, any>): string {
   return createHash('sha256').update(JSON.stringify(filtered)).digest('hex');
 }
 
+const FAMILY_FIELDS = [
+  'parentId', 'paymentMethod', 'paymentDate', 'checkNumber', 'checkDueDate', 'checkBank',
+  'transactionRef', 'notes',
+];
+
+/** A retried family payment hashes the same whatever order its children or allocations came in. */
+export function computeFamilyIdempotencyHash(payload: Record<string, any>): string {
+  const filtered: Record<string, any> = {};
+  for (const key of FAMILY_FIELDS) {
+    if (payload[key] !== undefined) filtered[key] = payload[key];
+  }
+  filtered.children = [...(payload.children ?? [])]
+    .map((child) => ({
+      studentId: child.studentId,
+      allocations: [...(child.allocations ?? [])]
+        .map((allocation) => ({ feeId: allocation.feeId, number: Number(allocation.number), amount: toCents(allocation.amount) }))
+        .sort((a, b) => `${a.feeId}:${a.number}`.localeCompare(`${b.feeId}:${b.number}`)),
+    }))
+    .sort((a, b) => String(a.studentId).localeCompare(String(b.studentId)));
+  return createHash('sha256').update(JSON.stringify(filtered)).digest('hex');
+}
+
 @Service()
 export class PaymentValidator {
   @I18n('fees.errors') private ft!: (key: string) => string;
@@ -133,6 +155,50 @@ export class PaymentValidator {
     // FIX: SEC-008 — crossing the check boundary requires a new receipt lifecycle.
     if (requestedMethod && (previousMethod === 'check') !== (requestedMethod === 'check')) {
       Err(409, this.pt('methodChangeNeedsNewReceipt'));
+    }
+  }
+
+  /** The parent exists and every child on the receipt is linked to them. */
+  async validateFamily(parentId: string, studentIds: string[]) {
+    if (!(await this.paymentRepository.parentExists(parentId))) {
+      Err(404, this.pt('familyParentNotFound'));
+    }
+    const linked = new Set(await this.paymentRepository.getStudentIdsLinkedToParent(parentId, studentIds));
+    if (studentIds.some((studentId) => !linked.has(studentId))) {
+      Err(400, this.pt('familyStudentNotLinked'));
+    }
+  }
+
+  async checkFamilyReceiptExists(id: string) {
+    const receipt = await this.paymentRepository.getFamilyReceiptById(id);
+    if (!receipt) Err(404, this.pt('familyReceiptNotFound'));
+    return receipt!;
+  }
+
+  /** Same contract as `findByIdempotencyKey`, for family receipts. */
+  async findFamilyByIdempotencyKey(key: string, payloadHash: string) {
+    const existing = await this.paymentRepository.getFamilyReceiptByIdempotencyKey(key);
+    if (!existing) return null;
+    if (existing.idempotencyHash !== payloadHash) {
+      Err(409, this.pt('idempotencyKeyConflict'));
+    }
+    return existing;
+  }
+
+  /**
+   * An edit to one child's payment applies to the whole receipt. Two edits
+   * cannot: replacing a cheque with cash writes a new receipt per payment, and
+   * each payment keeps the number derived from the family receipt.
+   */
+  ensureFamilyEditable(
+    previous: { paymentMethod: string; receiptNumber?: string | null },
+    data: { paymentMethod?: string; receiptNumber?: string | null },
+  ) {
+    if (previous.paymentMethod === 'check' && data.paymentMethod && data.paymentMethod !== 'check') {
+      Err(409, this.pt('familyMethodChangeNeedsNewReceipt'));
+    }
+    if (data.receiptNumber !== undefined && (data.receiptNumber ?? null) !== (previous.receiptNumber ?? null)) {
+      Err(409, this.pt('familyReceiptNumberFixed'));
     }
   }
 

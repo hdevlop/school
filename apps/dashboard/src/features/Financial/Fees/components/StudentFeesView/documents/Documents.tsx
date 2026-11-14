@@ -11,13 +11,18 @@ import { useTranslation } from 'najm-i18n/react';
 export const Documents = ({ studentId }) => {
   const { t } = useTranslation();
   const { currency, displayDateOnly, majorMoney } = useSchoolFormat();
-  const { printReceipt, isReceiptLoading } = usePrintReceipt();
+  const { printReceipt, printFamilyReceipt, isReceiptLoading } = usePrintReceipt();
   const { studentPayments, isStudentPaymentsLoading } = usePayments({ studentId, enabled: false });
 
   const payments = Array.isArray(studentPayments) ? studentPayments : [];
   const completedPayments = payments.filter((p) => p.status === 'completed');
 
   const handlePrint = (payment) => {
+    // Paid with brothers and sisters: the receipt the parent was handed.
+    if (payment.familyReceiptId) {
+      printFamilyReceipt({ familyReceiptId: payment.familyReceiptId, currency });
+      return;
+    }
     printReceipt({
       paymentId: payment.id,
       receiptNumber: payment.receiptNumber ?? payment.id,
@@ -89,7 +94,9 @@ export const Documents = ({ studentId }) => {
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900">
-                      {t('payments.dialogs.receiptNumber', { receiptNumber: payment.receiptNumber ?? payment.id })}
+                      {payment.familyReceiptNumber
+                        ? t('payments.family.receiptNumber', { receiptNumber: payment.familyReceiptNumber })
+                        : t('payments.dialogs.receiptNumber', { receiptNumber: payment.receiptNumber ?? payment.id })}
                     </p>
                     <p className="text-sm text-gray-500">
                       {displayDateOnly(payment.paymentDate)} &nbsp;·&nbsp;{' '}

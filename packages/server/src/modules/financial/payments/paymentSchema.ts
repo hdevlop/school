@@ -1,4 +1,4 @@
-import { date, pgEnum, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
+import { date, index, pgEnum, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 import {
@@ -12,6 +12,7 @@ import {
 } from '../../../database/shared';
 import { getEnumValues } from '../../../shared/enums';
 import { studentRef } from '../../students/studentSchema';
+import { familyReceiptRef } from './familyReceiptSchema';
 
 export const paymentStatusEnum = pgEnum('paymentStatus', getEnumValues('paymentStatus'));
 
@@ -32,6 +33,8 @@ export const payments = pgTable('payments', {
   voidedBy: actionByRef('voided_by'),
   transactionRef: text('transaction_ref'),
   receiptNumber: text('receipt_number').unique(),
+  // Set when this payment is one child's part of a family receipt.
+  familyReceiptId: familyReceiptRef('set null'),
   status: paymentStatusEnum('status').default('completed'),
   processedBy: processedByRef(),
   idempotencyKey: text('idempotency_key'),
@@ -42,6 +45,7 @@ export const payments = pgTable('payments', {
   paymentsIdempotencyKeyUnique: uniqueIndex('payments_idempotency_key_unique')
     .on(table.idempotencyKey)
     .where(sql`${table.idempotencyKey} IS NOT NULL`),
+  paymentsFamilyReceiptIdx: index('payments_family_receipt_idx').on(table.familyReceiptId),
 }));
 
 export const paymentRef = createRef('payment_id', () => payments.id);

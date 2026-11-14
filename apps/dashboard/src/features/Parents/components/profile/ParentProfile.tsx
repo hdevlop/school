@@ -47,6 +47,7 @@ import ParentAttentionCard from './ParentAttentionCard';
 import ParentDetailsTab from './ParentDetailsTab';
 import { FamilyLinkButton } from '../FamilyLinkActions';
 import { avatarVersion } from '@/lib/avatarVersion';
+import { useFamilyPayment } from '@/features/Financial/Payment/hooks/useFamilyPayment';
 
 const TABS = ['overview', 'details'] as const;
 type ParentTab = (typeof TABS)[number];
@@ -107,6 +108,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
   const { openDialog } = useDialog();
   const { can } = usePermissions();
   const { updateParent, isUpdating } = useParents({ enabled: false });
+  const { openFamilyPayment } = useFamilyPayment();
   const [tab, setTab] = useState<ParentTab>('overview');
   const locale = language === 'fr' ? 'fr-FR' : language === 'ar' ? 'ar-MA' : 'en-US';
   const text = (key: string, params?: TranslationParams) =>
@@ -674,9 +676,21 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                     </div>
                   </div>
 
-                  <NCardFooter className="mt-auto">
+                  <NCardFooter className="mt-auto flex-col gap-2">
+                    {/* Several children: one visit, one receipt for all of them. */}
+                    {children.length > 1 && can('create:payments') && (
+                      <NButton
+                        type="button"
+                        className="w-full gap-2"
+                        onClick={() => openFamilyPayment({ id: parent.id, name: parent.name }, children)}
+                      >
+                        <UsersRound className="size-4" />
+                        {t('payments.family.open')}
+                      </NButton>
+                    )}
                     <NButton
                       type="button"
+                      variant={children.length > 1 && can('create:payments') ? 'outline' : undefined}
                       className="w-full gap-2"
                       onClick={() =>
                         children.length === 1

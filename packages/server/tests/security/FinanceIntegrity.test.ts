@@ -187,7 +187,8 @@ describe('SEC-007 cancelled installment lifecycle', () => {
   it('does not settle a check or activate credit against a cancelled target', async () => {
     const h = cancelledAllocationHarness();
     const effects: string[] = [];
-    const service = new PaymentService({ getByIdForUpdate: async () => ({ paymentMethod: 'check', status: 'deposited' }),
+    const service = new PaymentService({ getById: async () => ({ paymentMethod: 'check', status: 'deposited' }),
+      getByIdForUpdate: async () => ({ paymentMethod: 'check', status: 'deposited' }),
       update: async () => effects.push('update') } as any, h.pv, {} as any,
       { ...h.allocRepo, getByPaymentId: async () => [{ installmentId: h.row.id, feeId: 'fee', installment: { number: 2 }, amount: '100' }] } as any,
       {} as any, h.instRepo as any, {} as any,

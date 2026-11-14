@@ -14,12 +14,20 @@ export const usePaymentsTableColumns = (feeYear?: string) => {
       accessorKey: "receiptNumber",
       header: t('payments.table.receiptNumber'),
       enableSorting: true,
-      cell: ({ getValue }: any) => {
+      cell: ({ getValue, row }: any) => {
         const receiptNumber = getValue();
+        const familyReceiptNumber = row.original?.familyReceiptNumber;
         return receiptNumber ? (
-          <span className="font-mono text-sm font-medium text-gray-900">
-            {receiptNumber}
-          </span>
+          <div className="flex flex-col">
+            <span className="font-mono text-sm font-medium text-gray-900">
+              {receiptNumber}
+            </span>
+            {familyReceiptNumber && (
+              <span className="text-xs text-muted-foreground">
+                {t('payments.family.receiptNumber', { receiptNumber: familyReceiptNumber })}
+              </span>
+            )}
+          </div>
         ) : (
           <span className="text-gray-400">{t('common.notAvailable')}</span>
         );

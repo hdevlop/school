@@ -39,6 +39,21 @@ export const recordPaymentApi = async (data) => {
   return res.data;
 };
 
+/** One parent paying for several children: one family receipt, one payment per child. */
+export const recordFamilyPaymentApi = async (data) => {
+  const payload = { ...data };
+  if (!payload.idempotencyKey) {
+    payload.idempotencyKey = crypto.randomUUID();
+  }
+  const res = await api.post('/payments/family', payload);
+  return res.data;
+};
+
+export const getFamilyReceiptApi = async (id: string) => {
+  const res = await api.get(`/payments/family/${id}`);
+  return res.data;
+};
+
 export const updatePaymentApi = async (data) => {
   const { id, ...updateData } = data;
   const res = await api.put(`/payments/${id}`, updateData);

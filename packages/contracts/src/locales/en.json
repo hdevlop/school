@@ -3896,7 +3896,12 @@
       "noInstallmentsMatched": "No installments matched the requested allocation targets",
       "installmentNotFoundForFee": "Installment #{{number}} not found for fee {{feeId}}",
       "allocationExceedsAvailable": "Allocation of {{amount}} exceeds available {{available}} for installment #{{number}}",
-      "idempotencyKeyConflict": "This idempotency key was already used for another payment"
+      "idempotencyKeyConflict": "This idempotency key was already used for another payment",
+      "familyParentNotFound": "Parent not found.",
+      "familyStudentNotLinked": "Every child on a family receipt must be linked to this parent.",
+      "familyReceiptNotFound": "Family receipt not found.",
+      "familyMethodChangeNeedsNewReceipt": "This payment is on a family receipt. To replace its check, void the family receipt and record the payment again.",
+      "familyReceiptNumberFixed": "The receipt number of a payment on a family receipt cannot be changed."
     },
     "validation": {
       "amountRequired": "Payment amount is required",
@@ -4056,6 +4061,23 @@
       "payAllOverdue": "Pay all overdue ({{amount}})",
       "oldestFirst": "Oldest first",
       "clearAll": "Clear all"
+    },
+    "family": {
+      "title": "Family payment",
+      "open": "Family payment",
+      "openForSiblings": "Pay for the family",
+      "subtitle": "{{parent}} · children: {{number}}",
+      "selectChildren": "Select what each child pays",
+      "payAllDue": "Everything due, all children ({{amount}})",
+      "payAllOverdue": "All overdue, all children ({{amount}})",
+      "childSelected": "Selected: {{amount}}",
+      "nothingDue": "Nothing left to pay this year",
+      "loadFailed": "This child's fees could not be loaded.",
+      "noChildren": "No children are linked to this parent.",
+      "receiptNumber": "Family receipt {{receiptNumber}}",
+      "childrenPaid": "Children paid: {{number}}",
+      "sharedReceiptNote": "On family receipt {{receiptNumber}}: voiding, refunding or changing the check applies to every child on it.",
+      "siblings": "Brothers and sisters: {{names}}"
     }
   },
   "transport": {
@@ -7303,7 +7325,9 @@
       "debitCard": "Debit card",
       "online": "Online payment",
       "mobilePayment": "Mobile payment"
-    }
+    },
+    "payer": "Paid by",
+    "subtotal": "Subtotal"
   },
   "validationMessages": {
     "unknownBirthplaceId": "Choose a valid birthplace.",
@@ -7557,7 +7581,10 @@
     "schoolAddressRequired": "School address is required",
     "examPlanningMonth": "Invalid month, dates or duplicate entry IDs",
     "examPlanningJsonLimit": "JSON file exceeds 5 MB",
-    "atMostThreePhoneNumbers": "Enter at most three phone numbers"
+    "atMostThreePhoneNumbers": "Enter at most three phone numbers",
+    "familyChildRequired": "Select at least one child to pay for",
+    "familyTooManyChildren": "Too many children on one receipt",
+    "familyDuplicateChild": "Each child can appear only once on a receipt"
   },
   "academic": {
     "accountantAssignmentOptional": "Choose one or more cycles, or leave it empty for the whole school.",

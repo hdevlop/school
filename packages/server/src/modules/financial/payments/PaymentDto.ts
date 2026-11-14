@@ -47,6 +47,49 @@ export const createPaymentDto = paymentBaseSchema.omit({ status: true, settledDa
   }
 });
 
+// One parent paying for several children: one receipt, one payment per child.
+// Each child's payment is exactly what its installments take; change is handed
+// back at the desk, never kept as credit.
+const familyChildSchema = z.object({
+  studentId: requiredId,
+  allocations: z.array(paymentAllocationSchema).min(1, 'At least one allocation is required'),
+});
+
+export const createFamilyPaymentDto = paymentBaseSchema.pick({
+  paymentMethod: true,
+  paymentDate: true,
+  checkNumber: true,
+  checkDueDate: true,
+  checkBank: true,
+  transactionRef: true,
+  notes: true,
+}).extend({
+  parentId: requiredId,
+  children: z.array(familyChildSchema).min(1, 'Select at least one child to pay for').max(20, 'Too many children on one receipt'),
+  idempotencyKey: z.string().uuid().optional(),
+}).superRefine((value, ctx) => {
+  const studentIds = value.children.map((child) => child.studentId);
+  if (new Set(studentIds).size !== studentIds.length) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Each child can appear only once on a receipt', path: ['children'] });
+  }
+  for (const [index, child] of value.children.entries()) {
+    const cents = child.allocations.reduce((sum, allocation) => sum + Math.round(allocation.amount * 100), 0);
+    if (cents > 100_000_000) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Amount too large', path: ['children', index, 'allocations'] });
+    }
+  }
+  if (value.paymentMethod === 'check') {
+    if (!value.checkNumber) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'checkNumber is required for check payments', path: ['checkNumber'] });
+    }
+    if (!value.checkDueDate) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'checkDueDate is required for check payments', path: ['checkDueDate'] });
+    }
+  }
+});
+
+export const familyReceiptIdParam = z.object({ id: z.string().min(1) });
+
 export const updatePaymentDto = paymentBaseSchema
   .omit({ amount: true, processedBy: true, status: true })
   .partial()
@@ -81,6 +124,7 @@ export const topPayingStudentsQueryDto = revenueQuerySchema.extend({
 }).default({});
 
 export type CreatePaymentDto = z.infer<typeof createPaymentDto>;
+export type CreateFamilyPaymentDto = z.infer<typeof createFamilyPaymentDto>;
 export type UpdatePaymentDto = z.infer<typeof updatePaymentDto>;
 export type RefundPaymentDto = z.infer<typeof refundPaymentDto>;
 export type VoidPaymentDto = z.infer<typeof voidPaymentDto>;

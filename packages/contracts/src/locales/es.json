@@ -4030,7 +4030,12 @@
       "noInstallmentsMatched": "Ninguna cuota coincide con las asignaciones solicitadas",
       "installmentNotFoundForFee": "Cuota n.º {{number}} no encontrada para la tarifa {{feeId}}",
       "allocationExceedsAvailable": "La asignación de {{amount}} supera el disponible de {{available}} para la cuota n.º {{number}}",
-      "idempotencyKeyConflict": "Esta clave de idempotencia ya se usó para otro pago"
+      "idempotencyKeyConflict": "Esta clave de idempotencia ya se usó para otro pago",
+      "familyParentNotFound": "Padre o tutor no encontrado.",
+      "familyStudentNotLinked": "Cada hijo de un recibo familiar debe estar vinculado a este padre o tutor.",
+      "familyReceiptNotFound": "Recibo familiar no encontrado.",
+      "familyMethodChangeNeedsNewReceipt": "Este pago forma parte de un recibo familiar. Para reemplazar su cheque, anule el recibo familiar y registre el pago de nuevo.",
+      "familyReceiptNumberFixed": "No se puede cambiar el número de recibo de un pago de un recibo familiar."
     },
     "filters": {
       "filterByPaymentMethod": "Filtrar por método de pago",
@@ -4121,6 +4126,23 @@
       "checkNumberRequired": "Introduce el número del cheque",
       "checkDueDateRequired": "Introduce la fecha de vencimiento del cheque",
       "paymentDateRequired": "Introduce la fecha del pago"
+    },
+    "family": {
+      "title": "Pago familiar",
+      "open": "Pago familiar",
+      "openForSiblings": "Pagar por la familia",
+      "subtitle": "{{parent}} · hijos: {{number}}",
+      "selectChildren": "Elija lo que paga cada hijo",
+      "payAllDue": "Todo lo pendiente, todos los hijos ({{amount}})",
+      "payAllOverdue": "Todo lo vencido, todos los hijos ({{amount}})",
+      "childSelected": "Seleccionado: {{amount}}",
+      "nothingDue": "Nada pendiente este año",
+      "loadFailed": "No se pudieron cargar las cuotas de este hijo.",
+      "noChildren": "No hay hijos vinculados a este padre o tutor.",
+      "receiptNumber": "Recibo familiar {{receiptNumber}}",
+      "childrenPaid": "Hijos pagados: {{number}}",
+      "sharedReceiptNote": "Recibo familiar {{receiptNumber}}: anular, reembolsar o cambiar el cheque se aplica a todos los hijos del recibo.",
+      "siblings": "Hermanos: {{names}}"
     }
   },
   "reports": {
@@ -6596,7 +6618,9 @@
       "debitCard": "Tarjeta de débito",
       "online": "Pago en línea",
       "mobilePayment": "Pago móvil"
-    }
+    },
+    "payer": "Pagado por",
+    "subtotal": "Subtotal"
   },
   "validationMessages": {
     "unknownBirthplaceId": "Elige un lugar de nacimiento válido.",
@@ -6850,7 +6874,10 @@
     "schoolAddressRequired": "La dirección de la escuela es obligatoria",
     "examPlanningMonth": "Mes, fechas o identificadores de examen duplicados no válidos",
     "examPlanningJsonLimit": "El archivo JSON supera los 5 MB",
-    "atMostThreePhoneNumbers": "Introduce como máximo tres números de teléfono"
+    "atMostThreePhoneNumbers": "Introduce como máximo tres números de teléfono",
+    "familyChildRequired": "Seleccione al menos un hijo para pagar",
+    "familyTooManyChildren": "Demasiados hijos en un mismo recibo",
+    "familyDuplicateChild": "Cada hijo solo puede aparecer una vez en un recibo"
   },
   "academic": {
     "accountantAssignmentOptional": "Elija uno o varios ciclos, o déjelo vacío para toda la escuela.",

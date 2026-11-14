@@ -13,8 +13,15 @@ import { usePaymentStore } from '../../store/paymentStore';
 import { toast } from 'sonner';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { buildFamilyChildren } from '../../utils/familyPayment';
 
-export const PaymentForm = ({ studentId }) => {
+interface PaymentFormProps {
+    studentId?: string;
+    /** A family payment: the parent paying, and the children in the order shown. */
+    family?: { parentId: string; childOrder: string[] };
+}
+
+export const PaymentForm = ({ studentId, family }: PaymentFormProps) => {
     const { t } = useTranslation();
     const { majorMoney } = useSchoolFormat();
     const paymentDetailsSchema = useMemo(() => createPaymentSchemas(t).details, [t]);
@@ -50,6 +57,35 @@ export const PaymentForm = ({ studentId }) => {
 
         if (!formData.amount || cashReceived <= 0) {
             toast.error(t('payments.errors.amountRequired'));
+            return;
+        }
+
+        if (family) {
+            // Each child pays exactly what is selected for them; any change is
+            // handed back, as on a single child's payment.
+            const children = buildFamilyChildren(selectedInstallments, family.childOrder);
+            if (children.length === 0) {
+                toast.error(t('payments.errors.amountRequired'));
+                return;
+            }
+            if (totalAllocated > cashReceived) {
+                toast.error(t('payments.errors.insufficientCash', { amount: majorMoney(totalAllocated - cashReceived) }));
+                return;
+            }
+            const { amount: _received, ...details } = formData;
+            submitting.current = true;
+            try {
+                await pop({
+                    ...details,
+                    parentId: family.parentId,
+                    children,
+                    idempotencyKey: idempotencyKey.current,
+                });
+            } catch {
+                // The family payment hook already showed the refusal.
+            } finally {
+                submitting.current = false;
+            }
             return;
         }
 
