@@ -15,6 +15,8 @@ type Params = {
   sourceId: string;
   setSourceId: (v: string) => void;
   sourceOptions: Option[];
+  /** Extra class on the exam picker's wrapper. */
+  sourceClassName?: string;
   classOptions: Option[];
   sectionOptions: Option[];
   subjectOptions: Option[];
@@ -29,7 +31,7 @@ export const useGradesTableFilters = (params: Params) => {
   const {
     classId, isAllClasses, sectionId, subjectId,
     setClassId, setSectionId, setSubjectId,
-    sourceType, sourceId, setSourceId, sourceOptions,
+    sourceType, sourceId, setSourceId, sourceOptions, sourceClassName,
     classOptions, sectionOptions, subjectOptions,
     isClassesLoading, isSectionsLoading, isSubjectsLoading, isSourceLoading,
   } = params;
@@ -89,7 +91,7 @@ export const useGradesTableFilters = (params: Params) => {
       onChange: setSourceId,
       options: sourceOptions,
       disabled: isAllClasses || !sectionId || isSourceLoading || sourceOptions.length === 0,
-      className: 'w-full lg:w-56',
+      className: `w-full lg:w-56 ${sourceClassName ?? ''}`,
     });
     base.push({
       name: 'studentName',
@@ -99,7 +101,7 @@ export const useGradesTableFilters = (params: Params) => {
     });
     return base;
   }, [
-    t, classOptions, sectionOptions, subjectOptions, sourceOptions,
+    t, classOptions, sectionOptions, subjectOptions, sourceOptions, sourceClassName,
     classId, isAllClasses, sectionId, subjectId, sourceType, sourceId,
     setClassId, setSectionId, setSubjectId,
     setSourceId,

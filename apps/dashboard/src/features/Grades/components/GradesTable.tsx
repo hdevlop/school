@@ -6,12 +6,15 @@ import type { GradeDraft } from '../store/gradeDraftStore';
 import { toast } from 'sonner';
 import { useAuth } from 'najm-auth/client/react';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
-import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, useMediaQuery } from 'najm-kit';
+import { NButton, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, useMediaQuery } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import GradesHeader from './GradesHeader';
 import GradeRosterCard from './GradeRosterCard';
 import { useTeacherOverview } from '@/features/Dashboard/hooks/useTeacherDashboard';
-import { LoaderCircle } from 'lucide-react';
+import { Eye, LoaderCircle, Printer } from 'lucide-react';
+import { useNThemeBrandingSlot } from 'najm-theme/react';
+import { buildMassarDocument } from '@/features/Massar/config/massarDocument';
+import { printPlanningDocument } from '@/features/Assessments/planning/planningDocument';
 import { useGrades, useSourceGrades } from '../hooks/useGrades';
 import { useMassarGrades } from '../hooks/useMassarGrades';
 import { examSourcesWithMassar, massarMarkFromGrade, massarSourceLabels } from '../config/massarGradeSources';
@@ -35,6 +38,13 @@ import { useTranslation } from 'najm-i18n/react';
 import { EMPTY_GRADE_DRAFT, gradeDraftKey, useGradeDraftStore } from '../store/gradeDraftStore';
 import { GradeRosterCardSkeleton } from '@/shared/PersonCardSkeleton';
 import GradesSheet, { type GradeExamSheetProps } from './GradesSheet';
+import GradeStudentMenu from './GradeStudentMenu';
+import GradePaperPreview from './GradePaperPreview';
+import { MobileFeatureActions } from '@/shared/FeatureActions';
+import {
+  completionListCss, completionText, cssString, isComplete, rosterCompletion, sheetComponentCompletion,
+} from '../config/gradeCompletion';
+import styles from './GradesTable.module.css';
 
 const PASS_THRESHOLD = 50;
 /** On a desktop the exam filter picks a Massar Contrôle, whose parts the sheet shows side by side. */
@@ -62,7 +72,7 @@ const resolveGradeStatus = (marksObtained, fallback = 'pending') => {
 };
 
 function GradesTableForYear() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { can } = useViewerRole();
   const { user } = useAuth();
   const role = (user as any)?.role;
@@ -240,13 +250,16 @@ function GradesTableForYear() {
   const pickOptions = !isSheet ? sourceOptions : gridOnly ? contrôleOptions : sheetOptions;
   const selectSheetOption = useCallback((value: string) => setSourceId(sourceOfOption(value)), [sourceOfOption]);
 
-  // Nothing to pick: on a grid-only desktop the subject's newest Contrôle (the
-  // list runs oldest to newest, see examSourcesWithMassar), the one being filled
-  // in, whose grid opens straight away; otherwise the only exam for this class,
+  // Nothing to pick: with Massar, the subject's newest Contrôle (the list runs
+  // oldest to newest, see examSourcesWithMassar), the one being filled in. A
+  // desktop opens its grid straight away; a phone opens its first part, so the
+  // list can count every part of it. Otherwise the only exam for this class,
   // section and subject.
+  const opensNewestContrôle = !!massarParts?.length && !!subjectId;
   const defaultOption = !sectionId || isAllClasses ? ''
     : gridOnly ? (subjectId ? contrôleOptions.at(-1)?.value ?? '' : '')
-      : pickOptions.length === 1 ? pickOptions[0].value : '';
+      : opensNewestContrôle && contrôleOptions.length ? contrôleOptions.at(-1)!.value
+        : pickOptions.length === 1 ? pickOptions[0].value : '';
   const defaultSourceId = defaultOption ? sourceOfOption(defaultOption) : '';
   useEffect(() => {
     if (!defaultSourceId) return;
@@ -309,6 +322,8 @@ function GradesTableForYear() {
     const massarMarks = new Map((massarSheet?.marks ?? [])
       .filter(mark => mark.componentCode === massar.source?.componentCode)
       .map(mark => [mark.studentId, mark]));
+    // One remark per student for the grid's subject and Contrôle, whichever part is open.
+    const massarRemarks = new Map((massarSheet?.remarks ?? []).map(item => [item.studentId, item.remark]));
 
     const ctxTeacherId = getSourceTeacherId(selectedSource);
 
@@ -333,6 +348,7 @@ function GradesTableForYear() {
         marksObtained: massar.source ? mark?.mark ?? null : g?.marksObtained ?? null,
         status: massar.source ? (mark?.absence === 'justified' ? 'missed' : mark?.mark != null ? 'graded' : 'pending') : g?.status ?? 'pending',
         feedback: g?.feedback ?? '',
+        remark: massar.source ? massarRemarks.get(s.id) ?? '' : '',
         assessmentId: sourceType === 'assessment' ? (sourceId || null) : null,
         examId: sourceType === 'exam' && !massar.source ? (sourceId || null) : null,
         classId: getSourceClassId(selectedSource) || s.classId || (isAllClasses ? null : classId) || null,
@@ -388,6 +404,63 @@ function GradesTableForYear() {
     [baseRoster, draft, editableRow]
   );
 
+  // Progress counts only who can take a mark here: the Massar sheet's own
+  // students, or the exam's dated roster. Unknown until that list has loaded.
+  const canTakeMark = useMemo(() => {
+    if (!selectedSource) return null;
+    if (massar.source) {
+      if (!massarSheet) return null;
+      const ids = new Set(massarSheet.students.map((student) => student.id));
+      return (row) => ids.has(row.studentId);
+    }
+    if (isEligibilityLoading || !eligibleStudents) return null;
+    const sectionOf = new Map(eligibleStudents.map((student) => [student.id, student.sectionId]));
+    return (row) => sectionOf.get(row.studentId) === row.sectionId;
+  }, [selectedSource, massar.source, massarSheet, isEligibilityLoading, eligibleStudents]);
+  // Typed marks count at once, before they are saved.
+  const progress = useMemo(() => (canTakeMark ? rosterCompletion(roster, canTakeMark) : null), [roster, canTakeMark]);
+  // Every component of the open Massar sheet; the one on screen counts what is typed too.
+  const componentCompletion = useMemo(() => {
+    if (!massar.source || !massarSheet) return null;
+    const byComponent = sheetComponentCompletion(massarSheet);
+    if (progress && byComponent.has(massar.source.componentCode)) byComponent.set(massar.source.componentCode, progress);
+    return byComponent;
+  }, [massar.source, massarSheet, progress]);
+
+  // A Massar part's whole Contrôle as the admin's Massar page prints it, every
+  // part side by side, with this part's typed marks as well: printed, or
+  // looked at on the phone's read-only paper.
+  const logo = useNThemeBrandingSlot('authLogo');
+  const paperDocument = () => {
+    if (!massar.source || !massarSheet) return '';
+    const code = massar.source.componentCode;
+    const typed = baseRoster.filter((row) => draft[row.studentId] && editableRow(row))
+      .map((row) => massarMarkFromGrade(row.studentId, code, { ...row, ...draft[row.studentId] }));
+    const typedIds = new Set(typed.map((mark) => mark.studentId));
+    const sheet = {
+      ...massarSheet,
+      marks: [...massarSheet.marks.filter((mark) => mark.componentCode !== code || !typedIds.has(mark.studentId)), ...typed],
+    };
+    return buildMassarDocument([sheet], {
+      language, logo, title: t('massar.flow.paperTitle'), student: t('massar.student'),
+      teacher: t('massar.teacher'), term: t('massar.term'), exam: t('massar.exam'),
+    });
+  };
+  const [isPrinting, setIsPrinting] = useState(false);
+  const printSheet = async () => {
+    const html = paperDocument();
+    if (!html) return;
+    // The window opens within the click, before anything is awaited, so no popup blocker stops it.
+    setIsPrinting(true);
+    try {
+      if (!await printPlanningDocument(html)) toast.error(t('insurance.popupBlocked'));
+    } finally {
+      setIsPrinting(false);
+    }
+  };
+  // The paper is drawn when it opens, from the marks as they are then.
+  const [paperHtml, setPaperHtml] = useState<string | null>(null);
+
   const applyDraft = useCallback((studentId: string, patch: Record<string, any>) => {
     patchDraft(draftKey, studentId, patch);
   }, [patchDraft, draftKey]);
@@ -414,6 +487,34 @@ function GradesTableForYear() {
     if (!canEdit(row)) return;
     applyDraft(row.studentId, { marksObtained: null, status: 'missed' });
   }, [canEdit, applyDraft]);
+
+  // A long press or a double tap on a student opens their menu: absent, clear the mark, remark.
+  const [menuStudentId, setMenuStudentId] = useState<string | null>(null);
+  const openStudentMenu = useCallback((row) => setMenuStudentId(row.studentId), []);
+  const menuRow = menuStudentId ? roster.find((row) => row.studentId === menuStudentId) ?? null : null;
+  // Absent replaces whatever mark was there, as the sheet's "A" key does; undone, the student waits for a mark.
+  const toggleAbsent = useCallback((row) => (
+    (row.status || 'pending') === 'missed' ? handleStatusToggle(row) : handleMarkAbsent(row)
+  ), [handleStatusToggle, handleMarkAbsent]);
+  const clearMark = useCallback((row) => {
+    if (!canEdit(row)) return;
+    applyDraft(row.studentId, { marksObtained: null, status: 'pending' });
+  }, [canEdit, applyDraft]);
+  // A Massar grid keeps one remark per student for its subject and Contrôle; one of School's exams keeps
+  // it as the grade's feedback, saved with the marks.
+  const saveRemark = async (row, remark: string) => {
+    if (!massar.source) {
+      handleCellEdit(row, 'feedback', remark);
+      return;
+    }
+    try {
+      await massar.saveRemark({ sheetId: massar.source.sheetId, studentId: row.studentId, remark });
+      toast.success(t(remark ? 'grades.studentMenu.remarkSaved' : 'grades.studentMenu.remarkRemoved'));
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || err?.message || t('grades.errors.saveFailed'));
+      throw err;
+    }
+  };
 
   const hasChanges = Object.keys(draft).length > 0;
   const canSubmit = !!selectedSource && !isStudentsLoading && !isEligibilityLoading && !isMassarSheetLoading && !rosterError && !isSubmitting
@@ -495,6 +596,20 @@ function GradesTableForYear() {
   // On a phone every filter stays on screen, three to a row: class, section
   // and subject, then the exam on a row of its own, where its long Massar
   // name fits, then the student search.
+  // The phone lists the open sheet's components one by one: each says how far
+  // it got, at the right edge of the picker and of each option in its list.
+  const completionCss = useMemo(() => (componentCompletion && !isSheet
+    ? completionListCss(t('grades.toolbar.searchExam'), pickOptions.flatMap((option) => {
+      const item = filteredSources.find((source) => source.id === option.value);
+      return item && 'sheetId' in item && item.sheetId === massarSheet?.sheet.id
+        ? [{ label: option.label, completion: componentCompletion.get(item.componentCode) }]
+        : [];
+    }))
+    : ''), [componentCompletion, isSheet, pickOptions, filteredSources, massarSheet, t]);
+  const completionStyle = !isSheet && progress && progress.total > 0 ? {
+    '--grade-completion': cssString(completionText(progress)),
+    ...(isComplete(progress) ? { '--grade-completion-color': 'var(--color-emerald-600, #059669)' } : {}),
+  } as React.CSSProperties : undefined;
   const gradeFilters = useGradesTableFilters({
     classId, isAllClasses, sectionId, subjectId,
     // The filter row is the deliberate half: every change made here drops the
@@ -506,6 +621,7 @@ function GradesTableForYear() {
     sourceId: isSheet && selectedSource && 'sheetId' in selectedSource ? `${MASSAR_SHEET_OPTION}${selectedSource.sheetId}` : sourceId,
     setSourceId: isSheet ? selectSheetOption : setSourceId,
     sourceOptions: pickOptions,
+    sourceClassName: styles.sourceFilter,
     classOptions, sectionOptions, subjectOptions,
     isClassesLoading, isSectionsLoading, isSubjectsLoading,
     isSourceLoading: sourceType === 'assessment' ? isAssessmentsLoading : isExamsLoading || (can('read:grades') && massar.sources.isLoading),
@@ -573,7 +689,8 @@ function GradesTableForYear() {
   const subtitleTitle = selectedSource && !massarSheetId ? ` · ${selectedSource.title}` : '';
 
   return (
-    <div className='flex flex-col gap-2 w-full h-full min-h-0'>
+    <div className='flex flex-col gap-2 w-full h-full min-h-0' style={completionStyle}>
+      {completionCss ? <style>{completionCss}</style> : null}
       <NPageHeader
         icon={FEATURE_ICONS.grades}
         title={t('grades.messages.pageTitle')}
@@ -623,6 +740,22 @@ function GradesTableForYear() {
             {massar.source && massarSheet && !massarSheet.canEdit ? (
               <p role="status" className="text-xs text-muted-foreground">{t('massar.readOnly')}</p>
             ) : null}
+            {/* The phone's ⋮ menu: the Massar paper, as the admin prints it, to
+                print or to look at whole, every part side by side. */}
+            {massarSheet ? (
+              <MobileFeatureActions>
+                <div className="md:hidden">
+                  <NButton type="button" variant="ghost" disabled={isPrinting} onClick={() => { void printSheet(); }}>
+                    <Printer aria-hidden="true" className="size-4" />
+                    {t('insurance.print')}
+                  </NButton>
+                  <NButton type="button" variant="ghost" onClick={() => setPaperHtml(paperDocument())}>
+                    <Eye aria-hidden="true" className="size-4" />
+                    {t('grades.paperPreview')}
+                  </NButton>
+                </div>
+              </MobileFeatureActions>
+            ) : null}
             <GradesHeader
               stats={stats}
               failed={hasFailedSave}
@@ -635,10 +768,15 @@ function GradesTableForYear() {
         error={tableError}
         renderError={renderTableError}
         showAddButton={false}
+        // A Massar part prints the Massar paper instead (the menu item above).
+        showPrintButton={!massar.source}
         showViewToggle={false}
         defaultMode='table'
         renderCardSkeleton={GradeRosterCardSkeleton}
         renderCard={renderRosterCard}
+        // A long press or a double tap on a student opens their menu.
+        onRowLongPress={openStudentMenu}
+        onRowDoubleClick={openStudentMenu}
         dynamicHeight={true}
         renderEmpty={() => (
           <NEmptyState
@@ -657,6 +795,27 @@ function GradesTableForYear() {
         )}
       />
       )}
+      {!isSheet ? (
+        <GradeStudentMenu
+          row={menuRow}
+          onClose={() => setMenuStudentId(null)}
+          remark={(massar.source ? menuRow?.remark : menuRow?.feedback) ?? ''}
+          canRemark={!!menuRow?.editable}
+          savingRemark={massar.isSavingRemark}
+          onToggleAbsent={toggleAbsent}
+          onClearMark={clearMark}
+          onSaveRemark={saveRemark}
+        />
+      ) : null}
+      {/* Opened from the phone's menu, and kept open when the phone turns sideways
+          (where the wider screen would otherwise switch to the desktop's grid). */}
+      {paperHtml !== null ? (
+        <GradePaperPreview
+          html={paperHtml}
+          title={massarSheet ? `${massarSheet.sheet.subjectName} · ${massarSheet.round.termLabel} · ${massarSheet.round.examLabel}` : ''}
+          onClose={() => setPaperHtml(null)}
+        />
+      ) : null}
     </div>
   );
 }

@@ -29,8 +29,17 @@ export function useMassarGrades(sourceId: string, enabled: boolean) {
       await client.invalidateQueries({ queryKey: yearScopedKey('massar', scope, `${NOTES_MASSAR_API}/sheets/${encodeURIComponent(input.sheetId)}`) });
     },
   });
+  // A remark is written on its own, from the student's menu, and the grid read again to show it.
+  const remark = useMutation({
+    mutationFn: (input: { sheetId: string; studentId: string; remark: string }) => withAcademicYear(scope.academicYear,
+      () => massarPut(`/sheets/${encodeURIComponent(input.sheetId)}/remarks`, { studentId: input.studentId, remark: input.remark }, NOTES_MASSAR_API)),
+    onSuccess: async (_data, input) => {
+      await client.invalidateQueries({ queryKey: yearScopedKey('massar', scope, `${NOTES_MASSAR_API}/sheets/${encodeURIComponent(input.sheetId)}`) });
+    },
+  });
   return {
     sources: { ...sources, data: enabled ? sources.data : null, error: enabled ? sources.error : null },
     source, sheet, save: save.mutateAsync, isSaving: save.isPending,
+    saveRemark: remark.mutateAsync, isSavingRemark: remark.isPending,
   };
 }

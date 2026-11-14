@@ -110,7 +110,7 @@ export function GradeMarkField({ value, total, disabled, label, onChange, inputC
         onChange={event => update(event.target.value)}
         onKeyDown={keyDown}
       />
-      {!inputClassName && total != null && <span className="text-xs text-muted-foreground">/ {Number(total)}</span>}
+      {/* No "/ 10" beside each field: every mark on the list shares one scale, and a mark above it is outlined (title above). */}
     </div>
   );
 }
