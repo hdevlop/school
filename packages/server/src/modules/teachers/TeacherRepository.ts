@@ -466,16 +466,17 @@ export class TeacherRepository {
         eq(teacherAssignments.subjectId, subjectId),
       ))
       .limit(1);
-    if (!slot) {
-      await this.db.update(teacherAssignments).set({ teacherId: null, updatedAt: sql`CURRENT_TIMESTAMP` })
-        .where(eq(teacherAssignments.id, row.id));
-      return row.id;
-    }
+    // The row itself is never emptied: once records use it, the database refuses
+    // to take its teacher away (retain_academic_assignment_context, 0107). The
+    // records move to a vacant slot instead, made here when the class has none.
+    const slotId = slot?.id ?? (await this.db.insert(teacherAssignments)
+      .values({ classId: row.classId, sectionId, subjectId, teacherId: null })
+      .returning({ id: teacherAssignments.id }))[0].id;
     for (const table of [exams, assessments, attendance, routineEntries, homework, massarSheets, alerts]) {
-      await this.db.update(table).set({ teacherAssignmentId: slot.id }).where(eq(table.teacherAssignmentId, row.id));
+      await this.db.update(table).set({ teacherAssignmentId: slotId }).where(eq(table.teacherAssignmentId, row.id));
     }
     await this.db.delete(teacherAssignments).where(eq(teacherAssignments.id, row.id));
-    return slot.id;
+    return slotId;
   }
 
   async deleteAssignment(teacherId, sectionId, subjectId) {

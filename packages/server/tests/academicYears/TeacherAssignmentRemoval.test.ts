@@ -66,17 +66,24 @@ describe('the vacant slot', () => {
       statements.push(sql);
       if (sql.startsWith('select') && sql.includes('"teacher_assignments"."teacher_id" = $')) return { rows: [['ta-1', 'cm1']] };
       if (sql.startsWith('select') && sql.includes('"teacher_assignments"."teacher_id" is null')) return { rows: slot ? [['slot-1']] : [] };
+      if (sql.startsWith('insert into "teacher_assignments"')) return { rows: [['new-slot']] };
       return { rows: [] };
     }) as any;
     return { statements, repo };
   };
 
-  it('is the assignment itself, without its teacher, when the class has none yet: its records do not move', async () => {
+  // The database refuses to take the teacher off an assignment records use
+  // (retain_academic_assignment_context), so the assignment is never emptied.
+  it('is made when the class has none yet, and takes every record: the assignment is never emptied', async () => {
     const { statements, repo } = capture(false);
-    expect(await repo.vacateAssignment('teacher', 'cm1-b', 'SB01')).toBe('ta-1');
-    const writes = statements.filter((sql) => !sql.startsWith('select'));
-    expect(writes).toHaveLength(1);
-    expect(writes[0]).toMatch(/^update "teacher_assignments" set "teacher_id" = \$1/);
+    expect(await repo.vacateAssignment('teacher', 'cm1-b', 'SB01')).toBe('new-slot');
+    const writes = statements.filter((sql) => !sql.startsWith('select')).map((sql) => sql.match(/^(insert into|update|delete from) "(\w+)"/)?.slice(1).join(' '));
+    expect(writes).toEqual([
+      'insert into teacher_assignments',
+      'update exams', 'update assessments', 'update attendance', 'update routine_entries', 'update homework',
+      'update massar_sheets', 'update alerts', 'delete from teacher_assignments',
+    ]);
+    expect(statements.some((sql) => /^update "teacher_assignments"/.test(sql))).toBe(false);
   });
 
   it('takes every record of the assignment when the class already has one, and the assignment goes', async () => {
