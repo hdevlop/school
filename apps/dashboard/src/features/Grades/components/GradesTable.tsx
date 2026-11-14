@@ -364,17 +364,22 @@ function GradesTableForYear() {
     const withGrade = baseRoster.filter((r) => r.gradeId);
     const total = baseRoster.length;
     let passing = 0;
+    let scored = 0;
     let highest: number | null = null;
     let lowest: number | null = null;
     for (const r of withGrade) {
+      // An absent student has no mark to pass or fail with (School stores their grade as 0):
+      // they count as done, never in the pass rate, the highest or the lowest.
+      if (r.status === 'missed') continue;
       const pct = computePercent(r.marksObtained, r.totalMarks);
       if (pct == null) continue;
+      scored++;
       if (pct >= PASS_THRESHOLD) passing++;
       if (highest == null || pct > highest) highest = pct;
       if (lowest == null || pct < lowest) lowest = pct;
     }
-    const passRate = withGrade.length > 0 ? Math.round((passing / withGrade.length) * 100) : 0;
-    return { total, graded: withGrade.length, passing, highest, lowest, passRate };
+    const passRate = scored > 0 ? Math.round((passing / scored) * 100) : 0;
+    return { total, graded: scored, passing, highest, lowest, passRate };
   }, [baseRoster]);
 
   const isMassarSource = !!massar.source;
