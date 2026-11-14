@@ -7,6 +7,8 @@ export type PlanningDocumentOptions = {
   schoolLogo?: string | null;
   academicYear: string;
   semester: 1 | 2 | null;
+  /** Which Contrôle the calendar is for, already worded ("Contrôle 1"); printed beside the semester. */
+  control?: string | null;
   sectionId?: string;
   language: string;
   assetOrigin: string;
@@ -32,7 +34,8 @@ export function buildPlanningDocument(records: readonly PlanningAssessment[], op
   const fontBase = safeImageUrl('/fonts/assessment-planning/', options.assetOrigin);
   const locale = ['ar', 'fr', 'en', 'es'].includes(options.language) ? options.language : 'fr';
   const label = options.labels;
-  const date = (value: string, language: string, weekday = false) => new Intl.DateTimeFormat(language, weekday
+  const control = options.control ? ` &nbsp;•&nbsp; <b dir="auto">${e(options.control)}</b>` : '';
+  const date =(value: string, language: string, weekday = false) => new Intl.DateTimeFormat(language, weekday
     ? { weekday: 'long', timeZone: 'UTC' }
     : { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${value}T12:00:00Z`));
   const pages = planningClasses(records).map(cls => {
@@ -56,7 +59,7 @@ export function buildPlanningDocument(records: readonly PlanningAssessment[], op
     const sectionName = options.sectionId ? records.flatMap(targetSections).find(section => section.id === options.sectionId)?.name : '';
     return `<section class="sheet" style="--document-accent:${accent};--document-pale:${pale};--document-latin-size:${latinSize}pt;--document-arabic-size:${arabicSize}pt">
       <header class="document-header">${logo ? `<img src="${e(logo)}" alt="${e(options.schoolName)}">` : '<div class="school-identity" dir="auto">' + e(options.schoolName) + '</div>'}
-        <div class="heading"><h1 dir="auto">${e(options.title)}</h1><p><b>${e(label.semester)} ${e(semester)}</b> &nbsp;•&nbsp; ${e(label.academicYear)} : <bdi>${e(options.academicYear)}</bdi></p></div>
+        <div class="heading"><h1 dir="auto">${e(options.title)}</h1><p><b>${e(label.semester)} ${e(semester)}</b>${control} &nbsp;•&nbsp; ${e(label.academicYear)} : <bdi>${e(options.academicYear)}</bdi></p></div>
         <div class="class-badge"><small>${e(label.class)}</small><strong>${e(toOfficialClassName(cls.name))}</strong>${sectionName ? `<span>${e(sectionName)}</span>` : ''}</div>
       </header>
       <table><colgroup><col style="width:66%"><col style="width:19%"><col style="width:15%"></colgroup><thead><tr>
@@ -64,7 +67,7 @@ export function buildPlanningDocument(records: readonly PlanningAssessment[], op
         <th scope="col"><span lang="ar" dir="rtl">المادة</span><small>${e(label.subject)}</small></th>
         <th scope="col"><span lang="ar" dir="rtl">التاريخ</span><small>${e(label.date)}</small></th>
       </tr></thead>${rows}</table>
-      <footer><strong dir="auto">${e(options.schoolName)}</strong> · ${e(options.title)} · ${e(label.semester)} ${e(semester)} · ${e(options.academicYear)}</footer>
+      <footer><strong dir="auto">${e(options.schoolName)}</strong> · ${e(options.title)} · ${e(label.semester)} ${e(semester)}${options.control ? ` · ${e(options.control)}` : ''} · ${e(options.academicYear)}</footer>
     </section>`;
   }).join('');
   return `<!doctype html><html lang="${locale}" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${e(options.title)}</title><style>

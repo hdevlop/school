@@ -36,6 +36,10 @@ describe('planning selection and document', () => {
     expect(html.indexOf('>1APG<')).toBeLessThan(html.indexOf('>3APG<'));
     expect(html).toContain('rowspan="2"');
     expect(html).toContain('lang="ar" dir="rtl"');
+    expect(html).not.toContain('Contrôle 1</b>');
+    const withControl = buildPlanningDocument(records, { ...options, control: 'Contrôle 1' });
+    expect(withControl).toContain('<b>Semestre 1</b> &nbsp;•&nbsp; <b dir="auto">Contrôle 1</b>');
+    expect(withControl).toContain('Semestre 1 · Contrôle 1 · 2026/2027</footer>');
     expect(html).toContain('--document-accent:#D94F8A');
     expect(html).toContain('print-color-adjust:exact');
     expect(html).toContain('@page{size:A4 portrait');

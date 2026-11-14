@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { examPlanningMonths, examPlanningSemester, type ExamPlanningClass } from '@sms/contracts';
-import { examPlanningEntries, examPlanningRecords, initialPlanningMonth, planningMonthRange, planningTextLanguage, updatePlanningMonthDraft } from '@/features/Exams/planning/examPlanningModel';
+import { examPlanningControlNumbers, examPlanningEntries, examPlanningRecords, initialPlanningMonth, planningMonthRange, planningTextLanguage, updatePlanningMonthDraft } from '@/features/Exams/planning/examPlanningModel';
 
 const classes: ExamPlanningClass[] = [
   { id: 'ps', name: 'PS', visible: true, months: {} },
@@ -62,5 +62,29 @@ describe('exam planning dates and document selection', () => {
     expect(examPlanningEntries(cls, planningMonthRange('2026-12'), drafts)).toEqual([]);
     expect(updatePlanningMonthDraft(drafts, cls, '2026-11', cls.months['2026-11'])).toEqual({ cp: { '2026-12': [] } });
     expect(cls.months['2026-11'][0].lessons).toEqual(entry.lessons);
+  });
+});
+
+describe('exam planning Contrôle numbers', () => {
+  const year: ExamPlanningClass[] = [
+    { id: 'cp', name: 'CP', visible: true, months: {
+      '2026-11': [{ id: 'a', date: '2026-11-09', subject: 'Arabe', lessons: [] }],
+      '2027-03': [{ id: 'c', date: '2027-03-10', subject: 'Arabe', lessons: [] }],
+    } },
+    // A hidden class still makes December a Contrôle, as it does in Massar.
+    { id: 'ce1', name: 'CE1', visible: false, months: { '2026-12': [{ id: 'b', date: '2026-12-14', subject: 'Maths', lessons: [] }] } },
+  ];
+
+  it('numbers each semester month with exams in order, across every class', () => {
+    expect(examPlanningControlNumbers(year, ['2026-11-09'])).toEqual([1]);
+    expect(examPlanningControlNumbers(year, ['2026-12-14'])).toEqual([2]);
+    expect(examPlanningControlNumbers(year, ['2027-03-10'])).toEqual([1]);
+    expect(examPlanningControlNumbers(year, ['2026-11-09', '2026-12-14'])).toEqual([1, 2]);
+  });
+
+  it('counts unsaved months, and none for dates without exams', () => {
+    expect(examPlanningControlNumbers(year, ['2026-10-05'])).toEqual([]);
+    const drafts = { cp: { '2026-10': [{ id: 'd', date: '2026-10-05', subject: 'Arabe', lessons: [] }] } };
+    expect(examPlanningControlNumbers(year, ['2026-11-09'], drafts)).toEqual([2]);
   });
 });

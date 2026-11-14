@@ -1,4 +1,4 @@
-import { examPlanningMonths, examPlanningSemester, type ExamPlanningClass, type ExamPlanningEntry } from '@sms/contracts';
+import { examPlanningMonths, examPlanningSemester, massarPlanningControls, type ExamPlanningClass, type ExamPlanningEntry } from '@sms/contracts';
 import type { PlanningAssessment } from '@/features/Assessments/planning/planningModel';
 
 export type PlanningDateRange = { from: string; to: string };
@@ -37,6 +37,17 @@ export function updatePlanningMonthDraft(drafts: ExamPlanningDrafts, cls: ExamPl
   const next = { ...drafts, [cls.id]: months };
   if (!Object.keys(months).length) delete next[cls.id];
   return next;
+}
+
+/**
+ * The Contrôle numbers the given exam dates fall in, as Massar counts them:
+ * across every class, hidden ones included, the n-th month of a semester with
+ * exams is Contrôle n. Unsaved edits count, so the preview matches what will be saved.
+ */
+export function examPlanningControlNumbers(classes: ExamPlanningClass[], dates: readonly string[], drafts: ExamPlanningDrafts = {}): number[] {
+  const months = new Set(dates.map(date => date.slice(0, 7)));
+  const controls = massarPlanningControls(classes.map(cls => ({ classId: cls.id, months: { ...cls.months, ...drafts[cls.id] } })));
+  return [...new Set(controls.filter(control => months.has(control.examFrom.slice(0, 7))).map(control => control.exam))].sort((a, b) => a - b);
 }
 
 /** The list, preview and print document use the same inclusive date range. */

@@ -22,7 +22,7 @@ import { classDocumentColors } from '@/features/Assessments/planning/planningMod
 import { buildPlanningDocument, printPlanningDocument, type PlanningDocumentOptions } from '@/features/Assessments/planning/planningDocument';
 import { PlanningPreview } from '@/features/Assessments/planning/PlanningPreview';
 import { useExamPlanning } from './useExamPlanning';
-import { examPlanningEntries, examPlanningRecords, initialPlanningMonth, planningMonthRange, updatePlanningMonthDraft, type ExamPlanningDrafts, type PlanningDateRange, type PlanningEntrySelection } from './examPlanningModel';
+import { examPlanningControlNumbers, examPlanningEntries, examPlanningRecords, initialPlanningMonth, planningMonthRange, updatePlanningMonthDraft, type ExamPlanningDrafts, type PlanningDateRange, type PlanningEntrySelection } from './examPlanningModel';
 import { PlanningEntryEditor } from './PlanningEntryEditor';
 import { PlanningClassSettings } from './PlanningClassSettings';
 import { PlanningMissingSubjects, usePlanningSubjects } from './PlanningSubjects';
@@ -79,9 +79,12 @@ function PlanningContent() {
   const records = invalidRange ? [] : examPlanningRecords(shownClasses, range, drafts);
   const outputDisabled = !records.length || dirty || !!error || isLoading || isSettingsLoading || !!settingsError || isPrinting || saving;
   const semesters = [...new Set(records.map(record => record.planning?.semester))];
+  // The Contrôle these exams are, numbered the way Massar opens them.
+  const control = examPlanningControlNumbers(classes, records.map(record => record.date), drafts)
+    .map(exam => t('massar.flow.controlNumber', { exam })).join(' / ');
   const documentOptions: PlanningDocumentOptions = {
     title: t('examPlanning.documentTitle'), schoolName: settings?.schoolName || schoolApp.appName,
-    schoolLogo: settings?.schoolLogo || logo, academicYear: viewingYear ?? '', semester: semesters.length === 1 ? semesters[0] ?? null : null, language,
+    schoolLogo: settings?.schoolLogo || logo, academicYear: viewingYear ?? '', semester: semesters.length === 1 ? semesters[0] ?? null : null, control: control || null, language,
     assetOrigin: typeof window === 'undefined' ? 'http://localhost' : window.location.origin,
     labels: { semester: t('assessmentPlanning.semester'), academicYear: t('assessmentPlanning.academicYear'), class: t('assessments.form.class'), lessons: t('assessmentPlanning.lessons'), subject: t('assessments.form.subject'), date: t('assessments.form.date'), sections: t('assessmentPlanning.sections') },
   };
