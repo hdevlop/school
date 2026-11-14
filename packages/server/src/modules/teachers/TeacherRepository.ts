@@ -1,5 +1,5 @@
 import { DB } from '../../database/db';
-import { teachers, users, teacherAssignments, sections, subjects, students, classes, staff, studentEnrollments, studentEnrollmentPlacements, assessments, exams, attendance, routineEntries, grades } from '../../database/schema';
+import { teachers, users, teacherAssignments, sections, subjects, students, classes, staff, studentEnrollments, studentEnrollmentPlacements, assessments, exams, attendance, routineEntries, grades, homework, massarSheets, alerts } from '../../database/schema';
 import { Repository } from '../../najm';
 import { getBusinessDateOnly } from '../../shared/businessDate';
 import { Owned, type OwnedWhere } from '../../auth';
@@ -402,6 +402,82 @@ export class TeacherRepository {
     return assignment;
   }
 
+  /**
+   * What is still recorded under one of the teacher's assignments in the
+   * selected year, once its upcoming planned exams went to an empty slot:
+   * each of these keeps the assignment, so it cannot be deleted. Null when
+   * the teacher has no such assignment.
+   */
+  async recordsUnderAssignment(teacherId: string, sectionId: string, subjectId: string) {
+    const filter = and(
+      eq(teacherAssignments.teacherId, teacherId),
+      eq(teacherAssignments.sectionId, sectionId),
+      eq(teacherAssignments.subjectId, subjectId),
+      inArray(teacherAssignments.classId, this.classesInSelectedYear()),
+    );
+    await this.moveUpcomingPlanned(filter);
+    const [row] = await this.db
+      .select({ id: teacherAssignments.id, className: classes.name, sectionName: sections.name, subjectName: subjects.name })
+      .from(teacherAssignments)
+      .innerJoin(classes, eq(classes.id, teacherAssignments.classId))
+      .innerJoin(sections, eq(sections.id, teacherAssignments.sectionId))
+      .innerJoin(subjects, eq(subjects.id, teacherAssignments.subjectId))
+      .where(filter)
+      .limit(1);
+    if (!row) return null;
+    const total = async (table: typeof exams | typeof assessments | typeof attendance | typeof routineEntries | typeof homework) =>
+      Number((await this.db.select({ n: count() }).from(table).where(eq(table.teacherAssignmentId, row.id)))[0]?.n ?? 0);
+    const [examCount, assessmentCount, attendanceCount, lessonCount, homeworkCount] = await Promise.all([
+      total(exams), total(assessments), total(attendance), total(routineEntries), total(homework),
+    ]);
+    return {
+      className: row.className,
+      sectionName: row.sectionName,
+      subjectName: row.subjectName,
+      records: { exams: examCount, assessments: assessmentCount, attendance: attendanceCount, lessons: lessonCount, homework: homeworkCount },
+    };
+  }
+
+  /**
+   * An administrator takes a subject from a teacher although records were kept
+   * under it: the assignment becomes the class's vacant slot for that subject,
+   * with everything recorded under it (exams and their marks, assessments,
+   * attendance, lessons, homework, Massar sheets). The next teacher given the
+   * subject fills the slot and takes them over (createAssignment). When the
+   * class already has a slot, the records join it and this row goes.
+   */
+  async vacateAssignment(teacherId: string, sectionId: string, subjectId: string) {
+    const [row] = await this.db
+      .select({ id: teacherAssignments.id, classId: teacherAssignments.classId })
+      .from(teacherAssignments)
+      .where(and(
+        eq(teacherAssignments.teacherId, teacherId),
+        eq(teacherAssignments.sectionId, sectionId),
+        eq(teacherAssignments.subjectId, subjectId),
+        inArray(teacherAssignments.classId, this.classesInSelectedYear()),
+      ))
+      .limit(1);
+    if (!row) return null;
+    const [slot] = await this.db.select({ id: teacherAssignments.id }).from(teacherAssignments)
+      .where(and(
+        isNull(teacherAssignments.teacherId),
+        eq(teacherAssignments.classId, row.classId),
+        eq(teacherAssignments.sectionId, sectionId),
+        eq(teacherAssignments.subjectId, subjectId),
+      ))
+      .limit(1);
+    if (!slot) {
+      await this.db.update(teacherAssignments).set({ teacherId: null, updatedAt: sql`CURRENT_TIMESTAMP` })
+        .where(eq(teacherAssignments.id, row.id));
+      return row.id;
+    }
+    for (const table of [exams, assessments, attendance, routineEntries, homework, massarSheets, alerts]) {
+      await this.db.update(table).set({ teacherAssignmentId: slot.id }).where(eq(table.teacherAssignmentId, row.id));
+    }
+    await this.db.delete(teacherAssignments).where(eq(teacherAssignments.id, row.id));
+    return slot.id;
+  }
+
   async deleteAssignment(teacherId, sectionId, subjectId) {
     const filter = and(
       eq(teacherAssignments.teacherId, teacherId),
@@ -519,24 +595,28 @@ export class TeacherRepository {
   async recordedHistory(id: string) {
     const { assignmentIds, examIds, assessmentIds } = this.historyScope(id);
     const total = async (query: Promise<Array<{ n: number }>>) => Number((await query)[0]?.n ?? 0);
-    const [examCount, assessmentCount, gradeCount, attendanceCount, lessonCount] = await Promise.all([
+    const [examCount, assessmentCount, gradeCount, attendanceCount, lessonCount, homeworkCount] = await Promise.all([
       total(this.db.select({ n: count() }).from(exams).where(inArray(exams.teacherAssignmentId, assignmentIds))),
       total(this.db.select({ n: count() }).from(assessments).where(inArray(assessments.teacherAssignmentId, assignmentIds))),
       total(this.db.select({ n: count() }).from(grades).where(or(inArray(grades.examId, examIds), inArray(grades.assessmentId, assessmentIds)))),
       total(this.db.select({ n: count() }).from(attendance).where(or(eq(attendance.teacherId, id), inArray(attendance.teacherAssignmentId, assignmentIds)))),
       total(this.db.select({ n: count() }).from(routineEntries).where(inArray(routineEntries.teacherAssignmentId, assignmentIds))),
+      total(this.db.select({ n: count() }).from(homework).where(inArray(homework.teacherAssignmentId, assignmentIds))),
     ]);
-    return { exams: examCount, assessments: assessmentCount, grades: gradeCount, attendance: attendanceCount, lessons: lessonCount };
+    return { exams: examCount, assessments: assessmentCount, grades: gradeCount, attendance: attendanceCount, lessons: lessonCount, homework: homeworkCount };
   }
 
   /**
    * Erases what a teacher recorded, in every year, so the teacher can be
    * deleted: their exams and assessments with the students' grades, their
-   * attendance (its history goes with it) and their timetable lessons. Run
-   * inside the deletion's transaction, before the teacher row.
+   * attendance (its history goes with it), their timetable lessons and the
+   * homework they posted (its attachment rows go with it; the files, once no
+   * row points at them, go with the next storage sweep). Run inside the
+   * deletion's transaction, before the teacher row.
    */
   async eraseRecordedHistory(id: string) {
     const { assignmentIds, examIds, assessmentIds } = this.historyScope(id);
+    await this.db.delete(homework).where(inArray(homework.teacherAssignmentId, assignmentIds));
     await this.db.delete(grades).where(or(inArray(grades.examId, examIds), inArray(grades.assessmentId, assessmentIds)));
     await this.db.delete(exams).where(inArray(exams.teacherAssignmentId, assignmentIds));
     await this.db.delete(assessments).where(inArray(assessments.teacherAssignmentId, assignmentIds));

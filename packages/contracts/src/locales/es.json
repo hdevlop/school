@@ -1238,6 +1238,8 @@
         "viewDetails": "Ver detalles",
         "hoursPerWeek": "{{hours}} h/semana",
         "yearsCount": "{{count}} años",
+        "classes": "Clases: {{classes}}",
+        "noClasses": "Ninguna clase asignada",
         "actions": {
           "email": "Enviar un correo",
           "map": "Ver la dirección en el mapa",
@@ -5307,6 +5309,7 @@
   "teachers": {
     "errors": {
       "hasAssignmentHistory": "Este docente tiene asignaciones de clase en un curso escolar. Elimínelas antes de borrar al docente",
+      "assignmentInUse": "No se puede quitar {{subject}} en {{class}} · {{section}} a este docente: hay registros vinculados a esta asignación ({{records}}). Un administrador puede quitarla; los registros quedan entonces en la clase para el próximo docente de la asignatura.",
       "invitationEmailRequired": "El correo es obligatorio para enviar el enlace de activación del profesor",
       "notFound": "Docente no encontrado",
       "datedRosterUnreviewed": "Las listas fechadas de un docente requieren un historial de asignaciones revisado",
@@ -5331,7 +5334,8 @@
         "assessments": "evaluaciones",
         "grades": "notas de alumnos",
         "attendance": "registros de asistencia",
-        "lessons": "clases del horario"
+        "lessons": "clases del horario",
+        "homework": "deberes"
       },
       "bulkDeleteItemName": "elemento",
       "createButton": "Crear",

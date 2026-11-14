@@ -6,9 +6,12 @@ import { SectionValidator } from '../sections';
 import { ClassValidator } from '../classes';
 import { SubjectValidator } from '../subjects';
 
+type AssignmentRecords = NonNullable<Awaited<ReturnType<TeacherRepository['recordsUnderAssignment']>>>;
+
 @Service()
 export class TeacherValidator {
-  @I18n('teachers.errors') private tt!: (key: string) => string;
+  @I18n('teachers.errors') private tt!: (key: string, params?: Record<string, string>) => string;
+  @I18n() private t!: (key: string) => string;
 
   constructor(
     private teacherRepository: TeacherRepository,
@@ -38,6 +41,23 @@ export class TeacherValidator {
 
   ensureAssignmentsDeleted(assignments: unknown) {
     if (isEmpty(assignments)) Err(404, this.tt('assignmentNotFound'));
+  }
+
+  /**
+   * An assignment that exams, assessments, attendance, timetable lessons or
+   * homework were recorded under keeps them: taking it from the teacher is
+   * refused, naming what holds it, rather than failing in the database.
+   */
+  ensureAssignmentFree(used: AssignmentRecords | null) {
+    if (!used) return;
+    const held = (Object.entries(used.records) as Array<[keyof AssignmentRecords['records'], number]>).filter(([, n]) => n > 0);
+    if (!held.length) return;
+    Err(409, this.tt('assignmentInUse', {
+      subject: used.subjectName,
+      class: used.className,
+      section: used.sectionName,
+      records: held.map(([kind, n]) => `${this.t(`teachers.dialogs.history.${kind}`)} (${n})`).join(', '),
+    }));
   }
 
   async ensureNoAssignmentHistory(id?: string) {

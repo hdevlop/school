@@ -2044,6 +2044,8 @@
         "viewDetails": "Voir les détails",
         "hoursPerWeek": "{{hours}} h/semaine",
         "yearsCount": "{{count}} ans",
+        "classes": "Classes : {{classes}}",
+        "noClasses": "Aucune classe attribuée",
         "actions": {
           "email": "Envoyer un e-mail",
           "map": "Voir l’adresse sur la carte",
@@ -5408,6 +5410,7 @@
   "teachers": {
     "errors": {
       "hasAssignmentHistory": "Cet enseignant a des affectations de classe dans une année scolaire. Retirez-les avant de le supprimer",
+      "assignmentInUse": "Impossible de retirer {{subject}} en {{class}} · {{section}} à cet enseignant : des enregistrements y sont rattachés ({{records}}). Un administrateur peut la retirer ; les enregistrements restent alors à la classe pour le prochain enseignant de la matière.",
       "invitationEmailRequired": "L’e-mail est requis pour envoyer le lien d’activation de l’enseignant",
       "notFound": "Enseignant introuvable",
       "datedRosterUnreviewed": "Les listes datées d'un enseignant exigent un historique d'affectations vérifié",
@@ -5432,7 +5435,8 @@
         "assessments": "évaluations",
         "grades": "notes d’élèves",
         "attendance": "présences",
-        "lessons": "cours de l’emploi du temps"
+        "lessons": "cours de l’emploi du temps",
+        "homework": "devoirs"
       },
       "bulkDeleteItemName": "élément",
       "createButton": "Créer",

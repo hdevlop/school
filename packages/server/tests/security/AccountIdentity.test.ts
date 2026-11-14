@@ -75,4 +75,23 @@ describe('loginIdentity', () => {
     expect(loginIdentityUpdate({ email: 'a@example.ma' }, { email: null, phone: '+212612345678' }))
       .toEqual({ email: 'a@example.ma', phone: null });
   });
+
+  // Writing the email or phone, even unchanged, ends every session of the
+  // account: a form that sends them back as they were must write nothing.
+  it('writes nothing when an edit sends the email and phone back unchanged', () => {
+    const stored = { email: 'hicham@example.ma', phone: '+212612345678' };
+    expect(loginIdentityUpdate({ ...stored }, stored)).toEqual({});
+    expect(loginIdentityUpdate({ email: ' Hicham@Example.ma ', phone: '+212612345678' }, stored)).toEqual({});
+    // An email account's profile phone is not its login: changing it leaves the login alone.
+    expect(loginIdentityUpdate({ ...stored, phone: '+212698765432' }, stored)).toEqual({});
+    const phoneOnly = { email: null, phone: '+212612345678' };
+    expect(loginIdentityUpdate({ email: '', phone: '+212612345678' }, phoneOnly)).toEqual({});
+  });
+
+  it('writes only the field that changes', () => {
+    expect(loginIdentityUpdate({ email: 'new@example.ma', phone: '+212612345678' }, { email: 'a@example.ma', phone: '+212612345678' }))
+      .toEqual({ email: 'new@example.ma' });
+    expect(loginIdentityUpdate({ email: '', phone: '+212698765432' }, { email: null, phone: '+212612345678' }))
+      .toEqual({ phone: '+212698765432' });
+  });
 });

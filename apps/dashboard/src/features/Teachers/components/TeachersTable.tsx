@@ -116,7 +116,7 @@ function TeachersTable() {
   const deletionWarning = async (teacher) => {
     if (role !== 'admin') return t('common.deleteConfirm');
     const impact = await withAcademicYear(viewingYear, () => getTeacherDeletionImpactApi(teacher.id));
-    const list = (['exams', 'grades', 'assessments', 'attendance', 'lessons'] as const)
+    const list = (['exams', 'grades', 'assessments', 'attendance', 'lessons', 'homework'] as const)
       .filter((key) => impact[key] > 0)
       .map((key) => `${t(`teachers.dialogs.history.${key}`)} (${impact[key]})`)
       .join(' · ');

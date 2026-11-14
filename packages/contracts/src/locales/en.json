@@ -1138,6 +1138,8 @@
         "viewDetails": "View details",
         "hoursPerWeek": "{{hours}} h/week",
         "yearsCount": "{{count}} years",
+        "classes": "Classes: {{classes}}",
+        "noClasses": "No class assigned",
         "actions": {
           "email": "Send an email",
           "map": "Show address on map",
@@ -3494,6 +3496,7 @@
       "cinExists": "A teacher with this CIN already exists",
       "emailExists": "A teacher with this email already exists",
       "hasAssignmentHistory": "This teacher has class assignments in a school year. Remove those assignments before deleting the teacher",
+      "assignmentInUse": "{{subject}} in {{class}} · {{section}} cannot be taken from this teacher: records are kept under it ({{records}}). An administrator can remove it; the records then stay with the class for the next teacher of the subject.",
       "datedRosterUnreviewed": "Dated teacher rosters require reviewed assignment history",
       "dateOutsideYear": "Date is outside the academic year reporting interval",
       "assignmentNotFound": "Assignment not found",
@@ -3614,7 +3617,8 @@
         "assessments": "assessments",
         "grades": "student grades",
         "attendance": "attendance records",
-        "lessons": "timetable lessons"
+        "lessons": "timetable lessons",
+        "homework": "homework"
       },
       "bulkDeleteItemName": "{{count}} teacher(s)"
     },

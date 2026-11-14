@@ -11,6 +11,8 @@ function serviceWith(current: Row[]) {
   const service = {
     teacherRepository: {
       getAssignmentRows: async () => current,
+      // Nothing was recorded under these assignments (see TeacherAssignmentRemoval for when something was).
+      recordsUnderAssignment: async () => null,
       deleteAssignment: async (_teacherId: string, sectionId: string, subjectId: string) => {
         calls.push(`delete ${sectionId}/${subjectId}`);
       },
@@ -18,6 +20,7 @@ function serviceWith(current: Row[]) {
         calls.push(`create ${row.sectionId}/${row.subjectId}`);
       },
     },
+    teacherValidator: { ensureAssignmentFree: () => {} },
   };
   const replace = (TeacherService.prototype as any).replaceTeacherAssignments;
   return { calls, run: (assignments: unknown) => replace.call(service, 'T1', assignments) };

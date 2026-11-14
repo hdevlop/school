@@ -2,7 +2,7 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 
-import { BookOpen, CalendarDays } from 'lucide-react';
+import { BookOpen, CalendarDays, School } from 'lucide-react';
 import { NButton, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { isAuthorizationError, isNotFoundError } from '@/services/apiError';
@@ -47,6 +47,8 @@ const TeacherOverview = ({ teacherId, onViewDetails }: TeacherOverviewProps) => 
   const retry = () => { void refetch(); };
   const cardState = { loading: isLoading, error: loadError, onRetry: retry };
   const { t } = useTranslation();
+  // Each class once, in the order the overview lists them.
+  const taughtClasses = [...new Set((overview?.classes ?? []).map((item) => item.className))];
 
   // Without an overview every figure below would read 0, which says "nothing
   // to do" about a teacher this reader cannot see or a request that failed.
@@ -70,11 +72,24 @@ const TeacherOverview = ({ teacherId, onViewDetails }: TeacherOverviewProps) => 
         <TeacherInfoCard
           person={overview?.teacher}
           jobTitle={t('staff.roles.teacher')}
-          subtitle={overview?.teacher.specialization ? (
-            <p className="flex max-w-full items-center gap-1.5 text-sm text-muted-foreground">
-              <BookOpen className="size-4 shrink-0" aria-hidden="true" />
-              <span className="truncate">{overview.teacher.specialization}</span>
-            </p>
+          subtitle={overview ? (
+            <>
+              {overview.teacher.specialization ? (
+                <p className="flex max-w-full items-center gap-1.5 text-sm text-muted-foreground">
+                  <BookOpen className="size-4 shrink-0" aria-hidden="true" />
+                  <span className="truncate">{overview.teacher.specialization}</span>
+                </p>
+              ) : null}
+              {/* The classes they teach this year, as the monitor's card names its levels. */}
+              <p className="flex max-w-full items-center gap-1.5 text-sm text-muted-foreground">
+                <School className="size-4 shrink-0" aria-hidden="true" />
+                <span className="truncate">
+                  {taughtClasses.length
+                    ? t('dashboard.teacher.info.classes', { classes: taughtClasses.join(', ') })
+                    : t('dashboard.teacher.info.noClasses')}
+                </span>
+              </p>
+            </>
           ) : null}
           onViewDetails={onViewDetails}
           {...cardState}

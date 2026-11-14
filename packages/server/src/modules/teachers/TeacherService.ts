@@ -253,7 +253,7 @@ export class TeacherService {
   }
 
   @Transaction()
-  async update(id: string, data: UpdateTeacherDto) {
+  async update(id: string, data: UpdateTeacherDto, actorRole?: string) {
     // No 'password' here. A routine profile edit must not double as a
     // credential reset: that path has no audit, forces no replacement and
     // revokes no session. Recovery goes through the Reset access command.
@@ -302,7 +302,7 @@ export class TeacherService {
     // The edit form sends the year's whole list: absent leaves it alone, an
     // empty list removes every assignment of the year.
     if (data.assignments !== undefined) {
-      await this.replaceTeacherAssignments(id, data.assignments);
+      await this.replaceTeacherAssignments(id, data.assignments, actorRole);
     }
     return await this.teacherRepository.getById(id);
   }
@@ -397,7 +397,7 @@ export class TeacherService {
   // Makes the selected year's assignments match the list: rows already there
   // keep their ids, missing ones are added and the rest removed. Other years
   // are not touched, since the repository reads and deletes inside the year.
-  private async replaceTeacherAssignments(teacherId: string, assignments: TeacherAssignmentDto[]) {
+  private async replaceTeacherAssignments(teacherId: string, assignments: TeacherAssignmentDto[], actorRole?: string) {
     const key = (row: { classId: string; sectionId: string; subjectId: string }) =>
       `${row.classId}|${row.sectionId}|${row.subjectId}`;
 
@@ -414,8 +414,18 @@ export class TeacherService {
     const current = await this.teacherRepository.getAssignmentRows(teacherId);
     const currentKeys = new Set(current.map(key));
 
+    // A removed assignment that records were kept under goes to the class's
+    // vacant slot when an administrator removes it, records and all, for the
+    // next teacher of the subject; anyone else is refused by name. The
+    // update's transaction undoes whatever this loop did before a refusal.
     for (const row of current) {
       if (!wanted.has(key(row))) {
+        const used = await this.teacherRepository.recordsUnderAssignment(teacherId, row.sectionId, row.subjectId);
+        if (actorRole === 'admin' && used && Object.values(used.records).some((n) => n > 0)) {
+          await this.teacherRepository.vacateAssignment(teacherId, row.sectionId, row.subjectId);
+          continue;
+        }
+        this.teacherValidator.ensureAssignmentFree(used);
         await this.teacherRepository.deleteAssignment(teacherId, row.sectionId, row.subjectId);
       }
     }

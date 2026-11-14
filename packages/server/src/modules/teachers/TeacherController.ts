@@ -172,8 +172,9 @@ export class TeacherController {
   @Validate({ params: teacherIdParam, body: updateTeacherDto })
   @McpTool({ description: 'Update a teacher by ID', confirm: { level: 'warning', message: 'confirm.teachers.update' } })
   @ResMsg('teachers.success.updated')
-  async update(@Params('id') id: string, @Body() body: UpdateTeacherDto) {
-    return this.teacherService.update(id, body);
+  async update(@Params('id') id: string, @Body() body: UpdateTeacherDto, @User() user: { role?: string }) {
+    // An administrator may take a subject on which records were kept; see replaceTeacherAssignments.
+    return this.teacherService.update(id, body, user?.role);
   }
 
   @Get('/:id/deletion-impact')
