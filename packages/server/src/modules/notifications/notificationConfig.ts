@@ -12,13 +12,15 @@ export const notificationFlags = {
 export function normalizeVapidSubject(contact: string | undefined) {
   const value = contact?.trim();
   if (!value || value.length > 320) return undefined;
-  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return `mailto:${value}`;
+  // A value already naming its scheme is checked first: "mailto:ops@school.ma"
+  // also looks like a bare address, and would otherwise become "mailto:mailto:…".
   if (/^(mailto:|https:)/i.test(value)) {
     try {
       const url = new URL(value);
       return url.protocol === 'mailto:' || url.protocol === 'https:' ? value : undefined;
     } catch { return undefined; }
   }
+  if (/^[^\s@:]+@[^\s@]+\.[^\s@]+$/.test(value)) return `mailto:${value}`;
   return undefined;
 }
 

@@ -28,7 +28,25 @@ export class PersonalNotificationRepository {
       .where(eq(usersTable.status, 'active'));
     const recipients = [...new Set(grants.filter(row => matchPermission([row.permission], permission)).map(row => row.userId))];
     if (!recipients.length) return [];
-    return this.db.insert(notifications).values(recipients.map(recipientUserId => ({ recipientUserId, ...notification }))).onConflictDoNothing().returning();
+    const created = await this.db.insert(notifications).values(recipients.map(recipientUserId => ({ recipientUserId, ...notification }))).onConflictDoNothing().returning();
+    await this.queueDeliveries(created);
+    return created;
+  }
+
+  /**
+   * A push for each new notification to each device its recipient enabled.
+   * Without these rows the worker has nothing to send: the notification would
+   * reach the inbox and never the phone.
+   */
+  private async queueDeliveries(created: Array<{ id: string; recipientUserId: string }>) {
+    if (created.length === 0) return;
+    const userIds = [...new Set(created.map((notification) => notification.recipientUserId))];
+    const subscriptions = await this.db.select({ id: pushSubscriptions.id, userId: pushSubscriptions.userId }).from(pushSubscriptions)
+      .where(and(inArray(pushSubscriptions.userId, userIds), isNull(pushSubscriptions.disabledAt)));
+    const deliveries = created.flatMap((notification) => subscriptions
+      .filter((subscription) => subscription.userId === notification.recipientUserId)
+      .map((subscription) => ({ notificationId: notification.id, pushSubscriptionId: subscription.id })));
+    if (deliveries.length > 0) await this.db.insert(notificationDeliveries).values(deliveries).onConflictDoNothing();
   }
 
   async listMine(userId: string, input: { limit: number; unread?: boolean }) {
@@ -117,15 +135,7 @@ export class PersonalNotificationRepository {
       body: input.body.slice(0, 300),
       href: input.href,
     }))).onConflictDoNothing().returning();
-    if (created.length === 0) return [];
-    const subscriptions = await this.db.select().from(pushSubscriptions)
-      .where(and(inArray(pushSubscriptions.userId, userIds), isNull(pushSubscriptions.disabledAt)));
-    const deliveries = created.flatMap((notification) => subscriptions
-      .filter((subscription) => subscription.userId === notification.recipientUserId)
-      .map((subscription) => ({ notificationId: notification.id, pushSubscriptionId: subscription.id })));
-    if (deliveries.length > 0) {
-      await this.db.insert(notificationDeliveries).values(deliveries).onConflictDoNothing();
-    }
+    await this.queueDeliveries(created);
     return created;
   }
 
