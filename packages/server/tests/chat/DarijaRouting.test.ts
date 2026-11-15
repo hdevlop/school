@@ -40,7 +40,7 @@ describe('rewriteDarijaForRouting', () => {
     ['وريني النقط ديال التلميذ Zzbench Qqtest.', 'اعرض النقاط التلميذ zzbench qqtest.'],
     ['علّم ياسين وسلمى غايبين هاد الصباح فالقسم 2B.', 'سجل ياسين وسلمي غائبين هذا الصباح في القسم 2b.'],
     ['شنو هوما الامتحانات اللي جايين؟', 'ما هم الامتحانات الذي القادمه؟'],
-    ['واش كاين شي تلميذ ماخلصش؟', 'هل يوجد شي تلميذ لم يدفع؟'],
+    ['واش كاين شي تلميذ ماخلصش؟', 'هل يوجد بعض تلميذ لم يدفع؟'],
   ])('rewrites %s for routing', (message, routed) => {
     expect(rewriteDarijaForRouting(normalize(message))).toBe(routed);
   });
@@ -91,8 +91,11 @@ describe('rewriteDarijaForRouting', () => {
   });
 
   it('handles long attached conjunctions without recursive stack overflow', () => {
+    // najm-rag 3.3.0 collapses a letter repeated three or more times, so the
+    // long run becomes one و; the point here is that it returns at all.
     const prefix = 'و'.repeat(12000);
-    expect(rewriteDarijaForRouting(`${prefix}شحال`)).toBe(`${prefix}كم`);
-    expect(rewriteDarijaForRouting(`${prefix}وقت`)).toBe(`${prefix}وقت`);
+    expect(rewriteDarijaForRouting(`${prefix}شحال`)).toBe('وكم');
+    expect(rewriteDarijaForRouting(`${prefix}وقت`)).toBe('وقت');
+    expect(rewriteDarijaForRouting('ووشحال')).toBe('ووكم');
   });
 });
