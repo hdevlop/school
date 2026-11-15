@@ -4,6 +4,7 @@ import { rag, ragStudio } from 'najm-rag';
 
 import { rewriteDarijaForRouting } from '../modules/chat/routing/darijaRouting';
 import { schoolRoutingContext } from '../modules/chat/routing/schoolRoutingContext';
+import semantics from '../modules/chat/routing/semantics.json';
 
 /**
  * Embeddings for chat tool routing and the knowledge base.
@@ -64,6 +65,13 @@ const TOOL_DEPENDENCIES: Record<string, string[]> = {
   'student-profile_get_attendance_summary': ['students_get_my_identity', 'parents_get_my_identity', 'parents_get_children', 'student-profile_get_academic'],
   'parents_get_my_identity': ['parents_get_children'],
   'parents_get_children': ['parents_get_my_identity', 'student-profile_get_academic'],
+  // Family reads take the signed-in parent's or a child's ID, so the model
+  // needs the identity reads that return it.
+  'parent-profile_get_all_fees_due': ['parents_get_my_identity'],
+  'parent-profile_get_unread_alerts': ['parents_get_my_identity'],
+  'parent-profile_get_all_upcoming_events': ['parents_get_my_identity'],
+  homework_get_by_student: ['students_get_my_identity', 'parents_get_my_identity', 'parents_get_children'],
+  'student-profile_get_financial': ['students_get_my_identity', 'parents_get_my_identity', 'parents_get_children'],
   'students_get_my_identity': ['student-profile_get_overview', 'student-profile_get_academic', 'student-profile_get_attendance_summary'],
   'teachers_get_my_identity': ['teacher-profile_get_my_classes', 'teacher-profile_get_my_students', 'teacher-profile_get_pending_grading'],
   'teacher-profile_get_pending_grading': ['teachers_get_my_identity'],
@@ -98,7 +106,7 @@ const TOOL_DEPENDENCIES: Record<string, string[]> = {
   payments_get_by_student: ['search_search_students'],
   students_get_student_parents: ['search_search_students'],
   'student-routes_get_by_student': ['search_search_students'],
-  'student-profile_get_transport': ['search_search_students'],
+  'student-profile_get_transport': ['search_search_students', 'students_get_my_identity', 'parents_get_my_identity', 'parents_get_children'],
   // Personal records share vocabulary ("my record", "this year"). A grade
   // question can retrieve the attendance profile first; keep the academic
   // read available so the model can answer the requested part of the record.
@@ -172,6 +180,9 @@ export const ragConfig = (): NajmPlugin => {
     // Darija words become MSA before tool routing embeds a message; the model
     // still reads the user's own words.
     rewriteRoutingQuery: query => schoolRoutingContext(query, rewriteDarijaForRouting(query)),
+    // School's routing phrases: those not stored yet are added after boot
+    // tool indexing; studio edits stay. Edit the file to change one for good.
+    seedSemantics: semantics,
     knowledge: true,
     allowedLangs: ['en', 'fr', 'ar', 'es'],
   }) as unknown as NajmPlugin;

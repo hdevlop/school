@@ -269,7 +269,10 @@
         { "lang": "darija-latn", "phrase": "ghiyab dyal bnti" },
         { "lang": "fr", "phrase": "les absences de ma fille cette année" },
         { "lang": "ar", "phrase": "ملخص غياب ابنتي" },
-        { "lang": "en", "phrase": "my child's absence summary" }
+        { "lang": "en", "phrase": "my child's absence summary" },
+        { "lang": "darija", "phrase": "الغيابات والتأخرات ديال ولدي" },
+        { "lang": "darija-latn", "phrase": "ghiyab w ta2khir dyal weldi" },
+        { "lang": "fr", "phrase": "bilan des absences et retards de mon enfant" }
       ]
     },
     {
@@ -310,6 +313,110 @@
         { "lang": "fr", "phrase": "nombre total du personnel" },
         { "lang": "ar", "phrase": "عدد الموظفين" },
         { "lang": "en", "phrase": "how many staff members work here" }
+      ]
+    },
+    {
+      "toolName": "homework_get_by_student",
+      "phrases": [
+        { "lang": "darija", "phrase": "الواجبات المنزلية اللي عطاوها لولدي" },
+        { "lang": "darija", "phrase": "شنو الدروس اللي خاص بنتي تراجع وتحل" },
+        { "lang": "darija", "phrase": "الدوفوارات ديال التلميذ هاد السيمانة" },
+        { "lang": "darija-latn", "phrase": "les devoirs li 3tawhom l weldi" },
+        { "lang": "darija-latn", "phrase": "chno khas bnti t7ell f dar" },
+        { "lang": "fr", "phrase": "les devoirs à la maison donnés à mon enfant" },
+        { "lang": "ar", "phrase": "الواجبات المنزلية المطلوبة من ابني" },
+        { "lang": "en", "phrase": "homework assigned to my child" }
+      ]
+    },
+    {
+      "toolName": "homework_get_all",
+      "phrases": [
+        { "lang": "darija", "phrase": "جميع الواجبات المنزلية اللي تعطات" },
+        { "lang": "darija-latn", "phrase": "ga3 les devoirs li t3taw" },
+        { "lang": "fr", "phrase": "tous les devoirs publiés cette année" },
+        { "lang": "ar", "phrase": "كل الواجبات المنزلية المنشورة" },
+        { "lang": "en", "phrase": "all homework posted this year" }
+      ]
+    },
+    {
+      "toolName": "parent-profile_get_all_fees_due",
+      "phrases": [
+        { "lang": "darija", "phrase": "المبلغ اللي باقي فذمتي لجميع الولاد" },
+        { "lang": "darija", "phrase": "الواجبات الشهرية اللي مازال ماتخلصاتش ديال ولادي" },
+        { "lang": "darija-latn", "phrase": "lflous li ba9yin 3liya dyal wladi kamlin" },
+        { "lang": "fr", "phrase": "total des frais impayés pour tous mes enfants" },
+        { "lang": "ar", "phrase": "المبالغ المستحقة علي لجميع أبنائي" },
+        { "lang": "en", "phrase": "how much I still owe for all my children" }
+      ]
+    },
+    {
+      "toolName": "student-profile_get_financial",
+      "phrases": [
+        { "lang": "darija", "phrase": "الحساب المالي ديال بنتي شنو تخلص وشنو باقي" },
+        { "lang": "darija-latn", "phrase": "l7sab dyal weldi chno tkhelles w chno ba9i" },
+        { "lang": "fr", "phrase": "situation financière de mon enfant, payé et reste à payer" },
+        { "lang": "ar", "phrase": "الوضعية المالية لابني المدفوع والمتبقي" },
+        { "lang": "en", "phrase": "my child's balance, paid and outstanding" }
+      ]
+    },
+    {
+      "toolName": "parent-profile_get_all_upcoming_events",
+      "phrases": [
+        { "lang": "darija", "phrase": "المناسبات والخرجات اللي غادي تكون للولاد" },
+        { "lang": "darija-latn", "phrase": "les sorties w l7aflat li jayin l wladi" },
+        { "lang": "fr", "phrase": "les événements à venir pour mes enfants" },
+        { "lang": "ar", "phrase": "الفعاليات القادمة الخاصة بأبنائي" },
+        { "lang": "en", "phrase": "upcoming school events for my kids" }
+      ]
+    },
+    {
+      "toolName": "events_get_today",
+      "phrases": [
+        { "lang": "darija", "phrase": "شنو كاين من مناسبة فالمدرسة هاد النهار" },
+        { "lang": "darija-latn", "phrase": "chno kayn f lmdrasa had nhar mn 7afla" },
+        { "lang": "fr", "phrase": "événements prévus à l'école ce jour" },
+        { "lang": "ar", "phrase": "ما يجري في المدرسة من فعاليات الآن" },
+        { "lang": "en", "phrase": "school events happening today" }
+      ]
+    },
+    {
+      "toolName": "announcements_get_recent",
+      "phrases": [
+        { "lang": "darija", "phrase": "البلاغات الجديدة اللي نشرات المدرسة" },
+        { "lang": "darija-latn", "phrase": "les annonces jdad dyal lmdrasa" },
+        { "lang": "fr", "phrase": "les communiqués récents de l'école" },
+        { "lang": "ar", "phrase": "أحدث البلاغات المنشورة من المدرسة" },
+        { "lang": "en", "phrase": "latest school announcements" }
+      ]
+    },
+    {
+      "toolName": "parent-profile_get_unread_alerts",
+      "phrases": [
+        { "lang": "darija", "phrase": "الإشعارات اللي ماقريتهاش على الدراري ديالي" },
+        { "lang": "darija-latn", "phrase": "les notifications li ma9ritch 3la wladi" },
+        { "lang": "fr", "phrase": "mes alertes non lues sur mes enfants" },
+        { "lang": "ar", "phrase": "الإشعارات غير المقروءة حول أبنائي" },
+        { "lang": "en", "phrase": "my unread alerts about my children" }
+      ]
+    },
+    {
+      "toolName": "student-profile_get_transport",
+      "phrases": [
+        { "lang": "darija", "phrase": "النقل المدرسي ديال ولدي الطريق والشيفور" },
+        { "lang": "darija-latn", "phrase": "transport dyal bnti trik w chauffeur" },
+        { "lang": "fr", "phrase": "transport scolaire de mon enfant, trajet et chauffeur" },
+        { "lang": "ar", "phrase": "النقل المدرسي لابنتي والسائق" },
+        { "lang": "en", "phrase": "my child's school transport, route and driver" }
+      ]
+    },
+    {
+      "toolName": "student-profile_get_overview",
+      "phrases": [
+        { "lang": "darija", "phrase": "المعلومات ديال بنتي القسم والفوج" },
+        { "lang": "darija-latn", "phrase": "ma3lomat dyal weldi l9ism w lfawj" },
+        { "lang": "fr", "phrase": "fiche de mon enfant, classe et section" },
+        { "lang": "ar", "phrase": "بطاقة ابني القسم والفوج" },
+        { "lang": "en", "phrase": "my child's profile with class and section" }
       ]
     }
   ]

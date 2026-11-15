@@ -77,9 +77,11 @@ and removes SDK token/pricing metadata before the widget receives a reply.
 Administrator diagnostics retain timings and outcomes without token or cost fields.
 
 `routing/semantics.json` holds example phrases (Darija, Arabizi, French, Arabic,
-English) for about 30 everyday read tools. najm-rag does not load the file
-itself: import it once per database in RAG Studio (Semantics → Import JSON) or
-with `POST /api/rag-studio/semantics/import`, and import it again after editing.
+English) for everyday read tools. `ragConfig.ts` passes it as `seedSemantics`:
+after boot tool indexing, najm-rag adds the phrases a database does not have
+yet and leaves stored ones (and studio edits) alone, so a new phrase in the
+file reaches every database on its next start. A phrase deleted or reworded in
+the studio comes back while it is in the file; change it here instead.
 Phrases were written from tool descriptions, not from the test fixtures; keep
 it that way so the fixtures stay a fair test. With Qwen3 Embedding the routing
 threshold is 0.68 (`ragConfig.ts`).
