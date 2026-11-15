@@ -2181,7 +2181,7 @@
     "processing": "En traitement",
     "completed": "Terminé",
     "graded": "Noté",
-    "missed": "Manqué",
+    "missed": "Absent",
     "draft": "Brouillon",
     "published": "Publié",
     "planned": "Planifié",
@@ -4468,7 +4468,7 @@
       "totalGrades": "Total des notes"
     },
     "status": {
-      "missed": "Manqué",
+      "missed": "Absent",
       "pending": "En attente"
     },
     "table": {
@@ -5280,7 +5280,7 @@
         "result": "Résultat",
         "graded": "Noté",
         "pending": "En attente",
-        "missed": "Manqué",
+        "missed": "Absent",
         "average": "Moyenne",
         "averageShort": "Moy.",
         "loading": "Chargement des notes...",
@@ -7271,6 +7271,7 @@
     "readOnly": "Cette feuille est en lecture seule.",
     "unsaved": "Modifications non enregistrées. Enregistrez avant de quitter cette feuille.",
     "justified": "Absence justifiée",
+    "absentByTeacher": "Absent : seul l'enseignant peut le modifier",
     "importTitle": "Importer des fichiers Massar",
     "importHelp": "Choisissez des XLSX, un dossier ou un ZIP (200 fichiers, 15 Mo maximum). Vérifiez l’aperçu puis confirmez. Aucun import ne supprime de données.",
     "templateReady": "Modèle Massar propre disponible",

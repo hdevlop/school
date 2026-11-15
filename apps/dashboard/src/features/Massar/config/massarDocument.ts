@@ -2,7 +2,9 @@ import type { MassarSheetDetail } from '@sms/contracts';
 import { componentLabel } from './componentLabels';
 import { massarClassColors } from './massarModel';
 
-export type MassarPaperOptions = { language: string; logo?: string | null; title: string; student: string; teacher: string; term: string; exam: string };
+/** `absent` is how a printed sheet names an absence, in the interface language (غائب when not given). */
+export type MassarPaperOptions = { language: string; logo?: string | null; title: string; student: string; teacher: string; term: string; exam: string; absent?: string };
+const ABSENT = 'غائب';
 export const escapeHtml = (value: unknown) => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
 const e = escapeHtml;
 
@@ -37,10 +39,13 @@ const IDENTITY_WIDTH = IDENTITY.number + IDENTITY.code + IDENTITY.name;
 const USUAL_STUDENTS = 25, COMPACT_STUDENTS = 38;
 const isCompact = (students: number) => students > USUAL_STUDENTS && students <= COMPACT_STUDENTS;
 
-/** A mark as printed: two decimals, مبرر for a justified absence, and nothing when none is entered (never 0). */
-export const massarMarkText = (data: MassarSheetDetail, studentId: string, code: string) => {
+/**
+ * A mark as printed: two decimals, the absent label for an absence, and nothing when none is entered (never 0).
+ * Only the xlsx sent to Massar writes مبرر, the one word Massar accepts (server: writeSheet.ts).
+ */
+export const massarMarkText = (data: MassarSheetDetail, studentId: string, code: string, absent = ABSENT) => {
   const found = data.marks.find(item => item.studentId === studentId && item.componentCode === code);
-  return found?.absence === 'justified' ? 'مبرر' : found?.mark === null || found?.mark === undefined ? '' : Number(found.mark).toFixed(2);
+  return found?.absence === 'justified' ? absent : found?.mark === null || found?.mark === undefined ? '' : Number(found.mark).toFixed(2);
 };
 
 /**
@@ -71,7 +76,7 @@ export function buildMassarDocument(sheets: MassarSheetDetail[], options: Massar
           <th>ر.ت<small dir="ltr">N°</small></th><th>رقم التلميذ<small>Code Massar</small></th><th>إسم التلميذ<small dir="auto">${e(options.student)}</small></th>
           ${data.components.map(component => `<th class="part" dir="auto">${e(componentLabel(component.name))}</th>`).join('')}
         </tr></thead>
-        <tbody>${data.students.map(student => `<tr><td class="number">${student.position + 1}</td><td dir="ltr">${e(student.studentCode)}</td><td class="name" dir="auto">${e(student.name)}</td>${data.components.map(component => `<td class="mark" dir="ltr">${e(massarMarkText(data, student.id, component.code))}</td>`).join('')}</tr>`).join('')}</tbody>
+        <tbody>${data.students.map(student => `<tr><td class="number">${student.position + 1}</td><td dir="ltr">${e(student.studentCode)}</td><td class="name" dir="auto">${e(student.name)}</td>${data.components.map(component => `<td class="mark" dir="ltr">${e(massarMarkText(data, student.id, component.code, options.absent))}</td>`).join('')}</tr>`).join('')}</tbody>
       </table></div>
       <footer><span>توقيع الأستاذ(ة): <i></i></span><span class="latin" dir="auto">${e(data.schoolName)} · <bdi>${e(data.sheet.className)}</bdi> · ${e(data.sheet.subjectName)} · <bdi>${e(data.yearLabel)}</bdi></span></footer>
     </section>`;

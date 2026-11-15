@@ -24,9 +24,10 @@ it('gives each student of a class one statement with every subject, in Massar or
   expect(statements[1].units.map(unit => unit.subject)).toEqual(['اللغة العربية', 'اللغة الفرنسية']);
 });
 
-it('prints a missing mark blank and a justified absence as مبرر, never 0', () => {
+it('prints a missing mark blank and an absence as Absent in the interface language, never 0 nor مبرر', () => {
   const [a, b] = studentStatements([arabic, french]);
-  expect(a.units[0].parts.map(part => part.mark)).toEqual(['8.50', 'مبرر']);
+  expect(a.units[0].parts.map(part => part.mark)).toEqual(['8.50', 'غائب']);
+  expect(studentStatements([arabic, french], undefined, 'Absent')[0].units[0].parts[1].mark).toBe('Absent');
   expect(a.units[1].parts[0].mark).toBe('');
   // A real zero is a mark.
   expect(b.units[0].parts[0].mark).toBe('0.00');

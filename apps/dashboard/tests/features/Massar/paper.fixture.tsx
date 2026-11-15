@@ -15,15 +15,22 @@ const detail: MassarSheetDetail = {
 };
 mock.module('najm-i18n/react', () => ({ useTranslation: () => ({ language: 'ar', t: (key: string, params?: any) => translate(translations, 'ar', key, params) }) }));
 mock.module('@tanstack/react-query', () => ({ useQueryClient: () => ({ invalidateQueries: async () => {} }) }));
-mock.module('@/features/Users/hooks/useViewerRole', () => ({ useViewerRole: () => ({ userId: role, role, can: () => role !== 'supervisor' }) }));
+mock.module('@/features/Users/hooks/useViewerRole', () => ({ useViewerRole: () => ({ userId: role, role, isSchoolWide: role === 'registrar' || role === 'admin', can: () => role !== 'supervisor' }) }));
 mock.module('@/features/AcademicYears/hooks/useYearScopedQuery', () => ({ useAcademicYearScope: () => ({ academicYear: '2026-2027' }) }));
 mock.module('@/features/Massar/hooks/useMassar', () => ({ useMassarRead: () => ({ data: detail, error: null }), useMassarAction: () => ({ run: () => {}, pending: false }), massarPut: () => {}, massarPost: () => {} }));
 const { MassarPaper } = await import('@/features/Massar/components/MassarPaper');
 const options = { language: 'ar', title: 'Notes', student: 'Student', teacher: 'Teacher', maxMark: '/', term: 'Term', exam: 'Exam' };
 const html = () => renderToStaticMarkup(<MassarPaper id="sheet" options={options} onBusy={() => {}} />);
 const teacher = html();
-assert.match(teacher, /dir="rtl"/); assert.match(teacher, /01-01-2018/); assert.match(teacher, /value="مبرر"/);
+// An absence reads "Absent" in the interface language; مبرر is only what the file sent to Massar writes.
+assert.match(teacher, /dir="rtl"/); assert.match(teacher, /01-01-2018/); assert.match(teacher, /value="غائب"/); assert.doesNotMatch(teacher, /value="مبرر"/);
 assert.doesNotMatch(teacher, /data-row="0"[^>]*disabled=""/); assert.doesNotMatch(teacher, /إرسال|حفظ النقط/);
+// The teacher can lift the absence; the registrar sees the same cell grayed and read-only, the next part still open.
+assert.doesNotMatch(teacher, /data-col="0"[^>]*readOnly=""/);
+role = 'registrar';
+const registrar = html();
+assert.match(registrar, /data-col="0"[^>]*readOnly=""/); assert.doesNotMatch(registrar, /data-col="1"[^>]*readOnly=""/);
+assert.match(registrar, /data-absent="true"/);
 role = 'supervisor'; detail.canEdit = false;
 assert.match(html(), /<iframe/); assert.match(html(), /data-row="0"[^>]*disabled=""/);
 role = 'registrar'; detail.sheet.status = 'exported'; detail.canReopen = true;

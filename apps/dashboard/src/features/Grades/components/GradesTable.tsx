@@ -73,7 +73,7 @@ const resolveGradeStatus = (marksObtained, fallback = 'pending') => {
 
 function GradesTableForYear() {
   const { t, language } = useTranslation();
-  const { can } = useViewerRole();
+  const { can, isSchoolWide } = useViewerRole();
   const { user } = useAuth();
   const role = (user as any)?.role;
   // Every exam belongs to one teacher assignment: a grade is given under the
@@ -386,12 +386,15 @@ function GradesTableForYear() {
   const editableRow = useCallback((row) => {
     // Saving does not lock the fields: what is typed meanwhile waits in the draft for the next save.
     if (isStudentsLoading || isEligibilityLoading || isMassarSheetLoading || rosterError || !selectedSource) return false;
+    // The teacher decides who was absent: a saved absence is grayed for the registrar and admin, who
+    // can neither give that student a mark nor lift the absence. (`row` is the saved roster, not the draft.)
+    if (isSchoolWide && row.status === 'missed') return false;
     if (isMassarSource) return can('update:grades') && !!massarSheet?.canEdit
       && massarSheet.students.some(student => student.id === row.studentId);
     return can(row.gradeId ? 'update:grades' : 'create:grades') && !isGradesLoading
       && (!!row.assessmentId || !!row.examId) && !!row.classId && !!row.sectionId && !!row.subjectId && !!row.teacherId
       && (eligibleStudents || []).some(student => student.id === row.studentId && student.sectionId === row.sectionId);
-  }, [isStudentsLoading, isEligibilityLoading, isMassarSheetLoading, rosterError, selectedSource, isMassarSource, can, massarSheet, isGradesLoading, eligibleStudents]);
+  }, [isStudentsLoading, isEligibilityLoading, isMassarSheetLoading, rosterError, selectedSource, isSchoolWide, isMassarSource, can, massarSheet, isGradesLoading, eligibleStudents]);
   // The columns must not change while marks are typed or saved: a new cell
   // function is a new component to the table, which would remount the field
   // and drop the focus after each keystroke. So every callback they take is
@@ -447,7 +450,7 @@ function GradesTableForYear() {
       marks: [...massarSheet.marks.filter((mark) => mark.componentCode !== code || !typedIds.has(mark.studentId)), ...typed],
     };
     return buildMassarDocument([sheet], {
-      language, logo, title: t('massar.flow.paperTitle'), student: t('massar.student'),
+      language, logo, title: t('massar.flow.paperTitle'), student: t('massar.student'), absent: t('grades.status.missed'),
       teacher: t('massar.teacher'), term: t('massar.term'), exam: t('massar.exam'),
     });
   };

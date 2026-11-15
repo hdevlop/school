@@ -78,7 +78,7 @@ export function MassarStatementEditor({ settings, setup, open }: { settings: Mas
   };
 
   const settingsKey = JSON.stringify(current);
-  const preview = useMemo(() => !open ? '' : buildStudentStatementDocument(previewStatementSheets(setup, levelId), { language, logo, title: t('massar.flow.statementSettings.preview'), settings: JSON.parse(settingsKey) as MassarStatementSettings }), [open, setup, levelId, language, logo, t, settingsKey]);
+  const preview = useMemo(() => !open ? '' : buildStudentStatementDocument(previewStatementSheets(setup, levelId), { language, logo, title: t('massar.flow.statementSettings.preview'), absent: t('grades.status.missed'), settings: JSON.parse(settingsKey) as MassarStatementSettings }), [open, setup, levelId, language, logo, t, settingsKey]);
 
   return <section className={styles.statementEditor} data-section="preview" aria-labelledby="statement-section-title">
     <div className={styles.statementBar}>

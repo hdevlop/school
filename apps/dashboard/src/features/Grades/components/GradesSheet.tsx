@@ -67,7 +67,7 @@ export default function GradesSheet({ filters, massarSheetId, exam, placeholder,
   const { t, language } = useTranslation();
   const logo = useNThemeBrandingSlot('authLogo');
   const options = useMemo<MassarPaperOptions>(() => ({
-    language, logo, title: t('massar.flow.paperTitle'), student: t('massar.student'),
+    language, logo, title: t('massar.flow.paperTitle'), student: t('massar.student'), absent: t('grades.status.missed'),
     teacher: t('massar.teacher'), term: t('massar.term'), exam: t('massar.exam'),
   }), [language, logo, t]);
 

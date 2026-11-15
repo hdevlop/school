@@ -6,7 +6,7 @@ import { remarkLanguage, remarkPen, studentRemark } from './statementRemarks';
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 /** `studentIds` prints those students' pages only, ranked among the whole class all the same. */
-export type StudentStatementOptions = { language: string; logo?: string | null; title: string; settings?: MassarStatementSettings | null; studentIds?: readonly string[] };
+export type StudentStatementOptions = { language: string; logo?: string | null; title: string; absent?: string; settings?: MassarStatementSettings | null; studentIds?: readonly string[] };
 
 type StatementPart = { name: string; mark: string; value: number | null };
 /** A subject on a statement; `rank` is by the subject's average within the class, among the `ranked` students who have one. */
@@ -83,13 +83,13 @@ function rankAmong<T extends { average: number | null }>(items: T[]): Array<T & 
  * class's Massar order. A subject whose sheet does not list the student is left
  * out of that student's statement, rather than printed empty.
  */
-export function studentStatements(sheets: MassarSheetDetail[], settings: MassarStatementSettings = MASSAR_DEFAULT_STATEMENT): StudentStatement[] {
+export function studentStatements(sheets: MassarSheetDetail[], settings: MassarStatementSettings = MASSAR_DEFAULT_STATEMENT, absent?: string): StudentStatement[] {
   const byClass = new Map<string, MassarSheetDetail[]>();
   for (const sheet of sheets) byClass.set(sheet.sheet.className, [...(byClass.get(sheet.sheet.className) ?? []), sheet]);
-  return [...byClass.keys()].sort(classOrder).flatMap(className => classStatements(className, byClass.get(className)!, settings));
+  return [...byClass.keys()].sort(classOrder).flatMap(className => classStatements(className, byClass.get(className)!, settings, absent));
 }
 
-function classStatements(className: string, list: MassarSheetDetail[], settings: MassarStatementSettings): StudentStatement[] {
+function classStatements(className: string, list: MassarSheetDetail[], settings: MassarStatementSettings, absent?: string): StudentStatement[] {
   const first = list[0];
   const level = levelOfClass(className);
 
@@ -99,7 +99,7 @@ function classStatements(className: string, list: MassarSheetDetail[], settings:
   const unitOf = (sheet: MassarSheetDetail, studentId: string): StatementUnit => {
     const parts = sheet.components.map(component => ({
       name: component.name,
-      mark: massarMarkText(sheet, studentId, component.code),
+      mark: massarMarkText(sheet, studentId, component.code, absent),
       value: markValue(sheet, studentId, component.code),
     }));
     return {
@@ -349,7 +349,7 @@ export function buildStudentStatementDocument(sheets: MassarSheetDetail[], optio
     // The ministry's emblem heads every statement on the right, as on the ministry's own papers.
     ministry: safeUrl('/images/massar/ministry.png', origin),
   };
-  const pages = studentStatements(sheets, settings)
+  const pages = studentStatements(sheets, settings, options.absent)
     .filter(statement => !options.studentIds || options.studentIds.includes(statement.student.id))
     .map(statement => renderPage(statement, settings, images))
     .join('');

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent, type ClipboardEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type KeyboardEvent, type ClipboardEvent } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { NajmScroll, NButton } from 'najm-kit';
 import { componentLabel } from '../config/componentLabels';
@@ -45,6 +45,11 @@ function EditablePaper({ data, options, onBusy, latinNames, selected, onSelect, 
   // Notes grades with its own permission; Massar's page with Massar's.
   const editable = data.canEdit && viewer.can(api === '/massar' ? 'update:massar-marks' : 'update:grades');
   const busy = state.dirty || state.saving;
+  // The teacher decides who was absent. A saved absence is a grayed cell for everyone else (registrar, admin):
+  // they can neither type a mark over it nor lift it. One typed here and not yet saved can still be undone.
+  const savedAbsences = useMemo(() => new Set(data.marks.filter(mark => mark.absence === 'justified').map(mark => cellKey(mark.studentId, mark.componentCode))), [data.marks]);
+  const locked = (key: string) => !editable || (viewer.isSchoolWide && savedAbsences.has(key));
+  const absentLabel = t('grades.status.missed');
   useEffect(() => { engine.activate(); return () => engine.dispose(); }, [engine]);
   useEffect(() => {
     const persist = () => { try { if (engine.snapshot().dirty) sessionStorage.setItem(recoveryKey, JSON.stringify(engine.recovery())); else sessionStorage.removeItem(recoveryKey); } catch { /* The visible draft still works when storage is unavailable. */ } };
@@ -66,10 +71,13 @@ function EditablePaper({ data, options, onBusy, latinNames, selected, onSelect, 
   }, [busy, t]);
   const update = (row: number, col: number, text: string) => {
     const key = cellKey(data.students[row].id, data.components[col].code);
-    engine.update({ [key]: /^(a|مبرر)$/i.test(text) ? { text: '', absence: 'justified' } : { text, absence: 'none' } });
+    if (locked(key)) return;
+    // An absent cell shows "Absent": typing next to it gives the mark, erasing it lifts the absence.
+    if (state.cells[key]?.absence === 'justified') text = text.startsWith(absentLabel) ? text.slice(absentLabel.length) : text.endsWith(absentLabel) ? text.slice(0, -absentLabel.length) : absentLabel.startsWith(text) ? '' : text;
+    engine.update({ [key]: /^(a|مبرر)$/i.test(text.trim()) || text.trim() === absentLabel ? { text: '', absence: 'justified' } : { text, absence: 'none' } });
   };
   const keyboard = (event: KeyboardEvent<HTMLInputElement>, row: number, col: number) => {
-    if (event.key.toLowerCase() === 'a' && !event.ctrlKey && !event.metaKey && !event.altKey) { event.preventDefault(); update(row, col, 'A'); return; }
+    if (event.key.toLowerCase() === 'a' && !event.ctrlKey && !event.currentTarget.readOnly && !event.metaKey && !event.altKey) { event.preventDefault(); update(row, col, 'A'); return; }
     const next = nextCell(event.key, row, col, data.students.length, data.components.length, event.shiftKey, true);
     if (!next) return;
     const target = event.currentTarget.closest('table')?.querySelector<HTMLInputElement>(`input[data-row="${next.row}"][data-col="${next.col}"]`);
@@ -77,14 +85,18 @@ function EditablePaper({ data, options, onBusy, latinNames, selected, onSelect, 
   };
   const paste = (event: ClipboardEvent<HTMLInputElement>, row: number, col: number) => {
     event.preventDefault();
-    engine.update(Object.fromEntries(pastedCells(event.clipboardData.getData('text/plain'), row, col, data.students.length, data.components.length).map(({ row, col, cell }) => [cellKey(data.students[row].id, data.components[col].code), cell])));
+    // A pasted block passes over the absences this viewer cannot change.
+    engine.update(Object.fromEntries(pastedCells(event.clipboardData.getData('text/plain'), row, col, data.students.length, data.components.length).map(({ row, col, cell }) => [cellKey(data.students[row].id, data.components[col].code), cell] as const).filter(([key]) => !locked(key))));
   };
   const field = (row: number, col: number, phone = false) => {
     const student = data.students[row], component = data.components[col], key = cellKey(student.id, component.code), cell = state.cells[key], invalid = !parseCell(cell, data.maxMark);
-    // A mark is typed left to right, as a number is, inside the right-to-left Massar sheet.
-    return <div className={styles.cellField} data-empty={!cell.text && cell.absence === 'none'}><input type="text" inputMode="decimal" autoComplete="off" dir="ltr" data-row={row} data-col={col} value={cell.absence === 'justified' ? 'مبرر' : cell.text} disabled={!editable} className={styles.markInput} aria-label={`${student.name} · ${component.name}`} aria-invalid={invalid} aria-describedby={invalid ? `invalid-${phone ? 'm' : 'd'}-${row}-${col}` : undefined} onChange={event => update(row, col, event.target.value)} onKeyDown={event => keyboard(event, row, col)} onPaste={event => paste(event, row, col)} />
+    const absent = cell.absence === 'justified', fixed = editable && absent && locked(key);
+    // A mark is typed left to right, as a number is, inside the right-to-left Massar sheet. An absence reads
+    // "Absent" in the interface language; only the file sent to Massar writes مبرر, the one word Massar accepts.
+    // A cell the viewer cannot change stays focusable (read-only), so the arrow keys still move through it.
+    return <div className={styles.cellField} data-empty={!cell.text && !absent} data-absent={absent || undefined}><input type="text" inputMode="decimal" autoComplete="off" dir="ltr" data-row={row} data-col={col} value={absent ? absentLabel : cell.text} disabled={!editable} readOnly={fixed} title={fixed ? t('massar.absentByTeacher') : undefined} className={styles.markInput} aria-label={`${student.name} · ${component.name}`} aria-invalid={invalid} aria-describedby={invalid ? `invalid-${phone ? 'm' : 'd'}-${row}-${col}` : undefined} onChange={event => update(row, col, event.target.value)} onKeyDown={event => keyboard(event, row, col)} onPaste={event => paste(event, row, col)} />
       {invalid && <small className={styles.invalidMark} id={`invalid-${phone ? 'm' : 'd'}-${row}-${col}`}>{t('massar.flow.maxError', { max: data.maxMark })}</small>}
-      {phone && <label className={styles.checkbox}><input type="checkbox" checked={cell.absence === 'justified'} disabled={!editable} onChange={event => engine.update({ [key]: { text: '', absence: event.target.checked ? 'justified' : 'none' } })} />{t('massar.justified')}</label>}
+      {phone && <label className={styles.checkbox}><input type="checkbox" checked={absent} disabled={!editable || locked(key)} onChange={event => engine.update({ [key]: { text: '', absence: event.target.checked ? 'justified' : 'none' } })} />{absentLabel}</label>}
     </div>;
   };
   return <>
@@ -102,7 +114,7 @@ function EditablePaper({ data, options, onBusy, latinNames, selected, onSelect, 
       <NajmScroll axis="both" autoHide="leave" className={styles.desktopSheet}><table className={styles.paperTable} data-pick={onSelect ? 'true' : undefined} style={{ width: IDENTITY_WIDTH + data.components.length * MARK_WIDTH }}>
         <colgroup><col className={styles.colNumber} /><col className={styles.colCode} /><col className={styles.colName} />{data.components.map(component => <col key={component.code} className={styles.colMark} />)}</colgroup>
         <thead><tr><th className={styles.stickyNumber}><bdi dir="ltr">N°</bdi></th><th className={styles.stickyCode}>Code Massar</th><th className={styles.stickyName}>{t('massar.student')}</th>{data.components.map(component => <th key={component.code} dir="auto" title={component.name}>{componentLabel(component.name)}</th>)}</tr></thead>
-        <tbody>{data.students.map((student, row) => <tr key={student.id} data-selected={selected?.includes(student.id) || undefined}
+        <tbody>{data.students.map((student, row) => <tr key={student.id} data-selected={selected?.includes(student.id) || undefined} data-absent={(data.components.length > 0 && data.components.every(component => state.cells[cellKey(student.id, component.code)]?.absence === 'justified')) || undefined}
           onMouseDown={() => { pressing.current = true; }}
           onClick={event => { pressing.current = false; onSelect?.({ id: student.id, name: student.name }, event.ctrlKey || event.metaKey); }}
           onFocus={() => { if (!pressing.current && !selected?.includes(student.id)) onSelect?.({ id: student.id, name: student.name }, false); }}><td className={styles.stickyNumber}>{student.position + 1}</td><td className={styles.stickyCode} dir="ltr">{student.studentCode}</td><th scope="row" className={styles.stickyName} dir="auto" title={[student.name, latinNames?.get(student.id)].filter(Boolean).join(' · ')}>{latinNames?.get(student.id) ? <><bdi lang="ar" dir="rtl" className="block truncate">{student.name}</bdi><bdi dir="ltr" className={styles.latinName}>{latinNames.get(student.id)}</bdi></> : student.name}</th>{data.components.map((component, col) => <td key={component.code}>{field(row, col)}</td>)}</tr>)}</tbody>

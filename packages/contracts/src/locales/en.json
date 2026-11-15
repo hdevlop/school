@@ -1440,7 +1440,7 @@
     "rescheduled": "Rescheduled",
     "reviewed": "Reviewed",
     "graded": "Graded",
-    "missed": "Missed",
+    "missed": "Absent",
     "present": "Present",
     "absent": "Absent",
     "late": "Late",
@@ -2825,7 +2825,7 @@
         "result": "Result",
         "graded": "Graded",
         "pending": "Pending",
-        "missed": "Missed",
+        "missed": "Absent",
         "average": "Average",
         "averageShort": "Avg",
         "loading": "Loading grades...",
@@ -4411,7 +4411,7 @@
     "status": {
       "graded": "Graded",
       "pending": "Pending",
-      "missed": "Missed"
+      "missed": "Absent"
     },
     "report": {
       "overallGPA": "Overall GPA",
@@ -7877,6 +7877,7 @@
     "readOnly": "This sheet is read-only.",
     "unsaved": "Unsaved changes. Save before leaving this sheet.",
     "justified": "Justified absence",
+    "absentByTeacher": "Absent: only the teacher can change it",
     "importTitle": "Import Massar files",
     "importHelp": "Choose XLSX files, a folder or a ZIP (up to 200 files, 15 MB). Preview first, then confirm. Nothing is deleted by an import.",
     "templateReady": "Clean template available",

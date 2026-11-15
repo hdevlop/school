@@ -90,6 +90,10 @@
 .cellField .markInput:focus { outline:2px solid var(--ring); background:color-mix(in oklab,var(--ring) 10%,var(--card)); }
 .cellField .markInput[aria-invalid='true'] { border-color:var(--destructive); background:color-mix(in oklab,var(--destructive) 10%,var(--card)); color:color-mix(in oklab,var(--destructive) 70%,var(--foreground)); }
 .cellField .markInput:disabled { opacity:1; background:var(--muted); color:var(--muted-foreground); }
+/* An absent student: no mark to give. The cell is grayed, the whole row too when every part is absent. */
+.cellField[data-absent='true'] .markInput, .sheetCard .cellField[data-absent='true'] .markInput:not(:disabled) { background:var(--muted); color:var(--muted-foreground); font-weight:600; }
+.cellField[data-absent='true'] .markInput:read-only { cursor:not-allowed; }
+.paperTable tbody tr[data-absent]:not([data-selected]) > td, .paperTable tbody tr[data-absent]:not([data-selected]) > th { background:color-mix(in oklab,var(--muted) 55%,var(--card)); color:var(--muted-foreground); }
 .invalidMark { display:block; color:var(--destructive,#b91c1c); font-size:11px; }
 .phoneSheet { display:none; }
 .supervisedPaper { display:none; }

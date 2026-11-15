@@ -169,7 +169,7 @@ function MassarContent() {
   // The same sheets print as Massar papers (one per subject) or as each student's statement (one per student).
   const paperOptions: MassarPaperOptions = {
     language, logo,
-    title: t('massar.flow.paperTitle'), student: t('massar.student'), teacher: t('massar.teacher'), term: t('massar.term'), exam: t('massar.exam'),
+    title: t('massar.flow.paperTitle'), student: t('massar.student'), teacher: t('massar.teacher'), term: t('massar.term'), exam: t('massar.exam'), absent: t('grades.status.missed'),
   };
   const print = async (chosen: MassarSheetRow[], build: (details: MassarSheetDetail[]) => string = details => buildMassarDocument(details, paperOptions)) => {
     if (!chosen.length) return;
@@ -188,7 +188,7 @@ function MassarContent() {
     }
   };
   const printStatements = (chosen: MassarSheetRow[], studentIds?: string[]) => print(chosen, details => buildStudentStatementDocument(details, {
-    language, logo, title: t('massar.flow.statements.title'), settings: availability.data?.statement, studentIds,
+    language, logo, title: t('massar.flow.statements.title'), absent: t('grades.status.missed'), settings: availability.data?.statement, studentIds,
   }));
 
   // ── Pieces ────────────────────────────────────────────────────────────────

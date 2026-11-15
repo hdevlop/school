@@ -1533,7 +1533,7 @@
     "processing": "Procesando",
     "completed": "Completado",
     "graded": "Calificado",
-    "missed": "Perdido",
+    "missed": "Ausente",
     "draft": "Borrador",
     "published": "Publicado",
     "planned": "Planificado",
@@ -3703,7 +3703,7 @@
       "totalGrades": "Total de notas"
     },
     "status": {
-      "missed": "Perdido",
+      "missed": "Ausente",
       "pending": "Pendiente"
     },
     "table": {
@@ -5131,7 +5131,7 @@
         "result": "Resultado",
         "graded": "Calificado",
         "pending": "Pendiente",
-        "missed": "No realizado",
+        "missed": "Ausente",
         "average": "Promedio",
         "averageShort": "Prom.",
         "loading": "Cargando notas...",
@@ -7170,6 +7170,7 @@
     "readOnly": "Esta hoja es de solo lectura.",
     "unsaved": "Cambios sin guardar. Guarde antes de salir de esta hoja.",
     "justified": "Ausencia justificada",
+    "absentByTeacher": "Ausente: solo el profesor puede cambiarlo",
     "importTitle": "Importar archivos de Massar",
     "importHelp": "Seleccione archivos XLSX, una carpeta o un ZIP (hasta 200 archivos, 15 MB). Revise y confirme. La importación no elimina datos.",
     "templateReady": "Plantilla original disponible",
