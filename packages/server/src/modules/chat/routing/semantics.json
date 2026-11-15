@@ -1,0 +1,316 @@
+{
+  "items": [
+    {
+      "toolName": "students_get_student_count",
+      "phrases": [
+        { "lang": "darija", "phrase": "قداش وصلو التسجيلات ديال التلاميذ هاد الموسم" },
+        { "lang": "darija", "phrase": "قداش من واحد كيقرا عندنا من التلاميذ" },
+        { "lang": "darija", "phrase": "قداش فيهم التلاميذ فالمؤسسة بجميع المستويات" },
+        { "lang": "darija-latn", "phrase": "9addach wslo tasjilat dyal tlamid had lmawsim" },
+        { "lang": "darija-latn", "phrase": "majmou3 tlamid f ga3 l a9sam" },
+        { "lang": "fr", "phrase": "total des inscriptions élèves sur la saison" },
+        { "lang": "fr", "phrase": "combien d'inscrits au total dans tout l'établissement" },
+        { "lang": "ar", "phrase": "كم تلميذا يتابع دراسته في مؤسستنا" },
+        { "lang": "en", "phrase": "total number of students enrolled in the whole school" }
+      ]
+    },
+    {
+      "toolName": "classes_get_class_student_count",
+      "phrases": [
+        { "lang": "darija", "phrase": "شحال من تلميذ فقسم واحد بحال السادس ابتدائي" },
+        { "lang": "darija", "phrase": "عدد التلاميذ اللي فهاد المستوى بوحدو" },
+        { "lang": "darija-latn", "phrase": "3adad tlamid f l mostawa dyal rrabi3 bo7do" },
+        { "lang": "fr", "phrase": "combien d'élèves dans la classe de CE2" },
+        { "lang": "ar", "phrase": "كم عدد التلاميذ في مستوى معين مثل الرابع ابتدائي" },
+        { "lang": "en", "phrase": "how many students are in one specific class level" }
+      ]
+    },
+    {
+      "toolName": "students_get_students",
+      "phrases": [
+        { "lang": "darija", "phrase": "عطيني لائحة ديال التلاميذ المسجلين كاملين" },
+        { "lang": "darija", "phrase": "سميات التلاميذ واحد بواحد" },
+        { "lang": "darija-latn", "phrase": "lista dyal tlamid kamlin b smiyathom" },
+        { "lang": "fr", "phrase": "liste de tous les élèves inscrits avec leurs noms" },
+        { "lang": "ar", "phrase": "قائمة جميع التلاميذ المسجلين بأسمائهم" },
+        { "lang": "en", "phrase": "list every enrolled student by name" }
+      ]
+    },
+    {
+      "toolName": "search_search_students",
+      "phrases": [
+        { "lang": "darija", "phrase": "قلب ليا على تلميذ سميتو يوسف" },
+        { "lang": "darija", "phrase": "لقى ليا التلميذة بالسمية ولا بالكود ديالها" },
+        { "lang": "darija-latn", "phrase": "9leb lia 3la tilmid smito amine" },
+        { "lang": "fr", "phrase": "chercher un élève par son nom ou son code" },
+        { "lang": "ar", "phrase": "ابحث عن تلميذ باسمه أو رمزه" },
+        { "lang": "en", "phrase": "find a student named Omar" }
+      ]
+    },
+    {
+      "toolName": "teachers_get_teacher_count",
+      "phrases": [
+        { "lang": "darija", "phrase": "قداش فيهم الأساتذة ديالنا" },
+        { "lang": "darija", "phrase": "العدد ديال الأساتذة كاملين بلا سميات" },
+        { "lang": "darija-latn", "phrase": "9addach fihom lasatida" },
+        { "lang": "fr", "phrase": "combien de profs avons-nous au total" },
+        { "lang": "ar", "phrase": "كم أستاذا يدرّس في مؤسستنا" },
+        { "lang": "en", "phrase": "total number of teachers in the school" }
+      ]
+    },
+    {
+      "toolName": "teachers_get_teachers",
+      "phrases": [
+        { "lang": "darija", "phrase": "سميات الأساتذة والمواد ديالهم" },
+        { "lang": "darija", "phrase": "شكون هوما الأساتذة اللي كيقريو عندنا" },
+        { "lang": "darija-latn", "phrase": "lista dyal lasatida b smiyathom" },
+        { "lang": "fr", "phrase": "liste des enseignants avec leurs matières" },
+        { "lang": "ar", "phrase": "قائمة الأساتذة وأسماؤهم" },
+        { "lang": "en", "phrase": "list the teachers and what they teach" }
+      ]
+    },
+    {
+      "toolName": "classes_get_classes",
+      "phrases": [
+        { "lang": "darija", "phrase": "شنو هوما المستويات والأقسام اللي فالمدرسة" },
+        { "lang": "darija", "phrase": "المستويات الدراسية اللي كاينة من الأول حتى للسادس" },
+        { "lang": "darija-latn", "phrase": "l mostawayat li kaynin mn lowel l ssadis" },
+        { "lang": "fr", "phrase": "quelles sont les classes et les niveaux de l'école" },
+        { "lang": "ar", "phrase": "ما هي المستويات الدراسية الموجودة في المدرسة" },
+        { "lang": "en", "phrase": "which classes and grade levels does the school have" }
+      ]
+    },
+    {
+      "toolName": "sections_get_sections",
+      "phrases": [
+        { "lang": "darija", "phrase": "شنو هوما المجموعات ديال كل مستوى بحال 2B" },
+        { "lang": "darija-latn", "phrase": "l afwaj b7al 2A w 2B" },
+        { "lang": "fr", "phrase": "liste des sections comme 2A et 2B" },
+        { "lang": "ar", "phrase": "قائمة الأفواج مثل 2B" },
+        { "lang": "en", "phrase": "list the sections such as 2A and 2B" }
+      ]
+    },
+    {
+      "toolName": "sections_get_students",
+      "phrases": [
+        { "lang": "darija", "phrase": "شكون التلاميذ اللي فالقسم 2B" },
+        { "lang": "darija-latn", "phrase": "tlamid dyal l9ism 2B" },
+        { "lang": "fr", "phrase": "les élèves de la section 2B" },
+        { "lang": "ar", "phrase": "تلاميذ القسم 2B" },
+        { "lang": "en", "phrase": "students in section 2B" }
+      ]
+    },
+    {
+      "toolName": "attendance_get_today_students",
+      "phrases": [
+        { "lang": "darija", "phrase": "التلاميذ الغايبين هاد الصباح" },
+        { "lang": "darija", "phrase": "المناداة ديال الصباح شكون ماكانش" },
+        { "lang": "darija", "phrase": "واش كاين شي تلميذ ماجاش اليوم" },
+        { "lang": "darija-latn", "phrase": "chkon ghayeb lyoum mn tlamid" },
+        { "lang": "darija-latn", "phrase": "lghiyab dyal sba7" },
+        { "lang": "fr", "phrase": "qui manque à l'appel ce matin" },
+        { "lang": "ar", "phrase": "أسماء الغائبين هذا الصباح" },
+        { "lang": "en", "phrase": "which students are absent today" }
+      ]
+    },
+    {
+      "toolName": "attendance_get_by_date",
+      "phrases": [
+        { "lang": "darija", "phrase": "شكون اللي غاب البارح" },
+        { "lang": "darija", "phrase": "الغياب ديال نهار الاثنين اللي فات" },
+        { "lang": "darija-latn", "phrase": "chkon ghab lbare7" },
+        { "lang": "fr", "phrase": "les absences d'hier" },
+        { "lang": "ar", "phrase": "الغياب في تاريخ محدد مثل أمس" },
+        { "lang": "en", "phrase": "attendance for a past date like yesterday" }
+      ]
+    },
+    {
+      "toolName": "attendance_get_by_student",
+      "phrases": [
+        { "lang": "darija", "phrase": "شحال من مرة غاب هاد التلميذ" },
+        { "lang": "darija", "phrase": "الغيابات ديال تلميذ واحد بالسمية" },
+        { "lang": "darija-latn", "phrase": "ghiyabat dyal tilmid wa7ed" },
+        { "lang": "fr", "phrase": "les absences d'un élève précis" },
+        { "lang": "ar", "phrase": "غيابات تلميذ معين" },
+        { "lang": "en", "phrase": "absence record of one named student" }
+      ]
+    },
+    {
+      "toolName": "attendance_get_today_staff",
+      "phrases": [
+        { "lang": "darija", "phrase": "شكون غاب من الخدامة والأساتذة اليوم" },
+        { "lang": "darija-latn", "phrase": "chkon ghab mn lmowadafin lyoum" },
+        { "lang": "fr", "phrase": "présence du personnel aujourd'hui" },
+        { "lang": "ar", "phrase": "حضور الموظفين اليوم" },
+        { "lang": "en", "phrase": "staff attendance today" }
+      ]
+    },
+    {
+      "toolName": "exams_get_upcoming_exams",
+      "phrases": [
+        { "lang": "darija", "phrase": "إمتى الامتحانات الجاية" },
+        { "lang": "darija", "phrase": "شنو هوما الفروض اللي جايين هاد السيمانة" },
+        { "lang": "darija", "phrase": "واش كاين شي امتحان قريب" },
+        { "lang": "darija-latn", "phrase": "imta l2imti7anat jayin" },
+        { "lang": "darija-latn", "phrase": "lforod li jayin had simana" },
+        { "lang": "fr", "phrase": "quand sont les prochains examens" },
+        { "lang": "ar", "phrase": "متى موعد أقرب امتحان" },
+        { "lang": "en", "phrase": "when are the next exams" }
+      ]
+    },
+    {
+      "toolName": "exams_get_today_exams",
+      "phrases": [
+        { "lang": "darija", "phrase": "واش كاين شي امتحان اليوم" },
+        { "lang": "darija-latn", "phrase": "wach kayn chi imti7an lyoum" },
+        { "lang": "fr", "phrase": "y a-t-il un examen aujourd'hui" },
+        { "lang": "ar", "phrase": "امتحانات اليوم" },
+        { "lang": "en", "phrase": "exams scheduled today" }
+      ]
+    },
+    {
+      "toolName": "assessments_get_today_assessments",
+      "phrases": [
+        { "lang": "darija", "phrase": "الفروض والكونطرولات ديال اليوم" },
+        { "lang": "darija-latn", "phrase": "forod lyoum f l9ism" },
+        { "lang": "fr", "phrase": "les contrôles et devoirs en classe d'aujourd'hui" },
+        { "lang": "ar", "phrase": "فروض المراقبة المستمرة اليوم" },
+        { "lang": "en", "phrase": "today's quizzes and class tests" }
+      ]
+    },
+    {
+      "toolName": "grades_get_student_report",
+      "phrases": [
+        { "lang": "darija", "phrase": "وريني بيان النقط ديال هاد التلميذ" },
+        { "lang": "darija", "phrase": "النتائج ديال التلميذة فكل المواد" },
+        { "lang": "darija-latn", "phrase": "werini lbulletin dyal tilmid" },
+        { "lang": "fr", "phrase": "relevé de notes trimestriel d'un élève" },
+        { "lang": "ar", "phrase": "كشف نقط تلميذ في جميع المواد" },
+        { "lang": "en", "phrase": "report card of a student" }
+      ]
+    },
+    {
+      "toolName": "grades_get_by_section",
+      "phrases": [
+        { "lang": "darija", "phrase": "النقط ديال القسم كامل فمادة وحدة" },
+        { "lang": "darija-latn", "phrase": "no9at dyal l9ism kaml f lfrancais" },
+        { "lang": "fr", "phrase": "les notes de toute la classe en mathématiques" },
+        { "lang": "ar", "phrase": "نقط القسم في مادة الرياضيات" },
+        { "lang": "en", "phrase": "grades of a whole section in one subject" }
+      ]
+    },
+    {
+      "toolName": "fees_get_student_fees",
+      "phrases": [
+        { "lang": "darija", "phrase": "شحال باقي خاص هاد التلميذ يخلص" },
+        { "lang": "darija", "phrase": "الواجبات الشهرية ديال التلميذ" },
+        { "lang": "darija-latn", "phrase": "ch7al ba9i khaso ykhelles" },
+        { "lang": "fr", "phrase": "frais de scolarité restants d'un élève" },
+        { "lang": "ar", "phrase": "الرسوم الدراسية المتبقية على تلميذ" },
+        { "lang": "en", "phrase": "school fees still owed by a student" }
+      ]
+    },
+    {
+      "toolName": "payments_get_by_student",
+      "phrases": [
+        { "lang": "darija", "phrase": "شنو خلص هاد التلميذ لحد الآن" },
+        { "lang": "darija-latn", "phrase": "chno khelles had tilmid" },
+        { "lang": "fr", "phrase": "historique des paiements d'un élève" },
+        { "lang": "ar", "phrase": "المبالغ التي دفعها تلميذ" },
+        { "lang": "en", "phrase": "payments a student has made" }
+      ]
+    },
+    {
+      "toolName": "students_get_student_parents",
+      "phrases": [
+        { "lang": "darija", "phrase": "نمرة التيليفون ديال باباه ولا ماماه" },
+        { "lang": "darija", "phrase": "شكون هوما الواليدين ديال هاد التلميذ" },
+        { "lang": "darija-latn", "phrase": "nemra dyal bah dyal tilmid" },
+        { "lang": "fr", "phrase": "téléphone des parents d'un élève" },
+        { "lang": "ar", "phrase": "رقم هاتف ولي أمر التلميذ" },
+        { "lang": "en", "phrase": "parent phone number for a student" }
+      ]
+    },
+    {
+      "toolName": "student-routes_get_by_student",
+      "phrases": [
+        { "lang": "darija", "phrase": "فين كيركب هاد التلميذ فالكار ديال المدرسة" },
+        { "lang": "darija-latn", "phrase": "lkar dyal tilmid w trik dyalo" },
+        { "lang": "fr", "phrase": "le bus et le trajet d'un élève" },
+        { "lang": "ar", "phrase": "حافلة النقل المدرسي لتلميذ" },
+        { "lang": "en", "phrase": "which school bus route a student takes" }
+      ]
+    },
+    {
+      "toolName": "parents_get_children",
+      "phrases": [
+        { "lang": "darija", "phrase": "ولادي فأشمن قسم كيقراو" },
+        { "lang": "darija-latn", "phrase": "wladi f ina 9ism kay9raw" },
+        { "lang": "fr", "phrase": "dans quelle classe sont mes enfants" },
+        { "lang": "ar", "phrase": "في أي قسم يدرس أبنائي" },
+        { "lang": "en", "phrase": "which class are my children in" }
+      ]
+    },
+    {
+      "toolName": "student-profile_get_academic",
+      "phrases": [
+        { "lang": "darija", "phrase": "كيفاش جايب ولدي فالنقط" },
+        { "lang": "darija", "phrase": "النقط ديالي فهاد الدورة" },
+        { "lang": "darija-latn", "phrase": "no9at dyal weldi" },
+        { "lang": "fr", "phrase": "les notes de mon fils ce semestre" },
+        { "lang": "ar", "phrase": "نتائج ابني الدراسية" },
+        { "lang": "en", "phrase": "my child's grades this term" }
+      ]
+    },
+    {
+      "toolName": "student-profile_get_attendance_summary",
+      "phrases": [
+        { "lang": "darija", "phrase": "شحال من مرة غابت بنتي هاد العام" },
+        { "lang": "darija-latn", "phrase": "ghiyab dyal bnti" },
+        { "lang": "fr", "phrase": "les absences de ma fille cette année" },
+        { "lang": "ar", "phrase": "ملخص غياب ابنتي" },
+        { "lang": "en", "phrase": "my child's absence summary" }
+      ]
+    },
+    {
+      "toolName": "class-routines_get_teacher_routine",
+      "phrases": [
+        { "lang": "darija", "phrase": "الجدول ديال الحصص ديال الأستاذ فالسيمانة" },
+        { "lang": "darija-latn", "phrase": "l emploi dyal lostad" },
+        { "lang": "fr", "phrase": "emploi du temps d'un enseignant" },
+        { "lang": "ar", "phrase": "جدول حصص الأستاذ الأسبوعي" },
+        { "lang": "en", "phrase": "a teacher's weekly timetable" }
+      ]
+    },
+    {
+      "toolName": "teacher-profile_get_my_classes",
+      "phrases": [
+        { "lang": "darija", "phrase": "شمن أقسام كنقري هاد العام" },
+        { "lang": "darija-latn", "phrase": "a9sam li kan9erri" },
+        { "lang": "fr", "phrase": "les classes où j'enseigne" },
+        { "lang": "ar", "phrase": "الأقسام التي أدرسها" },
+        { "lang": "en", "phrase": "the classes I teach" }
+      ]
+    },
+    {
+      "toolName": "subjects_get_subjects",
+      "phrases": [
+        { "lang": "darija", "phrase": "شنو هوما المواد اللي كتقرا فالمدرسة" },
+        { "lang": "darija-latn", "phrase": "lmawad li kat9ra" },
+        { "lang": "fr", "phrase": "liste des matières enseignées" },
+        { "lang": "ar", "phrase": "المواد الدراسية" },
+        { "lang": "en", "phrase": "list of subjects taught" }
+      ]
+    },
+    {
+      "toolName": "staff_get_staff_count",
+      "phrases": [
+        { "lang": "darija", "phrase": "شحال من خدام عندنا فالإدارة والمدرسة" },
+        { "lang": "darija-latn", "phrase": "9addach fihom l personnel" },
+        { "lang": "fr", "phrase": "nombre total du personnel" },
+        { "lang": "ar", "phrase": "عدد الموظفين" },
+        { "lang": "en", "phrase": "how many staff members work here" }
+      ]
+    }
+  ]
+}

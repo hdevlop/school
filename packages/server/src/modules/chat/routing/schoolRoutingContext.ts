@@ -16,9 +16,18 @@ export function schoolRoutingContext(query: string, routingQuery = query): strin
   const teaching = mentions('kan9erri|ken9erri|[وفب]?كنقري|i teach|j enseigne');
   const pending = mentions('pending grading|ns7ho|ns7h|[وفب]?نصحح(?:و|هم)?|بلا نقط|ما تسجل|ma tsjjel');
   const assessments = mentions('l?forod|l?fard|assessments?|assignments?|quizzes|[وفب]?(?:الفروض|فروض|فرض)');
+  // One class or level named by code or ordinal, not only by the word "class".
+  const namedClass = placement
+    || /(?<![\p{L}\p{N}])(?:cp|ce[12]|cm[12]|[1-6](?:ap|ac|bac)|[1-6][a-f])(?![\p{L}\p{N}])/iu.test(text)
+    || mentions('ibtida2i|i3dadi|ssadis|lkhamis|rrabi3|ttalit|[وفب]?(?:ابتدائي|اعدادي|إعدادي|السادس|الخامس|الرابع|الثالث)');
+  const upcoming = mentions('jay|jayin|jaya|jayen|mazal|prochains?|prochaine|upcoming|next|[وفب]?(?:الجاي|الجايين|الجاية|جاي|جايين|القادم|القادمة|المقبلة)');
   const hints: string[] = [];
+  // Naming the per-class count for a whole-school question made it the primary
+  // tool (13 of 113 School routing cases, 2026-11-15); offer it for one class only.
   if (mentions('ch7al|chhal|combien|how many|شحال|كم|عدد') && mentions('tlamid|tlamd|tilmid|students?|eleves?|تلميذ|تلاميذ'))
-    hints.push('student counts students_get_student_count classes_get_class_student_count classes_get_classes');
+    hints.push(namedClass
+      ? 'student counts students_get_student_count classes_get_class_student_count classes_get_classes'
+      : 'student counts students_get_student_count');
   if (grades && !pending) hints.push(personal
     ? 'student academic grades student-profile_get_academic grades_get_by_student'
     : placement ? 'class subject grades grades_get_by_section grades_get_by_subject'
@@ -36,6 +45,10 @@ export function schoolRoutingContext(query: string, routingQuery = query): strin
     hints.push('teachers_get_my_identity teacher-profile_get_my_classes teacher-profile_get_my_students own teaching assignments subjects');
   if (pending)
     hints.push('teacher pending assessments teachers_get_my_identity teacher-profile_get_pending_grading');
+  // Upcoming tests are read from the exam calendar; today's assessments only
+  // answer "today" (upcoming forod routed to them in 5 of 113 cases).
+  else if (assessments && upcoming)
+    hints.push('upcoming exams calendar exams_get_upcoming_exams exams_get_all');
   else if (assessments)
     hints.push('assessment quizzes assignments assessments_get_all assessments_get_today_assessments');
   return hints.length ? `${hints.join('\n')}\n${routingQuery}` : routingQuery;

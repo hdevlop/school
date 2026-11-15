@@ -9,7 +9,7 @@ than reaching into another workspace's source files.
 | --- | --- |
 | `replies/` | Language detection and localized write refusals |
 | `jev/` | Classifier, Decisions protocol, wording, guards and four result formatters |
-| `routing/` | Query-only Darija discovery hints and provider policy |
+| `routing/` | Query-only Darija discovery hints, routing phrases (`semantics.json`) and provider policy |
 | `transport/` | Selected year/date metadata, release controls and response/failure handling |
 | `diagnostics/` | Fixed diagnostic records and guarded read endpoints |
 
@@ -75,6 +75,14 @@ comparison CLIs and their tests have been removed. Shadow mode is retired;
 monthly budget or price tracking. `transport/` keeps provider dispatch constraints
 and removes SDK token/pricing metadata before the widget receives a reply.
 Administrator diagnostics retain timings and outcomes without token or cost fields.
+
+`routing/semantics.json` holds example phrases (Darija, Arabizi, French, Arabic,
+English) for about 30 everyday read tools. najm-rag does not load the file
+itself: import it once per database in RAG Studio (Semantics → Import JSON) or
+with `POST /api/rag-studio/semantics/import`, and import it again after editing.
+Phrases were written from tool descriptions, not from the test fixtures; keep
+it that way so the fixtures stay a fair test. With Qwen3 Embedding the routing
+threshold is 0.68 (`ragConfig.ts`).
 
 Reviewed questions and fake HTTP/MCP data live under
 `packages/server/tests/chat/fixtures/`; they never run a paid benchmark.

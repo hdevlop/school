@@ -22,6 +22,28 @@ test('class-count discovery preserves the class code and offers an explicit coun
   expect(result).toEndWith(query);
 });
 
+test('a whole-school student count does not offer the per-class count', () => {
+  for (const query of ['شحال من تلميذ مسجل عندنا هاد العام؟', 'ch7al mn tlamid 3ndna', 'how many students do we have?']) {
+    const result = schoolRoutingContext(query);
+    expect(result).toContain('students_get_student_count');
+    expect(result).not.toContain('classes_get_class_student_count');
+  }
+});
+
+test('a class named by level or code offers the per-class count', () => {
+  for (const query of ['ch7al mn tilmid f ssadis', 'شحال من تلميذ فالسادس ابتدائي؟', 'how many students in 2B?']) {
+    expect(schoolRoutingContext(query)).toContain('classes_get_class_student_count');
+  }
+});
+
+test('upcoming assessments read the exam calendar, not today\'s assessments', () => {
+  for (const query of ['شنو هما الفروض الجايين؟', 'werini lforod jayin', 'upcoming assignments please']) {
+    const result = schoolRoutingContext(query);
+    expect(result).toContain('exams_get_upcoming_exams');
+    expect(result).not.toContain('assessments_get_today_assessments');
+  }
+});
+
 test('assessments discover assessment records separately from exams and pending grading', () => {
   const result = schoolRoutingContext('شنو هما الفروض اللي عندنا اليوم؟');
   expect(result).toContain('assessments_get_today_assessments');

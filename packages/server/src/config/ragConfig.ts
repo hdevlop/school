@@ -18,7 +18,7 @@ import { schoolRoutingContext } from '../modules/chat/routing/schoolRoutingConte
  *   RAG_EMBEDDING_TIMEOUT_MS            indexing, default 60000
  *   RAG_EMBEDDING_QUERY_TIMEOUT_MS      one chat question, default 5000
  *   RAG_EMBEDDING_QUERY_COOLDOWN_MS     skip the provider after a failure, default 30000
- *   RAG_EMBEDDING_QUERY_PREFIX          default per provider and model, below;
+ *   RAG_EMBEDDING_QUERY_PREFIX          default per model, below;
  *   RAG_EMBEDDING_DOCUMENT_PREFIX       set to an empty value for none
  */
 
@@ -28,27 +28,29 @@ type EmbeddingProvider = (typeof EMBEDDING_PROVIDERS)[number];
 interface EmbeddingDefaults {
   queryPrefix: string;
   documentPrefix: string;
+  /** Tool routing threshold for this model; unset keeps najm-rag's. */
+  similarityThreshold?: number;
 }
 
-const PROVIDER_DEFAULTS: Record<EmbeddingProvider, EmbeddingDefaults & { baseUrl: string }> = {
-  ollama: {
-    baseUrl: 'http://127.0.0.1:11434',
-    queryPrefix: '',
-    documentPrefix: '',
-  },
-  'openai-compatible': {
-    baseUrl: 'http://127.0.0.1:18080/v1',
-    queryPrefix: 'task: search result | query: ',
-    documentPrefix: 'title: none | text: ',
-  },
+const PROVIDER_BASE_URLS: Record<EmbeddingProvider, string> = {
+  ollama: 'http://127.0.0.1:11434',
+  'openai-compatible': 'http://127.0.0.1:18080/v1',
 };
 
-// A model's own prompt format wins over its provider's.
+// Prompts for models najm-rag has no preset for. EmbeddingGemma is left out on
+// purpose: with neither prefix set, najm-rag applies its retrieval prompts and
+// the 0.35 threshold measured with them. Setting a prefix, even to '', keeps
+// the 0.45 default threshold, which is too strict for prompted scores.
 const MODEL_DEFAULTS: Record<string, EmbeddingDefaults> = {
   'qwen3-embedding': {
     queryPrefix:
       'Instruct: Retrieve the school management tool that fulfills the user request.\nQuery: ',
     documentPrefix: '',
+    // Qwen scores unrelated tools around 0.6-0.7, so najm-rag's 0.45 default
+    // offered tools to every greeting. Measured 2026-11-15 on 787 held-out
+    // School messages (fr, ar, Darija, Arabizi): small talk given tools 84 of
+    // 84 -> 18 of 84; right tool given 91% -> 92%; requests with no tool 0% -> 2%.
+    similarityThreshold: 0.68,
   },
 };
 
@@ -114,12 +116,12 @@ function resolveEmbeddingConfig() {
     'ollama',
   );
   const model = envString(process.env.RAG_EMBEDDING_MODEL) ?? 'embeddinggemma';
-  const defaults = { ...PROVIDER_DEFAULTS[provider], ...MODEL_DEFAULTS[model] };
+  const defaults: Partial<EmbeddingDefaults> = MODEL_DEFAULTS[model] ?? {};
 
   return {
     provider,
     model,
-    baseUrl: envString(process.env.RAG_EMBEDDING_BASE_URL) ?? defaults.baseUrl,
+    baseUrl: envString(process.env.RAG_EMBEDDING_BASE_URL) ?? PROVIDER_BASE_URLS[provider],
     apiKey: process.env.RAG_EMBEDDING_API_KEY,
     dimensions: envInt('RAG_EMBEDDING_DIMENSIONS', process.env.RAG_EMBEDDING_DIMENSIONS, {
       fallback: 768,
@@ -153,12 +155,14 @@ function resolveEmbeddingConfig() {
   };
 }
 
-export const ragConfig = (): NajmPlugin =>
-  rag({
+export const ragConfig = (): NajmPlugin => {
+  const embedding = resolveEmbeddingConfig();
+  return rag({
     dialect: 'pg',
-    embedding: resolveEmbeddingConfig(),
+    embedding,
     toolRouting: {
       enabled: true,
+      similarityThreshold: MODEL_DEFAULTS[embedding.model]?.similarityThreshold,
       // When routing fails, answer without tools and say the data is
       // unreachable (najm-chatbot's notice) rather than send all ~430 tools,
       // about 51k tokens on every step.
@@ -171,6 +175,7 @@ export const ragConfig = (): NajmPlugin =>
     knowledge: true,
     allowedLangs: ['en', 'fr', 'ar', 'es'],
   }) as unknown as NajmPlugin;
+};
 
 // najm-rag 2.1.2 makes the Studio Assistant opt-in; School registers studioAssistant().
 export const ragStudioConfig = () => ragStudio({ auth: 'standalone', assistant: true });
