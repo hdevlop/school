@@ -22,7 +22,8 @@ function abortable<T>(start: () => Promise<T>, signal: AbortSignal): Promise<T> 
   });
 }
 
-async function responseText(response: Response, signal: AbortSignal) {
+/** Reads a provider body, at most 64 KiB, abandoning it when `signal` aborts. */
+export async function responseText(response: Response, signal: AbortSignal) {
   const reader = response.body?.getReader();
   if (!reader) throw new Error('missing_body');
   const decoder = new TextDecoder(); let bytes = 0, text = '';

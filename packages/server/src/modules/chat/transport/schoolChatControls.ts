@@ -22,6 +22,15 @@ export function readJevControls() {
   };
 }
 
+/**
+ * Jev as a second judge after tool routing (najm-rag `rerankTools`). Off
+ * unless CHATBOT_JEV_RERANK=on; independent of CHATBOT_FLOW and
+ * CHATBOT_JEV_MODE, which govern Jev's four direct replies. Read at boot.
+ */
+export function readJevRerankControls() {
+  return { enabled: envChoice('CHATBOT_JEV_RERANK', process.env.CHATBOT_JEV_RERANK, ['off', 'on'], 'off') === 'on' };
+}
+
 /** The release switch enables the qualified scope; Jev off retains router fallback. */
 export function effectiveJevMode(): JevMode {
   return readSchoolChatControls().enabled ? readJevControls().mode : 'off';

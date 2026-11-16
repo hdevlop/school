@@ -64,3 +64,23 @@ Two follow-ups, same questions:
 
 Still weak: a section's marks (2 of 22), one test's results (3 of 21) and the
 report card (6 of 24); 19 questions get no tool.
+
+### Jev as a second judge, measured 2026-11-16
+
+The router's candidates for the 200 grades questions and 120 older fixture
+questions, judged by Jev through najm-rag's `rerankTools` rules
+(`JevToolReranker.ts`, about $0.00003 and 0.25 s per message):
+
+| | Router alone | With Jev | Right before, wrong after |
+| --- | --- | --- | --- |
+| Grades, right tool first | 74 (37%) | **94 (47%)** | 0 |
+| Grades, Darija only | 45 of 140 | 53 of 140 | |
+| Older questions | 44 of 82 | **52 of 82** | 2 |
+
+The right tool is among the router's 8 candidates for 83% of grades questions:
+Jev can only choose among them, so phrases, hints and tool descriptions still
+decide the rest. Showing Jev near misses below the threshold rescued none of the
+19 grades questions that get no tool. Lower confidence cuts (0.5 to 0.6) gained
+2 more and lost 3 to 7. Jev did worse than the router on a teacher's marks and
+school KPIs: their descriptions are too close to their neighbours'.
+

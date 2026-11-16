@@ -5,6 +5,8 @@ import { rag, ragStudio } from 'najm-rag';
 import { rewriteDarijaForRouting } from '../modules/chat/routing/darijaRouting';
 import { ROUTING_TEXT_VERSION, schoolRoutingContext } from '../modules/chat/routing/schoolRoutingContext';
 import { seedSemantics } from '../modules/chat/routing/seedSemantics';
+import { schoolJevToolReranker } from '../modules/chat/jev/JevToolReranker';
+import { readJevRerankControls } from '../modules/chat/transport/schoolChatControls';
 
 /**
  * Embeddings for chat tool routing and the knowledge base.
@@ -191,6 +193,15 @@ export const ragConfig = (): NajmPlugin => {
     // routing/semantics/): those not stored yet are added after boot tool
     // indexing; studio edits stay. Edit the files to change one for good.
     seedSemantics,
+    // Jev picks among the router's tools (CHATBOT_JEV_RERANK=on). najm-rag's
+    // defaults: a pick at 0.85 leads with its dependencies and the router's
+    // next 3; at 0.7 it moves to the top; anything else, a failure or no
+    // answer in 0.8 s keeps the router's order. Measured 2026-11-16 on the
+    // router's candidates for 320 fixture questions: right tool first 74 -> 94
+    // of 200 grades questions (0 lost) and 44 -> 52 of 82 older ones (2 lost).
+    // Near misses below the threshold rescued nothing at 0.62 or 0.58, so none
+    // are shown; lower confidence cuts gained 2 and lost 3 to 7.
+    ...(readJevRerankControls().enabled ? { rerankTools: { rerank: schoolJevToolReranker } } : {}),
     knowledge: true,
     allowedLangs: ['en', 'fr', 'ar', 'es'],
   }) as unknown as NajmPlugin;

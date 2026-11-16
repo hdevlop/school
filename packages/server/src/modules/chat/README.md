@@ -32,7 +32,7 @@ role-based access decision. Jev results explicitly describe their accessible
 scope so an owned subset does not appear to be a school-wide total. Personal
 answers now use router/20B tool chaining instead of identity-dependent renderers.
 
-Jev has eight runtime files, each with one main responsibility:
+Jev has nine runtime files, each with one main responsibility:
 
 | File | Responsibility |
 | --- | --- |
@@ -40,6 +40,7 @@ Jev has eight runtime files, each with one main responsibility:
 | `jevWording.ts` | The one provider request shape used for eligible reads |
 | `jevDecision.ts` | Validate provider decisions and confidence/write agreement |
 | `JevIntentClassifier.ts` | Eligibility, provider calls, cancellation and fallback |
+| `JevToolReranker.ts` | Picks one of the router's candidate tools (najm-rag `rerankTools`) |
 | `JevRequestContext.ts` | Request context and the framework preparation hooks |
 | `jevReplyPlan.ts` | Supported read scope and authorized result formatting |
 | `guards/countGuard.ts` | Count wording and explicit name/list exclusions |
@@ -88,6 +89,16 @@ the studio comes back while it is in the file; change it here instead.
 Phrases were written from tool descriptions, not from the test fixtures; keep
 it that way so the fixtures stay a fair test. With Qwen3 Embedding the routing
 threshold is 0.68 (`ragConfig.ts`).
+
+With `CHATBOT_JEV_RERANK=on`, Jev also judges every routed message: najm-rag
+shows it the router's candidate tools with their descriptions, and a pick at
+confidence 0.85 leads the list (with its dependencies and the router's next 3),
+at 0.7 moves to the top. "None", a lower confidence, a malformed answer or no
+answer in 0.8 s keeps the router's order; after a failure Jev is skipped for
+30 s. It needs an OpenRouter key in the AI settings and najm-rag with
+`rerankTools` (after 3.6.0); with 3.6.0 the setting is ignored. It only
+reorders the tools offered: the tools still check access when they run. The
+studio's routing preview reports the pick as `rerank`.
 
 Stored phrases are embedded through the same hints and Darija rewrite as a
 message. After changing either, change `ROUTING_TEXT_VERSION` in

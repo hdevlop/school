@@ -5,7 +5,7 @@ const probability = (value: unknown): value is number => typeof value === 'numbe
 // API probabilities are rounded to two decimals in the retained probe. Nine
 // individually rounded values can differ from one by at most 9 * 0.005.
 const probabilitySumTolerance = INTENT_NAMES.length * 0.005 + 1e-12;
-const modelMatches = (model: unknown) => typeof model === 'string' && (model === JEV_MODEL
+export const modelMatches = (model: unknown) => typeof model === 'string' && (model === JEV_MODEL
   || model.startsWith(`${JEV_MODEL}-`) && /^\d{8}$/.test(model.slice(JEV_MODEL.length + 1)));
 
 /** Reads one decisions response; anything malformed is an error sample, never a guess. */
