@@ -126,3 +126,31 @@ little and stays 0.85. Measured on the dev server:
 | Grades with no tool | 19 | 16 |
 | Older questions, of 82 | 53 | 57 |
 | No-tool questions right, of 38 | 11 | 11 |
+
+Then the routing hints learned the grades words that missed (2026-11-16): the
+marking words تنقيط, درجات, تقييمات, نتائج and tan9it; report sheets (البيان,
+كشف, الحصيلة, البولطان, relevé, boletín, full report, not next to fees);
+averages (المعدل, lmo3adal, moyenne) for the school-wide reads; and which read a
+marks question names: a teacher, an exam, a class test, one subject in every
+class, a class, a class code, or else a student. "My" with a class code
+("mon groupe CP C", "الأقسام ديالي") is a staff member's class, not the reader's
+own marks. The Darija rewrite learned tan9it, ta9yimat, kachf, lmo3adal, jab,
+kol and jami3. Three runs on the dev server, Jev on:
+
+| | Before | With the hints |
+| --- | --- | --- |
+| Grades, right tool first | 131-133 | **151-156 (76-78%)** |
+| Grades, right tool offered | 157 | 185-187 |
+| Grades with no tool | 16 | 4 |
+| Darija only, of 140 | 87-88 | 99-103 |
+| A student's report card, of 24 | 10 | 16-18 |
+| One class, of 22 | 13 | 18-20 |
+| A teacher's marks, of 20 | 5-6 | 9 |
+| Older questions, of 82 | 55-57 | 53-54 |
+
+The routing text of only one older question changed; the older ones that moved
+are class and count questions where Jev's pick varies from run to run (one,
+"how many students in the 6th grade", now gets the per-class count first
+instead of the class list). These hints were written from the failing grades
+questions, so the grades numbers above flatter them; the older questions are
+the check that nothing else got worse.

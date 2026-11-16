@@ -182,3 +182,28 @@ test.each([
 test('monthly-fee wording "الواجبات الشهرية" is not homework', () => {
   expect(routed('شحال باقي عليا ديال الواجبات الشهرية؟')).not.toContain('homework_get');
 });
+
+test.each([
+  ['شنو التنقيط ديال الأستاذة العلوي', 'grades_get_by_teacher'],
+  ['les notes données par le professeur de maths', 'grades_get_by_teacher'],
+  ['نتائج امتحان الرياضيات ديال 3AC A', 'grades_get_by_exam'],
+  ['chno jabo tlamd f lfard dyal l3arabiya', 'grades_get_by_assessment'],
+  ['tan9it lfrançais f kol la9sam', 'grades_get_by_subject'],
+  ['notes de calcul pour mon groupe CP B', 'grades_get_by_section'],
+  ['بغيت البيان ديال سارة من 5AP B', 'grades_get_student_report'],
+  ['quiero el boletin de Omar', 'grades_get_student_report'],
+  ['ch7al lmo3adal dyal lmdrasa', 'registrar-dashboard_get_overview'],
+])('a grades question names its read: %s', (query, tool) => {
+  expect(schoolRoutingContext(query)).toContain(tool);
+});
+
+test('"my" with a class code is a staff member\'s class, not the reader\'s own marks', () => {
+  expect(schoolRoutingContext('notes de mes élèves de 6AP C')).not.toContain('student-profile_get_academic');
+  expect(schoolRoutingContext('bghit nno9at dyali')).toContain('student-profile_get_academic');
+  expect(schoolRoutingContext('nno9at dyal bnti f 5AP B')).toContain('parents_get_children');
+});
+
+test('a statement next to fees is not a report card', () => {
+  expect(schoolRoutingContext('relevé des frais de Omar')).not.toContain('grades_get_student_report');
+  expect(schoolRoutingContext('كشف الواجبات الشهرية')).not.toContain('grades_get_student_report');
+});
