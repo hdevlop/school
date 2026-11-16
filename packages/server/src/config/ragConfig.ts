@@ -100,6 +100,12 @@ const TOOL_DEPENDENCIES: Record<string, string[]> = {
   grades_get_by_section: ['classes_get_classes', 'sections_get_sections', 'subjects_get_subjects', 'grades_get_all'],
   grades_get_by_subject: ['classes_get_classes', 'subjects_get_subjects', 'grades_get_all'],
   grades_get_all: ['classes_get_classes', 'sections_get_sections', 'subjects_get_subjects'],
+  // One test's or exam's results need its ID: the class's own list (about
+  // 10 KB), never the year's 222 exams (160 KB, which left OSS20B unable to
+  // reply). A teacher's marks need the teacher found by name.
+  grades_get_by_exam: ['sections_get_sections', 'exams_get_by_section'],
+  grades_get_by_assessment: ['sections_get_sections', 'assessments_get_by_section'],
+  grades_get_by_teacher: ['search_search_teachers'],
   exams_get_upcoming_exams: ['exams_get_all'],
   // "This month" may retrieve today's exam tool; the list is needed to
   // apply a different date window without guessing teacher/class IDs.

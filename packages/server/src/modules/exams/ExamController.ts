@@ -51,7 +51,7 @@ export class ExamController {
   @Get('/section/:sectionId')
   @CanList()
   @Validate({ params: sectionIdParam })
-  @McpTool({ description: 'Get exams by section', readOnly: true })
+  @McpTool({ description: "List one class section's exams by sectionId: each exam's id (examId), title (often the subject), date and marks out of. Examens d'une classe, امتحانات القسم.", readOnly: true })
   @ResMsg('exams.success.retrieved')
   async getBySection(@Params('sectionId') sectionId: string) {
     return this.examService.getAll({ sectionId });

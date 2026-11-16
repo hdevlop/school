@@ -6,7 +6,7 @@ import { normalizeReplyText } from 'najm-chatbot';
  * changes. najm-rag then marks every phrase stale; run "Reindex semantics" in
  * the RAG studio after the deploy.
  */
-export const ROUTING_TEXT_VERSION = '2026-11-16 grades read hints';
+export const ROUTING_TEXT_VERSION = '2026-11-16 grades lookups';
 
 /** Query-only discovery hints. No role, identity lookup or access decision. */
 // najm-rag lowercases the message and folds these letters before this hook
@@ -81,8 +81,8 @@ export function schoolRoutingContext(query: string, routingQuery = query): strin
     // one subject everywhere, a class, a class code (often a student's), or a student.
     if (own) hints.push('student academic grades student-profile_get_academic grades_get_by_student');
     else if (teacher && !teaching) hints.push('marks one teacher recorded grades_get_by_teacher search_search_teachers');
-    else if (exam && !upcoming) hints.push('one exam results grades_get_by_exam exams_get_all');
-    else if (assessments && !upcoming) hints.push('one class test results grades_get_by_assessment assessments_get_all');
+    else if (exam && !upcoming) hints.push('one exam results grades_get_by_exam exams_get_by_section sections_get_sections');
+    else if (assessments && !upcoming) hints.push('one class test results grades_get_by_assessment assessments_get_by_section sections_get_sections');
     else if (everyClass) hints.push('one subject in every class grades_get_by_subject');
     else if (placement) hints.push('class subject grades grades_get_by_section grades_get_by_subject');
     else if (classCode) hints.push('class or student grades grades_get_by_section grades_get_by_student search_search_students');
