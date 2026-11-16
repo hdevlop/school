@@ -3,6 +3,7 @@ import { AiSettingsService } from 'najm-chatbot';
 import { JEV_DECISIONS_URL, JEV_MODEL } from './jevIntents';
 import { modelMatches } from './jevDecision';
 import { responseText } from './JevIntentClassifier';
+import { rewriteDarijaForRouting } from '../routing/darijaRouting';
 
 /**
  * Jev as najm-rag's `rerankTools` judge: it picks which of the router's
@@ -21,13 +22,13 @@ export const RERANK_FAILURES_BEFORE_COOLDOWN = 3;
 export const RERANK_FAILURE_COOLDOWN_MS = 30_000;
 const DESCRIPTION_CHARS = 400;
 
-const INSTRUCTIONS = 'The message was typed in the chat of a Moroccan school management dashboard by a staff member, '
+export const TOOL_PICK_INSTRUCTIONS = 'The message was typed in the chat of a Moroccan school management dashboard by a staff member, '
   + 'teacher, parent or student. It can be English, French, Spanish, Modern Standard Arabic or Moroccan Darija in Arabic '
   + 'or Latin script, or a mix. Which tool should the assistant call first to answer it? '
   + 'Choose none when no listed tool fits or the message asks for no school data.';
 
 /** One provider request: each candidate tool is a choice described by its MCP description. */
-export function buildToolPickRequest(query: string, candidates: ToolCandidate[]) {
+export function buildToolPickRequest(query: string, candidates: ToolCandidate[], instructions = TOOL_PICK_INSTRUCTIONS) {
   const criteria: Record<string, string> = {};
   for (const candidate of candidates) {
     criteria[candidate.toolName] = (candidate.description || candidate.toolName).slice(0, DESCRIPTION_CHARS);
@@ -36,7 +37,7 @@ export function buildToolPickRequest(query: string, candidates: ToolCandidate[])
   return {
     model: JEV_MODEL,
     state: query,
-    questions: { tool: { type: 'choice', instructions: INSTRUCTIONS, criteria } },
+    questions: { tool: { type: 'choice', instructions, criteria } },
   };
 }
 
@@ -57,6 +58,9 @@ export interface JevToolRerankerOptions {
   settings: () => Promise<ProviderSettings | null>;
   transport?: typeof fetch;
   now?: () => number;
+  /** For measurement: other instructions, or the text Jev reads instead of the message. */
+  instructions?: string;
+  state?: (query: string) => string;
 }
 
 /**
@@ -81,7 +85,7 @@ export function createJevToolReranker(options: JevToolRerankerOptions) {
       const response = await transport(JEV_DECISIONS_URL, {
         method: 'POST', redirect: 'error', signal: request.signal,
         headers: { authorization: `Bearer ${settings.apiKey}`, 'content-type': 'application/json' },
-        body: JSON.stringify({ ...buildToolPickRequest(request.query, request.candidates),
+        body: JSON.stringify({ ...buildToolPickRequest(options.state ? options.state(request.query) : request.query, request.candidates, options.instructions),
           session_id: crypto.randomUUID(), provider: { data_collection: 'deny' } }),
       });
       const text = await responseText(response, request.signal);
@@ -107,5 +111,21 @@ export function bindJevToolReranker(container: Container) {
   settingsSource = async () => (await container.resolve(AiSettingsService)).getInternal();
 }
 
+/**
+ * Jev reads the message and, when it differs, the router's Arabic rewrite of
+ * its Darija words. Measured 2026-11-16 on the router's candidates for 320
+ * fixture questions, with the reworded grades descriptions: right tool first
+ * 90-98 -> 98-99 of 200 grades questions, 52-53 -> 55 of 82 older ones, none
+ * lost. A Darija word list in the instructions added 6 grades questions but
+ * lost 3-4 older ones.
+ */
+export function withArabicRewrite(query: string) {
+  const rewritten = rewriteDarijaForRouting(query);
+  return rewritten && rewritten !== query ? `${query}\n(${rewritten})` : query;
+}
+
 /** The instance ragConfig passes to najm-rag. */
-export const schoolJevToolReranker = createJevToolReranker({ settings: async () => (settingsSource ? settingsSource() : null) });
+export const schoolJevToolReranker = createJevToolReranker({
+  settings: async () => (settingsSource ? settingsSource() : null),
+  state: withArabicRewrite,
+});

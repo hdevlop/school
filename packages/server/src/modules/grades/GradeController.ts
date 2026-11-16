@@ -31,7 +31,7 @@ export class GradeController {
 
   @Get()
   @CanList()
-  @McpTool({ description: "List the selected year's grades", readOnly: true })
+  @McpTool({ description: "List every recorded mark of the selected school year, across all classes, subjects and teachers. Only for the whole school's marks; when one student, class, subject, teacher, test or exam is named, a narrower grades read answers it. Toutes les notes de l'année, جميع النقط.", readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getAll() {
     return this.gradeService.getAll();
@@ -40,7 +40,7 @@ export class GradeController {
   @Get('/assessment/:assessmentId')
   @CanList()
   @Validate({ params: assessmentIdParam })
-  @McpTool({ description: 'Get grades by assessment', readOnly: true })
+  @McpTool({ description: "Read the results of one class test, quiz or assignment by assessmentId: each student's mark on that test. A class test is a fard, contrôle or devoir surveillé; exam-session results are the exam read, and test dates are the exam calendar. Résultats d'un contrôle, نتائج الفرض.", readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getByAssessment(@Params('assessmentId') assessmentId: string) {
     return this.gradeService.getByAssessment(assessmentId);
@@ -49,7 +49,7 @@ export class GradeController {
   @Get('/exam/:examId')
   @CanList()
   @Validate({ params: examIdParam })
-  @McpTool({ description: 'Get grades by exam', readOnly: true })
+  @McpTool({ description: "Read the results of one exam by examId: each student's mark on that exam and who passed. An exam is a scheduled exam session (imti7an, examen, midterm, final); class tests and quizzes are the assessment read, and exam dates are the exam calendar. Résultats d'un examen, نتائج الامتحان.", readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getByExam(@Params('examId') examId: string) {
     return this.gradeService.getByExam(examId);
@@ -76,7 +76,7 @@ export class GradeController {
   @Get('/section/:sectionId')
   @CanList()
   @Validate({ params: sectionIdParam, query: gradeSectionFilterDto })
-  @McpTool({ description: 'Get grades by section, optionally limited to one subjectId. For section-and-subject grades supply both resolved IDs.', readOnly: true })
+  @McpTool({ description: "Read the marks of one class section (for example 5AP B or 2AC 3) by sectionId, optionally only one subject with subjectId: each student's marks in that class. For section-and-subject grades supply both resolved IDs. Notes d'une classe, نقط القسم.", readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getBySection(@Params('sectionId') sectionId: string, @Query() filters: GradeSectionFilterDto = {}) {
     return this.gradeService.getAll({ sectionId, subjectId: filters.subjectId });
@@ -85,7 +85,7 @@ export class GradeController {
   @Get('/subject/:subjectId')
   @CanList()
   @Validate({ params: subjectIdParam })
-  @McpTool({ description: 'Get grades by subject', readOnly: true })
+  @McpTool({ description: "Read every mark in one subject across the whole school by subjectId, for example all Mathématiques marks in every class. For one class in one subject, the section read with subjectId is narrower. Notes par matière, نقط المادة.", readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getBySubject(@Params('subjectId') subjectId: string) {
     return this.gradeService.getAll({ subjectId });

@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { describe, expect, mock, test } from 'bun:test';
 import {
-  buildToolPickRequest, createJevToolReranker, parseToolPick, NO_TOOL, RERANK_FAILURE_COOLDOWN_MS, RERANK_FAILURES_BEFORE_COOLDOWN, type ToolCandidate,
+  buildToolPickRequest, createJevToolReranker, parseToolPick, NO_TOOL, RERANK_FAILURE_COOLDOWN_MS, RERANK_FAILURES_BEFORE_COOLDOWN, withArabicRewrite, type ToolCandidate,
 } from '../../src/modules/chat/jev/JevToolReranker';
 import { JEV_DECISIONS_URL, JEV_MODEL } from '../../src/modules/chat/jev/jevIntents';
 
@@ -127,5 +127,21 @@ describe('Jev as the tool reranker', () => {
     const rerank = createJevToolReranker({ settings: async () => openRouter, transport: transport as any });
     expect(await rerank({ query, candidates: [], signal: new AbortController().signal })).toBeNull();
     expect(transport).not.toHaveBeenCalled();
+  });
+
+  test('Jev also reads the Arabic rewrite of a Darija message; other languages go as typed', () => {
+    const darija = withArabicRewrite(query);
+    expect(darija.startsWith(`${query}\n(`)).toBe(true);
+    expect(darija).not.toBe(query);
+    expect(withArabicRewrite('les notes de la classe 5AP B')).toBe('les notes de la classe 5AP B');
+  });
+
+  test('the state option changes the text Jev reads, not the candidates', async () => {
+    const transport = mock(async (_url: any, _init?: any) => Response.json(pick('grades_get_by_section')));
+    const rerank = createJevToolReranker({ settings: async () => openRouter, transport: transport as any, state: q => q + ' (rewritten)' });
+    await rerank({ query, candidates, signal: new AbortController().signal });
+    const body = JSON.parse((transport.mock.calls[0] as any)[1].body);
+    expect(body.state).toBe(query + ' (rewritten)');
+    expect(Object.keys(body.questions.tool.criteria)).toEqual(['grades_get_by_student', 'grades_get_by_section', NO_TOOL]);
   });
 });

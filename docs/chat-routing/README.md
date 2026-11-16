@@ -87,3 +87,24 @@ on the running dev server with Jev on: **94 of 200** right first (Darija 54 of
 140), a teacher's marks 7 of 20 (4 with the old wording), KPIs 12 of 15 (9), older
 questions 52 of 82. Jev answered all 181 questions it was asked.
 
+
+Then the five thin grades descriptions (all marks, one test, one exam, one
+class, one subject) were reworded to say what each read covers and which
+narrower read answers a named class, test or exam, and Jev reads the message
+followed by the router's Arabic rewrite of its Darija words
+(`withArabicRewrite`). Measured on the dev server:
+
+| Grades, right tool first | Router alone | With Jev |
+| --- | --- | --- |
+| All 200 | 73 (37%) | **109 (55%)** |
+| Darija only, of 140 | 45 | 67 |
+| One class, of 22 | 2 | 11 |
+| One subject, of 18 | 6 | 12 |
+| One test, of 21 | 3 | 8 |
+| One exam, of 19 | 7 | 11 |
+| Older questions, of 82 | 44 | 53 |
+
+The router alone did not change (72 to 74 before), so the gain is Jev's. A
+Darija word list in Jev's instructions gained 6 more grades questions but lost
+3 to 4 older ones, so it was left out. Still open: 19 grades questions get no
+tool, and greetings get a tool (11 of 38 no-tool questions right).
