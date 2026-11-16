@@ -1,11 +1,29 @@
 import { Repository } from '../../najm';
 import { DB } from '../../database/db';
 import { students, teachers, staff, parents, users } from '../../database/schema';
-import { and, ilike, or, sql } from 'drizzle-orm';
+import { and, ilike, or, sql, type SQL, type SQLWrapper } from 'drizzle-orm';
 import { Owned, type OwnedWhere, ownershipCondition, type ScopeContext } from '../../auth';
 import { Student } from '../students/StudentGuards';
 import { Teacher } from '../teachers/TeacherGuards';
 import { Parent } from '../parents/ParentGuards';
+
+// Arabic letters typed in several forms: hamza on alif, taa marbuta, alif maqsura.
+const ARABIC_FROM = 'أإآةى';
+const ARABIC_TO = 'اااهي';
+const foldArabic = (text: string) => text.replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي');
+const folded = (column: SQLWrapper) => sql`translate(${column}, ${ARABIC_FROM}, ${ARABIC_TO})`;
+
+/**
+ * A person's name matches when each word of the query appears in one of the
+ * name columns, in any order: "Anas Ftita" finds FTITA ANAS, and an Arabic
+ * name finds the student's stored Arabic name. The chat searches with what
+ * the user typed; Arabic-script names found nothing before (2026-11-16).
+ */
+export function nameWordsMatch(query: string, columns: SQLWrapper[]): SQL | undefined {
+  const words = query.trim().split(/\s+/).filter(Boolean).slice(0, 6);
+  if (!words.length) return undefined;
+  return and(...words.map((word) => or(...columns.map((column) => ilike(folded(column), `%${foldArabic(word)}%`)))));
+}
 
 @Repository()
 export class SearchRepository {
@@ -25,6 +43,7 @@ export class SearchRepository {
         image: sql<string>`coalesce(${users.image}, ${students.image})`,
         email: users.email,
         phone: students.phone,
+        arabicName: students.arabicName,
         type: sql<string>`'student'`.as('type'),
       })
       .from(students)
@@ -32,6 +51,7 @@ export class SearchRepository {
       .where(
         and(this.ownedWhere(), or(
           ilike(students.name, pattern),
+          nameWordsMatch(query, [students.name, students.arabicName]),
           ilike(students.studentCode, pattern),
           ilike(students.phone, pattern),
           ilike(users.email, pattern),
@@ -60,6 +80,7 @@ export class SearchRepository {
       .where(
         and(ownershipCondition(this.db, [Teacher], this._scopeCtx), or(
           ilike(staff.name, pattern),
+          nameWordsMatch(query, [staff.name]),
           ilike(staff.cin, pattern),
           ilike(staff.phone, pattern),
           ilike(users.email, pattern),
