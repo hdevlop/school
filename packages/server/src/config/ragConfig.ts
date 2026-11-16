@@ -179,6 +179,11 @@ export const ragConfig = (): NajmPlugin => {
     },
     // Darija words become MSA before tool routing embeds a message; the model
     // still reads the user's own words.
+    // Stored phrases go through this same rewrite, hint lines included (no
+    // rewriteRoutingPhrase). Embedding phrases with the Darija rewrite alone
+    // was measured 2026-11-16 on 120 fixture questions: the right tool ranked
+    // first fell from 45 to 37 of 82, none improved. Phrase and message must
+    // carry the same hints to stay comparable.
     rewriteRoutingQuery: query => schoolRoutingContext(query, rewriteDarijaForRouting(query)),
     // School's routing phrases: those not stored yet are added after boot
     // tool indexing; studio edits stay. Edit the file to change one for good.
@@ -189,4 +194,5 @@ export const ragConfig = (): NajmPlugin => {
 };
 
 // najm-rag 2.1.2 makes the Studio Assistant opt-in; School registers studioAssistant().
-export const ragStudioConfig = () => ragStudio({ auth: 'standalone', assistant: true });
+// The dashboard's /rag-studio page sends the signed-in admin's own token.
+export const ragStudioConfig = () => ragStudio({ auth: 'session', assistant: true });

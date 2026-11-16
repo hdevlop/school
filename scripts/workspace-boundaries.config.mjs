@@ -79,9 +79,11 @@ const policy = {
     // Audited client entries of packages whose root is server-only. Read the
     // published entry's imports before adding one; never add a root package.
     //   najm-chatbot/react: React, AI SDK and najm-auth client imports only.
+    //   najm-rag/studio (3.6.0): React, TanStack Query/Router, lucide-react,
+    //     najm-kit and zod only; the admin /rag-studio page mounts it.
     // najm-kit/server is not listed as forbidden at all: despite its name it
     // is pure constants and cookie/fetch helpers with no Node or server import.
-    allowedExternal: ["najm-chatbot/react", "najm-database/sync/client", "najm-database/sync/contracts"],
+    allowedExternal: ["najm-chatbot/react", "najm-rag/studio", "najm-database/sync/client", "najm-database/sync/contracts"],
     // The by-key enum registry names every tuple; importing it from a
     // component would keep all of them alive in the client bundle.
     forbiddenSpecifiers: ["@sms/contracts/lookup"],

@@ -59,6 +59,8 @@ export const PAGE_ACCESS = {
   vehicles: schoolWide('read:vehicles'),
   accessControl: inRoles(ADMIN),
   appearance: inRoles(ADMIN),
+  // Every RAG studio route is @isAdmin() in najm-rag.
+  ragStudio: inRoles(ADMIN),
   settings: can('read:settings'),
   visitRequests: can('read:visit-requests'),
   publicPage: can('read:settings'),
