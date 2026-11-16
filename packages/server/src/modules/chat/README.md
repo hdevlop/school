@@ -89,6 +89,11 @@ Phrases were written from tool descriptions, not from the test fixtures; keep
 it that way so the fixtures stay a fair test. With Qwen3 Embedding the routing
 threshold is 0.68 (`ragConfig.ts`).
 
+Stored phrases are embedded through the same hints and Darija rewrite as a
+message. After changing either, change `ROUTING_TEXT_VERSION` in
+`routing/schoolRoutingContext.ts`; after the deploy, run "Reindex semantics" in
+the RAG studio (`/rag-studio`), whose dashboard counts the stale phrases.
+
 Reviewed questions and fake HTTP/MCP data live under
 `packages/server/tests/chat/fixtures/`; they never run a paid benchmark.
 Verification uses `bun run test:chat`, `test:academic-years`, `test:security`,

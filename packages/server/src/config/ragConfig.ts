@@ -3,7 +3,7 @@ import { envChoice, envFlag, envInt, envString } from 'najm-core/env';
 import { rag, ragStudio } from 'najm-rag';
 
 import { rewriteDarijaForRouting } from '../modules/chat/routing/darijaRouting';
-import { schoolRoutingContext } from '../modules/chat/routing/schoolRoutingContext';
+import { ROUTING_TEXT_VERSION, schoolRoutingContext } from '../modules/chat/routing/schoolRoutingContext';
 import { seedSemantics } from '../modules/chat/routing/seedSemantics';
 
 /**
@@ -185,6 +185,8 @@ export const ragConfig = (): NajmPlugin => {
     // first fell from 45 to 37 of 82, none improved. Phrase and message must
     // carry the same hints to stay comparable.
     rewriteRoutingQuery: query => schoolRoutingContext(query, rewriteDarijaForRouting(query)),
+    // A changed rewrite marks every stored phrase stale for "Reindex semantics".
+    routingTextVersion: ROUTING_TEXT_VERSION,
     // School's routing phrases (semantics.json and the per-feature files in
     // routing/semantics/): those not stored yet are added after boot tool
     // indexing; studio edits stay. Edit the files to change one for good.

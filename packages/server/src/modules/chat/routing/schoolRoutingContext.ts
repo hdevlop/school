@@ -1,5 +1,13 @@
 import { normalizeReplyText } from 'najm-chatbot';
 
+/**
+ * Names the current routing text: these hints and the Darija rewrite. Stored
+ * phrases are embedded through them too, so change this string whenever either
+ * changes. najm-rag then marks every phrase stale; run "Reindex semantics" in
+ * the RAG studio after the deploy.
+ */
+export const ROUTING_TEXT_VERSION = '2026-11-16 report-card hint';
+
 /** Query-only discovery hints. No role, identity lookup or access decision. */
 // najm-rag lowercases the message and folds these letters before this hook
 // runs, so "الجاية" arrives as "الجايه": fold the text and every pattern alike.
