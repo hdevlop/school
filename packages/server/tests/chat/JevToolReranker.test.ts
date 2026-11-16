@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { describe, expect, mock, test } from 'bun:test';
 import {
-  buildToolPickRequest, createJevToolReranker, parseToolPick, NO_TOOL, RERANK_FAILURE_COOLDOWN_MS, type ToolCandidate,
+  buildToolPickRequest, createJevToolReranker, parseToolPick, NO_TOOL, RERANK_FAILURE_COOLDOWN_MS, RERANK_FAILURES_BEFORE_COOLDOWN, type ToolCandidate,
 } from '../../src/modules/chat/jev/JevToolReranker';
 import { JEV_DECISIONS_URL, JEV_MODEL } from '../../src/modules/chat/jev/jevIntents';
 
@@ -84,28 +84,41 @@ describe('Jev as the tool reranker', () => {
     ['a malformed answer', () => Response.json(pick('fees_get_all'))],
     ['an oversized answer', () => new Response('x'.repeat(70_000))],
     ['a network error', () => { throw new Error('offline'); }],
-  ])('%s gives no pick, then Jev is skipped for the cooldown', async (_label, answer) => {
+  ])('%s gives no pick; three in a row skip Jev for the cooldown', async (_label, answer) => {
     const { ask, transport, advance } = reranker(answer);
+    for (let i = 0; i < RERANK_FAILURES_BEFORE_COOLDOWN; i++) expect(await ask()).toBeNull();
     expect(await ask()).toBeNull();
-    expect(await ask()).toBeNull();
-    expect(transport).toHaveBeenCalledTimes(1);
+    expect(transport).toHaveBeenCalledTimes(RERANK_FAILURES_BEFORE_COOLDOWN);
     advance(RERANK_FAILURE_COOLDOWN_MS);
     await ask();
-    expect(transport).toHaveBeenCalledTimes(2);
+    expect(transport).toHaveBeenCalledTimes(RERANK_FAILURES_BEFORE_COOLDOWN + 1);
   });
 
-  test('an aborted request (najm-rag timed out) gives no pick and starts the cooldown', async () => {
-    const controller = new AbortController();
+  test('one slow or failed call does not switch Jev off; a success resets the count', async () => {
+    const answers = [() => { throw new Error('slow'); }, () => { throw new Error('slow'); },
+      () => Response.json(pick('grades_get_by_section')), () => { throw new Error('slow'); }, () => { throw new Error('slow'); },
+      () => Response.json(pick('grades_get_by_student'))];
+    const { ask, transport } = reranker(() => answers.shift()!());
+    const results = [];
+    for (let i = 0; i < 6; i++) results.push((await ask())?.toolName ?? null);
+    expect(results).toEqual([null, null, 'grades_get_by_section', null, null, 'grades_get_by_student']);
+    expect(transport).toHaveBeenCalledTimes(6);
+  });
+
+  test('aborted requests (najm-rag timed out) give no pick and count as failures', async () => {
     const transport = mock((_url: any, init: any) => new Promise<Response>((_, reject) => {
       if (init.signal.aborted) return reject(init.signal.reason);
       init.signal.addEventListener('abort', () => reject(init.signal.reason));
     }));
     const rerank = createJevToolReranker({ settings: async () => openRouter, transport: transport as any });
-    const answer = rerank({ query, candidates, signal: controller.signal });
-    controller.abort();
-    expect(await answer).toBeNull();
+    for (let i = 0; i < RERANK_FAILURES_BEFORE_COOLDOWN; i++) {
+      const controller = new AbortController();
+      const answer = rerank({ query, candidates, signal: controller.signal });
+      controller.abort();
+      expect(await answer).toBeNull();
+    }
+    // Aborted before the call each time; the next message, on a fresh signal, is skipped by the cooldown.
     expect(await rerank({ query, candidates, signal: new AbortController().signal })).toBeNull();
-    // Aborted before the call; the next message, on a fresh signal, is skipped by the cooldown.
     expect(transport).not.toHaveBeenCalled();
   });
 

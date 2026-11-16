@@ -201,7 +201,7 @@ export const ragConfig = (): NajmPlugin => {
     // of 200 grades questions (0 lost) and 44 -> 52 of 82 older ones (2 lost).
     // Near misses below the threshold rescued nothing at 0.62 or 0.58, so none
     // are shown; lower confidence cuts gained 2 and lost 3 to 7.
-    ...(readJevRerankControls().enabled ? { rerankTools: { rerank: schoolJevToolReranker } } : {}),
+    rerankTools: readJevRerankControls().enabled ? { rerank: schoolJevToolReranker } : undefined,
     knowledge: true,
     allowedLangs: ['en', 'fr', 'ar', 'es'],
   }) as unknown as NajmPlugin;

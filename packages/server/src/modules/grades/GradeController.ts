@@ -94,7 +94,7 @@ export class GradeController {
   @Get('/teacher/:teacherId')
   @CanList()
   @Validate({ params: teacherIdParam })
-  @McpTool({ description: 'Get grades by teacher', readOnly: true })
+  @McpTool({ description: 'Read the marks one teacher recorded on their own assessments and exams, by teacherId. Notes saisies par un enseignant, النقط ديال الأستاذ.', readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getByTeacher(@Params('teacherId') teacherId: string) {
     return this.gradeService.getAll({ teacherId });

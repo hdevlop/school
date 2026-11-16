@@ -13,7 +13,7 @@ export class AcademicDashboardController {
   // route asks for each permission they read.
   @Get('/kpis')
   @CanSchoolWide('read:students', 'read:teachers', 'read:attendance', 'read:grades')
-  @McpTool({ description: 'Get academic dashboard KPIs — total students, teachers, attendance rate, avg GPA, pending grading', readOnly: true })
+  @McpTool({ description: 'Read the school-wide headline numbers in one call: total students and teachers, attendance rate, the overall average grade (GPA) and how many assessments still wait for marks. One figure each, no breakdown by class, subject or month.', readOnly: true })
   @ResMsg('dashboards.success.retrieved')
   async getKpis() {
     return this.academicDashboardService.getKpis();

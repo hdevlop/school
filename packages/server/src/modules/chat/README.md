@@ -94,10 +94,9 @@ With `CHATBOT_JEV_RERANK=on`, Jev also judges every routed message: najm-rag
 shows it the router's candidate tools with their descriptions, and a pick at
 confidence 0.85 leads the list (with its dependencies and the router's next 3),
 at 0.7 moves to the top. "None", a lower confidence, a malformed answer or no
-answer in 0.8 s keeps the router's order; after a failure Jev is skipped for
-30 s. It needs an OpenRouter key in the AI settings and najm-rag with
-`rerankTools` (after 3.6.0); with 3.6.0 the setting is ignored. It only
-reorders the tools offered: the tools still check access when they run. The
+answer in 0.8 s keeps the router's order; after three failures in a row Jev is
+skipped for 30 s. It needs an OpenRouter key in the AI settings and najm-rag
+3.7.0 or later. It only reorders the tools offered: the tools still check access when they run. The
 studio's routing preview reports the pick as `rerank`.
 
 Stored phrases are embedded through the same hints and Darija rewrite as a

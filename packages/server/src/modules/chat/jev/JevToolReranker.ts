@@ -16,7 +16,8 @@ export interface ToolPick { toolName: string | null; confidence: number }
 interface ProviderSettings { provider?: string | null; apiKey?: string | null; baseUrl?: string | null }
 
 export const NO_TOOL = 'none';
-/** After a failure, skip Jev this long instead of making every message wait for its timeout. */
+/** After this many failures in a row, skip Jev for the cooldown instead of making every message wait for its timeout. */
+export const RERANK_FAILURES_BEFORE_COOLDOWN = 3;
 export const RERANK_FAILURE_COOLDOWN_MS = 30_000;
 const DESCRIPTION_CHARS = 400;
 
@@ -58,11 +59,17 @@ export interface JevToolRerankerOptions {
   now?: () => number;
 }
 
-/** najm-rag's `rerankTools.rerank`. Never throws: a failure is null and starts the cooldown. */
+/**
+ * najm-rag's `rerankTools.rerank`. Never throws: a failure is null, and
+ * RERANK_FAILURES_BEFORE_COOLDOWN in a row start the cooldown. One slow call
+ * must not switch Jev off: on the dev server a single timeout skipped Jev for
+ * the next 30 s of messages.
+ */
 export function createJevToolReranker(options: JevToolRerankerOptions) {
   const transport = options.transport ?? ((input, init) => fetch(input, init));
   const now = options.now ?? Date.now;
   let skipUntil = 0;
+  let failures = 0;
 
   return async function rerank(request: { query: string; candidates: ToolCandidate[]; signal: AbortSignal }): Promise<ToolPick | null> {
     if (now() < skipUntil || request.candidates.length === 0) return null;
@@ -79,10 +86,15 @@ export function createJevToolReranker(options: JevToolRerankerOptions) {
       });
       const text = await responseText(response, request.signal);
       if (!response.ok) throw new Error('provider_rejected');
-      return parseToolPick(JSON.parse(text), request.candidates);
+      const pick = parseToolPick(JSON.parse(text), request.candidates);
+      failures = 0;
+      return pick;
     } catch {
       // A timeout is najm-rag aborting the signal: it is a failure too.
-      skipUntil = now() + RERANK_FAILURE_COOLDOWN_MS;
+      if (++failures >= RERANK_FAILURES_BEFORE_COOLDOWN) {
+        skipUntil = now() + RERANK_FAILURE_COOLDOWN_MS;
+        failures = 0;
+      }
       return null;
     }
   };

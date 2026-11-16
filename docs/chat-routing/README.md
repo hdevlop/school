@@ -82,5 +82,8 @@ Jev can only choose among them, so phrases, hints and tool descriptions still
 decide the rest. Showing Jev near misses below the threshold rescued none of the
 19 grades questions that get no tool. Lower confidence cuts (0.5 to 0.6) gained
 2 more and lost 3 to 7. Jev did worse than the router on a teacher's marks and
-school KPIs: their descriptions are too close to their neighbours'.
+school KPIs: their descriptions were too thin. Reworded, and measured
+on the running dev server with Jev on: **94 of 200** right first (Darija 54 of
+140), a teacher's marks 7 of 20 (4 with the old wording), KPIs 12 of 15 (9), older
+questions 52 of 82. Jev answered all 181 questions it was asked.
 
