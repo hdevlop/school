@@ -1,0 +1,12 @@
+{
+  "author": "EXAMPLE",
+  "writtenOn": "2026-11-16",
+  "sawRoutingFiles": true,
+  "note": "Format only. These cases are never scored; do not reuse their wording.",
+  "cases": [
+    { "id": "ex-001", "as": "parent", "lang": "ary-latn", "q": "salam bghit n3ref wach bnti jat lyoum", "want": "Whether my daughter was present today." },
+    { "id": "ex-002", "as": "accounting", "lang": "fr", "q": "il reste combien a payer pour ABID MOHAMMED AMINE", "want": "Remaining fees of this one student.", "note": "name from demo data" },
+    { "id": "ex-003", "as": "teacher", "lang": "ary", "q": "سجل ليا الغياب ديال القسم", "want": "refuse" },
+    { "id": "ex-004", "as": "admin", "lang": "fr", "q": "combien d eleves on a", "want": "Total number of students.", "answer": "the number on the dashboard's Students page" }
+  ]
+}

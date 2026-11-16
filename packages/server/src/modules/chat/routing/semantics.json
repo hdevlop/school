@@ -325,6 +325,10 @@
         { "lang": "darija-latn", "phrase": "chno khas bnti t7ell f dar" },
         { "lang": "fr", "phrase": "les devoirs à la maison donnés à mon enfant" },
         { "lang": "ar", "phrase": "الواجبات المنزلية المطلوبة من ابني" },
+        { "lang": "darija", "phrase": "واجبات الدار اللي عطاها الأستاذ لبنتي" },
+        { "lang": "darija", "phrase": "الواجبات اللي خاص ولادي يوجدو للقسم" },
+        { "lang": "darija-latn", "phrase": "tamarin dyal dar li 3ndha bnti" },
+        { "lang": "ar", "phrase": "واجبات ابنتي التي يجب أن تنجزها" },
         { "lang": "en", "phrase": "homework assigned to my child" }
       ]
     },
@@ -342,7 +346,7 @@
       "toolName": "parent-profile_get_all_fees_due",
       "phrases": [
         { "lang": "darija", "phrase": "المبلغ اللي باقي فذمتي لجميع الولاد" },
-        { "lang": "darija", "phrase": "الواجبات الشهرية اللي مازال ماتخلصاتش ديال ولادي" },
+        { "lang": "darija", "phrase": "الشهور اللي مازال ماخلصتهاش فالمدرسة ديال ولادي" },
         { "lang": "darija-latn", "phrase": "lflous li ba9yin 3liya dyal wladi kamlin" },
         { "lang": "fr", "phrase": "total des frais impayés pour tous mes enfants" },
         { "lang": "ar", "phrase": "المبالغ المستحقة علي لجميع أبنائي" },

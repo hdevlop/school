@@ -108,3 +108,61 @@ test('discovery appends the supplied routing copy without changing names, IDs or
   expect(schoolRoutingContext(query, routing)).toEndWith('\n' + routing);
   expect(routing).toContain('ab9z 4b 2025-2026');
 });
+
+// najm-rag lowercases and folds أ/إ/آ, ى and ة before calling the hook.
+const routed = (query: string) => {
+  const normalized = query.trim().toLowerCase().replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه');
+  return schoolRoutingContext(normalized, rewriteDarijaForRouting(normalized));
+};
+
+test('hint words spelled with ة still match after najm-rag folds them', () => {
+  expect(routed('شنو هي الفروض الجاية؟')).toContain('exams_get_upcoming_exams');
+  expect(routed('شنو هي الأنشطة المقبلة؟')).toContain('events_get_upcoming');
+});
+
+test.each([
+  'شحال باقي عليا ديال الواجبات الشهرية؟',
+  'ch7al ba9i 3liya nkhelles?',
+  'Combien me reste-t-il à payer pour mes enfants ?',
+  'كم بقي من الرسوم على أبنائي؟',
+])("a parent's own fees offer the family balance, not staff fee reports: %s", (query) => {
+  const result = routed(query);
+  expect(result).toContain('parent-profile_get_all_fees_due');
+  expect(result).toContain('parents_get_my_identity');
+  expect(result).not.toContain('fees_get_student_fees');
+});
+
+test.each([
+  'شحال خاص EL AMRANI SARA تخلص؟',
+  "Quels sont les frais de l'élève Karim ?",
+])("a named student's fees offer that student's fee read: %s", (query) => {
+  const result = routed(query);
+  expect(result).toContain('fees_get_student_fees');
+  expect(result).toContain('search_search_students');
+  expect(result).not.toContain('parent-profile_get_all_fees_due');
+});
+
+test('a whole-school fee question gets no single-student or family hint', () => {
+  const result = routed('شحال دخلنا من الرسوم هاد الشهر؟');
+  expect(result).not.toContain('fees_get_student_fees');
+  expect(result).not.toContain('parent-profile_get_all_fees_due');
+});
+
+test('an Arabizi absence verb about my child offers the attendance summary', () => {
+  expect(routed('wach weldi kayghib bzaf?')).toContain('student-profile_get_attendance_summary');
+  // Without a personal word it adds no hint: "absents aujourd'hui" routes on its own.
+  expect(routed("Quels élèves sont absents aujourd'hui ?")).not.toContain('student-profile_get_attendance_summary');
+});
+
+test.each([
+  ['ga3 les devoirs dyal had simana', 'homework_get_all'],
+  ['wach kayn chi bus l bnti?', 'student-profile_get_transport'],
+  ['واش وصلوني شي إشعارات؟', 'parent-profile_get_unread_alerts'],
+  ['كاينة شي حفلة فالمدرسة اليوم؟', 'events_get_today'],
+])('topic hints: %s', (query, tool) => {
+  expect(routed(query)).toContain(tool);
+});
+
+test('monthly-fee wording "الواجبات الشهرية" is not homework', () => {
+  expect(routed('شحال باقي عليا ديال الواجبات الشهرية؟')).not.toContain('homework_get');
+});
