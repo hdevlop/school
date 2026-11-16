@@ -862,6 +862,13 @@
       "when": 1794756355870,
       "tag": "0122_rag_semantic_fingerprint_nearest_tool",
       "breakpoints": true
+    },
+    {
+      "idx": 123,
+      "version": "7",
+      "when": 1794778880732,
+      "tag": "0123_columns_never_migrated",
+      "breakpoints": true
     }
   ]
 }
