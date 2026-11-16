@@ -154,3 +154,25 @@ are class and count questions where Jev's pick varies from run to run (one,
 instead of the class list). These hints were written from the failing grades
 questions, so the grades numbers above flatter them; the older questions are
 the check that nothing else got worse.
+
+### Answers through the real chat, measured 2026-11-16
+
+Routing is only half of it: 30 questions about real demo records (students,
+classes, teachers and exams that have marks; mixed Darija, Arabic, French,
+English, Spanish; as the admin) went through `/api/chat` with the selected
+year. Answered means a successful read that answers it and no failure text.
+
+| Change | Answered, of 30 |
+| --- | --- |
+| Routing work above only | 12 |
+| Grades MCP reads answer with summaries (`gradeChatSummary.ts`) | 19 |
+| Exam and teacher reads get the class's exam list and the teacher search | 24 |
+| Search matches name words, Latin or Arabic; subject-named exams read the class | **27** |
+
+A class's raw grade rows (about 450 KB) or the year's 222 exams (160 KB)
+left OSS20B unable to reply at all; the grades fixtures' invented names are
+why they are not used for this check. Still wrong in the last run: one
+question answered with a clarifying question, one exam picked as a class test,
+one teacher question with no call. OSS20B sometimes writes its planning
+("We need ...") into the answer, and answers some French or English
+questions in Arabic.
