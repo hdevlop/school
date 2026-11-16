@@ -77,7 +77,10 @@ and removes SDK token/pricing metadata before the widget receives a reply.
 Administrator diagnostics retain timings and outcomes without token or cost fields.
 
 `routing/semantics.json` holds example phrases (Darija, Arabizi, French, Arabic,
-English) for everyday read tools. `ragConfig.ts` passes it as `seedSemantics`:
+English) for everyday read tools, and `routing/semantics/<feature>.json` one
+feature's phrases each (written as `docs/chat-routing` describes, at most 12 per
+tool). `routing/seedSemantics.ts` merges them; `ragConfig.ts` passes the result
+as `seedSemantics`:
 after boot tool indexing, najm-rag adds the phrases a database does not have
 yet and leaves stored ones (and studio edits) alone, so a new phrase in the
 file reaches every database on its next start. A phrase deleted or reworded in

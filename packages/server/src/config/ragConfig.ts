@@ -4,7 +4,7 @@ import { rag, ragStudio } from 'najm-rag';
 
 import { rewriteDarijaForRouting } from '../modules/chat/routing/darijaRouting';
 import { schoolRoutingContext } from '../modules/chat/routing/schoolRoutingContext';
-import semantics from '../modules/chat/routing/semantics.json';
+import { seedSemantics } from '../modules/chat/routing/seedSemantics';
 
 /**
  * Embeddings for chat tool routing and the knowledge base.
@@ -185,9 +185,10 @@ export const ragConfig = (): NajmPlugin => {
     // first fell from 45 to 37 of 82, none improved. Phrase and message must
     // carry the same hints to stay comparable.
     rewriteRoutingQuery: query => schoolRoutingContext(query, rewriteDarijaForRouting(query)),
-    // School's routing phrases: those not stored yet are added after boot
-    // tool indexing; studio edits stay. Edit the file to change one for good.
-    seedSemantics: semantics,
+    // School's routing phrases (semantics.json and the per-feature files in
+    // routing/semantics/): those not stored yet are added after boot tool
+    // indexing; studio edits stay. Edit the files to change one for good.
+    seedSemantics,
     knowledge: true,
     allowedLangs: ['en', 'fr', 'ar', 'es'],
   }) as unknown as NajmPlugin;
