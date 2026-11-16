@@ -58,6 +58,13 @@ export const gradeSectionFilterDto = z.object({ subjectId: requiredId.optional()
 export type GradeSectionFilterDto = z.infer<typeof gradeSectionFilterDto>;
 export const subjectIdParam = z.object({ subjectId: z.string().min(1) });
 export const teacherIdParam = z.object({ teacherId: z.string().min(1) });
+/** Bodies of the grades MCP reads (POST /grades/mcp/...). */
+export const sectionGradesDto = sectionIdParam.extend({ subjectId: requiredId.optional() });
+export type SectionGradesDto = z.infer<typeof sectionGradesDto>;
+export type AssessmentIdDto = z.infer<typeof assessmentIdParam>;
+export type ExamIdDto = z.infer<typeof examIdParam>;
+export type SubjectIdDto = z.infer<typeof subjectIdParam>;
+export type TeacherIdDto = z.infer<typeof teacherIdParam>;
 
 export type CreateGradeDto = z.infer<typeof createGradeDto>;
 export type UpdateGradeDto = z.infer<typeof updateGradeDto>;

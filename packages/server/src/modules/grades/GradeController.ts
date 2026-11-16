@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { GradeService } from './GradeService';
+import { classGradesSummary, gradesOverview, sourceGradesSummary } from './gradeChatSummary';
 import { Grade, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './GradeGuards';
 import { isAdmin, isAdministrator, CanSchoolWide } from '../../auth';
 import {
@@ -21,6 +22,12 @@ import {
   type CreateGradeDto,
   type UpdateGradeDto,
   type DeleteBulkGradeDto,
+  sectionGradesDto,
+  type SectionGradesDto,
+  type AssessmentIdDto,
+  type ExamIdDto,
+  type SubjectIdDto,
+  type TeacherIdDto,
 } from './GradeDto';
 
 @ToolGroup('grades')
@@ -31,28 +38,53 @@ export class GradeController {
 
   @Get()
   @CanList()
-  @McpTool({ description: "List every recorded mark of the selected school year, across all classes, subjects and teachers. Only for the whole school's marks; when one student, class, subject, teacher, test or exam is named, a narrower grades read answers it. Toutes les notes de l'année, جميع النقط.", readOnly: true })
+  @ResMsg('grades.success.retrieved')
+  async listAll() {
+    return this.gradeService.getAll();
+  }
+
+  // The MCP reads below return gradeChatSummary's summaries; the GET routes
+  // keep every row for the dashboard.
+  @Post('/mcp/all')
+  @CanList()
+  @McpTool({ description: "Summarize every recorded mark of the selected school year, across all classes, subjects and teachers: the count, the average, and figures per class and per subject. Only for the whole school's marks; when one student, class, subject, teacher, test or exam is named, a narrower grades read answers it. Toutes les notes de l'année, جميع النقط.", readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getAll() {
-    return this.gradeService.getAll();
+    return gradesOverview(await this.gradeService.getAll());
   }
 
   @Get('/assessment/:assessmentId')
   @CanList()
   @Validate({ params: assessmentIdParam })
-  @McpTool({ description: "Read the results of one class test, quiz or assignment by assessmentId: each student's mark on that test. A class test is a fard, contrôle or devoir surveillé; exam-session results are the exam read, and test dates are the exam calendar. Résultats d'un contrôle, نتائج الفرض.", readOnly: true })
   @ResMsg('grades.success.retrieved')
-  async getByAssessment(@Params('assessmentId') assessmentId: string) {
+  async listByAssessment(@Params('assessmentId') assessmentId: string) {
     return this.gradeService.getByAssessment(assessmentId);
+  }
+
+  @Post('/mcp/assessment')
+  @CanList()
+  @Validate({ body: assessmentIdParam })
+  @McpTool({ description: "Read the results of one class test, quiz or assignment by assessmentId: each student's mark on that test, the average and how many passed. A class test is a fard, contrôle or devoir surveillé; exam-session results are the exam read, and test dates are the exam calendar. Résultats d'un contrôle, نتائج الفرض.", readOnly: true })
+  @ResMsg('grades.success.retrieved')
+  async getByAssessment(@Body() body: AssessmentIdDto) {
+    return sourceGradesSummary(await this.gradeService.getByAssessment(body.assessmentId));
   }
 
   @Get('/exam/:examId')
   @CanList()
   @Validate({ params: examIdParam })
-  @McpTool({ description: "Read the results of one exam by examId: each student's mark on that exam and who passed. An exam is a scheduled exam session (imti7an, examen, midterm, final); class tests and quizzes are the assessment read, and exam dates are the exam calendar. Résultats d'un examen, نتائج الامتحان.", readOnly: true })
   @ResMsg('grades.success.retrieved')
-  async getByExam(@Params('examId') examId: string) {
+  async listByExam(@Params('examId') examId: string) {
     return this.gradeService.getByExam(examId);
+  }
+
+  @Post('/mcp/exam')
+  @CanList()
+  @Validate({ body: examIdParam })
+  @McpTool({ description: "Read the results of one exam by examId: each student's mark on that exam, the average and who passed. An exam is a scheduled exam session (imti7an, examen, midterm, final); class tests and quizzes are the assessment read, and exam dates are the exam calendar. Résultats d'un examen, نتائج الامتحان.", readOnly: true })
+  @ResMsg('grades.success.retrieved')
+  async getByExam(@Body() body: ExamIdDto) {
+    return sourceGradesSummary(await this.gradeService.getByExam(body.examId));
   }
 
   @Get('/student/:studentId')
@@ -76,28 +108,52 @@ export class GradeController {
   @Get('/section/:sectionId')
   @CanList()
   @Validate({ params: sectionIdParam, query: gradeSectionFilterDto })
-  @McpTool({ description: "Read the marks of one class section (for example 5AP B or 2AC 3) by sectionId, optionally only one subject with subjectId: each student's marks in that class. For section-and-subject grades supply both resolved IDs. Notes d'une classe, نقط القسم.", readOnly: true })
   @ResMsg('grades.success.retrieved')
-  async getBySection(@Params('sectionId') sectionId: string, @Query() filters: GradeSectionFilterDto = {}) {
+  async listBySection(@Params('sectionId') sectionId: string, @Query() filters: GradeSectionFilterDto = {}) {
     return this.gradeService.getAll({ sectionId, subjectId: filters.subjectId });
+  }
+
+  @Post('/mcp/section')
+  @CanList()
+  @Validate({ body: sectionGradesDto })
+  @McpTool({ description: "Read the marks of one class section (for example 5AP B or 2AC 3) by sectionId, optionally only one subject with subjectId: each student's marks and average, the class average per subject, and its tests and exams. For section-and-subject grades supply both resolved IDs. Notes d'une classe, نقط القسم.", readOnly: true })
+  @ResMsg('grades.success.retrieved')
+  async getBySection(@Body() body: SectionGradesDto) {
+    return classGradesSummary(await this.gradeService.getAll({ sectionId: body.sectionId, subjectId: body.subjectId }));
   }
 
   @Get('/subject/:subjectId')
   @CanList()
   @Validate({ params: subjectIdParam })
-  @McpTool({ description: "Read every mark in one subject across the whole school by subjectId, for example all Mathématiques marks in every class. For one class in one subject, the section read with subjectId is narrower. Notes par matière, نقط المادة.", readOnly: true })
   @ResMsg('grades.success.retrieved')
-  async getBySubject(@Params('subjectId') subjectId: string) {
+  async listBySubject(@Params('subjectId') subjectId: string) {
     return this.gradeService.getAll({ subjectId });
+  }
+
+  @Post('/mcp/subject')
+  @CanList()
+  @Validate({ body: subjectIdParam })
+  @McpTool({ description: "Summarize every mark in one subject across the whole school by subjectId, for example all Mathématiques marks in every class: the average per class and the tests and exams. For one class in one subject, the section read with subjectId is narrower. Notes par matière, نقط المادة.", readOnly: true })
+  @ResMsg('grades.success.retrieved')
+  async getBySubject(@Body() body: SubjectIdDto) {
+    return gradesOverview(await this.gradeService.getAll({ subjectId: body.subjectId }));
   }
 
   @Get('/teacher/:teacherId')
   @CanList()
   @Validate({ params: teacherIdParam })
-  @McpTool({ description: 'Read the marks one teacher recorded on their own assessments and exams, by teacherId. Notes saisies par un enseignant, النقط ديال الأستاذ.', readOnly: true })
   @ResMsg('grades.success.retrieved')
-  async getByTeacher(@Params('teacherId') teacherId: string) {
+  async listByTeacher(@Params('teacherId') teacherId: string) {
     return this.gradeService.getAll({ teacherId });
+  }
+
+  @Post('/mcp/teacher')
+  @CanList()
+  @Validate({ body: teacherIdParam })
+  @McpTool({ description: 'Summarize the marks one teacher recorded on their own assessments and exams, by teacherId: the average per class and subject and their tests and exams. Notes saisies par un enseignant, النقط ديال الأستاذ.', readOnly: true })
+  @ResMsg('grades.success.retrieved')
+  async getByTeacher(@Body() body: TeacherIdDto) {
+    return gradesOverview(await this.gradeService.getAll({ teacherId: body.teacherId }));
   }
 
   // Grades without exactly one usable source date belong to no year. Declared

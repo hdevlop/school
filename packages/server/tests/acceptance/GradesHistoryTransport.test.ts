@@ -85,12 +85,11 @@ describe('authenticated Grades REST and MCP on the marked PostgreSQL fixture', (
   });
 
   it('uses the same year selection over authenticated MCP', async () => {
-    const past = await request('/grades', '2025-2026', 'POST', pastGrade);
-    expect(past.status).toBe(200);
-    created.push(past.body.data.id);
     const { Client } = await import('@modelcontextprotocol/sdk/client/index.js');
     const { StreamableHTTPClientTransport } = await import('@modelcontextprotocol/sdk/client/streamableHttp.js');
-    const list = async (headerYear?: string, toolYear?: string) => {
+    // grades_get_all answers the chat with a summary (gradeChatSummary), so the
+    // year shows in its count of marks.
+    const marks = async (headerYear?: string, toolYear?: string) => {
       const client = new Client({ name: 'school-grade-history-test', version: '1.0.0' });
       const transport = new StreamableHTTPClientTransport(new URL(`http://localhost:${port}/api/mcp`), {
         requestInit: { headers: { Authorization: `Bearer ${adminToken}`,
@@ -104,10 +103,14 @@ describe('authenticated Grades REST and MCP on the marked PostgreSQL fixture', (
         const result = await client.callTool({ name: 'grades_get_all', arguments: toolYear ? { academicYear: toolYear } : {} });
         const { content, isError } = result as { content: Array<{ text: string }>; isError?: boolean };
         expect(isError).not.toBe(true);
-        return (JSON.parse(content[0].text) as Array<{ id: string }>).map((row) => row.id);
+        return (JSON.parse(content[0].text) as { marks: number }).marks;
       } finally { await transport.close(); }
     };
-    expect(await list('2025-2026')).toContain(past.body.data.id);
-    expect(await list(undefined, '2026-2027')).not.toContain(past.body.data.id);
+    const before = { past: await marks('2025-2026'), current: await marks(undefined, '2026-2027') };
+    const past = await request('/grades', '2025-2026', 'POST', pastGrade);
+    expect(past.status).toBe(200);
+    created.push(past.body.data.id);
+    expect(await marks('2025-2026')).toBe(before.past + 1);
+    expect(await marks(undefined, '2026-2027')).toBe(before.current);
   });
 });

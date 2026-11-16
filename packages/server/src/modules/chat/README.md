@@ -118,6 +118,10 @@ unchanged and module validation/guards still run. It buffers one model completio
 buffer database reads or the entire multi-step chat. Attendance's MCP-only list
 routes return module-owned evidence (`records`, `recordState`, `interpretation`)
 so an empty read does not claim zero absentees. Dashboard list routes keep arrays.
+The grades reads of all marks, one class, subject, teacher, test or exam work the
+same way (`POST /grades/mcp/...`): they answer with `grades/gradeChatSummary.ts`
+(averages per class, subject and student; each mark when a class has at most
+150) because a class's raw rows (about 450 KB) left OSS20B unable to reply.
 Formatting also applies to OSS20B calls without a request-local policy frame;
 other models and unrelated fetches keep their original behavior. Up to four
 repeated observed suffixes are recognized, with the same offered-name requirement.
