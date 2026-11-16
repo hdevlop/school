@@ -52,7 +52,10 @@ export function schoolRoutingContext(query: string, routingQuery = query): strin
     hints.push(namedClass
       ? 'student counts students_get_student_count classes_get_class_student_count classes_get_classes'
       : 'student counts students_get_student_count');
-  if (grades && !pending) hints.push(personal
+  // A report card is asked for by name, often with no word for marks.
+  const reportCard = mentions('bulletins?|relev[eé]s? de notes|report cards?|kachf n?no9at|bayan n?no9at|[وفب]?(?:كشف النقط|كشف النقاط|بيان النقط|بيان النقاط|البوليطان|بوليطان)');
+  if (reportCard && !personal) hints.push('student report card grades_get_student_report search_search_students');
+  else if (grades && !pending) hints.push(personal
     ? 'student academic grades student-profile_get_academic grades_get_by_student'
     : placement ? 'class subject grades grades_get_by_section grades_get_by_subject'
       : 'student grades grades_get_by_student search_search_students');

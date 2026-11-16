@@ -51,6 +51,16 @@ never shown to either LLM.
 | 20 | 36% | 76% | 39 |
 | 60 (all written) | 39% | 78% | 39 |
 
-Still weak: one student's marks, the report card and a section's marks are
-confused with each other (about 10% right first each); 21 questions get no
-tool; Darija scores 29% right first against 43% for the other languages.
+Two follow-ups, same questions:
+
+- New phrases for 4 weak tools with invented student names in them: 32% right
+  first, no better. The names matched "a question naming a person": 12 of 20
+  questions about a teacher's marks went to one student's marks. **Keep names
+  out of phrases.**
+- A report-card hint in `schoolRoutingContext.ts` (bulletin, كشف النقط, kachf
+  nno9at...): every other grades question carried the one-student hint, and a
+  bulletin alone carried none. **37% right first** (66 -> 74), Darija 29% -> 32%,
+  other features unchanged (44 of 82). Kept.
+
+Still weak: a section's marks (2 of 22), one test's results (3 of 21) and the
+report card (6 of 24); 19 questions get no tool.

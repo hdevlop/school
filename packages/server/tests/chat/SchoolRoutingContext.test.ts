@@ -71,6 +71,22 @@ test.each([
   expect(result).not.toContain('_get_my_identity');
 });
 
+// The one-student hint pulled report-card questions to grades_get_by_student;
+// a bulletin alone gave no grades hint at all. Measured 2026-11-16 on 200
+// staff grades questions: right tool first 66 -> 74, other features unchanged.
+test.each(['bghit kachf nno9at dyal ABID Amine', 'وريني البوليطان ديال التلميذ يوسف',
+  'le bulletin de Salma Idrissi', 'report card for Omar Bennani'])('a report card gets its own hint: %s', query => {
+  const result = schoolRoutingContext(query, rewriteDarijaForRouting(query));
+  expect(result).toContain('grades_get_student_report');
+  expect(result).not.toContain('grades_get_by_student');
+});
+
+test('a parent asking for a child\'s bulletin keeps the personal grades hint', () => {
+  const result = schoolRoutingContext('bghit bulletin dyal bnti f nno9at');
+  expect(result).not.toContain('grades_get_student_report');
+  expect(result).toContain('student-profile_get_academic');
+});
+
 test('self grades and teaching survive the routing rewrite with separate identity chains', () => {
   for (const query of ['bghit no9ati dyali', 'بغيت نقطي']) {
     expect(schoolRoutingContext(query, rewriteDarijaForRouting(query))).toContain('students_get_my_identity');
