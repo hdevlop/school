@@ -7,8 +7,10 @@ import { z } from 'zod';
 const studentIdParam = z.object({ studentId: z.string().min(1) });
 
 // Each tab asks for what its data's own module asks for on its routes, so a
-// profile never shows a role more than that module would: fees stay with the
-// finance roles and student routes with the administrator.
+// profile never shows a role more than that module would: student routes stay
+// with the administrator. Every tab loads the student through ownership first,
+// so the financial tab asks only for read:fees, which parents hold (migration
+// 0124) for their own children; the fee modules' own routes stay school-wide.
 @ToolGroup('student-profile')
 @Controller('/profiles/students')
 @isAuth()
@@ -43,7 +45,7 @@ export class StudentProfileController {
   }
 
   @Get('/:studentId/financial')
-  @CanSchoolWide('read:fees')
+  @Can('read:fees')
   @Validate({ params: studentIdParam })
   @McpTool({ description: 'Get student financial profile in the academic year — fees, payments, balance', readOnly: true })
   @ResMsg('students.success.retrieved')

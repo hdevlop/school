@@ -869,6 +869,13 @@
       "when": 1794778880732,
       "tag": "0123_columns_never_migrated",
       "breakpoints": true
+    },
+    {
+      "idx": 124,
+      "version": "7",
+      "when": 1794789408866,
+      "tag": "0124_parent_read_fees",
+      "breakpoints": true
     }
   ]
 }

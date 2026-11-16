@@ -297,7 +297,8 @@
       "read:behavior-rewards",
       "read:discipline",
       "read:sections",
-      "read:events"
+      "read:events",
+      "read:fees"
     ]
   },
   {

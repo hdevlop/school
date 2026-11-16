@@ -53,13 +53,13 @@ describe('profile routes', () => {
       getOverview: ['read:students'],
       getAcademic: ['read:grades'],
       getAttendanceSummary: ['read:attendance'],
-      getFinancial: ['read:fees', SCHOOL_WIDE],
+      getFinancial: ['read:fees'],
       getTransport: ['read:student-routes', SCHOOL_WIDE],
     });
     expect(of(ParentProfileController)).toEqual({
       getUnreadAlerts: ['read:alerts'],
-      getChildren: ['read:fees', SCHOOL_WIDE],
-      getAllFeesDue: ['read:fees', SCHOOL_WIDE],
+      getChildren: ['read:fees'],
+      getAllFeesDue: ['read:fees'],
       getAllUpcomingEvents: ['read:events'],
     });
     expect(of(TeacherProfileController)).toEqual({

@@ -35,9 +35,16 @@ const eventId = (name: string) => `${prefix}-${name}`;
 const librarian = { roleId: `${prefix}-role`, userId: `${prefix}-librarian`,
   email: `profiles-${suffix}@history.example.test`, password: crypto.randomUUID() };
 const LIBRARIAN_GRANTS = ['read:students', 'read:teachers'];
+// The family's parent signs in with a parent login (the fixture has none);
+// another family's parent has a child the first may not read.
+const family = { roleId: `${prefix}-parent-role`, email: `profiles-parent-${suffix}@history.example.test`,
+  password: crypto.randomUUID() };
+const otherParentId = `${prefix}-other-parent`;
+const otherParentUserId = `${prefix}-other-parent-user`;
 let adminToken: string;
 let principalToken: string;
 let librarianToken: string;
+let parentToken: string;
 const createdPermissionIds: string[] = [];
 
 async function login(email: string, password: string) {
@@ -71,13 +78,24 @@ const ids = (rows: Array<{ id: string }>) => rows.map((row) => row.id);
 const sorted = (rows: Array<{ id: string }>) => ids(rows).sort();
 
 beforeAll(async () => {
-  await db.insert(users).values({ id: parentUserId, name: 'History profiles parent',
-    email: `profiles-parent-${suffix}@history.example.test`, password: 'not-used', status: 'active', emailVerified: true });
-  await db.insert(parents).values({ id: parentId, userId: parentUserId, name: `History profiles parent ${suffix}`,
-    relationshipType: 'guardian' });
-  await db.insert(studentParents).values([OMAR, AYA].map((studentId) => ({
-    id: `${prefix}-link-${studentId.slice(-2)}`, studentId, parentId,
-  })));
+  // Parents hold read:fees for their own children's fee views.
+  await db.insert(roles).values({ id: family.roleId, name: 'parent' });
+  const [readFees] = await db.select({ id: permissions.id }).from(permissions).where(eq(permissions.name, 'read:fees'));
+  await db.insert(rolePermissions).values({ roleId: family.roleId, permissionId: readFees.id });
+  await db.insert(users).values([
+    { id: parentUserId, name: 'History profiles parent', email: family.email, roleId: family.roleId,
+      password: await Bun.password.hash(family.password, { algorithm: 'bcrypt', cost: 10 }), status: 'active', emailVerified: true },
+    { id: otherParentUserId, name: 'History profiles other parent', email: `profiles-other-${suffix}@history.example.test`,
+      roleId: family.roleId, password: 'not-used', status: 'active', emailVerified: true },
+  ]);
+  await db.insert(parents).values([
+    { id: parentId, userId: parentUserId, name: `History profiles parent ${suffix}`, relationshipType: 'guardian' },
+    { id: otherParentId, userId: otherParentUserId, name: `History profiles other parent ${suffix}`, relationshipType: 'guardian' },
+  ]);
+  await db.insert(studentParents).values([
+    ...[OMAR, AYA].map((studentId) => ({ id: `${prefix}-link-${studentId.slice(-2)}`, studentId, parentId })),
+    { id: `${prefix}-other-link`, studentId: ADAM, parentId: otherParentId },
+  ]);
   // Omar and Aya sit in 2026-2027 section A; nobody is placed in B that year.
   await db.insert(events).values([
     { id: eventId('school'), title: 'School open day', startDate: '2026-10-05' },
@@ -114,17 +132,18 @@ beforeAll(async () => {
   adminToken = await login('admin@history.example.test', adminPassword);
   principalToken = await login('principal@history.example.test', principalPassword);
   librarianToken = await login(librarian.email, librarian.password);
+  parentToken = await login(family.email, family.password);
 });
 
 afterAll(async () => {
   await server.stop();
   await db.delete(events).where(like(events.id, `${prefix}-%`));
   await db.delete(assessments).where(eq(assessments.id, todayAssessmentId));
-  await db.delete(studentParents).where(eq(studentParents.parentId, parentId));
-  await db.delete(parents).where(eq(parents.id, parentId));
-  await db.delete(users).where(inArray(users.id, [parentUserId, librarian.userId]));
-  await db.delete(rolePermissions).where(eq(rolePermissions.roleId, librarian.roleId));
-  await db.delete(roles).where(eq(roles.id, librarian.roleId));
+  await db.delete(studentParents).where(inArray(studentParents.parentId, [parentId, otherParentId]));
+  await db.delete(parents).where(inArray(parents.id, [parentId, otherParentId]));
+  await db.delete(users).where(inArray(users.id, [parentUserId, otherParentUserId, librarian.userId]));
+  await db.delete(rolePermissions).where(inArray(rolePermissions.roleId, [librarian.roleId, family.roleId]));
+  await db.delete(roles).where(inArray(roles.id, [librarian.roleId, family.roleId]));
   if (createdPermissionIds.length) await db.delete(permissions).where(inArray(permissions.id, createdPermissionIds));
   const [left] = await db.select({ count: count() }).from(events).where(like(events.id, `${prefix}-%`));
   expect(left.count).toBe(0);
@@ -227,11 +246,32 @@ describe('profiles over the history fixture', () => {
       unreadAlerts: 403, children: 403, feesDue: 403, upcomingEvents: 403,
       teacherClasses: 200, teacherToday: 200, teacherStudents: 200, pendingGrading: 403,
     });
-    // Fees stay with the finance roles and student routes with the administrator.
+    // Fees stay with the finance roles and parents, student routes with the administrator.
     expect(await status(`/profiles/students/${OMAR}/financial`, principalToken)).toBe(200);
     expect(await status(`/profiles/parents/${parentId}/fees-due`, principalToken)).toBe(200);
     expect(await status(`/profiles/students/${OMAR}/transport`, principalToken)).toBe(403);
     expect(await status(`/profiles/students/${OMAR}/overview`, '')).toBe(401);
+  });
+
+  // Parents read fees through the family views only, and only their own
+  // family's: the parent and child are loaded through ownership first.
+  it("shows a parent their own children's fees and no other family's", async () => {
+    // Parents see the current year only (2026-2027 on the fixture's business day).
+    const asParent = (path: string) => request(path, undefined, parentToken);
+    const due = await asParent(`/profiles/parents/${parentId}/fees-due`);
+    expect(due.status, JSON.stringify(due.body)).toBe(200);
+    expect(due.body?.data.map((row: { studentId: string }) => row.studentId).sort()).toEqual([OMAR, AYA]);
+    const children = await asParent(`/profiles/parents/${parentId}/children`);
+    expect(children.status).toBe(200);
+    expect(sorted(children.body?.data)).toEqual([OMAR, AYA]);
+    expect((await asParent(`/profiles/students/${AYA}/financial`)).status).toBe(200);
+
+    expect((await asParent(`/profiles/parents/${otherParentId}/fees-due`)).status).toBe(404);
+    expect((await asParent(`/profiles/parents/${otherParentId}/children`)).status).toBe(404);
+    expect((await asParent(`/profiles/students/${ADAM}/financial`)).status).toBe(404);
+    // The fee module's own routes have no ownership rules and stay school-wide.
+    expect((await asParent(`/fees/student/${AYA}`)).status).toBe(403);
+    expect((await asParent('/fees/outstanding')).status).toBe(403);
   });
 
   it('refuses bad years and people the reader cannot find', async () => {
