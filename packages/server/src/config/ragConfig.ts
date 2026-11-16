@@ -193,15 +193,19 @@ export const ragConfig = (): NajmPlugin => {
     // routing/semantics/): those not stored yet are added after boot tool
     // indexing; studio edits stay. Edit the files to change one for good.
     seedSemantics,
-    // Jev picks among the router's tools (CHATBOT_JEV_RERANK=on). najm-rag's
-    // defaults: a pick at 0.85 leads with its dependencies and the router's
-    // next 3; at 0.7 it moves to the top; anything else, a failure or no
-    // answer in 0.8 s keeps the router's order. Measured 2026-11-16 on the
-    // router's candidates for 320 fixture questions: right tool first 74 -> 94
-    // of 200 grades questions (0 lost) and 44 -> 52 of 82 older ones (2 lost).
-    // Near misses below the threshold rescued nothing at 0.62 or 0.58, so none
-    // are shown; lower confidence cuts gained 2 and lost 3 to 7.
-    rerankTools: readJevRerankControls().enabled ? { rerank: schoolJevToolReranker } : undefined,
+    // Jev picks among the router's tools (CHATBOT_JEV_RERANK=on). A pick at
+    // 0.85 leads with its dependencies and the router's next 3; at 0.3 it
+    // moves to the top and the router's tools stay offered; "none", a failure
+    // or no answer in 0.8 s keeps the router's order. Jev also sees tools down
+    // to 0.64 similarity, but one below the 0.68 threshold is used only at
+    // 0.85. Measured 2026-11-16 on the router's candidates for 320 fixture
+    // questions, against najm-rag's 0.7 promote and no near misses: right tool
+    // first 104-108 -> 127-132 of 200 grades questions, 54-55 -> 56-57 of 82
+    // older ones; no-tool questions unchanged. Promoting every pick gained 3
+    // more grades but lost older ones.
+    rerankTools: readJevRerankControls().enabled
+      ? { rerank: schoolJevToolReranker, promoteAt: 0.3, minSimilarity: 0.64 }
+      : undefined,
     knowledge: true,
     allowedLangs: ['en', 'fr', 'ar', 'es'],
   }) as unknown as NajmPlugin;

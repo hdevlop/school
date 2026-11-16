@@ -108,3 +108,21 @@ The router alone did not change (72 to 74 before), so the gain is Jev's. A
 Darija word list in Jev's instructions gained 6 more grades questions but lost
 3 to 4 older ones, so it was left out. Still open: 19 grades questions get no
 tool, and greetings get a tool (11 of 38 no-tool questions right).
+
+Then the cut-offs were tuned on the router's candidates (Jev asked once per
+candidate set, scored for every combination): the promote cut-off is the one
+that matters. Moving it from najm-rag's 0.7 to 0.3 put the right tool first for
+about 21 more grades questions and 2 more older ones; promoting every pick
+gained 3 more grades but lost older ones. Showing Jev tools down to 0.64 added
+1 to 3 and gave no greeting a tool. The select cut-off (0.75 to 0.95) changed
+little and stays 0.85. Measured on the dev server:
+
+| | Before tuning | Promote 0.3, floor 0.64 |
+| --- | --- | --- |
+| Grades, right tool first | 109 (55%) | **133 (67%)** |
+| Darija only, of 140 | 67 | 88 |
+| One test, of 21 | 8 | 17 |
+| One exam, of 19 | 11 | 15 |
+| Grades with no tool | 19 | 16 |
+| Older questions, of 82 | 53 | 57 |
+| No-tool questions right, of 38 | 11 | 11 |
