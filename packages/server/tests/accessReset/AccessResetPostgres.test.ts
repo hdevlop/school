@@ -84,17 +84,11 @@ afterAll(async () => {
  * would turn an unrelated outage into a failure here.
  */
 const buildContainer = async () => {
-  const { Server } = await import('najm-core');
-  const config = await import('../../src/config');
+  const { createNajmServer } = await import('najm-api');
+  const { schoolServerOptions } = await import('../../src/config/server');
+  const { database, cache, i18n, validation, email, auth, storage } = schoolServerOptions();
 
-  const server = new Server()
-    .use(config.databaseConfig())
-    .use(config.cacheConfig())
-    .use(config.i18nConfig())
-    .use(config.validationConfig())
-    .use(config.eventsConfig())
-    .use(config.emailConfig())
-    .use(config.authConfig())
+  const server = createNajmServer({ database, cache, i18n, validation, email, auth, storage, guards: false })
     .load({ AccessResetService, AccessResetRepository, AccessResetValidator });
 
   await server.init();

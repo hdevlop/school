@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { describe, expect, it, mock } from 'bun:test';
 import { getEffectiveGuards } from 'najm-guard';
-import { guardConfig } from '../../src/config';
+import { schoolServerOptions } from '../../src/config/server';
 import { yearScopedModules } from '../../src/config/yearScope';
 import { TeacherRequestApprovalController } from '../../src/modules/teacherRequests/TeacherRequestApprovalController';
 import { createTeacherRequestDto } from '../../src/modules/teacherRequests/TeacherRequestDto';
@@ -91,7 +91,7 @@ describe('reviewing a teacher sign-up', () => {
 });
 
 describe('who may reach it', () => {
-  const config = guardConfig().config;
+  const config = schoolServerOptions().guards;
   const defaultGuards = getEffectiveGuards(class Unguarded {}, 'none', config);
 
   it('opens only the form to the public', () => {

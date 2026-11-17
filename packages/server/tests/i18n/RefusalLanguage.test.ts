@@ -3,7 +3,8 @@ import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
 import { Server } from 'najm-core';
 import { LANGUAGE_HEADER } from '@sms/contracts/locales';
 import { Controller, Err, Get, I18n } from '../../src/najm';
-import { i18nConfig } from '../../src/config/coreConfig';
+import { i18n } from 'najm-i18n';
+import { schoolServerOptions } from '../../src/config/server';
 
 // The language a server refusal arrives in, through School's real i18n
 // configuration. ServerMessages.test.ts checks the catalog; this checks which
@@ -30,7 +31,7 @@ const PORT = 4791;
 let server: Server;
 
 beforeAll(async () => {
-  server = new Server({ isolated: true, silent: true }).use(i18nConfig()).load(RefusalProbeController);
+  server = new Server({ isolated: true, silent: true }).use(i18n(schoolServerOptions().i18n)).load(RefusalProbeController);
   await server.listen(PORT);
 });
 

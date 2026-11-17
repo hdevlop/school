@@ -1,15 +1,12 @@
 /**
- * One factory per Najm plugin, each in the file that owns its policy.
- * Environment variables are read and documented in `src/env.ts` only.
- * `src/index.ts` registers them in order.
+ * School's server: `server.ts` passes School's options to najm-api's preset,
+ * which registers the common Najm plugins in order with their shared policy,
+ * then adds School's own plugins (theme, rag, chatbot). The files here hold
+ * only School policy. Environment variables are read in `src/env.ts` only.
  */
-export { authConfig, guardConfig } from './authConfig';
-export { cacheConfig } from './cacheConfig';
+export { schoolServer, schoolServerOptions } from './server';
+export { authConfig } from './authConfig';
 export { chatbotConfig, chatRequestConfig, studioAssistantConfig } from './chatbotConfig';
-export { corsConfig, databaseConfig, eventsConfig, i18nConfig, validationConfig } from './coreConfig';
 export { emailConfig } from './emailConfig';
-export { mcpConfig } from './mcpConfig';
 export { ragConfig, ragStudioConfig } from './ragConfig';
-export { rateLimitConfig } from './rateLimitConfig';
-export { storageConfig } from './storageConfig';
 export { themeConfig } from './themeConfig';

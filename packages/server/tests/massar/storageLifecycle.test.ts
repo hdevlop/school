@@ -4,8 +4,8 @@ import { MassarService } from '../../src/modules/massar/MassarService';
 import { MassarValidator } from '../../src/modules/massar/MassarValidator';
 import { MassarCleanupService } from '../../src/modules/massar/MassarCleanupService';
 import { SchoolStorageValidator } from '../../src/config/SchoolStorageValidator';
-import { StorageValidator } from 'najm-storage';
-import { storageConfig } from '../../src/config/storageConfig';
+import { storage, StorageValidator } from 'najm-storage';
+import { schoolServerOptions } from '../../src/config/server';
 import { template, setupFixture, massarTestI18n } from './fixtures';
 import { readExport } from '../../src/modules/massar/workbook/readExport';
 
@@ -104,7 +104,7 @@ it('cleans expired previews and old orphans, preserving references across years 
 });
 
 it('restricts spreadsheet/text uploads to Massar, including inferred MIME and Windows case variants', () => {
-  expect(storageConfig().aliases).toContainEqual([StorageValidator, SchoolStorageValidator]);
+  expect(storage(schoolServerOptions().storage).aliases).toContainEqual([StorageValidator, SchoolStorageValidator]);
   const validator = new SchoolStorageValidator();
   for (const namespace of ['students', 'parents', 'documents', 'generic']) {
     for (const path of ['file.xlsx', 'file.csv', 'file.txt']) expect(() => validator.resolveUploadTarget(namespace, path, undefined)).toThrow();

@@ -306,6 +306,11 @@ export const server = new Server()
   .base('/api')
   .load(features);
 
+// School itself uses najm-api's preset instead (packages/server/src/config/server.ts):
+// createNajmServer({ ...slots, plugins: [...] }) registers cors, database, cache,
+// i18n, validation, rateLimit, events, email, guards, auth, mcp and storage in
+// order with the shared policy; each slot takes options, false, or () => plugin.
+
 // app/api/[...route]/route.ts
 export const GET = handle(server);
 export const POST = handle(server);
@@ -476,7 +481,7 @@ DELETE /api/:namespace/files              — delete all in namespace
 
 ## MCP Plugin Setup
 
-School's config is `packages/server/src/config/mcpConfig.ts` (najm-auth bearer auth, year hooks for every group in `yearScope.ts`).
+School's config is the `mcp` option in `packages/server/src/config/server.ts` (najm-auth bearer auth, year hooks for every group in `yearScope.ts`).
 
 ```typescript
 import { mcp } from 'najm-mcp';

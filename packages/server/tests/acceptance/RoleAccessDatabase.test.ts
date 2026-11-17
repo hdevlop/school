@@ -3,11 +3,11 @@ import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
 import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { cache } from 'najm-cache';
-import { database } from 'najm-database';
 import { email } from 'najm-email';
 import { Can } from '../../src/auth';
 import { Controller, Get, Server } from '../../src/najm';
-import { authConfig, eventsConfig, guardConfig, i18nConfig, validationConfig } from '../../src/config';
+import { createNajmServer } from 'najm-api';
+import { schoolServerOptions } from '../../src/config/server';
 import * as roleAccess from '../../src/modules/roleAccess';
 
 /** Real transactions and HTTP guards, in a disposable schema; no app rows change. */
@@ -61,10 +61,12 @@ beforeAll(async () => {
     ('actor', 'actor@example.invalid', ${hash}, 'active', 'admin-role'),
     ('holder', 'holder@example.invalid', ${hash}, 'active', 'target-role')`;
   await restore();
-  server = new Server().use(database({ default: drizzle(isolated) }))
-    .use(cache()).use(eventsConfig()).use(i18nConfig()).use(validationConfig())
-    .use(email({ provider: { provider: 'memory' } })).use(guardConfig()).use(authConfig())
-    .base('/api').load({ ...roleAccess, PayrollProbe });
+  const school = schoolServerOptions();
+  server = createNajmServer({
+    base: '/api', database: { default: drizzle(isolated) }, cache: () => cache(), i18n: school.i18n,
+    validation: school.validation, email: () => email({ provider: { provider: 'memory' } }),
+    guards: school.guards, auth: school.auth, storage: school.storage,
+  }).load({ ...roleAccess, PayrollProbe });
   await server.init();
   service = await server.container.resolve(roleAccess.RoleAccessService);
   repository = await server.container.resolve(roleAccess.RoleAccessRepository);

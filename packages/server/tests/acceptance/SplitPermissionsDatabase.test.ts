@@ -3,12 +3,12 @@ import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
-import { database } from 'najm-database';
 import { cache } from 'najm-cache';
 import { email } from 'najm-email';
 import { Can } from '../../src/auth';
 import { Controller, Get, Server } from '../../src/najm';
-import { authConfig, eventsConfig, guardConfig, i18nConfig } from '../../src/config';
+import { createNajmServer } from 'najm-api';
+import { schoolServerOptions } from '../../src/config/server';
 import { canReadRoutineCandidates, RoutineCandidateGuard } from '../../src/modules/classRoutines/ClassRoutineGuards';
 
 const connection = process.env.DB_URL;
@@ -30,10 +30,11 @@ class Probe {
 }
 
 async function start() {
-  server = new Server().use(database({ default: drizzle(db) }))
-    .use(cache()).use(eventsConfig()).use(i18nConfig())
-    .use(email({ provider: { provider: 'memory' } })).use(guardConfig()).use(authConfig())
-    .base('/api').load({ Probe, RoutineCandidateGuard });
+  const school = schoolServerOptions();
+  server = createNajmServer({
+    base: '/api', database: { default: drizzle(db) }, cache: () => cache(), i18n: school.i18n,
+    email: () => email({ provider: { provider: 'memory' } }), guards: school.guards, auth: school.auth, storage: school.storage,
+  }).load({ Probe, RoutineCandidateGuard });
   await server.init();
 }
 const request = (path: string, token?: string, body?: unknown) => server.fetch(new Request(`http://school.test/api${path}`, {

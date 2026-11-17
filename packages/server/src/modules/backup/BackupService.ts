@@ -14,7 +14,7 @@ import {
   isBackedUpFile,
   type BackupManifest,
 } from '@sms/contracts/backup';
-import { storageBasePath } from '../../config/storageConfig';
+import { env } from '../../env';
 import { Inject, Service, Transaction, TransactionService } from '../../najm';
 import { BackupArchiveReader, BackupArchiveWriter, backupFileName, insertionOrder, rowBatches } from './backupArchive';
 import { LandingRepository } from '../landing/LandingRepository';
@@ -43,7 +43,7 @@ export class BackupService {
   @Inject(TransactionService) private transactions!: TransactionService;
   @Inject(LandingRepository) private landing!: LandingRepository;
   /** The uploads folder; tests point it elsewhere. */
-  storagePath = storageBasePath();
+  storagePath = env.app.storagePath;
   /** The migrations a deploy applies; a restore replays them. */
   migrationsPath = backupMigrationsPath();
 

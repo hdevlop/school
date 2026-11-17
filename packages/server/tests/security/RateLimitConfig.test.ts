@@ -1,18 +1,33 @@
-import { describe, expect, it } from 'bun:test';
+import 'reflect-metadata';
+import { afterEach, describe, expect, it } from 'bun:test';
+import { createNajmServer } from 'najm-api';
+import { Server, type NajmPlugin } from 'najm-core';
+import { schoolServerOptions } from '../../src/config/server';
 
+const keys = ['NODE_ENV', 'SCHOOL_TRUSTED_PROXY_HOPS'] as const;
+const original = Object.fromEntries(keys.map(key => [key, process.env[key]]));
+afterEach(() => {
+  for (const key of keys) {
+    if (original[key] === undefined) delete process.env[key];
+    else process.env[key] = original[key];
+  }
+});
+
+/** The rate-limit config najm-api's preset registers for School's options. */
 function configuration(mode: string, hops?: string) {
-  const env = { ...process.env, NODE_ENV: mode };
-  if (hops === undefined) delete env.SCHOOL_TRUSTED_PROXY_HOPS;
-  else env.SCHOOL_TRUSTED_PROXY_HOPS = hops;
-  const moduleUrl = new URL('../../src/config/rateLimitConfig.ts', import.meta.url).href;
-  const result = Bun.spawnSync([process.execPath, '-e', `
-    const { rateLimitConfig } = await import(${JSON.stringify(moduleUrl)});
-    const { config } = rateLimitConfig();
-    console.log(JSON.stringify({ hops: config.trustedProxyHops,
-      skipped: config.skip?.({}) ?? false, unresolved: config.onUnresolvedClient }));
-  `], { env });
-  expect(result.exitCode).toBe(0);
-  return JSON.parse(new TextDecoder().decode(result.stdout));
+  process.env.NODE_ENV = mode;
+  if (hops === undefined) delete process.env.SCHOOL_TRUSTED_PROXY_HOPS;
+  else process.env.SCHOOL_TRUSTED_PROXY_HOPS = hops;
+  const seen: NajmPlugin[] = [];
+  const use = Server.prototype.use;
+  Server.prototype.use = function (plugin: NajmPlugin) { seen.push(plugin); return use.call(this, plugin); };
+  try {
+    createNajmServer({ server: { isolated: true, silent: true }, events: false, rateLimit: schoolServerOptions().rateLimit });
+  } finally {
+    Server.prototype.use = use;
+  }
+  const { config } = seen.find(plugin => plugin.name === 'rate-limit')!;
+  return { hops: config.trustedProxyHops, skipped: config.skip?.({}) ?? false, unresolved: config.onUnresolvedClient };
 }
 
 describe('rate limit environment policy', () => {

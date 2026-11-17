@@ -7,7 +7,9 @@ import { Server } from 'najm-core';
 import { translate } from 'najm-i18n';
 import { LANGUAGE_HEADER, translations } from '@sms/contracts/locales';
 import { Body, Controller, Post, Validate } from '../../src/najm';
-import { i18nConfig, validationConfig } from '../../src/config/coreConfig';
+import { i18n } from 'najm-i18n';
+import { validation } from 'najm-validation';
+import { schoolServerOptions } from '../../src/config/server';
 import { installZodDefaultMessages, translateIssueMessage } from '../../src/config/validationMessages';
 import { applyCreditDto } from '../../src/modules/financial/credits/CreditDto';
 import { num } from '../../src/shared/fields';
@@ -152,7 +154,7 @@ describe('refused request language', () => {
   let server: Server;
 
   beforeAll(async () => {
-    server = new Server({ isolated: true, silent: true }).use(i18nConfig()).use(validationConfig())
+    server = new Server({ isolated: true, silent: true }).use(i18n(schoolServerOptions().i18n)).use(validation(schoolServerOptions().validation))
       .load(ValidationProbeController);
     await server.listen(PORT);
   });

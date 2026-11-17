@@ -3,7 +3,8 @@ import { describe, expect, it } from 'bun:test';
 import { getRoutes } from 'najm-core';
 import { getEffectiveGuards, getGuardMetadata } from 'najm-guard';
 import { StorageController, StorageMcpTools, StorageStudioController } from 'najm-storage';
-import { guardConfig, storageConfig } from '../../src/config';
+import { storage } from 'najm-storage';
+import { schoolServerOptions } from '../../src/config/server';
 import { ClassRoutineController } from '../../src/modules/classRoutines/ClassRoutineController';
 import { HealthController } from '../../src/modules/health/HealthController';
 import { NotificationController } from '../../src/modules/financial/notifications/NotificationController';
@@ -19,7 +20,7 @@ function guards(target: any, method?: string) {
 
 it('requires sign-in on forgotten routes while preserving deliberate public endpoints', () => {
   class ForgottenController { read() {} }
-  const config = guardConfig().config;
+  const config = schoolServerOptions().guards;
   expect(getEffectiveGuards(ForgottenController, 'read', config).map(({ guardClass }) => guardClass.name)).toEqual(['AuthGuard']);
   for (const method of ['getHealth', 'getStatus', 'ping']) {
     expect(getEffectiveGuards(HealthController, method, config), method).toEqual([]);
@@ -34,7 +35,7 @@ it('requires sign-in on forgotten routes while preserving deliberate public endp
 
 describe('storage routes', () => {
   it('disables Studio and MCP, guards management for admins, and serves to signed-in users', () => {
-    const plugin = storageConfig();
+    const plugin = storage(schoolServerOptions().storage);
     expect(plugin.services).not.toContain(StorageStudioController);
     expect(plugin.services).not.toContain(StorageMcpTools);
 

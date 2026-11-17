@@ -1,6 +1,6 @@
 import { statfs } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { storageBasePath } from '../../config/storageConfig';
+import { env } from '../../env';
 
 export type StorageSpace = { freeBytes: number; totalBytes: number };
 
@@ -9,7 +9,7 @@ export type StorageSpace = { freeBytes: number; totalBytes: number };
  * cannot be read. The folder is created by the first upload, so a missing
  * folder is answered from its nearest existing parent: the same disk.
  */
-export async function readStorageSpace(path = resolve(storageBasePath())): Promise<StorageSpace | null> {
+export async function readStorageSpace(path = resolve(env.app.storagePath)): Promise<StorageSpace | null> {
   for (let current = path; ;) {
     try {
       const stats = await statfs(current);

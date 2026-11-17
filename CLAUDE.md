@@ -126,8 +126,9 @@ states that drift — so do not add one without changing the plan first.
   lookups stay unscoped. ESLint rejects `x.where(a).where(b)` and najm-auth's
   `own`/`Owned` in server code.
 
-- **Every route states its guard.** `packages/server/src/config/authConfig.ts`
-  registers `guards({ default: [isAuth()] })` before `auth()`, so a route that
+- **Every route states its guard.** `packages/server/src/config/server.ts`
+  passes `guards: { default: [isAuth()] }` to najm-api's `createNajmServer`,
+  which registers it before `auth()`, so a route that
   declares no guard asks for sign-in instead of being public. The default is a
   safety net, not a policy: sign-in alone lets any account in, so give each
   route the guard its data needs (`@Can(...)`, `@CanSchoolWide(...)`, ...) and

@@ -1,23 +1,16 @@
-import { guards } from 'najm-guard';
 import { defaultCredentialSetupPasswordSchema } from 'najm-auth';
-import { auth, isAuth } from '../auth';
+import { auth } from '../auth';
 import { ACCOUNT_EMAIL_APP_NAME, accountEmailLogo, accountEmailTheme } from '../email/accountEmailBrand';
 import { env } from '../env';
 
 /**
- * Sign-in and route guards; their variables are `env.auth` and `env.app.frontendUrl`.
+ * Sign-in; its variables are `env.auth` and `env.app.frontendUrl`. The default
+ * guard is set in `server.ts`, which the preset registers before auth.
  *
- * auth uses the cache, email and rate-limit plugins `src/index.ts` registers
+ * auth uses the cache, email and rate-limit plugins the preset registers
  * before it. Passing their config here as well would be ignored, and the
  * server warns when it is.
  */
-
-/**
- * Registered before `auth()`, so a route that declares no guard asks for
- * sign-in instead of being public. A safety net, not a policy: give each route
- * the guard its data needs, and mark a deliberately public one `@Public()`.
- */
-export const guardConfig = () => guards({ default: [isAuth()] });
 
 /** Google sign-in is offered only where its keys are configured. */
 export const googleSignInEnabled = () => env.auth.googleSignIn;

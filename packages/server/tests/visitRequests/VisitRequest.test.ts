@@ -5,7 +5,7 @@ import { VisitRequestService } from '../../src/modules/visitRequests/VisitReques
 import { VisitRequestValidator } from '../../src/modules/visitRequests/VisitRequestValidator';
 import { getEffectiveGuards } from 'najm-guard';
 import { VisitRequestController } from '../../src/modules/visitRequests/VisitRequestController';
-import { guardConfig } from '../../src/config';
+import { schoolServerOptions } from '../../src/config/server';
 import { withEnglishMessages } from '../support/englishMessages';
 const valid = { parentName:'Salma Benali',phone:'+212612345678' };
 describe('public visit enquiries', () => {
@@ -36,7 +36,7 @@ describe('public visit enquiries', () => {
     await validator.ensureActiveCycle();
   });
   it('makes only submission public and requires separate staff permissions', () => {
-    const config=guardConfig().config;
+    const config=schoolServerOptions().guards;
     expect(getEffectiveGuards(VisitRequestController,'create',config)).toEqual([]);
     for(const method of ['list','update']) expect(getEffectiveGuards(VisitRequestController,method,config).length).toBeGreaterThan(1);
   });

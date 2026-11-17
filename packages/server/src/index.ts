@@ -1,27 +1,6 @@
 import 'reflect-metadata';
 
-import { Server } from './najm';
-import {
-  databaseConfig,
-  cacheConfig,
-  authConfig,
-  corsConfig,
-  i18nConfig,
-  eventsConfig,
-  validationConfig,
-  rateLimitConfig,
-  storageConfig,
-  guardConfig,
-  mcpConfig,
-  ragConfig,
-  emailConfig,
-  chatbotConfig,
-  chatRequestConfig,
-  studioAssistantConfig,
-  ragStudioConfig,
-  themeConfig,
-} from './config';
-
+import { schoolServer } from './config/server';
 import * as modulesModule from './modules';
 import { registerYearPropertyInjector, registerYearRequestScope } from './modules/academicYears/requestYear';
 import { yearRequestControllers } from './config/yearScope';
@@ -32,50 +11,10 @@ import { assertServerEnv } from './env';
 export { loadActiveAcademicYearLabel, loadOwnSidebarOrder, loadSchoolUiSettings, type SchoolUiSettings } from './uiSettings';
 export { loadSchoolLandingProfile, loadLandingCycles, loadSchoolLandingContent } from './landing';
 
-export {
-  databaseConfig,
-  cacheConfig,
-  authConfig,
-  corsConfig,
-  i18nConfig,
-  eventsConfig,
-  validationConfig,
-  rateLimitConfig,
-  storageConfig,
-  guardConfig,
-  mcpConfig,
-  ragConfig,
-  emailConfig,
-  chatbotConfig,
-  studioAssistantConfig,
-  ragStudioConfig,
-  themeConfig,
-};
-
 // Every malformed environment variable, listed at once, before any plugin reads one.
 assertServerEnv();
 
-export const server = new Server()
-  .use(corsConfig())
-  .use(databaseConfig())
-  .use(cacheConfig())
-  .use(i18nConfig())
-  .use(validationConfig())
-  .use(rateLimitConfig())
-  .use(eventsConfig())
-  .use(emailConfig())
-  .use(guardConfig())
-  .use(authConfig())
-  .use(mcpConfig())
-  .use(storageConfig())
-  .use(themeConfig())
-  .use(ragConfig())
-  .use(chatbotConfig())
-  .use(chatRequestConfig())
-  .use(studioAssistantConfig())
-  .use(ragStudioConfig())
-  .base('/api')
-  .load(modulesModule);
+export const server = schoolServer().load(modulesModule);
 
 registerYearPropertyInjector(server.container);
 registerYearRequestScope(server.container, yearRequestControllers);
