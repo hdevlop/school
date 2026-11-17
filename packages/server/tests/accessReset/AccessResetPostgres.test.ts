@@ -95,15 +95,18 @@ const buildContainer = async () => {
   return server;
 };
 
+// audit_logs.id has no database default; the repository sets it (idField).
+const auditId = () => `probe-${crypto.randomUUID()}`;
+
 describe.skipIf(!probe.ok)('audit_logs accepts the access-reset security record', () => {
   it('stores actor, target, mode, reason and outcome without losing the metadata', async () => {
     await sql
       .begin(async (tx: any) => {
         const [row] = await tx`
           insert into audit_logs
-            (user_id, user_role, action, resource, resource_id, status, ip_address, metadata)
+            (id, user_id, user_role, action, resource, resource_id, status, ip_address, metadata)
           values
-            (${ADMIN_ID}, 'admin', 'access.reset', 'user-access', 'target-user',
+            (${auditId()}, ${ADMIN_ID}, 'admin', 'access.reset', 'user-access', 'target-user',
              'success', null,
              ${sql.json({
                mode: 'parent_credential_setup',
@@ -136,9 +139,9 @@ describe.skipIf(!probe.ok)('audit_logs accepts the access-reset security record'
       .begin(async (tx: any) => {
         const [row] = await tx`
           insert into audit_logs
-            (user_id, user_role, action, resource, resource_id, status, metadata)
+            (id, user_id, user_role, action, resource, resource_id, status, metadata)
           values
-            (${ADMIN_ID}, 'admin', 'access.reset', 'user-access', 'target-user', 'failure',
+            (${auditId()}, ${ADMIN_ID}, 'admin', 'access.reset', 'user-access', 'target-user', 'failure',
              ${sql.json({ mode: 'reset_email_sent', reason: 'retry', outcome: 'not_sent', undeliveredLinkLive: true })})
           returning metadata
         `;
