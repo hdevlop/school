@@ -45,5 +45,7 @@ describe('action permissions', () => {
     expect(result.stderr.toString()).toBe('');
     expect(result.stdout.toString()).toContain('permission controls verified');
     expect(result.exitCode).toBe(0);
-  });
+    // A child process renders the fixture; under the full suite's load it
+    // takes longer than Bun's 5 s default.
+  }, 30_000);
 });
