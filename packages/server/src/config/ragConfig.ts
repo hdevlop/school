@@ -41,7 +41,7 @@ export const ragConfig = (): NajmPlugin =>
     rerankTools: env.chat.jevRerank ? { rerank: schoolJevToolReranker, ...JEV_RERANK_THRESHOLDS } : undefined,
     knowledge: true,
     allowedLangs: ['en', 'fr', 'ar', 'es'],
-  }) as unknown as NajmPlugin;
+  });
 
 // najm-rag 2.1.2 makes the Studio Assistant opt-in; School registers studioAssistant().
 // The dashboard's /rag-studio page sends the signed-in admin's own token.
