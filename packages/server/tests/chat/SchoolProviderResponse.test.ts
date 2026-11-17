@@ -64,3 +64,30 @@ test('provider errors remain errors, and cancellation reaches the underlying str
   await response.body!.cancel();
   expect(cancelled).toBe(true);
 });
+
+const answerStream = (...parts: string[]) => new Response(parts.map((content, i) =>
+  frame(event({ content }, i === parts.length - 1 ? 'stop' : null))).join('') + 'data: [DONE]\n\n', { headers });
+const answerText = (body: string) => parse(body).map(chunk => chunk.choices[0].delta.content ?? '').join('');
+
+test('leaked planning glued to the answer is cut; the answer is kept as written', async () => {
+  let failures = 0;
+  const body = await schoolProviderResponse(answerStream('We need to answer in Darija. Provide grades', ' list.**نتائج CHAABI**\n- Français : 10.25/20'),
+    offered, () => failures++).text();
+  expect(answerText(body)).toBe('**نتائج CHAABI**\n- Français : 10.25/20');
+  expect(failures).toBe(0);
+});
+
+test('an answer that is planning only fails instead of reaching the user', async () => {
+  let failures = 0;
+  const response = schoolProviderResponse(answerStream('We need grades for student JAD. Use students_get_students search? ',
+    'We don\'t have name. So cannot find.'), offered, () => failures++);
+  await expect(response.text()).rejects.toThrow('planning only');
+  expect(failures).toBe(1);
+});
+
+test('an ordinary answer passes through unchanged, even when it says "we"', async () => {
+  for (const content of ['المعدل العام ديال المؤسسة هو 10.', 'We have 465 students this year.', 'Moyenne : 8.19/10. Notes : 240.']) {
+    const original = answerStream(content);
+    expect(answerText(await schoolProviderResponse(original, offered, () => {}).text())).toBe(content);
+  }
+});

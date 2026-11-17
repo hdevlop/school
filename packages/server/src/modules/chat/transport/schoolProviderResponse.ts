@@ -1,3 +1,4 @@
+import { withoutLeakedPlanning } from './schoolAnswerPlanning';
 interface ToolDelta { index: number; function?: { name?: string; arguments?: string }; [key: string]: unknown }
 interface Choice { index: number; delta?: { content?: string | null; tool_calls?: ToolDelta[]; [key: string]: unknown }; [key: string]: unknown }
 interface Chunk { choices?: Choice[]; [key: string]: unknown }
@@ -10,7 +11,8 @@ export function offeredToolName(name: string, offered: ReadonlySet<string>): str
 }
 
 /** One bounded provider completion, before the SDK sees names or planning text.
- * Tool steps expose structured calls only; answer-only steps retain their text.
+ * Tool steps expose structured calls only; answer-only steps retain their text
+ * except leaked planning (schoolAnswerPlanning).
  * Module guards/validation still execute every call. No retry or new generation.
  */
 export function schoolProviderResponse(response: Response, offered: ReadonlySet<string>, failed: () => void): Response {
@@ -46,13 +48,30 @@ export function schoolProviderResponse(response: Response, offered: ReadonlySet<
             names.set(key, (names.get(key) ?? '') + (call.function?.name ?? ''));
           }
         }
-        const emittedNames = new Set<string>();
+        // Answer-only steps: leaked planning before the answer is cut, and a
+        // planning-only answer fails (schoolAnswerPlanning).
+        const answers = new Map<number, string>();
+        for (const { chunk } of frames) for (const choice of chunk?.choices ?? []) {
+          if (!toolChoices.has(choice.index) && typeof choice.delta?.content === 'string')
+            answers.set(choice.index, (answers.get(choice.index) ?? '') + choice.delta.content);
+        }
+        const rewritten = new Map<number, string>();
+        for (const [index, answer] of answers) {
+          const checked = withoutLeakedPlanning(answer);
+          if ('planningOnly' in checked) throw Error('School provider answer was planning only');
+          if (checked.text !== answer) rewritten.set(index, checked.text);
+        }
+        const emittedNames = new Set<string>(), emittedAnswers = new Set<number>();
         const encoder = new TextEncoder();
         for (const { frame, chunk } of frames) {
           let changed = false;
           for (const choice of chunk?.choices ?? []) {
             if (choice.delta && toolChoices.has(choice.index) && Object.hasOwn(choice.delta, 'content')) {
               delete choice.delta.content; changed = true;
+            }
+            if (choice.delta && rewritten.has(choice.index) && typeof choice.delta.content === 'string') {
+              choice.delta.content = emittedAnswers.has(choice.index) ? '' : rewritten.get(choice.index)!;
+              emittedAnswers.add(choice.index); changed = true;
             }
             for (const call of choice.delta?.tool_calls ?? []) {
               const key = `${choice.index}:${call.index}`;
