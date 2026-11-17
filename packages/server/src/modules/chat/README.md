@@ -98,9 +98,10 @@ shows it the router's candidate tools with their descriptions, and a pick at
 confidence 0.85 leads the list (with its dependencies and the router's next 3),
 at 0.3 moves to the top. Jev also sees tools down to 0.64 similarity; one below
 the 0.68 threshold is used only at 0.85. "None", a lower confidence, a malformed
-answer or no answer in 0.8 s keeps the router's order; after three failures in a row Jev is
+answer or no answer in 0.8 s keeps the router's order, except a "none" at 0.9
+(najm-rag 3.8.0 `dropAt`): a greeting, thanks or how-to then gets no tools; after three failures in a row Jev is
 skipped for 30 s. It needs an OpenRouter key in the AI settings and najm-rag
-3.7.0 or later. It only reorders the tools offered: the tools still check access when they run. The
+3.8.0 or later. It only reorders the tools offered: the tools still check access when they run. The
 studio's routing preview reports the pick as `rerank`.
 
 Stored phrases are embedded through the same hints and Darija rewrite as a

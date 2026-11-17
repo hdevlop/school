@@ -176,3 +176,20 @@ question answered with a clarifying question, one exam picked as a class test,
 one teacher question with no call. OSS20B sometimes writes its planning
 ("We need ...") into the answer, and answers some French or English
 questions in Arabic.
+
+### Language, leaked planning and greetings, 2026-11-17
+
+- Every message now tells the answer model which language to answer in
+  (`replies/schoolAnswerLanguage.ts`, right for 98% of 1,464 labelled fixture
+  questions it was not tuned on). Real chat, 30 questions: answers in the
+  question's language 24 -> 30.
+- English planning OSS20B glued before its answer is cut, and a
+  planning-only answer fails like any failed generation
+  (`transport/schoolAnswerPlanning.ts`). It had leaked into 3 of 180 answers;
+  none in the runs after.
+- With najm-rag 3.8.0 `dropAt: 0.9`, a message Jev is sure no tool fits gets
+  no tools. All 14 greetings, thanks, goodbyes and how-to questions among the
+  older fixtures now get none (11 -> 14 of the 38 no-tool questions; the rest
+  are write requests, refused before routing). No grades question was dropped:
+  right tool first stays 151 of 200, older questions 55 of 82. Real chat:
+  27 of 30 answered.
