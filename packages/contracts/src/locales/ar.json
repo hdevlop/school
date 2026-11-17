@@ -1692,7 +1692,8 @@
     "collapseSidebar": "طي",
     "expandSidebar": "توسيع",
     "insurance": "التأمين",
-    "homework": "الواجبات المنزلية"
+    "homework": "الواجبات المنزلية",
+    "competencies": "الكفايات"
   },
   "backup": {
     "success": {
@@ -2848,6 +2849,9 @@
     "homework": {
       "create": "هل تريد نشر هذا الواجب؟",
       "update": "هل تريد تحديث هذا الواجب؟"
+    },
+    "competencies": {
+      "evaluate": "تسجيل مستوى هذا التلميذ؟"
     }
   },
   "announcements": {
@@ -5372,7 +5376,8 @@
         "grades": "نقط التلاميذ",
         "attendance": "سجلات الحضور",
         "lessons": "حصص استعمال الزمن",
-        "homework": "الواجبات المنزلية"
+        "homework": "الواجبات المنزلية",
+        "competencies": "الكفايات"
       },
       "bulkDeleteItemName": "العنصر",
       "createButton": "إنشاء",
@@ -7617,6 +7622,129 @@
       "attachmentPurged": "حُذف هذا الملف بعد انتهاء مدة حفظه",
       "attachmentMissing": "هذا الملف لم يعد متاحاً",
       "uploadFailed": "تم حفظ الواجب دون ملفاته. عدّله لإضافتها من جديد."
+    }
+  },
+  "competencies": {
+    "title": "الكفايات",
+    "subtitle": {
+      "pupils": "التلاميذ: {{count}}",
+      "withSubject": "التلاميذ: {{count}} · {{subject}}"
+    },
+    "views": {
+      "byCompetency": "حسب الكفاية",
+      "byStudent": "حسب التلميذ"
+    },
+    "filters": {
+      "class": "المستوى",
+      "section": "القسم",
+      "subject": "المادة",
+      "month": "الشهر",
+      "search": "التلميذ",
+      "child": "الطفل"
+    },
+    "levels": {
+      "not_acquired": "غياب الاكتساب",
+      "beginning": "في بداية الاكتساب",
+      "in_progress": "في مرحلة متوسطة",
+      "advanced": "في مرحلة متقدمة",
+      "mastered": "اكتساب متأكد",
+      "notEvaluated": "غير مقيَّم"
+    },
+    "card": {
+      "evaluatedPupils": "تم تقييم {{evaluated}} من {{total}} تلميذ",
+      "evaluatedCompetencies": "تم تقييم {{evaluated}} من {{total}} كفاية",
+      "change": "التطور منذ {{month}}: {{value}}"
+    },
+    "sheet": {
+      "title": "بطاقة التلميذ",
+      "back": "رجوع",
+      "roster": "التلاميذ",
+      "pickLevel": "المستوى"
+    },
+    "empty": {
+      "defaultHint": "توجد قائمة مقترحة لهذا القسم وهذه المادة: ابدأ منها وعدّلها، أو أنشئ قائمتك.",
+      "chooseAssignment": "اختر قسماً ومادة.",
+      "noAssignment": "لا تدرّس أي قسم بعد.",
+      "noCatalogTitle": "لا توجد كفايات بعد",
+      "noCatalog": "أضف المجالات والكفايات التي تتبعها في هذا القسم وهذه المادة.",
+      "noCatalogFamily": "لا تُتبع أي كفايات في هذه المادة بعد.",
+      "noStudents": "لا يوجد تلاميذ في هذا القسم هذا الشهر.",
+      "noMatch": "لا يوجد تلميذ يطابق هذا البحث.",
+      "noChildren": "لا يوجد طفل لعرضه."
+    },
+    "remark": {
+      "title": "ملاحظة للآباء",
+      "placeholder": "كلمة للآباء عن عمل هذا الشهر…",
+      "saving": "جارٍ الحفظ…",
+      "saved": "تم الحفظ",
+      "failed": "لم يتم حفظ الملاحظة."
+    },
+    "save": {
+      "failed": "لم يتم حفظ المستوى.",
+      "retry": "إعادة المحاولة"
+    },
+    "catalog": {
+      "useDefault": "البدء من القائمة المقترحة",
+      "manage": "إدارة الكفايات",
+      "copy": "نسخ إلى قسم آخر",
+      "addDomain": "إضافة مجال فرعي",
+      "addCompetency": "إضافة مهارة",
+      "domainName": "المجال الفرعي",
+      "competencyName": "المهارة",
+      "domainPlaceholder": "مجال فرعي جديد (مثال: القراءة)",
+      "competencies": "المهارات",
+      "addAltName": "إضافة اسم بلغة أخرى",
+      "hint": "كما في الشبكة: كل مجال فرعي يضم مهاراته.",
+      "actions": "إجراءات: {{name}}",
+      "altName": "الاسم بلغة ثانية (اختياري)",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "edit": "إعادة التسمية",
+      "delete": "حذف",
+      "moveUp": "تحريك للأعلى",
+      "moveDown": "تحريك للأسفل",
+      "done": "تم",
+      "deleteDomain": "حذف المجال الفرعي {{name}} مع مهاراته وكل المستويات المسجلة فيها؟",
+      "deleteCompetency": "حذف {{name}}؟ ستضيع {{count}} من المستويات المسجلة فيها.",
+      "copyTitle": "نسخ القائمة إلى قسم آخر",
+      "copyDescription": "تُنسخ المجالات الفرعية والمهارات دون مستويات التلاميذ.",
+      "copyTarget": "القسم",
+      "copyNone": "لا يوجد قسم آخر من أقسامك في هذه المادة بقائمة فارغة.",
+      "copyAction": "نسخ",
+      "failed": "لم يتم حفظ التعديل."
+    },
+    "success": {
+      "defaultApplied": "تمت إضافة القائمة المقترحة",
+      "remarked": "تم حفظ الملاحظة",
+      "retrieved": "تم جلب الكفايات بنجاح",
+      "created": "تمت الإضافة",
+      "updated": "تم الحفظ",
+      "deleted": "تم الحذف",
+      "copied": "تم نسخ القائمة",
+      "evaluated": "تم حفظ المستوى"
+    },
+    "errors": {
+      "noDefaultList": "لا توجد قائمة مقترحة لهذا القسم وهذه المادة",
+      "remarkTooLong": "لا تتجاوز الملاحظة 1000 حرف",
+      "domainNotFound": "المجال غير موجود",
+      "competencyNotFound": "الكفاية غير موجودة",
+      "assignmentNotFound": "القسم والمادة غير موجودين",
+      "writeNotAllowed": "الأستاذ وإدارة المدرسة فقط يعدّلون الكفايات",
+      "notYourAssignment": "أنت لا تدرّس هذه المادة في هذا القسم",
+      "monthOutsideYear": "هذا الشهر ليس من السنة الدراسية المختارة",
+      "invalidMonth": "يجب أن يكون الشهر بصيغة YYYY-MM",
+      "nameRequired": "الاسم مطلوب",
+      "nameTooLong": "الاسم طويل جداً",
+      "tooManyDomains": "تضم القائمة {{max}} مجالاً على الأكثر",
+      "tooManyCompetencies": "يضم المجال {{max}} كفاية على الأكثر",
+      "duplicateDomain": "المجال {{name}} موجود مسبقاً في هذه القائمة",
+      "duplicateCompetency": "الكفاية {{name}} موجودة مسبقاً في هذا المجال",
+      "otherList": "تُنقل الكفاية فقط إلى مجال آخر من نفس القائمة",
+      "sameAssignment": "اختر قسماً آخر للنسخ إليه",
+      "otherSubject": "تُنسخ القائمة فقط إلى قسم من نفس المادة",
+      "emptySource": "لا تحتوي هذه القائمة على مجالات للنسخ",
+      "targetNotEmpty": "هذا القسم لديه قائمة مسبقاً",
+      "studentNotInSection": "لم يكن هذا التلميذ في هذا القسم ذلك الشهر"
     }
   }
 }

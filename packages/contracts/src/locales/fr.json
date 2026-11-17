@@ -2333,7 +2333,8 @@
     "collapseSidebar": "Réduire",
     "expandSidebar": "Développer",
     "insurance": "Assurance",
-    "homework": "Devoirs"
+    "homework": "Devoirs",
+    "competencies": "Compétences"
   },
   "backup": {
     "success": {
@@ -3680,6 +3681,9 @@
     "homework": {
       "create": "Publier ce devoir ?",
       "update": "Mettre à jour ce devoir ?"
+    },
+    "competencies": {
+      "evaluate": "Enregistrer le niveau de cet élève ?"
     }
   },
   "announcements": {
@@ -5459,7 +5463,8 @@
         "grades": "notes d’élèves",
         "attendance": "présences",
         "lessons": "cours de l’emploi du temps",
-        "homework": "devoirs"
+        "homework": "devoirs",
+        "competencies": "compétences"
       },
       "bulkDeleteItemName": "élément",
       "createButton": "Créer",
@@ -7704,6 +7709,129 @@
       "attachmentPurged": "Ce fichier a été supprimé après sa durée de conservation",
       "attachmentMissing": "Ce fichier n’est plus disponible",
       "uploadFailed": "Le devoir est enregistré, mais pas ses fichiers. Modifiez-le pour les ajouter de nouveau."
+    }
+  },
+  "competencies": {
+    "title": "Compétences",
+    "subtitle": {
+      "pupils": "Élèves : {{count}}",
+      "withSubject": "Élèves : {{count}} · {{subject}}"
+    },
+    "views": {
+      "byCompetency": "Par compétence",
+      "byStudent": "Par élève"
+    },
+    "filters": {
+      "class": "Classe",
+      "section": "Section",
+      "subject": "Matière",
+      "month": "Mois",
+      "search": "Élève",
+      "child": "Enfant"
+    },
+    "levels": {
+      "not_acquired": "Non acquis",
+      "beginning": "Début",
+      "in_progress": "En cours",
+      "advanced": "Avancé",
+      "mastered": "Maîtrisé",
+      "notEvaluated": "Non évalué"
+    },
+    "card": {
+      "evaluatedPupils": "{{evaluated}} élèves évalués sur {{total}}",
+      "evaluatedCompetencies": "{{evaluated}} compétences évaluées sur {{total}}",
+      "change": "Évolution depuis {{month}} : {{value}}"
+    },
+    "sheet": {
+      "title": "Fiche élève",
+      "back": "Retour",
+      "roster": "Élèves",
+      "pickLevel": "Niveau"
+    },
+    "empty": {
+      "defaultHint": "Une liste est proposée pour cette classe et cette matière : partez-en et adaptez-la, ou construisez la vôtre.",
+      "chooseAssignment": "Choisissez une classe et une matière.",
+      "noAssignment": "Vous n'enseignez encore dans aucune classe.",
+      "noCatalogTitle": "Aucune compétence",
+      "noCatalog": "Ajoutez les domaines et les compétences que vous suivez dans cette classe et cette matière.",
+      "noCatalogFamily": "Aucune compétence n'est encore suivie dans cette matière.",
+      "noStudents": "Aucun élève dans cette classe ce mois-ci.",
+      "noMatch": "Aucun élève ne correspond à cette recherche.",
+      "noChildren": "Aucun enfant à afficher."
+    },
+    "remark": {
+      "title": "Remarque pour les parents",
+      "placeholder": "Un mot pour les parents sur le travail de ce mois…",
+      "saving": "Enregistrement…",
+      "saved": "Enregistrée",
+      "failed": "La remarque n'a pas été enregistrée."
+    },
+    "save": {
+      "failed": "Le niveau n'a pas été enregistré.",
+      "retry": "Réessayer"
+    },
+    "catalog": {
+      "useDefault": "Partir de la liste proposée",
+      "manage": "Gérer les compétences",
+      "copy": "Copier vers une autre classe",
+      "addDomain": "Ajouter un sous-domaine",
+      "addCompetency": "Ajouter une compétence",
+      "domainName": "Sous-domaine",
+      "competencyName": "Compétence",
+      "domainPlaceholder": "Nouveau sous-domaine (ex. Lecture)",
+      "competencies": "Compétences",
+      "addAltName": "Ajouter un nom dans une autre langue",
+      "hint": "Comme sur la grille : chaque sous-domaine regroupe ses compétences.",
+      "actions": "Actions : {{name}}",
+      "altName": "Nom dans une seconde langue (facultatif)",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "edit": "Renommer",
+      "delete": "Supprimer",
+      "moveUp": "Monter",
+      "moveDown": "Descendre",
+      "done": "Terminé",
+      "deleteDomain": "Supprimer le sous-domaine {{name}} avec ses compétences et tous les niveaux saisis ?",
+      "deleteCompetency": "Supprimer {{name}} ? {{count}} niveau(x) saisi(s) seront perdus.",
+      "copyTitle": "Copier la liste vers une autre classe",
+      "copyDescription": "Les sous-domaines et les compétences sont copiés, sans les niveaux des élèves.",
+      "copyTarget": "Classe",
+      "copyNone": "Aucune de vos autres classes de cette matière n'a de liste vide.",
+      "copyAction": "Copier",
+      "failed": "La modification n'a pas été enregistrée."
+    },
+    "success": {
+      "defaultApplied": "Liste proposée ajoutée",
+      "remarked": "Remarque enregistrée",
+      "retrieved": "Compétences récupérées avec succès",
+      "created": "Ajouté",
+      "updated": "Enregistré",
+      "deleted": "Supprimé",
+      "copied": "Liste copiée",
+      "evaluated": "Niveau enregistré"
+    },
+    "errors": {
+      "noDefaultList": "Aucune liste n'est proposée pour cette classe et cette matière",
+      "remarkTooLong": "La remarque est limitée à 1000 caractères",
+      "domainNotFound": "Domaine introuvable",
+      "competencyNotFound": "Compétence introuvable",
+      "assignmentNotFound": "Classe et matière introuvables",
+      "writeNotAllowed": "Seuls l'enseignant et l'administration modifient les compétences",
+      "notYourAssignment": "Vous n'enseignez pas cette matière dans cette classe",
+      "monthOutsideYear": "Ce mois n'appartient pas à l'année scolaire sélectionnée",
+      "invalidMonth": "Le mois doit être au format AAAA-MM",
+      "nameRequired": "Le nom est obligatoire",
+      "nameTooLong": "Le nom est trop long",
+      "tooManyDomains": "Une liste compte au plus {{max}} domaines",
+      "tooManyCompetencies": "Un domaine compte au plus {{max}} compétences",
+      "duplicateDomain": "Le domaine {{name}} existe déjà dans cette liste",
+      "duplicateCompetency": "La compétence {{name}} existe déjà dans ce domaine",
+      "otherList": "Une compétence ne passe qu'à un autre domaine de la même liste",
+      "sameAssignment": "Choisissez une autre classe",
+      "otherSubject": "Une liste ne se copie que vers une classe de la même matière",
+      "emptySource": "Cette liste n'a aucun domaine à copier",
+      "targetNotEmpty": "Cette classe a déjà une liste",
+      "studentNotInSection": "Cet élève n'était pas dans cette classe ce mois-là"
     }
   }
 }

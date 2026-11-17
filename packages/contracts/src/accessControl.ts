@@ -29,6 +29,7 @@ export const SIDEBAR_ENTRIES = [
   ['assessments', '/assessments', 'navigation.assessments'],
   ['exams', '/exams', 'navigation.exams'],
   ['grades', '/grades', 'navigation.grades'],
+  ['competencies', '/competencies', 'navigation.competencies'],
   ['massar', '/massar/sheets', 'massar.title'],
   ['events', '/calendar', 'navigation.calendar'],
   ['class-routines', '/class-routines', 'navigation.classRoutines'],

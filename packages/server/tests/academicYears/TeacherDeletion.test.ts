@@ -11,7 +11,7 @@ function harness() {
   const repository = {
     getById: async () => ({ id: 'teacher', staffId: 'staff' }),
     hasAnyAssignments: async () => true,
-    recordedHistory: async () => ({ exams: 3, assessments: 0, grades: 22, attendance: 0, lessons: 0, homework: 2 }),
+    recordedHistory: async () => ({ exams: 3, assessments: 0, grades: 22, attendance: 0, lessons: 0, homework: 2, competencies: 0 }),
     eraseRecordedHistory: async () => { calls.push('recorded history'); },
     delete: async () => { calls.push('teacher and assignments'); return { id: 'teacher' }; },
   };
@@ -37,7 +37,7 @@ describe('teacher deletion policy', () => {
 
   it('counts what a deletion would erase, for the confirmation', async () => {
     const { calls, service } = harness();
-    expect(await service.deletionImpact('teacher')).toEqual({ exams: 3, assessments: 0, grades: 22, attendance: 0, lessons: 0, homework: 2 });
+    expect(await service.deletionImpact('teacher')).toEqual({ exams: 3, assessments: 0, grades: 22, attendance: 0, lessons: 0, homework: 2, competencies: 0 });
     expect(calls).toEqual([]);
   });
 
@@ -71,8 +71,8 @@ describe('teacher deletion policy', () => {
 
   it('counts assignment-dependent records in all years without needing a selected-year scope', async () => {
     const { captured, repo } = capture();
-    expect(await repo.recordedHistory('teacher')).toEqual({ exams: 0, assessments: 0, grades: 22, attendance: 0, lessons: 0, homework: 0 });
-    expect(captured).toHaveLength(6);
+    expect(await repo.recordedHistory('teacher')).toEqual({ exams: 0, assessments: 0, grades: 22, attendance: 0, lessons: 0, homework: 0, competencies: 0 });
+    expect(captured).toHaveLength(7);
     for (const statement of captured) {
       expect(statement.sql).not.toContain('academic_year');
       expect(statement.params).toContain('teacher');
@@ -80,13 +80,16 @@ describe('teacher deletion policy', () => {
     expect(captured.some(statement => statement.sql.includes('"attendance"."teacher_id"'))).toBe(true);
     expect(captured.some(statement => statement.sql.includes('"routine_entries"'))).toBe(true);
     expect(captured.some(statement => statement.sql.includes('from "homework"'))).toBe(true);
+    expect(captured.some(statement => statement.sql.includes('from "competency_domains"'))).toBe(true);
+    // Remarks for the parents count with the lists, in the same query.
+    expect(captured.some(statement => statement.sql.includes('from "competency_remarks"'))).toBe(true);
   });
 
   it('erases grades before the exams and assessments they belong to, in every year, and only this teacher\'s', async () => {
     const { captured, repo } = capture();
     await repo.eraseRecordedHistory('teacher');
     const tables = captured.map(statement => statement.sql.match(/^delete from "(\w+)"/)?.[1]);
-    expect(tables).toEqual(['homework', 'grades', 'exams', 'assessments', 'attendance', 'routine_entries']);
+    expect(tables).toEqual(['homework', 'competency_domains', 'competency_remarks', 'grades', 'exams', 'assessments', 'attendance', 'routine_entries']);
     for (const statement of captured) {
       expect(statement.sql).not.toContain('academic_year');
       expect(statement.sql).toContain('"teacher_assignments"."teacher_id"');

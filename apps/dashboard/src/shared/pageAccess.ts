@@ -47,6 +47,7 @@ export const PAGE_ACCESS = {
   assessments: can('read:assessments'),
   exams: can('read:exams'),
   grades: can('read:grades'),
+  competencies: can('read:competencies'),
   massarSetup: schoolWide('manage:massar'),
   massarRounds: viewer => !['teacher', 'monitor', 'parent', 'student'].includes(viewer.role ?? '') && viewer.can('read:massar'),
   massarSheets: viewer => !['monitor', 'parent', 'student'].includes(viewer.role ?? '') && viewer.can('read:massar'),

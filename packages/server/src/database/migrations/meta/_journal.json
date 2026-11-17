@@ -876,6 +876,41 @@
       "when": 1794789408866,
       "tag": "0124_parent_read_fees",
       "breakpoints": true
+    },
+    {
+      "idx": 125,
+      "version": "7",
+      "when": 1794852699118,
+      "tag": "0125_competencies",
+      "breakpoints": true
+    },
+    {
+      "idx": 126,
+      "version": "7",
+      "when": 1794857731685,
+      "tag": "0126_competencies_sidebar",
+      "breakpoints": true
+    },
+    {
+      "idx": 127,
+      "version": "7",
+      "when": 1794860361776,
+      "tag": "0127_competency_not_acquired",
+      "breakpoints": true
+    },
+    {
+      "idx": 128,
+      "version": "7",
+      "when": 1794861803941,
+      "tag": "0128_competency_remarks",
+      "breakpoints": true
+    },
+    {
+      "idx": 129,
+      "version": "7",
+      "when": 1794867388890,
+      "tag": "0129_competency_default_lists",
+      "breakpoints": true
     }
   ]
 }

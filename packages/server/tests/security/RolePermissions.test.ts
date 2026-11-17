@@ -321,6 +321,8 @@ describe('the monitor role migration', () => {
     // Homework (0119) is a new default, not a moved guard: no migration grants
     // it, and an existing database adopts it once with `bun run seed:role-permissions`.
     migrated.push('read:homework');
+    // Competencies (0125) likewise.
+    migrated.push('read:competencies');
     expect(migrated.sort()).toEqual([...grants].sort());
   });
 

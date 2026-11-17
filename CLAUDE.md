@@ -191,7 +191,7 @@ states that drift — so do not add one without changing the plan first.
   portable packages those need (`najm-i18n/define`, `@faker-js/faker`,
   `nanoid`). The by-key
   `enumValues` lookup lives at `@sms/contracts/lookup` and is server-only: it
-  names all seventy-one tuples, so importing it from a component would keep
+  names all seventy-two tuples, so importing it from a component would keep
   every domain's strings alive. Adding or removing a value changes what the
   database accepts; `packages/contracts/tests/enums.test.ts` pins the exact
   members and order of every persisted enum so a careless edit fails loudly.

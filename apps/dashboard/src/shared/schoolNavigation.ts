@@ -50,6 +50,8 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
   // What the class has to do at home. Its own entry, beside the evaluations
   // it is not: homework carries no marks.
   const homework: GatedNavItem = { id: '/homework', label: t('navigation.homework'), icon: FEATURE_ICONS.homework, href: '/homework', access: 'homework' };
+  // A pupil's competencies month by month: the teacher sets them, the family reads them.
+  const competencies: GatedNavItem = { id: '/competencies', label: t('navigation.competencies'), icon: FEATURE_ICONS.competencies, href: '/competencies', access: 'competencies' };
 
   if (isFamily && !allFeatures) {
     return [
@@ -61,6 +63,7 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
         access: 'students',
       },
       homework,
+      competencies,
       communications,
       {
         id: 'student-conduct',
@@ -117,6 +120,7 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
     homework,
     evaluations,
     { id: '/grades', label: t('navigation.grades'), icon: FEATURE_ICONS.grades, href: '/grades', access: 'grades' },
+    competencies,
     { id: '/massar', label: t('massar.title'), icon: FEATURE_ICONS.massar, href: '/massar', access: 'massarSheets' },
     routine,
     {

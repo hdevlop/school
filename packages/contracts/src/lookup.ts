@@ -1,12 +1,13 @@
 import * as values from './enums';
 import { MASSAR_ABSENCE_VALUES, MASSAR_SHEET_STATUS_VALUES, MASSAR_ROUND_STATUS_VALUES, MASSAR_SHEET_KIND_VALUES } from './massar';
 import { HOMEWORK_ATTACHMENT_KIND_VALUES } from './homework';
+import { COMPETENCY_LEVEL_VALUES } from './competencies';
 
 /**
  * Generic lookup over every shared tuple, for the places that need to reach an
  * enum by key: Drizzle column definitions and the server's Zod adapter.
  *
- * It lives apart from `index.ts` on purpose. This object names all seventy-one
+ * It lives apart from `index.ts` on purpose. This object names all seventy-two
  * tuples, so anything importing it keeps all of them alive — in a browser
  * bundle that is every domain's strings on every page that needed one enum.
  * The dashboard imports named tuples from `@sms/contracts`; only the server
@@ -18,6 +19,7 @@ export const enumValues = {
   massarRoundStatus: MASSAR_ROUND_STATUS_VALUES,
   massarSheetKind: MASSAR_SHEET_KIND_VALUES,
   homeworkAttachmentKind: HOMEWORK_ATTACHMENT_KIND_VALUES,
+  competencyLevel: COMPETENCY_LEVEL_VALUES,
   userType: values.USER_TYPE_VALUES,
   userStatus: values.USER_STATUS_VALUES,
   tokenStatus: values.TOKEN_STATUS_VALUES,

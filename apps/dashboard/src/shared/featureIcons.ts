@@ -11,6 +11,7 @@ import {
   CalendarDays,
   CalendarRange,
   Car,
+  ChartNoAxesColumnIncreasing,
   ClipboardList,
   CreditCard,
   FileText,
@@ -83,6 +84,7 @@ export const FEATURE_ICONS = {
   behaviorRewards: Award,
 
   homework: NotebookPen,
+  competencies: ChartNoAxesColumnIncreasing,
   assessments: ClipboardList,
   evaluations: ClipboardList,
   assessmentPlanning: CalendarRange,

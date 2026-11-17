@@ -1,9 +1,9 @@
 import { DB } from '../../database/db';
-import { teachers, users, teacherAssignments, sections, subjects, students, classes, staff, studentEnrollments, studentEnrollmentPlacements, assessments, exams, attendance, routineEntries, grades, homework, massarSheets, alerts } from '../../database/schema';
+import { teachers, users, teacherAssignments, sections, subjects, students, classes, staff, studentEnrollments, studentEnrollmentPlacements, assessments, exams, attendance, routineEntries, grades, homework, massarSheets, alerts, competencyDomains, competencies, competencyRemarks } from '../../database/schema';
 import { Repository } from '../../najm';
 import { getBusinessDateOnly } from '../../shared/businessDate';
 import { Owned, type OwnedWhere } from '../../auth';
-import { count, eq, desc, sql, and, inArray, gt, isNull, lte, or } from 'drizzle-orm';
+import { count, eq, desc, sql, and, inArray, gt, isNull, lte, or, type SQL } from 'drizzle-orm';
 import { Teacher } from './TeacherGuards';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
@@ -427,14 +427,18 @@ export class TeacherRepository {
     if (!row) return null;
     const total = async (table: typeof exams | typeof assessments | typeof attendance | typeof routineEntries | typeof homework) =>
       Number((await this.db.select({ n: count() }).from(table).where(eq(table.teacherAssignmentId, row.id)))[0]?.n ?? 0);
-    const [examCount, assessmentCount, attendanceCount, lessonCount, homeworkCount] = await Promise.all([
+    const [examCount, assessmentCount, attendanceCount, lessonCount, homeworkCount, competencyCount] = await Promise.all([
       total(exams), total(assessments), total(attendance), total(routineEntries), total(homework),
+      this.competenciesUnder((column) => eq(column, row.id)),
     ]);
     return {
       className: row.className,
       sectionName: row.sectionName,
       subjectName: row.subjectName,
-      records: { exams: examCount, assessments: assessmentCount, attendance: attendanceCount, lessons: lessonCount, homework: homeworkCount },
+      records: {
+        exams: examCount, assessments: assessmentCount, attendance: attendanceCount, lessons: lessonCount, homework: homeworkCount,
+        competencies: competencyCount,
+      },
     };
   }
 
@@ -442,7 +446,7 @@ export class TeacherRepository {
    * An administrator takes a subject from a teacher although records were kept
    * under it: the assignment becomes the class's vacant slot for that subject,
    * with everything recorded under it (exams and their marks, assessments,
-   * attendance, lessons, homework, Massar sheets). The next teacher given the
+   * attendance, lessons, homework, competency lists and remarks, Massar sheets). The next teacher given the
    * subject fills the slot and takes them over (createAssignment). When the
    * class already has a slot, the records join it and this row goes.
    */
@@ -472,7 +476,7 @@ export class TeacherRepository {
     const slotId = slot?.id ?? (await this.db.insert(teacherAssignments)
       .values({ classId: row.classId, sectionId, subjectId, teacherId: null })
       .returning({ id: teacherAssignments.id }))[0].id;
-    for (const table of [exams, assessments, attendance, routineEntries, homework, massarSheets, alerts]) {
+    for (const table of [exams, assessments, attendance, routineEntries, homework, competencyDomains, competencyRemarks, massarSheets, alerts]) {
       await this.db.update(table).set({ teacherAssignmentId: slotId }).where(eq(table.teacherAssignmentId, row.id));
     }
     await this.db.delete(teacherAssignments).where(eq(teacherAssignments.id, row.id));
@@ -596,15 +600,19 @@ export class TeacherRepository {
   async recordedHistory(id: string) {
     const { assignmentIds, examIds, assessmentIds } = this.historyScope(id);
     const total = async (query: Promise<Array<{ n: number }>>) => Number((await query)[0]?.n ?? 0);
-    const [examCount, assessmentCount, gradeCount, attendanceCount, lessonCount, homeworkCount] = await Promise.all([
+    const [examCount, assessmentCount, gradeCount, attendanceCount, lessonCount, homeworkCount, competencyCount] = await Promise.all([
       total(this.db.select({ n: count() }).from(exams).where(inArray(exams.teacherAssignmentId, assignmentIds))),
       total(this.db.select({ n: count() }).from(assessments).where(inArray(assessments.teacherAssignmentId, assignmentIds))),
       total(this.db.select({ n: count() }).from(grades).where(or(inArray(grades.examId, examIds), inArray(grades.assessmentId, assessmentIds)))),
       total(this.db.select({ n: count() }).from(attendance).where(or(eq(attendance.teacherId, id), inArray(attendance.teacherAssignmentId, assignmentIds)))),
       total(this.db.select({ n: count() }).from(routineEntries).where(inArray(routineEntries.teacherAssignmentId, assignmentIds))),
       total(this.db.select({ n: count() }).from(homework).where(inArray(homework.teacherAssignmentId, assignmentIds))),
+      this.competenciesUnder((column) => inArray(column, assignmentIds)),
     ]);
-    return { exams: examCount, assessments: assessmentCount, grades: gradeCount, attendance: attendanceCount, lessons: lessonCount, homework: homeworkCount };
+    return {
+      exams: examCount, assessments: assessmentCount, grades: gradeCount, attendance: attendanceCount, lessons: lessonCount, homework: homeworkCount,
+      competencies: competencyCount,
+    };
   }
 
   /**
@@ -612,12 +620,30 @@ export class TeacherRepository {
    * deleted: their exams and assessments with the students' grades, their
    * attendance (its history goes with it), their timetable lessons and the
    * homework they posted (its attachment rows go with it; the files, once no
-   * row points at them, go with the next storage sweep). Run inside the
+   * row points at them, go with the next storage sweep) and the competency
+   * lists they built with every level set in them and the remarks they wrote. Run inside the
    * deletion's transaction, before the teacher row.
    */
+  /**
+   * The competencies in the lists built under these assignments, and the
+   * remarks written for parents there. A domain still empty counts as one, so
+   * it keeps its assignment like any record. One query: `under` names the
+   * assignments for each table's column.
+   */
+  private async competenciesUnder(under: (column: typeof competencyDomains.teacherAssignmentId | typeof competencyRemarks.teacherAssignmentId) => SQL | undefined) {
+    const remarks = this.db.select({ n: count() }).from(competencyRemarks).where(under(competencyRemarks.teacherAssignmentId));
+    const [row] = await this.db.select({ n: sql<number>`count(*) + (${remarks})` }).from(competencyDomains)
+      .leftJoin(competencies, eq(competencies.domainId, competencyDomains.id))
+      .where(under(competencyDomains.teacherAssignmentId));
+    return Number(row?.n ?? 0);
+  }
+
   async eraseRecordedHistory(id: string) {
     const { assignmentIds, examIds, assessmentIds } = this.historyScope(id);
     await this.db.delete(homework).where(inArray(homework.teacherAssignmentId, assignmentIds));
+    // Competencies and their levels go with their domains.
+    await this.db.delete(competencyDomains).where(inArray(competencyDomains.teacherAssignmentId, assignmentIds));
+    await this.db.delete(competencyRemarks).where(inArray(competencyRemarks.teacherAssignmentId, assignmentIds));
     await this.db.delete(grades).where(or(inArray(grades.examId, examIds), inArray(grades.assessmentId, assessmentIds)));
     await this.db.delete(exams).where(inArray(exams.teacherAssignmentId, assignmentIds));
     await this.db.delete(assessments).where(inArray(assessments.teacherAssignmentId, assignmentIds));

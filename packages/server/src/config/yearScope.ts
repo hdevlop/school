@@ -15,6 +15,7 @@ import { OperationsDashboardController } from '../modules/dashboard/operations/O
 import { ParentProfileController } from '../modules/profiles/ParentProfileController';
 import { AssessmentController } from '../modules/assessments/AssessmentController';
 import { HomeworkController } from '../modules/homework/HomeworkController';
+import { CompetencyController } from '../modules/competencies/CompetencyController';
 import { StudentProfileController } from '../modules/profiles/StudentProfileController';
 import { TeacherProfileController } from '../modules/profiles/TeacherProfileController';
 import { AttendanceController } from '../modules/attendance/AttendanceController';
@@ -85,6 +86,7 @@ export const yearScopedModules = {
   'parent-profile': ParentProfileController,
   assessments: AssessmentController,
   homework: HomeworkController,
+  competencies: CompetencyController,
   'student-profile': StudentProfileController,
   'teacher-profile': TeacherProfileController,
   attendance: AttendanceController,

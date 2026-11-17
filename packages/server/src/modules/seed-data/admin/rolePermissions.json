@@ -94,6 +94,10 @@
       "read:homework",
       "update:homework",
       "delete:homework",
+      "create:competencies",
+      "read:competencies",
+      "update:competencies",
+      "delete:competencies",
       "create:announcements",
       "read:announcements",
       "update:announcements",
@@ -151,7 +155,8 @@
       "read:massar",
       "manage:massar",
       "update:massar-marks",
-      "sidebar:massar"
+      "sidebar:massar",
+      "sidebar:competencies"
     ]
   },
   {
@@ -253,6 +258,10 @@
       "read:homework",
       "update:homework",
       "delete:homework",
+      "create:competencies",
+      "read:competencies",
+      "update:competencies",
+      "delete:competencies",
       "read:exams"
     ]
   },
@@ -270,6 +279,7 @@
       "read:announcements",
       "read:assessments",
       "read:homework",
+      "read:competencies",
       "read:exams",
       "read:attendance",
       "read:behavior-rewards",
@@ -292,6 +302,7 @@
       "read:announcements",
       "read:assessments",
       "read:homework",
+      "read:competencies",
       "read:exams",
       "read:attendance",
       "read:behavior-rewards",
@@ -353,6 +364,7 @@
       "read:exams",
       "read:assessments",
       "read:homework",
+      "read:competencies",
       "read:events",
       "create:alerts",
       "read:alerts",
@@ -389,6 +401,7 @@
       "read:exams",
       "read:assessments",
       "read:homework",
+      "read:competencies",
       "read:events",
       "read:alerts",
       "update:alerts",

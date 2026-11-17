@@ -1678,7 +1678,8 @@
     "collapseSidebar": "Contraer",
     "expandSidebar": "Expandir",
     "insurance": "Seguro",
-    "homework": "Deberes"
+    "homework": "Deberes",
+    "competencies": "Competencias"
   },
   "backup": {
     "success": {
@@ -2834,6 +2835,9 @@
     "homework": {
       "create": "¿Publicar estos deberes?",
       "update": "¿Actualizar estos deberes?"
+    },
+    "competencies": {
+      "evaluate": "¿Guardar el nivel de este alumno?"
     }
   },
   "announcements": {
@@ -5358,7 +5362,8 @@
         "grades": "notas de alumnos",
         "attendance": "registros de asistencia",
         "lessons": "clases del horario",
-        "homework": "deberes"
+        "homework": "deberes",
+        "competencies": "competencias"
       },
       "bulkDeleteItemName": "elemento",
       "createButton": "Crear",
@@ -7603,6 +7608,129 @@
       "attachmentPurged": "Este archivo se eliminó tras su periodo de conservación",
       "attachmentMissing": "Este archivo ya no está disponible",
       "uploadFailed": "Los deberes se guardaron, pero sus archivos no. Edítalos para añadirlos de nuevo."
+    }
+  },
+  "competencies": {
+    "title": "Competencias",
+    "subtitle": {
+      "pupils": "Alumnos: {{count}}",
+      "withSubject": "Alumnos: {{count}} · {{subject}}"
+    },
+    "views": {
+      "byCompetency": "Por competencia",
+      "byStudent": "Por alumno"
+    },
+    "filters": {
+      "class": "Curso",
+      "section": "Sección",
+      "subject": "Asignatura",
+      "month": "Mes",
+      "search": "Alumno",
+      "child": "Hijo"
+    },
+    "levels": {
+      "not_acquired": "No adquirido",
+      "beginning": "Inicio",
+      "in_progress": "En proceso",
+      "advanced": "Avanzado",
+      "mastered": "Dominado",
+      "notEvaluated": "Sin evaluar"
+    },
+    "card": {
+      "evaluatedPupils": "{{evaluated}} de {{total}} alumnos evaluados",
+      "evaluatedCompetencies": "{{evaluated}} de {{total}} competencias evaluadas",
+      "change": "Cambio desde {{month}}: {{value}}"
+    },
+    "sheet": {
+      "title": "Ficha del alumno",
+      "back": "Volver",
+      "roster": "Alumnos",
+      "pickLevel": "Nivel"
+    },
+    "empty": {
+      "defaultHint": "Hay una lista propuesta para esta clase y asignatura: parte de ella y adáptala, o crea la tuya.",
+      "chooseAssignment": "Elige una clase y una asignatura.",
+      "noAssignment": "Todavía no das clase en ningún grupo.",
+      "noCatalogTitle": "Aún no hay competencias",
+      "noCatalog": "Añade los dominios y las competencias que sigues en esta clase y asignatura.",
+      "noCatalogFamily": "Aún no se siguen competencias en esta asignatura.",
+      "noStudents": "No hay alumnos en esta clase este mes.",
+      "noMatch": "Ningún alumno coincide con esta búsqueda.",
+      "noChildren": "No hay ningún hijo que mostrar."
+    },
+    "remark": {
+      "title": "Observación para los padres",
+      "placeholder": "Unas palabras para los padres sobre el trabajo de este mes…",
+      "saving": "Guardando…",
+      "saved": "Guardada",
+      "failed": "La observación no se ha guardado."
+    },
+    "save": {
+      "failed": "El nivel no se ha guardado.",
+      "retry": "Reintentar"
+    },
+    "catalog": {
+      "useDefault": "Partir de la lista propuesta",
+      "manage": "Gestionar competencias",
+      "copy": "Copiar a otra clase",
+      "addDomain": "Añadir un subdominio",
+      "addCompetency": "Añadir una competencia",
+      "domainName": "Subdominio",
+      "competencyName": "Competencia",
+      "domainPlaceholder": "Nuevo subdominio (p. ej. Lectura)",
+      "competencies": "Competencias",
+      "addAltName": "Añadir un nombre en otro idioma",
+      "hint": "Como en la cuadrícula: cada subdominio agrupa sus competencias.",
+      "actions": "Acciones: {{name}}",
+      "altName": "Nombre en un segundo idioma (opcional)",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "edit": "Renombrar",
+      "delete": "Eliminar",
+      "moveUp": "Subir",
+      "moveDown": "Bajar",
+      "done": "Listo",
+      "deleteDomain": "¿Eliminar el subdominio {{name}} con sus competencias y todos los niveles registrados?",
+      "deleteCompetency": "¿Eliminar {{name}}? Se perderán {{count}} nivel(es) registrados.",
+      "copyTitle": "Copiar la lista a otra clase",
+      "copyDescription": "Se copian los subdominios y las competencias, sin los niveles de los alumnos.",
+      "copyTarget": "Clase",
+      "copyNone": "Ninguna de tus otras clases de esta asignatura tiene la lista vacía.",
+      "copyAction": "Copiar",
+      "failed": "El cambio no se ha guardado."
+    },
+    "success": {
+      "defaultApplied": "Lista propuesta añadida",
+      "remarked": "Observación guardada",
+      "retrieved": "Competencias obtenidas correctamente",
+      "created": "Añadido",
+      "updated": "Guardado",
+      "deleted": "Eliminado",
+      "copied": "Lista copiada",
+      "evaluated": "Nivel guardado"
+    },
+    "errors": {
+      "noDefaultList": "No hay ninguna lista propuesta para esta clase y asignatura",
+      "remarkTooLong": "La observación tiene un máximo de 1000 caracteres",
+      "domainNotFound": "Dominio no encontrado",
+      "competencyNotFound": "Competencia no encontrada",
+      "assignmentNotFound": "Clase y asignatura no encontradas",
+      "writeNotAllowed": "Solo el docente y la dirección del centro modifican las competencias",
+      "notYourAssignment": "No impartes esta asignatura en esta clase",
+      "monthOutsideYear": "Este mes no pertenece al curso escolar seleccionado",
+      "invalidMonth": "El mes debe tener el formato AAAA-MM",
+      "nameRequired": "El nombre es obligatorio",
+      "nameTooLong": "El nombre es demasiado largo",
+      "tooManyDomains": "Una lista tiene como máximo {{max}} dominios",
+      "tooManyCompetencies": "Un dominio tiene como máximo {{max}} competencias",
+      "duplicateDomain": "El dominio {{name}} ya existe en esta lista",
+      "duplicateCompetency": "La competencia {{name}} ya existe en este dominio",
+      "otherList": "Una competencia solo se mueve a otro dominio de la misma lista",
+      "sameAssignment": "Elige otra clase a la que copiar",
+      "otherSubject": "Una lista solo se copia a una clase de la misma asignatura",
+      "emptySource": "Esta lista no tiene dominios que copiar",
+      "targetNotEmpty": "Esa clase ya tiene una lista",
+      "studentNotInSection": "Este alumno no estaba en esta clase ese mes"
     }
   }
 }

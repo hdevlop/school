@@ -22,6 +22,7 @@ export * from './attendance';
 export * from './discipline';
 export * from './assessments';
 export * from './homework';
+export * from './competencies';
 export * from './exams';
 export * from './examPlanning';
 export * from './grades';

@@ -486,6 +486,30 @@
     "action": "delete"
   },
   {
+    "name": "create:competencies",
+    "description": "Permission to build the competency list of a class and subject",
+    "resource": "competencies",
+    "action": "create"
+  },
+  {
+    "name": "read:competencies",
+    "description": "Permission to view competencies and pupils' levels",
+    "resource": "competencies",
+    "action": "read"
+  },
+  {
+    "name": "update:competencies",
+    "description": "Permission to edit competencies and set pupils' levels",
+    "resource": "competencies",
+    "action": "update"
+  },
+  {
+    "name": "delete:competencies",
+    "description": "Permission to delete competencies",
+    "resource": "competencies",
+    "action": "delete"
+  },
+  {
     "name": "create:attendance",
     "description": "Permission to create attendance records",
     "resource": "attendance",
@@ -898,5 +922,11 @@
     "resource": "sidebar",
     "action": "massar",
     "description": "Show the Massar navigation group"
+  },
+  {
+    "name": "sidebar:competencies",
+    "resource": "sidebar",
+    "action": "show",
+    "description": "Show competencies in sidebar"
   }
 ]

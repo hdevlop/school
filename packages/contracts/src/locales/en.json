@@ -3614,7 +3614,8 @@
         "grades": "student grades",
         "attendance": "attendance records",
         "lessons": "timetable lessons",
-        "homework": "homework"
+        "homework": "homework",
+        "competencies": "competencies"
       },
       "bulkDeleteItemName": "{{count}} teacher(s)"
     },
@@ -5590,7 +5591,8 @@
     "collapseSidebar": "Collapse",
     "expandSidebar": "Expand",
     "insurance": "Insurance",
-    "homework": "Homework"
+    "homework": "Homework",
+    "competencies": "Competencies"
   },
   "backup": {
     "success": {
@@ -6463,6 +6465,9 @@
     "homework": {
       "create": "Post this homework?",
       "update": "Update this homework?"
+    },
+    "competencies": {
+      "evaluate": "Set this pupil's level?"
     }
   },
   "events": {
@@ -8310,6 +8315,129 @@
       "attachmentPurged": "This file was removed after its keeping period",
       "attachmentMissing": "This file is no longer available",
       "uploadFailed": "The homework was saved, but its files were not. Edit it to add them again."
+    }
+  },
+  "competencies": {
+    "title": "Competencies",
+    "subtitle": {
+      "pupils": "Pupils: {{count}}",
+      "withSubject": "Pupils: {{count}} · {{subject}}"
+    },
+    "views": {
+      "byCompetency": "By competency",
+      "byStudent": "By pupil"
+    },
+    "filters": {
+      "class": "Class",
+      "section": "Section",
+      "subject": "Subject",
+      "month": "Month",
+      "search": "Pupil",
+      "child": "Child"
+    },
+    "levels": {
+      "not_acquired": "Not acquired",
+      "beginning": "Beginning",
+      "in_progress": "In progress",
+      "advanced": "Advanced",
+      "mastered": "Mastered",
+      "notEvaluated": "Not evaluated"
+    },
+    "card": {
+      "evaluatedPupils": "{{evaluated}} of {{total}} pupils evaluated",
+      "evaluatedCompetencies": "{{evaluated}} of {{total}} competencies evaluated",
+      "change": "Change since {{month}}: {{value}}"
+    },
+    "sheet": {
+      "title": "Pupil sheet",
+      "back": "Back",
+      "roster": "Pupils",
+      "pickLevel": "Level"
+    },
+    "empty": {
+      "defaultHint": "A list is proposed for this class and subject: start from it and adapt it, or build your own.",
+      "chooseAssignment": "Choose a class and a subject.",
+      "noAssignment": "You do not teach a class yet.",
+      "noCatalogTitle": "No competencies yet",
+      "noCatalog": "Add the domains and competencies you follow in this class and subject.",
+      "noCatalogFamily": "No competencies are followed in this subject yet.",
+      "noStudents": "No pupils in this class this month.",
+      "noMatch": "No pupil matches this search.",
+      "noChildren": "No child to show."
+    },
+    "remark": {
+      "title": "Remark for the parents",
+      "placeholder": "A word for the parents on this month's work…",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "failed": "The remark was not saved."
+    },
+    "save": {
+      "failed": "The level was not saved.",
+      "retry": "Retry"
+    },
+    "catalog": {
+      "useDefault": "Start from the proposed list",
+      "manage": "Manage competencies",
+      "copy": "Copy to another class",
+      "addDomain": "Add a sub-domain",
+      "addCompetency": "Add a competency",
+      "domainName": "Sub-domain",
+      "competencyName": "Competency",
+      "domainPlaceholder": "New sub-domain (e.g. Reading)",
+      "competencies": "Competencies",
+      "addAltName": "Add a name in another language",
+      "hint": "As on the grid: each sub-domain holds its competencies.",
+      "actions": "Actions: {{name}}",
+      "altName": "Second-language name (optional)",
+      "save": "Save",
+      "cancel": "Cancel",
+      "edit": "Rename",
+      "delete": "Delete",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "done": "Done",
+      "deleteDomain": "Delete the sub-domain {{name}} with its competencies and every level set in them?",
+      "deleteCompetency": "Delete {{name}}? {{count}} level(s) set in it will be lost.",
+      "copyTitle": "Copy the list to another class",
+      "copyDescription": "The sub-domains and competencies are copied, without the pupils' levels.",
+      "copyTarget": "Class",
+      "copyNone": "None of your other classes in this subject has an empty list.",
+      "copyAction": "Copy",
+      "failed": "The change was not saved."
+    },
+    "success": {
+      "defaultApplied": "Proposed list added",
+      "remarked": "Remark saved",
+      "retrieved": "Competencies retrieved successfully",
+      "created": "Added",
+      "updated": "Saved",
+      "deleted": "Deleted",
+      "copied": "List copied",
+      "evaluated": "Level saved"
+    },
+    "errors": {
+      "noDefaultList": "No list is proposed for this class and subject",
+      "remarkTooLong": "The remark is limited to 1000 characters",
+      "domainNotFound": "Domain not found",
+      "competencyNotFound": "Competency not found",
+      "assignmentNotFound": "Class and subject not found",
+      "writeNotAllowed": "Only the teacher and the school administration change competencies",
+      "notYourAssignment": "You do not teach this subject in this class",
+      "monthOutsideYear": "This month is not in the selected school year",
+      "invalidMonth": "The month must be in YYYY-MM format",
+      "nameRequired": "The name is required",
+      "nameTooLong": "The name is too long",
+      "tooManyDomains": "A list holds at most {{max}} domains",
+      "tooManyCompetencies": "A domain holds at most {{max}} competencies",
+      "duplicateDomain": "The domain {{name}} already exists in this list",
+      "duplicateCompetency": "The competency {{name}} already exists in this domain",
+      "otherList": "A competency moves only to another domain of the same list",
+      "sameAssignment": "Choose another class to copy to",
+      "otherSubject": "A list is copied only to a class of the same subject",
+      "emptySource": "This list has no domains to copy",
+      "targetNotEmpty": "That class already has a list",
+      "studentNotInSection": "This pupil was not in this class that month"
     }
   }
 }

@@ -7,7 +7,7 @@ import { withEnglishMessages } from '../support/englishMessages';
 
 // The teacher teaches Français and Informatique in CM1 · B; six exams and two
 // homework were kept under Français. Saving the record without Français.
-const NONE = { exams: 0, assessments: 0, attendance: 0, lessons: 0, homework: 0 };
+const NONE = { exams: 0, assessments: 0, attendance: 0, lessons: 0, homework: 0, competencies: 0 };
 const UNDER: Record<string, typeof NONE> = { SB01: { ...NONE, exams: 6, homework: 2 }, SB09: NONE };
 
 function harness() {
@@ -80,7 +80,7 @@ describe('the vacant slot', () => {
     const writes = statements.filter((sql) => !sql.startsWith('select')).map((sql) => sql.match(/^(insert into|update|delete from) "(\w+)"/)?.slice(1).join(' '));
     expect(writes).toEqual([
       'insert into teacher_assignments',
-      'update exams', 'update assessments', 'update attendance', 'update routine_entries', 'update homework',
+      'update exams', 'update assessments', 'update attendance', 'update routine_entries', 'update homework', 'update competency_domains', 'update competency_remarks',
       'update massar_sheets', 'update alerts', 'delete from teacher_assignments',
     ]);
     expect(statements.some((sql) => /^update "teacher_assignments"/.test(sql))).toBe(false);
@@ -91,7 +91,7 @@ describe('the vacant slot', () => {
     expect(await repo.vacateAssignment('teacher', 'cm1-b', 'SB01')).toBe('slot-1');
     const writes = statements.filter((sql) => !sql.startsWith('select')).map((sql) => sql.match(/^(update|delete from) "(\w+)"/)?.slice(1).join(' '));
     expect(writes).toEqual([
-      'update exams', 'update assessments', 'update attendance', 'update routine_entries', 'update homework',
+      'update exams', 'update assessments', 'update attendance', 'update routine_entries', 'update homework', 'update competency_domains', 'update competency_remarks',
       'update massar_sheets', 'update alerts', 'delete from teacher_assignments',
     ]);
   });
