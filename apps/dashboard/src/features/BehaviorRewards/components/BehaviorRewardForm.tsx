@@ -69,7 +69,8 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
           disabled={isStudentsLoading}
         />
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 [&>*]:min-w-0">
+        {/* One per row on a phone, as the discipline form: side by side the long labels wrap and the fields misalign. */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 [&>*]:min-w-0">
           <FormInput
             name="behaviorDate"
             type="date"
