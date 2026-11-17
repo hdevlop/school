@@ -18,6 +18,10 @@
       "types": "./src/najm.ts",
       "default": "./src/najm.ts"
     },
+    "./env": {
+      "types": "./src/env.ts",
+      "default": "./src/env.ts"
+    },
     "./auth": {
       "types": "./src/auth.ts",
       "default": "./src/auth.ts"

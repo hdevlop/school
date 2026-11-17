@@ -1,9 +1,10 @@
+import { env } from '@sms/server/env';
 import LoginForm from './LoginForm';
 
 /**
  * Offers "Continue with Google" only where the server has Google's keys; the
- * server turns Google sign-in on from the same two variables (authConfig.ts).
+ * server turns Google sign-in on from the same `env.auth.googleSignIn`.
  */
 export default function LoginPage() {
-  return <LoginForm google={!!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET} />;
+  return <LoginForm google={env.auth.googleSignIn} />;
 }

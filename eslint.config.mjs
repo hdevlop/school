@@ -106,6 +106,20 @@ export default defineConfig([
     },
   },
   {
+    // Dashboard server code reads `env` from `@sms/server/env`. Browser code
+    // may read only what Next inlines: NODE_ENV and NEXT_PUBLIC_* by name.
+    files: ["apps/dashboard/src/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-syntax": ["error", {
+        selector: "MemberExpression[object.object.name='process'][object.property.name='env'][property.name!='NODE_ENV'][property.name!=/^NEXT_PUBLIC_/]",
+        message: "Read environment variables through `env` from `@sms/server/env` (declared once in packages/server/src/env.ts). Browser code may read only NODE_ENV and NEXT_PUBLIC_*.",
+      }, {
+        selector: "VariableDeclarator[init.object.name='process'][init.property.name='env']",
+        message: "Read environment variables through `env` from `@sms/server/env`; destructuring process.env hides them from Next and from search.",
+      }],
+    },
+  },
+  {
     // One reader per variable, with its parsing and default beside it.
     // src/scripts are standalone CLIs that read their own connection string.
     files: ["packages/server/src/**/*.ts"],

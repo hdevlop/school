@@ -6,6 +6,7 @@ import { LandingImage } from './LandingImage';
 import { InstallAppButton } from './InstallAppButton';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
+import { env } from '@sms/server/env';
 import { androidApkPath } from '@/lib/androidAssetLinks';
 
 const publicFileExists = (href: string) => existsSync(path.join(process.cwd(), 'public', href));
@@ -28,7 +29,7 @@ export function LandingHero({ stats, language, defaultLanguage, programs }: {
           <span className="landing-hero-title-line"><em className="landing-hero-curiosity">{t('landing.hero.titleAccent')}</em> {t('landing.hero.titleEveryday')}</span>
         </h1>
         <div className="landing-cta-row">
-          <InstallAppButton androidApk={androidApkPath({ ANDROID_APP_PACKAGE: process.env.ANDROID_APP_PACKAGE }, publicFileExists)} />
+          <InstallAppButton androidApk={androidApkPath({ ANDROID_APP_PACKAGE: env.android.packageName }, publicFileExists)} />
           {programs && <a href="#programs" className="landing-hero-programs">{t('landing.hero.programs')}<ArrowRight className="landing-arrow" size={16} aria-hidden /></a>}
         </div>
         <svg className="landing-hero-scribble" viewBox="0 0 80 90" fill="none" aria-hidden="true" focusable="false">

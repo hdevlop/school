@@ -239,8 +239,12 @@ states that drift — so do not add one without changing the plan first.
   same spellings (on/off, true/false, 1/0, yes/no), and `assertServerEnv()`
   lists every malformed value when the server is built. Add a variable there,
   never with a second default elsewhere. ESLint rejects `process.env` in the
-  rest of `packages/server/src` (scripts excepted), and
-  `tests/security/ServerEnv.test.ts` checks each entry reads its own name.
+  rest of `packages/server/src` (scripts excepted). The dashboard's server
+  components and route handlers import the same `env` from `@sms/server/env`;
+  browser code reads only `NODE_ENV` and `NEXT_PUBLIC_*`, which Next inlines,
+  and ESLint rejects any other `process.env` read in `apps/dashboard/src`.
+  `tests/security/ServerEnv.test.ts` checks each entry reads its own name and
+  is listed in `.env.local.example`.
 
 Current Najm versions are the pins in the root `package.json`. Read them there
 rather than assuming; they are upgraded deliberately, not by range.

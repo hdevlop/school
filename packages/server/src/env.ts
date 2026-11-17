@@ -16,7 +16,9 @@ import { MAX_TRUSTED_PROXY_HOPS } from 'najm-rate';
  * built, so startup lists every problem at once.
  *
  * Variables Najm reads itself (NODE_ENV, NEXT_PHASE, OPENROUTER_API_KEY, ...)
- * are not here. All are set in `apps/dashboard/.env.local`.
+ * are not here. All are set in `apps/dashboard/.env.local`. The dashboard's
+ * server components and route handlers read the same `env` through
+ * `@sms/server/env`; browser code reads only NODE_ENV and NEXT_PUBLIC_*.
  */
 
 const SOURCE = {
@@ -79,6 +81,9 @@ const SOURCE = {
   SEED_MODE: () => process.env.SEED_MODE,
   SCHOOL_SEED_LANDING: () => process.env.SCHOOL_SEED_LANDING,
   DEFAULT_USER_PASSWORD: () => process.env.DEFAULT_USER_PASSWORD,
+
+  ANDROID_APP_PACKAGE: () => process.env.ANDROID_APP_PACKAGE,
+  ANDROID_APP_SHA256: () => process.env.ANDROID_APP_SHA256,
 } as const satisfies Record<string, () => string | undefined>;
 
 export type EnvName = keyof typeof SOURCE;
@@ -260,6 +265,13 @@ export const env = {
     get landing() { return rawEnv('SCHOOL_SEED_LANDING'); },
     /** DEFAULT_USER_PASSWORD: the password of accounts created without one. */
     get defaultUserPassword() { return text('DEFAULT_USER_PASSWORD'); },
+  },
+
+  android: {
+    /** ANDROID_APP_PACKAGE, as set: the Android app's package; `lib/androidAssetLinks.ts` validates it. */
+    get packageName() { return rawEnv('ANDROID_APP_PACKAGE'); },
+    /** ANDROID_APP_SHA256, as set: comma-separated signing certificate fingerprints. */
+    get sha256() { return rawEnv('ANDROID_APP_SHA256'); },
   },
 };
 
