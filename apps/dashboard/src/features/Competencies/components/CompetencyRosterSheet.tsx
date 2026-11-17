@@ -7,7 +7,7 @@ import { evaluationKey, monthLabel, type EvaluationIndex } from '../config/compe
 import { levelLabel } from '../config/competencyOptions';
 import { LevelSignal } from './CompetencyVisuals';
 import { CompetencyTextScope, useCompetencyText } from './CompetencyText';
-import { LevelPopover } from './LevelPicker';
+import { LevelRow } from './LevelPicker';
 import type { SheetStudent } from './StudentCompetencySheet';
 
 const ROW = 'flex w-full items-center gap-3 rounded-xl border bg-card p-3 text-start';
@@ -55,21 +55,17 @@ function RosterSheet({ competencyId, domains, students, index, month, editable, 
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-sm font-semibold"><bdi dir="auto">{student.name}</bdi></div>
                   {student.altName ? <div className="truncate text-xs leading-5"><bdi dir="auto">{student.altName}</bdi></div> : null}
+                  <div className="truncate text-xs text-muted-foreground">{levelLabel(t, level)}</div>
                 </div>
-                <span className="text-xs text-muted-foreground">{levelLabel(t, level)}</span>
-                <LevelSignal level={level} />
               </>
             );
             return (
               <li key={student.id}>
                 {editable ? (
-                  <LevelPopover value={level} label={student.name} onChange={(next) => onSetLevel(competency.id, student.id, next)}>
-                    <button type="button"
-                      className={`${ROW} transition-colors hover:bg-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[state=open]:ring-1 data-[state=open]:ring-ring`}>
-                      {body}
-                    </button>
-                  </LevelPopover>
-                ) : <div className={ROW}>{body}</div>}
+                  <LevelRow className={ROW} value={level} label={student.name} onChange={(next) => onSetLevel(competency.id, student.id, next)}>
+                    {body}
+                  </LevelRow>
+                ) : <div className={ROW}>{body}<LevelSignal level={level} size="lg" /></div>}
               </li>
             );
           })}

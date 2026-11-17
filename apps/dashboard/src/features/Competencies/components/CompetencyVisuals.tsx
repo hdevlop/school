@@ -14,18 +14,40 @@ const barHeight = (index: number) => `${28 + (index * 72) / (SIGNAL_BARS - 1)}%`
  * A level as rising bars, like a signal: Début fills two, Maîtrisé all five,
  * Non évalué none. `sm` sits beside a pupil's name; `lg` beside a competency.
  */
-export function LevelSignal({ level, size = 'sm', className }: { level: CompetencyLevel | null | undefined; size?: 'sm' | 'lg'; className?: string }) {
+export function LevelSignal({ level, size = 'sm', className, onPick }: {
+  level: CompetencyLevel | null | undefined;
+  size?: 'sm' | 'lg';
+  className?: string;
+  /**
+   * Makes each bar a button for its level, so a teacher sets it in one tap:
+   * the third bar is En cours. Tapping the level already set clears it.
+   */
+  onPick?: (level: CompetencyLevel | null) => void;
+}) {
   const { t } = useCompetencyText();
   const filled = filledBars(level);
   const tone = level ? LEVEL_TONE[level].bar : EMPTY_TONE;
   const large = size === 'lg';
+  const bar = (index: number) => cn(large ? 'w-7 rounded-[4px]' : 'w-[5px] rounded-[1px]', index < filled ? tone : EMPTY_TONE);
+  const frame = cn('inline-flex shrink-0 items-end', large ? 'h-11 gap-[3px]' : 'h-5 gap-[2px]', className);
+  if (onPick) {
+    return (
+      <span role="radiogroup" aria-label={levelLabel(t, level)} className={frame}>
+        {COMPETENCY_LEVEL_VALUES.map((value, index) => (
+          <button key={value} type="button" role="radio" aria-checked={value === level}
+            aria-label={levelLabel(t, value)} title={levelLabel(t, value)}
+            onClick={() => onPick(value === level ? null : value)}
+            className="flex h-full items-end rounded-[4px] transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            <span aria-hidden="true" className={bar(index)} style={{ height: barHeight(index) }} />
+          </button>
+        ))}
+      </span>
+    );
+  }
   return (
-    <span role="img" aria-label={levelLabel(t, level)} title={levelLabel(t, level)}
-      className={cn('inline-flex shrink-0 items-end', large ? 'h-11 gap-[3px]' : 'h-5 gap-[2px]', className)}>
+    <span role="img" aria-label={levelLabel(t, level)} title={levelLabel(t, level)} className={frame}>
       {Array.from({ length: SIGNAL_BARS }, (_, index) => (
-        <span key={index} aria-hidden="true"
-          className={cn(large ? 'w-7 rounded-[4px]' : 'w-[5px] rounded-[1px]', index < filled ? tone : EMPTY_TONE)}
-          style={{ height: barHeight(index) }} />
+        <span key={index} aria-hidden="true" className={bar(index)} style={{ height: barHeight(index) }} />
       ))}
     </span>
   );

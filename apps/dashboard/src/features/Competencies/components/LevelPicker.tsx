@@ -56,3 +56,31 @@ export function LevelPopover({ value, onChange, label, disabled = false, childre
     </Popover>
   );
 }
+
+/**
+ * A row a teacher sets a level on two ways: a tap on one of its bars sets that
+ * level at once, and a tap anywhere else on the card opens the popover with
+ * every level and Non évalué. The card's button lies under the content and
+ * the bars sit above it, so no button holds another.
+ */
+export function LevelRow({ value, onChange, label, className, signal = 'lg', children }: {
+  value: CompetencyLevel | null | undefined;
+  onChange: (level: CompetencyLevel | null) => void;
+  label: string;
+  /** The card's look: border, padding, layout. */
+  className: string;
+  signal?: 'sm' | 'lg';
+  /** What the card shows before its bars. */
+  children: ReactNode;
+}) {
+  return (
+    <div className={cn(className, 'relative transition-colors hover:bg-accent/50 has-[>[data-state=open]]:ring-1 has-[>[data-state=open]]:ring-ring')}>
+      <LevelPopover value={value} label={label} onChange={onChange}>
+        <button type="button" aria-label={label}
+          className="absolute inset-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+      </LevelPopover>
+      {children}
+      <LevelSignal level={value} size={signal} onPick={onChange} className="relative" />
+    </div>
+  );
+}

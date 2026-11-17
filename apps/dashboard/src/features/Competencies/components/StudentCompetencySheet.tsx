@@ -12,7 +12,7 @@ import { proposeRemark } from '../config/competencyRemarks';
 import { ChangeMark, LevelSignal } from './CompetencyVisuals';
 import { CompetencyRemarkFooter } from './CompetencyRemarkFooter';
 import { useCompetencyText } from './CompetencyText';
-import { LevelPopover } from './LevelPicker';
+import { LevelRow } from './LevelPicker';
 
 export type SheetStudent = { id: string; name: string; altName?: string | null; image?: string | null; gender?: 'M' | 'F' | null };
 
@@ -88,18 +88,14 @@ export function StudentCompetencySheet({
                     <div className="mt-1 text-xs text-muted-foreground">{summary}</div>
                   </div>
                   <ChangeMark change={rowChange} label={changeLabel(rowChange)} signed={false} />
-                  <LevelSignal level={level} size="lg" />
                 </>
               );
               return editable ? (
-                <LevelPopover key={item.id} value={level} label={item.name} onChange={(next) => onSetLevel?.(item.id, next)}>
-                  <button type="button"
-                    className={`${ROW} transition-colors hover:bg-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[state=open]:ring-1 data-[state=open]:ring-ring`}>
-                    {body}
-                  </button>
-                </LevelPopover>
+                <LevelRow key={item.id} className={ROW} value={level} label={item.name} onChange={(next) => onSetLevel?.(item.id, next)}>
+                  {body}
+                </LevelRow>
               ) : (
-                <div key={item.id} className={ROW}>{body}</div>
+                <div key={item.id} className={ROW}>{body}<LevelSignal level={level} size="lg" /></div>
               );
             })}
           </section>

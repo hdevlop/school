@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
-import { MessageSquareText, Sparkles } from 'lucide-react';
+import { Eraser, MessageSquareText, Sparkles } from 'lucide-react';
 import { COMPETENCY_LIMITS, type CompetencyRemark } from '@sms/contracts';
 import { NButton, NConfirmDialog, Textarea } from 'najm-kit';
 import { useCompetencyText } from './CompetencyText';
@@ -45,7 +45,8 @@ type Status = 'idle' | 'saving' | 'saved' | 'failed';
 
 function RemarkEditor({ saved, onSave, propose }: { saved: string; onSave: (body: string) => Promise<unknown>; propose?: () => string | null }) {
   const { t, dir } = useCompetencyText();
-  const [replacing, setReplacing] = useState<string | null>(null);
+  // The text a confirmed proposal or clearing puts in place of the teacher's own.
+  const [confirming, setConfirming] = useState<{ text: string; clear: boolean } | null>(null);
   const proposal = propose?.() ?? null;
   const [draft, setDraft] = useState(saved);
   const [status, setStatus] = useState<Status>('idle');
@@ -90,26 +91,33 @@ function RemarkEditor({ saved, onSave, propose }: { saved: string; onSave: (body
   // A proposal fills an empty remark at once; over the teacher's own text it asks first.
   const applyProposal = () => {
     if (!proposal) return;
-    if (draft.trim()) setReplacing(proposal);
+    if (draft.trim()) setConfirming({ text: proposal, clear: false });
     else change(proposal);
   };
 
   return (
     <RemarkCard>
-      {propose ? (
-        <NButton type="button" size="sm" variant="outline" className="self-start" onClick={applyProposal} disabled={!proposal}
-          title={proposal ? undefined : t('competencies.remark.nothingToPropose')} leftIcon={<Sparkles className="size-4" />}>
-          {t('competencies.remark.propose')}
+      <div className="flex flex-wrap items-center gap-2">
+        {propose ? (
+          <NButton type="button" size="sm" variant="outline" onClick={applyProposal} disabled={!proposal}
+            title={proposal ? undefined : t('competencies.remark.nothingToPropose')} leftIcon={<Sparkles className="size-4" />}>
+            {t('competencies.remark.propose')}
+          </NButton>
+        ) : null}
+        {/* Clearing removes the remark for the parents too, so it asks first. */}
+        <NButton type="button" size="sm" variant="ghost" onClick={() => setConfirming({ text: '', clear: true })} disabled={!draft.trim()}
+          leftIcon={<Eraser className="size-4" />}>
+          {t('competencies.remark.clear')}
         </NButton>
-      ) : null}
+      </div>
       <NConfirmDialog
-        open={!!replacing}
-        onOpenChange={(open) => { if (!open) setReplacing(null); }}
-        title={t('competencies.remark.replaceTitle')}
-        description={t('competencies.remark.replaceDescription')}
-        confirmLabel={t('competencies.remark.replace')}
+        open={!!confirming}
+        onOpenChange={(open) => { if (!open) setConfirming(null); }}
+        title={t(confirming?.clear ? 'competencies.remark.clearTitle' : 'competencies.remark.replaceTitle')}
+        description={t(confirming?.clear ? 'competencies.remark.clearDescription' : 'competencies.remark.replaceDescription')}
+        confirmLabel={t(confirming?.clear ? 'competencies.remark.clear' : 'competencies.remark.replace')}
         cancelLabel={t('competencies.catalog.cancel')}
-        onConfirm={() => { if (replacing) change(replacing); setReplacing(null); }}
+        onConfirm={() => { if (confirming) change(confirming.text); setConfirming(null); }}
       />
       {/* An Arabic list's remark is written right to left from the first letter; otherwise the text decides. */}
       <Textarea value={draft} dir={dir === 'rtl' ? 'rtl' : 'auto'} rows={3} maxLength={COMPETENCY_LIMITS.remark}
