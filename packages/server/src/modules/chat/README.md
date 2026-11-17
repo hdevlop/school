@@ -52,8 +52,11 @@ preserved. Unsupported requests use the existing router/model path. The
 `@sms/server/jev-intents`, `jev-wording` and `jev-query-guard` package paths remain
 available without extra source facade files.
 
-The `replies/` folder has two files: `schoolReplyLanguage.ts` detects language and
-`schoolReplyWrite.ts` recognizes writes and returns localized refusals.
+The `replies/` folder has three files: `schoolReplyLanguage.ts` detects the language
+of refusals, `schoolReplyWrite.ts` recognizes writes and returns localized refusals,
+and `schoolAnswerLanguage.ts` names the answer's language, which `SchoolChatRequest`
+tells the model on every message (French, English, Spanish, Arabic or Darija in
+Arabic script for Darija and Arabizi).
 `jev/jevReplyPlan.ts` owns the four supported Jev result formatters and their
 accessible-data scope notices. `transport/schoolChatControls.ts` owns the release
 switch, Jev settings and first-turn parsing. The model configuration and transport
@@ -113,7 +116,9 @@ Verification uses `bun run test:chat`, `test:academic-years`, `test:security`,
 `transport/schoolProviderResponse.ts` adapts the OSS20B provider completion before
 the SDK dispatches tools: only observed terminal channel suffixes on offered
 names are normalized, and tool-step planning text is withheld. Arguments stay
-unchanged and module validation/guards still run. It buffers one model completion
+unchanged and module validation/guards still run. In an answer-only step,
+`schoolAnswerPlanning.ts` cuts English planning OSS20B glued before the answer;
+an answer that is planning only fails like any failed generation. It buffers one model completion
 (at most 1 MiB), so answer text appears after that step finishes; it does not
 buffer database reads or the entire multi-step chat. Attendance's MCP-only list
 routes return module-owned evidence (`records`, `recordState`, `interpretation`)
