@@ -27,6 +27,7 @@ import { registerYearPropertyInjector, registerYearRequestScope } from './module
 import { yearRequestControllers } from './config/yearScope';
 import { registerSchoolChatRequest } from './modules/chat/transport/registerSchoolChatRequest';
 import { bindJevToolReranker } from './modules/chat/jev/JevToolReranker';
+import { assertServerEnv } from './env';
 
 export { loadActiveAcademicYearLabel, loadOwnSidebarOrder, loadSchoolUiSettings, type SchoolUiSettings } from './uiSettings';
 export { loadSchoolLandingProfile, loadLandingCycles, loadSchoolLandingContent } from './landing';
@@ -50,6 +51,9 @@ export {
   ragStudioConfig,
   themeConfig,
 };
+
+// Every malformed environment variable, listed at once, before any plugin reads one.
+assertServerEnv();
 
 export const server = new Server()
   .use(corsConfig())

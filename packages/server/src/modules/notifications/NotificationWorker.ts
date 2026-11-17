@@ -1,5 +1,6 @@
 import Redis from 'ioredis';
 import { Service } from '../../najm';
+import { env } from '../../env';
 
 import { notificationFlags } from './notificationConfig';
 import { PersonalNotificationRepository } from './NotificationRepository';
@@ -14,10 +15,11 @@ export class NotificationWorker {
   constructor(private readonly repository: PersonalNotificationRepository, private readonly crypto: PushCryptoService, private readonly sender: PushSender) {}
 
   private async heartbeat() {
-    if (!process.env.REDIS_URL) return;
+    const redisUrl = env.cache.redisUrl;
+    if (!redisUrl) return;
     try {
       if (!this.redis) {
-        this.redis = new Redis(process.env.REDIS_URL, { lazyConnect: true, maxRetriesPerRequest: 1 });
+        this.redis = new Redis(redisUrl, { lazyConnect: true, maxRetriesPerRequest: 1 });
         this.redis.on('error', () => undefined);
       }
       if (this.redis.status === 'wait') await this.redis.connect();

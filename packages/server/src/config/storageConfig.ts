@@ -2,13 +2,14 @@ import { FileCategory, storage, StorageValidator } from 'najm-storage';
 
 import { isAdmin, isAuth } from '../auth';
 import type { NajmPlugin } from 'najm-core';
+import { env } from '../env';
 import { privateStorage } from './PrivateStorageGuard';
 import { SchoolStorageValidator } from './SchoolStorageValidator';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 /** The folder uploads are stored in, relative to the working directory unless absolute. */
-export const storageBasePath = () => process.env.SCHOOL_STORAGE_PATH?.trim() || 'storage';
+export const storageBasePath = () => env.app.storagePath;
 
 export const storageConfig = (): NajmPlugin => {
   const configured = storage({

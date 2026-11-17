@@ -1,6 +1,6 @@
 /**
- * One factory per Najm plugin, each in the file that owns its policy and the
- * environment variables it reads (listed at the top of that file).
+ * One factory per Najm plugin, each in the file that owns its policy.
+ * Environment variables are read and documented in `src/env.ts` only.
  * `src/index.ts` registers them in order.
  */
 export { authConfig, guardConfig } from './authConfig';

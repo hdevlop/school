@@ -106,6 +106,20 @@ export default defineConfig([
     },
   },
   {
+    // One reader per variable, with its parsing and default beside it.
+    // src/scripts are standalone CLIs that read their own connection string.
+    files: ["packages/server/src/**/*.ts"],
+    ignores: ["packages/server/src/env.ts", "packages/server/src/scripts/**"],
+    rules: {
+      "no-restricted-properties": ["error", {
+        object: "process",
+        property: "env",
+        message:
+          "Read environment variables through `env` from packages/server/src/env.ts: declare a new one there, once, with its default.",
+      }],
+    },
+  },
+  {
     files: ["packages/server/src/**/*.ts", "packages/seed/src/**/*.ts"],
     rules: {
       "no-restricted-syntax": ["error", {

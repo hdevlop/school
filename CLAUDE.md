@@ -231,6 +231,16 @@ states that drift — so do not add one without changing the plan first.
   `bun run test:boundaries` enforces this over the resolved import graph; see
   `docs/architecture/workspace.md` before adding an export or an exception.
 
+- **One reader per environment variable.** `packages/server/src/env.ts` is the
+  only server module that reads `process.env`: each variable is read literally
+  once, then parsed, documented and defaulted on a typed `env` getter
+  (`env.rag.embedding.model`, `env.chat.jevRerank`). Every switch takes the
+  same spellings (on/off, true/false, 1/0, yes/no), and `assertServerEnv()`
+  lists every malformed value when the server is built. Add a variable there,
+  never with a second default elsewhere. ESLint rejects `process.env` in the
+  rest of `packages/server/src` (scripts excepted), and
+  `tests/security/ServerEnv.test.ts` checks each entry reads its own name.
+
 Current Najm versions are the pins in the root `package.json`. Read them there
 rather than assuming; they are upgraded deliberately, not by range.
 

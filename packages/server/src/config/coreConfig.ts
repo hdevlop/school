@@ -1,5 +1,4 @@
 import { cors } from 'najm-cors';
-import { envString } from 'najm-core/env';
 import { database } from 'najm-database';
 import { events } from 'najm-event';
 import { i18n } from 'najm-i18n';
@@ -7,14 +6,10 @@ import { validation } from 'najm-validation';
 
 import { LANGUAGE_HEADER, schoolI18n } from '@sms/contracts/locales';
 import { db } from '../database/db';
+import { env } from '../env';
 import { createValidationErrorFormatter } from './validationMessages';
 
-/**
- * Plugins with no School policy beyond what is written here.
- *
- *   CORS_ORIGIN           the dashboard's origin; falls back to FRONTEND_URL
- *   FRONTEND_URL          runtime installation origin, then http://localhost:3000
- */
+/** Plugins with no School policy beyond what is written here. */
 
 export const databaseConfig = () => database({ default: db });
 
@@ -26,9 +21,7 @@ export const eventsConfig = () => events();
 export const corsConfig = () =>
   cors({
     origin: [
-      envString(process.env.CORS_ORIGIN) ??
-        envString(process.env.FRONTEND_URL) ??
-        'http://localhost:3000',
+      env.app.corsOrigin,
       'http://localhost:4100',
       'app://-',
     ],

@@ -2,21 +2,14 @@ import { guards } from 'najm-guard';
 import { defaultCredentialSetupPasswordSchema } from 'najm-auth';
 import { auth, isAuth } from '../auth';
 import { ACCOUNT_EMAIL_APP_NAME, accountEmailLogo, accountEmailTheme } from '../email/accountEmailBrand';
+import { env } from '../env';
 
 /**
- * Sign-in and route guards.
- *
- *   NAJM_ENCRYPTION_KEY   najm-auth's encryption key
- *   FRONTEND_URL          origin of the set-password link in invitation and
- *                         reset mails (default http://localhost:3000), and of
- *                         the page Google sign-in returns to
- *   GOOGLE_CLIENT_ID      Google sign-in, on when both are set. Google returns
- *   GOOGLE_CLIENT_SECRET  to FRONTEND_URL/api/auth/oauth/google/callback,
- *                         which must be an authorized redirect URI
+ * Sign-in and route guards; their variables are `env.auth` and `env.app.frontendUrl`.
  *
  * auth uses the cache, email and rate-limit plugins `src/index.ts` registers
- * before it, so their variables are read in those files. Passing their config
- * here as well would be ignored, and the server warns when it is.
+ * before it. Passing their config here as well would be ignored, and the
+ * server warns when it is.
  */
 
 /**
@@ -27,16 +20,16 @@ import { ACCOUNT_EMAIL_APP_NAME, accountEmailLogo, accountEmailTheme } from '../
 export const guardConfig = () => guards({ default: [isAuth()] });
 
 /** Google sign-in is offered only where its keys are configured. */
-export const googleSignInEnabled = () => !!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET;
+export const googleSignInEnabled = () => env.auth.googleSignIn;
 
 export const authConfig = () =>
   auth({
     appName: ACCOUNT_EMAIL_APP_NAME,
     accountInviteLogo: accountEmailLogo(),
     accountInviteTheme: accountEmailTheme,
-    frontendUrl: process.env.FRONTEND_URL,
+    frontendUrl: env.app.frontendUrl,
     dialect: 'pg',
-    encryptionKey: process.env.NAJM_ENCRYPTION_KEY,
+    encryptionKey: env.auth.encryptionKey,
     // A self-registered account waits for an administrator, who activates it
     // and gives it a role. It used to be active at once, with no role, and
     // could sign in and call every route that asks only for sign-in. Accounts

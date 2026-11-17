@@ -1,12 +1,8 @@
-function flag(name: string, defaultOn = false) {
-  const raw = process.env[name];
-  if (!raw) return defaultOn;
-  return raw === '1' || raw.toLowerCase() === 'true';
-}
+import { env } from '../../env';
 
 export const notificationFlags = {
-  get dispatchEnabled() { return flag('NOTIFICATIONS_DISPATCH_ENABLED'); },
-  get pushEnabled() { return flag('NOTIFICATIONS_PUSH_ENABLED'); },
+  get dispatchEnabled() { return env.notifications.dispatchEnabled; },
+  get pushEnabled() { return env.notifications.pushEnabled; },
 };
 
 export function normalizeVapidSubject(contact: string | undefined) {
@@ -33,9 +29,9 @@ export function isValidVapidPublicKey(key: string | undefined) {
 }
 
 export const vapidConfig = {
-  get publicKey() { return process.env.VAPID_PUBLIC_KEY?.trim() || undefined; },
-  get privateKey() { return process.env.VAPID_PRIVATE_KEY?.trim() || undefined; },
-  get contact() { return process.env.VAPID_CONTACT_EMAIL?.trim() || undefined; },
+  get publicKey() { return env.notifications.vapidPublicKey; },
+  get privateKey() { return env.notifications.vapidPrivateKey; },
+  get contact() { return env.notifications.vapidContact; },
   get subject() { return normalizeVapidSubject(this.contact); },
   get configured() {
     return Boolean(isValidVapidPublicKey(this.publicKey) && this.privateKey && this.subject);

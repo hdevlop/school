@@ -4,6 +4,7 @@ import { nanoid } from 'nanoid';
 
 import { AuthService, UserService } from '../../auth';
 import { Service, Transaction } from '../../najm';
+import { env } from '../../env';
 import type { AccessResetDelivery, AccessResetResult, ResetAccessDto } from './AccessResetDto';
 import { AccessResetRepository } from './AccessResetRepository';
 import {
@@ -204,14 +205,14 @@ export class AccessResetService {
   private resolveDelivery(emailSent: boolean): AccessResetDelivery {
     if (!emailSent) return 'not_sent';
 
-    const provider = (process.env.EMAIL_PROVIDER?.trim() || 'console').toLowerCase();
+    const provider = env.email.provider;
     if (SIMULATED_EMAIL_PROVIDERS.has(provider)) return 'simulated';
 
     // SendGrid's sandbox validates and accepts the request in full and then
     // delivers nothing. It reports success exactly like a real send, so
     // without this check School would tell an administrator that a parent had
     // been emailed when the mail never left.
-    if (provider === 'sendgrid' && emailFlagEnabled(process.env.SENDGRID_SANDBOX_MODE)) {
+    if (provider === 'sendgrid' && emailFlagEnabled(env.email.transport.SENDGRID_SANDBOX_MODE)) {
       return 'simulated';
     }
 

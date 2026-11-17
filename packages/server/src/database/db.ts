@@ -1,7 +1,8 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
+import { env } from '../env';
 
-const connectionString = process.env.DB_URL || process.env.DATABASE_URL || 'postgres://localhost:5432/postgres';
+const connectionString = env.database.url;
 
 /**
  * One pool per connection string per process. Next's dev server evaluates this

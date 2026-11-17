@@ -2,6 +2,7 @@ import { DEFAULT_LANDING_CONTENT, LANDING_PROGRAM_SLOTS, type LandingContent } f
 import { landingContentDto } from './LandingDto';
 import type { LandingSeedProgram } from './LandingRepository';
 import defaults from './data/defaults.json';
+import { env } from '../../env';
 
 // One packaged content source for first deployment, public rendering and editor.
 export const packagedLandingContent: LandingContent = {
@@ -13,7 +14,7 @@ export const packagedLandingPrograms: LandingSeedProgram[] = defaults.programs.m
 }));
 
 /** Missing records show the packaged page; an explicit opt-out keeps a blank draft. */
-export function defaultLandingContent(flag = process.env.SCHOOL_SEED_LANDING): LandingContent {
+export function defaultLandingContent(flag = env.seed.landing): LandingContent {
   if (flag !== undefined && flag !== '' && flag !== 'true' && flag !== 'false') {
     throw new Error('SCHOOL_SEED_LANDING must be true or false');
   }

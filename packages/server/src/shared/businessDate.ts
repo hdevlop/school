@@ -1,3 +1,5 @@
+import { env } from '../env';
+
 const BUSINESS_DATE_ENV = 'APP_BUSINESS_DATE';
 const DATE_ONLY_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
 
@@ -33,7 +35,7 @@ function formatLocalDate(value: Date): string {
 }
 
 export function getBusinessDateOverride(): string | null {
-  const value = process.env[BUSINESS_DATE_ENV]?.trim();
+  const value = env.app.businessDate;
   if (!value) return null;
   parseDateOnly(value);
   return value;

@@ -1,3 +1,5 @@
+import { env } from '../env';
+
 const DEFAULT_USER_PASSWORD = 'ChangeMe123';
 
 /**
@@ -5,7 +7,7 @@ const DEFAULT_USER_PASSWORD = 'ChangeMe123';
  * explicit password so accounts are created without sending an invite email,
  * keeping demo users log-in-able and avoiding an invite blast.
  */
-export const isSeeding = () => process.env.SEED_MODE === 'true';
+export const isSeeding = () => env.seed.running;
 
 export function resolveUserPassword(password?: string | null) {
   if (typeof password === 'string') {
@@ -15,7 +17,7 @@ export function resolveUserPassword(password?: string | null) {
     }
   }
 
-  const configuredPassword = process.env.DEFAULT_USER_PASSWORD?.trim();
+  const configuredPassword = env.seed.defaultUserPassword;
   if (configuredPassword) {
     return configuredPassword;
   }

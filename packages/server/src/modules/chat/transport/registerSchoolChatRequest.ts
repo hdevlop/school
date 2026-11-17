@@ -8,6 +8,7 @@ import { schoolJevRequestContext } from '../jev/JevRequestContext';
 import { latestChatUserText, schoolChatResponse } from './schoolChatResponse';
 import { readSchoolChatControls, ordinaryJevTurn, effectiveJevMode } from './schoolChatControls';
 import { installSchoolChatTransport, schoolChatTransportContext } from './SchoolChatTransport';
+import { embeddingEndpoint } from '../routing/embedding';
 
 /** Runs after the shared year boundary (50); never resolves or authorizes a second year. */
 export function registerSchoolChatRequest(container: Container) {
@@ -36,11 +37,7 @@ export function registerSchoolChatRequest(container: Container) {
         eligible: request => classifier.eligible(request), prepare: request => classifier.prepare(request) }, next);
     });
     if (enabled && actor?.id) {
-      const compatible = process.env.RAG_EMBEDDING_PROVIDER === 'openai-compatible';
-      const base = process.env.RAG_EMBEDDING_BASE_URL?.replace(/\/+$/u, '')
-        || (compatible ? 'http://127.0.0.1:18080/v1' : 'http://127.0.0.1:11434');
-      const embeddingUrl = base + (compatible ? '/embeddings' : '/api/embed');
-      await schoolChatTransportContext.run({ embeddingUrl, calls: 0 }, proceed);
+      await schoolChatTransportContext.run({ embeddingUrl: embeddingEndpoint(), calls: 0 }, proceed);
     } else await proceed();
     context.res = schoolChatResponse(context.res, latestUserText, context.req.raw.signal);
   };

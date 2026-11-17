@@ -129,3 +129,16 @@ export const schoolJevToolReranker = createJevToolReranker({
   settings: async () => (settingsSource ? settingsSource() : null),
   state: withArabicRewrite,
 });
+
+/**
+ * najm-rag's `rerankTools` thresholds for Jev's pick, measured on the router's
+ * candidates for the routing fixtures (docs/chat-routing/measurements.md):
+ *
+ * - promoteAt: a pick at 0.85 leads with its dependencies and the router's
+ *   next 3; at 0.3 it moves to the top and the router's tools stay offered.
+ *   "none", a failure or no answer in 0.8 s keeps the router's order.
+ * - minSimilarity: Jev also sees tools down to this similarity, but one below
+ *   the model's routing threshold is used only at 0.85.
+ * - dropAt: a "none" this sure leaves a greeting or how-to without tools.
+ */
+export const JEV_RERANK_THRESHOLDS = { promoteAt: 0.3, minSimilarity: 0.64, dropAt: 0.9 } as const;

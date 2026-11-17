@@ -2,8 +2,7 @@ import { Repository } from '../../../najm';
 import { and, desc, eq, inArray, ne, sql } from 'drizzle-orm';
 import { financialNotificationDeliveries, feeInstallments, fees, students, payments, paymentAllocations } from '../../../database/schema';
 import { DB } from '../../../database/db';
-
-const CRON_SECRET_ENV = 'FINANCIAL_CRON_SECRET';
+import { env } from '../../../env';
 
 function timingSafeEqual(a: string, b: string) {
   if (a.length !== b.length) return false;
@@ -15,7 +14,7 @@ function timingSafeEqual(a: string, b: string) {
 }
 
 export function checkCronSecret(provided: string | null | undefined): boolean {
-  const expected = process.env[CRON_SECRET_ENV];
+  const expected = env.notifications.financialCronSecret;
   if (!expected) return false;
   if (!provided) return false;
   return timingSafeEqual(provided, expected);
