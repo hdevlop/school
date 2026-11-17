@@ -69,7 +69,9 @@ describe('the remark book', () => {
 // Every French and maths skill of the default lists (packages/server/src/modules/competencies/defaultCatalogs.ts)
 // has its own sentence; read as text, since the dashboard does not import the server.
 describe('the remark book covers French and maths', () => {
-  const source = readFileSync(new URL('../../../../../../packages/server/src/modules/competencies/defaultCatalogs.ts', import.meta.url), 'utf8');
+  const source = readFileSync(new URL('../../../../../../packages/server/src/modules/competencies/defaultCatalogs.ts', import.meta.url), 'utf8')
+    // A Windows checkout has CRLF line endings; the blocks below split on LF.
+    .replace(/\r\n/g, '\n');
   // Each list is one `{ subject: …, classes: …, domains: [...] }` block of the file.
   const skillsOf = (subject: string) => source.split(/\n {2}\{\n/)
     .filter((block) => block.includes(`subject: '${subject}'`))
