@@ -26,6 +26,7 @@ import * as modulesModule from './modules';
 import { registerYearPropertyInjector, registerYearRequestScope } from './modules/academicYears/requestYear';
 import { yearRequestControllers } from './config/yearScope';
 import { registerSchoolChatRequest } from './modules/chat/transport/registerSchoolChatRequest';
+import { bindJevToolReranker } from './modules/chat/jev/JevToolReranker';
 
 export { loadActiveAcademicYearLabel, loadOwnSidebarOrder, loadSchoolUiSettings, type SchoolUiSettings } from './uiSettings';
 export { loadSchoolLandingProfile, loadLandingCycles, loadSchoolLandingContent } from './landing';
@@ -75,5 +76,6 @@ export const server = new Server()
 registerYearPropertyInjector(server.container);
 registerYearRequestScope(server.container, yearRequestControllers);
 registerSchoolChatRequest(server.container);
+bindJevToolReranker(server.container);
 
 export default server;

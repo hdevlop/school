@@ -1,5 +1,13 @@
 import { normalizeReplyText } from 'najm-chatbot';
 
+/**
+ * Names the current routing text: these hints and the Darija rewrite. Stored
+ * phrases are embedded through them too, so change this string whenever either
+ * changes. najm-rag then marks every phrase stale; run "Reindex semantics" in
+ * the RAG studio after the deploy.
+ */
+export const ROUTING_TEXT_VERSION = '2026-11-17 result reads lead';
+
 /** Query-only discovery hints. No role, identity lookup or access decision. */
 // najm-rag lowercases the message and folds these letters before this hook
 // runs, so "الجاية" arrives as "الجايه": fold the text and every pattern alike.
@@ -8,7 +16,7 @@ const foldArabic = (value: string) => value.replace(/[أإآ]/g, 'ا').replace(/
 export function schoolRoutingContext(query: string, routingQuery = query): string {
   const text = foldArabic(normalizeReplyText(query));
   const mentions = (words: string) => new RegExp(`(?<![\\p{L}\\p{N}_])(?:${foldArabic(words)})(?![\\p{L}\\p{N}_])`, 'u').test(text);
-  const grades = mentions('n?no9at[i]?|marks|grades|notes|[وفب]?(?:نقط|النقاط|النقط|نقاط|نقطي)');
+  const grades = mentions('n?no9at[i]?|l?tan9it|l?ta9yimat|marks|grades|notes|r[eé]sultats|results|[وفب]?(?:نقط|النقاط|النقط|نقاط|نقطي|التنقيط|تنقيط|الدرجات|درجات|التقييمات|تقييمات|النتائج|نتائج)');
   const attendance = mentions('l?ghyab|l?ghiyab|l?7(?:o|ou)dour|7ad(?:er|ra)|ghayb|ghayeb|attendance|[وفب]?(?:الحضور|حضور|حضوري|حضر|غاب|تاخر|الغياب|غياب|غيابي|غايب|غايبين)');
   const placement = mentions('l?9ism|l?majmou3a|l?2?a9sam|classes?|sections?|[وفب]?(?:القسم|قسم|الاقسام|اقسام|المجموعة)');
   // A school's girls/children are not automatically this account's own children.
@@ -21,8 +29,8 @@ export function schoolRoutingContext(query: string, routingQuery = query): strin
   const pending = mentions('pending grading|ns7ho|ns7h|[وفب]?نصحح(?:و|هم)?|بلا نقط|ما تسجل|ma tsjjel');
   const assessments = mentions('l?forod|l?fard|assessments?|assignments?|quizzes|[وفب]?(?:الفروض|فروض|فرض)');
   // One class or level named by code or ordinal, not only by the word "class".
-  const namedClass = placement
-    || /(?<![\p{L}\p{N}])(?:cp|ce[12]|cm[12]|[1-6](?:ap|ac|bac)|[1-6][a-f])(?![\p{L}\p{N}])/iu.test(text)
+  const classCode = /(?<![\p{L}\p{N}])(?:cp|ce[12]|cm[12]|[1-6](?:ap|ac|bac)|[1-6][a-f])(?![\p{L}\p{N}])/iu.test(text);
+  const namedClass = placement || classCode
     || mentions('ibtida2i|i3dadi|ssadis|lkhamis|rrabi3|ttalit|[وفب]?(?:ابتدائي|اعدادي|إعدادي|السادس|الخامس|الرابع|الثالث)');
   const upcoming = mentions('jay|jayin|jaya|jayen|mazal|prochains?|prochaine|upcoming|next|[وفب]?(?:الجاي|الجايين|الجاية|جاي|جايين|القادم|القادمة|المقبلة)');
   // Absence verbs. Only a personal question gets them: "absents aujourd'hui"
@@ -52,10 +60,34 @@ export function schoolRoutingContext(query: string, routingQuery = query): strin
     hints.push(namedClass
       ? 'student counts students_get_student_count classes_get_class_student_count classes_get_classes'
       : 'student counts students_get_student_count');
-  if (grades && !pending) hints.push(personal
-    ? 'student academic grades student-profile_get_academic grades_get_by_student'
-    : placement ? 'class subject grades grades_get_by_section grades_get_by_subject'
-      : 'student grades grades_get_by_student search_search_students');
+  // "My" with a class code is a staff member's class ("CE1 C من الأقسام ديالي",
+  // "mon groupe CP C"), not the reader's own marks; a child stays the family's.
+  const own = child || (personal && !classCode);
+  // A report card is asked for by name, often with no word for marks. "كشف",
+  // "relevé" and "الحصيلة" are also money words, so not next to fees.
+  const reportCard = mentions('bulletins?|relev[eé]s? de notes|boletin(?:es)?|boletín|report cards?|full report|kachf n?no9at|bayan n?no9at|l?bolitan|[وفب]?(?:كشف النقط|كشف النقاط|كشف نتائج|بيان النقط|بيان النقاط|بيان نتائج|البوليطان|بوليطان|البولطان|بولطان|الحصيلة الدراسية)')
+    || (!fees && mentions('relev[eé]s?|l?kachf|[وفب]?(?:كشف|البيان|الحصيلة)'));
+  const exam = mentions('l?imti7an(?:at)?|examens?|exams?|midterm|final|[وفب]?(?:الامتحان|امتحان|الامتحانات|امتحانات)');
+  const teacher = mentions('l?2?ostada?|prof|professeure?|enseignante?|teacher|[وفبل]?(?:الاستاذ|الاستاذة|استاذ|استاذة)');
+  const everyClass = mentions('kol l?a?9sam|jami3 l?a?9sam|jami3 l?mostawayat|kol l?mostawayat|toutes les classes|tous les niveaux|all classes|every class|[وفب]?(?:كل الاقسام|جميع الاقسام|كل المستويات|جميع المستويات)');
+  const average = mentions('l?mo3adal|moyennes?|averages?|gpa|[وفب]?(?:المعدل|معدل|المعدلات|معدلات)');
+  // "What did X get": the marks of a named student, test or exam.
+  const got = mentions('jab|jabat|jabet|jabo|jabou|[وفب]?(?:جاب|جابت|جابو)');
+  if (reportCard && !own) hints.push('student report card grades_get_student_report search_search_students');
+  else if (average && !own && !classCode && !grades)
+    hints.push('school averages pass rate registrar-dashboard_get_overview academic-dashboard_get_kpis');
+  else if ((grades || got) && !pending) {
+    // The read for what the message names: a teacher, an exam, a class test,
+    // one subject everywhere, a class, a class code (often a student's), or a student.
+    if (own) hints.push('student academic grades student-profile_get_academic grades_get_by_student');
+    else if (teacher && !teaching) hints.push('marks one teacher recorded grades_get_by_teacher search_search_teachers');
+    else if (exam && !upcoming) hints.push('one exam results grades_get_by_exam');
+    else if (assessments && !upcoming) hints.push('one class test results grades_get_by_assessment');
+    else if (everyClass) hints.push('one subject in every class grades_get_by_subject');
+    else if (placement) hints.push('class subject grades grades_get_by_section grades_get_by_subject');
+    else if (classCode) hints.push('class or student grades grades_get_by_section grades_get_by_student search_search_students');
+    else hints.push('student grades grades_get_by_student search_search_students');
+  }
   if (attendance || (absence && personal)) hints.push(personal
     ? 'student attendance summary student-profile_get_attendance_summary'
     : 'attendance date records attendance_get_by_date attendance_get_all');

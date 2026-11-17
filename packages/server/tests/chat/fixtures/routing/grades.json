@@ -1,0 +1,2008 @@
+{
+  "feature": "grades",
+  "audience": "staff-teachers",
+  "author": "GPT-6",
+  "sawRoutingFiles": false,
+  "cases": [
+    {
+      "id": "gr-001",
+      "as": "teacher",
+      "lang": "ary",
+      "q": "الرحموني وصال من 5AP C كنقريها بغيت نشوف شنو جابت لحد دابا",
+      "want": "Show all recorded marks for RAHMOUNI Wissal.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-002",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "واش نقدر نشوف بيان نقط بوحاديوي زكرياء CE2 C",
+      "want": "Show BOUHADDIOUI Zakaria's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-003",
+      "as": "supervisor",
+      "lang": "ary",
+      "q": "خرج ليا تنقيط 6AP C اللي كنشرف عليه غير فالعلوم",
+      "want": "Show science marks for the supervisor's 6AP C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-004",
+      "as": "admin",
+      "lang": "ary",
+      "q": "نقط الإنجليزية فالمؤسسة بجميع المستويات عندك",
+      "want": "Show English marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-005",
+      "as": "principal",
+      "lang": "ary",
+      "q": "بغيت نراجع التنقيط اللي دار شقور فالفروض والامتحانات ديالو",
+      "want": "Show marks awarded in teacher CHAKOUR's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-006",
+      "as": "teacher",
+      "lang": "ary",
+      "q": "آيت لحسن سكينة كتقرا معايا فـCM1 C وريني البيان ديالها كامل",
+      "want": "Show AIT LAHCEN Soukaina's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-007",
+      "as": "monitor",
+      "lang": "ary",
+      "q": "عندي 1AC C بغيت نقط الفرض 2 ديال الفيزياء",
+      "want": "Show physics test 2 results for the monitor's 1AC C.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-008",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "نتيجة الامتحان الجهوي التجريبي ديال 3AC A طالب بطالب",
+      "want": "Show individual results for the 3AC A regional mock exam.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-009",
+      "as": "admin",
+      "lang": "ary",
+      "q": "كل تنقيط مسجل فالسنة اللي مختارة دابا بغيتو مجموع",
+      "want": "Show all marks for the selected school year.",
+      "tools": [
+        "grades_get_all"
+      ]
+    },
+    {
+      "id": "gr-010",
+      "as": "principal",
+      "lang": "ary",
+      "q": "شحال نسبة اللي وصلو للمعدل فكل قسم",
+      "want": "Give pass rates by class.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-011",
+      "as": "teacher",
+      "lang": "ary",
+      "q": "فـCE2 C ديالي شحال جابو فالقراءة",
+      "want": "Show reading marks for the teacher's CE2 C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-012",
+      "as": "admin",
+      "lang": "ary",
+      "q": "شنو هو المعدل العام ديال المؤسسة حاليا",
+      "want": "Give the school average grade.",
+      "tools": [
+        "academic-dashboard_get_kpis"
+      ]
+    },
+    {
+      "id": "gr-013",
+      "as": "supervisor",
+      "lang": "ary",
+      "q": "الشاوي مهدي من CM2 C تابع ليا جمع ليا النقط ديالو",
+      "want": "Show all recorded marks for CHAOUI Mehdi.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-014",
+      "as": "monitor",
+      "lang": "ary",
+      "q": "محتاج بيان نقط الزهراوي كنزة من القسم ديالي CP C",
+      "want": "Show ZAHRAOUI Kenza's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-015",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "نقط 2AC A كاملة بلا ما نحدد المادة",
+      "want": "Show all subject marks for 2AC A.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-016",
+      "as": "teacher",
+      "lang": "ary",
+      "q": "شنو خرج فالتنقيط ديال الإملاء 3 اللي درت ل CE1 C",
+      "want": "Show results for the teacher's third CE1 C dictation test.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-017",
+      "as": "principal",
+      "lang": "ary",
+      "q": "التنقيط ديال الرياضيات فالمؤسسة كاملة بغيت نقلب فيه",
+      "want": "Show mathematics marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-018",
+      "as": "admin",
+      "lang": "ary",
+      "q": "وريني شنو عطى السوسي من نقط فالاختبارات ديالو",
+      "want": "Show marks awarded in teacher SOUSSI's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-019",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "نقط فرض الاجتماعيات رقم 1 فـ2AC B واش باينين",
+      "want": "Show results for social studies test 1 in 2AC B.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-020",
+      "as": "supervisor",
+      "lang": "ary",
+      "q": "نتائج امتحان الدورة الأولى ديال CM2 C اللي عندي",
+      "want": "Show first-term exam results for the supervisor's CM2 C.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-021",
+      "as": "teacher",
+      "lang": "ary",
+      "q": "درت امتحان فالتعبير ل 6AP C وريني النتائج اللي تسجلو",
+      "want": "Show recorded results for the teacher's 6AP C expression exam.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-022",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "بغيت نعرف المتوسط ديال كل مادة بلا سميات التلاميذ",
+      "want": "Give subject averages without individual marks.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-023",
+      "as": "admin",
+      "lang": "ary",
+      "q": "نقط الفلسفة من جميع أقسام الثانوي اللي عندنا",
+      "want": "Show philosophy marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-024",
+      "as": "principal",
+      "lang": "ary",
+      "q": "عطيني مجموع النقط اللي مسجلين لهاد السنة المختارة",
+      "want": "Show all marks for the selected school year.",
+      "tools": [
+        "grades_get_all"
+      ]
+    },
+    {
+      "id": "gr-025",
+      "as": "monitor",
+      "lang": "ary",
+      "q": "القسم اللي عندي 5AP C شوف ليا التنقيط ديال العربية",
+      "want": "Show Arabic marks for the monitor's 5AP C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-026",
+      "as": "teacher",
+      "lang": "ary",
+      "q": "جمع ليا النقط اللي حطيت فالفروض ديالي وحتى فالامتحانات",
+      "want": "Show marks awarded in the signed-in teacher's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-027",
+      "as": "supervisor",
+      "lang": "ary",
+      "q": "البقالي أميمة CE1 C من الأقسام ديالي شنو عندها من نقط",
+      "want": "Show all recorded marks for BAKKALI Oumaima.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-028",
+      "as": "admin",
+      "lang": "ary",
+      "q": "بغيت الحصيلة الدراسية ديال الهبطي حمزة 1AC C",
+      "want": "Show HABTI Hamza's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-029",
+      "as": "principal",
+      "lang": "ary",
+      "q": "واش النقط متكدسين تحت 10 ولا فوقها عطيني التوزيع",
+      "want": "Give the grade distribution.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-030",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "امتحان الفرنسية ديال نهاية السنة فـCE2 C شنو نتائجو",
+      "want": "Show CE2 C end-of-year French exam results.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-031",
+      "as": "teacher",
+      "lang": "ary",
+      "q": "5AP C اللي كنقريهم بغيت النقط ديالهم مادة بمادة",
+      "want": "Show all subject marks for the teacher's 5AP C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-032",
+      "as": "admin",
+      "lang": "ary",
+      "q": "المعدل ديال المدرسة ككل شحال واصل",
+      "want": "Give the school average grade.",
+      "tools": [
+        "academic-dashboard_get_kpis"
+      ]
+    },
+    {
+      "id": "gr-033",
+      "as": "monitor",
+      "lang": "ary",
+      "q": "كيف داير تنقيط فرض الحساب الأول فـCP C ديالي",
+      "want": "Show mathematics test 1 results for the monitor's CP C.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-034",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "جميع نقط التربية الإسلامية فالمدرسة عافاك",
+      "want": "Show Islamic education marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-035",
+      "as": "principal",
+      "lang": "ary",
+      "q": "نقط الأستاذة الناصري فالفروض والامتحانات بغيتها كاملة",
+      "want": "Show marks awarded in teacher NACIRI's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-036",
+      "as": "teacher",
+      "lang": "ary",
+      "q": "من الفروض ديالي اللي فيهم نقط مسجلين غير لشي تلاميذ شنو باقي ناقص",
+      "want": "List the teacher's tests with incomplete recorded grading.",
+      "tools": [
+        "teacher-profile_get_pending_grading"
+      ]
+    },
+    {
+      "id": "gr-037",
+      "as": "admin",
+      "lang": "ary",
+      "q": "شنو جاب الفيلالي إلياس 3AC B فالتقييمات ديالو",
+      "want": "Show all recorded marks for FILALI Ilyas.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-038",
+      "as": "supervisor",
+      "lang": "ary",
+      "q": "بغيت نشوف الحصيلة بالمادة ديال الورزازي دعاء CM1 C كتبع ليا",
+      "want": "Show OUARZAZI Douaa's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-039",
+      "as": "principal",
+      "lang": "ary",
+      "q": "وريني كيفاش تبدل متوسط النقط شهر بشهر",
+      "want": "Give monthly grade averages.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-040",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "نقط هاد السنة على صعيد المدرسة كلها بلا فلتر",
+      "want": "Show all marks for the selected school year.",
+      "tools": [
+        "grades_get_all"
+      ]
+    },
+    {
+      "id": "gr-041",
+      "as": "teacher",
+      "lang": "ary",
+      "q": "عندي العمراني غيثة فـ1AC C بغيت البولطان ديالها بالتفصيل",
+      "want": "Show OMRANI Ghita's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-042",
+      "as": "monitor",
+      "lang": "ary",
+      "q": "سجل النقط ديال 6AP C التابع ليا فالنشاط العلمي",
+      "want": "Show science marks for the monitor's 6AP C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-043",
+      "as": "admin",
+      "lang": "ary",
+      "q": "امتحان المعلوميات ديال 2AC C كيفاش تنقطو فيه",
+      "want": "Show results for the 2AC C computing exam.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-044",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "الفرض الرابع ديال الرياضيات فـ3AC B شحال جاب كل تلميذ",
+      "want": "Show mathematics test 4 results for 3AC B.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-045",
+      "as": "principal",
+      "lang": "ary",
+      "q": "المتوسط ديال المؤسسة من النقط اللي مدخلين دابا",
+      "want": "Give the school average from recorded grades.",
+      "tools": [
+        "academic-dashboard_get_kpis"
+      ]
+    },
+    {
+      "id": "gr-046",
+      "as": "supervisor",
+      "lang": "ary",
+      "q": "عطيني تنقيط الدمناتي مروان CP C راه من الأقسام ديالي",
+      "want": "Show all recorded marks for DEMNATI Marouane.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-047",
+      "as": "admin",
+      "lang": "ary",
+      "q": "شنو النقط اللي تسجلو عند الأستاذ الجباري",
+      "want": "Show marks awarded in teacher JABARI's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-048",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "بغيت نشوف بيان النقط ديال الودغيري نسرين CE1 C",
+      "want": "Show OUDGHIRI Nisrine's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-049",
+      "as": "principal",
+      "lang": "ary",
+      "q": "شكون من الأقسام معدلو طالع عطيني المتوسطات ديالهم",
+      "want": "Give averages by class.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-050",
+      "as": "admin",
+      "lang": "ary",
+      "q": "خرج تنقيط الفيزياء ديال المؤسسة بجميع الأقسام",
+      "want": "Show physics marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-051",
+      "as": "monitor",
+      "lang": "ary",
+      "q": "2AC C اللي كنسير بغيت نقطهم فكل المواد",
+      "want": "Show all subject marks for the monitor's 2AC C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-052",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "نتائج الامتحان الموحد المحلي ل 6AP C بالتنقيط",
+      "want": "Show marks for the 6AP C local standardized exam.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-053",
+      "as": "supervisor",
+      "lang": "ary",
+      "q": "فرض القراءة 2 فـCE1 C ديالي وريني شنو تسجل فيه",
+      "want": "Show reading test 2 results for the supervisor's CE1 C.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-054",
+      "as": "principal",
+      "lang": "ary",
+      "q": "جمع تنقيط جميع التلاميذ لهاد السنة اللي خدامين بها",
+      "want": "Show all marks for the selected school year.",
+      "tools": [
+        "grades_get_all"
+      ]
+    },
+    {
+      "id": "gr-055",
+      "as": "admin",
+      "lang": "ary",
+      "q": "شحال المعدل المدرسي الإجمالي دابا",
+      "want": "Give the school average grade.",
+      "tools": [
+        "academic-dashboard_get_kpis"
+      ]
+    },
+    {
+      "id": "gr-056",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "التوزيع ديال النقط ونسبة النجاح بغيتهم فملخص",
+      "want": "Give grade distribution and pass rate.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-057",
+      "as": "monitor",
+      "lang": "ary",
+      "q": "بوطيب ملاك من 5AP C عندي بغيت جميع النقط ديالها",
+      "want": "Show all recorded marks for BOUTAYEB Malak.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-058",
+      "as": "supervisor",
+      "lang": "ary",
+      "q": "كشف ديال المودن أشرف 6AP C اللي كنشرف عليه",
+      "want": "Show MOUDEN Achraf's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-059",
+      "as": "admin",
+      "lang": "ary",
+      "q": "التنقيط اللي دار بوزيان ففروضو وامتحاناتو كامل",
+      "want": "Show marks awarded in teacher BOUZIANE's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-060",
+      "as": "principal",
+      "lang": "ary",
+      "q": "نقط علوم الحياة والأرض فالمستويات كلها",
+      "want": "Show life and earth science marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-061",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "بغيت نقط CE1 C فالفرنسية بوحدها",
+      "want": "Show French marks for CE1 C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-062",
+      "as": "admin",
+      "lang": "ary",
+      "q": "امتحان العربية الاستدراكي فـ3AC C شنو تسجل من نتائج",
+      "want": "Show results for the 3AC C Arabic resit exam.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-063",
+      "as": "monitor",
+      "lang": "ary",
+      "q": "شحال جابو عندي فـCM1 C ففرض النشاط العلمي 1",
+      "want": "Show science test 1 results for the monitor's CM1 C.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-064",
+      "as": "principal",
+      "lang": "ary",
+      "q": "النقط على حساب الشهور وعلى حساب الأقسام عطيني المتوسط",
+      "want": "Give monthly and class averages.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-065",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "بلا تخصيص قسم بغيـت كل النقط المسجلة ديال العام المختار",
+      "want": "Show all marks for the selected school year.",
+      "tools": [
+        "grades_get_all"
+      ]
+    },
+    {
+      "id": "gr-066",
+      "as": "supervisor",
+      "lang": "ary",
+      "q": "سجل نقط غزواني يسرى 1AC C من المجموعة اللي تحت إشرافي",
+      "want": "Show all recorded marks for GHAZOUANI Yousra.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-067",
+      "as": "admin",
+      "lang": "ary",
+      "q": "الراجي وليد CE2 C نحتاج بيان النقط ديالو",
+      "want": "Show RAJI Walid's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-068",
+      "as": "principal",
+      "lang": "ary",
+      "q": "كيف داير المستوى العام للمؤسسة من ناحية معدل النقط",
+      "want": "Give the school average grade.",
+      "tools": [
+        "academic-dashboard_get_kpis"
+      ]
+    },
+    {
+      "id": "gr-069",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "عندي مراجعة لنقط الأستاذة الحراق خرجهم ليا",
+      "want": "Show marks awarded in teacher HARRAK's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-070",
+      "as": "monitor",
+      "lang": "ary",
+      "q": "3AC C اللي تابعين ليا بغيت نقاطهم فالرياضيات",
+      "want": "Show mathematics marks for the monitor's 3AC C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-071",
+      "as": "admin",
+      "lang": "ary",
+      "q": "تنقيط الأمازيغية فكل الأقسام اللي كتقراها",
+      "want": "Show Amazigh language marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-072",
+      "as": "supervisor",
+      "lang": "ary",
+      "q": "فـ2AC C ديالي شنو نتائج الفرض الثالث ديال الإنجليزية",
+      "want": "Show English test 3 results for the supervisor's 2AC C.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-073",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "نتيجة الامتحان التجريبي 2 ديال 6AP C كاملة",
+      "want": "Show results for the second 6AP C mock exam.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-074",
+      "as": "principal",
+      "lang": "ary",
+      "q": "بغيت النسبة ديال النجاح ومعدل كل مادة مجموعين",
+      "want": "Give the pass rate and subject averages.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-075",
+      "as": "admin",
+      "lang": "ary",
+      "q": "الحسني سجى فـCP C كلشي اللي عندها من نقط ورينيه",
+      "want": "Show all recorded marks for HASSANI Saja.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-076",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "بيان مفصل ديال نقط الزموري نائل CM2 C",
+      "want": "Show ZEMMOURI Nael's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-077",
+      "as": "supervisor",
+      "lang": "ary",
+      "q": "تنقيط CE2 C ديالي فالتربية الإسلامية كيف داير",
+      "want": "Show Islamic education marks for the supervisor's CE2 C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-078",
+      "as": "principal",
+      "lang": "ary",
+      "q": "بغيت النقط الخام ديال المؤسسة لهاد العام المختار كاملين",
+      "want": "Show all marks for the selected school year.",
+      "tools": [
+        "grades_get_all"
+      ]
+    },
+    {
+      "id": "gr-079",
+      "as": "admin",
+      "lang": "ary",
+      "q": "المعدل العام اللي كيبان فمؤشرات المدرسة شحال هو",
+      "want": "Give the school average grade.",
+      "tools": [
+        "academic-dashboard_get_kpis"
+      ]
+    },
+    {
+      "id": "gr-080",
+      "as": "registrar",
+      "lang": "ary",
+      "q": "فرض الهندسة رقم 2 فـCM2 C بغيت نتيجتو عند كل واحد",
+      "want": "Show geometry test 2 results for CM2 C.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-081",
+      "as": "teacher",
+      "lang": "ary-latn",
+      "q": "SABRI Hajar kat9ra 3ndi f 6AP C bghit tan9it dyalha kaml",
+      "want": "Show all recorded marks for SABRI Hajar.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-082",
+      "as": "admin",
+      "lang": "ary-latn",
+      "q": "nno9at dyal tarbiya badaniya f lmadrassa kolha",
+      "want": "Show physical education marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-083",
+      "as": "principal",
+      "lang": "ary-latn",
+      "q": "3tini ch7al men wa7ed jab lmo3adal b nnisba lmi2awiya",
+      "want": "Give the overall pass rate.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-084",
+      "as": "registrar",
+      "lang": "ary-latn",
+      "q": "BOUKILI Ismail CM1 C bghit lbayane dyal nno9at",
+      "want": "Show BOUKILI Ismail's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-085",
+      "as": "supervisor",
+      "lang": "ary-latn",
+      "q": "1AC C li m3aya chno jabo f lfard 2 dyal l3arbiya",
+      "want": "Show Arabic test 2 results for the supervisor's 1AC C.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-086",
+      "as": "teacher",
+      "lang": "ary-latn",
+      "q": "achmen forod dyali fihom nno9at dyal chi tlamid w lakhrin mazal",
+      "want": "List the teacher's tests with incomplete recorded grading.",
+      "tools": [
+        "teacher-profile_get_pending_grading"
+      ]
+    },
+    {
+      "id": "gr-087",
+      "as": "admin",
+      "lang": "ary-latn",
+      "q": "chno 3ta RIFI men no9at f les evaluations dyalo",
+      "want": "Show marks awarded in teacher RIFI's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-088",
+      "as": "monitor",
+      "lang": "ary-latn",
+      "q": "CM2 C ta7t l2ichraf dyali bghit nno9at dyalhom f kolchi",
+      "want": "Show all subject marks for the monitor's CM2 C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-089",
+      "as": "principal",
+      "lang": "ary-latn",
+      "q": "3tini lmo3adal l3am li kayn f indicateurs dyal lmadrassa",
+      "want": "Give the school average grade.",
+      "tools": [
+        "academic-dashboard_get_kpis"
+      ]
+    },
+    {
+      "id": "gr-090",
+      "as": "registrar",
+      "lang": "ary-latn",
+      "q": "natijat limti7an lkitabi dyal francais 2AC B b nno9at",
+      "want": "Show results for the 2AC B written French exam.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-091",
+      "as": "admin",
+      "lang": "ary-latn",
+      "q": "ga3 nno9at li m9ydin f l3am lmokhtar bla mat7yed 7ta 9ism",
+      "want": "Show all marks for the selected school year.",
+      "tools": [
+        "grades_get_all"
+      ]
+    },
+    {
+      "id": "gr-092",
+      "as": "supervisor",
+      "lang": "ary-latn",
+      "q": "CHERKAOUI Marwa CP C katb3 lia ch7al jabat f kol ta9yim",
+      "want": "Show all recorded marks for CHERKAOUI Marwa.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-093",
+      "as": "principal",
+      "lang": "ary-latn",
+      "q": "bghit nchof lfar9 bin l9sam f lmoyennes",
+      "want": "Give averages by class.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-094",
+      "as": "registrar",
+      "lang": "ary-latn",
+      "q": "BOUTALEB Ziad CE1 C 3tini relevé dyalou b kol mawad",
+      "want": "Show BOUTALEB Ziad's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-095",
+      "as": "admin",
+      "lang": "ary-latn",
+      "q": "tan9it chimie f jami3 lmostawayat li 3ndna",
+      "want": "Show chemistry marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-096",
+      "as": "monitor",
+      "lang": "ary-latn",
+      "q": "6AP C dyali ch7al jabo f limti7an lmo7ad dyal l3arbiya",
+      "want": "Show Arabic standardized exam results for the monitor's 6AP C.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-097",
+      "as": "registrar",
+      "lang": "ary-latn",
+      "q": "bghit nno9at li dar MAZOUZI f forod w imti7anat dyalo",
+      "want": "Show marks awarded in teacher MAZOUZI's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-098",
+      "as": "principal",
+      "lang": "ary-latn",
+      "q": "kifach m9ssma nno9at men l9lil l ktir",
+      "want": "Give the grade distribution.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-099",
+      "as": "supervisor",
+      "lang": "ary-latn",
+      "q": "CE1 C li kantb3 bghit nno9at dyal l7isab",
+      "want": "Show mathematics marks for the supervisor's CE1 C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-100",
+      "as": "admin",
+      "lang": "ary-latn",
+      "q": "lfard 1 dyal lhandassa 5AP C chno natija dyal kol tilmid",
+      "want": "Show geometry test 1 results for 5AP C.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-101",
+      "as": "registrar",
+      "lang": "ary-latn",
+      "q": "EL KHALFI Rania 3AC C chkoun ywerini nno9at dyalha kamlin",
+      "want": "Show all recorded marks for EL KHALFI Rania.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-102",
+      "as": "principal",
+      "lang": "ary-latn",
+      "q": "ch7al lmo3adal dyal lmo2assasa 7sab nno9at lm7fodin",
+      "want": "Give the school average from recorded grades.",
+      "tools": [
+        "academic-dashboard_get_kpis"
+      ]
+    },
+    {
+      "id": "gr-103",
+      "as": "admin",
+      "lang": "ary-latn",
+      "q": "kolchi li t9yyed men nno9at had ssana lm7ddda bghito",
+      "want": "Show all marks for the selected school year.",
+      "tools": [
+        "grades_get_all"
+      ]
+    },
+    {
+      "id": "gr-104",
+      "as": "monitor",
+      "lang": "ary-latn",
+      "q": "bghit bulletin dyal ZNIBER Anouar f 2AC C li 3ndi",
+      "want": "Show ZNIBER Anouar's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-105",
+      "as": "registrar",
+      "lang": "ary-latn",
+      "q": "nno9at dyal lfard 4 informatique f 1AC B",
+      "want": "Show computing test 4 results for 1AC B.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-106",
+      "as": "supervisor",
+      "lang": "ary-latn",
+      "q": "natija dyal limti7an chafawi francais f CE2 C li m3aya",
+      "want": "Show French oral exam results for the supervisor's CE2 C.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-107",
+      "as": "principal",
+      "lang": "ary-latn",
+      "q": "lmo3adal dyal kol chher wach tla3 wla hbet",
+      "want": "Give monthly grade averages.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-108",
+      "as": "admin",
+      "lang": "ary-latn",
+      "q": "nno9at li 7ettathom OUHADDOU f les controles w examens",
+      "want": "Show marks awarded in teacher OUHADDOU's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-109",
+      "as": "registrar",
+      "lang": "ary-latn",
+      "q": "nno9at dyal tarbiya tachkiliya f lmadrassa kamla",
+      "want": "Show visual arts marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-110",
+      "as": "monitor",
+      "lang": "ary-latn",
+      "q": "CP C li kantsnnt lihom 3tini tan9it l9ira2a",
+      "want": "Show reading marks for the monitor's CP C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-111",
+      "as": "admin",
+      "lang": "ary-latn",
+      "q": "AGOURAM Salma CM1 C chno t9yyed liha men no9at",
+      "want": "Show all recorded marks for AGOURAM Salma.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-112",
+      "as": "principal",
+      "lang": "ary-latn",
+      "q": "bghit 7asila dyal pass rate m3a lmoyennes par matiere",
+      "want": "Give the pass rate and subject averages.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-113",
+      "as": "registrar",
+      "lang": "ary-latn",
+      "q": "bnissba l BOUKHRISS Sami 6AP C bghit lkachf mfssel",
+      "want": "Show BOUKHRISS Sami's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-114",
+      "as": "supervisor",
+      "lang": "ary-latn",
+      "q": "lfard 3 dyal nchat l3ilmi f 5AP C ta7t mas2oliyti nno9at",
+      "want": "Show science test 3 results for the supervisor's 5AP C.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-115",
+      "as": "admin",
+      "lang": "ary-latn",
+      "q": "wrini kol tan9it f l3am li mkhtar f system",
+      "want": "Show all marks for the selected school year.",
+      "tools": [
+        "grades_get_all"
+      ]
+    },
+    {
+      "id": "gr-116",
+      "as": "principal",
+      "lang": "ary-latn",
+      "q": "ch7al kay3ti l indicateur dyal moyenne scolaire",
+      "want": "Give the school average grade.",
+      "tools": [
+        "academic-dashboard_get_kpis"
+      ]
+    },
+    {
+      "id": "gr-117",
+      "as": "registrar",
+      "lang": "ary-latn",
+      "q": "limti7an tajribi dyal physique 3AC B bghit les resultats",
+      "want": "Show results for the 3AC B physics mock exam.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-118",
+      "as": "admin",
+      "lang": "ary-latn",
+      "q": "l2ostada HAMMOUCHI chno 3tat f tan9it dyalha",
+      "want": "Show marks awarded in teacher HAMMOUCHI's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-119",
+      "as": "monitor",
+      "lang": "ary-latn",
+      "q": "nno9at dyal 1AC C li 3ndi ghir f llogha l ingliziya",
+      "want": "Show English marks for the monitor's 1AC C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-120",
+      "as": "principal",
+      "lang": "ary-latn",
+      "q": "nno9at dyal musique f ga3 l9sam li kay9rawha",
+      "want": "Show music marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-121",
+      "as": "teacher",
+      "lang": "ary-fr",
+      "q": "mon quiz vocabulaire 2 f CE2 C bghit les scores li tsjlo",
+      "want": "Show recorded results for the teacher's second CE2 C vocabulary quiz.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-122",
+      "as": "registrar",
+      "lang": "ary-fr",
+      "q": "bghit le relevé de MOUSTAKIM Hind en 5AP C",
+      "want": "Show MOUSTAKIM Hind's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-123",
+      "as": "admin",
+      "lang": "ary-fr",
+      "q": "les notes de techno f ga3 le college 3afak",
+      "want": "Show technology marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-124",
+      "as": "principal",
+      "lang": "ary-fr",
+      "q": "taux de reussite dyal chaque niveau b les moyennes",
+      "want": "Give pass rates and averages by class level.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-125",
+      "as": "supervisor",
+      "lang": "ary-fr",
+      "q": "CM1 C li sous ma responsabilite les notes d'expression ecrite",
+      "want": "Show written expression marks for the supervisor's CM1 C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-126",
+      "as": "admin",
+      "lang": "ary-fr",
+      "q": "BERRAHOU les notes li attribua f controles et examens bghithom",
+      "want": "Show marks awarded in teacher BERRAHOU's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-127",
+      "as": "monitor",
+      "lang": "ary-fr",
+      "q": "le recap des notes de OUAHBI Nizar CP C li kantbe3",
+      "want": "Show all recorded marks for OUAHBI Nizar.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-128",
+      "as": "registrar",
+      "lang": "ary-fr",
+      "q": "examen de fin de cycle 6AP C chno les resultats deja saisis",
+      "want": "Show recorded results for the 6AP C end-of-cycle exam.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-129",
+      "as": "principal",
+      "lang": "ary-fr",
+      "q": "la moyenne globale de l'ecole ch7al katban daba",
+      "want": "Give the school average grade.",
+      "tools": [
+        "academic-dashboard_get_kpis"
+      ]
+    },
+    {
+      "id": "gr-130",
+      "as": "admin",
+      "lang": "ary-fr",
+      "q": "toutes les notes enregistrees f l'annee active bghit nchofhom",
+      "want": "Show all marks for the selected school year.",
+      "tools": [
+        "grades_get_all"
+      ]
+    },
+    {
+      "id": "gr-131",
+      "as": "supervisor",
+      "lang": "ary-fr",
+      "q": "le bulletin dyal LAMRINI Safae 2AC C li kanchref 3liha",
+      "want": "Show LAMRINI Safae's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-132",
+      "as": "registrar",
+      "lang": "ary-fr",
+      "q": "les moyennes mensuelles wach kayn chi progression f nno9at",
+      "want": "Give monthly grade averages.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-133",
+      "as": "admin",
+      "lang": "ary-fr",
+      "q": "l'ensemble des notes de SVT machi ghir niveau wa7ed",
+      "want": "Show life and earth science marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-134",
+      "as": "monitor",
+      "lang": "ary-fr",
+      "q": "les resultats du controle 1 de conjugaison CE1 C dyali",
+      "want": "Show conjugation test 1 results for the monitor's CE1 C.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-135",
+      "as": "principal",
+      "lang": "ary-fr",
+      "q": "bghit la distribution des notes par tranche",
+      "want": "Give the grade distribution by score band.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-136",
+      "as": "registrar",
+      "lang": "ary-fr",
+      "q": "BENMOUSSA Aymen 1AC C ach kayn f son historique de notes",
+      "want": "Show all recorded marks for BENMOUSSA Aymen.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-137",
+      "as": "admin",
+      "lang": "ary-fr",
+      "q": "les notes deja mises par HILALI f ses evaluations",
+      "want": "Show marks awarded in teacher HILALI's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-138",
+      "as": "supervisor",
+      "lang": "ary-fr",
+      "q": "examen blanc numero 1 de 3AC C que je gere nno9at dyalo",
+      "want": "Show results for the supervisor's first 3AC C mock exam.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-139",
+      "as": "principal",
+      "lang": "ary-fr",
+      "q": "la moyenne ecole li kat7sboha f les indicateurs bghitha",
+      "want": "Give the school average grade.",
+      "tools": [
+        "academic-dashboard_get_kpis"
+      ]
+    },
+    {
+      "id": "gr-140",
+      "as": "registrar",
+      "lang": "ary-fr",
+      "q": "notes de 5AP C f toutes les matieres ila kan momkin",
+      "want": "Show all subject marks for 5AP C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-141",
+      "as": "teacher",
+      "lang": "fr",
+      "q": "mon examen oral d'anglais 1AC C les notes finales stp",
+      "want": "Show recorded results for the teacher's 1AC C English oral exam.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-142",
+      "as": "admin",
+      "lang": "fr",
+      "q": "les notes de HAMDAOUI Yasmine CE2 C depuis le debut de l'annee",
+      "want": "Show all recorded marks for HAMDAOUI Yasmine.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-143",
+      "as": "principal",
+      "lang": "fr",
+      "q": "je veux les moyennes des classes sans le detail des eleves",
+      "want": "Give class averages without individual marks.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-144",
+      "as": "registrar",
+      "lang": "fr",
+      "q": "le bulletin complet de BELHAJ Othmane en CM2 C",
+      "want": "Show BELHAJ Othmane's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-145",
+      "as": "supervisor",
+      "lang": "fr",
+      "q": "notes de calcul pour mon groupe CP C",
+      "want": "Show calculation marks for the supervisor's CP C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-146",
+      "as": "admin",
+      "lang": "fr",
+      "q": "ce qu'a attribue SLAOUI dans ses epreuves et controles",
+      "want": "Show marks awarded in teacher SLAOUI's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-147",
+      "as": "registrar",
+      "lang": "fr",
+      "q": "resultats du ds 2 de physique 2AC C eleve par eleve",
+      "want": "Show physics test 2 results for 2AC C.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-148",
+      "as": "principal",
+      "lang": "fr",
+      "q": "quel est le score moyen de l'etablissement dans les indicateurs",
+      "want": "Give the school average grade.",
+      "tools": [
+        "academic-dashboard_get_kpis"
+      ]
+    },
+    {
+      "id": "gr-149",
+      "as": "admin",
+      "lang": "fr",
+      "q": "toutes les notes de sciences sans limiter a une classe",
+      "want": "Show science marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-150",
+      "as": "registrar",
+      "lang": "fr",
+      "q": "la totalite des notes de l'annee choisie svp",
+      "want": "Show all marks for the selected school year.",
+      "tools": [
+        "grades_get_all"
+      ]
+    },
+    {
+      "id": "gr-151",
+      "as": "monitor",
+      "lang": "fr",
+      "q": "j'ai besoin du releve de TAOUFIK Maryam dans mon CE1 C",
+      "want": "Show TAOUFIK Maryam's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-152",
+      "as": "principal",
+      "lang": "fr",
+      "q": "le pourcentage de reussite global avec la repartition des scores",
+      "want": "Give the overall pass rate and grade distribution.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-153",
+      "as": "supervisor",
+      "lang": "fr",
+      "q": "les notes deja enregistrees pour mes 6AP C toutes matieres",
+      "want": "Show individual subject marks for the supervisor's 6AP C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-154",
+      "as": "admin",
+      "lang": "fr",
+      "q": "retrouve les notes de SEBTI Reda en 3AC C",
+      "want": "Show all recorded marks for SEBTI Reda.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-155",
+      "as": "registrar",
+      "lang": "fr",
+      "q": "les resultats chiffres de l'examen de rattrapage anglais 1AC B",
+      "want": "Show results for the 1AC B English resit exam.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-156",
+      "as": "principal",
+      "lang": "fr",
+      "q": "moyenne de chaque matiere sur les notes disponibles",
+      "want": "Give subject averages from recorded marks.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-157",
+      "as": "admin",
+      "lang": "fr",
+      "q": "notes donnees par MANSOURI sur tous ses tests et examens",
+      "want": "Show marks awarded in teacher MANSOURI's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-158",
+      "as": "monitor",
+      "lang": "fr",
+      "q": "mon CE2 C a eu combien au controle de lecture numero 4",
+      "want": "Show reading test 4 results for the monitor's CE2 C.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-159",
+      "as": "registrar",
+      "lang": "fr",
+      "q": "les notes d'histoire geo au niveau de toute l'ecole",
+      "want": "Show history and geography marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-160",
+      "as": "principal",
+      "lang": "fr",
+      "q": "la valeur actuelle de la moyenne scolaire generale",
+      "want": "Give the school average grade.",
+      "tools": [
+        "academic-dashboard_get_kpis"
+      ]
+    },
+    {
+      "id": "gr-161",
+      "as": "admin",
+      "lang": "fr",
+      "q": "aucun filtre je veux toutes les notes sur l'annee selectionnee",
+      "want": "Show all marks for the selected school year.",
+      "tools": [
+        "grades_get_all"
+      ]
+    },
+    {
+      "id": "gr-162",
+      "as": "supervisor",
+      "lang": "fr",
+      "q": "BOUAZZA Chaimae est dans mon CM1 C je cherche ses notes",
+      "want": "Show all recorded marks for BOUAZZA Chaimae.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-163",
+      "as": "registrar",
+      "lang": "fr",
+      "q": "le bilan par matiere et par epreuve de HADDADI Bilal 5AP C",
+      "want": "Show HADDADI Bilal's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-164",
+      "as": "monitor",
+      "lang": "fr",
+      "q": "les notes en arabe du 2AC C dont je m'occupe",
+      "want": "Show Arabic marks for the monitor's 2AC C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-165",
+      "as": "admin",
+      "lang": "fr",
+      "q": "controle 3 de grammaire CM2 C montre les scores enregistres",
+      "want": "Show grammar test 3 results for CM2 C.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-166",
+      "as": "principal",
+      "lang": "fr",
+      "q": "evolution des moyennes de septembre a maintenant mois par mois",
+      "want": "Give monthly grade averages for the selected school year.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-167",
+      "as": "registrar",
+      "lang": "fr",
+      "q": "les notes saisies pour l'examen commun de 3AC C",
+      "want": "Show recorded results for the 3AC C common exam.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-168",
+      "as": "admin",
+      "lang": "fr",
+      "q": "je cherche la notation de OUFKIR dans ses evaluations",
+      "want": "Show marks awarded in teacher OUFKIR's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-169",
+      "as": "principal",
+      "lang": "fr",
+      "q": "les scores d'espagnol pour l'ensemble de l'etablissement",
+      "want": "Show Spanish marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-170",
+      "as": "registrar",
+      "lang": "fr",
+      "q": "montre le bulletin de KERROUM Amira en CP C",
+      "want": "Show KERROUM Amira's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-171",
+      "as": "teacher",
+      "lang": "ar",
+      "q": "أريد مراجعة الدرجات التي منحتها في اختباراتي وامتحاناتي",
+      "want": "Show marks awarded in the signed-in teacher's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-172",
+      "as": "registrar",
+      "lang": "ar",
+      "q": "درجات العلمي مصعب في قسم 2AC C كاملة من فضلك",
+      "want": "Show all recorded marks for ALAMI Mossaab.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-173",
+      "as": "principal",
+      "lang": "ar",
+      "q": "ما نسبة النجاح ومتوسط الدرجات لكل مادة",
+      "want": "Give the pass rate and subject averages.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-174",
+      "as": "admin",
+      "lang": "ar",
+      "q": "أحتاج كشف نتائج برادة كوثر من CE1 C مفصلا",
+      "want": "Show BERRADA Kaoutar's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-175",
+      "as": "supervisor",
+      "lang": "ar",
+      "q": "اعرض درجات اللغة الفرنسية لقسم 5AP C الذي أشرف عليه",
+      "want": "Show French marks for the supervisor's 5AP C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-176",
+      "as": "registrar",
+      "lang": "ar",
+      "q": "نتائج الاختبار القصير الثاني في الجغرافيا لقسم 1AC C",
+      "want": "Show geography quiz 2 results for 1AC C.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-177",
+      "as": "admin",
+      "lang": "ar",
+      "q": "جميع درجات مادة التربية المدنية في المؤسسة",
+      "want": "Show civic education marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-178",
+      "as": "principal",
+      "lang": "ar",
+      "q": "كم يبلغ متوسط التحصيل العام للمؤسسة",
+      "want": "Give the school average grade.",
+      "tools": [
+        "academic-dashboard_get_kpis"
+      ]
+    },
+    {
+      "id": "gr-179",
+      "as": "monitor",
+      "lang": "ar",
+      "q": "نتائج امتحان نهاية الفصل لقسم CE2 C الذي أتابعه",
+      "want": "Show end-of-term exam results for the monitor's CE2 C.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-180",
+      "as": "registrar",
+      "lang": "ar",
+      "q": "اعرض كل الدرجات المحفوظة للسنة المحددة حاليا",
+      "want": "Show all marks for the selected school year.",
+      "tools": [
+        "grades_get_all"
+      ]
+    },
+    {
+      "id": "gr-181",
+      "as": "admin",
+      "lang": "ar",
+      "q": "الدرجات المسجلة في اختبارات الأستاذة بوعبيد وامتحاناتها",
+      "want": "Show marks awarded in teacher BOUABID's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-182",
+      "as": "principal",
+      "lang": "ar",
+      "q": "أريد توزيع الدرجات على الفئات العددية",
+      "want": "Give the grade distribution by score band.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-183",
+      "as": "supervisor",
+      "lang": "ar",
+      "q": "أحتاج جميع درجات الجوهري مروة في CM2 C الواقع تحت إشرافي",
+      "want": "Show all recorded marks for JAOUHARI Marwa.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-184",
+      "as": "monitor",
+      "lang": "ar",
+      "q": "بيان نتائج أزروال آدم من 6AP C الذي أتولى متابعته",
+      "want": "Show AZEROUAL Adam's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-185",
+      "as": "registrar",
+      "lang": "ar",
+      "q": "درجات جميع مواد قسم 3AC B كما هي مسجلة",
+      "want": "Show all subject marks for 3AC B.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-186",
+      "as": "teacher",
+      "lang": "en",
+      "q": "can i see every recorded score for KADDOURI Nada in my CM1 C",
+      "want": "Show all recorded marks for KADDOURI Nada.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    },
+    {
+      "id": "gr-187",
+      "as": "principal",
+      "lang": "en",
+      "q": "how did the school average move month to month",
+      "want": "Give monthly grade averages.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-188",
+      "as": "admin",
+      "lang": "en",
+      "q": "pull the marks awarded by ZAOUI across his assessments",
+      "want": "Show marks awarded in teacher ZAOUI's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-189",
+      "as": "registrar",
+      "lang": "en",
+      "q": "full report for BOUJEMAA Ilyana 6AP C pls",
+      "want": "Show BOUJEMAA Ilyana's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-190",
+      "as": "supervisor",
+      "lang": "en",
+      "q": "recorded results for science quiz 4 in the 5AP C i supervise",
+      "want": "Show science quiz 4 results for the supervisor's 5AP C.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-191",
+      "as": "admin",
+      "lang": "en",
+      "q": "need the english scores schoolwide all levels",
+      "want": "Show English marks across the school.",
+      "tools": [
+        "grades_get_by_subject"
+      ]
+    },
+    {
+      "id": "gr-192",
+      "as": "principal",
+      "lang": "en",
+      "q": "whats our overall average grade on the school indicators",
+      "want": "Give the school average grade.",
+      "tools": [
+        "academic-dashboard_get_kpis"
+      ]
+    },
+    {
+      "id": "gr-193",
+      "as": "monitor",
+      "lang": "en",
+      "q": "show maths marks for the 1AC C group assigned to me",
+      "want": "Show mathematics marks for the monitor's 1AC C.",
+      "tools": [
+        "grades_get_by_section"
+      ]
+    },
+    {
+      "id": "gr-194",
+      "as": "registrar",
+      "lang": "en",
+      "q": "all saved marks for the currently selected academic year",
+      "want": "Show all marks for the selected school year.",
+      "tools": [
+        "grades_get_all"
+      ]
+    },
+    {
+      "id": "gr-195",
+      "as": "admin",
+      "lang": "en",
+      "q": "scores from the 3AC B final french exam please",
+      "want": "Show results for the 3AC B final French exam.",
+      "tools": [
+        "grades_get_by_exam"
+      ]
+    },
+    {
+      "id": "gr-196",
+      "as": "registrar",
+      "lang": "es",
+      "q": "quiero el boletin de EL MALKI Ines de CE2 C",
+      "want": "Show EL MALKI Ines's report card.",
+      "tools": [
+        "grades_get_student_report"
+      ]
+    },
+    {
+      "id": "gr-197",
+      "as": "principal",
+      "lang": "es",
+      "q": "que porcentaje aprobo y como se distribuyen las notas",
+      "want": "Give the pass rate and grade distribution.",
+      "tools": [
+        "registrar-dashboard_get_overview"
+      ]
+    },
+    {
+      "id": "gr-198",
+      "as": "admin",
+      "lang": "es",
+      "q": "las notas que puso LOUKILI en sus pruebas y examenes",
+      "want": "Show marks awarded in teacher LOUKILI's assessments and exams.",
+      "tools": [
+        "grades_get_by_teacher"
+      ]
+    },
+    {
+      "id": "gr-199",
+      "as": "supervisor",
+      "lang": "es",
+      "q": "resultados del segundo control de mates de mi grupo CM2 C",
+      "want": "Show mathematics test 2 results for the supervisor's CM2 C.",
+      "tools": [
+        "grades_get_by_assessment"
+      ]
+    },
+    {
+      "id": "gr-200",
+      "as": "monitor",
+      "lang": "es",
+      "q": "ensename todas las notas de BOUHOUCH Younes de mi 6AP C",
+      "want": "Show all recorded marks for BOUHOUCH Younes.",
+      "tools": [
+        "grades_get_by_student"
+      ]
+    }
+  ]
+}

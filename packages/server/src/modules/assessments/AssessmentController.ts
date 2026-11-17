@@ -77,7 +77,7 @@ export class AssessmentController {
   @Get('/section/:sectionId')
   @CanList()
   @Validate({ params: sectionIdParam })
-  @McpTool({ description: 'Get assessments by section', readOnly: true })
+  @McpTool({ description: "List one class section's tests, quizzes and assignments by sectionId: each one's id (assessmentId), title, date and marks out of. Contrôles d'une classe, فروض القسم.", readOnly: true })
   @ResMsg('assessments.success.retrieved')
   async getBySection(@Params('sectionId') sectionId: string) {
     return this.assessmentService.getAll({ sectionId });

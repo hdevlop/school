@@ -71,6 +71,22 @@ test.each([
   expect(result).not.toContain('_get_my_identity');
 });
 
+// The one-student hint pulled report-card questions to grades_get_by_student;
+// a bulletin alone gave no grades hint at all. Measured 2026-11-16 on 200
+// staff grades questions: right tool first 66 -> 74, other features unchanged.
+test.each(['bghit kachf nno9at dyal ABID Amine', 'وريني البوليطان ديال التلميذ يوسف',
+  'le bulletin de Salma Idrissi', 'report card for Omar Bennani'])('a report card gets its own hint: %s', query => {
+  const result = schoolRoutingContext(query, rewriteDarijaForRouting(query));
+  expect(result).toContain('grades_get_student_report');
+  expect(result).not.toContain('grades_get_by_student');
+});
+
+test('a parent asking for a child\'s bulletin keeps the personal grades hint', () => {
+  const result = schoolRoutingContext('bghit bulletin dyal bnti f nno9at');
+  expect(result).not.toContain('grades_get_student_report');
+  expect(result).toContain('student-profile_get_academic');
+});
+
 test('self grades and teaching survive the routing rewrite with separate identity chains', () => {
   for (const query of ['bghit no9ati dyali', 'بغيت نقطي']) {
     expect(schoolRoutingContext(query, rewriteDarijaForRouting(query))).toContain('students_get_my_identity');
@@ -165,4 +181,29 @@ test.each([
 
 test('monthly-fee wording "الواجبات الشهرية" is not homework', () => {
   expect(routed('شحال باقي عليا ديال الواجبات الشهرية؟')).not.toContain('homework_get');
+});
+
+test.each([
+  ['شنو التنقيط ديال الأستاذة العلوي', 'grades_get_by_teacher'],
+  ['les notes données par le professeur de maths', 'grades_get_by_teacher'],
+  ['نتائج امتحان الرياضيات ديال 3AC A', 'grades_get_by_exam'],
+  ['chno jabo tlamd f lfard dyal l3arabiya', 'grades_get_by_assessment'],
+  ['tan9it lfrançais f kol la9sam', 'grades_get_by_subject'],
+  ['notes de calcul pour mon groupe CP B', 'grades_get_by_section'],
+  ['بغيت البيان ديال سارة من 5AP B', 'grades_get_student_report'],
+  ['quiero el boletin de Omar', 'grades_get_student_report'],
+  ['ch7al lmo3adal dyal lmdrasa', 'registrar-dashboard_get_overview'],
+])('a grades question names its read: %s', (query, tool) => {
+  expect(schoolRoutingContext(query)).toContain(tool);
+});
+
+test('"my" with a class code is a staff member\'s class, not the reader\'s own marks', () => {
+  expect(schoolRoutingContext('notes de mes élèves de 6AP C')).not.toContain('student-profile_get_academic');
+  expect(schoolRoutingContext('bghit nno9at dyali')).toContain('student-profile_get_academic');
+  expect(schoolRoutingContext('nno9at dyal bnti f 5AP B')).toContain('parents_get_children');
+});
+
+test('a statement next to fees is not a report card', () => {
+  expect(schoolRoutingContext('relevé des frais de Omar')).not.toContain('grades_get_student_report');
+  expect(schoolRoutingContext('كشف الواجبات الشهرية')).not.toContain('grades_get_student_report');
 });

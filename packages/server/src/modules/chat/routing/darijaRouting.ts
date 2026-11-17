@@ -132,6 +132,11 @@ const arabiziWords: Readonly<Record<string, string>> = {
   '9leb': 'ابحث', l9a: 'ابحث', werrini: 'اعرض', wrrini: 'اعرض', bnati: 'بناتي', slm: 'السلام',
   salam: 'السلام', labas: 'بخير', bslama: 'مع السلامة', chokran: 'شكرا', choukran: 'شكرا',
   mrc: 'شكرا',
+  // Marking words (2026-11-16): grading, report sheets, averages, "got".
+  tan9it: 'التنقيط', ltan9it: 'التنقيط', ta9yim: 'تقييم', ta9yimat: 'التقييمات', lta9yimat: 'التقييمات',
+  kachf: 'كشف', lkachf: 'الكشف', mo3adal: 'المعدل', lmo3adal: 'المعدل', jami3: 'جميع', kol: 'كل',
+  jab: 'حصل', jabat: 'حصلت', jabet: 'حصلت', jabo: 'حصلوا', jabou: 'حصلوا',
+  l2ostada: 'الاستاذة', lostada: 'الاستاذة', bolitan: 'بيان النقاط', lbolitan: 'بيان النقاط',
 };
 const arabiziVocabulary = new Map(Object.entries(arabiziWords));
 

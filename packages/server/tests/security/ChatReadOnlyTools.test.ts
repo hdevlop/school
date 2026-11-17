@@ -23,6 +23,13 @@ const READ_ONLY_POSTS = new Set([
   'EventController.getByDateRangeMcp',
   'FeeController.getOverdueByStudent',
   'FinancialAuditController.list',
+  // The grades chat summaries (2026-11-16): each calls GradeService's reads.
+  'GradeController.getAll',
+  'GradeController.getByAssessment',
+  'GradeController.getByExam',
+  'GradeController.getBySection',
+  'GradeController.getBySubject',
+  'GradeController.getByTeacher',
   'ParentController.search',
   'PaymentController.getMonthlyRevenue',
   'PaymentController.getRevenueByPaymentMethod',

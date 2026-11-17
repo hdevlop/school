@@ -3,6 +3,8 @@
 Use a **different session** from the phrase writer, ideally a different model.
 Paste everything below the line, then the feature brief where it says. Never give
 this session the phrase files, `schoolRoutingContext.ts` or any other fixture.
+Remove the brief's "Typical need" column first: the phrase writer saw those
+examples, so the tests must not start from them.
 
 Save its answer as `packages/server/tests/chat/fixtures/routing/<feature>.json`.
 
@@ -19,6 +21,8 @@ Write them like this:
 - Darija in Latin letters uses 3, 7, 9: "ch7al jab f lfard", "3afak"
 - names written the way staff write them: "ABID MOHAMMED AMINE", "Alami", "5AP B"
 - never translate one question into another language; write each one fresh
+- never reuse a phrase or example from the brief: it only tells you what each tool
+  does; the questions must be your own words
 
 Feature brief (who asks, the tools, the neighbours): see the end.
 

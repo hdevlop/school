@@ -3,8 +3,10 @@ import { envChoice, envFlag, envInt, envString } from 'najm-core/env';
 import { rag, ragStudio } from 'najm-rag';
 
 import { rewriteDarijaForRouting } from '../modules/chat/routing/darijaRouting';
-import { schoolRoutingContext } from '../modules/chat/routing/schoolRoutingContext';
-import semantics from '../modules/chat/routing/semantics.json';
+import { ROUTING_TEXT_VERSION, schoolRoutingContext } from '../modules/chat/routing/schoolRoutingContext';
+import { seedSemantics } from '../modules/chat/routing/seedSemantics';
+import { schoolJevToolReranker } from '../modules/chat/jev/JevToolReranker';
+import { readJevRerankControls } from '../modules/chat/transport/schoolChatControls';
 
 /**
  * Embeddings for chat tool routing and the knowledge base.
@@ -98,6 +100,12 @@ const TOOL_DEPENDENCIES: Record<string, string[]> = {
   grades_get_by_section: ['classes_get_classes', 'sections_get_sections', 'subjects_get_subjects', 'grades_get_all'],
   grades_get_by_subject: ['classes_get_classes', 'subjects_get_subjects', 'grades_get_all'],
   grades_get_all: ['classes_get_classes', 'sections_get_sections', 'subjects_get_subjects'],
+  // One test's or exam's results need its ID: the class's own list (about
+  // 10 KB), never the year's 222 exams (160 KB, which left OSS20B unable to
+  // reply). A teacher's marks need the teacher found by name.
+  grades_get_by_exam: ['sections_get_sections', 'exams_get_by_section'],
+  grades_get_by_assessment: ['sections_get_sections', 'assessments_get_by_section'],
+  grades_get_by_teacher: ['search_search_teachers'],
   exams_get_upcoming_exams: ['exams_get_all'],
   // "This month" may retrieve today's exam tool; the list is needed to
   // apply a different date window without guessing teacher/class IDs.
@@ -185,9 +193,29 @@ export const ragConfig = (): NajmPlugin => {
     // first fell from 45 to 37 of 82, none improved. Phrase and message must
     // carry the same hints to stay comparable.
     rewriteRoutingQuery: query => schoolRoutingContext(query, rewriteDarijaForRouting(query)),
-    // School's routing phrases: those not stored yet are added after boot
-    // tool indexing; studio edits stay. Edit the file to change one for good.
-    seedSemantics: semantics,
+    // A changed rewrite marks every stored phrase stale for "Reindex semantics".
+    routingTextVersion: ROUTING_TEXT_VERSION,
+    // School's routing phrases (semantics.json and the per-feature files in
+    // routing/semantics/): those not stored yet are added after boot tool
+    // indexing; studio edits stay. Edit the files to change one for good.
+    seedSemantics,
+    // Jev picks among the router's tools (CHATBOT_JEV_RERANK=on). A pick at
+    // 0.85 leads with its dependencies and the router's next 3; at 0.3 it
+    // moves to the top and the router's tools stay offered; "none", a failure
+    // or no answer in 0.8 s keeps the router's order. Jev also sees tools down
+    // to 0.64 similarity, but one below the 0.68 threshold is used only at
+    // 0.85. Measured 2026-11-16 on the router's candidates for 320 fixture
+    // questions, against najm-rag's 0.7 promote and no near misses: right tool
+    // first 104-108 -> 127-132 of 200 grades questions, 54-55 -> 56-57 of 82
+    // older ones; no-tool questions unchanged. Promoting every pick gained 3
+    // more grades but lost older ones.
+    // A "none" at 0.9 (najm-rag 3.8.0 dropAt) leaves a greeting or how-to
+    // without tools. On the router's candidates Jev said none at 0.91-1.0 for
+    // greetings, follow-ups and "how do I change my password", and below 0.85
+    // for every question that needed a tool (2026-11-17): none were lost.
+    rerankTools: readJevRerankControls().enabled
+      ? { rerank: schoolJevToolReranker, promoteAt: 0.3, minSimilarity: 0.64, dropAt: 0.9 }
+      : undefined,
     knowledge: true,
     allowedLangs: ['en', 'fr', 'ar', 'es'],
   }) as unknown as NajmPlugin;
