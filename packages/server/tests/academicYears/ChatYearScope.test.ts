@@ -128,7 +128,13 @@ describe('published chat controller year boundary', () => {
       provider.getContext('شحال من تلميذ هاد العام؟'),
     ]);
     for (const context of [french, arabic, darija]) expect(context).toContain('Existing knowledge context');
-    for (const context of [french, arabic, darija]) expect(context).toBe('Existing knowledge context');
+    // The one line added above the knowledge is the answer's language (b17651b2): no School hint.
+    for (const context of [french, arabic, darija]) {
+      const [language, knowledge, ...rest] = context.split('\n\n');
+      expect(language).toStartWith('Write the whole answer in ');
+      expect(knowledge).toBe('Existing knowledge context');
+      expect(rest).toEqual([]);
+    }
     const latest = await provider.getContext('Quels examens sont prévus prochainement ?\n---\nشحال من تلميذ؟');
     expect(latest).not.toContain('at most five');
     expect(await provider.getContextTrace('شحال من تلميذ؟')).toEqual({ used: false, chunks: [] });
