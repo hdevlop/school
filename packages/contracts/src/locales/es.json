@@ -7660,6 +7660,11 @@
     },
     "remark": {
       "title": "Observación para los padres",
+      "propose": "Proponer una observación",
+      "nothingToPropose": "Introduce primero los niveles del mes",
+      "replaceTitle": "¿Reemplazar la observación?",
+      "replaceDescription": "La observación propuesta reemplazará el texto escrito. Podrás editarla después.",
+      "replace": "Reemplazar",
       "placeholder": "Unas palabras para los padres sobre el trabajo de este mes…",
       "saving": "Guardando…",
       "saved": "Guardada",

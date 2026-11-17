@@ -7761,6 +7761,11 @@
     },
     "remark": {
       "title": "Remarque pour les parents",
+      "propose": "Proposer une remarque",
+      "nothingToPropose": "Saisissez d'abord les niveaux du mois",
+      "replaceTitle": "Remplacer la remarque ?",
+      "replaceDescription": "La remarque proposée remplacera le texte écrit. Vous pourrez la modifier ensuite.",
+      "replace": "Remplacer",
       "placeholder": "Un mot pour les parents sur le travail de ce mois…",
       "saving": "Enregistrement…",
       "saved": "Enregistrée",

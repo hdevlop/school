@@ -7,12 +7,14 @@ import {
   averageRank, evaluationKey, levelOfRank, monthLabel, rankChange, studentSummary, LEVEL_RANK, type EvaluationIndex,
 } from '../config/competencyLevels';
 import { levelLabel } from '../config/competencyOptions';
+import { catalogLanguage } from '../config/competencyLanguage';
+import { proposeRemark } from '../config/competencyRemarks';
 import { ChangeMark, LevelSignal } from './CompetencyVisuals';
 import { CompetencyRemarkFooter } from './CompetencyRemarkFooter';
 import { useCompetencyText } from './CompetencyText';
 import { LevelPopover } from './LevelPicker';
 
-export type SheetStudent = { id: string; name: string; altName?: string | null; image?: string | null };
+export type SheetStudent = { id: string; name: string; altName?: string | null; image?: string | null; gender?: 'M' | 'F' | null };
 
 const ROW = 'flex w-full items-center gap-3 rounded-xl border bg-card p-3 text-start';
 
@@ -104,7 +106,14 @@ export function StudentCompetencySheet({
         );
       })}
 
-      <CompetencyRemarkFooter key={`${student.id}:${month}`} remark={remark} onSave={onSaveRemark} />
+      <CompetencyRemarkFooter key={`${student.id}:${month}`} remark={remark} onSave={onSaveRemark}
+        // A remark drafted from this month's levels, in the list's language, for the teacher to edit.
+        propose={onSaveRemark ? () => proposeRemark({
+          domains,
+          levelOf: (competencyId) => index.get(evaluationKey(competencyId, student.id, month)),
+          gender: student.gender,
+          language: catalogLanguage(domains) === 'ar' ? 'ar' : 'fr',
+        }) : undefined} />
     </div>
   );
 }

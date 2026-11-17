@@ -148,7 +148,7 @@ function StaffCompetencies() {
   const roster = useStudentsOnDate(rosterDay(month, months.today));
   const students: SheetStudent[] = useMemo(() => ((roster.students as any[] | undefined) ?? [])
     .filter((student) => student.sectionId === sectionId)
-    .map((student) => ({ id: student.id, name: student.name, altName: student.arabicName ?? null, image: student.image ?? null }))
+    .map((student) => ({ id: student.id, name: student.name, altName: student.arabicName ?? null, image: student.image ?? null, gender: student.gender ?? null }))
     .sort((a, b) => a.name.localeCompare(b.name, language)), [roster.students, sectionId, language]);
   const studentIds = useMemo(() => students.map((student) => student.id), [students]);
   const domains = catalog.data;

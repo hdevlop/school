@@ -8367,6 +8367,11 @@
     },
     "remark": {
       "title": "Remark for the parents",
+      "propose": "Suggest a remark",
+      "nothingToPropose": "Set this month's levels first",
+      "replaceTitle": "Replace the remark?",
+      "replaceDescription": "The suggested remark will replace what is written. You can edit it afterwards.",
+      "replace": "Replace",
       "placeholder": "A word for the parents on this month's work…",
       "saving": "Saving…",
       "saved": "Saved",
