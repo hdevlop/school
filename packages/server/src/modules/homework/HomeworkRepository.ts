@@ -204,7 +204,7 @@ export class HomeworkRepository {
    */
   async partsFor(subjectId: string, where: { sectionIds?: string[]; classId?: string }) {
     const inClass = where.sectionIds?.length ? inArray(sections.id, where.sectionIds) : eq(sections.classId, where.classId ?? '');
-    const massar = await this.db.selectDistinct({ components: massarSubjects.components }).from(massarSubjects)
+    const massar = await this.db.selectDistinct({ components: massarSubjects.components, name: massarSubjects.name }).from(massarSubjects)
       .innerJoin(massarLevels, eq(massarLevels.id, massarSubjects.levelId))
       .innerJoin(massarClasses, and(eq(massarClasses.levelId, massarSubjects.levelId), eq(massarClasses.academicYearId, massarSubjects.academicYearId)))
       .innerJoin(sections, eq(sections.classId, massarClasses.classId))
@@ -216,7 +216,10 @@ export class HomeworkRepository {
       ));
     const own = await this.db.select({ name: subSubjects.name }).from(subSubjects)
       .where(eq(subSubjects.subjectId, subjectId)).orderBy(asc(subSubjects.position), asc(subSubjects.name));
-    return homeworkParts(massar.map((row) => row.components), own.map((row) => row.name));
+    const [subject] = await this.db.select({ name: subjects.name }).from(subjects).where(eq(subjects.id, subjectId)).limit(1);
+    // The subject's own names, in the school's language and in Massar's: a part named so is the whole subject.
+    const names = [subject?.name, ...massar.map((row) => row.name)].filter((name): name is string => !!name);
+    return homeworkParts(massar.map((row) => row.components), own.map((row) => row.name), names);
   }
 
   /** The assessment is one the same teacher gave for the same subject. */

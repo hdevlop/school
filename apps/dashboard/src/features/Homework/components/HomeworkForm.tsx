@@ -217,8 +217,6 @@ const HomeworkForm = ({ homework = null, place = null }: { homework?: HomeworkRo
   const initialSectionIds = homework?.sectionIds?.length
     ? homework.sectionIds
     : homework?.section?.id ? [homework.section.id] : preset?.sectionId ? [preset.sectionId] : [];
-  const { sections } = useSections();
-  const [changingPlace, setChangingPlace] = useState(false);
 
   const defaultValues = {
     title: homework?.title || '',
@@ -238,15 +236,6 @@ const HomeworkForm = ({ homework = null, place = null }: { homework?: HomeworkRo
     // The form is for the year being viewed; naming it on every class says nothing.
     .map((item: any) => ({ value: item.id, label: item.name }));
 
-  // The filter already says where: those fields stay out of the way, behind one line that names
-  // the place and offers to change it. A class the viewer cannot post in is asked for as usual.
-  const presetClassOk = !!preset?.classId && (isClassesLoading || own.isLoading || classOptions.some((option) => option.value === preset.classId));
-  const hideClass = presetClassOk && !changingPlace;
-  const hideSections = hideClass && !!preset?.sectionId;
-  const placeLabel = [
-    classOptions.find((option) => option.value === preset?.classId)?.label,
-    preset?.sectionId ? (sections || []).find((section: any) => section.id === preset.sectionId)?.name : null,
-  ].filter(Boolean).join(' · ');
 
   const handleSubmit = (values: HomeworkSubmitValues) => {
     const save: HomeworkSave = {
@@ -274,6 +263,21 @@ const HomeworkForm = ({ homework = null, place = null }: { homework?: HomeworkRo
     <div className="flex w-full flex-col gap-4">
       <NForm key={viewingYear} id="homework-form" schema={schema} defaultValues={defaultValues} onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4">
+          {/* Where the homework goes comes first, filled in from where the list is filtered and
+              changed in place: nothing else in the form moves when the class or a section does. */}
+          <div className="grid grid-cols-2 gap-3 md:gap-4">
+            <FormInput
+              name="classId"
+              type="select"
+              formLabel={t('homework.form.class')}
+              placeholder={t('homework.form.classPlaceholder')}
+              icon={Building}
+              items={classOptions}
+              required
+              disabled={isClassesLoading || own.isLoading}
+            />
+            <SectionsMultiselect initialClassId={initialClassId} own={own} />
+          </div>
           <FormSectionHeader icon={NotebookPen} title={t('homework.form.details')} />
           <FormInput
             name="title"
@@ -291,34 +295,10 @@ const HomeworkForm = ({ homework = null, place = null }: { homework?: HomeworkRo
             icon={FileText}
           />
 
-          {/* On a phone the fields pair up two per row and speak for themselves, without these headers. */}
-          <div className="hidden md:block"><FormSectionHeader icon={BookOpen} title={t('homework.form.context')} /></div>
-          {hideClass ? (
-            <div className="flex min-h-10 items-center gap-2 rounded-md border bg-muted/40 px-3 py-2 text-sm">
-              <Building className="size-4 shrink-0 text-muted-foreground" aria-hidden />
-              <span className="min-w-0 flex-1 truncate font-medium">{placeLabel || t('common.loading')}</span>
-              <button type="button" className="shrink-0 text-sm font-medium text-primary hover:underline" onClick={() => setChangingPlace(true)}>
-                {t('common.edit')}
-              </button>
-            </div>
-          ) : null}
-          <div className="grid grid-cols-2 gap-3 md:gap-4">
-            {hideClass ? null : (
-              <FormInput
-                name="classId"
-                type="select"
-                formLabel={t('homework.form.class')}
-                placeholder={t('homework.form.classPlaceholder')}
-                icon={Building}
-                items={classOptions}
-                required
-                disabled={isClassesLoading || own.isLoading}
-              />
-            )}
-            {/* Kept mounted while hidden: it is what clears the sections when the class changes. */}
-            <div className={hideSections ? 'hidden' : 'contents'}>
-              <SectionsMultiselect initialClassId={initialClassId} own={own} />
-            </div>
+          {/* The subject, its sub-subject and the teacher, each when there is a choice. Shown only
+              while a field in it is: a teacher of one subject without sub-subjects has none, and the
+              empty row would add a second gap between Détails and the dates. */}
+          <div className="hidden grid-cols-2 gap-3 has-[>:not(.hidden)]:grid md:gap-4">
             <HomeworkSubjectSelect own={own} />
             <HomeworkSubSubjectSelect />
             {teacherRequired && <HomeworkTeacherSelect />}

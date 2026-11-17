@@ -11,6 +11,15 @@ describe('the parts a homework may name', () => {
       .toEqual(['Comptine/Chant', 'Graphisme', 'Activités orales', 'Projet de classe']);
   });
 
+  // Massar grades Informatique as one block: its one component is the subject.
+  it('are none when the only part is the subject itself, whatever its language', () => {
+    expect(homeworkParts([[{ code: '0030', name: 'المعلوميات' }]], [], ['Informatique', 'المعلوميات'])).toEqual([]);
+    expect(homeworkParts([[{ code: '0019', name: 'الرياضيات ' }]], ['Nombres et calcul', 'Géométrie'], ['Mathématiques', 'الرياضيات']))
+      .toEqual(['Nombres et calcul', 'Géométrie']);
+    expect(homeworkParts([], ['التربية الإسلامية', 'القرآن الكريم', 'التزكية'], ['Éducation islamique', 'التربية الإسلامية']))
+      .toEqual(['القرآن الكريم', 'التزكية']);
+  });
+
   it('are the subject’s own sub-subjects when the class has no Massar parts for it', () => {
     expect(homeworkParts([], ['Lecture', 'Dictée', ' Lecture'])).toEqual(['Lecture', 'Dictée']);
     expect(homeworkParts([[]], [])).toEqual([]);
