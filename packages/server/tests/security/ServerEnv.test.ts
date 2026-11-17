@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'bun:test';
+import { readFileSync } from 'node:fs';
 import { ENV_NAMES, checkServerEnv, env, rawEnv } from '../../src/env';
 import { embeddingEndpoint, resolveEmbedding } from '../../src/modules/chat/routing/embedding';
 
@@ -13,6 +14,12 @@ beforeEach(() => { for (const name of ENV_NAMES) delete process.env[name]; });
 afterEach(restore);
 
 describe('server environment', () => {
+  it('lists every variable in the env template, set or commented out', () => {
+    const template = readFileSync(new URL('../../../../apps/dashboard/.env.local.example', import.meta.url), 'utf8');
+    const listed = (name: string) => new RegExp(`^#?[ \\t]*${name}=`, 'm').test(template);
+    expect(ENV_NAMES.filter(name => !listed(name))).toEqual([]);
+  });
+
   it('reads each variable under its own name', () => {
     for (const name of ENV_NAMES) process.env[name] = `probe-${name}`;
     for (const name of ENV_NAMES) expect(rawEnv(name)).toBe(`probe-${name}`);
