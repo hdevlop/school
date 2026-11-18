@@ -39,7 +39,7 @@ export function LevelPopover({ value, onChange, label, disabled = false, childre
           {levelOptions(t).map((option) => {
             const checked = option.value === current;
             return (
-              <button key={option.value} type="button" role="radio" aria-checked={checked} onClick={() => pick(option.value)}
+              <button key={option.value} type="button" role="radio" aria-checked={checked} aria-label={option.label} onClick={() => pick(option.value)}
                 className={cn(
                   'flex min-h-11 w-full items-center gap-3 rounded-lg px-2.5 text-start text-sm transition-colors',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
@@ -69,7 +69,7 @@ export function LevelRow({ value, onChange, label, className, signal = 'lg', chi
   label: string;
   /** The card's look: border, padding, layout. */
   className: string;
-  signal?: 'sm' | 'lg';
+  signal?: 'sm' | 'lg' | 'row';
   /** What the card shows before its bars. */
   children: ReactNode;
 }) {

@@ -32,6 +32,14 @@ export class CompetencyValidator {
     return this.year.reportingStartsOn.slice(0, 7);
   }
 
+  /** Every month of the year, first to last. */
+  yearMonths() {
+    const months: string[] = [];
+    const last = this.year.reportingEndsOn.slice(0, 7);
+    for (let month = this.baselineMonth(); month <= last; month = monthBounds(month).end.slice(0, 7)) months.push(month);
+    return months;
+  }
+
   ensureMonthInYear(month: string) {
     if (month < this.year.reportingStartsOn.slice(0, 7) || month > this.year.reportingEndsOn.slice(0, 7)) {
       Err(400, this.ct('monthOutsideYear'));

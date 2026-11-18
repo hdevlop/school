@@ -35,8 +35,16 @@ export function CompetencyTextScope({ domains, children, className }: {
 
 /** `useTranslation` for the competency views: the list's language inside a scope, the interface's outside. */
 export function useCompetencyText(): CompetencyText {
+  return useTextIn(useContext(ListLanguage));
+}
+
+/** The text of these domains' list, for a view that keeps its own header and filters outside the scope. */
+export function useListText(domains: readonly CompetencyDomain[]): CompetencyText {
+  return useTextIn(useMemo(() => catalogLanguage(domains), [domains]));
+}
+
+function useTextIn(list: 'ar' | null): CompetencyText {
   const page = useTranslation();
-  const list = useContext(ListLanguage);
   return useMemo(() => list
     ? { t: (key, params) => schoolI18n.translate(list, key as SchoolTranslationKey, params), language: list, dir: schoolI18n.direction(list) }
     : { t: page.t as CompetencyText['t'], language: page.language, dir: schoolI18n.direction(schoolI18n.normalizeLanguage(page.language)) },

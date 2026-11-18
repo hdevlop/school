@@ -43,7 +43,7 @@ describe('competency permissions', () => {
 describe('competency routes', () => {
   it('each ask for the permission of what they do', () => {
     const expected: Record<string, string> = {
-      listAssignments: 'read:competencies', getCatalog: 'read:competencies', getEvaluations: 'read:competencies', getStudentSheet: 'read:competencies',
+      listAssignments: 'read:competencies', getCatalog: 'read:competencies', getEvaluations: 'read:competencies', getStudentSheet: 'read:competencies', getYearLevels: 'read:competencies',
       createDomain: 'create:competencies', createCompetency: 'create:competencies', copyCatalog: 'create:competencies', applyDefault: 'create:competencies',
       updateDomain: 'update:competencies', updateCompetency: 'update:competencies', setEvaluation: 'update:competencies', setRemark: 'update:competencies',
       deleteDomain: 'delete:competencies', deleteCompetency: 'delete:competencies',

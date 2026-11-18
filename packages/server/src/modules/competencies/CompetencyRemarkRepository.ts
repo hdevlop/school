@@ -1,4 +1,4 @@
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 import { Repository } from '../../najm';
 import { Owned, type OwnedWhere } from '../../auth';
 import { DB } from '../../database/db';
@@ -27,14 +27,14 @@ export class CompetencyRemarkRepository {
   }
 
   /** The remarks written in one class and subject for a month, or one pupil's. */
-  async forAssignment(teacherAssignmentId: string, month: string, studentId?: string) {
+  async forAssignment(teacherAssignmentId: string, months: string[], studentId?: string) {
     return this.db.select(remarkSelect)
       .from(competencyRemarks)
       .where(and(
         this.ownedWhere(),
         this.inYear(),
         eq(competencyRemarks.teacherAssignmentId, teacherAssignmentId),
-        eq(competencyRemarks.month, month),
+        inArray(competencyRemarks.month, months),
         studentId ? eq(competencyRemarks.studentId, studentId) : undefined,
       ));
   }

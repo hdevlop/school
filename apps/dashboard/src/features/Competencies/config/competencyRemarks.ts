@@ -8,48 +8,53 @@ import { LEVEL_RANK } from './competencyLevels';
  * التعرف على بعض الحروف وقراءتها…", "تحتاج إلى تحسين التحكم في القلم واحترام
  * اتجاه الكتابة") and the usual wording of Moroccan report cards.
  *
- * A remark reads like the teachers': difficulties first, then what the pupil
- * needs; a good pupil gets an appreciation, a strength and an encouragement.
+ * Parent remarks name observed skills and suggest one activity for the family.
  * `{masculine|feminine}` picks the pupil's form (يواجه|تواجه, Il|Elle).
  */
 export type RemarkLanguage = 'ar' | 'fr';
 export type RemarkGender = 'M' | 'F' | null | undefined;
 
-/** One skill: the noun phrase sentences are built around, and its own "needs" sentence when the teachers have one. */
-type Entry = { topic: string; need?: string };
+/** A skill's topic, teacher support wording and optional home activity. */
+type Entry = { topic: string; need?: string; activity?: string };
 
 const AR: Record<string, Entry> = {
   // اللغة العربية — the school's CP and CE2 grids first.
   'القراءة السليمة': {
     topic: 'التعرف على بعض الحروف وقراءتها بشكل صحيح',
+    activity: 'يمكن اختيار حرف من الدرس والبحث عنه معًا في ثلاث كلمات ثم قراءتها بصوت مسموع.',
     need: '{يحتاج|تحتاج} إلى دعم ومواكبة فردية لتجاوز {صعوباته|صعوباتها} في التعرف على الحروف وقراءتها.',
   },
   'القراءة السليمة المعبرة': { topic: 'القراءة السليمة والمعبرة' },
   'القراءة المعبرة': { topic: 'القراءة المعبرة' },
-  'فهم المسموع': { topic: 'فهم المسموع والتفاعل معه' },
-  'فهم المقروء': { topic: 'فهم المقروء والإجابة عن الأسئلة' },
+  'فهم المسموع': { topic: 'فهم المسموع والتفاعل معه', activity: 'يمكن قراءة حكاية قصيرة بصوت مسموع، ثم الحديث معًا عمّا وقع في بدايتها ونهايتها.' },
+  'فهم المقروء': { topic: 'فهم المقروء والإجابة عن الأسئلة', activity: 'بعد قراءة فقرة قصيرة، يمكن طرح سؤال والبحث معًا عن الجملة التي تتضمن الجواب.' },
   'فهم النص': { topic: 'فهم النص والإجابة عن الأسئلة' },
   'فهم أسئلة النص': { topic: 'فهم أسئلة النص والإجابة عنها' },
   'قيمة النص': { topic: 'استخلاص قيمة النص' },
   'التجزيء المقطعي': {
     topic: 'التعرف على المقاطع وتجزيء الكلمات',
+    activity: 'يمكن اختيار كلمة من الدرس ونطقها ببطء مع التصفيق مرة لكل مقطع.',
     need: '{يحتاج|تحتاج} إلى مواكبة لتجاوز {صعوباته|صعوباتها} في التعرف على الحروف والمقاطع وكتابتها.',
   },
-  'المرونة': { topic: 'القراءة بطلاقة واسترسال' },
+  'المرونة': { topic: 'القراءة بطلاقة واسترسال', activity: 'يمكن قراءة جملتين بالتناوب ثم إعادة قراءتهما مع مراعاة مواضع الوقف.' },
   'الخط': {
     topic: 'رسم بعض الحروف وكتابتها بالشكل الصحيح',
+    activity: 'يمكن اختيار حرف من الكراسة وكتابته على السطر ثم مقارنة شكله بالنموذج.',
     need: '{يحتاج|تحتاج} إلى تحسين التحكم في القلم واحترام اتجاه الكتابة ومقاييس الحروف.',
   },
   'النقل': {
     topic: 'نقل الكلمات والجمل بشكل سليم',
+    activity: 'يمكن نسخ جملة قصيرة ثم مقارنتها بالأصل كلمةً كلمة مع الانتباه للمسافات.',
     need: '{يحتاج|تحتاج} إلى مزيد من التمرن على النقل مع احترام السطر والمسافات بين الكلمات.',
   },
   'الإملاء': {
     topic: 'الربط بين الحرف والصوت والتمييز بين الحروف والحركات',
+    activity: 'يمكن إملاء ثلاث كلمات من الدرس ثم مراجعة الحروف والحركات معًا.',
     need: '{يحتاج|تحتاج} إلى دعم في الربط بين الحرف والصوت المناسب له.',
   },
   'التعبير الكتابي': {
     topic: 'التعبير الكتابي وتركيب جمل سليمة',
+    activity: 'يمكن اختيار صورة وكتابة جملتين تصفان ما يحدث فيها ثم قراءتهما معًا.',
     need: '{يحتاج|تحتاج} إلى أنشطة متنوعة ومتدرجة في التعبير الكتابي لتركيب جمل سليمة.',
   },
   'التراكيب': { topic: 'توظيف الظواهر التركيبية' },
@@ -74,11 +79,11 @@ const AR: Record<string, Entry> = {
   'التلاوة السليمة': { topic: 'تلاوة القرآن الكريم تلاوة سليمة' },
   'فهم المعاني': { topic: 'فهم معاني الآيات' },
   'التمثل': { topic: 'تمثل القيم المدروسة' },
-  'التمثل في السلوك': { topic: 'تمثل القيم في {سلوكه|سلوكها}' },
+  'التمثل في السلوك': { topic: 'تطبيق القيم في الحياة اليومية' },
   'معرفة الأحداث': { topic: 'معرفة أحداث السيرة النبوية' },
   'استخلاص القيم': { topic: 'استخلاص القيم' },
   'معرفة الأحكام': { topic: 'معرفة الأحكام المقررة' },
-  'التطبيق العملي': { topic: 'التطبيق العملي لما {تعلمه|تعلمته}' },
+  'التطبيق العملي': { topic: 'التطبيق العملي للمعارف المكتسبة' },
   'معرفة الحقوق والواجبات': { topic: 'معرفة الحقوق والواجبات' },
   // الرياضيات (CE6, taught in Arabic)
   'الأعداد الصحيحة الطبيعية': {
@@ -122,9 +127,31 @@ const AR: Record<string, Entry> = {
 };
 
 const FR: Record<string, Entry> = {
+  // English classes use the school's French parent-facing wording.
+  'Understanding simple instructions': { topic: 'la compréhension des consignes en anglais', activity: 'Donnez une consigne courte en anglais et invitez votre enfant à la réaliser.' },
+  'Naming familiar things': { topic: 'le nom des objets familiers en anglais', activity: 'Choisissez trois objets de la maison et nommez-les ensemble en anglais.' },
+  'Songs and rhymes': { topic: 'les comptines en anglais', activity: 'Reprenez une comptine de classe en alternant les vers avec votre enfant.' },
+  'Learning new words': { topic: 'le vocabulaire anglais étudié en classe', activity: 'Associez trois mots du cours à des images, puis cachez les mots pour les retrouver.' },
+  'Using words in context': { topic: 'l’emploi du vocabulaire anglais en contexte', activity: 'Choisissez un mot du cours et inventez ensemble une phrase qui l’utilise.' },
+  'Recognizing letters and words': { topic: 'la reconnaissance des lettres et des mots en anglais', activity: 'Choisissez un mot du cours et retrouvez-le ensemble dans une phrase.' },
+  'Copying words': { topic: 'la copie de mots en anglais', activity: 'Proposez un mot à copier, puis comparez la copie au modèle lettre par lettre.' },
+  'Understanding spoken English': { topic: 'la compréhension de l’anglais oral', activity: 'Écoutez un court dialogue en anglais et relevez ensemble ce que demande chaque personne.' },
+  'Speaking with confidence': { topic: 'la prise de parole en anglais', activity: 'Rejouez un dialogue du cours à deux, puis échangez les rôles.' },
+  'Reading aloud': { topic: 'la lecture à voix haute en anglais', activity: 'Lisez une courte phrase à tour de rôle en marquant les pauses.' },
+  'Understanding a text': { topic: 'la compréhension de textes en anglais', activity: 'Après un court passage, demandez à votre enfant de retrouver la phrase qui répond à une question.' },
+  'Spelling': { topic: 'l’orthographe des mots anglais', activity: 'Choisissez trois mots du cours à écrire de mémoire, puis vérifiez-les ensemble.' },
+  'Writing sentences': { topic: 'la rédaction de phrases en anglais', activity: 'Partez d’une phrase du cours et changez le sujet ou le verbe pour en écrire une autre.' },
+  'Listening comprehension': { topic: 'la compréhension orale en anglais', activity: 'Écoutez un court dialogue en anglais et demandez à votre enfant d’en résumer l’idée principale.' },
+  'Oral expression': { topic: 'l’expression orale en anglais', activity: 'Choisissez une image et invitez votre enfant à la décrire en deux phrases en anglais.' },
+  'Reading comprehension': { topic: 'la compréhension des textes en anglais', activity: 'Après un court texte en anglais, demandez à votre enfant d’en résumer l’idée principale avec ses propres mots.' },
+  'Guided writing': { topic: 'la rédaction guidée en anglais', activity: 'Reprenez une phrase modèle du cours et remplacez deux éléments pour rédiger une nouvelle phrase.' },
+  'Free writing': { topic: 'la rédaction autonome en anglais', activity: 'Invitez votre enfant à raconter un moment de sa journée en trois phrases en anglais, puis à les relire.' },
+  'Grammar': { topic: 'la grammaire anglaise', activity: 'Choisissez une phrase du cours et transformez-la en question, puis en phrase négative.' },
+  'Vocabulary': { topic: 'le vocabulaire anglais', activity: 'Choisissez trois mots du cours et invitez votre enfant à employer chacun dans une phrase.' },
+  'Pronunciation': { topic: 'la prononciation en anglais', activity: 'Écoutez une courte phrase en anglais, puis répétez-la en suivant le rythme et l’accent des mots.' },
   // Français — oral
-  'Écouter et comprendre': { topic: 'la compréhension orale', need: "{Il|Elle} doit être plus {attentif|attentive} en classe et s'entraîner à reformuler ce qu'{il|elle} entend." },
-  'Comprendre un message oral': { topic: 'la compréhension orale', need: "{Il|Elle} doit être plus {attentif|attentive} en classe et s'entraîner à reformuler ce qu'{il|elle} entend." },
+  'Écouter et comprendre': { topic: 'la compréhension orale', need: 'Lisez une courte consigne à voix haute et invitez votre enfant à la reformuler.' },
+  'Comprendre un message oral': { topic: 'la compréhension orale', need: 'Écoutez un court message et invitez votre enfant à en redire les deux idées principales.' },
   'Comprendre un discours oral': { topic: 'la compréhension des discours oraux' },
   "S'exprimer oralement": { topic: "l'expression orale", need: "{Il|Elle} doit prendre la parole plus souvent en classe et s'exprimer par des phrases complètes." },
   "S'exprimer à l'oral (raconter, décrire)": { topic: "l'expression orale", need: "{Il|Elle} doit prendre la parole plus souvent en classe et s'exprimer par des phrases complètes." },
@@ -217,31 +244,27 @@ const FR: Record<string, Entry> = {
 
 const PHRASES = {
   ar: {
-    difficulty: '{يواجه|تواجه} صعوبة في {topic}.',
+    coverage: (rated: number, total: number) => `عدد الكفايات المقيّمة هذا الشهر ${rated} من أصل ${total}.`,
+    mastered: (topic: string) => `أظهر التقييم تمكّنًا من ${topic}.`,
+    advanced: (topic: string) => `من نقاط القوة المسجّلة هذا الشهر ${topic}.`,
+    developing: (topic: string) => `يتواصل التدرّب على ${topic}.`,
+    support: (topic: string) => `يستدعي ${topic} مزيدًا من الدعم.`,
+    allMastered: 'أظهر تقييم هذا الشهر تمكّنًا من جميع الكفايات المقررة.',
+    extend: (topic: string) => `لتوسيع العمل على ${topic}، يمكن اختيار مثال جديد من الكراسة وشرح طريقة إنجازه.`,
+    practice: (topic: string) => `للتدرّب على ${topic} في المنزل، يمكن مراجعة مثال من الدرس ثم تطبيقه في تمرين مشابه.`,
     need: '{يحتاج|تحتاج} إلى دعم ومواكبة في {topic}.',
-    manyWeak: '{يحتاج|تحتاج} إلى مواكبة وجهد مضاعف لتجاوز {تعثراته|تعثراتها}.',
-    improve: '{يحتاج|تحتاج} إلى مزيد من التمرن على {topic}.',
-    strength: '{يتمكن|تتمكن} جيدا من {topic}.',
-    excellent: 'عمل ممتاز، {يتحكم|تتحكم} في مختلف المهارات المقررة.',
-    good: 'مستوى جيد.',
-    average: 'مستوى متوسط.',
-    closeExcellent: '{نشجعه|نشجعها} على الاستمرار بنفس الجدية.',
-    closeGood: '{مطالب|مطالبة} بمواصلة المجهود.',
-    closeAverage: '{يحتاج|تحتاج} إلى مزيد من المثابرة والتركيز.',
     unknown: (name: string) => name,
   },
   fr: {
-    difficulty: '{Il|Elle} rencontre des difficultés dans {topic}.',
+    coverage: (rated: number, total: number) => `Ce mois-ci, l’évaluation porte sur ${rated} compétence${rated > 1 ? 's' : ''} sur ${total}.`,
+    mastered: (topic: string) => `Votre enfant maîtrise ${topic}.`,
+    advanced: (topic: string) => `Votre enfant est à l’aise avec ${topic}.`,
+    developing: (topic: string) => `Votre enfant consolide ${topic}.`,
+    support: (topic: string) => `Votre enfant a besoin d’aide pour travailler ${topic}.`,
+    allMastered: 'Votre enfant maîtrise toutes les compétences prévues pour ce mois.',
+    extend: (topic: string) => `Pour aller plus loin, choisissez un autre exercice sur ${topic} et invitez votre enfant à expliquer sa réponse.`,
+    practice: (topic: string) => `Pour travailler ${topic} à la maison, reprenez un exemple du cours, puis essayez ensemble un exercice similaire.`,
     need: "{Il|Elle} a besoin d'un accompagnement régulier dans {topic}.",
-    manyWeak: "{Il|Elle} a besoin d'un suivi régulier et d'efforts soutenus pour surmonter ses difficultés.",
-    improve: '{Il|Elle} doit poursuivre ses efforts dans {topic}.',
-    strength: "{Il|Elle} est à l'aise dans {topic}.",
-    excellent: "Excellent travail : {il|elle} maîtrise l'ensemble des compétences.",
-    good: 'Bon travail.',
-    average: 'Résultats moyens.',
-    closeExcellent: '{Il|Elle} est {encouragé|encouragée} à poursuivre dans cette voie.',
-    closeGood: '{Il|Elle} doit poursuivre ses efforts.',
-    closeAverage: "{Il|Elle} doit redoubler d'efforts et de concentration.",
     unknown: (name: string) => `« ${name} »`,
   },
 } as const;
@@ -251,76 +274,65 @@ export function agree(text: string, gender: RemarkGender) {
   return text.replace(/\{([^{}|]*)\|([^{}|]*)\}/g, (_, masculine: string, feminine: string) => (gender === 'F' ? feminine : masculine));
 }
 
-type Rated = { name: string; rank: number; order: number };
+type Rated = { name: string; rank: number };
 
 function entryFor(language: RemarkLanguage, name: string): Entry {
   const bank = language === 'ar' ? AR : FR;
-  return bank[name.trim()] ?? { topic: PHRASES[language].unknown(name.trim()) };
+  const key = name.trim();
+  return Object.hasOwn(bank, key) ? bank[key] : { topic: PHRASES[language].unknown(key) };
 }
 
-/**
- * A remark for one pupil's month, from the levels set in the list. Nothing
- * when no level is set. Weak: the two weakest skills' difficulties, then the
- * weakest's need (or a general one past two weak skills). Average and good:
- * an appreciation, a strength and what to work on. Excellent: an
- * appreciation and an encouragement. One sentence per line, as on the sheets.
- */
+/** A factual observation and one practice activity based on this pupil's rated skills for the month. */
 export function proposeRemark({ domains, levelOf, gender, language }: {
   domains: readonly CompetencyDomain[];
   levelOf: (competencyId: string) => CompetencyLevel | null | undefined;
   gender: RemarkGender;
   language: RemarkLanguage;
 }): string | null {
-  const rated: Rated[] = [];
-  let order = 0;
+  let total = 0;
+  let assessed = 0;
+  let strongest: Rated | undefined;
+  let weakest: Rated | undefined;
   for (const domain of domains) {
+    total += domain.competencies.length;
     for (const item of domain.competencies) {
       const level = levelOf(item.id);
-      if (level) rated.push({ name: item.name, rank: LEVEL_RANK[level], order });
-      order += 1;
+      if (!level) continue;
+      assessed++;
+      const rank = LEVEL_RANK[level];
+      // Keep catalog order when several skills have the same level.
+      if (!strongest || rank > strongest.rank) strongest = { name: item.name, rank };
+      if (!weakest || rank < weakest.rank) weakest = { name: item.name, rank };
     }
   }
-  if (!rated.length) return null;
+  if (!strongest || !weakest) return null;
 
   const phrases = PHRASES[language];
-  const say = (template: string, name?: string) => {
-    const topic = name ? entryFor(language, name).topic : '';
-    return agree(template.replace('{topic}', topic), gender);
-  };
-  const byWeakest = [...rated].sort((a, b) => a.rank - b.rank || a.order - b.order);
-  const byStrongest = [...rated].sort((a, b) => b.rank - a.rank || a.order - b.order);
-  const weak = byWeakest.filter((item) => item.rank <= LEVEL_RANK.beginning);
-  const toWork = byWeakest.filter((item) => item.rank <= LEVEL_RANK.in_progress);
-  const strong = byStrongest.filter((item) => item.rank >= LEVEL_RANK.advanced);
-  const average = rated.reduce((sum, item) => sum + item.rank, 0) / rated.length;
+  const lines = assessed < total ? [phrases.coverage(assessed, total)] : [];
+  const strength = entryFor(language, strongest.name);
+  if (assessed === total && total > 1 && weakest.rank === LEVEL_RANK.mastered) {
+    lines.push(phrases.allMastered);
+  } else if (strongest.rank >= LEVEL_RANK.advanced) {
+    lines.push(strongest.rank === LEVEL_RANK.mastered ? phrases.mastered(strength.topic) : phrases.advanced(strength.topic));
+  }
 
-  const lines: string[] = [];
-  if (average >= 4.5 && !toWork.length) {
-    lines.push(say(phrases.excellent), say(phrases.closeExcellent));
-  } else if (average >= 2.5 && weak.length <= 1) {
-    lines.push(say(average >= 3.5 ? phrases.good : phrases.average));
-    if (strong[0]) lines.push(say(phrases.strength, strong[0].name));
-    if (weak[0]) {
-      // One weak skill: say it, then what helps, as the teachers do.
-      lines.push(say(phrases.difficulty, weak[0].name));
-      const own = entryFor(language, weak[0].name).need;
-      lines.push(own ? agree(own, gender) : say(phrases.need, weak[0].name));
-    } else {
-      if (toWork[0]) lines.push(say(phrases.improve, toWork[0].name));
-      lines.push(say(average >= 3.5 ? phrases.closeGood : phrases.closeAverage));
-    }
+  const focus = entryFor(language, weakest.name);
+  if (weakest.rank <= LEVEL_RANK.in_progress) {
+    lines.push(weakest.rank === LEVEL_RANK.in_progress ? phrases.developing(focus.topic) : phrases.support(focus.topic));
+    // A neutral activity also works when the pupil's gender is unavailable.
+    const need = focus.need;
+    lines.push(focus.activity ?? (need && (gender || !need.includes('{')) ? agree(need, gender) : phrases.practice(focus.topic)));
   } else {
-    const shown = (weak.length ? weak : toWork).slice(0, 2);
-    for (const item of shown) lines.push(say(phrases.difficulty, item.name));
-    if (weak.length > 2) lines.push(say(phrases.manyWeak));
-    else {
-      const first = shown[0];
-      const own = first ? entryFor(language, first.name).need : undefined;
-      lines.push(own ? agree(own, gender) : say(phrases.need, first?.name));
-    }
+    lines.push(focus.activity ?? phrases.extend(focus.topic));
   }
   return lines.join('\n');
 }
 
 /** The book has its own sentence for this skill, rather than the general one. */
-export const hasOwnRemark = (language: RemarkLanguage, name: string) => !!(language === 'ar' ? AR : FR)[name.trim()];
+export const hasOwnRemark = (language: RemarkLanguage, name: string) => Object.hasOwn(language === 'ar' ? AR : FR, name.trim());
+
+/** What helps with one skill, as the book writes it: the skill's own sentence, else the general one. */
+export function skillNeed(language: RemarkLanguage, name: string, gender: RemarkGender) {
+  const entry = entryFor(language, name);
+  return agree(entry.need ?? entry.activity ?? PHRASES[language].need.replace('{topic}', () => entry.topic), gender);
+}

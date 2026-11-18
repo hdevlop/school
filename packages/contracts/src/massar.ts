@@ -39,6 +39,8 @@ export interface MassarSheetDetail {
   sheet: MassarSheetRow; round: MassarRound; components: MassarComponent[]; maxMark: number;
   students: MassarStudent[]; marks: MassarMark[]; remarks: MassarRemark[]; canEdit: boolean; canReopen: boolean;
   schoolName: string; levelLabel: string; yearLabel: string;
+  /** The first day Planning holds this Contrôle's exams, when it is planned: the month the Contrôle belongs to. */
+  examFrom?: string | null;
 }
 export interface MassarMappings {
   classes: Array<{ name: string; classId: string | null; sectionId: string | null }>;

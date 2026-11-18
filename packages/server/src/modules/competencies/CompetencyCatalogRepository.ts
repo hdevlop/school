@@ -42,6 +42,8 @@ const assignmentSelect = {
   subjectId: teacherAssignments.subjectId,
   subjectName: subjects.name,
   subjectCode: subjects.code,
+  teacherName: sql<string | null>`(select member.name from teachers teacher
+    join staff member on member.id = teacher.staff_id where teacher.id = ${teacherAssignments.teacherId})`,
 };
 
 const sameName = (column: typeof competencyDomains.name | typeof competencies.name, name: string) =>

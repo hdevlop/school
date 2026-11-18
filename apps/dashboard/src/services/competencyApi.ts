@@ -1,4 +1,5 @@
 import type {
+  CompetencyYearLevels,
   CompetencyAssignment, CompetencyDomain, CompetencyEvaluation, CompetencyEvaluations, CompetencyLevel, CompetencyRemark, StudentCompetencySheet,
 } from '@sms/contracts';
 import { api } from './http';
@@ -22,6 +23,11 @@ export const getCompetencyEvaluationsApi = async (teacherAssignmentId: string, m
 
 export const getStudentCompetencySheetApi = async (studentId: string, month: string, subjectId?: string): Promise<{ data: CompetencySheet }> => {
   const res = await api.get(`/competencies/student/${studentId}`, { params: { month, ...(subjectId ? { subjectId } : {}) } });
+  return res.data;
+};
+
+export const getCompetencyYearLevelsApi = async (teacherAssignmentId: string): Promise<{ data: CompetencyYearLevels }> => {
+  const res = await api.get('/competencies/year', { params: { teacherAssignmentId } });
   return res.data;
 };
 

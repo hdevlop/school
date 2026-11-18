@@ -55,6 +55,15 @@ export class CompetencyController {
     return this.service.getStudentSheet(studentId, query);
   }
 
+  @Get('/year')
+  @Can('read:competencies')
+  @Validate({ query: catalogQuery })
+  @McpTool({ description: "List pupils' competency levels and the teacher's remarks in one teaching assignment (class, section and subject) for every month of the year", readOnly: true })
+  @ResMsg('competencies.success.retrieved')
+  getYearLevels(@Query() query: { teacherAssignmentId: string }) {
+    return this.service.getYearLevels(query);
+  }
+
   @Post('/domains')
   @Can('create:competencies')
   @Validate(createDomainDto)

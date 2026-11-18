@@ -119,3 +119,26 @@
 .menu :global([data-menu-quick]) :global([data-slot='global-actions']) {
   display: none;
 }
+
+/* A page's labelled commands read as a list, one per line, like the feature
+   actions above, whatever wrapper holds them. Icon buttons (named by
+   aria-label) stay in a row. */
+.menu :global([data-menu-quick]):has(button:not([aria-label])),
+.menu :global([data-menu-quick]) :has(> button:not([aria-label])) {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 0.125rem;
+}
+
+.menu :global([data-menu-quick]) button:not([aria-label]) {
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  white-space: normal;
+  text-align: start;
+  font-weight: 500;
+}

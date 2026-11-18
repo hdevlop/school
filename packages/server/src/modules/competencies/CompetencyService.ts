@@ -1,4 +1,4 @@
-import type { StudentCompetencySheet } from '@sms/contracts';
+import type { CompetencyYearLevels, StudentCompetencySheet } from '@sms/contracts';
 import { Service, Transaction } from '../../najm';
 import { StudentValidator } from '../students/StudentValidator';
 import { CompetencyCatalogRepository } from './CompetencyCatalogRepository';
@@ -136,7 +136,7 @@ export class CompetencyService {
     const baselineMonth = this.validator.baselineMonth();
     const [evaluations, remarks] = await Promise.all([
       this.evaluations.forAssignment(teacherAssignmentId, [...new Set([month, baselineMonth])]),
-      this.remarks.forAssignment(teacherAssignmentId, month),
+      this.remarks.forAssignment(teacherAssignmentId, [month]),
     ]);
     return { month, baselineMonth, evaluations, remarks };
   }
@@ -186,7 +186,7 @@ export class CompetencyService {
       ? await Promise.all([
         this.catalog.catalog(teacherAssignmentId),
         this.evaluations.forAssignment(teacherAssignmentId, [...new Set([query.month, baselineMonth])], studentId),
-        this.remarks.forAssignment(teacherAssignmentId, query.month, studentId),
+        this.remarks.forAssignment(teacherAssignmentId, [query.month], studentId),
       ])
       : [[], [], []];
     const subject = subjects.find((item) => item.id === placed?.subjectId) ?? null;
@@ -201,5 +201,19 @@ export class CompetencyService {
       evaluations,
       remarks,
     };
+  }
+
+  /**
+   * One class and subject's levels and remarks in every month of the year,
+   * for the pupils' progress sheets: read through their ownership, so a
+   * teacher gets those of their own classes only.
+   */
+  async getYearLevels({ teacherAssignmentId }: { teacherAssignmentId: string }): Promise<CompetencyYearLevels> {
+    const months = this.validator.yearMonths();
+    const [evaluations, remarks] = await Promise.all([
+      this.evaluations.forAssignment(teacherAssignmentId, months),
+      this.remarks.forAssignment(teacherAssignmentId, months),
+    ]);
+    return { teacherAssignmentId, months, evaluations, remarks };
   }
 }

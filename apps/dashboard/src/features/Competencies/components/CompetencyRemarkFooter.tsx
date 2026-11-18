@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { Eraser, MessageSquareText, Sparkles } from 'lucide-react';
 import { COMPETENCY_LIMITS, type CompetencyRemark } from '@sms/contracts';
 import { NButton, NConfirmDialog, Textarea } from 'najm-kit';
@@ -19,7 +19,7 @@ export function CompetencyRemarkFooter({ remark, onSave, propose }: {
   remark: CompetencyRemark | null | undefined;
   /** Given to whoever may write it; without it the remark is read-only. */
   onSave?: (body: string) => Promise<unknown>;
-  /** A remark drafted from the month's levels; null while no level is set. */
+  /** Available once this month's first level is set. Generates the text on demand. */
   propose?: () => string | null;
 }) {
   const saved = remark?.body ?? '';
@@ -31,7 +31,7 @@ export function CompetencyRemarkFooter({ remark, onSave, propose }: {
 function RemarkCard({ children }: { children: ReactNode }) {
   const { t } = useCompetencyText();
   return (
-    <section aria-label={t('competencies.remark.title')} className="flex flex-col gap-2 rounded-xl border bg-card p-3">
+    <section aria-label={t('competencies.remark.title')} className="flex flex-col gap-2 rounded-xl border border-border/70 bg-card p-3 @xl/sheet:p-4">
       <h3 className="flex items-center gap-2 text-sm font-semibold">
         <MessageSquareText aria-hidden="true" className="size-4 text-muted-foreground" />
         {t('competencies.remark.title')}
@@ -47,7 +47,7 @@ function RemarkEditor({ saved, onSave, propose }: { saved: string; onSave: (body
   const { t, dir } = useCompetencyText();
   // The text a confirmed proposal or clearing puts in place of the teacher's own.
   const [confirming, setConfirming] = useState<{ text: string; clear: boolean } | null>(null);
-  const proposal = propose?.() ?? null;
+  const hintId = useId();
   const [draft, setDraft] = useState(saved);
   const [status, setStatus] = useState<Status>('idle');
   const lastSaved = useRef(saved);
@@ -90,7 +90,8 @@ function RemarkEditor({ saved, onSave, propose }: { saved: string; onSave: (body
 
   // A proposal fills an empty remark at once; over the teacher's own text it asks first.
   const applyProposal = () => {
-    if (!proposal) return;
+    const proposal = propose?.();
+    if (!proposal || proposal === draft.trim()) return;
     if (draft.trim()) setConfirming({ text: proposal, clear: false });
     else change(proposal);
   };
@@ -98,18 +99,17 @@ function RemarkEditor({ saved, onSave, propose }: { saved: string; onSave: (body
   return (
     <RemarkCard>
       <div className="flex flex-wrap items-center gap-2">
-        {propose ? (
-          <NButton type="button" size="sm" variant="outline" onClick={applyProposal} disabled={!proposal}
-            title={proposal ? undefined : t('competencies.remark.nothingToPropose')} leftIcon={<Sparkles className="size-4" />}>
-            {t('competencies.remark.propose')}
-          </NButton>
-        ) : null}
+        <NButton type="button" size="sm" variant="outline" onClick={applyProposal} disabled={!propose}
+          aria-describedby={propose ? undefined : hintId} leftIcon={<Sparkles className="size-4" />}>
+          {t('competencies.remark.propose')}
+        </NButton>
         {/* Clearing removes the remark for the parents too, so it asks first. */}
         <NButton type="button" size="sm" variant="ghost" onClick={() => setConfirming({ text: '', clear: true })} disabled={!draft.trim()}
           leftIcon={<Eraser className="size-4" />}>
           {t('competencies.remark.clear')}
         </NButton>
       </div>
+      {!propose && <p id={hintId} className="text-xs text-muted-foreground">{t('competencies.remark.nothingToPropose')}</p>}
       <NConfirmDialog
         open={!!confirming}
         onOpenChange={(open) => { if (!open) setConfirming(null); }}

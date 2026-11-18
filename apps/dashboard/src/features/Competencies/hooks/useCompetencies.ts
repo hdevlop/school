@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useTranslation } from 'najm-i18n/react';
-import type { CompetencyAssignment, CompetencyDomain, CompetencyEvaluations, CompetencyLevel } from '@sms/contracts';
+import type { CompetencyAssignment, CompetencyDomain, CompetencyEvaluations, CompetencyLevel, CompetencyYearLevels } from '@sms/contracts';
 import { useAcademicYearScope, useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { withAcademicYear, yearScopedKey } from '@/features/AcademicYears/utils/yearScope';
 import * as competencyApi from '@/services/competencyApi';
@@ -47,6 +47,17 @@ export function useStudentCompetencySheet(studentId: string | undefined, month: 
     enabled: !!studentId && !!month,
   });
   return { ...detail, data: detail.data as competencyApi.CompetencySheet | null };
+}
+
+/** One class and subject's levels in every month of the year, for the follow-up report. */
+export function useCompetencyYearLevels(teacherAssignmentId: string | undefined) {
+  const detail = useYearScopedDetail({
+    resource: RESOURCE,
+    parts: ['year', teacherAssignmentId],
+    fetch: () => competencyApi.getCompetencyYearLevelsApi(teacherAssignmentId!),
+    enabled: !!teacherAssignmentId,
+  });
+  return { ...detail, data: detail.data as CompetencyYearLevels | null };
 }
 
 type LevelChange = competencyApi.SetCompetencyLevel & { teacherAssignmentId: string };

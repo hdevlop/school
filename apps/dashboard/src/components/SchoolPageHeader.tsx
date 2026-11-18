@@ -16,15 +16,19 @@ type HeaderProps = ComponentProps<typeof NPageHeader> & {
   mobileActions?: ReactNode;
   /** Phones return directly to Home by default; opt out for a custom navigation control. */
   mobileBack?: boolean;
+  /** Where the phone back arrow goes instead of Home, for a screen opened from another. */
+  onBack?: () => void;
+  backLabel?: string;
 };
 type ActionsProps = ComponentProps<typeof NPageHeaderActions>;
 
-function MobileBackButton() {
+function MobileBackButton({ onBack, label }: { onBack?: () => void; label?: string }) {
   const router = useRouter();
   const { t } = useTranslation();
+  const name = label ?? t('mobileHome.title');
   return (
     <NButton type="button" variant="ghost" size="icon" className="absolute start-2 top-1.5 z-10 h-11 w-9 md:hidden"
-      data-slot="page-header-back" onClick={() => router.push(SCHOOL_HOME_PATH)} aria-label={t('mobileHome.title')} title={t('mobileHome.title')}>
+      data-slot="page-header-back" onClick={onBack ?? (() => router.push(SCHOOL_HOME_PATH))} aria-label={name} title={name}>
       <ArrowLeft className="size-5 rtl:rotate-180" aria-hidden />
     </NButton>
   );
@@ -45,7 +49,7 @@ function hasPageActions(node: ReactNode): boolean {
 }
 
 /** Keeps every page's existing actions together behind one control on phones. */
-export function SchoolPageHeader({ mobileActions, mobileBack = true, ...props }: HeaderProps) {
+export function SchoolPageHeader({ mobileActions, mobileBack = true, onBack, backLabel, ...props }: HeaderProps) {
   const featureActions = useFeatureActions();
   const children = Children.toArray(props.children);
   const actionSlots = children.filter((child) => isValidElement<ActionsProps>(child) && child.type === NPageHeaderActions);
@@ -56,7 +60,7 @@ export function SchoolPageHeader({ mobileActions, mobileBack = true, ...props }:
   const headerProps = {
     ...props,
     className: cn(styles.header, mobileBack && styles.withBack, props.className),
-    top: mobileBack ? <><MobileBackButton />{props.top}</> : props.top,
+    top: mobileBack ? <><MobileBackButton onBack={onBack} label={backLabel} />{props.top}</> : props.top,
   };
 
   // A page that supplies its own compact controls retains that arrangement.

@@ -16,7 +16,7 @@ const barHeight = (index: number) => `${28 + (index * 72) / (SIGNAL_BARS - 1)}%`
  */
 export function LevelSignal({ level, size = 'sm', className, onPick }: {
   level: CompetencyLevel | null | undefined;
-  size?: 'sm' | 'lg';
+  size?: 'sm' | 'lg' | 'row';
   className?: string;
   /**
    * Makes each bar a button for its level, so a teacher sets it in one tap:
@@ -27,9 +27,9 @@ export function LevelSignal({ level, size = 'sm', className, onPick }: {
   const { t } = useCompetencyText();
   const filled = filledBars(level);
   const tone = level ? LEVEL_TONE[level].bar : EMPTY_TONE;
-  const large = size === 'lg';
-  const bar = (index: number) => cn(large ? 'w-7 rounded-[4px]' : 'w-[5px] rounded-[1px]', index < filled ? tone : EMPTY_TONE);
-  const frame = cn('inline-flex shrink-0 items-end', large ? 'h-11 gap-[3px]' : 'h-5 gap-[2px]', className);
+  const barWidth = { sm: 'w-[5px] rounded-[1px]', lg: 'w-7 rounded-[4px]', row: 'w-3 rounded-sm' }[size];
+  const bar = (index: number) => cn(barWidth, index < filled ? tone : EMPTY_TONE);
+  const frame = cn('inline-flex shrink-0 items-end', { sm: 'h-5 gap-[2px]', lg: 'h-11 gap-[3px]', row: 'h-9 gap-px' }[size], className);
   if (onPick) {
     return (
       <span role="radiogroup" aria-label={levelLabel(t, level)} className={frame}>
@@ -37,7 +37,7 @@ export function LevelSignal({ level, size = 'sm', className, onPick }: {
           <button key={value} type="button" role="radio" aria-checked={value === level}
             aria-label={levelLabel(t, value)} title={levelLabel(t, value)}
             onClick={() => onPick(value === level ? null : value)}
-            className="flex h-full items-end rounded-[4px] transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            className={cn('flex h-full items-end justify-center rounded-[4px] transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring', size === 'row' && 'w-6 hover:bg-muted')}>
             <span aria-hidden="true" className={bar(index)} style={{ height: barHeight(index) }} />
           </button>
         ))}
@@ -70,19 +70,13 @@ export function LevelDistributionBar({ distribution, total, className }: { distr
   );
 }
 
-/** `4/8` inside a ring that fills as more pupils are evaluated. */
-export function EvaluatedRing({ evaluated, total, label }: { evaluated: number; total: number; label: string }) {
-  const radius = 18;
-  const circumference = 2 * Math.PI * radius;
-  const share = total ? Math.min(1, evaluated / total) : 0;
+export function EvaluatedCount({ evaluated, total, label }: {
+  evaluated: number; total: number; label: string;
+}) {
   return (
-    <span role="img" aria-label={label} title={label} className="relative inline-flex size-11 shrink-0 items-center justify-center">
-      <svg viewBox="0 0 44 44" className="absolute inset-0 -rotate-90" aria-hidden="true">
-        <circle cx="22" cy="22" r={radius} fill="none" strokeWidth="4" className="stroke-muted-foreground/20" />
-        <circle cx="22" cy="22" r={radius} fill="none" strokeWidth="4" strokeLinecap="round" className="stroke-foreground"
-          strokeDasharray={circumference} strokeDashoffset={circumference * (1 - share)} />
-      </svg>
-      <span aria-hidden="true" className="relative text-[11px] font-semibold tabular-nums">{evaluated}/{total}</span>
+    <span title={label} className="inline-flex min-w-12 shrink-0 items-center justify-center rounded-md bg-muted px-1.5 py-0.5 text-xs font-semibold text-foreground">
+      <span className="sr-only">{label}</span>
+      <bdi dir="ltr" aria-hidden="true" className="tabular-nums">{evaluated}/{total}</bdi>
     </span>
   );
 }

@@ -26,49 +26,59 @@ describe('the remark book', () => {
     expect(propose({}, 'F')).toBeNull();
   });
 
-  // As the teachers write it: difficulties, then what helps.
-  it('names a weak pupil\'s difficulties, weakest first, then the need the teachers write', () => {
+  it('names the weakest assessed skill and a specific home activity in Arabic', () => {
     expect(propose({ w0: 'not_acquired', r0: 'beginning', r1: 'in_progress', w2: 'in_progress' }, 'F')).toBe([
-      'تواجه صعوبة في رسم بعض الحروف وكتابتها بالشكل الصحيح.',
-      'تواجه صعوبة في التعرف على بعض الحروف وقراءتها بشكل صحيح.',
-      'تحتاج إلى تحسين التحكم في القلم واحترام اتجاه الكتابة ومقاييس الحروف.',
+      'عدد الكفايات المقيّمة هذا الشهر 4 من أصل 9.',
+      'يستدعي رسم بعض الحروف وكتابتها بالشكل الصحيح مزيدًا من الدعم.',
+      'يمكن اختيار حرف من الكراسة وكتابته على السطر ثم مقارنة شكله بالنموذج.',
     ].join('\n'));
   });
 
-  it('asks for doubled effort past two weak skills', () => {
-    const remark = propose({ r0: 'not_acquired', r3: 'not_acquired', w2: 'beginning', w0: 'beginning' }, 'M')!;
-    expect(remark.split('\n')).toHaveLength(3);
-    expect(remark).toEndWith('يحتاج إلى مواكبة وجهد مضاعف لتجاوز تعثراته.');
+  it('describes a strength and prioritizes just one practice activity for a mixed month', () => {
+    const text = propose({ r0: 'advanced', r1: 'mastered', w0: 'beginning', w3: 'beginning' }, 'M')!;
+    expect(text.split('\n')).toHaveLength(4);
+    expect(text).toContain('أظهر التقييم تمكّنًا من فهم المسموع والتفاعل معه.');
+    expect(text).toContain('اختيار حرف من الكراسة');
+    expect(text).not.toContain('صورة');
   });
 
-  it('gives a good pupil an appreciation, a strength and what to work on', () => {
-    expect(propose({ r0: 'advanced', r1: 'mastered', r4: 'in_progress', w0: 'advanced' }, 'M')).toBe([
-      'مستوى جيد.',
-      'يتمكن جيدا من فهم المسموع والتفاعل معه.',
-      'يحتاج إلى مزيد من التمرن على القراءة بطلاقة واسترسال.',
-      'مطالب بمواصلة المجهود.',
+  const english = [domain('e', 'English', ['Reading comprehension', 'Pronunciation', 'Free writing', 'Grammar', 'Vocabulary', 'Guided writing', 'Listening comprehension', 'Oral expression'])];
+
+  it('describes one of eight English skills in French and gives the family an activity', () => {
+    expect(propose({ e0: 'mastered' }, 'F', english, 'fr')).toBe([
+      'Ce mois-ci, l’évaluation porte sur 1 compétence sur 8.',
+      'Votre enfant maîtrise la compréhension des textes en anglais.',
+      'Après un court texte en anglais, demandez à votre enfant d’en résumer l’idée principale avec ses propres mots.',
     ].join('\n'));
+    expect(propose({ e0: 'in_progress' }, 'F', english, 'fr')!.split('\n')[1]).toBe('Votre enfant consolide la compréhension des textes en anglais.');
   });
 
-  it('congratulates an excellent pupil', () => {
-    expect(propose({ r0: 'mastered', r1: 'mastered', w0: 'advanced' }, 'F')).toBe(
-      'عمل ممتاز، تتحكم في مختلف المهارات المقررة.\nنشجعها على الاستمرار بنفس الجدية.',
-    );
+  it('reserves whole-list mastery for a complete list with every skill mastered', () => {
+    const list = [domain('f', 'Français', ['Grammaire', 'Dictée'])];
+    expect(propose({ f0: 'mastered', f1: 'advanced' }, 'M', list, 'fr')).not.toContain('toutes les compétences');
+    expect(propose({ f0: 'mastered', f1: 'mastered' }, 'M', list, 'fr')).toStartWith('Votre enfant maîtrise toutes les compétences prévues pour ce mois.');
+    expect(propose({ f0: 'mastered' }, 'M', [domain('f', 'Français', ['Dictée'])], 'fr')).toStartWith('Votre enfant maîtrise la dictée.');
   });
 
-  it('writes a French list in French, and names a skill it has no sentence for', () => {
+  it('uses a custom skill name literally and gives a practice task', () => {
     const list = [domain('f', 'Lecture', ['Reconnaître les sons et les lettres', 'Lire un album'])];
     expect(propose({ f0: 'beginning', f1: 'not_acquired' }, 'F', list, 'fr')).toBe([
-      'Elle rencontre des difficultés dans « Lire un album ».',
-      'Elle rencontre des difficultés dans la reconnaissance des sons et des lettres.',
-      "Elle a besoin d'un accompagnement régulier dans « Lire un album ».",
+      'Votre enfant a besoin d’aide pour travailler « Lire un album ».',
+      'Pour travailler « Lire un album » à la maison, reprenez un exemple du cours, puis essayez ensemble un exercice similaire.',
     ].join('\n'));
+  });
+
+  it('uses neutral guidance when gender is unknown and the bank has a gendered sentence', () => {
+    const domains = [domain('f', 'Lecture', ['Lire avec fluidité'])];
+    const text = proposeRemark({ domains, language: 'fr', gender: null, levelOf: () => 'beginning' });
+    expect(text).toContain('reprenez un exemple du cours');
+    expect(text).not.toMatch(/\b(Il|Elle)\b|[{}]/);
   });
 });
 
-// Every French and maths skill of the default lists (packages/server/src/modules/competencies/defaultCatalogs.ts)
-// has its own sentence; read as text, since the dashboard does not import the server.
-describe('the remark book covers French and maths', () => {
+// Each French, English and maths skill in the default lists has its own sentence.
+// Read the catalog as text because the dashboard does not import the server.
+describe('the remark book covers default subject skills', () => {
   const source = readFileSync(new URL('../../../../../../packages/server/src/modules/competencies/defaultCatalogs.ts', import.meta.url), 'utf8')
     // A Windows checkout has CRLF line endings; the blocks below split on LF.
     .replace(/\r\n/g, '\n');
@@ -81,7 +91,7 @@ describe('the remark book covers French and maths', () => {
         .flatMap(([, , items]) => [...items.matchAll(/(['"])((?:(?!\1).)+)\1/g)].map((match) => match[2])),
     }));
 
-  for (const subject of ['FR', 'MATH']) {
+  for (const subject of ['FR', 'MATH', 'ENG']) {
     it(subject, () => {
       const lists = skillsOf(subject);
       expect(lists.length).toBeGreaterThan(2);

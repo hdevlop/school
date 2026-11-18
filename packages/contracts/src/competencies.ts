@@ -28,6 +28,8 @@ export interface CompetencyAssignment {
   sectionName: string;
   subjectId: string;
   subjectName: string;
+  /** The teacher of the class and subject, when one is assigned. */
+  teacherName?: string | null;
   /** A starting list exists for this class and subject (the school's grid, or a draft to edit). */
   hasDefaultList?: boolean;
 }
@@ -81,4 +83,13 @@ export interface StudentCompetencySheet extends CompetencyEvaluations {
   subject: { id: string; name: string } | null;
   teacherAssignmentId: string | null;
   domains: CompetencyDomain[];
+}
+
+/** One class and subject's levels and remarks in every month of the year: what the pupils' progress sheets show. */
+export interface CompetencyYearLevels {
+  teacherAssignmentId: string;
+  /** The year's months, from the first. */
+  months: string[];
+  evaluations: CompetencyEvaluation[];
+  remarks: CompetencyRemark[];
 }

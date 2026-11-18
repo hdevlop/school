@@ -974,7 +974,9 @@ export class MassarService {
       await this.refreshGrids({ sheetId: id, massarClassId: before.sheet.massarClassId });
     }
 
-    const [row, stored, remarks, config] = await Promise.all([this.requireSheet(id), this.repository.marks(id), this.repository.remarks(id), this.repository.yearConfig()]);
+    const [row, stored, remarks, config, planning] = await Promise.all([
+      this.requireSheet(id), this.repository.marks(id), this.repository.remarks(id), this.repository.yearConfig(), this.repository.planningMonths(),
+    ]);
     const marks = numericMarks(stored);
     const manager = mayManageMassar(actor);
     const { status, teacherUnlocked } = row.sheet;
@@ -992,6 +994,7 @@ export class MassarService {
       schoolName: config?.schoolName ?? '',
       levelLabel: row.level.label,
       yearLabel: this.year.label,
+      examFrom: massarPlanningControls(planning).find(control => control.term === row.round.term && control.exam === row.round.exam)?.examFrom ?? null,
       // Notes asks its own permission: a teacher grades there without any of Massar's.
       canEdit: roundOpen && unlocked && (entry === 'notes' ? matchPermission(actor.permissions ?? [], 'update:grades') : manager || actor.role === 'teacher'),
       canReopen: roundOpen && manager && status === 'exported',

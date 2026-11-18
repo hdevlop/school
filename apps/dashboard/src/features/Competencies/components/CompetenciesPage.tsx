@@ -1,13 +1,14 @@
 'use client';
 
 import { useMemo, useState, type ReactNode } from 'react';
-import { ArrowLeft, Copy, ListTree, Search, TriangleAlert, Users } from 'lucide-react';
-import type { CompetencyAssignment, CompetencyDomain, CompetencyLevel } from '@sms/contracts';
-import { cn, NajmScroll, NButton, NEmptyState, NErrorState, NPageHeaderActions, NSkeleton, SelectInput, TextInput } from 'najm-kit';
+import { ArrowLeft, ChevronDown, ChevronLeft, ChevronRight, Copy, FileChartColumn, ListTree, Search, SlidersHorizontal, TriangleAlert, Users } from 'lucide-react';
+import { compareClassNames, type CompetencyAssignment, type CompetencyDomain, type CompetencyLevel } from '@sms/contracts';
+import {
+  cn, NajmScroll, NButton, NEmptyState, NErrorState, NPageHeaderActions, NSkeleton, SelectInput, Sheet, SheetContent, SheetHeader, SheetTitle, TextInput, useMediaQuery, useNPortalScope,
+} from 'najm-kit';
 import { localDateInput } from 'najm-kit/format';
 import { useTranslation } from 'najm-i18n/react';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
-import { HeaderActionsMenu } from '@/components/HeaderActionsMenu';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useViewingAcademicYear, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
@@ -24,13 +25,15 @@ import { CompetencyRosterSheet } from './CompetencyRosterSheet';
 import { CopyCatalogSheet } from './CopyCatalogSheet';
 import { StudentCompetencySheet, type SheetStudent } from './StudentCompetencySheet';
 import { CompetencyTextScope } from './CompetencyText';
+import { FollowUpReports } from './FollowUpReports';
 
 type View = 'competencies' | 'students';
 const NO_DOMAINS: CompetencyDomain[] = [];
+const WORKSPACE = 'mx-auto w-full min-w-0';
 
-const ListSkeleton = () => (
-  <div className="flex flex-col gap-2" aria-busy="true">
-    {Array.from({ length: 5 }, (_, index) => <NSkeleton key={index} className="h-16 w-full rounded-xl" />)}
+const ListSkeleton = ({ grid = false }: { grid?: boolean }) => (
+  <div className={cn('grid gap-3', grid && '@xl:grid-cols-2 @5xl:grid-cols-3')} aria-busy="true">
+    {Array.from({ length: 6 }, (_, index) => <NSkeleton key={index} className={cn('w-full rounded-xl', grid ? 'h-27' : 'h-16')} />)}
   </div>
 );
 
@@ -43,39 +46,109 @@ function Filter({ value, onChange, items, label, disabled }: {
   );
 }
 
-/** The two views of mockups 1 and 2, as icons that stay in the phone header: by pupil first, the page's default. */
-function ViewToggle({ view, onChange }: { view: View; onChange: (view: View) => void }) {
+function ViewToggle({ view, onChange, compact = false }: { view: View; onChange: (view: View) => void; compact?: boolean }) {
   const { t } = useTranslation();
   const options: Array<{ value: View; label: string; Icon: typeof Users }> = [
     { value: 'students', label: t('competencies.views.byStudent'), Icon: Users },
     { value: 'competencies', label: t('competencies.views.byCompetency'), Icon: FEATURE_ICONS.competencies as typeof Users },
   ];
   return (
-    <div role="group" className="flex items-center gap-0.5 rounded-lg bg-muted p-0.5">
+    <div role="group" className={cn('gap-0.5 rounded-lg bg-muted p-1', compact ? 'flex shrink-0' : 'grid grid-cols-2 @xl:flex')}>
       {options.map(({ value, label, Icon }) => (
-        <button key={value} type="button" aria-pressed={view === value} aria-label={label} title={label} onClick={() => onChange(value)}
-          className={cn('flex size-9 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-            view === value ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground')}>
-          <Icon aria-hidden="true" className="size-4" />
+        <button key={value} type="button" aria-pressed={view === value} onClick={() => onChange(value)}
+          aria-label={compact ? label : undefined} title={compact ? label : undefined}
+          className={cn('flex items-center justify-center gap-1.5 rounded-md text-sm font-medium leading-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+            compact ? 'size-8' : 'min-h-9 px-2 py-1.5 @xl:px-3',
+            view === value ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:bg-background/50 hover:text-foreground')}>
+          <Icon aria-hidden="true" className="size-4 shrink-0" />
+          {compact ? null : label}
         </button>
       ))}
     </div>
   );
 }
 
-/** The pupil sheet's own bar (mockup 3): back to the list, the month and subject under the title. */
-function SheetBar({ subtitle, onBack }: { subtitle: string; onBack: () => void }) {
+type FilterItems = Array<{ value: string; label: string }>;
+
+/** Phones: the four filters as one line that opens them in a bottom sheet. */
+function FilterChip({ parts, onOpen }: { parts: string[]; onOpen: () => void }) {
   const { t } = useTranslation();
   return (
-    <div className="flex items-center gap-2 rounded-xl border bg-card p-2">
-      <NButton type="button" size="icon" variant="ghost" className="size-10" onClick={onBack} aria-label={t('competencies.sheet.back')}>
-        <ArrowLeft aria-hidden="true" className="size-5 rtl:rotate-180" />
-      </NButton>
-      <div className="min-w-0">
-        <h2 className="truncate text-base font-semibold">{t('competencies.sheet.title')}</h2>
-        <p className="truncate text-xs text-muted-foreground">{subtitle}</p>
-      </div>
+    <button type="button" onClick={onOpen} aria-haspopup="dialog" aria-label={`${t('common.filters')}: ${parts.join(' · ')}`}
+      className="flex min-h-10 min-w-0 flex-1 items-center gap-2 rounded-lg border border-border/70 bg-card px-3 text-sm transition-colors hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+      <SlidersHorizontal aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
+      <span aria-hidden="true" className="min-w-0 flex-1 truncate text-start font-medium">
+        {parts.map((part, index) => (
+          <span key={index}>
+            {index ? <span className="px-1 text-muted-foreground">·</span> : null}
+            <bdi dir="auto">{part}</bdi>
+          </span>
+        ))}
+      </span>
+      <ChevronDown aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
+    </button>
+  );
+}
+
+function FilterField({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="grid gap-1.5">
+      <span className="text-xs font-medium text-muted-foreground">{label}</span>
+      {children}
     </div>
+  );
+}
+
+function FilterSheet({ open, onClose, classId, onClass, classes, sectionId, onSection, sections, subjectId, onSubject, subjects, month, onMonth, months }: {
+  open: boolean; onClose: () => void;
+  classId: string; onClass: (value: string) => void; classes: FilterItems;
+  sectionId: string; onSection: (value: string) => void; sections: FilterItems;
+  subjectId: string; onSubject: (value: string) => void; subjects: FilterItems;
+  month: string; onMonth: (value: string) => void; months: FilterItems;
+}) {
+  const { t } = useTranslation();
+  const portal = useNPortalScope();
+  const at = months.findIndex((item) => item.value === month);
+  const step = (by: number) => { const next = months[at + by]; if (next) onMonth(next.value); };
+  return (
+    <Sheet open={open} onOpenChange={(next) => { if (!next) onClose(); }}>
+      <SheetContent side="bottom" portalClassName={portal} className="gap-0 rounded-t-2xl bg-background p-0 pb-[env(safe-area-inset-bottom)]">
+        <SheetHeader className="border-b border-border/60 px-4 py-3">
+          <SheetTitle className="text-base">{t('common.filters')}</SheetTitle>
+        </SheetHeader>
+        <div className="grid gap-3 p-4">
+          <div className="grid grid-cols-2 gap-2">
+            <FilterField label={t('competencies.filters.class')}>
+              <Filter value={classId} onChange={onClass} items={classes} label={t('competencies.filters.class')} disabled={!classes.length} />
+            </FilterField>
+            <FilterField label={t('competencies.filters.section')}>
+              <Filter value={sectionId} onChange={onSection} items={sections} label={t('competencies.filters.section')} disabled={!sections.length} />
+            </FilterField>
+          </div>
+          {subjects.length > 1 ? (
+            <FilterField label={t('competencies.filters.subject')}>
+              <Filter value={subjectId} onChange={onSubject} items={subjects} label={t('competencies.filters.subject')} />
+            </FilterField>
+          ) : null}
+          <FilterField label={t('competencies.filters.month')}>
+            <div className="flex items-center gap-2">
+              <NButton type="button" size="icon" variant="outline" className="size-10 shrink-0" disabled={at <= 0}
+                onClick={() => step(-1)} aria-label={t('common.previous')}>
+                <ChevronLeft aria-hidden="true" className="size-4 rtl:rotate-180" />
+              </NButton>
+              <div className="min-w-0 flex-1">
+                <Filter value={month} onChange={onMonth} items={months} label={t('competencies.filters.month')} />
+              </div>
+              <NButton type="button" size="icon" variant="outline" className="size-10 shrink-0" disabled={at < 0 || at >= months.length - 1}
+                onClick={() => step(1)} aria-label={t('common.next')}>
+                <ChevronRight aria-hidden="true" className="size-4 rtl:rotate-180" />
+              </NButton>
+            </div>
+          </FilterField>
+          <NButton type="button" className="mt-1 w-full" onClick={onClose}>{t('common.close')}</NButton>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }
 
@@ -111,19 +184,27 @@ function StaffCompetencies() {
   const months = useMonths();
   const [month, setMonth] = useState(months.initial);
   const [view, setView] = useState<View>('students');
+  const desktop = useMediaQuery('(min-width: 1100px)');
+  // Phones fold the filters into one line above the roster.
+  const phone = useMediaQuery('(max-width: 767px)');
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const splitRoster = desktop && view === 'students';
   const [search, setSearch] = useState('');
   const [studentId, setStudentId] = useState<string | null>(null);
+  const [reportOpen, setReportOpen] = useState(false);
   const [rosterCompetencyId, setRosterCompetencyId] = useState<string | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
   const [copyOpen, setCopyOpen] = useState(false);
 
   const assignments = useCompetencyAssignments();
-  // Class, then its sections, then the subjects taught there: a teacher of one
-  // subject never sees the subject filter, it is in the subtitle.
+  // Each choice limits the next one to the available assignments.
   const classes = useMemo(() => {
     const seen = new Map<string, string>();
     for (const item of assignments.data) if (!seen.has(item.classId)) seen.set(item.classId, item.className);
-    return [...seen].map(([value, label]) => ({ value, label }));
+    return [...seen]
+      .map(([value, label]) => ({ value, label }))
+      .sort((left, right) => compareClassNames(left.label, right.label));
   }, [assignments.data]);
   const [pickedClass, setClassId] = useState('');
   const classId = classes.some((item) => item.value === pickedClass) ? pickedClass : classes[0]?.value ?? '';
@@ -174,19 +255,39 @@ function StaffCompetencies() {
 
   const rosterUnknown = isCountUnknown(roster.error, roster.students as unknown[] | undefined, roster.isStudentsLoading);
   const subtitle = !assignment || rosterUnknown ? undefined
-    : t('competencies.subtitle.withSubject', { count: students.length, subject: assignment.subjectName });
-  const selected = students.find((student) => student.id === studentId);
+    : t('competencies.subtitle.pupils', { count: students.length });
   const query = search.trim().toLowerCase();
   const shown = query
     ? students.filter((student) => `${student.name} ${student.altName ?? ''}`.toLowerCase().includes(query))
     : students;
+  const selected = view === 'students'
+    ? shown.find((student) => student.id === studentId) ?? (splitRoster ? shown[0] : undefined)
+    : undefined;
+  const sheetOnly = !!selected && !splitRoster;
+  const searchInput = (
+    <TextInput value={search} onChange={setSearch} placeholder={t('competencies.filters.searchPlaceholder')} aria-label={t('competencies.filters.search')}
+      icon={Search} className="w-full min-w-0 [&_input]:text-sm" />
+  );
+  const studentSheet = selected ? (
+    <StudentCompetencySheet key={`${assignmentId}:${selected.id}:${month}`} student={selected} domains={domains} index={index} month={month} baselineMonth={baselineMonth}
+      editable={editable} onSetLevel={(competencyId, next) => setLevel(competencyId, selected.id, next)}
+      remark={evaluations.data?.remarks?.find((item) => item.studentId === selected.id && item.month === month)}
+      onSaveRemark={editable && assignmentId
+        ? (body) => remarks.save({ teacherAssignmentId: assignmentId, studentId: selected.id, month, body })
+        : undefined} />
+  ) : null;
 
-  const menu: ReactNode = assignment && canCreate ? (
+  const menu: ReactNode = assignment ? (
     <>
-      <NButton type="button" variant="ghost" onClick={() => setEditorOpen(true)} leftIcon={<ListTree className="size-4" />}>
-        {t('competencies.catalog.manage')}
+      <NButton type="button" variant="ghost" onClick={() => setReportOpen(true)} leftIcon={<FileChartColumn className="size-4" />}>
+        {t('competencies.report.open')}
       </NButton>
-      {isTeacher && domains.length ? (
+      {canCreate ? (
+        <NButton type="button" variant="ghost" onClick={() => setEditorOpen(true)} leftIcon={<ListTree className="size-4" />}>
+          {t('competencies.catalog.manage')}
+        </NButton>
+      ) : null}
+      {canCreate && isTeacher && domains.length ? (
         <NButton type="button" variant="ghost" onClick={() => setCopyOpen(true)} leftIcon={<Copy className="size-4" />}>
           {t('competencies.catalog.copy')}
         </NButton>
@@ -194,13 +295,30 @@ function StaffCompetencies() {
     </>
   ) : null;
 
+  const filterSummary = [
+    [classes.find((item) => item.value === classId)?.label, sections.find((item) => item.value === sectionId)?.label].filter(Boolean).join(' '),
+    assignment?.subjectName,
+    months.items.find((item) => item.value === month)?.label,
+  ].filter((part): part is string => !!part);
+  const showSearch = view === 'students' && domains.length > 0;
+  // A new list starts at its top, so the folded search comes back with it.
+  const closeSheet = () => { setStudentId(null); setScrolled(false); };
+  const changeView = (next: View) => { setView(next); setScrolled(false); };
+  // Folds only a roster long enough to stay scrollable once the search is gone, so the fold cannot bounce.
+  const onListScroll = (_instance: unknown, event: Event) => {
+    const viewport = event.target as HTMLElement;
+    if (viewport.scrollHeight - viewport.clientHeight < 160) return;
+    setScrolled((was) => (was ? viewport.scrollTop > 8 : viewport.scrollTop > 48));
+  };
+
   let body: ReactNode;
-  if (assignments.isLoading) body = <ListSkeleton />;
+  let desktopWorkspace: ReactNode;
+  if (assignments.isLoading) body = <ListSkeleton grid={!phone && view === 'students'} />;
   else if (assignments.error) body = <NErrorState surface="panel" onRetry={() => void assignments.refetch()} />;
   else if (!assignments.data.length) {
     body = <NEmptyState surface="panel" icon={FEATURE_ICONS.competencies}
       title={isTeacher ? t('competencies.empty.noAssignment') : t('competencies.empty.noCatalogFamily')} />;
-  } else if (catalog.isLoading || evaluations.isLoading || roster.isStudentsLoading) body = <ListSkeleton />;
+  } else if (catalog.isLoading || evaluations.isLoading || roster.isStudentsLoading) body = <ListSkeleton grid={!phone && !selected && view === 'students'} />;
   else if (catalog.error || evaluations.error || roster.error) {
     body = <NErrorState surface="panel" onRetry={() => { void catalog.refetch(); void evaluations.refetch(); }} />;
   } else if (!domains.length) {
@@ -222,72 +340,139 @@ function StaffCompetencies() {
           </div>
         ) : undefined} />
     );
-  } else if (selected) {
-    body = (
-      <StudentCompetencySheet student={selected} domains={domains} index={index} month={month} baselineMonth={baselineMonth}
-        editable={editable} onSetLevel={(competencyId, next) => setLevel(competencyId, selected.id, next)}
-        remark={evaluations.data?.remarks?.find((item) => item.studentId === selected.id && item.month === month)}
-        onSaveRemark={editable && assignmentId
-          ? (body) => remarks.save({ teacherAssignmentId: assignmentId, studentId: selected.id, month, body })
-          : undefined} />
-    );
   } else if (!students.length) {
     body = <NEmptyState surface="panel" icon={Users} title={t('competencies.empty.noStudents')} />;
   } else if (view === 'competencies') {
     body = <CompetencyOverview domains={domains} index={index} studentIds={studentIds} month={month} onOpen={setRosterCompetencyId} />;
+  } else if (splitRoster) {
+    desktopWorkspace = (
+      <div className="grid min-h-0 flex-1 grid-cols-[clamp(16rem,24%,24rem)_minmax(0,1fr)] gap-2">
+        <section aria-label={t('competencies.sheet.roster')} className="flex min-h-0 flex-col overflow-hidden rounded-xl border border-border/70 bg-card">
+          <div className="grid shrink-0 gap-2 border-b border-border/60 p-3">
+            <h2 className="flex items-center justify-between gap-2 text-base font-semibold">
+              {t('competencies.sheet.roster')}
+              <span className="rounded-md bg-muted px-2 py-0.5 text-xs tabular-nums text-muted-foreground">{shown.length}</span>
+            </h2>
+            {searchInput}
+          </div>
+          <NajmScroll axis="y" autoHide="scroll" className="min-h-0 flex-1">
+            {selected ? (
+              <CompetencyTextScope domains={domains}>
+                <CompetencyStudentList students={shown} activeId={selected.id} index={index} competencyIds={competencyIds} month={month} onOpen={setStudentId} />
+              </CompetencyTextScope>
+            ) : null}
+          </NajmScroll>
+        </section>
+        <NajmScroll key={selected?.id} axis="y" autoHide="scroll" className="min-h-0 min-w-0">
+          {studentSheet ? (
+            <CompetencyTextScope domains={domains} className="min-w-0 pb-4">{studentSheet}</CompetencyTextScope>
+          ) : <NEmptyState surface="panel" icon={Search} title={t('competencies.empty.noMatch')} />}
+        </NajmScroll>
+      </div>
+    );
+  } else if (selected) {
+    body = studentSheet;
   } else {
     body = shown.length
-      ? <CompetencyStudentList students={shown} index={index} competencyIds={competencyIds} month={month} onOpen={setStudentId} />
+      ? <CompetencyStudentList mobile={phone} students={shown} index={index} competencyIds={competencyIds} month={month} onOpen={setStudentId} />
       : <NEmptyState surface="panel" icon={Search} title={t('competencies.empty.noMatch')} />;
+  }
+
+  // The follow-up reports after a Massar Contrôle, in place of the page.
+  if (reportOpen && assignment) {
+    return (
+      <FollowUpReports assignment={assignment} domains={domains} students={students} onBack={() => setReportOpen(false)} />
+    );
   }
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col gap-2">
-      {selected ? (
-        <SheetBar subtitle={`${monthLabel(month, language)}${assignment ? ` · ${assignment.subjectName}` : ''}`} onBack={() => setStudentId(null)} />
-      ) : (
-        <NPageHeader
-          icon={FEATURE_ICONS.competencies}
-          title={t('competencies.title')}
-          subtitle={subtitle}
-          compactActions={(
-            <div className="flex items-center gap-1">
-              <ViewToggle view={view} onChange={setView} />
-              <HeaderActionsMenu contentClassName="md:hidden" hasOwnActions={!!menu}>{menu}</HeaderActionsMenu>
-            </div>
-          )}
-        >
+      {/* One header for the list and a pupil's sheet: the sheet's back arrow returns to the list, its menu stays. */}
+      {sheetOnly ? (
+        <NPageHeader icon={FEATURE_ICONS.competencies} title={t('competencies.sheet.title')}
+          subtitle={`${monthLabel(month, language)}${assignment ? ` · ${assignment.subjectName}` : ''}`}
+          onBack={closeSheet} backLabel={t('competencies.sheet.back')}>
           <NPageHeaderActions>
-            <ViewToggle view={view} onChange={setView} />
+            {/* Phones go back with the header's arrow; wider screens have no arrow. */}
+            <NButton type="button" variant="outline" className="max-md:hidden" onClick={closeSheet}
+              leftIcon={<ArrowLeft aria-hidden="true" className="size-4 rtl:rotate-180" />}>
+              {t('competencies.sheet.back')}
+            </NButton>
+            {menu}
+            <PageHeaderGlobalActions />
+          </NPageHeaderActions>
+        </NPageHeader>
+      ) : (
+        <NPageHeader icon={FEATURE_ICONS.competencies} title={t('competencies.title')} subtitle={desktopWorkspace ? undefined : subtitle}>
+          <NPageHeaderActions>
             {menu}
             <PageHeaderGlobalActions />
           </NPageHeaderActions>
         </NPageHeader>
       )}
 
-      {selected ? null : (
-        <div className={cn('grid shrink-0 gap-2 lg:flex lg:[&>*]:w-56', subjects.length > 1 ? 'grid-cols-2' : 'grid-cols-3')}>
-          <Filter value={classId} onChange={(value) => { setClassId(value); setStudentId(null); }} items={classes} label={t('competencies.filters.class')} disabled={!classes.length} />
-          <Filter value={sectionId} onChange={(value) => { setSectionId(value); setStudentId(null); }} items={sections} label={t('competencies.filters.section')} disabled={!sections.length} />
-          {subjects.length > 1 ? (
-            <Filter value={subjectId} onChange={setSubjectId} items={subjects} label={t('competencies.filters.subject')} />
-          ) : null}
-          <Filter value={month} onChange={setMonth} items={months.items} label={t('competencies.filters.month')} />
-          {view === 'students' && domains.length ? (
-            <div className="col-span-full lg:w-72">
-              <TextInput value={search} onChange={setSearch} placeholder={t('competencies.filters.search')} aria-label={t('competencies.filters.search')}
-                icon={Search} className="w-full [&_input]:text-sm" />
+      {sheetOnly ? null : phone ? (
+        <section aria-label={t('common.table.filterRegion')} className="shrink-0">
+          <div className="flex items-center gap-2">
+            <FilterChip parts={filterSummary} onOpen={() => setFiltersOpen(true)} />
+            <ViewToggle compact view={view} onChange={changeView} />
+          </div>
+          {showSearch ? (
+            // Scrolling down the roster folds the search away; scrolling back up, or a query, brings it back.
+            <div className={cn('grid transition-[grid-template-rows,opacity] duration-200 ease-out',
+              scrolled && !search ? 'grid-rows-[0fr] opacity-0' : 'grid-rows-[1fr] opacity-100')}>
+              <div className="min-h-0 overflow-hidden"><div className="pt-2">{searchInput}</div></div>
             </div>
           ) : null}
+        </section>
+      ) : (
+        <div className={cn(WORKSPACE, '@container shrink-0')}>
+          {/* One bare row, as Attendance and Grades lay out their filters: phones two per row, desktop one line with the view toggle at its end. */}
+          <section aria-label={t('common.table.filterRegion')} className="grid grid-cols-2 items-center gap-2 lg:flex lg:flex-wrap">
+            <div className="min-w-0 lg:w-48">
+              <Filter value={classId} onChange={setClassId} items={classes} label={t('competencies.filters.class')} disabled={!classes.length} />
+            </div>
+            <div className="min-w-0 lg:w-48">
+              <Filter value={sectionId} onChange={setSectionId} items={sections} label={t('competencies.filters.section')} disabled={!sections.length} />
+            </div>
+            <div className="min-w-0 lg:w-48">
+              {subjects.length === 1 ? (
+                <div className="flex min-h-10 min-w-0 items-center rounded-lg bg-muted/60 px-3 text-sm font-medium"
+                  title={`${t('competencies.filters.subject')} · ${subjects[0].label}`}>
+                  <bdi dir="auto" className="truncate">{subjects[0].label}</bdi>
+                </div>
+              ) : (
+                <Filter value={subjectId} onChange={setSubjectId} items={subjects} label={t('competencies.filters.subject')} disabled={!subjects.length} />
+              )}
+            </div>
+            <div className="min-w-0 lg:w-48">
+              <Filter value={month} onChange={setMonth} items={months.items} label={t('competencies.filters.month')} />
+            </div>
+            {!desktop && view === 'students' && domains.length ? <div className="col-span-2 min-w-0 lg:w-72">{searchInput}</div> : null}
+            <div className="col-span-2 lg:ms-auto">
+              <ViewToggle view={view} onChange={setView} />
+            </div>
+          </section>
         </div>
       )}
 
-      {level.failed ? <SaveFailed onRetry={level.retry} /> : null}
+      {level.failed ? (
+        <div className={cn(WORKSPACE, sheetOnly && 'max-w-3xl')}><SaveFailed onRetry={level.retry} /></div>
+      ) : null}
 
-      <NajmScroll axis="y" autoHide="scroll" className="min-h-0 flex-1">
-        <CompetencyTextScope domains={domains} className="mx-auto flex w-full max-w-3xl flex-col pb-6">{body}</CompetencyTextScope>
-      </NajmScroll>
+      {desktopWorkspace ?? <NajmScroll axis="y" autoHide="scroll" className="min-h-0 flex-1" events={phone ? { scroll: onListScroll } : undefined}>
+        <CompetencyTextScope domains={domains} className={cn(WORKSPACE, '@container pb-6', sheetOnly && 'max-w-3xl')}>
+          {body}
+        </CompetencyTextScope>
+      </NajmScroll>}
 
+      {phone ? (
+        <FilterSheet open={filtersOpen} onClose={() => setFiltersOpen(false)}
+          classId={classId} onClass={setClassId} classes={classes}
+          sectionId={sectionId} onSection={setSectionId} sections={sections}
+          subjectId={subjectId} onSubject={setSubjectId} subjects={subjects}
+          month={month} onMonth={setMonth} months={months.items} />
+      ) : null}
       <CompetencyRosterSheet competencyId={rosterCompetencyId} domains={domains} students={students} index={index} month={month}
         editable={editable} onSetLevel={setLevel} onClose={() => setRosterCompetencyId(null)} />
       {assignment && editorOpen ? (
@@ -353,7 +538,7 @@ function FamilyCompetencies() {
         <Filter value={month} onChange={setMonth} items={months.items} label={t('competencies.filters.month')} />
       </div>
       <NajmScroll axis="y" autoHide="scroll" className="min-h-0 flex-1">
-        <CompetencyTextScope domains={data?.domains ?? NO_DOMAINS} className="mx-auto flex w-full max-w-3xl flex-col pb-6">{body}</CompetencyTextScope>
+        <CompetencyTextScope domains={data?.domains ?? NO_DOMAINS} className="mx-auto flex w-full max-w-3xl flex-col pb-6 min-[1100px]:max-w-none">{body}</CompetencyTextScope>
       </NajmScroll>
     </div>
   );
