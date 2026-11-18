@@ -1,4 +1,5 @@
 import { COMPETENCY_LEVEL_VALUES, type CompetencyLevel, type MassarRound } from '@sms/contracts';
+import { componentLabel } from '@/features/Massar/config/componentLabels';
 import { escapeHtml as e, massarFontFaces, safeUrl } from '@/features/Massar/config/massarDocument';
 import { LEVEL_RANK, monthLabel } from './competencyLevels';
 import { formatNumber, isRoomy, levelShare, profileAxes, radar, reportLevel, signed, strengthsAndNeeds, type Appreciation, type CompetencyLine, type FollowUp, type Standing } from './followUpReport';
@@ -131,7 +132,7 @@ function indicators(report: FollowUp, options: FollowUpPrintOptions) {
     <div class="tiles">
       ${tile(report.average == null ? '—' : outOf(formatNumber(report.average), maxMark), `${t('competencies.report.indAverage')} ${options.examLabel}`, 'accent')}
       ${tile(report.diff == null ? '—' : num(signed(report.diff)), t('competencies.report.indCompare', { average: formatNumber(report.classAverage) }), diffTone)}
-      ${tile(ind.level == null ? '—' : outOf(Math.round(ind.level * 10) / 10, 5), `${level ? t(`competencies.levels.${level}`) : ''} · ${t('competencies.report.indLevel')}`, 'level')}
+      ${tile(ind.level == null ? '—' : outOf(formatNumber(ind.level), 5), `${level ? t(`competencies.levels.${level}`) : ''} · ${t('competencies.report.indLevel')}`, 'level')}
       ${tile(report.examMonth ? outOf(ind.acquired, ind.total) : '—', t('competencies.report.indAcquired'))}
       ${tile(report.examMonth ? num(ind.support) : '—', t('competencies.report.indSupport'), ind.support ? 'bad' : '')}
       ${tile(ind.mastery == null ? '—' : num(`${ind.mastery}%`), t('competencies.report.indMastery'))}
@@ -150,7 +151,11 @@ function marks(report: FollowUp, options: FollowUpPrintOptions) {
   // A single part is the subject's average itself: only the average's column is printed.
   const parts = report.parts.length > 1 ? report.parts : [];
   const absent = report.parts.length === 1 && report.parts[0].absent;
-  const head = parts.map((part) => `<th>${e(part.name)}</th>`).join('');
+  const head = parts.map((part) => {
+    const label = componentLabel(part.name);
+    const title = label === part.name ? '' : ` title="${e(part.name)}"`;
+    return `<th${title}>${e(label)}</th>`;
+  }).join('');
   const classes = (...names: string[]) => { const list = names.filter(Boolean).join(' '); return list ? ` class="${list}"` : ''; };
   const markCell = (mark: number | null, absent: boolean, grade: Appreciation | null, total = '') => (mark == null
     ? (absent ? `<td${classes(total, 'muted')}>${e(t('competencies.report.absent'))}</td>` : `<td${classes(total)}></td>`)
@@ -298,7 +303,7 @@ const PREVIEW_STYLES = `
   .card-title,.section-title{flex-wrap:wrap;align-items:center;gap:4px 8px}
   .card-title h4,.section-title h3{font-size:16px}
   .card-title small,.section-title small{color:#64748b;font-size:11px}
-  .radar{max-height:160px;overflow:visible}.radar text{font-size:11px}
+  .radar{max-height:160px;overflow:visible}.radar text{font-size:12px}
   .bar-row,.legend,.scale li{font-size:12px}.legend{flex-wrap:wrap;gap:4px 12px}
   .tile{min-height:54px;padding:5px}.tile b{font-size:18px}.tile>span{font-size:11px}
   .scale small,.scale b{font-size:11px}.scale small{color:#64748b}
@@ -365,7 +370,7 @@ export function buildFollowUpDocument(reports: readonly FollowUp[], options: Fol
     .card{display:flex;flex-direction:column;gap:1.5mm}
     .card-title,.section-title{display:flex;justify-content:space-between;align-items:baseline;gap:2mm}
     .card-title h4{margin:0;font-size:9.5pt}.card-title small,.section-title small{font:7pt MassarLatin,sans-serif;color:#94a3b8}
-    .radar{width:100%;height:auto;max-height:34mm;overflow:visible}.radar text{font-size:8.5px;fill:#334155}
+    .radar{width:100%;height:auto;max-height:34mm;overflow:visible}.radar text{font-size:10px;fill:#25354a}
     .legend{display:flex;justify-content:center;gap:4mm;font-size:7pt;color:#475569}.legend span{display:inline-flex;align-items:center;gap:1mm}
     .legend i{display:inline-block;width:4mm;height:.8mm}.legend .dashed i{height:0;border-top:.8mm dashed;background:none}
     .bar-row{display:grid;grid-template-columns:1fr 2fr auto;align-items:center;gap:1.5mm;font-size:7.5pt}.bar{position:relative;height:2.5mm;background:#eef2f6;border-radius:1mm}
@@ -385,6 +390,7 @@ export function buildFollowUpDocument(reports: readonly FollowUp[], options: Fol
     thead th{background:#fff1f2;font-size:7.8pt;font-weight:700;color:#475569}
     .marks th.label{text-align:start;width:22mm;background:#f8fafc}.marks td{font:9.5pt MassarLatin,MassarArabic,sans-serif}
     .marks th.label:lang(ar){white-space:nowrap}
+    .marks td :is(bdi,span[dir="ltr"]){white-space:nowrap;overflow-wrap:normal}
     .marks .total{background:#fdf2f8}.marks thead .total{background:#e11d48;color:#fff}.marks tr.soft td,.marks tr.soft th{color:#64748b}
     .marks td.grade{font:7.5pt MassarArabic,serif;color:#64748b}.marks td.total.grade b,.marks.flat td.grade b{color:#c2410c}
     .marks.flat th{font-weight:600;color:#475569;background:#f8fafc}.marks.flat thead th.total{background:#e11d48;color:#fff}
@@ -407,7 +413,7 @@ export function buildFollowUpDocument(reports: readonly FollowUp[], options: Fol
     .focus-col li p{margin:.4mm 0 0;font-size:8pt;line-height:1.35;color:#475569}
     /* A short report: a wider profile with readable labels, roomier tables and text. */
     .roomy .cards{grid-template-columns:1.15fr 1.45fr .9fr}
-    .roomy .radar{max-height:40mm}.roomy .radar text{font-size:12px}
+    .roomy .radar{max-height:40mm}.roomy .radar text{font-size:13px}
     .roomy .marks th,.roomy .marks td{padding:1mm}
     .roomy .competencies td{padding:.5mm .8mm}.roomy .competencies td.name{font-size:9pt}
     .roomy .analysis{gap:.3mm;font-size:8.5pt}
@@ -436,7 +442,7 @@ export function buildFollowUpDocument(reports: readonly FollowUp[], options: Fol
         & > .panel:has(>table:not(.flat)){display:grid;grid-template-rows:auto minmax(min-content,1fr);flex-grow:1}
         & > .panel:has(>.competencies){flex-grow:1.4}
         & .radar{max-height:42mm}
-        & .radar text{font-size:10px}
+        & .radar text{font-size:11px}
         & .analysis{font-size:9.5pt;line-height:1.4;gap:.5mm}
         & .competencies td.name,& .competencies td.current{font-size:9pt}
         & thead th{font-size:8.5pt}

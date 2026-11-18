@@ -1,7 +1,7 @@
 import { foldSubjectName } from '@sms/contracts';
 import { LEVEL_RANK } from './competencyLevels';
 import { agree, skillNeed, type RemarkGender, type RemarkLanguage } from './competencyRemarks';
-import { reportLevel, type CompetencyLine, type FollowUp, type PartRow } from './followUpReport';
+import { formatNumber, reportLevel, type CompetencyLine, type FollowUp, type PartRow } from './followUpReport';
 
 /**
  * قراءة تحليلية: the marks of a Massar Contrôle set against the competencies
@@ -142,8 +142,9 @@ export function analyze(report: FollowUp, { maxMark, language, gender, levelLabe
   const concise = language === 'ar' && report.parts.length > 1;
   if (report.average != null) {
     const { average, classAverage, diff } = report;
-    const template = diff == null ? phrases.mark : diff > 0 ? phrases.higher : diff < 0 ? phrases.lower : phrases.equal;
-    lines.push(say(template, { mark: `${average}/${maxMark}`, classMark: `${classAverage}/${maxMark}`, gap: Math.abs(diff ?? 0) }));
+    const gap = formatNumber(Math.abs(diff ?? 0));
+    const template = diff === 0 ? phrases.equal : diff == null || gap === '0' ? phrases.mark : diff > 0 ? phrases.higher : phrases.lower;
+    lines.push(say(template, { mark: `${formatNumber(average)}/${maxMark}`, classMark: `${formatNumber(classAverage)}/${maxMark}`, gap }));
     if (!report.examMonth && total) lines.push(phrases.undated);
     else if (total && !assessed) lines.push(say(phrases.noLevels, { total }));
   }
@@ -156,7 +157,7 @@ export function analyze(report: FollowUp, { maxMark, language, gender, levelLabe
       const classGap = classComparison ? (classComparison.mark / maxMark) * 100 - classComparison.level * 20 : 0;
       if (Math.abs(gap) <= GAP) lines.push(phrases.overallAgree);
       else if (classComparison && Math.abs(classGap) > GAP && Math.sign(gap) === Math.sign(classGap)) {
-        const format = (value: number) => value.toLocaleString(language, { maximumFractionDigits: 2 });
+        const format = (value: number) => value.toLocaleString(language, { maximumFractionDigits: 1 });
         lines.push(say(phrases.classComparison, { mark: `${format(classComparison.mark)}/${maxMark}`, level: format(classComparison.level) }));
       } else if (Math.abs(gap) > LARGE_GAP) {
         lines.push(gap > 0 ? phrases.overallMarkAbove : phrases.overallLevelAbove);
@@ -178,7 +179,7 @@ export function analyze(report: FollowUp, { maxMark, language, gender, levelLabe
     const { part, rank } = link;
     if (part.mark == null) continue;
     const finding = classify((part.mark / maxMark) * 100, rank * 20);
-    let sentence = say(phrases[finding], { part: part.name, mark: `${part.mark}/${maxMark}`, level: levelLabel(rank) });
+    let sentence = say(phrases[finding], { part: part.name, mark: `${formatNumber(part.mark)}/${maxMark}`, level: levelLabel(rank) });
     const versus = part.diff == null ? 0 : (part.diff / maxMark) * 100;
     if (Math.abs(versus) >= CLASS_GAP) sentence = `${sentence.replace(/[.。]$/, '')} (${versus > 0 ? phrases.aboveClass : phrases.belowClass}).`;
     lines.push(sentence);

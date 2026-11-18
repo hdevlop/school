@@ -57,6 +57,13 @@ describe('the follow-up report after a Massar Contrôle', () => {
     expect(badr.average).toBe(7.5);
     expect(amina.classAverage).toBe(7.25);
     expect(amina.diff).toBe(-0.25);
+    for (const mode of ['preview', 'print'] as const) {
+      const html = buildFollowUpDocument([amina, badr], documentOptions, mode);
+      expect(html).toContain('<bdi dir="ltr">7.3</bdi>');
+      expect(html).toContain('<bdi dir="ltr">−0.3</bdi>');
+      expect(html).toContain('<bdi dir="ltr">+0.3</bdi>');
+      expect(html).toContain('<bdi dir="ltr">7</bdi>');
+    }
   });
 
   it('follows the competencies up to the Contrôle\'s month, with the current level and its trend', () => {
@@ -212,9 +219,13 @@ describe('the follow-up report after a Massar Contrôle', () => {
     expect(followUpRoundLabels(sheet.round, 'ar', t)).toEqual({ examLabel: 'الفرض الأول', termLabel: 'الدورة الأولى' });
     expect(followUpRoundLabels({ ...sheet.round, exam: 4 }, 'fr', t).examLabel).toBe(t('massar.flow.activities'));
     const options = { ...documentOptions, ...labels, t, language: 'fr', dir: 'ltr' as const, subjectName: 'Français' };
+    const [first, ...rest] = amina.parts;
+    const report = { ...amina, parts: [{ ...first, name: 'Orthographe/Dictée' }, ...rest] };
     for (const mode of ['preview', 'print'] as const) {
-      const html = buildFollowUpDocument([amina], options, mode);
+      const html = buildFollowUpDocument([report], options, mode);
       expect(html).toContain('<th class="label">Contrôle 1</th>');
+      expect(html).toContain('<th title="Orthographe/Dictée">Ortho./Dictée</th>');
+      expect(html).toContain('>Orthographe/Dictée</text>');
       expect(html).toContain('Semestre 1');
       expect(html).not.toContain('الفرض الأول');
     }
@@ -293,7 +304,7 @@ describe('the analysis of marks against competencies', () => {
       ['الإملاء', ['c2']], ['القراءة', ['c1']], ['الاستماع والتحدث', ['c3']],
     ]);
     expect(analyze(report, options).split('\n')).toEqual([
-      'بلغ معدل الفرض 7/10، وهو أقل من معدل القسم (7.25/10) بفارق 0.25.',
+      'بلغ معدل الفرض 7/10، وهو أقل من معدل القسم (7.3/10) بفارق 0.3.',
       'في مكوّن «الإملاء»، جاءت نقطة الفرض (8/10) أعلى من المستوى المسجّل في تقييم الكفايات المرتبطة به (L2) (فوق معدل القسم).',
       'بمقارنة آخر تقييمين متاحين لكل كفاية، بلغ عدد الكفايات التي تحسّنت 2 والتي تراجعت 1.',
       // What helps, from the remark book's own sentence for the skill.
@@ -304,12 +315,14 @@ describe('the analysis of marks against competencies', () => {
   it('explains the mark, its class comparison and missing competency evidence in both languages', () => {
     const marksOnly = { ...badr, average: 18, classAverage: 14.32, diff: 3.68, indicators: { ...badr.indicators, total: 8 } };
     expect(analyze(marksOnly, { ...options, maxMark: 20 })).toBe([
-      'بلغ معدل الفرض 18/20، وهو أعلى من معدل القسم (14.32/20) بفارق 3.68.',
+      'بلغ معدل الفرض 18/20، وهو أعلى من معدل القسم (14.3/20) بفارق 3.7.',
       'لم يُسجّل أي تقييم للكفايات حتى شهر الفرض (0 من أصل 8).',
     ].join('\n'));
     const french = analyze(marksOnly, { ...options, maxMark: 20, language: 'fr' });
     expect(french).toContain('18/20');
     expect(french).toContain('0 sur 8');
+    expect(analyze({ ...marksOnly, average: 14.34, diff: 0.02 }, { ...options, maxMark: 20, language: 'fr' }))
+      .toStartWith('La moyenne au contrôle est de 14.3/20.');
     expect(analyze({ ...badr, average: 0, classAverage: 0, diff: 0 }, options)).toContain('0/10، وهو يساوي معدل القسم');
     expect(analyze({ ...badr, average: 0, classAverage: null, diff: null }, options)).toStartWith('بلغ معدل الفرض 0/10.');
   });
@@ -317,7 +330,7 @@ describe('the analysis of marks against competencies', () => {
   it('reports partial coverage without comparing the exam to a whole-catalog level', () => {
     const [partial] = followUps({ sheet, domains, evaluations: [level('a', 'c1', '2026-10', 'mastered')], remarks: [], months: MONTHS });
     expect(analyze(partial, options).split('\n')).toEqual([
-      'بلغ معدل الفرض 7/10، وهو أقل من معدل القسم (7.25/10) بفارق 0.25.',
+      'بلغ معدل الفرض 7/10، وهو أقل من معدل القسم (7.3/10) بفارق 0.3.',
       'بلغ عدد الكفايات المقيّمة 1 من أصل 3، ومتوسط مستواها «L5».',
     ]);
     expect(analyze({ ...partial, average: null, parts: [] }, options)).toBe('بلغ عدد الكفايات المقيّمة 1 من أصل 3، ومتوسط مستواها «L5».');

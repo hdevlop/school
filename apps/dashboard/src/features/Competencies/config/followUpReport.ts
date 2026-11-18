@@ -219,9 +219,15 @@ export function strengthsAndNeeds(report: Pick<FollowUp, 'domains'>) {
   };
 }
 
-/** `+0.2`, `−0.23`, `0`. */
-export const signed = (value: number) => (value > 0 ? `+${value}` : value < 0 ? `−${Math.abs(value)}` : '0');
-export const formatNumber = (value: number | null) => (value == null ? '' : String(value));
+const reportNumber = new Intl.NumberFormat('en', { maximumFractionDigits: 1, useGrouping: false });
+export const formatNumber = (value: number | null) => (value == null ? '' : reportNumber.format(value));
+
+/** `+0.2`, `−0.3`, `0`. */
+export function signed(value: number): string {
+  const magnitude = formatNumber(Math.abs(value));
+  if (magnitude === '0') return magnitude;
+  return `${value < 0 ? '−' : '+'}${magnitude}`;
+}
 
 /** One spoke of the profile radar: the pupil's value and the class's on it. */
 export type RadarAxis = { name: string; value: number | null; group: number | null };
