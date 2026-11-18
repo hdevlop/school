@@ -13,6 +13,7 @@ import {
   Car,
   ChartNoAxesColumnIncreasing,
   ClipboardList,
+  ClipboardX,
   CreditCard,
   FileText,
   FileBarChart,
@@ -84,6 +85,7 @@ export const FEATURE_ICONS = {
   behaviorRewards: Award,
 
   homework: NotebookPen,
+  homeworkFollowUp: ClipboardX,
   competencies: ChartNoAxesColumnIncreasing,
   assessments: ClipboardList,
   evaluations: ClipboardList,

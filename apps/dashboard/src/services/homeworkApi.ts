@@ -1,4 +1,6 @@
-import type { HomeworkAttachment, HomeworkRow } from '@sms/contracts';
+import type {
+  HomeworkAttachment, HomeworkCompletionEntry, HomeworkMissedRecord, HomeworkRosterEntry, HomeworkRow,
+} from '@sms/contracts';
 import { api, fileRequest, formApi } from './http';
 
 export type HomeworkPayload = {
@@ -75,7 +77,24 @@ export const getHomeworkAttachmentBlobApi = async (id: string, attachmentId: str
   return response.blob();
 };
 
-export const acknowledgeHomeworkApi = async (id: string, studentId: string): Promise<{ data: { homeworkId: string; studentId: string; seenAt: string | null } }> => {
+/** The pupils a homework was given to, with their follow-up. Staff only. */
+export const getHomeworkRosterApi = async (id: string): Promise<{ data: HomeworkRosterEntry[] }> => {
+  const res = await api.get(`/homework/${id}/completions`);
+  return res.data;
+};
+
+export const saveHomeworkCompletionsApi = async (id: string, entries: HomeworkCompletionEntry[]): Promise<{ data: HomeworkRosterEntry[] }> => {
+  const res = await api.put(`/homework/${id}/completions`, { entries });
+  return res.data;
+};
+
+/** The selected year's missed homework the reader may see; `studentId` narrows to one pupil. */
+export const getMissedHomeworkApi = async (studentId?: string): Promise<{ data: HomeworkMissedRecord[] }> => {
+  const res = await api.get('/homework/missed', { params: studentId ? { studentId } : {} });
+  return res.data;
+};
+
+export const acknowledgeHomeworkApi =async (id: string, studentId: string): Promise<{ data: { homeworkId: string; studentId: string; seenAt: string | null } }> => {
   const res = await api.post(`/homework/${id}/acknowledge`, { studentId });
   return res.data;
 };

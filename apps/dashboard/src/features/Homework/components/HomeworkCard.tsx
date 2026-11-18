@@ -1,11 +1,12 @@
 'use client'
 
 import React, { useState } from 'react';
-import { BookOpen, Building, Calendar, CalendarClock, Check, DoorOpen, Eye, NotebookPen, Paperclip, User } from 'lucide-react';
-import { Label, NButton, NSectionInfo } from 'najm-kit';
+import { BookOpen, Building, Calendar, CalendarClock, Check, ClipboardCheck, DoorOpen, Eye, NotebookPen, Paperclip, User } from 'lucide-react';
+import { Label, NBadge, NButton, NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import type { HomeworkRow } from '@sms/contracts';
+import type { HomeworkCompletionStatus, HomeworkRow } from '@sms/contracts';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { COMPLETION_COLORS } from '../config/homeworkCompletion';
 import { useAcknowledgeHomework } from '../hooks/useHomework';
 import HomeworkAttachments from './HomeworkAttachments';
 
@@ -16,6 +17,28 @@ export function homeworkPlacementLabel(row: Pick<HomeworkRow, 'class' | 'section
     : row.section?.name;
   return [row.class?.name, sections].filter(Boolean).join(' - ');
 }
+
+/**
+ * How the follow-up went: the three counts once opened, a short line in a list
+ * card, where a phone has no room for the counts.
+ */
+function completionSummary(counts: NonNullable<HomeworkRow['completionCounts']>, detailed: boolean, t: (key: string, params?: Record<string, unknown>) => string) {
+  if (!counts.reviewed) return t('homework.completion.notReviewed');
+  const missed = counts.incomplete + counts.notDone;
+  if (!detailed) return missed ? t('homework.completion.missed', { count: missed }) : t('homework.completion.allDone');
+  return t('homework.completion.summary', { done: counts.reviewed - missed, incomplete: counts.incomplete, notDone: counts.notDone });
+}
+
+/** The teacher's follow-up of one pupil, with their remark when there is one. */
+const CompletionBadge = ({ status, note }: { status: HomeworkCompletionStatus; note: string | null }) => {
+  const { t } = useTranslation();
+  return (
+    <span className="flex flex-wrap items-center gap-1">
+      <NBadge color={COMPLETION_COLORS[status]} look="soft" label={t(`homework.completion.status.${status}`)} />
+      {note && <span className="text-xs text-muted-foreground">{note}</span>}
+    </span>
+  );
+};
 
 // A parent confirms they saw the homework, once per child. The dialog shows
 // a row read earlier, so a confirmation is kept here until the list reloads.
@@ -32,9 +55,12 @@ const ParentAcknowledgment = ({ homework }: { homework: HomeworkRow }) => {
         const seenAt = child.seenAt ?? justSeen[child.id];
         return (
           <div key={child.id} className="flex flex-wrap items-center justify-between gap-2">
-            <span className="text-sm">
-              <span className="text-muted-foreground">{t('homework.card.child')} </span>
-              <span className="font-medium">{child.name}</span>
+            <span className="flex flex-wrap items-center gap-2 text-sm">
+              <span>
+                <span className="text-muted-foreground">{t('homework.card.child')} </span>
+                <span className="font-medium">{child.name}</span>
+              </span>
+              {child.completion && <CompletionBadge status={child.completion.status} note={child.completion.note} />}
             </span>
             {seenAt ? (
               <span className="flex items-center gap-1 text-sm text-muted-foreground">
@@ -111,6 +137,22 @@ const HomeworkCard = ({ data, detailed = false }: { data: HomeworkRow; detailed?
           />
           {!detailed && attachments.length > 0 && (
             <NSectionInfo icon={Paperclip} iconColor="text-muted-foreground" label={t('homework.table.attachments')} value={String(attachments.length)} valueColor="text-foreground font-medium" />
+          )}
+          {homework.completionCounts && (
+            <NSectionInfo
+              icon={ClipboardCheck}
+              iconColor="text-muted-foreground"
+              label={t('homework.table.followUp')}
+              value={completionSummary(homework.completionCounts, detailed, t)}
+              valueColor="text-foreground font-medium"
+            />
+          )}
+          {homework.completion && (
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <ClipboardCheck className="h-4 w-4 text-muted-foreground" aria-hidden />
+              <span className="text-muted-foreground">{t('homework.table.followUp')}</span>
+              <CompletionBadge status={homework.completion.status} note={homework.completion.note} />
+            </div>
           )}
           {homework.studentCount != null && (
             <NSectionInfo

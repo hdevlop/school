@@ -3,7 +3,7 @@ import { Body, Controller, Get, Params, Put, ResMsg, User, Validate } from '../.
 import { Can, Policy } from '../../auth';
 import { MassarService } from './MassarService';
 import { MassarSheet } from './MassarGuards';
-import { massarIdParam, massarMarksDto, massarRemarkDto, type MassarMarksInput, type MassarRemarkInput } from './MassarDto';
+import { massarAnalysisDto, massarIdParam, massarMarksDto, massarRemarkDto, type MassarAnalysisInput, type MassarMarksInput, type MassarRemarkInput } from './MassarDto';
 import type { MassarActor } from './MassarValidator';
 
 /**
@@ -42,4 +42,16 @@ export class MassarGradesController {
   @Validate({ params: massarIdParam, body: massarRemarkDto })
   @ResMsg('massar.success.saved')
   remark(@Params('id') id: string, @Body() body: MassarRemarkInput, @User() actor: MassarActor) { return this.service.saveRemark(id, body, actor, 'notes'); }
+
+  @Get('/sheets/:id/analyses')
+  @Can('read:grades')
+  @Validate({ params: massarIdParam })
+  @ResMsg('massar.success.loaded')
+  analyses(@Params('id') id: string) { return this.service.analyses(id); }
+
+  @Put('/sheets/:id/analyses')
+  @Can('update:grades')
+  @Validate({ params: massarIdParam, body: massarAnalysisDto })
+  @ResMsg('massar.success.saved')
+  analysis(@Params('id') id: string, @Body() body: MassarAnalysisInput, @User() actor: MassarActor) { return this.service.saveAnalysis(id, body, actor); }
 }

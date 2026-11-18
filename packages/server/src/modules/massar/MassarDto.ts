@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { GENDER_VALUES, MASSAR_ABSENCE_VALUES, MASSAR_MAX_COEFFICIENT, MASSAR_MAX_EXAMS_PER_TERM, MASSAR_REMARK_MAX_LENGTH } from '@sms/contracts';
+import { GENDER_VALUES, MASSAR_ABSENCE_VALUES, MASSAR_ANALYSIS_MAX_LENGTH, MASSAR_MAX_COEFFICIENT, MASSAR_MAX_EXAMS_PER_TERM, MASSAR_REMARK_MAX_LENGTH } from '@sms/contracts';
 import type { MassarMark } from '@sms/contracts';
 
 export const massarIdParam = z.object({ id: z.string().min(1).max(100) });
@@ -45,6 +45,11 @@ export const massarMarkDto = z.object({ studentId: z.string().min(1), componentC
 export const massarMarksDto = z.object({ revision: z.number().int().nonnegative(), marks: z.array(massarMarkDto).max(2500) });
 /** One student's remark on a grid; an empty one removes it. Written on its own, so it needs no revision. */
 export const massarRemarkDto = z.object({ studentId: z.string().min(1).max(100), remark: z.string().trim().max(MASSAR_REMARK_MAX_LENGTH) });
+/** Null restores the suggestion. An empty string deliberately hides the analysis. */
+export const massarAnalysisDto = z.object({
+  studentId: massarRemarkDto.shape.studentId,
+  analysis: z.string().max(MASSAR_ANALYSIS_MAX_LENGTH).nullable(),
+});
 export const massarRevisionDto = z.object({ revision: z.number().int().nonnegative() });
 export const massarExportDto = z.object({ sheetIds: z.array(z.string().min(1)).min(1).max(400), empty: z.boolean().default(false) });
 // One class's subjects, exported to check them; a class has a dozen subjects at most.
@@ -54,3 +59,4 @@ export type MassarCommit = z.input<typeof massarCommitDto>;
 export type MassarRoundInput = z.infer<typeof massarRoundDto>;
 export type MassarMarksInput = { revision: number; marks: MassarMark[] };
 export type MassarRemarkInput = z.infer<typeof massarRemarkDto>;
+export type MassarAnalysisInput = z.infer<typeof massarAnalysisDto>;

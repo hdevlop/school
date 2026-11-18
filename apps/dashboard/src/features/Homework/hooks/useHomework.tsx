@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useTranslation } from 'najm-i18n/react';
 import { useEntityCRUD } from 'najm-kit/query/crud';
-import type { HomeworkRow } from '@sms/contracts';
+import type { HomeworkCompletionEntry, HomeworkMissedRecord, HomeworkRosterEntry, HomeworkRow } from '@sms/contracts';
 import { useYearScopedList, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import * as homeworkApi from '@/services/homeworkApi';
 
@@ -66,6 +66,40 @@ export const useHomework = (options?: { enabled?: boolean }) => {
     isSaving: isCreating || isUpdating,
     isDeleting,
   };
+};
+
+/** The pupils a homework was given to, with their follow-up. */
+export const useHomeworkRoster = (homeworkId: string | null) => {
+  const { data, isLoading, error } = useYearScopedList({
+    resource: 'homework',
+    parts: ['completions', homeworkId],
+    fetch: () => homeworkApi.getHomeworkRosterApi(homeworkId!),
+    enabled: Boolean(homeworkId),
+  });
+  return { roster: data as HomeworkRosterEntry[], isLoading, error };
+};
+
+/** Saves a homework's follow-up; the lists that count it reload. */
+export const useSaveHomeworkCompletions = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, entries }: { id: string; entries: HomeworkCompletionEntry[] }) =>
+      homeworkApi.saveHomeworkCompletionsApi(id, entries),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['homework'] }),
+    onError: (error: Error) => toast.error(error.message),
+  });
+};
+
+/** The selected year's missed homework the reader may see, or one pupil's. */
+export const useMissedHomework = (options: { studentId?: string; enabled?: boolean } = {}) => {
+  const { studentId, enabled = true } = options;
+  const { data, isLoading, error } = useYearScopedList({
+    resource: 'homework',
+    parts: ['missed', studentId ?? 'all'],
+    fetch: () => homeworkApi.getMissedHomeworkApi(studentId),
+    enabled,
+  });
+  return { records: data as HomeworkMissedRecord[], isLoading, error };
 };
 
 /** "Vu par le parent": marks one homework seen for one of the parent's children. */

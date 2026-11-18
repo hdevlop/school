@@ -19,11 +19,17 @@ function fixture(status = 'not_started') {
     cls: { id: 'class-1', name: '1APG-1', guid: 'synthetic-guid' }, level: { code: '1APG', levelCode: '1061101010', levelCodeNumeric: true, label: 'Synthetic level', maxMark: 10, kind: 'components' }, subject: { code: '0011', name: 'Synthetic subject', observedRounds: [], confirmed: true }, teacherName: 'Synthetic teacher', round: { id: 'round-1', term: 1, exam: 1, termLabel: 'الدورة الأولى', examLabel: 'الفرض الأول', status: 'open', dueDate: null as string | null } };
   let marks: any[] = [];
   const remarks = new Map<string, string>();
+  const analyses = new Map<string, string>();
   const repository = {
     lock: async () => {}, sheetById: async (id: string) => id === 'sheet-1' ? row : undefined,
     marks: async () => marks, saveMarks: async (_id: string, data: any[]) => { marks = data; },
     remarks: async () => [...remarks].map(([studentId, remark]) => ({ studentId, remark })),
     saveRemark: async (_id: string, studentId: string, remark: string) => { if (remark) remarks.set(studentId, remark); else remarks.delete(studentId); },
+    analyses: async () => [...analyses].map(([studentId, analysis]) => ({ studentId, analysis })),
+    saveAnalysis: async (_id: string, studentId: string, analysis: string | null) => {
+      if (analysis === null) analyses.delete(studentId);
+      else analyses.set(studentId, analysis);
+    },
     hiddenIds: async () => [], previousYearSubjects: async () => [], addModelSubject: async () => {},
     // Planning gives the ready class exams in October and the college class in October to December: Contrôles 1 to 3 of semester 1.
     planningMonths: async () => [{ classId: 'school-ready', months: { '2026-10': [{ date: '2026-10-20' }] } }, { classId: 'school-college', months: { '2026-10': [{ date: '2026-10-21' }], '2026-11': [{ date: '2026-11-18' }], '2026-12': [{ date: '2026-12-16' }] } }] as Array<{ classId: string; months: Record<string, Array<{ date?: string }>> }>,
@@ -302,6 +308,26 @@ describe('Massar sheet workflow', () => {
     for (const status of ['exported', 'changed_after_export']) await expect(fixture(status).service.saveRemark('sheet-1', { studentId: 'student-1', remark: 'Bien' }, grader, 'notes')).rejects.toThrow();
     await expect(fixture().service.saveRemark('foreign-sheet', { studentId: 'student-1', remark: 'Bien' }, grader, 'notes')).rejects.toThrow();
     expect(getTransactionalMethods(MassarService).map(method => method.propertyKey)).toContain('saveRemark');
+  });
+  it('saves and resets a follow-up analysis independently of teacher remarks and sheet revisions', async () => {
+    const { service, row } = fixture();
+    const grader = { ...teacher, permissions: ['read:grades', 'update:grades'] };
+    const studentId = 'student-1';
+    await service.saveRemark('sheet-1', { studentId, remark: 'Observation' }, grader, 'notes');
+    for (const analysis of ['قراءة تحليلية\nTexte édité', '']) {
+      await service.saveAnalysis('sheet-1', { studentId, analysis }, grader);
+      expect(await service.analyses('sheet-1')).toEqual([{ studentId, analysis }]);
+    }
+    await expect(service.saveAnalysis('sheet-1', { studentId: 'another-pupil', analysis: '' }, grader)).rejects.toThrow();
+    await expect(service.analyses('foreign-sheet')).rejects.toThrow();
+    row.sheet.status = 'exported';
+    await expect(service.saveAnalysis('sheet-1', { studentId, analysis: null }, grader)).rejects.toThrow();
+    expect(await service.analyses('sheet-1')).toEqual([{ studentId, analysis: '' }]);
+    row.sheet.status = 'not_started';
+    await service.saveAnalysis('sheet-1', { studentId, analysis: null }, grader);
+    expect(await service.analyses('sheet-1')).toEqual([]);
+    expect((await service.sheet('sheet-1', grader, 'notes')).remarks).toEqual([{ studentId, remark: 'Observation' }]);
+    expect(row.sheet.revision).toBe(0);
   });
   it('reopens explicitly, retains the export record, and requires re-export after editing', async () => {
     const { service, row } = fixture('exported'); row.sheet.exportedAt = '2026-11-06T00:00:00Z';

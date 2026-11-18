@@ -13,7 +13,7 @@ import { studentEnrollments, studentEnrollmentPlacements } from '../studentEnrol
 import { staff } from '../staff/staffSchema';
 import { teachers, teacherAssignments } from '../teachers/teacherSchema';
 import { examPlanning } from '../examPlanning/ExamPlanningSchema';
-import { massarClasses, massarEnrollments, massarImports, massarLevels, massarMarks, massarRemarks, massarRounds, massarSheets, massarSubjects, massarYears } from './massarSchema';
+import { massarClasses, massarEnrollments, massarFollowUpAnalyses, massarImports, massarLevels, massarMarks, massarRemarks, massarRounds, massarSheets, massarSubjects, massarYears } from './massarSchema';
 import { MassarSheet } from './MassarGuards';
 import type { MassarComponent, MassarMark, MassarSheetStatus, MassarStudent } from '@sms/contracts';
 
@@ -171,6 +171,22 @@ export class MassarRepository {
     }
     await this.db.insert(massarRemarks).values({ sheetId, studentId, remark, academicYearId: this.year.id, updatedBy: actorId }).onConflictDoUpdate({
       target: [massarRemarks.sheetId, massarRemarks.studentId], set: { remark, updatedBy: actorId, updatedAt: sql`CURRENT_TIMESTAMP` },
+    });
+  }
+  async analyses(sheetId: string) {
+    const table = massarFollowUpAnalyses;
+    return this.db.select({ studentId: table.studentId, analysis: table.analysis }).from(table)
+      .innerJoin(massarSheets, eq(massarSheets.id, table.sheetId))
+      .where(and(this.ownedWhere(), eq(massarSheets.academicYearId, this.year.id), eq(table.academicYearId, this.year.id), eq(table.sheetId, sheetId)));
+  }
+  async saveAnalysis(sheetId: string, studentId: string, analysis: string | null, actorId: string) {
+    const table = massarFollowUpAnalyses;
+    if (analysis === null) {
+      await this.db.delete(table).where(and(eq(table.academicYearId, this.year.id), eq(table.sheetId, sheetId), eq(table.studentId, studentId)));
+      return;
+    }
+    await this.db.insert(table).values({ sheetId, studentId, analysis, academicYearId: this.year.id, updatedBy: actorId }).onConflictDoUpdate({
+      target: [table.sheetId, table.studentId], set: { analysis, updatedBy: actorId, updatedAt: sql`CURRENT_TIMESTAMP` },
     });
   }
   async completedMarkCounts(roundId?: string) {

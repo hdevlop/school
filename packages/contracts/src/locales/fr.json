@@ -2334,7 +2334,8 @@
     "expandSidebar": "Développer",
     "insurance": "Assurance",
     "homework": "Devoirs",
-    "competencies": "Compétences"
+    "competencies": "Compétences",
+    "homeworkFollowUp": "Devoirs non faits"
   },
   "backup": {
     "success": {
@@ -3680,7 +3681,8 @@
     },
     "homework": {
       "create": "Publier ce devoir ?",
-      "update": "Mettre à jour ce devoir ?"
+      "update": "Mettre à jour ce devoir ?",
+      "completions": "Enregistrer le suivi de ce devoir ?"
     },
     "competencies": {
       "evaluate": "Enregistrer le niveau de cet élève ?"
@@ -5239,7 +5241,8 @@
         "grades": "Notes",
         "fees": "Frais",
         "transport": "Transport",
-        "alerts": "Alertes"
+        "alerts": "Alertes",
+        "homework": "Devoirs"
       },
       "genders": {
         "M": "Masculin",
@@ -6304,6 +6307,10 @@
     "homework": {
       "title": "Aucun devoir pour le moment",
       "description": "Publiez le premier devoir d’une classe."
+    },
+    "homeworkFollowUp": {
+      "title": "Aucun devoir manqué",
+      "description": "Les devoirs marqués « Non fait » ou « Incomplet » dans le suivi apparaîtront ici."
     }
   },
   "academicSources": {
@@ -7655,7 +7662,8 @@
       "date": "Donné le",
       "dueOn": "Pour le",
       "attachments": "Fichiers",
-      "seen": "Vu par les parents"
+      "seen": "Vu par les parents",
+      "followUp": "Suivi"
     },
     "card": {
       "givenOn": "Donné le",
@@ -7682,7 +7690,8 @@
       "deleted": "Devoir supprimé",
       "attached": "Fichiers ajoutés",
       "detached": "Fichier retiré",
-      "acknowledged": "Marqué comme vu"
+      "acknowledged": "Marqué comme vu",
+      "completionsSaved": "Suivi du devoir enregistré"
     },
     "errors": {
       "notFound": "Devoir introuvable",
@@ -7708,7 +7717,31 @@
       "attachmentNotFound": "Fichier introuvable",
       "attachmentPurged": "Ce fichier a été supprimé après sa durée de conservation",
       "attachmentMissing": "Ce fichier n’est plus disponible",
-      "uploadFailed": "Le devoir est enregistré, mais pas ses fichiers. Modifiez-le pour les ajouter de nouveau."
+      "uploadFailed": "Le devoir est enregistré, mais pas ses fichiers. Modifiez-le pour les ajouter de nouveau.",
+      "rosterNotAllowed": "La liste des élèves du suivi est réservée à l’équipe pédagogique.",
+      "completionDuplicateStudent": "Un élève figure deux fois dans le suivi.",
+      "completionStudentNotInHomework": "Un élève du suivi n’a pas reçu ce devoir.",
+      "completionNoteTooLong": "La remarque est trop longue (300 caractères au plus)."
+    },
+    "completion": {
+      "menu": "Suivi des élèves",
+      "title": "Suivi du devoir",
+      "hint": "Tous les élèves sont « Fait » par défaut. Marquez seulement ceux qui ne l’ont pas fait, ou pas en entier.",
+      "status": {
+        "done": "Fait",
+        "incomplete": "Incomplet",
+        "not_done": "Non fait"
+      },
+      "notReviewed": "Non vérifié",
+      "allDone": "Tous faits",
+      "notePlaceholder": "Remarque (facultatif)",
+      "saveButton": "Enregistrer le suivi",
+      "empty": "Aucun élève n’était dans les sections de ce devoir à sa date.",
+      "summary": "Faits : {{done}} · Incomplets : {{incomplete}} · Non faits : {{notDone}}",
+      "missed": "Manqués : {{count}}",
+      "label": "Suivi",
+      "search": "Rechercher un élève",
+      "noMatch": "Aucun élève ne correspond."
     }
   },
   "competencies": {
@@ -7785,6 +7818,12 @@
       "subjectAverage": "Moyenne de la matière",
       "classAverage": "Moyenne de la classe",
       "diff": "Écart à la classe",
+      "rank": "Rang dans la classe",
+      "classHigh": "Note la plus haute",
+      "classLow": "Note la plus basse",
+      "focus": "Points forts et points à améliorer",
+      "strengths": "Points forts",
+      "toImprove": "Points à améliorer",
       "appreciation": "Appréciation",
       "appreciations": {
         "excellent": "Excellent",
@@ -7810,7 +7849,8 @@
       "failed": "Les notes Massar n'ont pas pu être chargées.",
       "absent": "Abs.",
       "analysis": "Analyse des résultats",
-      "analysisHint": "Vous pouvez modifier ce texte avant d'imprimer ; il n'est pas enregistré.",
+      "analysisHint": "L’analyse s’enregistre automatiquement.",
+      "analysisSaveFailed": "L’analyse n’a pas pu être enregistrée.",
       "analysisReset": "Rétablir le texte proposé"
     },
     "remark": {
@@ -7895,5 +7935,24 @@
       "targetNotEmpty": "Cette classe a déjà une liste",
       "studentNotInSection": "Cet élève n'était pas dans cette classe ce mois-là"
     }
+  },
+  "homeworkFollowUp": {
+    "title": "Devoirs non faits",
+    "subtitle": "Élèves concernés : {{count}}",
+    "table": {
+      "student": "Élève",
+      "class": "Classe",
+      "notDone": "Non faits",
+      "incomplete": "Incomplets",
+      "thisMonth": "Ce mois-ci",
+      "lastMissed": "Dernier",
+      "subjects": "Matières"
+    },
+    "toReport": "À signaler",
+    "toReportHint": "{{count}} devoirs manqués ce mois-ci : vous pouvez ouvrir un incident.",
+    "reportAction": "Signaler un incident",
+    "viewTitle": "Devoirs manqués — {{name}}",
+    "incidentDescription": "Devoirs non faits ou incomplets ce mois-ci ({{count}}) : {{list}}.",
+    "profileEmpty": "Aucun devoir manqué cette année."
   }
 }

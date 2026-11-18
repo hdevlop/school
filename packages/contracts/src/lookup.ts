@@ -1,6 +1,6 @@
 import * as values from './enums';
 import { MASSAR_ABSENCE_VALUES, MASSAR_SHEET_STATUS_VALUES, MASSAR_ROUND_STATUS_VALUES, MASSAR_SHEET_KIND_VALUES } from './massar';
-import { HOMEWORK_ATTACHMENT_KIND_VALUES } from './homework';
+import { HOMEWORK_ATTACHMENT_KIND_VALUES, HOMEWORK_COMPLETION_STATUS_VALUES } from './homework';
 import { COMPETENCY_LEVEL_VALUES } from './competencies';
 
 /**
@@ -19,6 +19,7 @@ export const enumValues = {
   massarRoundStatus: MASSAR_ROUND_STATUS_VALUES,
   massarSheetKind: MASSAR_SHEET_KIND_VALUES,
   homeworkAttachmentKind: HOMEWORK_ATTACHMENT_KIND_VALUES,
+  homeworkCompletionStatus: HOMEWORK_COMPLETION_STATUS_VALUES,
   competencyLevel: COMPETENCY_LEVEL_VALUES,
   userType: values.USER_TYPE_VALUES,
   userStatus: values.USER_STATUS_VALUES,

@@ -1693,7 +1693,8 @@
     "expandSidebar": "توسيع",
     "insurance": "التأمين",
     "homework": "الواجبات المنزلية",
-    "competencies": "الكفايات"
+    "competencies": "الكفايات",
+    "homeworkFollowUp": "الواجبات غير المنجزة"
   },
   "backup": {
     "success": {
@@ -2848,7 +2849,8 @@
     },
     "homework": {
       "create": "هل تريد نشر هذا الواجب؟",
-      "update": "هل تريد تحديث هذا الواجب؟"
+      "update": "هل تريد تحديث هذا الواجب؟",
+      "completions": "حفظ تتبع هذا الواجب؟"
     },
     "competencies": {
       "evaluate": "تسجيل مستوى هذا التلميذ؟"
@@ -5104,7 +5106,8 @@
         "grades": "النقط",
         "fees": "الرسوم",
         "transport": "النقل",
-        "alerts": "التنبيهات"
+        "alerts": "التنبيهات",
+        "homework": "الواجبات"
       },
       "genders": {
         "M": "ذكر",
@@ -6217,6 +6220,10 @@
     "homework": {
       "title": "لا توجد واجبات بعد",
       "description": "انشر أول واجب لأحد الأقسام."
+    },
+    "homeworkFollowUp": {
+      "title": "لا توجد واجبات غير منجزة",
+      "description": "تظهر هنا الواجبات المسجلة «غير منجز» أو «ناقص» في التتبع."
     }
   },
   "academicSources": {
@@ -7568,7 +7575,8 @@
       "date": "أُعطي يوم",
       "dueOn": "ليوم",
       "attachments": "الملفات",
-      "seen": "اطّلع عليه الآباء"
+      "seen": "اطّلع عليه الآباء",
+      "followUp": "التتبع"
     },
     "card": {
       "givenOn": "أُعطي يوم",
@@ -7595,7 +7603,8 @@
       "deleted": "تم حذف الواجب",
       "attached": "تمت إضافة الملفات",
       "detached": "تمت إزالة الملف",
-      "acknowledged": "تم تأكيد الاطلاع"
+      "acknowledged": "تم تأكيد الاطلاع",
+      "completionsSaved": "تم حفظ تتبع الواجب"
     },
     "errors": {
       "notFound": "الواجب غير موجود",
@@ -7621,7 +7630,31 @@
       "attachmentNotFound": "الملف غير موجود",
       "attachmentPurged": "حُذف هذا الملف بعد انتهاء مدة حفظه",
       "attachmentMissing": "هذا الملف لم يعد متاحاً",
-      "uploadFailed": "تم حفظ الواجب دون ملفاته. عدّله لإضافتها من جديد."
+      "uploadFailed": "تم حفظ الواجب دون ملفاته. عدّله لإضافتها من جديد.",
+      "rosterNotAllowed": "لائحة التلاميذ في تتبع الواجب خاصة بالطاقم التربوي.",
+      "completionDuplicateStudent": "يظهر تلميذ مرتين في التتبع.",
+      "completionStudentNotInHomework": "أحد التلاميذ في التتبع لم يُكلَّف بهذا الواجب.",
+      "completionNoteTooLong": "الملاحظة طويلة جدًا (300 حرف كحد أقصى)."
+    },
+    "completion": {
+      "menu": "تتبع التلاميذ",
+      "title": "تتبع الواجب",
+      "hint": "جميع التلاميذ «منجز» افتراضيًا. حدِّد فقط من لم ينجزه أو لم يُكمله.",
+      "status": {
+        "done": "منجز",
+        "incomplete": "ناقص",
+        "not_done": "غير منجز"
+      },
+      "notReviewed": "لم يُتتبَّع",
+      "allDone": "الكل منجز",
+      "notePlaceholder": "ملاحظة (اختياري)",
+      "saveButton": "حفظ التتبع",
+      "empty": "لم يكن أي تلميذ في أقسام هذا الواجب في تاريخه.",
+      "summary": "منجز: {{done}} · ناقص: {{incomplete}} · غير منجز: {{notDone}}",
+      "missed": "غير منجز: {{count}}",
+      "label": "التتبع",
+      "search": "ابحث عن تلميذ",
+      "noMatch": "لا يوجد تلميذ مطابق."
     }
   },
   "competencies": {
@@ -7698,6 +7731,12 @@
       "subjectAverage": "معدل المادة",
       "classAverage": "معدل القسم",
       "diff": "الفارق عن القسم",
+      "rank": "الرتبة في القسم",
+      "classHigh": "أعلى نقطة في القسم",
+      "classLow": "أدنى نقطة في القسم",
+      "focus": "نقاط القوة ونقاط التحسين",
+      "strengths": "نقاط القوة",
+      "toImprove": "نقاط تحتاج إلى تحسين",
       "appreciation": "التقدير",
       "appreciations": {
         "excellent": "ممتاز",
@@ -7723,7 +7762,8 @@
       "failed": "تعذر تحميل نقط مسار.",
       "absent": "غ",
       "analysis": "قراءة تحليلية",
-      "analysisHint": "يمكنك تعديل هذا النص قبل الطباعة، ولا يُحفظ.",
+      "analysisHint": "يُحفظ نص التحليل تلقائيًا.",
+      "analysisSaveFailed": "تعذّر حفظ نص التحليل.",
       "analysisReset": "استرجاع النص المقترح"
     },
     "remark": {
@@ -7808,5 +7848,24 @@
       "targetNotEmpty": "هذا القسم لديه قائمة مسبقاً",
       "studentNotInSection": "لم يكن هذا التلميذ في هذا القسم ذلك الشهر"
     }
+  },
+  "homeworkFollowUp": {
+    "title": "الواجبات غير المنجزة",
+    "subtitle": "التلاميذ المعنيون: {{count}}",
+    "table": {
+      "student": "التلميذ",
+      "class": "القسم",
+      "notDone": "غير منجز",
+      "incomplete": "ناقص",
+      "thisMonth": "هذا الشهر",
+      "lastMissed": "آخر واجب",
+      "subjects": "المواد"
+    },
+    "toReport": "للإبلاغ",
+    "toReportHint": "{{count}} واجبات غير منجزة هذا الشهر: يمكنك فتح مخالفة.",
+    "reportAction": "تسجيل مخالفة",
+    "viewTitle": "الواجبات غير المنجزة — {{name}}",
+    "incidentDescription": "واجبات غير منجزة أو ناقصة هذا الشهر ({{count}}): {{list}}.",
+    "profileEmpty": "لا توجد واجبات غير منجزة هذه السنة."
   }
 }

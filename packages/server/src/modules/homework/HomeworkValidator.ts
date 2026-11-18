@@ -91,6 +91,18 @@ export class HomeworkValidator {
     }
   }
 
+  /** The class list of a homework is staff's: a family reads its own child's follow-up on the homework. */
+  ensureMayReadRoster(actor: HomeworkActor) {
+    if (actor.role === 'parent' || actor.role === 'student') Err(403, this.ht('rosterNotAllowed'));
+  }
+
+  /** Every pupil of a follow-up is listed once and is one the homework was given to. */
+  ensureRosterEntries(entries: Array<{ studentId: string }>, roster: Set<string>) {
+    const ids = entries.map((entry) => entry.studentId);
+    if (new Set(ids).size !== ids.length) Err(400, this.ht('completionDuplicateStudent'));
+    if (ids.some((id) => !roster.has(id))) Err(400, this.ht('completionStudentNotInHomework'));
+  }
+
   /** Only a parent marks homework seen, and only for a child it was given to. */
   async ensureParentOfChild(homeworkId: string, studentId: string, actor: HomeworkActor) {
     if (actor.role !== 'parent') Err(403, this.ht('parentOnly'));

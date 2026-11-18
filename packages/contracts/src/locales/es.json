@@ -1679,7 +1679,8 @@
     "expandSidebar": "Expandir",
     "insurance": "Seguro",
     "homework": "Deberes",
-    "competencies": "Competencias"
+    "competencies": "Competencias",
+    "homeworkFollowUp": "Tareas no hechas"
   },
   "backup": {
     "success": {
@@ -2834,7 +2835,8 @@
     },
     "homework": {
       "create": "¿Publicar estos deberes?",
-      "update": "¿Actualizar estos deberes?"
+      "update": "¿Actualizar estos deberes?",
+      "completions": "¿Guardar el seguimiento de esta tarea?"
     },
     "competencies": {
       "evaluate": "¿Guardar el nivel de este alumno?"
@@ -5090,7 +5092,8 @@
         "grades": "Notas",
         "fees": "Cuotas",
         "transport": "Transporte",
-        "alerts": "Alertas"
+        "alerts": "Alertas",
+        "homework": "Tareas"
       },
       "genders": {
         "M": "Masculino",
@@ -6203,6 +6206,10 @@
     "homework": {
       "title": "Aún no hay deberes",
       "description": "Publica los primeros deberes de una clase."
+    },
+    "homeworkFollowUp": {
+      "title": "Ninguna tarea no hecha",
+      "description": "Las tareas marcadas «No hecha» o «Incompleta» en el seguimiento aparecerán aquí."
     }
   },
   "academicSources": {
@@ -7554,7 +7561,8 @@
       "date": "Dados el",
       "dueOn": "Para el",
       "attachments": "Archivos",
-      "seen": "Visto por los padres"
+      "seen": "Visto por los padres",
+      "followUp": "Seguimiento"
     },
     "card": {
       "givenOn": "Dados el",
@@ -7581,7 +7589,8 @@
       "deleted": "Deberes eliminados",
       "attached": "Archivos añadidos",
       "detached": "Archivo quitado",
-      "acknowledged": "Marcado como visto"
+      "acknowledged": "Marcado como visto",
+      "completionsSaved": "Seguimiento de la tarea guardado"
     },
     "errors": {
       "notFound": "Deberes no encontrados",
@@ -7607,7 +7616,31 @@
       "attachmentNotFound": "Archivo no encontrado",
       "attachmentPurged": "Este archivo se eliminó tras su periodo de conservación",
       "attachmentMissing": "Este archivo ya no está disponible",
-      "uploadFailed": "Los deberes se guardaron, pero sus archivos no. Edítalos para añadirlos de nuevo."
+      "uploadFailed": "Los deberes se guardaron, pero sus archivos no. Edítalos para añadirlos de nuevo.",
+      "rosterNotAllowed": "La lista de alumnos del seguimiento es para el equipo docente.",
+      "completionDuplicateStudent": "Un alumno aparece dos veces en el seguimiento.",
+      "completionStudentNotInHomework": "Un alumno del seguimiento no recibió esta tarea.",
+      "completionNoteTooLong": "La observación es demasiado larga (300 caracteres como máximo)."
+    },
+    "completion": {
+      "menu": "Seguimiento de alumnos",
+      "title": "Seguimiento de la tarea",
+      "hint": "Todos los alumnos están en «Hecha» por defecto. Marque solo a quienes no la hicieron o no la terminaron.",
+      "status": {
+        "done": "Hecha",
+        "incomplete": "Incompleta",
+        "not_done": "No hecha"
+      },
+      "notReviewed": "Sin revisar",
+      "allDone": "Todas hechas",
+      "notePlaceholder": "Observación (opcional)",
+      "saveButton": "Guardar seguimiento",
+      "empty": "Ningún alumno estaba en las secciones de esta tarea en su fecha.",
+      "summary": "Hechas: {{done}} · Incompletas: {{incomplete}} · No hechas: {{notDone}}",
+      "missed": "Faltantes: {{count}}",
+      "label": "Seguimiento",
+      "search": "Buscar un alumno",
+      "noMatch": "Ningún alumno coincide."
     }
   },
   "competencies": {
@@ -7684,6 +7717,12 @@
       "subjectAverage": "Media de la asignatura",
       "classAverage": "Media de la clase",
       "diff": "Diferencia con la clase",
+      "rank": "Puesto en la clase",
+      "classHigh": "Nota más alta",
+      "classLow": "Nota más baja",
+      "focus": "Puntos fuertes y aspectos a mejorar",
+      "strengths": "Puntos fuertes",
+      "toImprove": "Aspectos a mejorar",
       "appreciation": "Valoración",
       "appreciations": {
         "excellent": "Excelente",
@@ -7709,7 +7748,8 @@
       "failed": "No se pudieron cargar las notas de Massar.",
       "absent": "Aus.",
       "analysis": "Análisis de resultados",
-      "analysisHint": "Puedes editar este texto antes de imprimir; no se guarda.",
+      "analysisHint": "El análisis se guarda automáticamente.",
+      "analysisSaveFailed": "No se ha podido guardar el análisis.",
       "analysisReset": "Restablecer el texto propuesto"
     },
     "remark": {
@@ -7794,5 +7834,24 @@
       "targetNotEmpty": "Esa clase ya tiene una lista",
       "studentNotInSection": "Este alumno no estaba en esta clase ese mes"
     }
+  },
+  "homeworkFollowUp": {
+    "title": "Tareas no hechas",
+    "subtitle": "Alumnos afectados: {{count}}",
+    "table": {
+      "student": "Alumno",
+      "class": "Clase",
+      "notDone": "No hechas",
+      "incomplete": "Incompletas",
+      "thisMonth": "Este mes",
+      "lastMissed": "Última",
+      "subjects": "Materias"
+    },
+    "toReport": "Para informar",
+    "toReportHint": "{{count}} tareas no hechas este mes: puede abrir un incidente.",
+    "reportAction": "Registrar un incidente",
+    "viewTitle": "Tareas no hechas — {{name}}",
+    "incidentDescription": "Tareas no hechas o incompletas este mes ({{count}}): {{list}}.",
+    "profileEmpty": "Ninguna tarea no hecha este año."
   }
 }

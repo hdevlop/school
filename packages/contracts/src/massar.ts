@@ -17,6 +17,9 @@ export interface MassarMark { studentId: string; componentCode: string; mark: nu
 export interface MassarRemark { studentId: string; remark: string }
 /** The longest remark a teacher can write: a sentence or two, as fits a statement's ملاحظات cell. */
 export const MASSAR_REMARK_MAX_LENGTH = 300;
+/** Saved analysis in one pupil's follow-up report. */
+export interface MassarFollowUpAnalysis { studentId: string; analysis: string }
+export const MASSAR_ANALYSIS_MAX_LENGTH = 2000;
 /** A component of an owned, opened sheet that can be selected on Grades. */
 export interface MassarGradeSource {
   id: string; sheetId: string; componentCode: string; title: string;

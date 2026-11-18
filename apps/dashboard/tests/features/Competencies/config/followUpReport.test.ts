@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'bun:test';
 import type { CompetencyDomain, CompetencyEvaluation, MassarSheetDetail } from '@sms/contracts';
-import { appreciation, followUps, radar } from '@/features/Competencies/config/followUpReport';
-import { analyze, classify, linkParts } from '@/features/Competencies/config/followUpAnalysis';
-import { buildFollowUpDocument, type FollowUpPrintOptions } from '@/features/Competencies/config/followUpDocument';
+import { schoolI18n, type SchoolTranslationKey } from '@sms/contracts/locales';
+import { appreciation, followUps, isRoomy, partAxes, profileAxes, radar, standing, strengthsAndNeeds } from '@/features/Competencies/config/followUpReport';
+import { analyze, classify, comparableClassMean, linkParts, rankLabel } from '@/features/Competencies/config/followUpAnalysis';
+import { buildFollowUpDocument, followUpRoundLabels, wrapLabel, type FollowUpPrintOptions } from '@/features/Competencies/config/followUpDocument';
 
 const MONTHS = ['2026-09', '2026-10', '2026-11', '2026-12', '2027-01', '2027-02', '2027-03', '2027-04', '2027-05', '2027-06'];
 const student = (id: string, name: string, position: number) => ({ id, studentCode: `F${position}`, name, dateOfBirth: '2018-01-01', massarStudentId: null, position });
@@ -64,7 +65,6 @@ describe('the follow-up report after a Massar Contrôle', () => {
     expect(amina.domains[0].lines.map(({ current, trend }) => [current, trend])).toEqual([
       ['advanced', 'up'], ['beginning', 'down'], ['in_progress', null],
     ]);
-    expect(amina.domains[0]).toMatchObject({ average: 3, acquiredShare: 33 });
     expect(amina.indicators).toMatchObject({ level: 3, acquired: 1, support: 1, total: 3, mastery: 33 });
     expect(amina.indicators.distribution).toEqual({ not_acquired: 0, beginning: 1, in_progress: 1, advanced: 1, mastered: 0 });
   });
@@ -75,9 +75,108 @@ describe('the follow-up report after a Massar Contrôle', () => {
   });
 
   it('draws the radar from the centre to the maximum', () => {
-    const chart = radar(amina.parts, 10, 100, 0);
+    const chart = radar(partAxes(amina.parts), 10, 100, 0);
     expect(chart.pupil[0]).toEqual({ x: 50, y: 15 });
     expect(chart.rings).toHaveLength(4);
+  });
+
+  it('uses the exact mean for the label in the analysis and the printed tile', () => {
+    const competencies = Array.from({ length: 11 }, (_, i) => ({ ...domains[0].competencies[0], id: String(i) }));
+    const [report] = followUps({ sheet, domains: [{ ...domains[0], competencies }], months: MONTHS, remarks: [],
+      evaluations: competencies.map((skill, i) => level('a', skill.id, '2026-11', i < 6 ? 'advanced' : 'mastered')),
+    });
+    const label = rankLabel(key => key);
+    expect(report.indicators.level).toBe(49 / 11);
+    expect(label(3.5)).toEndWith('in_progress');
+    expect(label(3.51)).toEndWith('advanced');
+    expect(label(report.indicators.level!)).toEndWith('advanced');
+    expect(buildFollowUpDocument([report], documentOptions)).toContain('competencies.levels.advanced · competencies.report.indLevel');
+  });
+
+  it('breaks incomplete radar outlines and keeps true zeros at the centre', () => {
+    const partial = { ...badr, parts: badr.parts.map((part, i) => i === 0 ? { ...part, mark: 0 } : part) };
+    const chart = radar(partAxes(partial.parts), 10, 210, 40);
+    expect(chart.pupil[0]).toEqual({ x: 105, y: 105 });
+    expect(chart.pupil[2]).toBeNull();
+    for (const mode of ['preview', 'print'] as const) {
+      const html = buildFollowUpDocument([partial], documentOptions, mode);
+      expect(html).not.toContain('fill="#2a78d6" fill-opacity');
+      expect(html.match(/<circle [^>]*fill="#2a78d6"/g)).toHaveLength(2);
+    }
+  });
+
+  it('profiles each competency\'s current level beside the class\'s mean', () => {
+    expect(amina.skills).toEqual([
+      { id: 'c1', name: 'c1', rank: 4, classAverage: 4 },
+      { id: 'c2', name: 'c2', rank: 2, classAverage: 2 },
+      { id: 'c3', name: 'c3', rank: 3, classAverage: 3 },
+    ]);
+    expect(badr.skills.map((skill) => skill.rank)).toEqual([null, null, null]);
+  });
+
+  it('draws the profile on the competencies when the Contrôle has fewer than three parts', () => {
+    const onePart = { ...amina, parts: amina.parts.slice(0, 1) };
+    expect(profileAxes(amina, 10)?.kind).toBe('parts');
+    expect(profileAxes(onePart, 10)).toMatchObject({ kind: 'skills', max: 5 });
+    // A pupil with no level yet, or fewer than three competencies, keeps the bars.
+    expect(profileAxes({ ...badr, parts: onePart.parts }, 10)).toBeNull();
+    expect(profileAxes({ ...onePart, skills: amina.skills.slice(0, 2) }, 10)).toBeNull();
+    const html = buildFollowUpDocument([onePart], documentOptions);
+    expect(html).toContain('<svg class="radar"');
+    expect(html).not.toContain('class="bar-row"');
+    expect(buildFollowUpDocument([{ ...badr, parts: onePart.parts }], documentOptions)).toContain('class="bar-row"');
+  });
+
+  it('ranks the pupil in the class, beside the class\'s highest and lowest marks', () => {
+    expect(amina.standing.total).toEqual({ rank: 2, ranked: 2, high: 7.5, low: 7 });
+    expect(badr.standing.total).toEqual({ rank: 1, ranked: 2, high: 7.5, low: 7 });
+    expect(amina.standing.parts.r).toEqual({ rank: 2, ranked: 2, high: 9, low: 7 });
+    // Badr's absent part counts in no rank: Amina is first of one, and Badr has none.
+    expect(amina.standing.parts.o).toEqual({ rank: 1, ranked: 1, high: 6, low: 6 });
+    expect(badr.standing.parts.o.rank).toBeNull();
+    // Ties share a rank.
+    expect(standing(8, [9, 8, 8, 6]).rank).toBe(2);
+    expect(standing(6, [9, 8, 8, 6]).rank).toBe(4);
+    const html = buildFollowUpDocument([amina], documentOptions);
+    expect(html).toContain('<th class="label">competencies.report.rank</th>');
+    expect(html).toContain('<td class="total"><b><span dir="ltr">2<small>/2</small></span></b></td>');
+    expect(html).toContain('<th class="label">competencies.report.classHigh</th>');
+  });
+
+  it('fills a short report\'s page: larger, with the strengths and the areas to improve', () => {
+    const [short, shortBadr] = followUps({ sheet: { ...sheet, components: sheet.components.slice(0, 1) }, domains, evaluations, remarks: [], months: MONTHS });
+    expect(isRoomy(short)).toBe(true);
+    expect(isRoomy(amina)).toBe(false);
+    expect(strengthsAndNeeds(short).strengths.map((line) => line.id)).toEqual(['c1']);
+    // Weakest first.
+    expect(strengthsAndNeeds(short).needs.map((line) => line.id)).toEqual(['c2', 'c3']);
+    const html = buildFollowUpDocument([short], { ...documentOptions, needOf: (_, name) => `aide ${name}` });
+    expect(html).toContain('<section class="sheet roomy">');
+    expect(html).toContain('competencies.report.focus');
+    expect(html).toContain('<b>c2</b> <small style="color:#f97316">competencies.levels.beginning</small><p dir="auto">aide c2</p>');
+    // The section takes number 4, the observations follow it.
+    expect(html).toContain('<span class="n">4</span>competencies.report.focus');
+    expect(html).toContain('<span class="n">6</span>competencies.report.inspector');
+    // A pupil with no level yet has no such section, and the long report none at all.
+    expect(buildFollowUpDocument([shortBadr], documentOptions)).not.toContain('competencies.report.focus');
+    expect(buildFollowUpDocument([amina], documentOptions)).not.toContain('competencies.report.focus');
+  });
+
+  it('prints a single part once, its measures side by side in one row', () => {
+    expect(buildFollowUpDocument([amina], documentOptions)).toContain('<th>القراءة</th>');
+    const html = buildFollowUpDocument([{ ...amina, parts: amina.parts.slice(0, 1) }], documentOptions);
+    expect(html).not.toContain('<th>القراءة</th>');
+    expect(html).toContain('<table class="marks flat"><thead><tr><th class="total">الفرض الأول</th><th>competencies.report.classAverage</th>');
+    expect(html.match(/<table class="marks flat">[\s\S]*?<\/table>/)?.[0].match(/<tr>/g)).toHaveLength(2);
+    // An absent pupil's only part reads absent on the average.
+    const absent = buildFollowUpDocument([{ ...badr, parts: badr.parts.slice(2), average: null }], documentOptions);
+    expect(absent).toContain('<td class="total muted">competencies.report.absent</td>');
+    expect(absent).not.toMatch(/<td class="[^"]*" class=/);
+  });
+
+  it('wraps a long radar label on whole words', () => {
+    expect(wrapLabel('Reconnaître les formes géométriques')).toEqual(['Reconnaître les', 'formes', 'géométriques']);
+    expect(wrapLabel('القراءة')).toEqual(['القراءة']);
   });
 
   it('prints one escaped page per pupil, right to left in Arabic', () => {
@@ -88,6 +187,8 @@ describe('the follow-up report after a Massar Contrôle', () => {
     expect(html).not.toContain('javascript:');
     expect(html).toContain('/images/massar/ministry.png');
     expect(html).toContain('fr:competencies.report.marks');
+    expect(html).toContain('<th class="domain" rowspan="3">القراءة</th>');
+    expect(html).toMatch(/<td class="share"[^>]*><bdi dir="ltr">80%<\/bdi><\/td>/);
     // The analysis prints line by line, escaped, and only where there is one.
     expect(html).toContain('<li dir="auto">سطر &lt;ثان&gt;</li>');
     expect(html.match(/class="analysis"/g)).toHaveLength(1);
@@ -103,11 +204,67 @@ describe('the follow-up report after a Massar Contrôle', () => {
     expect(html).toContain('<div class="table-scroll" tabindex="0" role="region" aria-label="competencies.report.competencies">');
     expect(html).toContain('<li dir="auto">سطر &lt;ثان&gt;</li>');
   });
+
+  it('uses the translated control and semester everywhere in a French report', () => {
+    const t: FollowUpPrintOptions['t'] = (key, params) => schoolI18n.translate('fr', key as SchoolTranslationKey, params);
+    const labels = followUpRoundLabels(sheet.round, 'fr', t);
+    expect(labels).toEqual({ examLabel: 'Contrôle 1', termLabel: 'Semestre 1' });
+    expect(followUpRoundLabels(sheet.round, 'ar', t)).toEqual({ examLabel: 'الفرض الأول', termLabel: 'الدورة الأولى' });
+    expect(followUpRoundLabels({ ...sheet.round, exam: 4 }, 'fr', t).examLabel).toBe(t('massar.flow.activities'));
+    const options = { ...documentOptions, ...labels, t, language: 'fr', dir: 'ltr' as const, subjectName: 'Français' };
+    for (const mode of ['preview', 'print'] as const) {
+      const html = buildFollowUpDocument([amina], options, mode);
+      expect(html).toContain('<th class="label">Contrôle 1</th>');
+      expect(html).toContain('Semestre 1');
+      expect(html).not.toContain('الفرض الأول');
+    }
+  });
+
+  it('makes room to edit an empty analysis in the preview and prints only the edited text', () => {
+    const options = { ...documentOptions, editableAnalysis: true, analysisOf: () => '' };
+    const preview = buildFollowUpDocument([amina], options, 'preview');
+    expect(preview.indexOf('data-analysis-editor')).toBeGreaterThan(preview.indexOf('<table class="competencies">'));
+    expect(preview.indexOf('data-analysis-editor')).toBeLessThan(preview.indexOf('<div class="notes">'));
+    const print = buildFollowUpDocument([amina], { ...options, analysisOf: () => 'نص محرر <مثال>' });
+    expect(print).toContain('<li dir="auto">نص محرر &lt;مثال&gt;</li>');
+    expect(print).not.toContain('data-analysis-editor');
+  });
+
+  it('uses compact print for a wide Arabic grid and includes the full edited analysis and teacher comment', () => {
+    const report = { ...amina, parts: [...amina.parts, ...amina.parts], remark: 'السطر الأول\nالسطر الأخير' };
+    const html = buildFollowUpDocument([report], { ...documentOptions, analysisOf: () => 'نص يدوي\nتتمة التحليل' });
+    expect(html).toContain('<section class="sheet dense">');
+    expect(html).toContain('السطر الأول\nالسطر الأخير');
+    expect(html).toContain('<li dir="auto">نص يدوي</li><li dir="auto">تتمة التحليل</li>');
+    expect(html.split('<div class="notes">')[1].match(/<i class="line"><\/i>/g)).toHaveLength(2);
+  });
 });
 
 describe('the analysis of marks against competencies', () => {
   const label = (rank: number) => `L${Math.round(rank)}`;
   const options = { maxMark: 10, language: 'ar' as const, gender: 'F' as const, levelLabel: label };
+
+  it('compares matched pupils only and gives class context for a shared gap', () => {
+    const highMark = { ...amina, average: 9, parts: amina.parts.slice(0, 1) };
+    const comparison = comparableClassMean([highMark, amina, badr, { ...amina, average: null }]);
+    expect(comparison).toEqual({ mark: 8, level: 3 });
+    expect(comparableClassMean([amina, badr])).toBeNull();
+    expect(analyze(highMark, { ...options, language: 'fr', classComparison: comparison })).toContain('la moyenne au contrôle est de 8/10 et le niveau moyen des compétences de 3/5');
+    expect(analyze(highMark, options)).toContain('نتيجة الفرض أعلى');
+    expect(analyze({ ...highMark, average: 8.5 }, options)).not.toContain('نتيجة الفرض أعلى');
+  });
+
+  it('names up to two developing skills and gives one activity on a long report', () => {
+    const names = ['حل المسائل', 'الإنشاءات الهندسية', 'المحيط والمساحة'];
+    const developing = { ...amina, domains: [{ ...amina.domains[0],
+      lines: amina.domains[0].lines.map((line, i) => ({ ...line, name: names[i], current: 'in_progress' as const })),
+    }] };
+    const guidance = analyze(developing, options).split('\n').at(-1)!;
+    expect(guidance).toContain('«حل المسائل» و«الإنشاءات الهندسية»');
+    expect(guidance).toContain('رسم المعطيات');
+    expect(guidance).not.toContain(names[2]);
+    expect(analyze(developing, { ...options, priorities: false })).not.toContain('كفايات تحتاج إلى تثبيت');
+  });
 
   it('classifies a mark against a level, both in percent', () => {
     expect(classify(75, 80)).toBe('strong');
@@ -127,9 +284,9 @@ describe('the analysis of marks against competencies', () => {
         { code: '4', name: 'مشروع الوحدة', mark: 7, absent: false, classAverage: 7, diff: 0, appreciation: 'good' as const },
       ],
       domains: [
-        { id: 'r', name: 'القراءة', average: 4, acquiredShare: 100, lines: [{ id: 'c1', name: 'القراءة السليمة', levels: {}, current: 'advanced' as const, trend: 'up' as const }] },
-        { id: 'w', name: 'الكتابة', average: 2, acquiredShare: 0, lines: [{ id: 'c2', name: 'الإملاء', levels: {}, current: 'beginning' as const, trend: 'down' as const }] },
-        { id: 'o', name: 'التواصل الشفهي', average: 3, acquiredShare: 0, lines: [{ id: 'c3', name: 'الاستماع والفهم', levels: {}, current: 'in_progress' as const, trend: 'up' as const }] },
+        { id: 'r', name: 'القراءة', lines: [{ id: 'c1', name: 'القراءة السليمة', levels: {}, current: 'advanced' as const, trend: 'up' as const }] },
+        { id: 'w', name: 'الكتابة', lines: [{ id: 'c2', name: 'الإملاء', levels: {}, current: 'beginning' as const, trend: 'down' as const }] },
+        { id: 'o', name: 'التواصل الشفهي', lines: [{ id: 'c3', name: 'الاستماع والفهم', levels: {}, current: 'in_progress' as const, trend: 'up' as const }] },
       ],
     };
     expect(linkParts(report).map((link) => [link.part.name, link.lines.map((line) => line.id)])).toEqual([
@@ -137,11 +294,7 @@ describe('the analysis of marks against competencies', () => {
     ]);
     expect(analyze(report, options).split('\n')).toEqual([
       'بلغ معدل الفرض 7/10، وهو أقل من معدل القسم (7.25/10) بفارق 0.25.',
-      'بلغ عدد الكفايات المقيّمة 3 من أصل 3، ومتوسط مستواها «L3».',
-      'تتقارب نتيجة الفرض مع متوسط مستوى الكفايات.',
       'في مكوّن «الإملاء»، جاءت نقطة الفرض (8/10) أعلى من المستوى المسجّل في تقييم الكفايات المرتبطة به (L2) (فوق معدل القسم).',
-      'في مكوّن «القراءة»، جاء المستوى المسجّل في تقييم الكفايات المرتبطة به (L4) أعلى من نقطة الفرض (4/10) (دون معدل القسم).',
-      'في مكوّن «الاستماع والتحدث»، تنسجم النقطة (7/10) مع مستوى الكفايات المرتبطة به (L3)، ويُستحسن مواصلة التمرّن.',
       'بمقارنة آخر تقييمين متاحين لكل كفاية، بلغ عدد الكفايات التي تحسّنت 2 والتي تراجعت 1.',
       // What helps, from the remark book's own sentence for the skill.
       'أولوية للدعم – الإملاء: تحتاج إلى دعم في الربط بين الحرف والصوت المناسب له.',
@@ -182,12 +335,18 @@ describe('the analysis of marks against competencies', () => {
     expect(linkParts({ ...combined, domains: [twoDomains[0], { ...twoDomains[1], lines: [{ ...twoDomains[1].lines[0], current: null }] }] })).toEqual([]);
   });
 
+  it('leaves the priorities out when the page lists the areas to improve itself', () => {
+    const lines = analyze(amina, { ...options, priorities: false }).split('\n');
+    expect(lines.some((line) => line.startsWith('أولوية للدعم'))).toBe(false);
+    expect(analyze(amina, options)).toContain('أولوية للدعم');
+  });
+
   it('describes a trend across skipped months as a comparison of recorded assessments', () => {
     const [report] = followUps({ sheet, domains, months: MONTHS, remarks: [], evaluations: [
       level('a', 'c1', '2026-09', 'beginning'), level('a', 'c1', '2026-11', 'advanced'),
     ] });
-    expect(analyze(report, options)).toContain('آخر تقييمين');
-    expect(analyze(report, { ...options, language: 'fr' })).toContain('deux dernières évaluations');
+    expect(analyze(report, options)).toContain('في «c1»، انتقل المستوى من «L2» إلى «L4».');
+    expect(analyze(report, { ...options, language: 'fr' })).toContain('Pour « c1 », le niveau est passé de « L2 » à « L4 ».');
   });
 
   it('keeps undated and out-of-year exams independent of subsequent evaluations and remarks', () => {

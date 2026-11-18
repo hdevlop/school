@@ -32,7 +32,7 @@ mock.module('@/features/Alerts/hooks/useAlerts', () => ({ useAlerts: () => ({ al
 mock.module('@/features/AcademicYears/hooks/useViewingAcademicYear', () => ({ useViewingAcademicYear: () => ({ viewingYear: '2026-2027' }) }));
 mock.module('@/hooks/useSchoolFormat', () => ({ useSchoolFormat: () => ({ majorMoney: (value: number) => String(value) }) }));
 mock.module('@/shared/useDialog', () => ({ useDialog: () => ({ openDialog: () => {} }) }));
-for (const tab of ['Overview', 'Fees', 'Alerts', 'Attendance', 'Grades', 'Transport']) {
+for (const tab of ['Overview', 'Fees', 'Alerts', 'Attendance', 'Grades', 'Homework', 'Transport']) {
   mock.module(`@/features/Students/components/StudentProfile/${tab}`, () => ({ default: empty }));
 }
 mock.module('@/features/Students/components/SimpleStudentForm', () => ({ default: empty }));

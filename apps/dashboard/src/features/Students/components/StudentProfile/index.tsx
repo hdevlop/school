@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
 import { SCHOOL_HOME_PATH } from '@/najm.config';
 import { NajmScroll, NButton, NEmptyState, NErrorState, NForbiddenState, NLoadingState, NPageHeaderActions, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
-import { AlertTriangle, ArrowLeft, Bus, CalendarCheck, DollarSign, GraduationCap, Pencil, User } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Bus, CalendarCheck, DollarSign, GraduationCap, NotebookPen, Pencil, User } from 'lucide-react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { StudentProfileProps } from './types';
 import OverviewTab from './Overview';
@@ -15,6 +15,7 @@ import FeesTab from './Fees';
 import AlertsTab from './Alerts';
 import AttendanceTab from './Attendance';
 import GradesTab from './Grades';
+import HomeworkTab from './Homework';
 import LeftSidebar from './LeftSidebar';
 import SectionTitle from './SectionTitle';
 import MobileHeader from './MobileHeader';
@@ -112,6 +113,9 @@ export default function StudentProfile({ studentId }: StudentProfileProps) {
     { value: 'attendance', icon: CalendarCheck, label: t('students.profile.tabs.attendance'), content: <AttendanceTab {...sharedTabProps} /> },
     ...(canReadGrades
       ? [{ value: 'grades', icon: GraduationCap, label: t('students.profile.tabs.grades'), content: <GradesTab {...sharedTabProps} /> }]
+      : []),
+    ...(can('read:homework')
+      ? [{ value: 'homework', icon: NotebookPen, label: t('students.profile.tabs.homework'), content: <HomeworkTab studentId={studentId} /> }]
       : []),
     ...(canReadFees
       ? [{ value: 'fees', icon: DollarSign, label: t('students.profile.tabs.fees'), content: <FeesTab {...sharedTabProps} /> }]

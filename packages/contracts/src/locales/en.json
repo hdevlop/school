@@ -2780,7 +2780,8 @@
         "grades": "Grades",
         "fees": "Fees",
         "transport": "Transport",
-        "alerts": "Alerts"
+        "alerts": "Alerts",
+        "homework": "Homework"
       },
       "genders": {
         "M": "Male",
@@ -5592,7 +5593,8 @@
     "expandSidebar": "Expand",
     "insurance": "Insurance",
     "homework": "Homework",
-    "competencies": "Competencies"
+    "competencies": "Competencies",
+    "homeworkFollowUp": "Missed homework"
   },
   "backup": {
     "success": {
@@ -6464,7 +6466,8 @@
     },
     "homework": {
       "create": "Post this homework?",
-      "update": "Update this homework?"
+      "update": "Update this homework?",
+      "completions": "Save this homework’s follow-up?"
     },
     "competencies": {
       "evaluate": "Set this pupil's level?"
@@ -6910,6 +6913,10 @@
     "homework": {
       "title": "No homework yet",
       "description": "Post the first homework for a class."
+    },
+    "homeworkFollowUp": {
+      "title": "No missed homework",
+      "description": "Homework marked “Not done” or “Incomplete” in the follow-up will appear here."
     }
   },
   "academicSources": {
@@ -8261,7 +8268,8 @@
       "date": "Given on",
       "dueOn": "Due on",
       "attachments": "Files",
-      "seen": "Seen by parents"
+      "seen": "Seen by parents",
+      "followUp": "Follow-up"
     },
     "card": {
       "givenOn": "Given on",
@@ -8288,7 +8296,8 @@
       "deleted": "Homework deleted",
       "attached": "Files added",
       "detached": "File removed",
-      "acknowledged": "Marked as seen"
+      "acknowledged": "Marked as seen",
+      "completionsSaved": "Homework follow-up saved"
     },
     "errors": {
       "notFound": "Homework not found",
@@ -8314,7 +8323,31 @@
       "attachmentNotFound": "File not found",
       "attachmentPurged": "This file was removed after its keeping period",
       "attachmentMissing": "This file is no longer available",
-      "uploadFailed": "The homework was saved, but its files were not. Edit it to add them again."
+      "uploadFailed": "The homework was saved, but its files were not. Edit it to add them again.",
+      "rosterNotAllowed": "The follow-up class list is for teaching staff.",
+      "completionDuplicateStudent": "A student is listed twice in the follow-up.",
+      "completionStudentNotInHomework": "A student in the follow-up was not given this homework.",
+      "completionNoteTooLong": "The remark is too long (300 characters at most)."
+    },
+    "completion": {
+      "menu": "Student follow-up",
+      "title": "Homework follow-up",
+      "hint": "Every student is “Done” by default. Mark only those who did not do it, or did not finish it.",
+      "status": {
+        "done": "Done",
+        "incomplete": "Incomplete",
+        "not_done": "Not done"
+      },
+      "notReviewed": "Not checked",
+      "allDone": "All done",
+      "notePlaceholder": "Remark (optional)",
+      "saveButton": "Save follow-up",
+      "empty": "No student was in this homework’s sections on its date.",
+      "summary": "Done: {{done}} · Incomplete: {{incomplete}} · Not done: {{notDone}}",
+      "missed": "Missed: {{count}}",
+      "label": "Follow-up",
+      "search": "Search a student",
+      "noMatch": "No student matches."
     }
   },
   "competencies": {
@@ -8391,6 +8424,12 @@
       "subjectAverage": "Subject average",
       "classAverage": "Class average",
       "diff": "Gap to the class",
+      "rank": "Rank in the class",
+      "classHigh": "Highest mark",
+      "classLow": "Lowest mark",
+      "focus": "Strengths and areas to improve",
+      "strengths": "Strengths",
+      "toImprove": "Areas to improve",
       "appreciation": "Appraisal",
       "appreciations": {
         "excellent": "Excellent",
@@ -8416,7 +8455,8 @@
       "failed": "The Massar marks could not be loaded.",
       "absent": "Abs.",
       "analysis": "Results analysis",
-      "analysisHint": "You can edit this text before printing; it is not saved.",
+      "analysisHint": "The analysis is saved automatically.",
+      "analysisSaveFailed": "The analysis could not be saved.",
       "analysisReset": "Restore the suggested text"
     },
     "remark": {
@@ -8501,5 +8541,24 @@
       "targetNotEmpty": "That class already has a list",
       "studentNotInSection": "This pupil was not in this class that month"
     }
+  },
+  "homeworkFollowUp": {
+    "title": "Missed homework",
+    "subtitle": "Students concerned: {{count}}",
+    "table": {
+      "student": "Student",
+      "class": "Class",
+      "notDone": "Not done",
+      "incomplete": "Incomplete",
+      "thisMonth": "This month",
+      "lastMissed": "Latest",
+      "subjects": "Subjects"
+    },
+    "toReport": "To report",
+    "toReportHint": "{{count}} homework missed this month: you can open an incident.",
+    "reportAction": "Report an incident",
+    "viewTitle": "Missed homework — {{name}}",
+    "incidentDescription": "Homework not done or incomplete this month ({{count}}): {{list}}.",
+    "profileEmpty": "No missed homework this year."
   }
 }

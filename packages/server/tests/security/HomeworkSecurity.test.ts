@@ -46,8 +46,11 @@ describe('homework routes', () => {
     const expected: Record<string, string> = {
       getAll: 'read:homework', getBySection: 'read:homework', getByStudent: 'read:homework', getById: 'read:homework',
       readAttachment: 'read:homework', acknowledge: 'read:homework', parts: 'read:homework',
+      // The follow-up: a family reaches only its own child's records (ownership), never the class list (validator).
+      missed: 'read:homework', roster: 'read:homework',
       create: 'create:homework',
       update: 'update:homework', addAttachments: 'update:homework', removeAttachment: 'update:homework',
+      saveCompletions: 'update:homework',
       deleteById: 'delete:homework',
     };
     const routes = getRoutes(HomeworkController).map((route) => route.methodName).sort();
@@ -132,5 +135,37 @@ describe('who writes homework', () => {
     await expect(rules.ensureParentOfChild('hw-1', 'other-child', { id: 'parent-user', role: 'parent' })).rejects.toThrow('homework.errors.notYourChild');
     await rules.ensureParentOfChild('hw-1', 'own-child', { id: 'parent-user', role: 'parent' });
     expect(asked).toEqual([['hw-1', 'other-child', 'parent-user'], ['hw-1', 'own-child', 'parent-user']]);
+  });
+
+  it('keeps the class list of a follow-up from families', () => {
+    const rules = validator();
+    for (const role of ['teacher', 'monitor', 'supervisor', 'principal']) expect(() => rules.ensureMayReadRoster({ id: 'u', role }), role).not.toThrow();
+    for (const role of ['parent', 'student']) expect(() => rules.ensureMayReadRoster({ id: 'u', role }), role).toThrow('homework.errors.rosterNotAllowed');
+  });
+
+  it('records a follow-up only for pupils the homework was given to, each once', () => {
+    const rules = validator();
+    const roster = new Set(['amine', 'sara']);
+    expect(() => rules.ensureRosterEntries([{ studentId: 'amine' }, { studentId: 'sara' }], roster)).not.toThrow();
+    expect(() => rules.ensureRosterEntries([{ studentId: 'amine' }, { studentId: 'amine' }], roster)).toThrow('homework.errors.completionDuplicateStudent');
+    expect(() => rules.ensureRosterEntries([{ studentId: 'other-class' }], roster)).toThrow('homework.errors.completionStudentNotInHomework');
+  });
+
+  // A monitor reads the follow-up of their classes but records none; the homework is read through ownership first.
+  it('writes a follow-up only as a writer, on a homework the writer can see', async () => {
+    const calls: string[] = [];
+    const service = new HomeworkService(
+      {} as never,
+      {
+        ensureMayWrite: (actor: { role: string }) => { calls.push(`ensureMayWrite ${actor.role}`); if (actor.role === 'monitor') throw new Error('homework.errors.writeNotAllowed'); },
+        ensureExists: async (id: string) => { calls.push(`ensureExists ${id}`); throw new Error('Homework not found'); },
+      } as never,
+      {} as never,
+      {} as never,
+      { save: async () => { calls.push('save'); } } as never,
+    );
+    await expect(service.saveCompletions('hw-1', [], { id: 'm', role: 'monitor' })).rejects.toThrow('homework.errors.writeNotAllowed');
+    await expect(service.saveCompletions('hw-1', [], { id: 't', role: 'teacher' })).rejects.toThrow('Homework not found');
+    expect(calls).toEqual(['ensureMayWrite monitor', 'ensureMayWrite teacher', 'ensureExists hw-1']);
   });
 });

@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { boolean, check, date, index, integer, jsonb, numeric, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
-import { MASSAR_REMARK_MAX_LENGTH } from '@sms/contracts';
+import { MASSAR_ANALYSIS_MAX_LENGTH, MASSAR_REMARK_MAX_LENGTH } from '@sms/contracts';
 import type { MassarComponent, MassarPlan, MassarRoundStatus, MassarSheetKind, MassarSheetStatus, MassarAbsence, MassarStatementSettings, MassarStudent } from '@sms/contracts';
 import { actionByRef, idField, timestamps } from '../../database/shared';
 import { academicYears } from '../academicYears/AcademicYearSchema';
@@ -74,6 +74,17 @@ export const massarRemarks = pgTable('massar_remarks', {
   studentId: text('student_id').notNull().references(() => students.id, { onDelete: 'restrict' }),
   remark: text('remark').notNull(), updatedBy: actionByRef('updated_by'), ...timestamps,
 }, table => [uniqueIndex('massar_remark_unique').on(table.sheetId, table.studentId), check('massar_remark_length', sql`char_length(${table.remark}) between 1 and ${sql.raw(String(MASSAR_REMARK_MAX_LENGTH))}`)]);
+
+/** Teacher overrides of the generated analysis, including an intentionally blank analysis. */
+export const massarFollowUpAnalyses = pgTable('massar_follow_up_analyses', {
+  id: idField(12), academicYearId: yearRef(),
+  sheetId: text('sheet_id').notNull().references(() => massarSheets.id, { onDelete: 'cascade' }),
+  studentId: text('student_id').notNull().references(() => students.id, { onDelete: 'cascade' }),
+  analysis: text('analysis').notNull(), updatedBy: actionByRef('updated_by'), ...timestamps,
+}, table => [
+  uniqueIndex('massar_analysis_unique').on(table.sheetId, table.studentId),
+  check('massar_analysis_length', sql`char_length(${table.analysis}) <= ${sql.raw(String(MASSAR_ANALYSIS_MAX_LENGTH))}`),
+]);
 
 /** Only opaque ids are returned to the client; preview contents stay in restricted storage. */
 export const massarImports = pgTable('massar_imports', {

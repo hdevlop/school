@@ -1,10 +1,10 @@
 "use client"
 
-import React, { useMemo } from 'react';
-import { Plus } from 'lucide-react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { ClipboardCheck, Eye, Pencil, Plus, Trash2 } from 'lucide-react';
 import { NEmptyState, NErrorState, NForbiddenState, NPageHeaderActions } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import type { HomeworkRow } from '@sms/contracts';
+import type { HomeworkCompletionEntry, HomeworkRow } from '@sms/contracts';
 import { PermissionButton } from '@/components/PermissionButton';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
@@ -15,9 +15,10 @@ import { useDialog } from '@/shared/useDialog';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
-import { useHomework, type HomeworkSave } from '../hooks/useHomework';
+import { useHomework, useSaveHomeworkCompletions, type HomeworkSave } from '../hooks/useHomework';
 import { useHomeworkTableColumns } from '../hooks/useHomeworkTableColumns';
 import HomeworkCard from './HomeworkCard';
+import HomeworkCompletionForm, { HOMEWORK_COMPLETION_FORM_ID } from './HomeworkCompletionForm';
 import HomeworkForm from './HomeworkForm';
 
 function HomeworkTable() {
@@ -26,10 +27,17 @@ function HomeworkTable() {
   // the school-wide roles any; monitors, supervisors and families only read.
   const { role, isFamily, isSchoolWide } = useViewerRole();
   const mayWrite = role === 'teacher' || isSchoolWide;
-  const columns = useHomeworkTableColumns(role === 'parent' ? 'parent' : role === 'student' ? 'student' : 'staff');
+  // The follow-up cell opens the dialog defined below; a stable callback keeps the columns memoized.
+  const followUpRef = useRef<(row: HomeworkRow) => void>(() => {});
+  const openFollowUp = useCallback((row: HomeworkRow) => followUpRef.current(row), []);
+  const columns = useHomeworkTableColumns(
+    role === 'parent' ? 'parent' : role === 'student' ? 'student' : 'staff',
+    mayWrite ? openFollowUp : undefined,
+  );
   const scope = useClassSectionTableScope();
 
   const { homework, saveHomework, deleteHomework, error, isHomeworkLoading, isSaving, isDeleting } = useHomework();
+  const saveCompletions = useSaveHomeworkCompletions();
   const rows = useMemo(() => (homework || []).filter(scope.matches), [homework, scope.matches]);
   const { openDialog, confirmDelete } = useDialog();
 
@@ -67,6 +75,23 @@ function HomeworkTable() {
       },
     });
   };
+
+  // Who did it: the teacher ticks the few pupils who did not.
+  const handleFollowUp = (row: HomeworkRow) => {
+    openDialog({
+      title: t('homework.completion.title'),
+      width: '3xl',
+      children: <HomeworkCompletionForm homework={row} />,
+      primaryButton: {
+        form: HOMEWORK_COMPLETION_FORM_ID,
+        text: t('homework.completion.saveButton'),
+        loading: saveCompletions.isPending,
+        onClick: async (data: { id: string; entries: HomeworkCompletionEntry[] }) => { await saveCompletions.mutateAsync(data); },
+      },
+    });
+  };
+
+  useEffect(() => { followUpRef.current = handleFollowUp; });
 
   const handleDelete = (row: HomeworkRow) => {
     confirmDelete({
@@ -111,8 +136,20 @@ function HomeworkTable() {
         filters={scope.filters}
         onCreate={mayWrite ? handleAddClick : undefined}
         onView={handleView}
+        onRowClick={handleView}
         onEdit={mayWrite ? handleEdit : undefined}
         onDelete={mayWrite ? handleDelete : undefined}
+        menuButton
+        menu={{
+          row: (row: HomeworkRow) => [
+            { label: t('common.view'), icon: Eye, onSelect: () => handleView(row) },
+            ...(mayWrite ? [
+              { label: t('homework.completion.menu'), permission: 'update:homework', icon: ClipboardCheck, onSelect: () => handleFollowUp(row) },
+              { label: t('common.edit'), permission: 'update:homework', icon: Pencil, onSelect: () => handleEdit(row) },
+              { label: t('common.delete'), permission: 'delete:homework', icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(row) },
+            ] : []),
+          ],
+        }}
         loading={isHomeworkLoading}
         error={hasFailedToLoad(error, homework) ? error : null}
         renderError={(currentError) => (

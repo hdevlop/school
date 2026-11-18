@@ -1,7 +1,7 @@
 import { foldSubjectName } from '@sms/contracts';
-import { LEVEL_RANK, levelOfRank } from './competencyLevels';
+import { LEVEL_RANK } from './competencyLevels';
 import { agree, skillNeed, type RemarkGender, type RemarkLanguage } from './competencyRemarks';
-import type { CompetencyLine, FollowUp, PartRow } from './followUpReport';
+import { reportLevel, type CompetencyLine, type FollowUp, type PartRow } from './followUpReport';
 
 /**
  * قراءة تحليلية: the marks of a Massar Contrôle set against the competencies
@@ -27,6 +27,7 @@ const PART_LINKS = new Map(Object.entries({
 
 /** Beyond this many points (in percent) between a mark and its level, they disagree. */
 export const GAP = 15;
+const LARGE_GAP = 25;
 /** A part this far above or below the class average (in percent of the maximum) is said so. */
 export const CLASS_GAP = 5;
 
@@ -52,7 +53,10 @@ const PHRASES = {
     overallAgree: 'تتقارب نتيجة الفرض مع متوسط مستوى الكفايات.',
     overallMarkAbove: 'نتيجة الفرض أعلى من متوسط مستوى الكفايات.',
     overallLevelAbove: 'متوسط مستوى الكفايات أعلى من نتيجة الفرض.',
+    classComparison: 'لدى تلاميذ القسم الذين توفرت لهم نقطة الفرض وتقييمات جميع الكفايات، بلغ متوسط النقط {mark} ومتوسط مستوى الكفايات {level}/5.',
+    consolidate: 'كفايات تحتاج إلى تثبيت: {skills}. {practice}',
     trend: 'بمقارنة آخر تقييمين متاحين لكل كفاية، بلغ عدد الكفايات التي تحسّنت {up} والتي تراجعت {down}.',
+    example: 'في «{skill}»، انتقل المستوى من «{from}» إلى «{to}».',
     priority: 'أولوية للدعم – {name}: {need}',
   },
   fr: {
@@ -73,7 +77,10 @@ const PHRASES = {
     overallAgree: 'Le résultat du contrôle est proche du niveau moyen des compétences.',
     overallMarkAbove: 'Le résultat du contrôle dépasse le niveau moyen des compétences.',
     overallLevelAbove: 'Le niveau moyen des compétences dépasse le résultat du contrôle.',
+    classComparison: 'Pour les élèves de la classe ayant une note et un bilan complet, la moyenne au contrôle est de {mark} et le niveau moyen des compétences de {level}/5.',
+    consolidate: 'À consolider en priorité : {skills}. {practice}',
     trend: 'Entre les deux dernières évaluations disponibles pour chaque compétence, le nombre de progressions est de {up} et celui de reculs de {down}.',
+    example: 'Pour « {skill} », le niveau est passé de « {from} » à « {to} ».',
     priority: 'Priorité de soutien – {name} : {need}',
   },
 } as const;
@@ -115,12 +122,15 @@ export function classify(markShare: number, levelShare: number): Finding {
  * the month's trend, then up to two skills to support with what helps them.
  * Empty when the pupil has neither marks nor levels.
  */
-export function analyze(report: FollowUp, { maxMark, language, gender, levelLabel }: {
+export function analyze(report: FollowUp, { maxMark, language, gender, levelLabel, priorities = true, classComparison }: {
   maxMark: number;
   language: RemarkLanguage;
   gender: RemarkGender;
   /** The level's name in the report's language. */
   levelLabel: (rank: number) => string;
+  /** False when the page lists the areas to improve on its own, with what helps each. */
+  priorities?: boolean;
+  classComparison?: ReturnType<typeof comparableClassMean>;
 }): string {
   const phrases = PHRASES[language];
   const say = (template: string, values: Record<string, string | number> = {}) => agree(fill(template, values), gender);
@@ -129,6 +139,7 @@ export function analyze(report: FollowUp, { maxMark, language, gender, levelLabe
   const all = report.domains.flatMap((domain) => domain.lines);
   const assessed = all.filter((line) => line.current).length;
   const { level, total } = report.indicators;
+  const concise = language === 'ar' && report.parts.length > 1;
   if (report.average != null) {
     const { average, classAverage, diff } = report;
     const template = diff == null ? phrases.mark : diff > 0 ? phrases.higher : diff < 0 ? phrases.lower : phrases.equal;
@@ -137,14 +148,33 @@ export function analyze(report: FollowUp, { maxMark, language, gender, levelLabe
     else if (total && !assessed) lines.push(say(phrases.noLevels, { total }));
   }
   if (level != null && assessed) {
-    lines.push(say(phrases.coverage, { assessed, total, level: levelLabel(level) }));
-    if (report.average != null && assessed === total) {
-      const verdict = classify((report.average / maxMark) * 100, level * 20);
-      lines.push(verdict === 'markAbove' ? phrases.overallMarkAbove : verdict === 'levelAbove' ? phrases.overallLevelAbove : phrases.overallAgree);
+    if (!concise || assessed < total || report.average == null) {
+      lines.push(say(phrases.coverage, { assessed, total, level: levelLabel(level) }));
+    }
+    if (!concise && report.average != null && assessed === total) {
+      const gap = (report.average / maxMark) * 100 - level * 20;
+      const classGap = classComparison ? (classComparison.mark / maxMark) * 100 - classComparison.level * 20 : 0;
+      if (Math.abs(gap) <= GAP) lines.push(phrases.overallAgree);
+      else if (classComparison && Math.abs(classGap) > GAP && Math.sign(gap) === Math.sign(classGap)) {
+        const format = (value: number) => value.toLocaleString(language, { maximumFractionDigits: 2 });
+        lines.push(say(phrases.classComparison, { mark: `${format(classComparison.mark)}/${maxMark}`, level: format(classComparison.level) }));
+      } else if (Math.abs(gap) > LARGE_GAP) {
+        lines.push(gap > 0 ? phrases.overallMarkAbove : phrases.overallLevelAbove);
+      }
     }
   }
 
-  for (const link of linkParts(report)) {
+  let links = linkParts(report);
+  if (concise) {
+    // First look for a mismatch between the two assessments, then for a difference from the class.
+    const marked = links.filter(link => link.part.mark != null);
+    const gap = (link: PartLink) => Math.abs(link.part.mark! / maxMark * 100 - link.rank * 20);
+    const classGap = (link: PartLink) => Math.abs(link.part.diff ?? 0) / maxMark * 100;
+    const mismatch = marked.filter(link => gap(link) > GAP).sort((a, b) => gap(b) - gap(a));
+    links = (mismatch.length ? mismatch : marked.filter(link => classGap(link) >= CLASS_GAP)
+      .sort((a, b) => classGap(b) - classGap(a))).slice(0, 1);
+  }
+  for (const link of links) {
     const { part, rank } = link;
     if (part.mark == null) continue;
     const finding = classify((part.mark / maxMark) * 100, rank * 20);
@@ -156,15 +186,53 @@ export function analyze(report: FollowUp, { maxMark, language, gender, levelLabe
 
   const up = all.filter((line) => line.trend === 'up').length;
   const down = all.filter((line) => line.trend === 'down').length;
-  if (up || down) lines.push(say(phrases.trend, { up, down }));
+  if (up || down) {
+    let trend = say(phrases.trend, { up, down });
+    const changed = all.find(line => line.trend === 'up' || line.trend === 'down');
+    if (changed) {
+      const observed = report.months.flatMap(month => changed.levels[month] ?? []);
+      const from = observed.at(-2);
+      const to = observed.at(-1);
+      if (from && to) {
+        const example = say(phrases.example, { skill: changed.name, from: levelLabel(LEVEL_RANK[from]), to: levelLabel(LEVEL_RANK[to]) });
+        trend = concise ? example : trend + ' ' + example;
+      }
+    }
+    lines.push(trend);
+  }
 
+  if (!priorities) return lines.join('\n');
   const weakest = all
     .filter((line) => line.current && LEVEL_RANK[line.current] <= LEVEL_RANK.beginning)
     .sort((a, b) => LEVEL_RANK[a.current!] - LEVEL_RANK[b.current!])
-    .slice(0, 2);
-  for (const line of weakest) lines.push(say(phrases.priority, { name: line.name, need: skillNeed(language, line.name, gender) }));
+    .slice(0, concise ? 1 : 2);
+  for (const line of weakest) lines.push(say(phrases.priority, { name: line.name, need: skillNeed(language, line.name, gender, line.current) }));
+  if (!weakest.length) {
+    const developing = all.filter(line => line.current === 'in_progress').slice(0, 2);
+    if (developing.length) lines.push(say(phrases.consolidate, {
+      skills: developing.map(line => `«${line.name}»`).join(language === 'ar' ? ' و' : ' et '),
+      practice: skillNeed(language, developing[0].name, gender, developing[0].current),
+    }));
+    else if (concise && assessed === total && assessed > 0) {
+      lines.push(say('للتوسّع في «{skill}»، يمكن اختيار مثال جديد من الدرس وشرح طريقة إنجازه.', { skill: all[0].name }));
+    }
+  }
   return lines.join('\n');
 }
 
 /** The level's name for an average rank, through the report's translator. */
-export const rankLabel = (t: (key: string) => string) => (rank: number) => t(`competencies.levels.${levelOfRank(rank)}`);
+export const rankLabel = (t: (key: string) => string) => (rank: number) => t(`competencies.levels.${reportLevel(rank)}`);
+
+/** Compare both measures for the same pupils, with a mark and every catalog skill assessed. */
+export function comparableClassMean(reports: readonly FollowUp[]) {
+  let mark = 0;
+  let level = 0;
+  let count = 0;
+  for (const report of reports) {
+    if (report.average == null || report.indicators.level == null || report.skills.some(skill => skill.rank == null)) continue;
+    mark += report.average;
+    level += report.indicators.level;
+    count++;
+  }
+  return count >= 2 ? { mark: mark / count, level: level / count } : null;
+}

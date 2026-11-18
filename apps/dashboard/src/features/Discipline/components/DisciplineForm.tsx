@@ -64,7 +64,10 @@ function IncidentLocationField() {
   );
 }
 
-export default function DisciplineForm({ incident }: { incident?: DisciplineIncident | null }) {
+/** What a new incident may open with, when another page suggests it (missed homework, say). */
+export type DisciplineDraft = Partial<Pick<DisciplineIncident, 'studentId' | 'category' | 'severity' | 'description'>>;
+
+export default function DisciplineForm({ incident, draft }: { incident?: DisciplineIncident | null; draft?: DisciplineDraft }) {
   const { t } = useTranslation();
   const disciplineSchema = useMemo(() => createDisciplineSchemas(t).discipline, [t]);
   const { pop } = useDialog();
@@ -78,12 +81,12 @@ export default function DisciplineForm({ incident }: { incident?: DisciplineInci
 
   const defaultValues = {
     ...(incident?.id ? { id: incident.id } : {}),
-    studentId: incident?.studentId || '',
+    studentId: incident?.studentId || draft?.studentId || '',
     ...dateParts,
-    category: incident?.category || 'classroom_disruption',
-    severity: incident?.severity || 'medium',
+    category: incident?.category || draft?.category || 'classroom_disruption',
+    severity: incident?.severity || draft?.severity || 'medium',
     location: incident?.location || '',
-    description: incident?.description || '',
+    description: incident?.description || draft?.description || '',
   };
 
   const submit = (data) => {

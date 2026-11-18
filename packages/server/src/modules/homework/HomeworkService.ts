@@ -1,6 +1,8 @@
 import { Inject, Service, Transaction, TransactionService } from '../../najm';
 import { AcademicSourceService } from '../academicSources/AcademicSourceService';
+import type { HomeworkCompletionEntry } from '@sms/contracts';
 import { HomeworkAttachmentService } from './HomeworkAttachmentService';
+import { HomeworkCompletionRepository } from './HomeworkCompletionRepository';
 import type { CreateHomeworkDto, HomeworkPartsQuery, UpdateHomeworkDto } from './HomeworkDto';
 import { HomeworkRepository, type HomeworkListFilters, type HomeworkReader } from './HomeworkRepository';
 import { HomeworkValidator, type HomeworkActor } from './HomeworkValidator';
@@ -16,13 +18,15 @@ export class HomeworkService {
     private validator: HomeworkValidator,
     private sources: AcademicSourceService,
     private attachments: HomeworkAttachmentService,
+    private completions: HomeworkCompletionRepository,
   ) {}
 
-  // A parent reads which of their children each homework is for; staff read
-  // how many families have seen it. A pupil reads the homework alone.
+  // A parent reads which of their children each homework is for, with each
+  // one's follow-up; staff read how many families have seen it and how the
+  // follow-up went. A pupil reads their own follow-up.
   private reader(actor: HomeworkActor): HomeworkReader {
     if (actor.role === 'parent') return { parentUserId: actor.id };
-    if (actor.role === 'student') return {};
+    if (actor.role === 'student') return { studentUserId: actor.id };
     return { counts: true };
   }
 
@@ -146,6 +150,31 @@ export class HomeworkService {
     await this.validator.ensureParentOfChild(id, studentId, actor);
     const seen = await this.repository.acknowledge(id, studentId, actor.id);
     return { homeworkId: id, studentId, seenAt: seen?.seenAt ?? null };
+  }
+
+  /** The pupils the homework was given to, with their follow-up. Staff only. */
+  async roster(id: string, actor: HomeworkActor) {
+    this.validator.ensureMayReadRoster(actor);
+    await this.validator.ensureExists(id);
+    return this.completions.roster(id);
+  }
+
+  /**
+   * Records the follow-up of the pupils listed. Each must be one the
+   * homework was given to; a pupil left out keeps what was recorded.
+   */
+  async saveCompletions(id: string, entries: HomeworkCompletionEntry[], actor: HomeworkActor) {
+    this.validator.ensureMayWrite(actor);
+    await this.validator.ensureExists(id);
+    const roster = await this.completions.roster(id);
+    this.validator.ensureRosterEntries(entries, new Set(roster.map((entry) => entry.studentId)));
+    await this.completions.save(id, entries, actor.id);
+    return this.completions.roster(id);
+  }
+
+  /** The missed homework the reader may see: a family its own child's, staff that of their classes. */
+  async missed(filters: { studentId?: string }) {
+    return this.completions.missed(filters);
   }
 
   async clearForSeedReset() {

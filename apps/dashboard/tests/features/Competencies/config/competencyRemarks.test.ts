@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import type { CompetencyDomain, CompetencyLevel } from '@sms/contracts';
 import { readFileSync } from 'node:fs';
-import { agree, hasOwnRemark, proposeRemark } from '@/features/Competencies/config/competencyRemarks';
+import { agree, hasOwnRemark, proposeRemark, skillNeed } from '@/features/Competencies/config/competencyRemarks';
 
 // The school's CP Arabic grid.
 const domain = (id: string, name: string, items: string[]): CompetencyDomain => ({
@@ -16,6 +16,19 @@ const propose = (levels: Record<string, CompetencyLevel>, gender: 'M' | 'F', dom
   proposeRemark({ domains, levelOf: (id) => levels[id], gender, language });
 
 describe('the remark book', () => {
+  it('matches Maths practice to each support level in reports and monthly remarks', () => {
+    const skills = ['Compter et dénombrer', 'Lire et écrire les nombres', 'Comparer et ranger les nombres',
+      'Résoudre un petit problème', 'Reconnaître les figures planes', 'Reconnaître les formes géométriques', 'Comparer et mesurer des longueurs'];
+    for (const name of skills) {
+      const activities = (['not_acquired', 'beginning', 'in_progress'] as const).map(level => {
+        const activity = skillNeed('fr', name, null, level);
+        expect(propose({ m0: level }, 'F', [domain('m', 'Maths', [name])], 'fr')).toEndWith(activity);
+        return activity;
+      });
+      expect(new Set(activities).size).toBe(3);
+    }
+  });
+
   it('agrees with the pupil: feminine for a girl, masculine otherwise', () => {
     expect(agree('{يواجه|تواجه} صعوبة', 'F')).toBe('تواجه صعوبة');
     expect(agree('{يواجه|تواجه} صعوبة', 'M')).toBe('يواجه صعوبة');
@@ -69,7 +82,7 @@ describe('the remark book', () => {
   });
 
   it('uses neutral guidance when gender is unknown and the bank has a gendered sentence', () => {
-    const domains = [domain('f', 'Lecture', ['Lire avec fluidité'])];
+    const domains = [domain('m', 'Calcul', ['Additionner et soustraire'])];
     const text = proposeRemark({ domains, language: 'fr', gender: null, levelOf: () => 'beginning' });
     expect(text).toContain('reprenez un exemple du cours');
     expect(text).not.toMatch(/\b(Il|Elle)\b|[{}]/);
@@ -101,4 +114,15 @@ describe('the remark book covers default subject skills', () => {
       }
     });
   }
+
+  it('offers three distinct activities for every French skill in reports and monthly remarks', () => {
+    for (const name of new Set(skillsOf('FR').flatMap(list => list.skills))) {
+      const activities = (['not_acquired', 'beginning', 'in_progress'] as const).map(level => {
+        const activity = skillNeed('fr', name, null, level);
+        expect(propose({ f0: level }, 'F', [domain('f', 'Français', [name])], 'fr')).toEndWith(activity);
+        return activity;
+      });
+      expect(new Set(activities).size, name).toBe(3);
+    }
+  });
 });

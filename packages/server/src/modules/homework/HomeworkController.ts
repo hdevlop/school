@@ -1,13 +1,15 @@
 import { McpTool, ToolGroup } from 'najm-mcp';
+import type { HomeworkCompletionEntry } from '@sms/contracts';
 import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, Validate } from '../../najm';
 import { Can } from '../../auth';
 import { Homework, Policy, CanCreate, CanDelete, CanList, CanRead, CanUpdate } from './HomeworkGuards';
 import { HomeworkService } from './HomeworkService';
 import type { HomeworkActor } from './HomeworkValidator';
 import {
-  acknowledgeHomeworkDto, createHomeworkDto, homeworkAttachmentParams, homeworkIdParam, homeworkPartsQuery, homeworkSectionParam,
-  homeworkStudentParam, homeworkUploadDto, updateHomeworkDto,
-  type AcknowledgeHomeworkDto, type CreateHomeworkDto, type HomeworkPartsQuery, type UpdateHomeworkDto,
+  acknowledgeHomeworkDto, createHomeworkDto, homeworkAttachmentParams, homeworkIdParam, homeworkMissedQuery, homeworkPartsQuery,
+  homeworkSectionParam, homeworkStudentParam, homeworkUploadDto, saveHomeworkCompletionsDto, updateHomeworkDto,
+  type AcknowledgeHomeworkDto, type CreateHomeworkDto, type HomeworkMissedQuery, type HomeworkPartsQuery,
+  type SaveHomeworkCompletionsDto, type UpdateHomeworkDto,
 } from './HomeworkDto';
 
 /** Every File in a multipart body, whatever its field is called. */
@@ -67,6 +69,37 @@ export class HomeworkController {
   @ResMsg('homework.success.retrieved')
   parts(@Query() query: HomeworkPartsQuery) {
     return this.service.parts(query);
+  }
+
+  // Missed homework (incomplete or not done) by pupil, for the Conduite
+  // follow-up page and a pupil's profile. Read through the follow-up's own
+  // ownership: a family sees its child's records only.
+  @Get('/missed')
+  @Can('read:homework')
+  @Validate({ query: homeworkMissedQuery })
+  @McpTool({ description: "List the selected year's missed homework (devoirs non faits · الواجبات غير المنجزة): each pupil's homework recorded incomplete or not done, newest first; studentId narrows to one pupil.", readOnly: true })
+  @ResMsg('homework.success.retrieved')
+  missed(@Query() query: HomeworkMissedQuery) {
+    return this.service.missed(query);
+  }
+
+  @Get('/:id/completions')
+  @Can('read:homework')
+  @Validate({ params: homeworkIdParam })
+  @McpTool({ description: "Read one homework's follow-up (suivi): the pupils it was given to, each with done, incomplete, not done, or not checked yet", readOnly: true })
+  @ResMsg('homework.success.retrieved')
+  roster(@Params('id') id: string, @User() actor: HomeworkActor) {
+    return this.service.roster(id, actor);
+  }
+
+  @Put('/:id/completions')
+  @Can('update:homework')
+  @Validate({ params: homeworkIdParam, body: saveHomeworkCompletionsDto })
+  @McpTool({ description: "Record one homework's follow-up: for each pupil listed, done, incomplete or not done, with an optional remark", confirm: { level: 'warning', message: 'confirm.homework.completions' } })
+  @ResMsg('homework.success.completionsSaved')
+  saveCompletions(@Params('id') id: string, @Body() body: SaveHomeworkCompletionsDto, @User() actor: HomeworkActor) {
+    // The DTO requires each pupil's id; Zod's inferred type here leaves it optional.
+    return this.service.saveCompletions(id, body.entries as HomeworkCompletionEntry[], actor);
   }
 
   @Get('/:id')

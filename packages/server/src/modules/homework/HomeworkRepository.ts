@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, inArray, or, sql, type SQL } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
-import type { HomeworkAttachment, HomeworkChild } from '@sms/contracts';
+import type { HomeworkAttachment, HomeworkChild, HomeworkCompletion } from '@sms/contracts';
 import { Repository } from '../../najm';
 import { Owned, type OwnedWhere } from '../../auth';
 import { DB } from '../../database/db';
@@ -19,10 +19,11 @@ export type HomeworkListFilters = { sectionId?: string; studentId?: string };
 
 /**
  * What a read adds for its reader: a parent gets their own children the
- * homework is for, staff get how many pupils' parents marked it seen. The
- * service decides which; neither changes which rows are returned.
+ * homework is for, staff get how many pupils' parents marked it seen and how
+ * the follow-up went, a pupil gets their own follow-up. The service decides
+ * which; none changes which rows are returned.
  */
-export type HomeworkReader = { parentUserId?: string; counts?: boolean };
+export type HomeworkReader = { parentUserId?: string; studentUserId?: string; counts?: boolean };
 
 const homeworkSelect = {
   id: homework.id,
@@ -50,9 +51,12 @@ const attachmentList = sql<HomeworkAttachment[]>`(
 
 // The reading parent's children who sat in a target section on the day the
 // homework was given, with the moment that parent marked it seen for each.
+// Each child also carries the teacher's follow-up for them, once recorded.
 const childrenOf = (parentUserId: string) => sql<HomeworkChild[]>`(
   select coalesce(jsonb_agg(jsonb_build_object(
-    'id', student.id, 'name', student.name, 'seenAt', seen.seen_at
+    'id', student.id, 'name', student.name, 'seenAt', seen.seen_at,
+    'completion', case when completion.id is null then null
+      else jsonb_build_object('status', completion.status, 'note', completion.note) end
   ) order by student.name), '[]'::jsonb)
   from student_enrollments enrollment
   join student_enrollment_placements placement on placement.enrollment_id = enrollment.id
@@ -61,8 +65,30 @@ const childrenOf = (parentUserId: string) => sql<HomeworkChild[]>`(
   join parents parent on parent.id = link.parent_id
   left join homework_acknowledgments seen on seen.homework_id = ${homework.id}
     and seen.student_id = student.id and seen.parent_user_id = ${parentUserId}
+  left join homework_completions completion on completion.homework_id = ${homework.id}
+    and completion.student_id = student.id
   where parent.user_id = ${parentUserId}
     and ${inTargetSectionOnSourceDate(homework)}
+)`;
+
+// The signed-in pupil's own follow-up of the homework, once recorded.
+const ownCompletion = (studentUserId: string) => sql<HomeworkCompletion | null>`(
+  select jsonb_build_object('status', completion.status, 'note', completion.note)
+  from homework_completions completion
+  join students student on student.id = completion.student_id
+  where completion.homework_id = ${homework.id} and student.user_id = ${studentUserId}
+  limit 1
+)`;
+
+// How many pupils the follow-up was recorded for, and how many missed it.
+const completionCounts = sql<{ reviewed: number; incomplete: number; notDone: number }>`(
+  select jsonb_build_object(
+    'reviewed', count(*)::int,
+    'incomplete', (count(*) filter (where completion.status = 'incomplete'))::int,
+    'notDone', (count(*) filter (where completion.status = 'not_done'))::int
+  )
+  from homework_completions completion
+  where completion.homework_id = ${homework.id}
 )`;
 
 const studentCount = sql<number>`(
@@ -111,7 +137,8 @@ export class HomeworkRepository {
         )`,
         attachments: attachmentList,
         ...(reader.parentUserId ? { children: childrenOf(reader.parentUserId) } : {}),
-        ...(reader.counts ? { seenCount, studentCount } : {}),
+        ...(reader.studentUserId ? { completion: ownCompletion(reader.studentUserId) } : {}),
+        ...(reader.counts ? { seenCount, studentCount, completionCounts } : {}),
       })
       .from(homework)
       .leftJoin(teacherAssignments, eq(homework.teacherAssignmentId, teacherAssignments.id))

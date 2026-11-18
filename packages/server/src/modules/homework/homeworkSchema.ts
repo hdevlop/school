@@ -59,6 +59,26 @@ export const homeworkAttachments = pgTable('homework_attachments', {
   index('homework_attachments_homework_idx').on(table.homeworkId),
 ]);
 
+export const homeworkCompletionStatusEnum = pgEnum('homeworkCompletionStatus', getEnumValues('homeworkCompletionStatus'));
+
+/**
+ * The teacher's follow-up of one pupil for one homework: done, incomplete or
+ * not done, with an optional remark. No row means not checked yet. It goes
+ * with its homework, and with the pupil.
+ */
+export const homeworkCompletions = pgTable('homework_completions', {
+  id: idField(),
+  homeworkId: homeworkRef(),
+  studentId: studentRef(),
+  status: homeworkCompletionStatusEnum('status').notNull(),
+  note: text('note'),
+  recordedBy: text('recorded_by').references(() => users.id, { onDelete: 'set null' }),
+  ...timestamps,
+}, (table) => [
+  uniqueIndex('homework_completions_unique').on(table.homeworkId, table.studentId),
+  index('homework_completions_student_idx').on(table.studentId, table.status),
+]);
+
 /** A parent marked the homework seen for one of their children. */
 export const homeworkAcknowledgments = pgTable('homework_acknowledgments', {
   id: idField(),

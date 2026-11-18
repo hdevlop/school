@@ -56,7 +56,7 @@ export const SIDEBAR_ORDER_IDS = [
   // `/massar` and `/massar-settings` are the menu's Massar pages; the older
   // `/massar/...` ids stay accepted for orders saved before they replaced them.
   'financial', 'attendance', 'student-conduct', 'evaluations', 'academic', 'massar', '/massar', '/massar-settings', '/massar/rounds', '/massar/setup',
-  'transport', 'access-control', 'appearance', 'communications', '/exam-planning',
+  'transport', 'access-control', 'appearance', 'communications', '/exam-planning', '/homework-follow-up',
   ...SIDEBAR_ENTRIES.map((entry) => entry[1]),
 ] as const;
 export type SidebarOrderId = typeof SIDEBAR_ORDER_IDS[number];
@@ -66,7 +66,9 @@ const MASSAR_PAGE_IDS: ReadonlySet<string> = new Set(['/massar', '/massar-settin
 
 export function sidebarKeyForItem(itemId: string): SidebarKey | undefined {
   if (MASSAR_PAGE_IDS.has(itemId)) return 'massar';
-  const pageId = itemId === '/exam-planning' || itemId === '/assessment-planning' ? '/exams' : itemId;
+  // Missed homework follows the Homework entry: it reads the same records.
+  const pageId = itemId === '/exam-planning' || itemId === '/assessment-planning' ? '/exams'
+    : itemId === '/homework-follow-up' ? '/homework' : itemId;
   return SIDEBAR_ENTRIES.find((entry) => entry[1] === pageId)?.[0];
 }
 

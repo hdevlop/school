@@ -231,5 +231,8 @@ export {
   chatbotUnmatchedQueriesTable as chatbotUnmatchedQueries,
 } from 'najm-rag/pg';
 export * from '../../modules/massar/massarSchema';
-export { homework, homeworkRef, homeworkAttachments, homeworkAcknowledgments, homeworkAttachmentKindEnum } from '../../modules/homework/homeworkSchema';
+export {
+  homework, homeworkRef, homeworkAttachments, homeworkAcknowledgments, homeworkAttachmentKindEnum,
+  homeworkCompletions, homeworkCompletionStatusEnum,
+} from '../../modules/homework/homeworkSchema';
 export { competencyDomains, competencyDomainRef, competencies, competencyRef, competencyEvaluations, competencyRemarks, competencyLevelEnum } from '../../modules/competencies/competencySchema';

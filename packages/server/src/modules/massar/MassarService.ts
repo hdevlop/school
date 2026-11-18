@@ -17,7 +17,7 @@ import { MassarValidator, mayManageMassar, type MassarActor, type MassarEntry } 
 import { MassarGradeLink } from './MassarGradeLink';
 import {
   normalizeStatement,
-  type MassarCommit, type MassarMappings, type MassarMarksInput, type MassarPlanInput, type MassarRemarkInput, type MassarResolve, type MassarRoundInput, type MassarStatementInput,
+  type MassarAnalysisInput, type MassarCommit, type MassarMappings, type MassarMarksInput, type MassarPlanInput, type MassarRemarkInput, type MassarResolve, type MassarRoundInput, type MassarStatementInput,
 } from './MassarDto';
 import {
   buildImportPreview, pendingWithSuggestions, proposeSubject, sameName,
@@ -1059,6 +1059,19 @@ export class MassarService {
     this.validator.ensureRemarkStudent(data.studentId, row.sheet.roster);
     await this.repository.saveRemark(id, data.studentId, data.remark, actor.id);
     return { studentId: data.studentId, remark: data.remark };
+  }
+
+  async analyses(id: string) {
+    await this.requireSheet(id);
+    return this.repository.analyses(id);
+  }
+
+  @Transaction()
+  async saveAnalysis(id: string, data: MassarAnalysisInput, actor: MassarActor) {
+    const row = await this.ownedOpenSheet(id, null, actor, 'notes');
+    this.validator.ensureRemarkStudent(data.studentId, row.sheet.roster);
+    await this.repository.saveAnalysis(id, data.studentId, data.analysis, actor.id);
+    return data;
   }
 
   @Transaction()

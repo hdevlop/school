@@ -4,5 +4,6 @@ export { HomeworkRepository } from './HomeworkRepository';
 export { HomeworkValidator } from './HomeworkValidator';
 export { HomeworkAttachmentService } from './HomeworkAttachmentService';
 export { HomeworkAttachmentRepository } from './HomeworkAttachmentRepository';
+export { HomeworkCompletionRepository } from './HomeworkCompletionRepository';
 export { HomeworkCleanupService } from './HomeworkCleanupService';
 export * from './HomeworkGuards';

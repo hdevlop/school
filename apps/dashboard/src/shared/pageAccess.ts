@@ -44,6 +44,8 @@ export const PAGE_ACCESS = {
   discipline: can('read:discipline'),
   behaviorRewards: can('read:behavior-rewards'),
   homework: can('read:homework'),
+  // Missed homework is read through each follow-up's ownership, as homework is.
+  homeworkFollowUp: can('read:homework'),
   assessments: can('read:assessments'),
   exams: can('read:exams'),
   grades: can('read:grades'),

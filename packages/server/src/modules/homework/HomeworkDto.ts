@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { HOMEWORK_LIMITS as limits } from '@sms/contracts';
+import { HOMEWORK_COMPLETION_NOTE_MAX, HOMEWORK_COMPLETION_STATUS_VALUES, HOMEWORK_LIMITS as limits } from '@sms/contracts';
 import { optionalDateField, optionalId, requiredId } from '../../shared/fields';
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format');
@@ -40,8 +40,19 @@ export const homeworkStudentParam = z.object({ studentId: z.string().min(1) });
 /** The validation plugin restores the uploaded File fields into the body. */
 export const homeworkUploadDto = z.object({});
 export const acknowledgeHomeworkDto = z.object({ studentId: requiredId });
+/** The follow-up of a homework: each pupil listed once, with a status and an optional remark. */
+export const saveHomeworkCompletionsDto = z.object({
+  entries: z.array(z.object({
+    studentId: requiredId,
+    status: z.enum(HOMEWORK_COMPLETION_STATUS_VALUES),
+    note: z.string().trim().max(HOMEWORK_COMPLETION_NOTE_MAX, 'homework.errors.completionNoteTooLong').nullish(),
+  })).max(500),
+});
+export const homeworkMissedQuery = z.object({ studentId: z.string().min(1).optional() });
 
 export type CreateHomeworkDto = z.infer<typeof createHomeworkDto>;
 export type UpdateHomeworkDto = z.infer<typeof updateHomeworkDto>;
 export type HomeworkPartsQuery = z.infer<typeof homeworkPartsQuery>;
 export type AcknowledgeHomeworkDto =z.infer<typeof acknowledgeHomeworkDto>;
+export type SaveHomeworkCompletionsDto = z.infer<typeof saveHomeworkCompletionsDto>;
+export type HomeworkMissedQuery = z.infer<typeof homeworkMissedQuery>;
