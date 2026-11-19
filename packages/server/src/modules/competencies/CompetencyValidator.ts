@@ -1,9 +1,9 @@
-import { COMPETENCY_LIMITS as limits } from '@sms/contracts';
+import { COMPETENCY_LIMITS as limits, inMonth } from '@sms/contracts';
 import { Err, I18n, Service } from '../../najm';
 import { SCHOOL_WIDE_ROLES } from '../../auth';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { Year } from '../academicYears/requestYear';
-import { CompetencyCatalogRepository } from './CompetencyCatalogRepository';
+import { CompetencyCatalogRepository, type MonthSpan } from './CompetencyCatalogRepository';
 import { CompetencyEvaluationRepository } from './CompetencyEvaluationRepository';
 
 export type CompetencyActor = { id: string; role?: string | null };
@@ -38,6 +38,21 @@ export class CompetencyValidator {
     const last = this.year.reportingEndsOn.slice(0, 7);
     for (let month = this.baselineMonth(); month <= last; month = monthBounds(month).end.slice(0, 7)) months.push(month);
     return months;
+  }
+
+  /** A month as stored on a domain or competency: the year's first is null, the start of every list. */
+  storedFromMonth(month: string) {
+    return month > this.baselineMonth() ? month : null;
+  }
+
+  /** The month a span starts in, the year's first when it has always been followed. */
+  startOf(span: { fromMonth: string | null }) {
+    return span.fromMonth ?? this.baselineMonth();
+  }
+
+  /** A change is made in a month the domain or competency is followed in, as the teacher sees it there. */
+  ensureInMonth(span: { fromMonth: string | null; untilMonth: string | null }, month: string) {
+    if (!inMonth(span, month)) Err(409, this.ct('notInMonth'));
   }
 
   ensureMonthInYear(month: string) {
@@ -77,24 +92,26 @@ export class CompetencyValidator {
     return competency!;
   }
 
-  async ensureDomainRoom(teacherAssignmentId: string) {
-    if (await this.catalog.countDomains(teacherAssignmentId) >= limits.domains) {
+  /** Room among the domains still followed in the month or later; the ones that ended no longer count. */
+  async ensureDomainRoom(teacherAssignmentId: string, month: string) {
+    if (await this.catalog.countDomains(teacherAssignmentId, month) >= limits.domains) {
       Err(409, this.ct('tooManyDomains', { max: limits.domains }));
     }
   }
 
-  async ensureCompetencyRoom(domainId: string) {
-    if (await this.catalog.countCompetencies(domainId) >= limits.competencies) {
+  async ensureCompetencyRoom(domainId: string, month: string) {
+    if (await this.catalog.countCompetencies(domainId, month) >= limits.competencies) {
       Err(409, this.ct('tooManyCompetencies', { max: limits.competencies }));
     }
   }
 
-  async ensureDomainNameFree(teacherAssignmentId: string, name: string, excludeId?: string) {
-    if (await this.catalog.domainNameTaken(teacherAssignmentId, name, excludeId)) Err(409, this.ct('duplicateDomain', { name }));
+  /** A name repeats only in months that never meet: one that ended in October frees it for November. */
+  async ensureDomainNameFree(teacherAssignmentId: string, name: string, span: MonthSpan, excludeId?: string) {
+    if (await this.catalog.domainNameTaken(teacherAssignmentId, name, span, excludeId)) Err(409, this.ct('duplicateDomain', { name }));
   }
 
-  async ensureCompetencyNameFree(domainId: string, name: string, excludeId?: string) {
-    if (await this.catalog.competencyNameTaken(domainId, name, excludeId)) Err(409, this.ct('duplicateCompetency', { name }));
+  async ensureCompetencyNameFree(domainId: string, name: string, span: MonthSpan, excludeId?: string) {
+    if (await this.catalog.competencyNameTaken(domainId, name, span, excludeId)) Err(409, this.ct('duplicateCompetency', { name }));
   }
 
   ensureSameList(fromAssignmentId: string, toAssignmentId: string) {

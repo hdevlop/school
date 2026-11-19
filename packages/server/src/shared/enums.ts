@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { enumValues, type EnumKey } from '@sms/contracts/lookup';
-import { COMPETENCY_LEVEL_VALUES } from '@sms/contracts';
+import { COMPETENCY_LEVEL_VALUES, COMPETENCY_RENAME_SCOPE_VALUES } from '@sms/contracts';
 import { STUDENT_YEAR_ENROLLMENT_END_STATUS_VALUES } from '@sms/contracts';
 
 /**
@@ -38,6 +38,7 @@ export const sectionStatusEnum = createZodEnum('sectionStatus');
 export const languageEnum = createZodEnum('language');
 export const enrollmentStatusEnum = createZodEnum('enrollmentStatus');
 export const competencyLevelEnum = z.enum(COMPETENCY_LEVEL_VALUES);
+export const competencyRenameScopeEnum = z.enum(COMPETENCY_RENAME_SCOPE_VALUES);
 // Built over its tuple directly so the end command keeps the literal statuses
 // the enrollment service and repository are typed with.
 export const studentYearEnrollmentEndStatusEnum = z.enum(STUDENT_YEAR_ENROLLMENT_END_STATUS_VALUES);

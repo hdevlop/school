@@ -10,7 +10,7 @@ import { CompetencyTextScope, useCompetencyText } from './CompetencyText';
 import { LevelRow } from './LevelPicker';
 import type { SheetStudent } from './StudentCompetencySheet';
 
-const ROW = 'flex w-full items-center gap-3 rounded-xl border bg-card p-3 text-start';
+const ROW = 'flex w-full items-center gap-3 rounded-xl border bg-card p-3 text-start text-card-foreground';
 
 /**
  * One competency for the whole class: every pupil with their level this

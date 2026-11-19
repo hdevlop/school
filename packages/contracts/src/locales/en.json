@@ -8221,6 +8221,24 @@
     "subtitle": {
       "count": "Total: {{count}}"
     },
+    "mobile": {
+      "allClasses": "All classes",
+      "allSections": "All sections",
+      "allSubjects": "All subjects",
+      "search": "Search homework",
+      "searchPlaceholder": "Title, subject, or teacher…",
+      "resultsOne": "{{count}} result",
+      "results": "{{count}} results",
+      "sort": "Sort by date",
+      "newest": "Newest first",
+      "oldest": "Oldest first",
+      "given": "Given",
+      "due": "Due",
+      "details": "Homework details",
+      "files": "{{count}} files",
+      "missed": "{{count}} missed",
+      "seen": "{{seen}}/{{total}} seen"
+    },
     "form": {
       "details": "Homework",
       "context": "Class and subject",
@@ -8249,6 +8267,8 @@
       "takePhoto": "Take a photo",
       "preparing": "Preparing the photos…",
       "removeFile": "Remove",
+      "rotatePhoto": "Turn the photo",
+      "rotateFailed": "This photo could not be turned.",
       "tooManyFiles": "A homework holds at most {{max}} files."
     },
     "dialogs": {
@@ -8277,12 +8297,14 @@
       "noDueDate": "No due date",
       "seenCount": "{{seen}} of {{total}}",
       "seenByParents": "Seen by parents",
+      "backToList": "Back to homework",
       "markSeen": "Mark as seen",
       "seenOn": "Seen on {{date}}",
       "child": "For"
     },
     "attachments": {
       "title": "Photos and files",
+      "singularTitle": "Attachment",
       "photo": "Photo",
       "pdf": "PDF document",
       "open": "Open",
@@ -8340,8 +8362,14 @@
       },
       "notReviewed": "Not checked",
       "allDone": "All done",
+      "doneCount": "Done: {{count}}",
       "notePlaceholder": "Remark (optional)",
-      "saveButton": "Save follow-up",
+      "autosave": "Changes are saved automatically.",
+      "autosaving": "Saving…",
+      "autosaved": "Changes saved",
+      "autosaveFailed": "Changes could not be saved.",
+      "discardUnsaved": "Discard changes",
+      "retry": "Retry",
       "empty": "No student was in this homework’s sections on its date.",
       "summary": "Done: {{done}} · Incomplete: {{incomplete}} · Not done: {{notDone}}",
       "missed": "Missed: {{count}}",
@@ -8397,11 +8425,12 @@
       "noCatalogFamily": "No competencies are followed in this subject yet.",
       "noStudents": "No pupils in this class this month.",
       "noMatch": "No pupil matches this search.",
-      "noChildren": "No child to show."
+      "noChildren": "No child to show.",
+      "noCatalogMonth": "No competency is followed in this month yet. Add the ones taught this month."
     },
     "report": {
       "title": "Follow-up report",
-      "open": "Follow-up reports",
+      "tab": "Report",
       "round": "Test",
       "year": "School year",
       "pupilName": "Pupil's name",
@@ -8447,11 +8476,10 @@
       "change": "Progress",
       "remark": "Teacher's remarks",
       "inspector": "Inspector's remarks",
-      "print": "Print the report",
+      "print": "This student · {{name}}",
       "printAll": "Print the whole class ({{count}})",
-      "previous": "Previous pupil",
-      "next": "Next pupil",
       "noRound": "No Massar test for this class and subject.",
+      "noStudent": "No report for this student for the selected test.",
       "failed": "The Massar marks could not be loaded.",
       "absent": "Abs.",
       "analysis": "Results analysis",
@@ -8506,7 +8534,16 @@
       "copyTarget": "Class",
       "copyNone": "None of your other classes in this subject has an empty list.",
       "copyAction": "Copy",
-      "failed": "The change was not saved."
+      "failed": "The change was not saved.",
+      "monthNote": "Changes apply from {{month}} on. Earlier months keep their own list and levels.",
+      "renameTitle": "Rename {{name}}",
+      "renameAsk": "{{name}} already has levels before {{month}}. What should the new name change?",
+      "renameFromMonth": "Replace it from {{month}}",
+      "renameFromMonthHint": "A new competency: the earlier months keep {{name}} and its levels.",
+      "renameAll": "Correct the name in every month",
+      "renameAllHint": "A spelling fix: the earlier months show the new name too.",
+      "deleteCompetencyFrom": "Remove {{name}} from {{month}} on? {{count}} level(s) set from {{month}} will be lost; the earlier months keep it.",
+      "deleteDomainFrom": "Remove the sub-domain {{name}} and its competencies from {{month}} on? {{count}} level(s) set from {{month}} will be lost; the earlier months keep them."
     },
     "success": {
       "defaultApplied": "Proposed list added",
@@ -8539,7 +8576,8 @@
       "otherSubject": "A list is copied only to a class of the same subject",
       "emptySource": "This list has no domains to copy",
       "targetNotEmpty": "That class already has a list",
-      "studentNotInSection": "This pupil was not in this class that month"
+      "studentNotInSection": "This pupil was not in this class that month",
+      "notInMonth": "This is not followed in this month"
     }
   },
   "homeworkFollowUp": {

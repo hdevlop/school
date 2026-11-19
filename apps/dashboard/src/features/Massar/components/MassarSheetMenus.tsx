@@ -4,6 +4,7 @@ import { FileSpreadsheet, FileText, Files, FolderArchive, GraduationCap, Layers,
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, NButton } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import type { MassarSheetRow } from '@sms/contracts';
+import printStyles from '@/components/PrintMenu.module.css';
 import type { SelectedStudent } from './MassarPaper';
 import styles from './Massar.module.css';
 
@@ -127,30 +128,30 @@ export function MassarPrintMenu({ sheet, subjects, levelSheets, sheets, classNam
       </NButton>
     </DropdownMenuTrigger>
     <DropdownMenuContent data-keep-selection align="end" className="w-auto max-w-[calc(100vw-24px)] p-0">
-      <div className={styles.printMenu} data-columns={statementChoices.length > 0 ? 2 : 1}>
-        <DropdownMenuGroup className={styles.printColumn}>
-          <DropdownMenuLabel className={styles.printTitle}><Files aria-hidden />{t('massar.flow.printTitle')}</DropdownMenuLabel>
+      <div className={printStyles.printMenu} data-columns={statementChoices.length > 0 ? 2 : 1}>
+        <DropdownMenuGroup className={printStyles.printColumn}>
+          <DropdownMenuLabel className={printStyles.printTitle}><Files aria-hidden />{t('massar.flow.printTitle')}</DropdownMenuLabel>
           {paperChoices.map(({ key, icon: Icon, label, detail, chosen }, index) => <Fragment key={key}>
             {index === 2 && <DropdownMenuSeparator />}
-            <DropdownMenuItem className={styles.printItem} disabled={!chosen.length} onSelect={() => onPrint(chosen)}>
+            <DropdownMenuItem className={printStyles.printItem} disabled={!chosen.length} onSelect={() => onPrint(chosen)}>
               <Icon aria-hidden />
               <span><strong><bdi>{label}</bdi></strong>{detail && <small><bdi>{detail}</bdi></small>}</span>
-              <span className={styles.printCount} dir="ltr" title={t('massar.flow.printSheets', { count: chosen.length })}>{chosen.length}</span>
+              <span className={printStyles.printCount} dir="ltr" title={t('massar.flow.printSheets', { count: chosen.length })}>{chosen.length}</span>
             </DropdownMenuItem>
           </Fragment>)}
         </DropdownMenuGroup>
         {statementChoices.length > 0 && <>
-          <div className={styles.printDivider} role="separator" aria-orientation="vertical" />
-          <DropdownMenuGroup className={styles.printColumn}>
-            <DropdownMenuLabel className={styles.printTitle}><UserRound aria-hidden />{t('massar.flow.statements.title')}</DropdownMenuLabel>
+          <div className={printStyles.printDivider} role="separator" aria-orientation="vertical" />
+          <DropdownMenuGroup className={printStyles.printColumn}>
+            <DropdownMenuLabel className={printStyles.printTitle}><UserRound aria-hidden />{t('massar.flow.statements.title')}</DropdownMenuLabel>
             {statementChoices.map((choice, index) => {
               const { key, icon: Icon, label, chosen, studentIds } = choice;
               return <Fragment key={key}>
                 {index === 1 && <DropdownMenuSeparator />}
-                <DropdownMenuItem className={styles.printItem} disabled={!chosen.length} onSelect={() => onPrintStatements(chosen, studentIds)}>
+                <DropdownMenuItem className={printStyles.printItem} disabled={!chosen.length} onSelect={() => onPrintStatements(chosen, studentIds)}>
                   <Icon aria-hidden />
                   <span><strong><bdi>{label}</bdi></strong><small>{statementHelp(choice)}</small></span>
-                  {key === 'student' && studentIds && studentIds.length > 0 && <span className={styles.printCount} dir="ltr">{studentIds.length}</span>}
+                  {key === 'student' && studentIds && studentIds.length > 0 && <span className={printStyles.printCount} dir="ltr">{studentIds.length}</span>}
                 </DropdownMenuItem>
               </Fragment>;
             })}

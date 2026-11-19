@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import type { HomeworkMissedRecord, HomeworkRosterEntry } from '@sms/contracts';
-import { completionDraft, completionEntries, missedByStudent, missedThisMonth, personInitials } from '@/features/Homework/config/homeworkCompletion';
+import { missedByStudent, missedThisMonth, personInitials, queueCompletionEntries } from '@/features/Homework/config/homeworkCompletion';
 import { familyCompletions } from '@/features/Homework/hooks/useHomeworkTableColumns';
 
 const pupil = (studentId: string, status: HomeworkRosterEntry['status'] = null, note: string | null = null): HomeworkRosterEntry =>
@@ -14,25 +14,25 @@ const missed = (studentId: string, date: string, status: HomeworkMissedRecord['s
   class: { id: 'cp', name: 'CP' }, section: { id: 'cp-a', name: 'A' },
 });
 
-describe('the follow-up form', () => {
-  it('starts every pupil not yet checked as done, and keeps what was recorded', () => {
-    expect(completionDraft([pupil('amine'), pupil('sara', 'not_done', 'Cahier oublié')])).toEqual({
-      amine: { status: 'done', note: '' },
-      sara: { status: 'not_done', note: 'Cahier oublié' },
-    });
+describe('homework follow-up autosave', () => {
+  it('queues the selected status and defaults for unreviewed pupils only', () => {
+    const roster = [pupil('amine'), pupil('sara', 'not_done', 'Cahier oublié'), pupil('yassine')];
+    const queue = queueCompletionEntries(roster, new Map(), [{ studentId: 'amine', status: 'incomplete' }]);
+    expect([...queue.values()]).toEqual([
+      { studentId: 'amine', status: 'incomplete' },
+      { studentId: 'yassine', status: 'done', ifUnreviewed: true },
+    ]);
   });
 
-  it('saves every pupil of the roster, a remark only where one was typed', () => {
-    const roster = [pupil('amine'), pupil('sara'), pupil('yassine')];
-    expect(completionEntries(roster, {
-      amine: { status: 'done', note: '   ' },
-      sara: { status: 'incomplete', note: ' Exercice 2 ' },
-    })).toEqual([
-      { studentId: 'amine', status: 'done', note: null },
-      { studentId: 'sara', status: 'incomplete', note: 'Exercice 2' },
-      // A pupil the draft lost is still saved, as done.
-      { studentId: 'yassine', status: 'done', note: null },
+  it('replaces a queued default with a newer explicit edit', () => {
+    const roster = [pupil('amine'), pupil('sara')];
+    const first = queueCompletionEntries(roster, new Map(), [{ studentId: 'amine', status: 'incomplete' }]);
+    const second = queueCompletionEntries(roster, first, [{ studentId: 'sara', status: 'not_done' }]);
+    expect([...second.values()]).toEqual([
+      { studentId: 'amine', status: 'incomplete' },
+      { studentId: 'sara', status: 'not_done' },
     ]);
+    expect(second.get('amine')).toBe(first.get('amine'));
   });
 });
 

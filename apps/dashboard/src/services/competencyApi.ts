@@ -1,5 +1,5 @@
 import type {
-  CompetencyYearLevels,
+  CompetencyRenameScope, CompetencyYearLevels,
   CompetencyAssignment, CompetencyDomain, CompetencyEvaluation, CompetencyEvaluations, CompetencyLevel, CompetencyRemark, StudentCompetencySheet,
 } from '@sms/contracts';
 import { api } from './http';
@@ -33,7 +33,8 @@ export const getCompetencyYearLevelsApi = async (teacherAssignmentId: string): P
 
 export type CompetencyNamePayload = { name: string; altName?: string | null };
 
-export const createCompetencyDomainApi = async (data: CompetencyNamePayload & { teacherAssignmentId: string }) => {
+/** A change to the list is made in the month on screen and applies from that month on. */
+export const createCompetencyDomainApi = async (data: CompetencyNamePayload & { teacherAssignmentId: string; month: string }) => {
   const res = await api.post('/competencies/domains', data);
   return res.data;
 };
@@ -43,23 +44,25 @@ export const updateCompetencyDomainApi = async (id: string, data: Partial<Compet
   return res.data;
 };
 
-export const deleteCompetencyDomainApi = async (id: string) => {
-  const res = await api.delete(`/competencies/domains/${id}`);
+export const deleteCompetencyDomainApi = async (id: string, month: string) => {
+  const res = await api.delete(`/competencies/domains/${id}?month=${encodeURIComponent(month)}`);
   return res.data;
 };
 
-export const createCompetencyApi = async (data: CompetencyNamePayload & { domainId: string }) => {
+export const createCompetencyApi = async (data: CompetencyNamePayload & { domainId: string; month: string }) => {
   const res = await api.post('/competencies', data);
   return res.data;
 };
 
-export const updateCompetencyApi = async (id: string, data: Partial<CompetencyNamePayload> & { position?: number; domainId?: string }) => {
+export const updateCompetencyApi = async (id: string, data: Partial<CompetencyNamePayload> & {
+  position?: number; domainId?: string; month?: string; scope?: CompetencyRenameScope;
+}) => {
   const res = await api.put(`/competencies/${id}`, data);
   return res.data;
 };
 
-export const deleteCompetencyApi = async (id: string) => {
-  const res = await api.delete(`/competencies/${id}`);
+export const deleteCompetencyApi = async (id: string, month: string) => {
+  const res = await api.delete(`/competencies/${id}?month=${encodeURIComponent(month)}`);
   return res.data;
 };
 

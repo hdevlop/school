@@ -16,27 +16,18 @@ export function personInitials(name: string) {
   return words.slice(0, 2).map((word) => Array.from(word)[0]).join('').toLocaleUpperCase() || '?';
 }
 
-export type CompletionDraft =Record<string, { status: HomeworkCompletionStatus; note: string }>;
-
-/**
- * What the follow-up form opens with: a pupil already recorded keeps their
- * status, every other one starts as done, so the teacher marks only the few
- * who missed it.
- */
-export function completionDraft(roster: HomeworkRosterEntry[]): CompletionDraft {
-  return Object.fromEntries(roster.map((entry) => [
-    entry.studentId,
-    { status: entry.status ?? 'done', note: entry.note ?? '' },
-  ]));
-}
-
-/** What the form saves: every pupil of the roster, a remark only where one was typed. */
-export function completionEntries(roster: HomeworkRosterEntry[], draft: CompletionDraft): HomeworkCompletionEntry[] {
-  return roster.map((entry) => {
-    const row = draft[entry.studentId] ?? { status: 'done', note: '' };
-    const note = row.note.trim();
-    return { studentId: entry.studentId, status: row.status, note: note || null };
-  });
+/** Apply explicit edits and record the default for pupils still awaiting review. */
+export function queueCompletionEntries(
+  roster: readonly HomeworkRosterEntry[],
+  pending: ReadonlyMap<string, HomeworkCompletionEntry>,
+  edits: readonly HomeworkCompletionEntry[],
+) {
+  const queue = new Map(pending);
+  for (const entry of edits) queue.set(entry.studentId, entry);
+  for (const { studentId, status } of roster) {
+    if (status === null && !queue.has(studentId)) queue.set(studentId, { studentId, status: 'done', ifUnreviewed: true });
+  }
+  return queue;
 }
 
 export type MissedByStudent = {

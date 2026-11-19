@@ -1,17 +1,24 @@
 'use client';
 
 import { useMemo, useRef, useState, type FormEvent } from 'react';
-import { ArrowDown, ArrowUp, Check, MoreVertical, Pencil, Plus, Trash2, X } from 'lucide-react';
-import type { CompetencyDomain } from '@sms/contracts';
+import { ArrowDown, ArrowUp, CalendarRange, Check, MoreVertical, Pencil, Plus, Trash2, X } from 'lucide-react';
+import { evaluationsFrom, ratedBefore, type CompetencyDomain, type CompetencyItem, type CompetencyRenameScope } from '@sms/contracts';
 import { cn, Input, NButton, NConfirmDialog, NSheet, Popover, PopoverContent, PopoverTrigger } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { catalogLanguage } from '../config/competencyLanguage';
+import { monthLabel } from '../config/competencyLevels';
 import { createCompetencyNameSchema } from '../config/competencySchemas';
 import { useCompetencyCatalogActions } from '../hooks/useCompetencies';
 
 type Names = { name: string; altName: string | null };
-type Deleting = { kind: 'domain' | 'competency'; id: string; name: string; count: number };
+/** `fromMonth`: removed from the month on, the earlier months keep it; otherwise it goes entirely. */
+type Deleting = { kind: 'domain' | 'competency'; id: string; name: string; count: number; fromMonth: boolean };
+/** A rename of a competency rated before the month, waiting for the teacher to say what it changes. */
+type Asking = { item: CompetencyItem; values: Names };
+
+/** Started in this month or later: removing it from this month leaves nothing for an earlier one. */
+const startsIn = (span: { fromMonth?: string | null }, month: string) => !!span.fromMonth && span.fromMonth >= month;
 /** The one name being renamed: a sub-domain's or a competency's id. */
 type Renaming = { kind: 'domain' | 'competency'; id: string } | null;
 
@@ -134,19 +141,24 @@ const Caption = ({ children }: { children: string }) => (
  * field at the bottom of each card for the next one and one under the cards
  * for the next sub-domain.
  */
-export function CatalogEditor({ open, onClose, teacherAssignmentId, domains, canCreate, canUpdate, canDelete }: {
+export function CatalogEditor({ open, onClose, teacherAssignmentId, month, domains, canCreate, canUpdate, canDelete }: {
   open: boolean;
   onClose: () => void;
   teacherAssignmentId: string;
+  /** The month on screen: the list as followed then, and the month every change applies from. */
+  month: string;
   domains: CompetencyDomain[];
   canCreate: boolean;
   canUpdate: boolean;
   canDelete: boolean;
 }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const actions = useCompetencyCatalogActions();
   const [renaming, setRenaming] = useState<Renaming>(null);
   const [deleting, setDeleting] = useState<Deleting | null>(null);
+  const [asking, setAsking] = useState<Asking | null>(null);
+  const [scope, setScope] = useState<CompetencyRenameScope>('fromMonth');
+  const monthName = monthLabel(month, language);
   const [busy, setBusy] = useState(false);
   // An Arabic list reads right to left here as on the sheets; its labels stay in the page language.
   const dir = catalogLanguage(domains) === 'ar' ? 'rtl' : undefined;
@@ -163,16 +175,45 @@ export function CatalogEditor({ open, onClose, teacherAssignmentId, domains, can
     }
   });
 
-  const rename = (kind: 'domain' | 'competency', id: string) => async (values: Names) => {
+  // A sub-domain's name is a heading, corrected in every month. A competency rated
+  // before this month asks whether the new name corrects it or replaces it from this month.
+  const rename = (kind: 'domain' | 'competency', id: string, item?: CompetencyItem) => async (values: Names) => {
+    const changed = !item || values.name !== item.name || (values.altName ?? null) !== (item.altName ?? null);
+    if (kind === 'competency' && item && changed && ratedBefore(item, month)) {
+      setScope('fromMonth');
+      setAsking({ item, values });
+      return false;
+    }
     const done = await act(() => (kind === 'domain' ? actions.updateDomain(id, values) : actions.updateCompetency(id, values)));
     if (done) setRenaming(null);
     return done;
   };
 
+  const confirmRename = async () => {
+    if (!asking) return;
+    const done = await act(() => actions.updateCompetency(asking.item.id, { ...asking.values, month, scope }));
+    if (done) { setAsking(null); setRenaming(null); }
+  };
+
   const confirmDelete = async () => {
     if (!deleting) return;
-    const done = await act(() => (deleting.kind === 'domain' ? actions.deleteDomain(deleting.id) : actions.deleteCompetency(deleting.id)));
+    const done = await act(() => (deleting.kind === 'domain' ? actions.deleteDomain(deleting.id, month) : actions.deleteCompetency(deleting.id, month)));
     if (done) setDeleting(null);
+  };
+
+  const deleteDomain = (domain: CompetencyDomain) => setDeleting({
+    kind: 'domain', id: domain.id, name: domain.name, fromMonth: !startsIn(domain, month),
+    count: domain.competencies.reduce((sum, item) => sum + evaluationsFrom(item, month), 0),
+  });
+  const deleteCompetency = (item: CompetencyItem) => setDeleting(startsIn(item, month)
+    ? { kind: 'competency', id: item.id, name: item.name, count: item.evaluationCount ?? 0, fromMonth: false }
+    : { kind: 'competency', id: item.id, name: item.name, count: evaluationsFrom(item, month), fromMonth: true });
+  const deleteText = (item: Deleting) => {
+    if (item.fromMonth) {
+      return t(item.kind === 'domain' ? 'competencies.catalog.deleteDomainFrom' : 'competencies.catalog.deleteCompetencyFrom',
+        { name: item.name, count: item.count, month: monthName });
+    }
+    return t(item.kind === 'domain' ? 'competencies.catalog.deleteDomain' : 'competencies.catalog.deleteCompetency', { name: item.name, count: item.count });
   };
 
   const isRenaming = (kind: 'domain' | 'competency', id: string) => renaming?.kind === kind && renaming.id === id;
@@ -191,8 +232,12 @@ export function CatalogEditor({ open, onClose, teacherAssignmentId, domains, can
         footer={<div className="flex w-full justify-end"><NButton type="button" onClick={onClose} disabled={busy}>{t('competencies.catalog.done')}</NButton></div>}
       >
         <div dir={dir} className="flex flex-col gap-3">
+          <p className="flex items-start gap-2 rounded-lg bg-muted/60 px-3 py-2 text-xs text-muted-foreground">
+            <CalendarRange className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+            <span>{t('competencies.catalog.monthNote', { month: monthName })}</span>
+          </p>
           {domains.map((domain, domainIndex) => (
-            <section key={domain.id} aria-label={domain.name} className="overflow-hidden rounded-xl border bg-card">
+            <section key={domain.id} aria-label={domain.name} className="overflow-hidden rounded-xl border bg-card text-card-foreground">
               <header className="flex items-center gap-2 border-b bg-muted/40 px-3 py-2">
                 {isRenaming('domain', domain.id) ? (
                   <div className="min-w-0 flex-1">
@@ -210,7 +255,7 @@ export function CatalogEditor({ open, onClose, teacherAssignmentId, domains, can
                       onRename={() => setRenaming({ kind: 'domain', id: domain.id })}
                       onUp={domainIndex > 0 ? () => reorder(moved(domains, domainIndex, -1), 'domain') : undefined}
                       onDown={domainIndex < domains.length - 1 ? () => reorder(moved(domains, domainIndex, 1), 'domain') : undefined}
-                      onDelete={() => setDeleting({ kind: 'domain', id: domain.id, name: domain.name, count: 0 })} />
+                      onDelete={() => deleteDomain(domain)} />
                   </>
                 )}
               </header>
@@ -226,7 +271,7 @@ export function CatalogEditor({ open, onClose, teacherAssignmentId, domains, can
                       {isRenaming('competency', item.id) ? (
                         <div className="min-w-0 flex-1 py-1">
                           <NameField mode="rename" initial={{ name: item.name, altName: item.altName }} placeholder={t('competencies.catalog.competencyName')}
-                            busy={busy} onSubmit={rename('competency', item.id)} onCancel={() => setRenaming(null)} />
+                            busy={busy} onSubmit={rename('competency', item.id, item)} onCancel={() => setRenaming(null)} />
                         </div>
                       ) : (
                         <>
@@ -238,7 +283,7 @@ export function CatalogEditor({ open, onClose, teacherAssignmentId, domains, can
                             onRename={() => setRenaming({ kind: 'competency', id: item.id })}
                             onUp={itemIndex > 0 ? () => reorder(moved(domain.competencies, itemIndex, -1), 'competency') : undefined}
                             onDown={itemIndex < domain.competencies.length - 1 ? () => reorder(moved(domain.competencies, itemIndex, 1), 'competency') : undefined}
-                            onDelete={() => setDeleting({ kind: 'competency', id: item.id, name: item.name, count: item.evaluationCount ?? 0 })} />
+                            onDelete={() => deleteCompetency(item)} />
                         </>
                       )}
                     </li>
@@ -247,7 +292,7 @@ export function CatalogEditor({ open, onClose, teacherAssignmentId, domains, can
                 {canCreate ? (
                   <div className="pt-1">
                     <NameField mode="add" placeholder={t('competencies.catalog.addCompetency')} busy={busy}
-                      onSubmit={(values) => act(() => actions.createCompetency({ ...values, domainId: domain.id }))} />
+                      onSubmit={(values) => act(() => actions.createCompetency({ ...values, domainId: domain.id, month }))} />
                   </div>
                 ) : null}
               </div>
@@ -258,7 +303,7 @@ export function CatalogEditor({ open, onClose, teacherAssignmentId, domains, can
             <section className="flex flex-col gap-1.5 rounded-xl border border-dashed p-3">
               <Caption>{t('competencies.catalog.addDomain')}</Caption>
               <NameField mode="add" placeholder={t('competencies.catalog.domainPlaceholder')} busy={busy}
-                onSubmit={(values) => act(() => actions.createDomain({ ...values, teacherAssignmentId }))} />
+                onSubmit={(values) => act(() => actions.createDomain({ ...values, teacherAssignmentId, month }))} />
             </section>
           ) : null}
         </div>
@@ -267,13 +312,40 @@ export function CatalogEditor({ open, onClose, teacherAssignmentId, domains, can
         open={!!deleting}
         onOpenChange={(next) => { if (!next && !busy) setDeleting(null); }}
         title={t('competencies.catalog.delete')}
-        description={deleting ? t(deleting.kind === 'domain' ? 'competencies.catalog.deleteDomain' : 'competencies.catalog.deleteCompetency', { name: deleting.name, count: deleting.count }) : ''}
+        description={deleting ? deleteText(deleting) : ''}
         confirmLabel={t('competencies.catalog.delete')}
         cancelLabel={t('competencies.catalog.cancel')}
         variant="destructive"
         loading={busy}
         onConfirm={confirmDelete}
       />
+      <NConfirmDialog
+        open={!!asking}
+        onOpenChange={(next) => { if (!next && !busy) setAsking(null); }}
+        title={asking ? t('competencies.catalog.renameTitle', { name: asking.item.name }) : ''}
+        description={asking ? t('competencies.catalog.renameAsk', { name: asking.item.name, month: monthName }) : ''}
+        confirmLabel={t('competencies.catalog.save')}
+        cancelLabel={t('competencies.catalog.cancel')}
+        loading={busy}
+        onConfirm={confirmRename}
+      >
+        {asking ? (
+          <div role="radiogroup" aria-label={t('competencies.catalog.renameTitle', { name: asking.item.name })} className="flex flex-col gap-2">
+            {(['fromMonth', 'all'] as const).map((choice) => (
+              <button key={choice} type="button" role="radio" aria-checked={scope === choice} onClick={() => setScope(choice)}
+                className={cn('flex flex-col gap-0.5 rounded-lg border px-3 py-2 text-start transition-colors hover:bg-accent',
+                  scope === choice ? 'border-primary bg-primary/5 ring-1 ring-primary' : 'border-border')}>
+                <span className="text-sm font-medium">
+                  {choice === 'fromMonth' ? t('competencies.catalog.renameFromMonth', { month: monthName }) : t('competencies.catalog.renameAll')}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {choice === 'fromMonth' ? t('competencies.catalog.renameFromMonthHint', { name: asking.item.name }) : t('competencies.catalog.renameAllHint')}
+                </span>
+              </button>
+            ))}
+          </div>
+        ) : null}
+      </NConfirmDialog>
     </>
   );
 }

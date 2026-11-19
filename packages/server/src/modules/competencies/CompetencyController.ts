@@ -5,9 +5,9 @@ import { CompetencyService } from './CompetencyService';
 import type { CompetencyActor } from './CompetencyValidator';
 import {
   applyDefaultDto, catalogQuery, competencyIdParam, competencyStudentParam, copyCatalogDto, createCompetencyDto, createDomainDto, evaluationsQuery,
-  setEvaluationDto, setRemarkDto, studentSheetQuery, updateCompetencyDto, updateDomainDto,
+  monthQuery, setEvaluationDto, setRemarkDto, studentSheetQuery, updateCompetencyDto, updateDomainDto,
   type ApplyDefaultDto, type CopyCatalogDto, type CreateCompetencyDto, type CreateDomainDto, type EvaluationsQuery, type SetEvaluationDto, type SetRemarkDto,
-  type StudentSheetQuery, type UpdateCompetencyDto, type UpdateDomainDto,
+  type MonthQuery, type StudentSheetQuery, type UpdateCompetencyDto, type UpdateDomainDto,
 } from './CompetencyDto';
 
 /**
@@ -82,10 +82,10 @@ export class CompetencyController {
 
   @Delete('/domains/:id')
   @Can('delete:competencies')
-  @Validate({ params: competencyIdParam })
+  @Validate({ params: competencyIdParam, query: monthQuery })
   @ResMsg('competencies.success.deleted')
-  deleteDomain(@Params('id') id: string, @User() actor: CompetencyActor) {
-    return this.service.deleteDomain(id, actor);
+  deleteDomain(@Params('id') id: string, @Query() query: MonthQuery, @User() actor: CompetencyActor) {
+    return this.service.deleteDomain(id, query.month, actor);
   }
 
   @Post('/copy')
@@ -139,9 +139,9 @@ export class CompetencyController {
 
   @Delete('/:id')
   @Can('delete:competencies')
-  @Validate({ params: competencyIdParam })
+  @Validate({ params: competencyIdParam, query: monthQuery })
   @ResMsg('competencies.success.deleted')
-  deleteCompetency(@Params('id') id: string, @User() actor: CompetencyActor) {
-    return this.service.deleteCompetency(id, actor);
+  deleteCompetency(@Params('id') id: string, @Query() query: MonthQuery, @User() actor: CompetencyActor) {
+    return this.service.deleteCompetency(id, query.month, actor);
   }
 }

@@ -7615,6 +7615,24 @@
     "subtitle": {
       "count": "Total : {{count}}"
     },
+    "mobile": {
+      "allClasses": "Toutes les classes",
+      "allSections": "Toutes les sections",
+      "allSubjects": "Toutes les matières",
+      "search": "Rechercher des devoirs",
+      "searchPlaceholder": "Titre, matière ou enseignant…",
+      "resultsOne": "{{count}} résultat",
+      "results": "{{count}} résultats",
+      "sort": "Trier par date",
+      "newest": "Plus récents",
+      "oldest": "Plus anciens",
+      "given": "Donné",
+      "due": "Pour",
+      "details": "Détails du devoir",
+      "files": "{{count}} fich.",
+      "missed": "{{count}} manq.",
+      "seen": "{{seen}}/{{total}} vues"
+    },
     "form": {
       "details": "Devoir",
       "context": "Classe et matière",
@@ -7643,6 +7661,8 @@
       "takePhoto": "Prendre une photo",
       "preparing": "Préparation des photos…",
       "removeFile": "Retirer",
+      "rotatePhoto": "Faire pivoter la photo",
+      "rotateFailed": "Impossible de faire pivoter cette photo.",
       "tooManyFiles": "Un devoir contient {{max}} fichiers au plus."
     },
     "dialogs": {
@@ -7671,12 +7691,14 @@
       "noDueDate": "Sans date de remise",
       "seenCount": "{{seen}} sur {{total}}",
       "seenByParents": "Vu par les parents",
+      "backToList": "Retour aux devoirs",
       "markSeen": "Marquer comme vu",
       "seenOn": "Vu le {{date}}",
       "child": "Pour"
     },
     "attachments": {
       "title": "Photos et fichiers",
+      "singularTitle": "Fichier joint",
       "photo": "Photo",
       "pdf": "Document PDF",
       "open": "Ouvrir",
@@ -7734,8 +7756,14 @@
       },
       "notReviewed": "Non vérifié",
       "allDone": "Tous faits",
+      "doneCount": "Faits : {{count}}",
       "notePlaceholder": "Remarque (facultatif)",
-      "saveButton": "Enregistrer le suivi",
+      "autosave": "Les modifications sont enregistrées automatiquement.",
+      "autosaving": "Enregistrement…",
+      "autosaved": "Modifications enregistrées",
+      "autosaveFailed": "Les modifications n’ont pas pu être enregistrées.",
+      "discardUnsaved": "Ignorer les modifications",
+      "retry": "Réessayer",
       "empty": "Aucun élève n’était dans les sections de ce devoir à sa date.",
       "summary": "Faits : {{done}} · Incomplets : {{incomplete}} · Non faits : {{notDone}}",
       "missed": "Manqués : {{count}}",
@@ -7791,11 +7819,12 @@
       "noCatalogFamily": "Aucune compétence n'est encore suivie dans cette matière.",
       "noStudents": "Aucun élève dans cette classe ce mois-ci.",
       "noMatch": "Aucun élève ne correspond à cette recherche.",
-      "noChildren": "Aucun enfant à afficher."
+      "noChildren": "Aucun enfant à afficher.",
+      "noCatalogMonth": "Aucune compétence n’est encore suivie ce mois-ci. Ajoutez celles travaillées ce mois."
     },
     "report": {
       "title": "Rapport de suivi",
-      "open": "Rapports de suivi",
+      "tab": "Rapport",
       "round": "Contrôle",
       "year": "Année scolaire",
       "pupilName": "Nom de l'élève",
@@ -7841,11 +7870,10 @@
       "change": "Évolution",
       "remark": "Observations de l'enseignant(e)",
       "inspector": "Observations de l'inspecteur",
-      "print": "Imprimer le rapport",
+      "print": "Cet élève · {{name}}",
       "printAll": "Imprimer toute la classe ({{count}})",
-      "previous": "Élève précédent",
-      "next": "Élève suivant",
       "noRound": "Aucun contrôle Massar pour cette classe et cette matière.",
+      "noStudent": "Aucun rapport pour cet élève pour ce contrôle.",
       "failed": "Les notes Massar n'ont pas pu être chargées.",
       "absent": "Abs.",
       "analysis": "Analyse des résultats",
@@ -7900,7 +7928,16 @@
       "copyTarget": "Classe",
       "copyNone": "Aucune de vos autres classes de cette matière n'a de liste vide.",
       "copyAction": "Copier",
-      "failed": "La modification n'a pas été enregistrée."
+      "failed": "La modification n'a pas été enregistrée.",
+      "monthNote": "Les changements s’appliquent à partir de {{month}}. Les mois précédents gardent leur liste et leurs niveaux.",
+      "renameTitle": "Renommer {{name}}",
+      "renameAsk": "{{name}} a déjà des niveaux avant {{month}}. Que doit changer le nouveau nom ?",
+      "renameFromMonth": "La remplacer à partir de {{month}}",
+      "renameFromMonthHint": "Une nouvelle compétence : les mois précédents gardent {{name}} et ses niveaux.",
+      "renameAll": "Corriger le nom dans tous les mois",
+      "renameAllHint": "Une correction d’orthographe : les mois précédents affichent aussi le nouveau nom.",
+      "deleteCompetencyFrom": "Retirer {{name}} à partir de {{month}} ? {{count}} niveau(x) saisi(s) depuis {{month}} seront perdus ; les mois précédents la gardent.",
+      "deleteDomainFrom": "Retirer le sous-domaine {{name}} et ses compétences à partir de {{month}} ? {{count}} niveau(x) saisi(s) depuis {{month}} seront perdus ; les mois précédents les gardent."
     },
     "success": {
       "defaultApplied": "Liste proposée ajoutée",
@@ -7933,7 +7970,8 @@
       "otherSubject": "Une liste ne se copie que vers une classe de la même matière",
       "emptySource": "Cette liste n'a aucun domaine à copier",
       "targetNotEmpty": "Cette classe a déjà une liste",
-      "studentNotInSection": "Cet élève n'était pas dans cette classe ce mois-là"
+      "studentNotInSection": "Cet élève n'était pas dans cette classe ce mois-là",
+      "notInMonth": "Ceci n’est pas suivi ce mois-ci"
     }
   },
   "homeworkFollowUp": {

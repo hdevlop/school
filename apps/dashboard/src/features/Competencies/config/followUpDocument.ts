@@ -84,7 +84,7 @@ function profile(report: FollowUp, max: number, t: Translate, caption: Translate
   // On levels, one ring per level (1 to 5); on marks, quarters of the maximum.
   const chart = radar(shape.axes, shape.max, size, 40, shape.kind === 'skills' ? [0.2, 0.4, 0.6, 0.8, 1] : undefined);
   // Room beside the rings for the labels: always on screen, and on a short page's wider card.
-  const labelMargin = preview ? 72 : roomy ? 82 : 0;
+  const labelMargin = preview ? 80 : roomy ? 90 : 0;
   const viewBox = `${-labelMargin} 0 ${size + labelMargin * 2} ${size}`;
   const poly = (points: Array<{ x: number; y: number }>) => points.map((point) => `${point.x},${point.y}`).join(' ');
   const series = (points: typeof chart.pupil, color: string, pupil: boolean) => {
@@ -100,6 +100,9 @@ function profile(report: FollowUp, max: number, t: Translate, caption: Translate
     const dots = pupil || !complete ? points.map(point => point ? `<circle cx="${point.x}" cy="${point.y}" r="2.4" fill="${color}"/>` : '').join('') : '';
     return outline + dots;
   };
+  // The svg is left to right whatever the page's direction, so "start" always means away from the centre on the
+  // right: on an Arabic page an inherited rtl turned it inward and the labels ran over the rings. Each label's own
+  // words still read right to left.
   const labels = chart.axes.map((axis) => {
     const anchor = Math.abs(axis.label.x - chart.centre) < 6 ? 'middle' : axis.label.x > chart.centre ? 'start' : 'end';
     const lines = wrapLabel(axis.name);
@@ -109,7 +112,7 @@ function profile(report: FollowUp, max: number, t: Translate, caption: Translate
     return `<text x="${axis.label.x}" y="${axis.label.y}" text-anchor="${anchor}" dominant-baseline="middle">${spans}</text>`;
   }).join('');
   return `<div class="card">${head}
-    <svg class="radar" viewBox="${viewBox}" role="img" aria-label="${e(t('competencies.report.profile'))}">
+    <svg class="radar" direction="ltr" viewBox="${viewBox}" role="img" aria-label="${e(t('competencies.report.profile'))}">
       ${chart.rings.map((ring) => `<polygon points="${poly(ring)}" fill="none" stroke="#d6dde6" stroke-width=".8"/>`).join('')}
       ${chart.axes.map((axis) => `<line x1="${chart.centre}" y1="${chart.centre}" x2="${axis.end.x}" y2="${axis.end.y}" stroke="#d6dde6" stroke-width=".8"/>`).join('')}
       ${series(chart.group, SERIES.group, false)}
@@ -303,7 +306,7 @@ const PREVIEW_STYLES = `
   .card-title,.section-title{flex-wrap:wrap;align-items:center;gap:4px 8px}
   .card-title h4,.section-title h3{font-size:16px}
   .card-title small,.section-title small{color:#64748b;font-size:11px}
-  .radar{max-height:160px;overflow:visible}.radar text{font-size:12px}
+  .radar{max-height:160px;overflow:visible}.radar text{font-size:13.5px}
   .bar-row,.legend,.scale li{font-size:12px}.legend{flex-wrap:wrap;gap:4px 12px}
   .tile{min-height:54px;padding:5px}.tile b{font-size:18px}.tile>span{font-size:11px}
   .scale small,.scale b{font-size:11px}.scale small{color:#64748b}
@@ -370,7 +373,7 @@ export function buildFollowUpDocument(reports: readonly FollowUp[], options: Fol
     .card{display:flex;flex-direction:column;gap:1.5mm}
     .card-title,.section-title{display:flex;justify-content:space-between;align-items:baseline;gap:2mm}
     .card-title h4{margin:0;font-size:9.5pt}.card-title small,.section-title small{font:7pt MassarLatin,sans-serif;color:#94a3b8}
-    .radar{width:100%;height:auto;max-height:34mm;overflow:visible}.radar text{font-size:10px;fill:#25354a}
+    .radar{width:100%;height:auto;max-height:34mm;overflow:visible}.radar text{font-size:11.5px;fill:#25354a}
     .legend{display:flex;justify-content:center;gap:4mm;font-size:7pt;color:#475569}.legend span{display:inline-flex;align-items:center;gap:1mm}
     .legend i{display:inline-block;width:4mm;height:.8mm}.legend .dashed i{height:0;border-top:.8mm dashed;background:none}
     .bar-row{display:grid;grid-template-columns:1fr 2fr auto;align-items:center;gap:1.5mm;font-size:7.5pt}.bar{position:relative;height:2.5mm;background:#eef2f6;border-radius:1mm}
@@ -413,7 +416,7 @@ export function buildFollowUpDocument(reports: readonly FollowUp[], options: Fol
     .focus-col li p{margin:.4mm 0 0;font-size:8pt;line-height:1.35;color:#475569}
     /* A short report: a wider profile with readable labels, roomier tables and text. */
     .roomy .cards{grid-template-columns:1.15fr 1.45fr .9fr}
-    .roomy .radar{max-height:40mm}.roomy .radar text{font-size:13px}
+    .roomy .radar{max-height:40mm}.roomy .radar text{font-size:14.5px}
     .roomy .marks th,.roomy .marks td{padding:1mm}
     .roomy .competencies td{padding:.5mm .8mm}.roomy .competencies td.name{font-size:9pt}
     .roomy .analysis{gap:.3mm;font-size:8.5pt}
@@ -442,7 +445,7 @@ export function buildFollowUpDocument(reports: readonly FollowUp[], options: Fol
         & > .panel:has(>table:not(.flat)){display:grid;grid-template-rows:auto minmax(min-content,1fr);flex-grow:1}
         & > .panel:has(>.competencies){flex-grow:1.4}
         & .radar{max-height:42mm}
-        & .radar text{font-size:11px}
+        & .radar text{font-size:12.5px}
         & .analysis{font-size:9.5pt;line-height:1.4;gap:.5mm}
         & .competencies td.name,& .competencies td.current{font-size:9pt}
         & thead th{font-size:8.5pt}

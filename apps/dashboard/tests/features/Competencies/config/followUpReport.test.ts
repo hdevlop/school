@@ -76,6 +76,22 @@ describe('the follow-up report after a Massar Contrôle', () => {
     expect(amina.indicators.distribution).toEqual({ not_acquired: 0, beginning: 1, in_progress: 1, advanced: 1, mastered: 0 });
   });
 
+  // Each month has its own list: one taken off in October keeps its levels in a November report, one added after it is not there.
+  it('lists the competencies followed in the months up to the Contrôle', () => {
+    const year: CompetencyDomain[] = [{
+      ...domains[0],
+      competencies: [
+        ...domains[0].competencies,
+        { id: 'ended', domainId: 'd', name: 'ended', altName: null, position: 3, untilMonth: '2026-10' },
+        { id: 'later', domainId: 'd', name: 'later', altName: null, position: 4, fromMonth: '2026-12' },
+      ],
+    }, { id: 'future', teacherAssignmentId: 't', name: 'future', altName: null, position: 1, fromMonth: '2027-01', competencies: [] }];
+    const [report] = followUps({ sheet, domains: year, evaluations: [...evaluations, level('a', 'ended', '2026-09', 'mastered')], remarks: [], months: MONTHS });
+    expect(report.domains.map((block) => [block.name, block.lines.map((line) => line.name)])).toEqual([['القراءة', ['c1', 'c2', 'c3', 'ended']]]);
+    expect(report.domains[0].lines[3].current).toBe('mastered');
+    expect(report.indicators.total).toBe(4);
+  });
+
   it('takes the Massar remark of the Contrôle, else the month\'s remark for the parents', () => {
     expect(amina.remark).toBe('مستوى متوسط في القراءة.');
     expect(badr.remark).toBe('Remarque du mois');
@@ -129,7 +145,8 @@ describe('the follow-up report after a Massar Contrôle', () => {
     expect(profileAxes({ ...badr, parts: onePart.parts }, 10)).toBeNull();
     expect(profileAxes({ ...onePart, skills: amina.skills.slice(0, 2) }, 10)).toBeNull();
     const html = buildFollowUpDocument([onePart], documentOptions);
-    expect(html).toContain('<svg class="radar"');
+    // Left to right on an Arabic page too, so the labels beside the rings grow outward, never over them.
+    expect(html).toContain('<svg class="radar" direction="ltr"');
     expect(html).not.toContain('class="bar-row"');
     expect(buildFollowUpDocument([{ ...badr, parts: onePart.parts }], documentOptions)).toContain('class="bar-row"');
   });

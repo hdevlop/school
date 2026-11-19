@@ -1,4 +1,5 @@
-import { index, integer, pgEnum, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
+import { check, index, integer, pgEnum, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 import type { CompetencyLevel } from '@sms/contracts';
 
 import { createRef, idField, timestamps } from '../../database/shared';
@@ -24,9 +25,15 @@ export const competencyDomains = pgTable('competency_domains', {
   // The same name in a second language, shown under the first.
   altName: text('alt_name'),
   position: integer('position').notNull().default(0),
+  // The months it is followed in (`YYYY-MM`, both included): a change a teacher
+  // makes in one month applies from that month on and leaves the earlier ones
+  // as they were. Null is the year's first month, or its last.
+  fromMonth: text('from_month'),
+  untilMonth: text('until_month'),
   ...timestamps,
 }, (table) => [
   index('competency_domains_assignment_idx').on(table.teacherAssignmentId, table.academicYearId),
+  check('competency_domains_months_check', sql`${table.untilMonth} is null or ${table.fromMonth} is null or ${table.untilMonth} >= ${table.fromMonth}`),
 ]);
 
 export const competencyDomainRef = createRef('domain_id', () => competencyDomains.id);
@@ -37,8 +44,16 @@ export const competencies = pgTable('competencies', {
   name: text('name').notNull(),
   altName: text('alt_name'),
   position: integer('position').notNull().default(0),
+  // The months it is followed in (`YYYY-MM`, both included): a change a teacher
+  // makes in one month applies from that month on and leaves the earlier ones
+  // as they were. Null is the year's first month, or its last.
+  fromMonth: text('from_month'),
+  untilMonth: text('until_month'),
   ...timestamps,
-}, (table) => [index('competencies_domain_idx').on(table.domainId)]);
+}, (table) => [
+  index('competencies_domain_idx').on(table.domainId),
+  check('competencies_months_check', sql`${table.untilMonth} is null or ${table.fromMonth} is null or ${table.untilMonth} >= ${table.fromMonth}`),
+]);
 
 export const competencyRef = createRef('competency_id', () => competencies.id);
 

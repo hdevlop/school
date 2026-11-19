@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { COMPETENCY_LIMITS as limits, COMPETENCY_MONTH_PATTERN } from '@sms/contracts';
-import { competencyLevelEnum } from '../../shared/enums';
+import { competencyLevelEnum, competencyRenameScopeEnum } from '../../shared/enums';
 
 // A plain string: `requiredId` preprocesses, which leaves the key optional in the inferred type.
 const requiredId = z.string().min(1, 'ID is required');
@@ -18,17 +18,24 @@ export const competencyStudentParam = z.object({ studentId: z.string().min(1) })
 
 export const catalogQuery = z.object({ teacherAssignmentId: requiredId });
 
-export const createDomainDto = z.object({ teacherAssignmentId: requiredId, name, altName });
+// A change to the list is made in the month the teacher is looking at, and applies from that month on.
+export const createDomainDto = z.object({ teacherAssignmentId: requiredId, name, altName, month });
 export const updateDomainDto = z.object({ name: name.optional(), altName: altName.optional(), position: position.optional() });
 
-export const createCompetencyDto = z.object({ domainId: requiredId, name, altName });
+export const createCompetencyDto = z.object({ domainId: requiredId, name, altName, month });
 export const updateCompetencyDto = z.object({
   name: name.optional(),
   altName: altName.optional(),
   position: position.optional(),
   // Moves the competency to another domain of the same list.
   domainId: z.string().min(1).optional(),
-});
+  // A rename of a competency rated in an earlier month says whether it corrects every month or starts from this one.
+  month: month.optional(),
+  scope: competencyRenameScopeEnum.optional(),
+}).refine((value) => value.scope !== 'fromMonth' || !!value.month, { message: 'competencies.errors.invalidMonth', path: ['month'] });
+
+// Removing a sub-domain or a competency ends it the month before, keeping the earlier months' levels.
+export const monthQuery = z.object({ month });
 
 export const copyCatalogDto = z.object({ fromAssignmentId: requiredId, toAssignmentId: requiredId });
 
@@ -63,3 +70,4 @@ export type EvaluationsQuery = z.infer<typeof evaluationsQuery>;
 export type SetEvaluationDto = z.infer<typeof setEvaluationDto>;
 export type SetRemarkDto = z.infer<typeof setRemarkDto>;
 export type StudentSheetQuery = z.infer<typeof studentSheetQuery>;
+export type MonthQuery = z.infer<typeof monthQuery>;

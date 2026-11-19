@@ -10,19 +10,21 @@ import { COMPLETION_COLORS } from '../config/homeworkCompletion';
 import { useAcknowledgeHomework } from '../hooks/useHomework';
 import HomeworkAttachments from './HomeworkAttachments';
 
+export function homeworkSectionNames(row: Pick<HomeworkRow, 'section' | 'targetSections'>) {
+  if (row.targetSections?.length) return row.targetSections.map((section) => section.name);
+  return row.section?.name ? [row.section.name] : [];
+}
+
 /** The class and its target sections, as "1AC - A, B". */
-export function homeworkPlacementLabel(row: Pick<HomeworkRow, 'class' | 'section' | 'targetSections'>) {
-  const sections = row.targetSections?.length
-    ? row.targetSections.map((section) => section.name).join(', ')
-    : row.section?.name;
-  return [row.class?.name, sections].filter(Boolean).join(' - ');
+export function homeworkPlacementLabel(row: Pick<HomeworkRow, 'class' | 'section' | 'targetSections'>, separator = ' - ') {
+  return [row.class?.name, homeworkSectionNames(row).join(', ')].filter(Boolean).join(separator);
 }
 
 /**
  * How the follow-up went: the three counts once opened, a short line in a list
  * card, where a phone has no room for the counts.
  */
-function completionSummary(counts: NonNullable<HomeworkRow['completionCounts']>, detailed: boolean, t: (key: string, params?: Record<string, unknown>) => string) {
+export function completionSummary(counts: NonNullable<HomeworkRow['completionCounts']>, detailed: boolean, t: (key: string, params?: Record<string, unknown>) => string) {
   if (!counts.reviewed) return t('homework.completion.notReviewed');
   const missed = counts.incomplete + counts.notDone;
   if (!detailed) return missed ? t('homework.completion.missed', { count: missed }) : t('homework.completion.allDone');
@@ -30,7 +32,7 @@ function completionSummary(counts: NonNullable<HomeworkRow['completionCounts']>,
 }
 
 /** The teacher's follow-up of one pupil, with their remark when there is one. */
-const CompletionBadge = ({ status, note }: { status: HomeworkCompletionStatus; note: string | null }) => {
+export const CompletionBadge = ({ status, note }: { status: HomeworkCompletionStatus; note: string | null }) => {
   const { t } = useTranslation();
   return (
     <span className="flex flex-wrap items-center gap-1">
@@ -42,7 +44,7 @@ const CompletionBadge = ({ status, note }: { status: HomeworkCompletionStatus; n
 
 // A parent confirms they saw the homework, once per child. The dialog shows
 // a row read earlier, so a confirmation is kept here until the list reloads.
-const ParentAcknowledgment = ({ homework }: { homework: HomeworkRow }) => {
+export const ParentAcknowledgment = ({ homework }: { homework: HomeworkRow }) => {
   const { t } = useTranslation();
   const { displayDateOnly } = useSchoolFormat();
   const acknowledge = useAcknowledgeHomework();
@@ -88,6 +90,15 @@ const ParentAcknowledgment = ({ homework }: { homework: HomeworkRow }) => {
     </div>
   );
 };
+
+export function HomeworkFilesAndAcknowledgment({ homework }: { homework: HomeworkRow }) {
+  return (
+    <>
+      <HomeworkAttachments homeworkId={homework.id} attachments={homework.attachments ?? []} />
+      <ParentAcknowledgment homework={homework} />
+    </>
+  );
+}
 
 /**
  * One homework. In a list it names its files by count; opened (`detailed`),
@@ -165,8 +176,7 @@ const HomeworkCard = ({ data, detailed = false }: { data: HomeworkRow; detailed?
           )}
         </div>
 
-        {detailed && <HomeworkAttachments homeworkId={homework.id} attachments={attachments} />}
-        {detailed && <ParentAcknowledgment homework={homework} />}
+        {detailed && <HomeworkFilesAndAcknowledgment homework={homework} />}
       </div>
     </div>
   );

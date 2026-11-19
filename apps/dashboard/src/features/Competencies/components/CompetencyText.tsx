@@ -38,7 +38,7 @@ export function useCompetencyText(): CompetencyText {
   return useTextIn(useContext(ListLanguage));
 }
 
-/** The text of these domains' list, for a view that keeps its own header and filters outside the scope. */
+/** Uses the list language from outside the sheet, where the report data is shared with the header. */
 export function useListText(domains: readonly CompetencyDomain[]): CompetencyText {
   return useTextIn(useMemo(() => catalogLanguage(domains), [domains]));
 }

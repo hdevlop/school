@@ -10,7 +10,7 @@ import { EvaluatedCount, LevelDistributionBar, LevelSignal } from './CompetencyV
 import type { SheetStudent } from './StudentCompetencySheet';
 import { StudentIdentity } from './StudentIdentity';
 
-const CARD = 'group flex h-full w-full min-w-0 gap-3 rounded-xl border border-border/60 bg-card p-3 text-start shadow-xs transition-colors hover:border-primary/40 hover:bg-accent/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring @xl:p-4';
+const CARD = 'group flex h-full w-full min-w-0 gap-3 rounded-xl border border-border/60 bg-card p-3 text-start text-card-foreground shadow-xs transition-colors hover:border-primary/40 hover:bg-accent/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring @xl:p-4';
 
 function OpenChevron() {
   return (
@@ -85,7 +85,7 @@ export function CompetencyStudentList({ students, index, competencyIds, month, o
   const { t } = useCompetencyText();
   if (mobile) {
     return (
-      <ul role="list" className="grid gap-5">
+      <ul role="list" className="grid gap-3">
         {students.map((student) => {
           const summary = studentSummary(index, competencyIds, student.id, month);
           const evaluated = t('competencies.card.evaluatedCompetencies', { evaluated: summary.evaluated, total: summary.total });

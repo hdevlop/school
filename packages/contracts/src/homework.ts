@@ -86,11 +86,17 @@ export interface HomeworkRosterEntry {
   note: string | null;
 }
 
+/** Maximum pupils in one request to save homework follow-up. */
+export const HOMEWORK_COMPLETION_BATCH_MAX = 500;
+
 /** The follow-up a teacher saves: every pupil listed gets that status. */
 export interface HomeworkCompletionEntry {
   studentId: string;
   status: HomeworkCompletionStatus;
+  /** Omit to keep an existing remark. Null clears it. */
   note?: string | null;
+  /** Records the default status only for a pupil the staff have not reviewed yet. */
+  ifUnreviewed?: boolean;
 }
 
 /** One missed homework of one pupil: the rows the Conduite follow-up page counts. */

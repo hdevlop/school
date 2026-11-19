@@ -141,12 +141,12 @@ export function useCompetencyCatalogActions() {
       run(() => competencyApi.createCompetencyDomainApi(data), 'competencies.success.created'),
     updateDomain: (id: string, data: Parameters<typeof competencyApi.updateCompetencyDomainApi>[1]) =>
       run(() => competencyApi.updateCompetencyDomainApi(id, data), 'competencies.success.updated'),
-    deleteDomain: (id: string) => run(() => competencyApi.deleteCompetencyDomainApi(id), 'competencies.success.deleted'),
+    deleteDomain: (id: string, month: string) => run(() => competencyApi.deleteCompetencyDomainApi(id, month), 'competencies.success.deleted'),
     createCompetency: (data: Parameters<typeof competencyApi.createCompetencyApi>[0]) =>
       run(() => competencyApi.createCompetencyApi(data), 'competencies.success.created'),
     updateCompetency: (id: string, data: Parameters<typeof competencyApi.updateCompetencyApi>[1]) =>
       run(() => competencyApi.updateCompetencyApi(id, data), 'competencies.success.updated'),
-    deleteCompetency: (id: string) => run(() => competencyApi.deleteCompetencyApi(id), 'competencies.success.deleted'),
+    deleteCompetency: (id: string, month: string) => run(() => competencyApi.deleteCompetencyApi(id, month), 'competencies.success.deleted'),
     applyDefault: (teacherAssignmentId: string) =>
       run(() => competencyApi.applyDefaultCompetencyListApi(teacherAssignmentId), 'competencies.success.defaultApplied'),
     copyCatalog: (fromAssignmentId: string, toAssignmentId: string) =>

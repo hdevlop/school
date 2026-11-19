@@ -1,4 +1,4 @@
-import { and, asc, count, eq, ne, sql } from 'drizzle-orm';
+import { and, asc, count, eq, gte, isNull, ne, or, sql, type SQL } from 'drizzle-orm';
 import type { CompetencyItem } from '@sms/contracts';
 import { Repository } from '../../najm';
 import { Owned, type OwnedWhere } from '../../auth';
@@ -12,20 +12,30 @@ import { CompetencyDomainOwner } from './CompetencyGuards';
 
 export type CatalogItem = CompetencyItem & { evaluationCount: number };
 
+/** The months a domain or competency is followed in; null is the year's first, or its last. */
+export type MonthSpan = { fromMonth: string | null; untilMonth: string | null };
+
 const domainSelect = {
   id: competencyDomains.id,
   teacherAssignmentId: competencyDomains.teacherAssignmentId,
   name: competencyDomains.name,
   altName: competencyDomains.altName,
   position: competencyDomains.position,
+  fromMonth: competencyDomains.fromMonth,
+  untilMonth: competencyDomains.untilMonth,
 };
 
-// The domain's competencies in order, each with how many levels were set in
-// it, so deleting one can say what goes with it.
+// The domain's competencies in order, each with its months and how many levels
+// were set in it in each month, so a change from one month on can say what it
+// keeps and what it loses.
 const competencyList = sql<CatalogItem[]>`(
   select coalesce(jsonb_agg(jsonb_build_object(
     'id', item.id, 'domainId', item.domain_id, 'name', item.name, 'altName', item.alt_name, 'position', item.position,
-    'evaluationCount', (select count(*)::int from competency_evaluations evaluation where evaluation.competency_id = item.id)
+    'fromMonth', item.from_month, 'untilMonth', item.until_month,
+    'evaluationCount', (select count(*)::int from competency_evaluations evaluation where evaluation.competency_id = item.id),
+    'evaluationsByMonth', (select coalesce(jsonb_object_agg(rated.month, rated.n), '{}'::jsonb) from (
+      select evaluation.month, count(*)::int as n from competency_evaluations evaluation
+      where evaluation.competency_id = item.id group by evaluation.month) rated)
   ) order by item.position, item.created_at), '[]'::jsonb)
   from competencies item
   where item.domain_id = "competency_domains"."id"
@@ -48,6 +58,17 @@ const assignmentSelect = {
 
 const sameName = (column: typeof competencyDomains.name | typeof competencies.name, name: string) =>
   sql`lower(btrim(${column})) = lower(btrim(${name}))`;
+
+type SpanColumns = { fromMonth: typeof competencies.fromMonth; untilMonth: typeof competencies.untilMonth }
+  | { fromMonth: typeof competencyDomains.fromMonth; untilMonth: typeof competencyDomains.untilMonth };
+
+/** Rows followed in at least one month of the span: two names may repeat only in months that never meet. */
+function overlaps(table: SpanColumns, span: MonthSpan): SQL | undefined {
+  return and(
+    span.fromMonth ? or(isNull(table.untilMonth), gte(table.untilMonth, span.fromMonth)) : undefined,
+    span.untilMonth ? or(isNull(table.fromMonth), sql`${table.fromMonth} <= ${span.untilMonth}`) : undefined,
+  );
+}
 
 /**
  * The list a teacher follows in one class, section and subject. Reads go
@@ -85,6 +106,12 @@ export class CompetencyCatalogRepository {
         id: competencies.id,
         domainId: competencies.domainId,
         name: competencies.name,
+        altName: competencies.altName,
+        position: competencies.position,
+        fromMonth: competencies.fromMonth,
+        untilMonth: competencies.untilMonth,
+        domainFromMonth: competencyDomains.fromMonth,
+        domainUntilMonth: competencyDomains.untilMonth,
         teacherAssignmentId: competencyDomains.teacherAssignmentId,
       })
       .from(competencies)
@@ -132,7 +159,7 @@ export class CompetencyCatalogRepository {
       .orderBy(asc(subjects.name));
   }
 
-  async createDomain(data: { teacherAssignmentId: string; name: string; altName: string | null; position: number }) {
+  async createDomain(data: { teacherAssignmentId: string; name: string; altName: string | null; position: number } & Partial<MonthSpan>) {
     const [row] = await this.db.insert(competencyDomains)
       .values({ ...data, academicYearId: this.year.id })
       .returning({ id: competencyDomains.id });
@@ -141,7 +168,7 @@ export class CompetencyCatalogRepository {
 
   // The service read the row through ownership first; the year keeps a write
   // from reaching another year's list.
-  async updateDomain(id: string, data: Partial<{ name: string; altName: string | null; position: number }>) {
+  async updateDomain(id: string, data: Partial<{ name: string; altName: string | null; position: number } & MonthSpan>) {
     const [row] = await this.db.update(competencyDomains).set(data)
       .where(and(eq(competencyDomains.id, id), this.inYear()))
       .returning({ id: competencyDomains.id });
@@ -155,12 +182,12 @@ export class CompetencyCatalogRepository {
     return row;
   }
 
-  async createCompetency(data: { domainId: string; name: string; altName: string | null; position: number }) {
+  async createCompetency(data: { domainId: string; name: string; altName: string | null; position: number } & Partial<MonthSpan>) {
     const [row] = await this.db.insert(competencies).values(data).returning({ id: competencies.id });
     return row;
   }
 
-  async updateCompetency(id: string, data: Partial<{ domainId: string; name: string; altName: string | null; position: number }>) {
+  async updateCompetency(id: string, data: Partial<{ domainId: string; name: string; altName: string | null; position: number } & MonthSpan>) {
     const [row] = await this.db.update(competencies).set(data)
       .where(eq(competencies.id, id))
       .returning({ id: competencies.id });
@@ -172,16 +199,32 @@ export class CompetencyCatalogRepository {
     return row;
   }
 
+  /** A domain's competencies with their months, the ended ones included: what removing it from a month on goes through. */
+  async competenciesOfDomain(domainId: string) {
+    return this.db.select({ id: competencies.id, fromMonth: competencies.fromMonth, untilMonth: competencies.untilMonth })
+      .from(competencies).where(eq(competencies.domainId, domainId));
+  }
+
   // School-wide lookups that validate a write; none returns rows to a reader.
 
-  async countDomains(teacherAssignmentId: string) {
+  /** The competency has levels in a month before this one. */
+  async ratedBefore(competencyId: string, month: string) {
+    const [row] = await this.db.execute<{ rated: boolean }>(sql`
+      select exists (select 1 from competency_evaluations where competency_id = ${competencyId} and month < ${month}) as rated`);
+    return !!row?.rated;
+  }
+
+  /** The list's domains; with a month, those still followed in it or later. */
+  async countDomains(teacherAssignmentId: string, month?: string) {
     const [row] = await this.db.select({ n: count() }).from(competencyDomains)
-      .where(and(eq(competencyDomains.teacherAssignmentId, teacherAssignmentId), this.inYear()));
+      .where(and(eq(competencyDomains.teacherAssignmentId, teacherAssignmentId), this.inYear(),
+        month ? overlaps(competencyDomains, { fromMonth: month, untilMonth: null }) : undefined));
     return Number(row?.n ?? 0);
   }
 
-  async countCompetencies(domainId: string) {
-    const [row] = await this.db.select({ n: count() }).from(competencies).where(eq(competencies.domainId, domainId));
+  async countCompetencies(domainId: string, month?: string) {
+    const [row] = await this.db.select({ n: count() }).from(competencies)
+      .where(and(eq(competencies.domainId, domainId), month ? overlaps(competencies, { fromMonth: month, untilMonth: null }) : undefined));
     return Number(row?.n ?? 0);
   }
 
@@ -198,21 +241,27 @@ export class CompetencyCatalogRepository {
     return Number(row?.n ?? 0);
   }
 
-  async domainNameTaken(teacherAssignmentId: string, name: string, excludeId?: string) {
+  async domainNameTaken(teacherAssignmentId: string, name: string, span: MonthSpan, excludeId?: string) {
     const [row] = await this.db.select({ id: competencyDomains.id }).from(competencyDomains)
       .where(and(
         eq(competencyDomains.teacherAssignmentId, teacherAssignmentId),
         this.inYear(),
         sameName(competencyDomains.name, name),
+        overlaps(competencyDomains, span),
         excludeId ? ne(competencyDomains.id, excludeId) : undefined,
       ))
       .limit(1);
     return !!row;
   }
 
-  async competencyNameTaken(domainId: string, name: string, excludeId?: string) {
+  async competencyNameTaken(domainId: string, name: string, span: MonthSpan, excludeId?: string) {
     const [row] = await this.db.select({ id: competencies.id }).from(competencies)
-      .where(and(eq(competencies.domainId, domainId), sameName(competencies.name, name), excludeId ? ne(competencies.id, excludeId) : undefined))
+      .where(and(
+        eq(competencies.domainId, domainId),
+        sameName(competencies.name, name),
+        overlaps(competencies, span),
+        excludeId ? ne(competencies.id, excludeId) : undefined,
+      ))
       .limit(1);
     return !!row;
   }

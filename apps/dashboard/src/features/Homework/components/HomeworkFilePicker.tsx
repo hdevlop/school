@@ -1,14 +1,16 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Camera, FileText, Loader2, Paperclip, X } from 'lucide-react';
+import { Camera, FileText, Loader2, Paperclip, RotateCw, X } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { NButton } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { HOMEWORK_LIMITS, HOMEWORK_UPLOAD_ACCEPT, type HomeworkAttachment } from '@sms/contracts';
-import { compressImage } from '@/lib/compressImage';
+import { compressImage, normalizeTurns, rotateImage } from '@/lib/compressImage';
 import { fileRefusal, fileSizeLabel, refusalLimitMb, remainingFileSlots } from '../config/homeworkFiles';
 import HomeworkAttachments from './HomeworkAttachments';
+import { homeworkAttachmentQuery } from '../hooks/useHomeworkAttachment';
 
 type Props = {
   homeworkId?: string;
@@ -40,6 +42,11 @@ const PickedPreview = ({ file }: { file: File }) => {
   return <img src={url} alt="" className="h-full w-full object-cover" />;
 };
 
+/** Where a turned photo came from, so the next turn starts from it again. */
+type Turned = { source: File; turns: number; storedId?: string };
+
+const tileButton = 'absolute top-1 flex h-6 w-6 items-center justify-center rounded-full bg-background/90 text-foreground shadow disabled:opacity-50';
+
 /**
  * Photos and PDFs of a homework: what is stored, what was just picked, and
  * two ways to add more. Photos are reduced here before they are sent; the
@@ -50,6 +57,9 @@ const HomeworkFilePicker = ({ homeworkId, stored, removedIds, onRemovedIdsChange
   const [preparing, setPreparing] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
   const cameraInput = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
+  // Keyed by the turned file: a later turn re-renders the original, never the last result.
+  const turned = useRef(new WeakMap<File, Turned>());
 
   const kept = stored.filter((attachment) => !removedIds.includes(attachment.id));
   const slots = remainingFileSlots(kept.length, files.length);
@@ -73,6 +83,54 @@ const HomeworkFilePicker = ({ homeworkId, stored, removedIds, onRemovedIdsChange
     }
   };
 
+  const rotatePicked = async (index: number) => {
+    const file = files[index];
+    const origin = turned.current.get(file) ?? { source: file, turns: 0 };
+    const turns = normalizeTurns(origin.turns + 1);
+    if (turns === 0) {
+      // Back where it started: the original, or the stored photo it replaced.
+      if (origin.storedId) {
+        onFilesChange(files.filter((_, position) => position !== index));
+        onRemovedIdsChange(removedIds.filter((id) => id !== origin.storedId));
+      } else {
+        onFilesChange(files.map((current, position) => (position === index ? origin.source : current)));
+      }
+      return;
+    }
+    setPreparing(true);
+    try {
+      const rotated = await rotateImage(origin.source, origin.source.name, turns, { maxEdge: HOMEWORK_LIMITS.imageEdge });
+      if (!rotated) return void toast.error(t('homework.form.rotateFailed'));
+      turned.current.set(rotated, { ...origin, turns });
+      onFilesChange(files.map((current, position) => (position === index ? rotated : current)));
+    } finally {
+      setPreparing(false);
+    }
+  };
+
+  /**
+   * A stored photo is turned here and sent again: saving drops the stored file
+   * and uploads the turned one in the same request, so cancelling keeps it as
+   * it was. It moves to the end of the list, like any file added.
+   */
+  const rotateStored = async (attachment: HomeworkAttachment) => {
+    if (!homeworkId) return;
+    setPreparing(true);
+    try {
+      const blob = await queryClient.fetchQuery(homeworkAttachmentQuery(homeworkId, attachment.id));
+      const source = new File([blob], 'photo', { type: blob.type || attachment.mimeType });
+      const rotated = await rotateImage(source, source.name, 1, { maxEdge: HOMEWORK_LIMITS.imageEdge });
+      if (!rotated) return void toast.error(t('homework.form.rotateFailed'));
+      turned.current.set(rotated, { source, turns: 1, storedId: attachment.id });
+      onRemovedIdsChange([...removedIds, attachment.id]);
+      onFilesChange([...files, rotated]);
+    } catch {
+      toast.error(t('homework.form.rotateFailed'));
+    } finally {
+      setPreparing(false);
+    }
+  };
+
   const onPick = (event: React.ChangeEvent<HTMLInputElement>) => {
     void addFiles(event.target.files);
     // The same file can be picked again after it was removed.
@@ -86,10 +144,22 @@ const HomeworkFilePicker = ({ homeworkId, stored, removedIds, onRemovedIdsChange
           {kept.map((attachment) => (
             <div key={attachment.id} className="relative">
               <HomeworkAttachments homeworkId={homeworkId} attachments={[attachment]} />
+              {attachment.kind === 'image' && !attachment.purgedAt && (
+                <button
+                  type="button"
+                  disabled={preparing}
+                  onClick={() => void rotateStored(attachment)}
+                  className={`${tileButton} start-1`}
+                  aria-label={t('homework.form.rotatePhoto')}
+                  title={t('homework.form.rotatePhoto')}
+                >
+                  <RotateCw className="h-3.5 w-3.5" aria-hidden />
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => onRemovedIdsChange([...removedIds, attachment.id])}
-                className="absolute end-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-background/90 text-foreground shadow"
+                className={`${tileButton} end-1`}
                 aria-label={t('homework.form.removeFile')}
                 title={t('homework.form.removeFile')}
               >
@@ -106,10 +176,22 @@ const HomeworkFilePicker = ({ homeworkId, stored, removedIds, onRemovedIdsChange
             <div key={`${file.name}-${file.size}-${index}`} className="relative flex h-44 w-full max-w-xs flex-col items-center justify-center gap-1 overflow-hidden rounded-lg border bg-muted/40 text-center text-xs text-muted-foreground">
               <PickedPreview file={file} />
               {!file.type.startsWith('image/') && <span className="px-1 leading-tight">{fileSizeLabel(file.size)}</span>}
+              {file.type.startsWith('image/') && (
+                <button
+                  type="button"
+                  disabled={preparing}
+                  onClick={() => void rotatePicked(index)}
+                  className={`${tileButton} start-1`}
+                  aria-label={t('homework.form.rotatePhoto')}
+                  title={t('homework.form.rotatePhoto')}
+                >
+                  <RotateCw className="h-3.5 w-3.5" aria-hidden />
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => onFilesChange(files.filter((_, position) => position !== index))}
-                className="absolute end-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-background/90 text-foreground shadow"
+                className={`${tileButton} end-1`}
                 aria-label={t('homework.form.removeFile')}
                 title={t('homework.form.removeFile')}
               >

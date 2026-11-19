@@ -66,6 +66,17 @@ async function capture<T>(Repository: new () => T, role: string, read: (reposito
   return statements;
 }
 
+it('uses the account photo, student photo, then gender avatar for both follow-up lists', async () => {
+  const [roster] = await capture(HomeworkCompletionRepository, 'teacher', (repository) => repository.roster('hw-1'));
+  const [missed] = await capture(HomeworkCompletionRepository, 'teacher', (repository) => repository.missed());
+  expect(roster.sql.replace(/\s+/g, ' ')).toContain(
+    "coalesce( nullif(account.image, ''), nullif(student.image, ''), case when student.gender = 'F' then '/images/student_female.png' when student.gender = 'M' then '/images/student_male.png' end ) as \"image\"",
+  );
+  expect(missed.sql.replace(/\s+/g, ' ')).toContain(
+    "coalesce( nullif(\"users\".\"image\", ''), nullif(\"students\".\"image\", ''), case when \"students\".\"gender\" = 'F' then '/images/student_female.png' when \"students\".\"gender\" = 'M' then '/images/student_male.png' end )",
+  );
+});
+
 describe('missed homework reads', () => {
   it('keep ownership, the year, the missed statuses and the pupil filter in one WHERE', async () => {
     for (const role of ['teacher', 'monitor', 'supervisor', 'student', 'parent']) {
@@ -92,6 +103,20 @@ describe('missed homework reads', () => {
 
   it('save nothing for an empty follow-up', async () => {
     expect(await capture(HomeworkCompletionRepository, 'teacher', (repository) => repository.save('hw-1', [], 'user-1'))).toEqual([]);
+  });
+
+  it('preserves omitted remarks and keeps existing reviews ahead of automatic defaults', async () => {
+    const [statement] = await capture(HomeworkCompletionRepository, 'teacher', (repository) => repository.save('hw-1', [
+      { studentId: 'explicit', status: 'not_done' },
+      { studentId: 'default', status: 'done', ifUnreviewed: true },
+      { studentId: 'clear', status: 'done', note: null },
+    ], 'user-1'));
+    const [conflict] = statement.sql.split(' do update ');
+    expect(conflict).toContain('on conflict ("homework_id","student_id")');
+    const update = statement.sql.slice(conflict.length);
+    expect(update).toMatch(/case when excluded\.student_id in \(\$\d+, \$\d+\) then "homework_completions"\."note" else excluded\.note end/);
+    expect(update).toMatch(/where excluded\.student_id not in \(\$\d+\)$/);
+    expect(statement.params.slice(-3)).toEqual(['explicit', 'default', 'default']);
   });
 });
 
@@ -121,5 +146,7 @@ describe('the follow-up body', () => {
     expect(saveHomeworkCompletionsDto.safeParse({ entries: [{ studentId: 's-1', status: 'absent' }] }).success).toBe(false);
     expect(saveHomeworkCompletionsDto.safeParse({ entries: [{ studentId: 's-1', status: 'done', note: 'x'.repeat(301) }] }).success).toBe(false);
     expect(saveHomeworkCompletionsDto.safeParse({ entries: [{ status: 'done' }] }).success).toBe(false);
+    expect(saveHomeworkCompletionsDto.parse({ entries: [{ studentId: 's-2', status: 'done', ifUnreviewed: true }] }).entries[0])
+      .toEqual({ studentId: 's-2', status: 'done', ifUnreviewed: true });
   });
 });

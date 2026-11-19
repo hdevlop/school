@@ -6,6 +6,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import type { HomeworkCompletionEntry, HomeworkMissedRecord, HomeworkRosterEntry, HomeworkRow } from '@sms/contracts';
 import { useYearScopedList, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { withAcademicYear, yearScopedKey, type YearScope } from '@/features/AcademicYears/utils/yearScope';
 import * as homeworkApi from '@/services/homeworkApi';
 
 /** The list this feature's page opens with. */
@@ -80,12 +81,19 @@ export const useHomeworkRoster = (homeworkId: string | null) => {
 };
 
 /** Saves a homework's follow-up; the lists that count it reload. */
-export const useSaveHomeworkCompletions = () => {
+export const useSaveHomeworkCompletions = (homeworkId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, entries }: { id: string; entries: HomeworkCompletionEntry[] }) =>
-      homeworkApi.saveHomeworkCompletionsApi(id, entries),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['homework'] }),
+    scope: { id: `homework-completions:${homeworkId}` },
+    mutationFn: ({ id, entries, scope }: { id: string; entries: HomeworkCompletionEntry[]; scope: YearScope }) =>
+      withAcademicYear(scope.academicYear, () => homeworkApi.saveHomeworkCompletionsApi(id, entries)),
+    onSuccess: async (roster, { id, scope }) => {
+      const key = yearScopedKey('homework', scope, 'completions', id);
+      await queryClient.cancelQueries({ queryKey: key, exact: true });
+      queryClient.setQueryData(key, roster);
+      void queryClient.invalidateQueries({ queryKey: yearScopedKey('homework', scope), exact: true });
+      void queryClient.invalidateQueries({ queryKey: yearScopedKey('homework', scope, 'missed') });
+    },
     onError: (error: Error) => toast.error(error.message),
   });
 };

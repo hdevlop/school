@@ -1,0 +1,106 @@
+.printMenu {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: min(320px, calc(100vw - 24px));
+}
+
+.printMenu[data-columns='2'] {
+  grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr);
+  width: min(700px, calc(100vw - 24px));
+}
+
+.printColumn {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 6px;
+}
+
+.printDivider {
+  align-self: stretch;
+  width: 1px;
+  background: var(--border);
+}
+
+.printTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: -6px -6px 4px;
+  padding: 9px 14px 8px;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in oklab, var(--muted) 45%, transparent);
+  color: var(--muted-foreground);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.printTitle > svg {
+  width: 13px;
+  height: 13px;
+}
+
+.printItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 6px 8px;
+}
+
+.printItem > svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--primary);
+}
+
+.printItem > span:first-of-type {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.printItem strong,
+.printItem small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.printItem strong {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.printItem small {
+  color: var(--muted-foreground);
+  font-size: 11px;
+}
+
+.printCount {
+  flex-shrink: 0;
+  min-width: 24px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--muted);
+  color: var(--muted-foreground);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .printMenu[data-columns='2'] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .printDivider {
+    width: auto;
+    height: 1px;
+  }
+}

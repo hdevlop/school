@@ -1,4 +1,4 @@
-import { and, desc, eq, inArray, sql } from 'drizzle-orm';
+import { and, desc, eq, inArray, notInArray, sql, type SQLWrapper } from 'drizzle-orm';
 import {
   HOMEWORK_MISSED_STATUS_VALUES,
   type HomeworkCompletionEntry, type HomeworkCompletionStatus, type HomeworkMissedStatus, type HomeworkRosterEntry,
@@ -17,6 +17,13 @@ import { HomeworkCompletion } from './HomeworkGuards';
 type RosterRow = { [Key in keyof HomeworkRosterEntry]: HomeworkRosterEntry[Key] };
 
 type Placement ={ sectionId: string; sectionName: string; classId: string; className: string } | null;
+
+const studentAvatar = (accountImage: SQLWrapper, profileImage: SQLWrapper, gender: SQLWrapper) => sql<string | null>`coalesce(
+  nullif(${accountImage}, ''),
+  nullif(${profileImage}, ''),
+  case when ${gender} = 'F' then '/images/student_female.png'
+    when ${gender} = 'M' then '/images/student_male.png' end
+)`;
 
 // Where the pupil of a follow-up sat on the day the homework was given: one of
 // its target sections, by the same rule as the homework's roster.
@@ -49,7 +56,8 @@ export class HomeworkCompletionRepository {
   async roster(homeworkId: string): Promise<HomeworkRosterEntry[]> {
     const rows = await this.db.execute<RosterRow & { massarPosition: number | null; sectionName: string }>(sql`
       select distinct on (student.id)
-        student.id as "studentId", student.name as "name", account.image as "image",
+        student.id as "studentId", student.name as "name",
+        ${studentAvatar(sql`account.image`, sql`student.image`, sql`student.gender`)} as "image",
         completion.status as "status", completion.note as "note",
         listed.position as "massarPosition", placed.name as "sectionName"
       from homework
@@ -74,9 +82,12 @@ export class HomeworkCompletionRepository {
       .map(({ massarPosition: _position, sectionName: _section, ...entry }) => entry);
   }
 
-  /** Writes each pupil's follow-up; a pupil already recorded gets the new status and remark. */
+  /** Writes each pupil's follow-up and preserves any omitted remarks. */
   async save(homeworkId: string, entries: HomeworkCompletionEntry[], recordedBy: string) {
     if (!entries.length) return;
+    const studentId = sql`excluded.student_id`;
+    const defaults = entries.filter((entry) => entry.ifUnreviewed).map((entry) => entry.studentId);
+    const keepRemarks = entries.filter((entry) => entry.note === undefined).map((entry) => entry.studentId);
     await this.db.insert(homeworkCompletions)
       .values(entries.map((entry) => ({
         homeworkId,
@@ -89,10 +100,13 @@ export class HomeworkCompletionRepository {
         target: [homeworkCompletions.homeworkId, homeworkCompletions.studentId],
         set: {
           status: sql`excluded.status`,
-          note: sql`excluded.note`,
+          note: keepRemarks.length
+            ? sql`case when ${inArray(studentId, keepRemarks)} then ${homeworkCompletions.note} else excluded.note end`
+            : sql`excluded.note`,
           recordedBy: sql`excluded.recorded_by`,
           updatedAt: sql`now()`,
         },
+        setWhere: defaults.length ? notInArray(studentId, defaults) : undefined,
       });
   }
 
@@ -115,7 +129,7 @@ export class HomeworkCompletionRepository {
         subjectName: subjects.name,
         studentId: students.id,
         studentName: students.name,
-        studentImage: users.image,
+        studentImage: studentAvatar(users.image, students.image, students.gender),
         placement: placementOnHomeworkDate,
       })
       .from(homeworkCompletions)

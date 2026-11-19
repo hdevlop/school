@@ -1,4 +1,4 @@
-import { COMPETENCY_LEVEL_VALUES, type CompetencyDomain, type CompetencyEvaluation, type CompetencyLevel, type CompetencyRemark, type MassarSheetDetail, type MassarStudent } from '@sms/contracts';
+import { catalogInMonths, COMPETENCY_LEVEL_VALUES, type CompetencyDomain, type CompetencyEvaluation, type CompetencyLevel, type CompetencyRemark, type MassarSheetDetail, type MassarStudent } from '@sms/contracts';
 import { LEVEL_RANK } from './competencyLevels';
 
 /**
@@ -88,8 +88,9 @@ export function standing(mark: number | null, marks: readonly number[]): Standin
   };
 }
 
-export function followUps({ sheet, domains, evaluations, remarks, months }: {
+export function followUps({ sheet, domains: yearDomains, evaluations, remarks, months }: {
   sheet: MassarSheetDetail;
+  /** The year's list: the report keeps what was followed in its months. */
   domains: readonly CompetencyDomain[];
   evaluations: readonly CompetencyEvaluation[];
   remarks: readonly CompetencyRemark[];
@@ -117,6 +118,9 @@ export function followUps({ sheet, domains, evaluations, remarks, months }: {
   const plannedMonth = sheet.examFrom?.slice(0, 7);
   const examMonth = plannedMonth && months.includes(plannedMonth) ? plannedMonth : null;
   const shown = examMonth ? months.filter((month) => month <= examMonth) : [];
+  // The competencies followed from the year's start to the Contrôle: one taken off in October still shows its levels,
+  // one added after the Contrôle does not.
+  const domains = shown.length ? catalogInMonths(yearDomains, shown).filter((domain) => domain.competencies.length) : yearDomains;
   const levelOf = new Map(evaluations.map((item) => [`${item.studentId}\u0000${item.competencyId}\u0000${item.month}`, item.level]));
   const remarkOf = new Map(sheet.remarks.map((item) => [item.studentId, item.remark]));
   // A pupil's current level on a competency: the last one set up to the Contrôle's month.

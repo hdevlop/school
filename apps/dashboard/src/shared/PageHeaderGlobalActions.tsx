@@ -6,21 +6,25 @@ import LanguageSwitcher from '@/features/Settings/components/LanguageSwitcher';
 import { NotificationsMenu } from '@/features/Notifications';
 import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
 
-export default function PageHeaderGlobalActions() {
+export default function PageHeaderGlobalActions({ fullscreenOnly = false }: { fullscreenOnly?: boolean }) {
   const { t } = useTranslation();
 
   return (
     <>
-      <ViewingYearSelector placement="header" />
+      {!fullscreenOnly && <ViewingYearSelector placement="header" />}
       <NGlobalActions>
-        <NotificationsMenu />
-        <LanguageSwitcher />
-        <NThemeToggle
-          label={t('common.toggleTheme')}
-          onError={(error) =>
-            toast.error(error instanceof Error ? error.message : 'Could not update color theme.')
-          }
-        />
+        {!fullscreenOnly && (
+          <>
+            <NotificationsMenu />
+            <LanguageSwitcher />
+            <NThemeToggle
+              label={t('common.toggleTheme')}
+              onError={(error) =>
+                toast.error(error instanceof Error ? error.message : 'Could not update color theme.')
+              }
+            />
+          </>
+        )}
         <NFullscreenToggle label={t('common.toggleFullscreen')} />
       </NGlobalActions>
     </>

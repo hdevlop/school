@@ -1,4 +1,4 @@
-import { and, eq, inArray, sql } from 'drizzle-orm';
+import { and, eq, gte, inArray, sql } from 'drizzle-orm';
 import type { CompetencyLevel } from '@sms/contracts';
 import { Repository } from '../../najm';
 import { Owned, type OwnedWhere } from '../../auth';
@@ -61,6 +61,21 @@ export class CompetencyEvaluationRepository {
       eq(competencyEvaluations.month, month),
       this.inYear(),
     ));
+  }
+
+  /** A competency removed from a month on loses its levels of that month and after; the earlier ones stay. */
+  async removeFrom(competencyId: string, month: string) {
+    await this.db.delete(competencyEvaluations).where(and(
+      eq(competencyEvaluations.competencyId, competencyId),
+      gte(competencyEvaluations.month, month),
+    ));
+  }
+
+  /** A competency replaced from a month on hands its levels of that month and after to the new one. */
+  async moveFrom(fromCompetencyId: string, toCompetencyId: string, month: string) {
+    await this.db.update(competencyEvaluations)
+      .set({ competencyId: toCompetencyId, updatedAt: sql`CURRENT_TIMESTAMP` })
+      .where(and(eq(competencyEvaluations.competencyId, fromCompetencyId), gte(competencyEvaluations.month, month)));
   }
 
   /**

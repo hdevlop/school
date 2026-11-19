@@ -4,7 +4,7 @@ import { translations } from '@sms/contracts/locales';
 
 import { createHomeworkSchema } from '@/features/Homework/config/homeworkSchemas';
 import { fileRefusal, fileSizeLabel, liveAttachments, refusalLimitMb, remainingFileSlots } from '@/features/Homework/config/homeworkFiles';
-import { fitWithin, renamedFor } from '@/lib/compressImage';
+import { fitWithin, normalizeTurns, renamedFor, rotatedSize } from '@/lib/compressImage';
 import { taughtClassIds, taughtSectionIds, taughtSubjectIds } from '@/features/Homework/config/homeworkTeaching';
 
 // The translator echoes the key: a wrong key would render raw in the form.
@@ -117,6 +117,25 @@ describe('reducing a photo in the browser', () => {
     expect(renamedFor('scan', 'image/webp')).toBe('scan.webp');
     expect(renamedFor('.jpg', 'image/webp')).toBe('photo.webp');
     expect(renamedFor('page.png', 'image/png')).toBe('page.png');
+  });
+
+  it('turns a sideways photo by quarter turns, swapping the sides on an odd count', () => {
+    expect(rotatedSize({ width: 1200, height: 1600 }, 1)).toEqual({ width: 1600, height: 1200 });
+    expect(rotatedSize({ width: 1200, height: 1600 }, 2)).toEqual({ width: 1200, height: 1600 });
+    expect(rotatedSize({ width: 1200, height: 1600 }, 3)).toEqual({ width: 1600, height: 1200 });
+    expect(rotatedSize({ width: 1200, height: 1600 }, 4)).toEqual({ width: 1200, height: 1600 });
+  });
+
+  it('counts four turns as none, and a turn back as three forward', () => {
+    expect([0, 1, 2, 3, 4, 5, -1, 8].map(normalizeTurns)).toEqual([0, 1, 2, 3, 0, 1, 3, 0]);
+  });
+
+  it('names the rotate button and its refusal in every language', () => {
+    for (const language of ['en', 'fr', 'ar', 'es'] as const) {
+      const form = translations[language].homework.form;
+      expect(form.rotatePhoto).toBeTruthy();
+      expect(form.rotateFailed).toBeTruthy();
+    }
   });
 });
 

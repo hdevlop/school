@@ -31,7 +31,7 @@ export function CompetencyRemarkFooter({ remark, onSave, propose }: {
 function RemarkCard({ children }: { children: ReactNode }) {
   const { t } = useCompetencyText();
   return (
-    <section aria-label={t('competencies.remark.title')} className="flex flex-col gap-2 rounded-xl border border-border/70 bg-card p-3 @xl/sheet:p-4">
+    <section aria-label={t('competencies.remark.title')} className="flex flex-col gap-2 rounded-xl border border-border/70 bg-card p-3 text-card-foreground @xl/sheet:p-4">
       <h3 className="flex items-center gap-2 text-sm font-semibold">
         <MessageSquareText aria-hidden="true" className="size-4 text-muted-foreground" />
         {t('competencies.remark.title')}

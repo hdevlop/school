@@ -1,10 +1,10 @@
 "use client"
 
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ClipboardCheck, Eye, Pencil, Plus, Trash2 } from 'lucide-react';
-import { NEmptyState, NErrorState, NForbiddenState, NPageHeaderActions } from 'najm-kit';
+import { NEmptyState, NErrorState, NForbiddenState, NPageHeaderActions, useMediaQuery, type NTableProps } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import type { HomeworkCompletionEntry, HomeworkRow } from '@sms/contracts';
+import type { HomeworkRow } from '@sms/contracts';
 import { PermissionButton } from '@/components/PermissionButton';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
@@ -13,32 +13,62 @@ import { HomeworkCardSkeleton } from '@/shared/CardSkeletons';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useDialog } from '@/shared/useDialog';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
+import { useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
-import { useHomework, useSaveHomeworkCompletions, type HomeworkSave } from '../hooks/useHomework';
+import { useHomework, type HomeworkSave } from '../hooks/useHomework';
 import { useHomeworkTableColumns } from '../hooks/useHomeworkTableColumns';
-import HomeworkCard from './HomeworkCard';
-import HomeworkCompletionForm, { HOMEWORK_COMPLETION_FORM_ID } from './HomeworkCompletionForm';
+import HomeworkCard, { homeworkPlacementLabel } from './HomeworkCard';
+import HomeworkCompletionSheet from './HomeworkCompletionSheet';
 import HomeworkForm from './HomeworkForm';
+import { homeworkTones } from '../config/homeworkTones';
+import { HomeworkMobileCard, HomeworkMobileCardSkeleton, HomeworkToneContext } from './HomeworkMobileCard';
+import { HomeworkMobileControls } from './HomeworkMobileControls';
+import HomeworkMobileDetailsDialog from './HomeworkMobileDetailsDialog';
+import styles from './HomeworkMobile.module.css';
+
+const normalizeSearch = (value: string) => value.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '');
 
 function HomeworkTable() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+  const isPhone = useMediaQuery('(max-width: 767px)');
+  const yearKey = useViewingYearKey();
+  const [search, setSearch] = useState('');
+  const [subjectSelection, setSubjectSelection] = useState<{ yearKey: string; id: string }>();
+  const [newestFirst, setNewestFirst] = useState(true);
+  const [desktopMode, setDesktopMode] = useState<NonNullable<NTableProps['mode']>>('table');
   // The server lets a teacher write the homework of their own classes and
   // the school-wide roles any; monitors, supervisors and families only read.
   const { role, isFamily, isSchoolWide } = useViewerRole();
   const mayWrite = role === 'teacher' || isSchoolWide;
-  // The follow-up cell opens the dialog defined below; a stable callback keeps the columns memoized.
-  const followUpRef = useRef<(row: HomeworkRow) => void>(() => {});
-  const openFollowUp = useCallback((row: HomeworkRow) => followUpRef.current(row), []);
+  const [followUp, setFollowUp] = useState<HomeworkRow | null>(null);
   const columns = useHomeworkTableColumns(
     role === 'parent' ? 'parent' : role === 'student' ? 'student' : 'staff',
-    mayWrite ? openFollowUp : undefined,
+    mayWrite ? setFollowUp : undefined,
   );
   const scope = useClassSectionTableScope();
+  const { filters, matches } = scope;
 
   const { homework, saveHomework, deleteHomework, error, isHomeworkLoading, isSaving, isDeleting } = useHomework();
-  const saveCompletions = useSaveHomeworkCompletions();
-  const rows = useMemo(() => (homework || []).filter(scope.matches), [homework, scope.matches]);
+  const subjects = useMemo(() => {
+    const names = new Map<string, string>();
+    for (const row of homework ?? []) {
+      if (row.subject) names.set(row.subject.id, row.subject.name);
+    }
+    return Array.from(names, ([value, label]) => ({ value, label }))
+      .sort((left, right) => left.label.localeCompare(right.label, language));
+  }, [homework, language]);
+  const subjectId = isPhone && subjectSelection?.yearKey === yearKey
+    && subjects.some((subject) => subject.value === subjectSelection.id) ? subjectSelection.id : '';
+  const query = isPhone ? normalizeSearch(search.trim()) : '';
+  const rows = useMemo(() => (homework ?? []).filter((row) =>
+    matches(row)
+      && (!subjectId || row.subject?.id === subjectId)
+      && (!query || [row.title, row.subject?.name, row.subject?.code, row.subSubject, row.teacher?.name, homeworkPlacementLabel(row)]
+        .some((value) => value && normalizeSearch(value).includes(query))),
+  ), [homework, matches, query, subjectId]);
+  const toneOf = useMemo(() => homeworkTones(homework ?? []), [homework]);
+  const sorting = useMemo(() => isPhone ? [{ id: 'date', desc: newestFirst }] : undefined, [isPhone, newestFirst]);
   const { openDialog, confirmDelete } = useDialog();
 
   const handleAddClick = () => {
@@ -56,8 +86,12 @@ function HomeworkTable() {
   };
 
   const handleView = (row: HomeworkRow) => {
-    openDialog({
-      title: t('homework.dialogs.viewTitle'),
+    const title = t('homework.dialogs.viewTitle');
+    openDialog(isPhone ? {
+      title,
+      render: ({ onOpenChange, zIndex }) => <HomeworkMobileDetailsDialog homework={row} onOpenChange={onOpenChange} zIndex={zIndex} />,
+    } : {
+      title,
       children: <HomeworkCard data={row} detailed />,
       showButtons: false,
     });
@@ -76,23 +110,6 @@ function HomeworkTable() {
     });
   };
 
-  // Who did it: the teacher ticks the few pupils who did not.
-  const handleFollowUp = (row: HomeworkRow) => {
-    openDialog({
-      title: t('homework.completion.title'),
-      width: '3xl',
-      children: <HomeworkCompletionForm homework={row} />,
-      primaryButton: {
-        form: HOMEWORK_COMPLETION_FORM_ID,
-        text: t('homework.completion.saveButton'),
-        loading: saveCompletions.isPending,
-        onClick: async (data: { id: string; entries: HomeworkCompletionEntry[] }) => { await saveCompletions.mutateAsync(data); },
-      },
-    });
-  };
-
-  useEffect(() => { followUpRef.current = handleFollowUp; });
-
   const handleDelete = (row: HomeworkRow) => {
     confirmDelete({
       title: t('common.delete'),
@@ -106,6 +123,8 @@ function HomeworkTable() {
   };
 
   const total = homework?.length ?? 0;
+  const countUnknown = isCountUnknown(error, homework, isHomeworkLoading);
+  const hasSelection = scope.hasSelection || Boolean(query || subjectId);
   // An empty list, filtered or not, offers to publish one to whoever may.
   const addAction = mayWrite ? (
     <PermissionButton permission="create:homework" size="sm" onClick={handleAddClick}>
@@ -115,25 +134,33 @@ function HomeworkTable() {
   ) : undefined;
 
   return (
-    <div className='flex flex-col gap-2 w-full h-full min-h-0'>
+    <div className="flex h-full min-h-0 w-full flex-col gap-2">
       <NPageHeader
         icon={FEATURE_ICONS.homework}
         title={t('navigation.homework')}
-        subtitle={isCountUnknown(error, homework, isHomeworkLoading) ? undefined : t('homework.subtitle.count', { count: total })}
+        subtitle={countUnknown ? undefined : t('homework.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
       </NPageHeader>
 
+      {isPhone && <HomeworkMobileControls filters={filters} subjects={subjects} subjectId={subjectId}
+        onSubjectChange={(id) => setSubjectSelection({ yearKey, id })} search={search} onSearch={setSearch}
+        count={countUnknown ? undefined : rows.length} newestFirst={newestFirst} onSort={setNewestFirst} />}
+
+      <HomeworkToneContext.Provider value={toneOf}>
       <NTable
         exportTitle={t('navigation.homework')}
         permissionResource="homework"
         responsiveSkeleton
-        className='min-h-0 flex-1'
+        className={`min-h-0 flex-1 ${styles.table}`}
         data={rows}
+        getRowId={(row) => row.id}
         columns={columns}
-        filters={scope.filters}
+        filters={isPhone ? undefined : filters}
+        sorting={sorting}
+        showCheckbox={isPhone ? false : undefined}
         onCreate={mayWrite ? handleAddClick : undefined}
         onView={handleView}
         onRowClick={handleView}
@@ -144,7 +171,7 @@ function HomeworkTable() {
           row: (row: HomeworkRow) => [
             { label: t('common.view'), icon: Eye, onSelect: () => handleView(row) },
             ...(mayWrite ? [
-              { label: t('homework.completion.menu'), permission: 'update:homework', icon: ClipboardCheck, onSelect: () => handleFollowUp(row) },
+              { label: t('homework.completion.menu'), permission: 'update:homework', icon: ClipboardCheck, onSelect: () => setFollowUp(row) },
               { label: t('common.edit'), permission: 'update:homework', icon: Pencil, onSelect: () => handleEdit(row) },
               { label: t('common.delete'), permission: 'delete:homework', icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(row) },
             ] : []),
@@ -157,15 +184,16 @@ function HomeworkTable() {
             ? <NForbiddenState surface="panel" />
             : <NErrorState surface="panel" />
         )}
-        renderCard={HomeworkCard}
-        renderCardSkeleton={HomeworkCardSkeleton}
+        renderCard={isPhone ? HomeworkMobileCard : HomeworkCard}
+        renderCardSkeleton={isPhone ? HomeworkMobileCardSkeleton : HomeworkCardSkeleton}
+        isFilteredEmpty={hasSelection && total > 0 && rows.length === 0}
         addButtonText={t('homework.dialogs.createButton')}
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
             icon={FEATURE_ICONS.homework}
-            title={scope.hasSelection ? t('emptyStates.filtered.title') : t('emptyStates.homework.title')}
-            description={scope.hasSelection ? t('emptyStates.filtered.description') : isFamily ? t('emptyStates.familyDescription') : t('emptyStates.homework.description')}
+            title={hasSelection ? t('emptyStates.filtered.title') : t('emptyStates.homework.title')}
+            description={hasSelection ? t('emptyStates.filtered.description') : isFamily ? t('emptyStates.familyDescription') : t('emptyStates.homework.description')}
             action={addAction}
           />
         )}
@@ -179,9 +207,14 @@ function HomeworkTable() {
             action={addAction}
           />
         )}
-        defaultMode='table'
+        mode={isPhone ? 'cards' : desktopMode}
+        onModeChange={setDesktopMode}
         dynamicHeight={true}
       />
+      </HomeworkToneContext.Provider>
+      {followUp && (
+        <HomeworkCompletionSheet key={followUp.id} homework={followUp} onClose={() => setFollowUp(null)} />
+      )}
     </div>
   );
 }

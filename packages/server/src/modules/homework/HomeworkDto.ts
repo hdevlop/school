@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { HOMEWORK_COMPLETION_NOTE_MAX, HOMEWORK_COMPLETION_STATUS_VALUES, HOMEWORK_LIMITS as limits } from '@sms/contracts';
+import { HOMEWORK_COMPLETION_BATCH_MAX, HOMEWORK_COMPLETION_NOTE_MAX, HOMEWORK_COMPLETION_STATUS_VALUES, HOMEWORK_LIMITS as limits } from '@sms/contracts';
 import { optionalDateField, optionalId, requiredId } from '../../shared/fields';
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format');
@@ -46,7 +46,8 @@ export const saveHomeworkCompletionsDto = z.object({
     studentId: requiredId,
     status: z.enum(HOMEWORK_COMPLETION_STATUS_VALUES),
     note: z.string().trim().max(HOMEWORK_COMPLETION_NOTE_MAX, 'homework.errors.completionNoteTooLong').nullish(),
-  })).max(500),
+    ifUnreviewed: z.boolean().optional(),
+  })).max(HOMEWORK_COMPLETION_BATCH_MAX),
 });
 export const homeworkMissedQuery = z.object({ studentId: z.string().min(1).optional() });
 
