@@ -363,3 +363,69 @@ describe('enrollment history SQL', () => {
     expect(params).toEqual(['enrollment-1']);
   });
 });
+
+describe('placement from the Massar class list', () => {
+  const actor = { id: 'admin-1', role: 'admin' };
+  const reason = 'Placed by the Massar import';
+  function fromMassar({ marks = 0, records = true } = {}) {
+    const fixture = build(oldYear.id);
+    const calls: string[] = [];
+    fixture.repository.getByStudentAndYear = async () => fixture.enrollment;
+    Object.defineProperty(fixture.service, 'year', { value: oldYear });
+    Object.assign(fixture.repository, {
+      hasDatedRecordsSince: async () => records,
+      marksInSections: async (_student: string, sections: string[]) => { calls.push(`marks ${sections.join(',')}`); return marks; },
+      realignToSection: async (input: { wrongSectionIds: string[]; targetSectionId: string }) => {
+        fixture.writes.push('realign');
+        calls.push(`realign ${input.wrongSectionIds.join(',')} -> ${input.targetSectionId}`);
+        return { placements: { before: [], after: [] }, moved: { attendance: 2 } };
+      },
+    });
+    return { ...fixture, calls };
+  }
+
+  // Massar lists the pupil in B of the same class: they sat in B all year, so
+  // the import corrects the whole year instead of moving them from today.
+  it('corrects the whole year to another section of the same class, records included', async () => {
+    const { service, writes, calls } = fromMassar();
+    await service.placeFromSource('student-1', { classId: 'class-old', sectionId: 'section-b' }, actor, reason);
+    expect(calls).toEqual(['marks section-old', 'realign section-old -> section-b']);
+    expect(writes).toEqual(['realign', 'audit-correction', 'update-current-student']);
+  });
+
+  it('also corrects an earlier move that Massar contradicts', async () => {
+    const { service, writes, calls, repository, current } = fromMassar();
+    const earlier = { ...current, id: 'placement-0', sectionId: 'section-b', validTo: '2025-11-07' };
+    Object.assign(current, { sectionId: 'section-b' });
+    repository.listPlacements = async () => [current, { ...earlier, sectionId: 'section-old', validFrom: '2025-09-01' }];
+    await service.placeFromSource('student-1', { classId: 'class-old', sectionId: 'section-b' }, actor, reason);
+    expect(calls).toEqual(['marks section-old', 'realign section-old -> section-b']);
+    expect(writes).toContain('realign');
+  });
+
+  // A test belongs to its section: with marks there the year is not rewritten,
+  // and the import falls back to its earlier rule (here: nothing recorded since
+  // the placement began, so the open placement is corrected in place).
+  it('leaves the year alone when the pupil has marks on the other section\'s tests', async () => {
+    const { service, writes, calls } = fromMassar({ marks: 3, records: false });
+    await service.placeFromSource('student-1', { classId: 'class-old', sectionId: 'section-b' }, actor, reason);
+    expect(calls).toEqual(['marks section-old']);
+    expect(writes).not.toContain('realign');
+    expect(writes).toEqual(['correct-placement', 'audit-correction', 'update-current-student']);
+  });
+
+  it('never rewrites the year when Massar puts the pupil in another class', async () => {
+    const { service, writes, calls } = fromMassar({ records: false });
+    await service.placeFromSource('student-1', { classId: 'class-other', sectionId: 'section-other' }, actor, reason);
+    expect(calls).toEqual([]);
+    expect(writes).not.toContain('realign');
+    expect(writes).toContain('correct-placement');
+  });
+
+  it('does nothing when every placement is already Massar\'s section', async () => {
+    const { service, writes, calls, current } = fromMassar();
+    await service.placeFromSource('student-1', { classId: current.classId, sectionId: current.sectionId }, actor, reason);
+    expect(calls).toEqual([]);
+    expect(writes).toEqual([]);
+  });
+});

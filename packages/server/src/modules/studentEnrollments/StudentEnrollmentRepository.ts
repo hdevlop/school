@@ -11,6 +11,7 @@ import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidato
 import { auditLogs } from '../../database/schema/coreSchema';
 import type { CorrectEnrollmentDto } from './StudentEnrollmentDto';
 import { usersTable as users } from '../../auth';
+import { collapsePlacementsToSection, marksInSections, moveRecordsToSection } from './sectionCorrection';
 
 // Shared by the single-student and batched reads, so both return one shape.
 const historyFields = {
@@ -427,6 +428,22 @@ export class StudentEnrollmentRepository {
           AND (r.section_id IS NULL OR p.section_id = r.section_id)
       ) LIMIT 1`);
     return rows.length > 0;
+  }
+
+  /** Marks on these sections' tests this year: they cannot follow a pupil to another section. */
+  async marksInSections(studentId: string, sectionIds: string[]) {
+    return marksInSections(this.db, studentId, this.year.id, sectionIds);
+  }
+
+  /**
+   * The pupil sat all year in `targetSectionId`: one placement there for the
+   * whole enrollment, and the year's records kept under the other sections
+   * follow them (see sectionCorrection).
+   */
+  async realignToSection(input: { enrollmentId: string; studentId: string; wrongSectionIds: string[]; targetSectionId: string; actorId: string; reason: string }) {
+    const placements = await collapsePlacementsToSection(this.db, input);
+    const moved = await moveRecordsToSection(this.db, { ...input, yearId: this.year.id });
+    return { placements, moved };
   }
 
   async auditCorrection(id: string, actorId: string, userRole: string, reason: string, before: unknown, after: unknown) {

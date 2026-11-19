@@ -314,9 +314,12 @@ export class StudentEnrollmentService {
   }
 
   /**
-   * A source of truth outside School (Massar) places the student. With nothing
+   * A source of truth outside School (Massar) places the student. Another
+   * section of the same class means the pupil sat there all year: the whole
+   * enrollment is corrected and what was recorded under the wrong section
+   * follows them, unless they have marks on its tests. Otherwise, with nothing
    * recorded under the current placement it was simply wrong: correct it and
-   * keep its dates. Otherwise move from today, so past records stay valid.
+   * keep its dates; with records, move from today, so past records stay valid.
    */
   @Transaction()
   async placeFromSource(studentId: string, target: { classId: string; sectionId: string }, actor: { id: string; role: string }, reason: string) {
@@ -324,9 +327,25 @@ export class StudentEnrollmentService {
     const enrollment = this.validator.ensureEnrollmentExists(await this.enrollments.getById(selected.id, true));
     const placements = await this.enrollments.listPlacements(enrollment.id);
     const current = this.validator.ensureClassSection(placements[0]);
-    if (current.classId === target.classId && current.sectionId === target.sectionId) return current;
+    const wrongSectionIds = [...new Set(placements.filter((placement) => placement.sectionId !== target.sectionId).map((placement) => placement.sectionId))];
+    if (!wrongSectionIds.length) return current;
     this.validator.ensureProfilePlacementAllowed(actor.role);
     const settings = await this.settings.getAdminSettings();
+    const active = settings?.activeAcademicYearId === this.year.id;
+    if (!enrollment.leftOn && placements.every((placement) => placement.classId === target.classId)
+      && !await this.enrollments.marksInSections(studentId, wrongSectionIds)) {
+      await this.ensurePlacement(this.year.id, target.classId, target.sectionId);
+      await this.ensureSectionCapacity(target.sectionId, placements[placements.length - 1].validFrom, null, { excludeEnrollmentId: enrollment.id });
+      const { placements: changed, moved } = await this.enrollments.realignToSection({
+        enrollmentId: enrollment.id, studentId, wrongSectionIds, targetSectionId: target.sectionId, actorId: actor.id, reason,
+      });
+      this.validator.ensureDatedRecordsRemainValid(await this.enrollments.hasInvalidDatedRecords(studentId));
+      await this.enrollments.auditCorrection(enrollment.id, actor.id, actor.role, reason,
+        { ...enrollment, placements: changed.before }, { ...enrollment, placements: changed.after, moved });
+      if (active) await this.enrollments.updateCurrentStudent(studentId, target.classId, target.sectionId, 'active');
+      return (await this.enrollments.listPlacements(enrollment.id))[0];
+    }
+    if (current.classId === target.classId && current.sectionId === target.sectionId) return current;
     if (!enrollment.leftOn && settings?.activeAcademicYearId === this.year.id && await this.enrollments.hasDatedRecordsSince(studentId, current.validFrom)) {
       return this.transfer(enrollment.id, { ...target, validFrom: getBusinessDateOnly(), reason }, actor.id, actor.role);
     }

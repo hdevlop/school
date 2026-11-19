@@ -95,6 +95,7 @@
     "academic-years:attendance-backfill": "bun --env-file=apps/dashboard/.env.local packages/server/src/scripts/academicYearAttendanceBackfill.ts",
     "academic-years:source-backfill": "bun --env-file=apps/dashboard/.env.local packages/server/src/scripts/academicYearSourceBackfill.ts",
     "academic-years:grade-backfill": "bun --env-file=apps/dashboard/.env.local packages/server/src/scripts/academicYearGradeBackfill.ts",
+    "academic-years:align-massar-sections": "bun --env-file=apps/dashboard/.env.local packages/server/src/scripts/alignSectionsToMassar.ts",
     "notifications:worker": "bun --cwd packages/server --env-file=../../apps/dashboard/.env.local src/workers/notificationsWorker.ts",
     "notifications:dispatch": "bun --cwd packages/server --env-file=../../apps/dashboard/.env.local src/workers/notificationsDispatch.ts",
     "seed:admin": "bun run --cwd packages/seed seed:admin",
