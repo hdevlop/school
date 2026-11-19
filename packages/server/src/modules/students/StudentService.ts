@@ -48,12 +48,10 @@ export class StudentService {
     return this.studentRepository.getStudentsByGender(activeOnly);
   }
 
+  // Both rosters carry where Massar lists each pupil: every class list orders by it.
   async getAll(onDate?: string) {
-    if (onDate) {
-      this.studentValidator.ensureRosterDateWithinYear(onDate, this.year);
-      return this.studentRepository.getAll({ onDate });
-    }
-    const list = await this.studentRepository.getAll({});
+    if (onDate) this.studentValidator.ensureRosterDateWithinYear(onDate, this.year);
+    const list = await this.studentRepository.getAll(onDate ? { onDate } : {});
     const placements = await this.studentRepository.getMassarPlacements(list.map((student) => student.id));
     const byStudent = new Map(placements.map(({ studentId, ...placement }) => [studentId, placement]));
     return list.map((student) => ({ ...student, ...byStudent.get(student.id) }));

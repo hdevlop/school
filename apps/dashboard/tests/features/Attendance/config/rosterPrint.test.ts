@@ -44,6 +44,12 @@ describe('attendance register print', () => {
     expect(ordered.map((person) => person.name)).toEqual(['Sahir', 'Khadar', 'Lmir', 'Rabii', 'Younouss']);
   });
 
+  it('follows Massar\'s order within a section, pupils Massar does not list last by name', () => {
+    const student = (name: string, massarPosition: number | null) => ({ name, massarPosition, class: { name: 'CP' }, section: { name: 'A' } });
+    const ordered = orderByCycle([student('Amine', 3), student('Zineb', 1), student('Sara', null), student('Badr', null), student('Yasmine', 2)]);
+    expect(ordered.map((person) => person.name)).toEqual(['Zineb', 'Yasmine', 'Amine', 'Badr', 'Sara']);
+  });
+
   it('names every choice in all four languages', () => {
     for (const [language, catalog] of Object.entries(translations)) {
       for (const item of ROSTER_PRINT_CHOICES) {

@@ -23,6 +23,13 @@ describe('student list activity order', () => {
     expect(records.toSorted(compareStudentListRows).map(student => student.name)).toEqual(['Salma', 'Amine', 'Zineb', 'Aya']);
   });
 
+  // A section lists its pupils as the Massar grid does, not alphabetically.
+  it('orders a section as Massar lists it, pupils Massar does not list last by name', () => {
+    const pupil = (name: string, massarPosition: number | null) => ({ name, massarPosition, class: { name: 'CE2' }, section: { name: 'B' } });
+    const records = [pupil('Adam', 3), pupil('Zakaria', 1), pupil('Yasmine', null), pupil('Badr', 2), pupil('Amal', null)];
+    expect(records.toSorted(compareStudentListRows).map(student => student.name)).toEqual(['Zakaria', 'Badr', 'Adam', 'Amal', 'Yasmine']);
+  });
+
   it('puts departed students after all active students, before pagination', () => {
     const departed = ['withdrawn', 'transferred', 'graduated'].map((status, index) => ({
       id: `left-${index}`, enrollment: { status, leftOn: '2026-10-01' },

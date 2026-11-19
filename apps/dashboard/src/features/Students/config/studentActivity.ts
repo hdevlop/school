@@ -16,14 +16,20 @@ type StudentListRow = Parameters<typeof isStudentDisabled>[0] & {
   name?: string | null;
   class?: { name?: string | null } | null;
   section?: { name?: string | null } | null;
+  massarPosition?: number | null;
 };
 const studentListCollator = new Intl.Collator('fr', { numeric: true });
+const massarPosition = (row: StudentListRow) => row.massarPosition ?? Number.POSITIVE_INFINITY;
 
-/** Current students first, then PS → MS → GS and the following levels. */
+/**
+ * Current students first, then PS → MS → GS and the following levels, each
+ * section as Massar lists it; pupils Massar does not list follow, by name.
+ */
 export const compareStudentListRows = (left: StudentListRow, right: StudentListRow) =>
   compareStudentActivity(left, right)
   || compareClassNames(left.class?.name ?? '', right.class?.name ?? '')
   || studentListCollator.compare(left.section?.name ?? '', right.section?.name ?? '')
+  || (massarPosition(left) === massarPosition(right) ? 0 : massarPosition(left) - massarPosition(right))
   || studentListCollator.compare(left.name ?? '', right.name ?? '');
 import { compareClassNames } from '@sms/contracts';
 import { INACTIVE_ROW_CLASS } from '@/shared/inactiveRow';

@@ -24,6 +24,7 @@ import { useAttendanceRoster } from '../hooks/useAttendanceRoster';
 import { useRosterPrint } from '../hooks/useRosterPrint';
 import { useStudentRosterColumns } from '../hooks/useAttendanceTableColumns';
 import { useStudentsOnDate } from '@/features/Students/hooks/useStudents';
+import { inMassarOrder } from '@/features/Students/config/massarRosterOrder';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
@@ -182,12 +183,13 @@ function StudentAttendanceTableForYear() {
     [sectionAssignments],
   );
 
+  // The register lists the pupils as Massar does: class by class, then each one's Massar position.
   const filteredStudents = useMemo(
-    () => isAllClasses
+    () => inMassarOrder<NonNullable<typeof students>[number]>(isAllClasses
       ? (students || [])
       : selectedSectionId
         ? (students || []).filter((student) => getStudentSectionId(student) === selectedSectionId)
-        : [],
+        : []),
     [students, selectedSectionId, isAllClasses],
   );
 

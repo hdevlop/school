@@ -18,7 +18,7 @@ import { printPlanningDocument } from '@/features/Assessments/planning/planningD
 import { useGrades, useSourceGrades } from '../hooks/useGrades';
 import { useMassarGrades } from '../hooks/useMassarGrades';
 import { examSourcesWithMassar, massarMarkFromGrade, massarSourceLabels } from '../config/massarGradeSources';
-import { compareMassarOrder } from '../config/massarRosterOrder';
+import { compareMassarOrder } from '@/features/Students/config/massarRosterOrder';
 import { studentListRead, useStudentsOnDate } from '@/features/Students/hooks/useStudents';
 import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { isStudentDisabled } from '@/features/Students/config/studentActivity';

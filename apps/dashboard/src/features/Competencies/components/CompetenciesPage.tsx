@@ -13,6 +13,7 @@ import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useViewingAcademicYear, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useStudents, useStudentsOnDate } from '@/features/Students/hooks/useStudents';
+import { inMassarOrder } from '@/features/Students/config/massarRosterOrder';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { isCountUnknown } from '@/services/apiError';
 import { competencyMonths, defaultMonth, indexEvaluations, monthLabel, rosterDay } from '../config/competencyLevels';
@@ -227,10 +228,11 @@ function StaffCompetencies() {
   const catalog = useCompetencyCatalog(assignmentId);
   const evaluations = useCompetencyEvaluations(assignmentId, month);
   const roster = useStudentsOnDate(rosterDay(month, months.today));
-  const students: SheetStudent[] = useMemo(() => ((roster.students as any[] | undefined) ?? [])
-    .filter((student) => student.sectionId === sectionId)
-    .map((student) => ({ id: student.id, name: student.name, altName: student.arabicName ?? null, image: student.image ?? null, gender: student.gender ?? null }))
-    .sort((a, b) => a.name.localeCompare(b.name, language)), [roster.students, sectionId, language]);
+  // The section's pupils in Massar's order, as on the paper class list.
+  const students: SheetStudent[] = useMemo(() => inMassarOrder(((roster.students as any[] | undefined) ?? [])
+    .filter((student) => student.sectionId === sectionId))
+    .map((student) => ({ id: student.id, name: student.name, altName: student.arabicName ?? null, image: student.image ?? null, gender: student.gender ?? null })),
+  [roster.students, sectionId]);
   const studentIds = useMemo(() => students.map((student) => student.id), [students]);
   const domains = catalog.data;
   const competencyIds = useMemo(() => domains.flatMap((domain) => domain.competencies.map((item) => item.id)), [domains]);

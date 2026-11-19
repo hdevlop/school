@@ -47,21 +47,31 @@ export class HomeworkCompletionRepository {
    * the homework through ownership first, and only staff reach this.
    */
   async roster(homeworkId: string): Promise<HomeworkRosterEntry[]> {
-    const rows = await this.db.execute<RosterRow>(sql`
+    const rows = await this.db.execute<RosterRow & { massarPosition: number | null; sectionName: string }>(sql`
       select distinct on (student.id)
         student.id as "studentId", student.name as "name", account.image as "image",
-        completion.status as "status", completion.note as "note"
+        completion.status as "status", completion.note as "note",
+        listed.position as "massarPosition", placed.name as "sectionName"
       from homework
       join student_enrollments enrollment on true
       join student_enrollment_placements placement on placement.enrollment_id = enrollment.id
+      join sections placed on placed.id = placement.section_id
       join students student on student.id = enrollment.student_id
       left join users account on account.id = student.user_id
       left join homework_completions completion
         on completion.homework_id = homework.id and completion.student_id = student.id
+      left join massar_enrollments listed on listed.student_id = student.id
+        and listed.academic_year_id = enrollment.academic_year_id and listed.left_on is null
       where homework.id = ${homeworkId}
         and ${inTargetSectionOnSourceDate(homework)}
       order by student.id`);
-    return [...rows].sort((left, right) => left.name.localeCompare(right.name));
+    // Section by section, each as Massar lists it; pupils Massar does not list follow, by name.
+    const position = (row: { massarPosition: number | null }) => row.massarPosition ?? Number.POSITIVE_INFINITY;
+    return [...rows]
+      .sort((left, right) => left.sectionName.localeCompare(right.sectionName, 'fr', { numeric: true })
+        || (position(left) === position(right) ? 0 : position(left) - position(right))
+        || left.name.localeCompare(right.name))
+      .map(({ massarPosition: _position, sectionName: _section, ...entry }) => entry);
   }
 
   /** Writes each pupil's follow-up; a pupil already recorded gets the new status and remark. */

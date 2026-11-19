@@ -26,13 +26,17 @@ interface CyclePerson {
   name?: string | null;
   class?: { name?: string | null } | null;
   section?: { name?: string | null } | null;
+  /** Where Massar lists the pupil in the class; pupils Massar does not list follow, by name. */
+  massarPosition?: number | null;
 }
 
-/** The school's cycle order (PS before CP before 1AC), then section, then name. */
+/** The school's cycle order (PS before CP before 1AC), then section, then Massar's order within it. */
 export function orderByCycle<T extends CyclePerson>(people: readonly T[]): T[] {
   const text = (value?: string | null) => value ?? '';
+  const position = (person: CyclePerson) => person.massarPosition ?? Number.POSITIVE_INFINITY;
   return [...people].sort((a, b) => compareClassNames(text(a.class?.name), text(b.class?.name))
     || text(a.section?.name).localeCompare(text(b.section?.name), 'fr', { numeric: true })
+    || (position(a) === position(b) ? 0 : position(a) - position(b))
     || text(a.name).localeCompare(text(b.name), 'fr'));
 }
 

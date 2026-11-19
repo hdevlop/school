@@ -27,3 +27,11 @@ export function compareMassarOrder(a: MassarOrdered, b: MassarOrdered): number {
   }
   return text(a.class?.name, b.class?.name) || text(a.section?.name, b.section?.name) || text(a.name, b.name);
 }
+
+/**
+ * A section's pupils as Massar lists them, the order every class list in the
+ * app follows (registers, competency sheets, follow-up reports). Returns a copy.
+ */
+export function inMassarOrder<T extends MassarOrdered>(students: readonly T[]): T[] {
+  return [...students].sort(compareMassarOrder);
+}

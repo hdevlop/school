@@ -181,17 +181,25 @@ describe('student roster on a date', () => {
       .toEqual({});
   });
 
-  it('reads that day of the resolved year', async () => {
+  // The day's roster carries each pupil's Massar position: class lists follow Massar's order.
+  it('reads that day of the resolved year, with where Massar lists each pupil', async () => {
     const calls: unknown[] = [];
-    const service = studentService(
-      { getAll: async (filters: unknown) => { calls.push(filters); return [{ id: 'student-1' }]; } },
-    );
-    expect<unknown>(await service.getAll('2025-10-01')).toEqual([{ id: 'student-1' }]);
-    expect(calls).toEqual([{ onDate: '2025-10-01' }]);
+    const service = studentService({
+      getAll: async (filters: unknown) => { calls.push(filters); return [{ id: 'student-1' }, { id: 'student-2' }]; },
+      getMassarPlacements: async (ids: string[]) => { calls.push(ids); return [{ studentId: 'student-1', massarClassName: '3APG-2', massarPosition: 4, massarName: 'x' }]; },
+    });
+    expect<unknown>(await service.getAll('2025-10-01')).toEqual([
+      { id: 'student-1', massarClassName: '3APG-2', massarPosition: 4, massarName: 'x' },
+      { id: 'student-2' },
+    ]);
+    expect(calls).toEqual([{ onDate: '2025-10-01' }, ['student-1', 'student-2']]);
   });
 
   it('accepts both ends of the reporting interval', async () => {
-    const service = studentService({ getAll: async ({ onDate }: { onDate: string }) => [{ date: onDate }] });
+    const service = studentService({
+      getAll: async ({ onDate }: { onDate: string }) => [{ date: onDate }],
+      getMassarPlacements: async () => [],
+    });
     expect<unknown>(await service.getAll('2025-09-01')).toEqual([{ date: '2025-09-01' }]);
     expect<unknown>(await service.getAll('2026-08-31')).toEqual([{ date: '2026-08-31' }]);
   });

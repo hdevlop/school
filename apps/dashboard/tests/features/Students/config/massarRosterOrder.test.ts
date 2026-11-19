@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { compareMassarOrder } from '@/features/Grades/config/massarRosterOrder';
+import { compareMassarOrder } from '@/features/Students/config/massarRosterOrder';
 
 const listed = (massarClassName: string, massarPosition: number, studentCode = 'X') => ({ massarClassName, massarPosition, studentCode });
 const unlisted = (className: string, sectionName: string, name: string) => ({
