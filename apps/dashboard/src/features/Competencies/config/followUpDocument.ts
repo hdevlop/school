@@ -47,15 +47,15 @@ const APPRECIATION_COLOR: Record<Appreciation, string> = {
   excellent: '#15803d', veryGood: '#15803d', good: '#c2410c', average: '#c2410c', weak: '#b91c1c',
 };
 /** The radar's two series: categorical slots 1 and 2 of the validated palette; the class's is dashed. */
-const SERIES = { pupil: '#2a78d6', group: '#eb6834' } as const;
+export const SERIES = { pupil: '#2a78d6', group: '#eb6834' } as const;
 
-const num = (value: number | string) => `<bdi dir="ltr">${e(value)}</bdi>`;
+export const num = (value: number | string) => `<bdi dir="ltr">${e(value)}</bdi>`;
 /** `7.25/10` read left to right as one number, whatever the page's direction. */
-const outOf = (value: number | string, max: number | string) => `<span dir="ltr">${e(value)}<small>/${e(max)}</small></span>`;
+export const outOf = (value: number | string, max: number | string) => `<span dir="ltr">${e(value)}<small>/${e(max)}</small></span>`;
 const badge = (level: CompetencyLevel | null) =>
   level ? `<span class="badge" style="background:${LEVEL_COLOR[level]}">${LEVEL_RANK[level]}</span>` : '<span class="badge none">–</span>';
 
-function titled(number: number, title: string, caption: string) {
+export function titled(number: number, title: string, caption: string) {
   return `<div class="section-title"><h3><span class="n">${number}</span>${e(title)}</h3>${caption ? `<small>${e(caption)}</small>` : ''}</div>`;
 }
 

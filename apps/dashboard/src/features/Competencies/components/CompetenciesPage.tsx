@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState, type ReactNode } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, Copy, FileChartColumn, ListTree, Search, TriangleAlert, Users } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Copy, FileChartColumn, ListTree, School, Search, TriangleAlert, Users } from 'lucide-react';
 import { catalogInMonths, compareClassNames, type CompetencyAssignment, type CompetencyDomain, type CompetencyLevel } from '@sms/contracts';
 import {
   cn, NajmScroll, NButton, NEmptyState, NErrorState, NPageHeaderActions, NSkeleton, SelectInput, TextInput, useMediaQuery,
@@ -30,7 +30,7 @@ import { StudentCompetencySheet, type SheetStudent, type SheetView } from './Stu
 import { CompetencyTextScope } from './CompetencyText';
 import { useFollowUpReport } from './FollowUpReports';
 
-type View = 'competencies' | 'students';
+type View = 'competencies' | 'students' | 'report';
 const NO_DOMAINS: CompetencyDomain[] = [];
 const WORKSPACE = 'mx-auto w-full min-w-0';
 
@@ -54,9 +54,10 @@ function ViewToggle({ view, onChange, compact = false }: { view: View; onChange:
   const options: Array<{ value: View; label: string; Icon: typeof Users }> = [
     { value: 'students', label: t('competencies.views.byStudent'), Icon: Users },
     { value: 'competencies', label: t('competencies.views.byCompetency'), Icon: FEATURE_ICONS.competencies as typeof Users },
+    { value: 'report', label: t('competencies.classReport.title'), Icon: School },
   ];
   return (
-    <div role="group" className={cn('gap-0.5 rounded-lg bg-muted p-1', compact ? 'flex shrink-0' : 'grid grid-cols-2 @xl:flex')}>
+    <div role="group" className={cn('gap-0.5 rounded-lg bg-muted p-1', compact ? 'flex shrink-0' : 'grid grid-cols-3 @xl:flex')}>
       {options.map(({ value, label, Icon }) => (
         <button key={value} type="button" aria-pressed={view === value} onClick={() => onChange(value)}
           aria-label={compact ? label : undefined} title={compact ? label : undefined}
@@ -231,10 +232,10 @@ function StaffCompetencies() {
   const selected = view === 'students'
     ? shown.find((student) => student.id === studentId) ?? (splitRoster ? shown[0] : undefined)
     : undefined;
-  const { preview, printMenu } = useFollowUpReport({
+  const { preview, classPreview, printMenu } = useFollowUpReport({
     assignment: catalog.isLoading || catalog.error ? undefined : assignment,
     // A report covers the months up to its Contrôle: it picks their competencies from the year's list.
-    domains: yearDomains, students, studentId: selected?.id,
+    domains: yearDomains, students, studentId: selected?.id, highlightId: selected?.id ?? studentId,
   });
   const sheetOnly = !!selected && !splitRoster;
   // A phone's top bar switches between the competencies and the report: in the pupil's card the switch crowded it.
@@ -334,6 +335,9 @@ function StaffCompetencies() {
     body = <NEmptyState surface="panel" icon={Users} title={t('competencies.empty.noStudents')} />;
   } else if (view === 'competencies') {
     body = <CompetencyOverview domains={domains} index={index} studentIds={studentIds} month={month} onOpen={setRosterCompetencyId} />;
+  } else if (view === 'report') {
+    // The class report follows its Contrôle, picked in it, not the month.
+    body = assignment ? <div className="mx-auto w-full max-w-6xl">{classPreview}</div> : null;
   } else if (splitRoster) {
     desktopWorkspace = (
       <div className="grid min-h-0 flex-1 grid-cols-[clamp(16rem,24%,24rem)_minmax(0,1fr)] gap-2">

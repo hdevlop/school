@@ -2,11 +2,12 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode, type SyntheticEvent } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronDown, FileChartColumn, Printer, UserRound, Users } from 'lucide-react';
+import { ChevronDown, FileChartColumn, Printer, School, UserRound, Users } from 'lucide-react';
 import type { CompetencyAssignment, CompetencyDomain, MassarGradeSource, MassarSheetDetail } from '@sms/contracts';
 import { MASSAR_ANALYSIS_MAX_LENGTH } from '@sms/contracts';
 import { schoolI18n, type SchoolTranslationKey } from '@sms/contracts/locales';
 import { cn, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, NButton, NEmptyState, NErrorState, NSkeleton, SelectInput } from 'najm-kit';
+import { localDateInput } from 'najm-kit/format';
 import { useTranslation } from 'najm-i18n/react';
 import printStyles from '@/components/PrintMenu.module.css';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
@@ -20,6 +21,9 @@ import { followUps, isRoomy, type FollowUp } from '../config/followUpReport';
 import { skillNeed } from '../config/competencyRemarks';
 import { analyze, comparableClassMean, rankLabel } from '../config/followUpAnalysis';
 import { buildFollowUpDocument, followUpRoundLabels, type FollowUpPrintOptions } from '../config/followUpDocument';
+import { analyzeClass, classNote, classReport, type ClassReport } from '../config/classReport';
+import { buildClassReportDocument, type ClassReportPrintOptions } from '../config/classReportDocument';
+import { monthLabel } from '../config/competencyLevels';
 import { useListText } from './CompetencyText';
 import type { SheetStudent } from './StudentCompetencySheet';
 
@@ -29,6 +33,8 @@ type ReportOptions = {
   /** The class roster, for each pupil's gender: the analysis agrees with it. */
   students: SheetStudent[];
   studentId?: string;
+  /** The pupil last opened, marked in the class report's table. */
+  highlightId?: string | null;
 };
 
 /**
@@ -38,7 +44,7 @@ type ReportOptions = {
  * read through Notes' own permission, so a teacher reaches their own grids
  * only; an Arabic list's report reads in Arabic, with French captions.
  */
-export function useFollowUpReport({ assignment, domains, students, studentId }: ReportOptions) {
+export function useFollowUpReport({ assignment, domains, students, studentId, highlightId = studentId }: ReportOptions) {
   const page = useTranslation();
   const { t, language, dir } = useListText(domains);
   const printOptions = useSchoolPrintOptions();
@@ -95,18 +101,37 @@ export function useFollowUpReport({ assignment, domains, students, studentId }: 
     if (documentOptions) return printSchoolDocument(buildFollowUpDocument(chosen, { ...documentOptions, analysisOf }));
   };
 
+  // تقرير القسم: the same pupils' reports, read as one class.
+  const klass = useMemo(() => classReport(reports, sheet.data?.maxMark ?? 10), [reports, sheet.data]);
+  const classOptions = useMemo<ClassReportPrintOptions | null>(() => {
+    if (!documentOptions) return null;
+    const labels = {
+      language: remarkLanguage, maxMark: documentOptions.maxMark, levelLabel: rankLabel(t),
+      appreciationLabel: (grade: string) => t(`competencies.report.appreciations.${grade}`),
+      monthLabel: (month: string) => monthLabel(month, language),
+    } as const;
+    const { date } = printOptions({ title: '', date: localDateInput(new Date()), details: [], columns: [] });
+    return { ...documentOptions, dateLabel: date, analysis: analyzeClass(klass, labels), note: classNote(klass, labels) };
+  }, [documentOptions, klass, remarkLanguage, t, language, printOptions]);
+  const printClass = () => {
+    if (classOptions) return printSchoolDocument(buildClassReportDocument(klass, classOptions));
+  };
+
   const isLoading = sources.isLoading || (round && (sheet.isLoading || analyses.read.isLoading)) || year.isLoading;
   const loadError = sources.error || sheet.error || analyses.read.error;
   const canPrint = !!documentOptions && reports.length > 0 && !isLoading && !loadError && !year.error;
-  let body: ReactNode;
-  if (isLoading) body = <NSkeleton className="h-[60vh] rounded-xl" />;
-  else if (loadError) body = <NErrorState surface="panel" title={t('competencies.report.failed')} onRetry={() => {
+  // The states the pupil's report and the class's share: loading, a refused read, no Contrôle yet.
+  let shared: ReactNode = null;
+  if (isLoading) shared = <NSkeleton className="h-[60vh] rounded-xl" />;
+  else if (loadError) shared = <NErrorState surface="panel" title={t('competencies.report.failed')} onRetry={() => {
     if (sources.error) void sources.refetch();
     if (sheet.error) void sheet.refetch();
     if (analyses.read.error) void analyses.read.refetch();
   }} />;
-  else if (year.error) body = <NErrorState surface="panel" onRetry={() => void year.refetch()} />;
-  else if (!round) body = <NEmptyState surface="panel" icon={FEATURE_ICONS.competencies} title={t('competencies.report.noRound')} />;
+  else if (year.error) shared = <NErrorState surface="panel" onRetry={() => void year.refetch()} />;
+  else if (!round) shared = <NEmptyState surface="panel" icon={FEATURE_ICONS.competencies} title={t('competencies.report.noRound')} />;
+  let body: ReactNode;
+  if (shared) body = shared;
   else if (!report) body = <NEmptyState surface="panel" icon={FEATURE_ICONS.competencies} title={t('competencies.report.noStudent')} />;
   else if (documentOptions) {
     const studentId = report.student.id;
@@ -158,23 +183,63 @@ export function useFollowUpReport({ assignment, domains, students, studentId }: 
               <Users aria-hidden="true" />
               <span><strong>{page.t('competencies.report.printAll', { count: reports.length })}</strong></span>
             </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className={printStyles.printItem} onSelect={() => void printClass()}>
+              <School aria-hidden="true" />
+              <span><strong>{page.t('competencies.classReport.title')}</strong></span>
+            </DropdownMenuItem>
           </DropdownMenuGroup>
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 
+  const roundPicker = round && (
+    <SelectInput value={round.sheetId} onChange={setRound} className="w-full min-w-0 max-w-64" showIcon={false}
+      items={roundChoices} placeholder={roundLabel} ariaLabel={roundLabel} />
+  );
   const preview = (
     <div className="flex min-w-0 flex-col gap-2">
-      {round && (
-        <SelectInput value={round.sheetId} onChange={setRound} className="w-full min-w-0 max-w-64" showIcon={false}
-          items={roundChoices} placeholder={roundLabel} ariaLabel={roundLabel} />
-      )}
+      {roundPicker}
       {body}
     </div>
   );
+  const classPreview = (
+    <div className="flex min-w-0 flex-col gap-2">
+      {roundPicker}
+      {shared ?? (!reports.length || !classOptions
+        ? <NEmptyState surface="panel" icon={FEATURE_ICONS.competencies} title={t('competencies.classReport.empty')} />
+        : <ClassPreview key={round?.sheetId} report={klass} options={classOptions} highlightId={highlightId ?? null}
+          title={`${t('competencies.classReport.title')} · ${documentOptions?.className ?? ''}`} />)}
+    </div>
+  );
 
-  return { preview, printMenu };
+  return { preview, classPreview, printMenu };
+}
+
+/** The class report as it prints, reflowed to the page's width; its wide table scrolls on its own. */
+function ClassPreview({ report, options, highlightId, title }: {
+  report: ClassReport; options: ClassReportPrintOptions; highlightId: string | null; title: string;
+}) {
+  const observer = useRef<ResizeObserver | null>(null);
+  const [height, setHeight] = useState(1100);
+  const html = useMemo(() => buildClassReportDocument(report, { ...options, highlightId }, 'preview'), [report, options, highlightId]);
+  useEffect(() => () => observer.current?.disconnect(), []);
+  const mount = (event: SyntheticEvent<HTMLIFrameElement>) => {
+    observer.current?.disconnect();
+    const body = event.currentTarget.contentDocument?.body;
+    if (!body) return;
+    // The document reflows again once its fonts and emblems load, or the window resizes.
+    const measure = () => setHeight(Math.ceil(body.getBoundingClientRect().height));
+    measure();
+    observer.current = new ResizeObserver(measure);
+    observer.current.observe(body);
+  };
+  return (
+    <div className="w-full overflow-hidden rounded-xl border border-border/60 bg-white shadow-sm">
+      <iframe title={title} srcDoc={html} sandbox="allow-same-origin" onLoad={mount} className="block w-full border-0" style={{ height }} />
+    </div>
+  );
 }
 
 function PagePreview({ report, options, analysis, title, onChange, onBlur, onReset, status, onRetry }: {
