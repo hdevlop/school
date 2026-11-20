@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { useDialog } from '@/shared/useDialog'
 import { createExamSchema } from '../config/examSchemas'
+import { TestPartsField } from './TestPartsField'
 import { useTranslation } from 'najm-i18n/react'
 import { buildExamStatusOptions, buildExamTypeOptions } from '../config/examOptions'
 import { useClasses } from '@/features/Classes/hooks/useClasses'
@@ -69,8 +70,7 @@ const ExamForm = ({ exam = null }) => {
   const examSchema = useMemo(() => createExamSchema(t), [t]);
   // Planning owns a planned exam's title, lessons, date, class, subject and teacher; the rest is the exam's own.
   const planned = Boolean(exam?.planningEntryId);
-  const plannedSchema = useMemo(() => examSchema.pick({ type: true, totalMarks: true, passingMarks: true, roomNumber: true, status: true }), [examSchema]);
-  const { pop } = useDialog();
+  const plannedSchema = useMemo(() => examSchema.pick({ type: true, totalMarks: true, passingMarks: true, roomNumber: true, status: true, parts: true }), [examSchema]);  const { pop } = useDialog();
   const { viewingYear, isResolving } = useViewingAcademicYear();
   const { data: registeredYears, isPending: isYearsPending } = useAcademicYearOptions();
   const calendar = registeredYears?.years.find((year) => year.label === viewingYear);
@@ -110,6 +110,7 @@ const ExamForm = ({ exam = null }) => {
     passingMarks: exam?.passingMarks ?? 10,
     roomNumber: exam?.roomNumber ?? undefined,
     status: exam?.status || 'scheduled',
+    parts: exam?.parts ?? [],
   };
 
   const classOptions = classes?.map((cls) => ({
@@ -302,6 +303,8 @@ const ExamForm = ({ exam = null }) => {
                 required={true}
               />
             </div>
+
+            <TestPartsField />
 
           </div>
         </NForm>

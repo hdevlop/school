@@ -86,6 +86,22 @@ export const massarFollowUpAnalyses = pgTable('massar_follow_up_analyses', {
   check('massar_analysis_length', sql`char_length(${table.analysis}) <= ${sql.raw(String(MASSAR_ANALYSIS_MAX_LENGTH))}`),
 ]);
 
+/**
+ * How many of a grid's pupils answered one part of its School test correctly,
+ * entered in the class report. The test is an exam or an assessment, so its id
+ * is no foreign key; a part since removed from the test is no longer read.
+ */
+export const massarPartResults = pgTable('massar_part_results', {
+  id: idField(12), academicYearId: yearRef(),
+  sheetId: text('sheet_id').notNull().references(() => massarSheets.id, { onDelete: 'cascade' }),
+  testId: text('test_id').notNull(),
+  partId: text('part_id').notNull(),
+  correct: integer('correct').notNull(), updatedBy: actionByRef('updated_by'), ...timestamps,
+}, table => [
+  uniqueIndex('massar_part_result_unique').on(table.sheetId, table.testId, table.partId),
+  check('massar_part_result_correct', sql`${table.correct} >= 0`),
+]);
+
 /** Only opaque ids are returned to the client; preview contents stay in restricted storage. */
 export const massarImports = pgTable('massar_imports', {
   id: text('id').primaryKey(), academicYearId: yearRef(), actorId: actionByRef('actor_id', 'restrict'),

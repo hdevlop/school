@@ -17,6 +17,7 @@ export * from './schoolDefaults';
 export * from './staffAvatar';
 export * from './academicStructure';
 export * from './assessmentPlanning';
+export * from './testParts';
 export * from './examPlanning';
 export * from './examPlanningJson';
 export * from './routineJson';

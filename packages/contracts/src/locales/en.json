@@ -4606,7 +4606,15 @@
     },
     "fromPlanning": "Planning",
     "fromPlanningHint": "Planned in Planning: change the title, lessons, date, subject or time there.",
-    "deleteInPlanning": "This exam comes from Planning. Delete it in Planning: its exam goes with it."
+    "deleteInPlanning": "This exam comes from Planning. Delete it in Planning: its exam goes with it.",
+    "parts": {
+      "title": "Questions of the test",
+      "hint": "After the test, the class report counts how many pupils answered each question correctly.",
+      "labelPlaceholder": "Question {{number}}",
+      "add": "Add a question",
+      "remove": "Remove this question",
+      "empty": "No questions yet."
+    }
   },
   "assessments": {
     "subtitle": {
@@ -7642,7 +7650,9 @@
     "atMostThreePhoneNumbers": "Enter at most three phone numbers",
     "familyChildRequired": "Select at least one child to pay for",
     "familyTooManyChildren": "Too many children on one receipt",
-    "familyDuplicateChild": "Each child can appear only once on a receipt"
+    "familyDuplicateChild": "Each child can appear only once on a receipt",
+    "duplicateTestPart": "Two questions have the same id.",
+    "partLabelRequired": "Name the question."
   },
   "academic": {
     "accountantAssignmentOptional": "Choose one or more cycles, or leave it empty for the whole school.",
@@ -7958,7 +7968,8 @@
       "planBelowOpened": "A Contrôle already opened cannot be taken out of the plan.",
       "subjectUnconfirmed": "This subject comes from last year’s Massar files. Upload this year’s Massar file for it first.",
       "controlClosed": "This Contrôle is closed in Massar: its marks can no longer change.",
-      "invalidRemark": "This student is not on this sheet."
+      "invalidRemark": "This student is not on this sheet.",
+      "invalidPartResult": "This question is not on this test, or the count is higher than the number of pupils."
     },
     "flow": {
       "control": "Contrôle {{exam}} — Semester {{term}}",
@@ -8511,7 +8522,11 @@
       "noGroups": "No pupil needs support or consolidation.",
       "generated": "Report generated from the competency follow-up data",
       "empty": "No mark or level for this class on the selected test.",
-      "noLevels": "No competency level recorded up to this test’s month."
+      "noLevels": "No competency level recorded up to this test’s month.",
+      "parts": "Results by question",
+      "partsHint": "Enter how many pupils answered each question correctly. Saved automatically.",
+      "partsSaveFailed": "The count was not saved.",
+      "noQuestions": "This test has no questions yet. List them in the exam or assessment form (Exams or Assessments → Edit) to count the correct answers here."
     },
     "remark": {
       "title": "Remark for the parents",

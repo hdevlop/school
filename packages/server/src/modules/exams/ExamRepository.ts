@@ -60,6 +60,7 @@ export class ExamRepository {
         instructions: exams.instructions,
         status: exams.status,
         sectionIds: exams.sectionIds,
+        parts: exams.parts,
         planningEntryId: exams.planningEntryId,
         createdAt: exams.createdAt,
         updatedAt: exams.updatedAt,

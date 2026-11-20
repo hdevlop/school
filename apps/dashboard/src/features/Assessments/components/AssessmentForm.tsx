@@ -21,6 +21,7 @@ import { localDateInput } from 'najm-kit/format'
 import { useAcademicYearOptions, useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear'
 import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYear'
 import { eligibleAssessmentTeachers } from '../config/assessmentTeachers'
+import { TestPartsField } from '@/features/Exams/components/TestPartsField'
 import type { AssessmentPlanning } from '@sms/contracts';
 
 const AssessmentTeacherSelect = () => {
@@ -145,6 +146,7 @@ const AssessmentForm = ({ assessment = null, defaultPlanning }: { assessment?: a
     totalMarks: assessment?.totalMarks ?? 100,
     passingMarks: assessment?.passingMarks ?? 50,
     status: assessment?.status || 'scheduled',
+    parts: assessment?.parts ?? [],
   };
 
   const classOptions = classes?.map((cls) => ({
@@ -311,6 +313,8 @@ const AssessmentForm = ({ assessment = null, defaultPlanning }: { assessment?: a
                 required={true}
               />
             </div>
+
+            <TestPartsField />
 
           </div>
         </NForm>

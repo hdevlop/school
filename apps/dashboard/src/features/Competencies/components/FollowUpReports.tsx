@@ -22,6 +22,9 @@ import { skillNeed } from '../config/competencyRemarks';
 import { analyze, comparableClassMean, rankLabel } from '../config/followUpAnalysis';
 import { buildFollowUpDocument, followUpRoundLabels, type FollowUpPrintOptions } from '../config/followUpDocument';
 import { analyzeClass, classNote, classReport, type ClassReport } from '../config/classReport';
+import { classParts, type ClassPart } from '../config/partCounts';
+import { useSheetParts } from '../hooks/useSheetParts';
+import { PartCounts } from './PartCounts';
 import { buildClassReportDocument, type ClassReportPrintOptions } from '../config/classReportDocument';
 import { monthLabel } from '../config/competencyLevels';
 import { useListText } from './CompetencyText';
@@ -116,6 +119,19 @@ export function useFollowUpReport({ assignment, domains, students, studentId, hi
   const printClass = () => {
     if (classOptions) return printSchoolDocument(buildClassReportDocument(klass, classOptions));
   };
+  // How many pupils answered each question of the Contrôle's School test correctly: entered here,
+  // kept apart from the report's page.
+  const sheetParts = useSheetParts(round?.sheetId);
+  const liveParts = classParts(sheetParts.parts, sheetParts.correctOf, klass.marked);
+  const partOf = (part: ClassPart) => [part.testId, part.partId] as const;
+  const partCounts = sheet.data?.canEdit === true || sheetParts.read.error ? (
+    <PartCounts key={round?.sheetId} parts={liveParts} marked={klass.marked} t={page.t}
+      statusOf={(part) => sheetParts.statusOf(...partOf(part))}
+      onChange={(part, correct) => sheetParts.change(...partOf(part), correct)}
+      onBlur={(part) => sheetParts.flush(...partOf(part))}
+      onRetry={(part) => sheetParts.retry(...partOf(part))}
+      error={!!sheetParts.read.error} loading={sheetParts.read.isLoading} onReload={() => void sheetParts.read.refetch()} />
+  ) : null;
 
   const isLoading = sources.isLoading || (round && (sheet.isLoading || analyses.read.isLoading)) || year.isLoading;
   const loadError = sources.error || sheet.error || analyses.read.error;
@@ -209,8 +225,11 @@ export function useFollowUpReport({ assignment, domains, students, studentId, hi
       {roundPicker}
       {shared ?? (!reports.length || !classOptions
         ? <NEmptyState surface="panel" icon={FEATURE_ICONS.competencies} title={t('competencies.classReport.empty')} />
-        : <ClassPreview key={round?.sheetId} report={klass} options={classOptions} highlightId={highlightId ?? null}
-          title={`${t('competencies.classReport.title')} · ${documentOptions?.className ?? ''}`} />)}
+        : <>
+          {partCounts}
+          <ClassPreview key={round?.sheetId} report={klass} options={classOptions} highlightId={highlightId ?? null}
+            title={`${t('competencies.classReport.title')} · ${documentOptions?.className ?? ''}`} />
+        </>)}
     </div>
   );
 

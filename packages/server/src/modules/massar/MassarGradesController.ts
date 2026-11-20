@@ -3,7 +3,7 @@ import { Body, Controller, Get, Params, Put, ResMsg, User, Validate } from '../.
 import { Can, Policy } from '../../auth';
 import { MassarService } from './MassarService';
 import { MassarSheet } from './MassarGuards';
-import { massarAnalysisDto, massarIdParam, massarMarksDto, massarRemarkDto, type MassarAnalysisInput, type MassarMarksInput, type MassarRemarkInput } from './MassarDto';
+import { massarAnalysisDto, massarIdParam, massarMarksDto, massarPartResultDto, massarRemarkDto, type MassarAnalysisInput, type MassarMarksInput, type MassarPartResultInput, type MassarRemarkInput } from './MassarDto';
 import type { MassarActor } from './MassarValidator';
 
 /**
@@ -54,4 +54,18 @@ export class MassarGradesController {
   @Validate({ params: massarIdParam, body: massarAnalysisDto })
   @ResMsg('massar.success.saved')
   analysis(@Params('id') id: string, @Body() body: MassarAnalysisInput, @User() actor: MassarActor) { return this.service.saveAnalysis(id, body, actor); }
+
+  /** The parts of the grid's School tests, and how many pupils answered each correctly. */
+  @Get('/sheets/:id/parts')
+  @Can('read:grades')
+  @Validate({ params: massarIdParam })
+  @ResMsg('massar.success.loaded')
+  parts(@Params('id') id: string) { return this.service.partResults(id); }
+
+  /** One part's count, entered in the class report; null clears it. */
+  @Put('/sheets/:id/parts')
+  @Can('update:grades')
+  @Validate({ params: massarIdParam, body: massarPartResultDto })
+  @ResMsg('massar.success.saved')
+  partResult(@Params('id') id: string, @Body() body: MassarPartResultInput, @User() actor: MassarActor) { return this.service.savePartResult(id, body, actor); }
 }

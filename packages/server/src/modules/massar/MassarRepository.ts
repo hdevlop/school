@@ -13,7 +13,7 @@ import { studentEnrollments, studentEnrollmentPlacements } from '../studentEnrol
 import { staff } from '../staff/staffSchema';
 import { teachers, teacherAssignments } from '../teachers/teacherSchema';
 import { examPlanning } from '../examPlanning/ExamPlanningSchema';
-import { massarClasses, massarEnrollments, massarFollowUpAnalyses, massarImports, massarLevels, massarMarks, massarRemarks, massarRounds, massarSheets, massarSubjects, massarYears } from './massarSchema';
+import { massarClasses, massarEnrollments, massarFollowUpAnalyses, massarImports, massarPartResults, massarLevels, massarMarks, massarRemarks, massarRounds, massarSheets, massarSubjects, massarYears } from './massarSchema';
 import { MassarSheet } from './MassarGuards';
 import type { MassarComponent, MassarMark, MassarSheetStatus, MassarStudent } from '@sms/contracts';
 
@@ -187,6 +187,22 @@ export class MassarRepository {
     }
     await this.db.insert(table).values({ sheetId, studentId, analysis, academicYearId: this.year.id, updatedBy: actorId }).onConflictDoUpdate({
       target: [table.sheetId, table.studentId], set: { analysis, updatedBy: actorId, updatedAt: sql`CURRENT_TIMESTAMP` },
+    });
+  }
+  async partResults(sheetId: string) {
+    const table = massarPartResults;
+    return this.db.select({ testId: table.testId, partId: table.partId, correct: table.correct }).from(table)
+      .innerJoin(massarSheets, eq(massarSheets.id, table.sheetId))
+      .where(and(this.ownedWhere(), eq(massarSheets.academicYearId, this.year.id), eq(table.academicYearId, this.year.id), eq(table.sheetId, sheetId)));
+  }
+  async savePartResult(sheetId: string, testId: string, partId: string, correct: number | null, actorId: string) {
+    const table = massarPartResults;
+    if (correct === null) {
+      await this.db.delete(table).where(and(eq(table.academicYearId, this.year.id), eq(table.sheetId, sheetId), eq(table.testId, testId), eq(table.partId, partId)));
+      return;
+    }
+    await this.db.insert(table).values({ sheetId, testId, partId, correct, academicYearId: this.year.id, updatedBy: actorId }).onConflictDoUpdate({
+      target: [table.sheetId, table.testId, table.partId], set: { correct, updatedBy: actorId, updatedAt: sql`CURRENT_TIMESTAMP` },
     });
   }
   async completedMarkCounts(roundId?: string) {

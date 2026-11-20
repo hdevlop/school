@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { EXAM_STATUS_VALUES, EXAM_TYPE_VALUES } from '@sms/contracts';
+import { createTestPartsSchema } from './testPartSchemas';
 
 type T = (key: string) => string;
 
@@ -68,6 +69,7 @@ export const createExamSchema = (t: T) => {
     roomNumber: numberField(validNumber().max(50, t('validationMessages.roomNumberTooLong'))).optional().nullable(),
     instructions: z.string().max(2000, t('validationMessages.instructionsTooLong')).optional().nullable(),
     status: z.enum(EXAM_STATUS_VALUES).default('scheduled'),
+    parts: createTestPartsSchema(t).default([]),
   });
 };
 

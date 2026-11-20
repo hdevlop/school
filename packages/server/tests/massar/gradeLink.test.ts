@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
 import { massarPlanningControls } from '@sms/contracts';
-import { MassarGradeLink, linkCells } from '../../src/modules/massar/MassarGradeLink';
+import { MassarGradeLink, linkCells, partTests } from '../../src/modules/massar/MassarGradeLink';
 import { MassarValidator } from '../../src/modules/massar/MassarValidator';
 import { massarTestI18n } from './fixtures';
 
@@ -91,5 +91,34 @@ describe('One mark in Massar and in Grades', () => {
     const sent = link({ sheet: { exportedAt: '2026-11-10 10:00:00', status: 'exported' }, grades: [{ id: 'g2', examId: 'exam-ar', studentId: 'student-2', marksObtained: '9', status: 'graded' }] });
     await sent.service.reconcile('user');
     expect(sent.state.marks).toEqual([]);
+  });
+});
+
+describe('Which School test questions a class report counts', () => {
+  // A stored question may still carry fields the list no longer has; only its id and label are read.
+  const parts = [{ id: 'q1', label: 'السؤال 1', points: 4 }, { id: 'q2', label: 'السؤال 2' }];
+  const assessment = (over: Record<string, unknown> = {}) => ({ id: 'assessment-1', title: 'فرض', parts, ...over });
+  const cellsOf = (theSheet: ReturnType<typeof sheet>, exams: Record<string, unknown>[]) => linkCells([theSheet] as never, exams as never, controls);
+
+  it('takes the linked Planning exam\'s questions, with their column', () => {
+    const theSheet = sheet();
+    const found = partTests(theSheet as never, cellsOf(theSheet, [exam({ parts })]), [assessment()] as never);
+    expect(found).toEqual([
+      { id: 'q1', label: 'السؤال 1', source: 'exam', testId: 'exam-ar', testTitle: 'العربية', componentCode: '1' },
+      { id: 'q2', label: 'السؤال 2', source: 'exam', testId: 'exam-ar', testTitle: 'العربية', componentCode: '1' },
+    ]);
+  });
+
+  it('falls back to the only assessment with parts for a one-column grid, and to nothing uncertain', () => {
+    const theSheet = sheet();
+    const cells = cellsOf(theSheet, [exam()]);
+    expect(partTests(theSheet as never, cells, [assessment()] as never).map(part => [part.source, part.testId])).toEqual([['assessment', 'assessment-1'], ['assessment', 'assessment-1']]);
+    expect(partTests(theSheet as never, cells, [assessment(), assessment({ id: 'assessment-2' })] as never)).toEqual([]);
+  });
+
+  it('gives each primary column the assessment named like it, never one test twice', () => {
+    const theSheet = sheet({ kind: 'components', maxMark: 10, components: [{ code: '1001', name: 'الإملاء' }, { code: '1002', name: 'القراءة' }] });
+    const found = partTests(theSheet as never, [], [assessment({ id: 'dictation', title: 'الاملاء' })] as never);
+    expect([...new Set(found.map(part => `${part.componentCode}:${part.testId}`))]).toEqual(['1001:dictation']);
   });
 });

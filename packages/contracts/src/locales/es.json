@@ -3407,7 +3407,15 @@
     },
     "fromPlanning": "Planificación",
     "fromPlanningHint": "Previsto en la Planificación: cambie allí el título, las lecciones, la fecha, la asignatura o la hora.",
-    "deleteInPlanning": "Este examen viene de la Planificación. Elimínelo en la Planificación: su examen se va con él."
+    "deleteInPlanning": "Este examen viene de la Planificación. Elimínelo en la Planificación: su examen se va con él.",
+    "parts": {
+      "title": "Preguntas de la prueba",
+      "hint": "Después de la prueba, el informe de clase cuenta cuántos alumnos respondieron bien cada pregunta.",
+      "labelPlaceholder": "Pregunta {{number}}",
+      "add": "Añadir una pregunta",
+      "remove": "Quitar esta pregunta",
+      "empty": "Aún no hay preguntas."
+    }
   },
   "expenses": {
     "subtitle": {
@@ -6935,7 +6943,9 @@
     "atMostThreePhoneNumbers": "Introduce como máximo tres números de teléfono",
     "familyChildRequired": "Seleccione al menos un hijo para pagar",
     "familyTooManyChildren": "Demasiados hijos en un mismo recibo",
-    "familyDuplicateChild": "Cada hijo solo puede aparecer una vez en un recibo"
+    "familyDuplicateChild": "Cada hijo solo puede aparecer una vez en un recibo",
+    "duplicateTestPart": "Dos preguntas tienen el mismo identificador.",
+    "partLabelRequired": "Escribe la pregunta."
   },
   "academic": {
     "accountantAssignmentOptional": "Elija uno o varios ciclos, o déjelo vacío para toda la escuela.",
@@ -7251,7 +7261,8 @@
       "planBelowOpened": "Un control ya abierto no puede quitarse del plan.",
       "subjectUnconfirmed": "Esta asignatura viene de los archivos Massar del año pasado. Importe primero su archivo Massar de este año.",
       "controlClosed": "Este Contrôle está cerrado en Massar: sus notas ya no pueden cambiar.",
-      "invalidRemark": "Este alumno no figura en esta hoja."
+      "invalidRemark": "Este alumno no figura en esta hoja.",
+      "invalidPartResult": "Esta pregunta no pertenece a esta prueba, o el número supera el de alumnos."
     },
     "flow": {
       "control": "Control {{exam}} — Semestre {{term}}",
@@ -7804,7 +7815,11 @@
       "noGroups": "Ningún alumno necesita apoyo ni refuerzo.",
       "generated": "Informe generado a partir de los datos de seguimiento de competencias",
       "empty": "No hay notas ni niveles para esta clase en el control elegido.",
-      "noLevels": "No hay niveles de competencia registrados hasta el mes del control."
+      "noLevels": "No hay niveles de competencia registrados hasta el mes del control.",
+      "parts": "Resultados por pregunta",
+      "partsHint": "Introduce cuántos alumnos respondieron bien cada pregunta. Se guarda automáticamente.",
+      "partsSaveFailed": "No se guardó el número.",
+      "noQuestions": "Esta prueba aún no tiene preguntas. Añádelas en el formulario del examen o de la evaluación (Exámenes o Evaluaciones → Editar) para contar aquí las respuestas correctas."
     },
     "remark": {
       "title": "Observación para los padres",

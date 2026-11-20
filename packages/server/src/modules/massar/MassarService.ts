@@ -4,7 +4,7 @@ import { StorageService } from 'najm-storage';
 import { matchPermission } from 'najm-auth/client';
 import {
   massarPlanningControls, withStatementDefaults,
-  type MassarComponent, type MassarGradeSource, type MassarMark, type MassarSheetDetail, type MassarSheetRow, type MassarStudent,
+  type MassarComponent, type MassarGradeSource, type MassarMark, type MassarSheetDetail, type MassarSheetParts, type MassarSheetRow, type MassarStudent,
 } from '@sms/contracts';
 import { Inject, LoggerService, Service, Transaction, TransactionService } from '../../najm';
 import { Year } from '../academicYears/requestYear';
@@ -17,7 +17,7 @@ import { MassarValidator, mayManageMassar, type MassarActor, type MassarEntry } 
 import { MassarGradeLink } from './MassarGradeLink';
 import {
   normalizeStatement,
-  type MassarAnalysisInput, type MassarCommit, type MassarMappings, type MassarMarksInput, type MassarPlanInput, type MassarRemarkInput, type MassarResolve, type MassarRoundInput, type MassarStatementInput,
+  type MassarAnalysisInput, type MassarCommit, type MassarMappings, type MassarMarksInput, type MassarPartResultInput, type MassarPlanInput, type MassarRemarkInput, type MassarResolve, type MassarRoundInput, type MassarStatementInput,
 } from './MassarDto';
 import {
   buildImportPreview, pendingWithSuggestions, proposeSubject, sameName,
@@ -1071,6 +1071,25 @@ export class MassarService {
     const row = await this.ownedOpenSheet(id, null, actor, 'notes');
     this.validator.ensureRemarkStudent(data.studentId, row.sheet.roster);
     await this.repository.saveAnalysis(id, data.studentId, data.analysis, actor.id);
+    return data;
+  }
+
+  /** The parts of the grid's School tests and how many pupils got each right; a count on a part since removed is not read. */
+  async partResults(id: string): Promise<MassarSheetParts> {
+    await this.requireSheet(id);
+    const [parts, results] = await Promise.all([this.grades?.testParts(id) ?? [], this.repository.partResults(id)]);
+    const known = new Set(parts.map(part => JSON.stringify([part.testId, part.id])));
+    return { parts, results: results.filter(result => known.has(JSON.stringify([result.testId, result.partId]))) };
+  }
+
+  /** How many pupils answered one part correctly. School's own, never exported; it follows the marks' locks all the same. */
+  @Transaction()
+  async savePartResult(id: string, data: MassarPartResultInput, actor: MassarActor) {
+    const row = await this.ownedOpenSheet(id, null, actor, 'notes');
+    const parts = await this.grades?.testParts(id) ?? [];
+    if (!parts.some(part => part.testId === data.testId && part.id === data.partId)) this.validator.refuse('invalidPartResult', 422);
+    if (data.correct !== null && data.correct > row.sheet.roster.length) this.validator.refuse('invalidPartResult', 422);
+    await this.repository.savePartResult(id, data.testId, data.partId, data.correct, actor.id);
     return data;
   }
 

@@ -84,7 +84,7 @@ export class AssessmentService {
     this.assessmentValidator.ensureSelectedYear(year.id);
     const ASSESSMENT_CREATE_KEYS = [
       'title', 'description', 'type', 'date', 'duration', 'totalMarks',
-      'passingMarks', 'instructions', 'status', 'sectionIds', 'planning'
+      'passingMarks', 'instructions', 'status', 'sectionIds', 'planning', 'parts'
     ];
 
     const assessmentDetails: Record<string, unknown> = {
@@ -133,7 +133,7 @@ export class AssessmentService {
 
     const ASSESSMENT_UPDATE_KEYS = [
       'title', 'description', 'type', 'date', 'duration', 'totalMarks',
-      'passingMarks', 'instructions', 'status', 'sectionIds', 'planning'
+      'passingMarks', 'instructions', 'status', 'sectionIds', 'planning', 'parts'
     ];
 
     const assessmentData: Record<string, unknown> = pickProps(normalizedData, ASSESSMENT_UPDATE_KEYS);

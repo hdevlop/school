@@ -77,7 +77,7 @@ export class ExamService {
     this.examValidator.ensureSelectedYear(year.id);
     const EXAM_CREATE_KEYS = [
       'title', 'description', 'type', 'date', 'startTime', 'endTime', 'duration',
-      'totalMarks', 'passingMarks', 'roomNumber', 'instructions', 'status', 'sectionIds'
+      'totalMarks', 'passingMarks', 'roomNumber', 'instructions', 'status', 'sectionIds', 'parts'
     ];
 
     const examDetails: Record<string, unknown> = {
@@ -126,7 +126,7 @@ export class ExamService {
 
     const EXAM_UPDATE_KEYS = [
       'title', 'description', 'type', 'date', 'startTime', 'endTime', 'duration',
-      'totalMarks', 'passingMarks', 'roomNumber', 'instructions', 'status', 'sectionIds'
+      'totalMarks', 'passingMarks', 'roomNumber', 'instructions', 'status', 'sectionIds', 'parts'
     ];
 
     const examData: Record<string, unknown> = pickProps(normalizedData, EXAM_UPDATE_KEYS);

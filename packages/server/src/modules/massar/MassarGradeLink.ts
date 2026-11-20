@@ -1,4 +1,4 @@
-import { foldSubjectName, massarPlanningControls, type MassarAbsence, type MassarMark } from '@sms/contracts';
+import { foldSubjectName, massarPlanningControls, type MassarAbsence, type MassarMark, type MassarSheetPart, type TestPart } from '@sms/contracts';
 import { Service } from '../../najm';
 import { MassarGradeRepository } from './MassarGradeRepository';
 import { MassarValidator } from './MassarValidator';
@@ -36,6 +36,34 @@ export function linkCells(sheets: Sheet[], exams: Exam[], controls: ReturnType<t
   return cells;
 }
 
+type PartAssessment = Awaited<ReturnType<MassarGradeRepository['partAssessments']>>[number];
+
+/**
+ * The parts a grid's class report counts, column by column: the linked
+ * Planning exam's when it has any, otherwise an assessment of the Contrôle's
+ * month with parts, named like the column or, for a grid of one column, the
+ * only one. As with the exams, anything less certain is left out.
+ */
+export function partTests(sheet: Pick<Sheet, 'components'>, cells: MassarGradeCell[], assessments: PartAssessment[]): MassarSheetPart[] {
+  const out: MassarSheetPart[] = [];
+  const used = new Set<string>();
+  for (const component of sheet.components) {
+    const exam = cells.find(cell => cell.componentCode === component.code)?.exam;
+    let test: { source: MassarSheetPart['source']; id: string; title: string; parts: TestPart[] | null } | undefined;
+    if (exam?.parts?.length) test = { source: 'exam', id: exam.id, title: exam.title, parts: exam.parts };
+    else {
+      const free = assessments.filter(item => !used.has(item.id));
+      const named = free.filter(item => foldSubjectName(item.title) === foldSubjectName(component.name));
+      const picked = named.length === 1 ? named[0] : sheet.components.length === 1 && free.length === 1 ? free[0] : undefined;
+      if (picked) { used.add(picked.id); test = { source: 'assessment', ...picked }; }
+    }
+    for (const part of test?.parts ?? []) {
+      out.push({ id: part.id, label: part.label, source: test!.source, testId: test!.id, testTitle: test!.title, componentCode: component.code });
+    }
+  }
+  return out;
+}
+
 /**
  * Keeps a Massar grid and School's exam grades the same mark, both ways, in the
  * caller's transaction: a mark saved or imported in the grid becomes the
@@ -60,6 +88,20 @@ export class MassarGradeLink {
     if (!sheetIds.length) return [];
     const [sheets, exams] = await Promise.all([this.repository.sheets({ sheetIds }), this.repository.plannedExams()]);
     return this.cells(sheets, exams);
+  }
+
+  /** The parts of the School tests one grid stands for, for a grid the caller has already been allowed to read. */
+  async testParts(sheetId: string): Promise<MassarSheetPart[]> {
+    const [sheet] = await this.repository.sheets({ sheetIds: [sheetId] });
+    if (!sheet?.classId || !sheet.sectionId || !sheet.subjectId) return [];
+    const controls = massarPlanningControls(await this.repository.planningMonths());
+    const month = controls.find(control => control.term === sheet.term && control.exam === sheet.exam)?.examFrom.slice(0, 7);
+    if (!month) return [];
+    const [exams, assessments] = await Promise.all([
+      this.repository.plannedExams({ classId: sheet.classId, sectionId: sheet.sectionId, subjectId: sheet.subjectId }),
+      this.repository.partAssessments({ sectionId: sheet.sectionId, subjectId: sheet.subjectId, month }),
+    ]);
+    return partTests(sheet, linkCells([sheet], exams, controls), assessments);
   }
 
   /** The grade a grid cell gives its exam: written, changed or removed. */

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { GENDER_VALUES, MASSAR_ABSENCE_VALUES, MASSAR_ANALYSIS_MAX_LENGTH, MASSAR_MAX_COEFFICIENT, MASSAR_MAX_EXAMS_PER_TERM, MASSAR_REMARK_MAX_LENGTH } from '@sms/contracts';
+import { GENDER_VALUES, MASSAR_ABSENCE_VALUES, MASSAR_ANALYSIS_MAX_LENGTH, MASSAR_MAX_COEFFICIENT, MASSAR_MAX_EXAMS_PER_TERM, MASSAR_REMARK_MAX_LENGTH, TEST_PART_LIMITS } from '@sms/contracts';
 import type { MassarMark } from '@sms/contracts';
 
 export const massarIdParam = z.object({ id: z.string().min(1).max(100) });
@@ -50,7 +50,13 @@ export const massarAnalysisDto = z.object({
   studentId: massarRemarkDto.shape.studentId,
   analysis: z.string().max(MASSAR_ANALYSIS_MAX_LENGTH).nullable(),
 });
-export const massarRevisionDto = z.object({ revision: z.number().int().nonnegative() });
+/** How many pupils answered one part correctly; null clears the count. */
+export const massarPartResultDto = z.object({
+  testId: z.string().trim().min(1).max(100),
+  partId: z.string().trim().min(1).max(TEST_PART_LIMITS.id),
+  correct: z.number().int().min(0).max(2500).nullable(),
+});
+export const massarRevisionDto =z.object({ revision: z.number().int().nonnegative() });
 export const massarExportDto = z.object({ sheetIds: z.array(z.string().min(1)).min(1).max(400), empty: z.boolean().default(false) });
 // One class's subjects, exported to check them; a class has a dozen subjects at most.
 export const massarClassExportDto = z.object({ sheetIds: z.array(z.string().min(1)).min(1).max(30) });
@@ -60,3 +66,4 @@ export type MassarRoundInput = z.infer<typeof massarRoundDto>;
 export type MassarMarksInput = { revision: number; marks: MassarMark[] };
 export type MassarRemarkInput = z.infer<typeof massarRemarkDto>;
 export type MassarAnalysisInput = z.infer<typeof massarAnalysisDto>;
+export type MassarPartResultInput = z.infer<typeof massarPartResultDto>;

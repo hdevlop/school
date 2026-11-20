@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ASSESSMENT_STATUS_VALUES, ASSESSMENT_TYPE_VALUES } from '@sms/contracts';
+import { createTestPartsSchema } from '@/features/Exams/config/testPartSchemas';
 
 type T = (key: string) => string;
 
@@ -62,6 +63,7 @@ export const createAssessmentSchema = (t: T) => {
     instructions: z.string().max(2000, t('validationMessages.instructionsTooLong')).optional().nullable(),
     status: z.enum(ASSESSMENT_STATUS_VALUES).default('scheduled'),
     assessmentId: optionalId,
+    parts: createTestPartsSchema(t).default([]),
   }).refine((data) => data.passingMarks <= data.totalMarks, {
     path: ['passingMarks'],
     message: t('assessments.errors.passingMarksExceedsTotal'),

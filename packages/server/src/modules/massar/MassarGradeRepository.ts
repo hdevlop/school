@@ -1,9 +1,10 @@
-import { and, eq, inArray, isNotNull, ne, sql } from 'drizzle-orm';
+import { and, eq, inArray, isNotNull, ne, or, sql } from 'drizzle-orm';
 import { Repository } from '../../najm';
 import { DB } from '../../database/db';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { exams } from '../exams/examSchema';
+import { assessments } from '../assessments/assessmentSchema';
 import { grades } from '../grades/gradeSchema';
 import { teacherAssignments } from '../teachers/teacherSchema';
 import { examPlanning } from '../examPlanning/ExamPlanningSchema';
@@ -41,12 +42,25 @@ export class MassarGradeRepository {
   async plannedExams(filter: { examIds?: string[]; classId?: string; sectionId?: string; subjectId?: string } = {}) {
     if (filter.examIds && !filter.examIds.length) return [];
     return this.db.select({
-      id: exams.id, title: exams.title, date: exams.date, totalMarks: exams.totalMarks,
+      id: exams.id, title: exams.title, date: exams.date, totalMarks: exams.totalMarks, parts: exams.parts,
       classId: teacherAssignments.classId, sectionId: teacherAssignments.sectionId, subjectId: teacherAssignments.subjectId,
     }).from(exams).innerJoin(teacherAssignments, eq(teacherAssignments.id, exams.teacherAssignmentId))
       .where(and(eq(exams.academicYearId, this.year.id), isNotNull(exams.planningEntryId), ne(exams.status, 'cancelled'),
         filter.examIds ? inArray(exams.id, filter.examIds) : undefined, filter.classId ? eq(teacherAssignments.classId, filter.classId) : undefined,
         filter.sectionId ? eq(teacherAssignments.sectionId, filter.sectionId) : undefined, filter.subjectId ? eq(teacherAssignments.subjectId, filter.subjectId) : undefined));
+  }
+  /**
+   * The year's assessments of one section and subject, dated in one month, that
+   * have parts: the tests a class report can count. Read after the grid itself,
+   * which the caller was already allowed to read.
+   */
+  async partAssessments(filter: { sectionId: string; subjectId: string; month: string }) {
+    return this.db.select({ id: assessments.id, title: assessments.title, parts: assessments.parts })
+      .from(assessments).innerJoin(teacherAssignments, eq(teacherAssignments.id, assessments.teacherAssignmentId))
+      .where(and(eq(assessments.academicYearId, this.year.id), ne(assessments.status, 'cancelled'), eq(teacherAssignments.subjectId, filter.subjectId),
+        or(eq(teacherAssignments.sectionId, filter.sectionId), sql`${assessments.sectionIds} @> ${JSON.stringify([filter.sectionId])}::jsonb`),
+        sql`to_char(${assessments.date}, 'YYYY-MM') = ${filter.month}`,
+        sql`jsonb_array_length(coalesce(${assessments.parts}, '[]'::jsonb)) > 0`));
   }
   async marks(sheetIds: string[]) {
     if (!sheetIds.length) return [];

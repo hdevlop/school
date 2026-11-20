@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { dateField, num, optionalId, requiredId, timeField } from '../../shared/fields';
 import { examStatusEnum, examTypeEnum } from '../../shared/enums';
+import { testPartsDto } from '../../shared/testPartsDto';
 
 const examSchema = z.object({
   classId: optionalId,
@@ -22,6 +23,7 @@ const examSchema = z.object({
   roomNumber: num().max(50, 'Room number too long').optional().nullable(),
   instructions: z.string().max(2000, 'Instructions too long').optional().nullable(),
   status: examStatusEnum.default('scheduled'),
+  parts: testPartsDto.optional(),
 });
 
 export const createExamDto = examSchema

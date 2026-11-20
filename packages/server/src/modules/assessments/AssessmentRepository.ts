@@ -26,6 +26,7 @@ export const assessmentSelect = {
   instructions: assessments.instructions,
   status: assessments.status,
   sectionIds: assessments.sectionIds,
+  parts: assessments.parts,
   createdAt: assessments.createdAt,
   updatedAt: assessments.updatedAt,
 };

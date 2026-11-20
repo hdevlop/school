@@ -4,6 +4,7 @@ import { createRef, idField, numericField, timestamps } from '../../database/sha
 import { getEnumValues } from '../../shared/enums';
 import { teacherAssignmentRef } from '../teachers/teacherSchema';
 import { academicYears } from '../academicYears/AcademicYearSchema';
+import type { TestPart } from '@sms/contracts';
 
 export const examTypeEnum = pgEnum('examType', getEnumValues('examType'));
 export const examStatusEnum = pgEnum('examStatus', getEnumValues('examStatus'));
@@ -26,6 +27,8 @@ export const exams = pgTable('exams', {
   instructions: text('instructions'),
   status: examStatusEnum('status').notNull().default('scheduled'),
   sectionIds: jsonb('section_ids').$type<string[]>(),
+  // Its questions or exercises, counted in the class report after the Contrôle.
+  parts: jsonb('parts').$type<TestPart[]>(),
   // The Planning entry this exam comes from (one exam per section); Planning keeps it in sync.
   planningEntryId: text('planning_entry_id'),
   ...timestamps,

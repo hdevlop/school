@@ -4300,7 +4300,15 @@
     },
     "fromPlanning": "Planning",
     "fromPlanningHint": "Prévu dans le Planning : modifiez-y le titre, les leçons, la date, la matière ou l’heure.",
-    "deleteInPlanning": "Cet examen vient du Planning. Supprimez-le dans le Planning : son examen part avec lui."
+    "deleteInPlanning": "Cet examen vient du Planning. Supprimez-le dans le Planning : son examen part avec lui.",
+    "parts": {
+      "title": "Questions de l’épreuve",
+      "hint": "Après l’épreuve, le rapport de classe compte les élèves ayant bien répondu à chaque question.",
+      "labelPlaceholder": "Question {{number}}",
+      "add": "Ajouter une question",
+      "remove": "Retirer cette question",
+      "empty": "Aucune question pour l’instant."
+    }
   },
   "feeTypes": {
     "subtitle": {
@@ -7036,7 +7044,9 @@
     "atMostThreePhoneNumbers": "Saisissez au plus trois numéros de téléphone",
     "familyChildRequired": "Sélectionnez au moins un enfant à payer",
     "familyTooManyChildren": "Trop d’enfants sur un même reçu",
-    "familyDuplicateChild": "Chaque enfant ne peut figurer qu’une fois sur un reçu"
+    "familyDuplicateChild": "Chaque enfant ne peut figurer qu’une fois sur un reçu",
+    "duplicateTestPart": "Deux questions ont le même identifiant.",
+    "partLabelRequired": "Nommez la question."
   },
   "academic": {
     "accountantAssignmentOptional": "Choisissez un ou plusieurs cycles, ou laissez vide pour toute l’école.",
@@ -7352,7 +7362,8 @@
       "planBelowOpened": "Un contrôle déjà ouvert ne peut pas être retiré du plan.",
       "subjectUnconfirmed": "Cette matière vient des fichiers Massar de l’an dernier. Importez d’abord son fichier Massar de cette année.",
       "controlClosed": "Ce Contrôle est fermé dans Massar : ses notes ne peuvent plus changer.",
-      "invalidRemark": "Cet élève ne figure pas sur cette feuille."
+      "invalidRemark": "Cet élève ne figure pas sur cette feuille.",
+      "invalidPartResult": "Cette question n’appartient pas à ce contrôle, ou le nombre dépasse celui des élèves."
     },
     "flow": {
       "control": "Contrôle {{exam}} — Semestre {{term}}",
@@ -7905,7 +7916,11 @@
       "noGroups": "Aucun élève n’a besoin de soutien ni de consolidation.",
       "generated": "Rapport généré à partir des données de suivi des compétences",
       "empty": "Aucune note ni aucun niveau pour cette classe au contrôle choisi.",
-      "noLevels": "Aucun niveau de compétence enregistré jusqu’au mois du contrôle."
+      "noLevels": "Aucun niveau de compétence enregistré jusqu’au mois du contrôle.",
+      "parts": "Résultats par question",
+      "partsHint": "Saisissez le nombre d’élèves ayant bien répondu à chaque question. Enregistré automatiquement.",
+      "partsSaveFailed": "Le nombre n’a pas été enregistré.",
+      "noQuestions": "Ce contrôle n’a pas encore de questions. Ajoutez-les dans le formulaire de l’examen ou de l’évaluation (Examens ou Évaluations → Modifier) pour compter ici les bonnes réponses."
     },
     "remark": {
       "title": "Remarque pour les parents",

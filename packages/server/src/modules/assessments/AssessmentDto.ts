@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { dateField, num, optionalId, requiredId } from '../../shared/fields';
 import { assessmentStatusEnum, assessmentTypeEnum } from '../../shared/enums';
 import { ASSESSMENT_PLANNING_LIMITS as limits, REVISION_LANGUAGES } from '@sms/contracts';
+import { testPartsDto } from '../../shared/testPartsDto';
 
 export const assessmentPlanningDto = z.object({
   round: z.string().trim().min(1).max(limits.round),
@@ -30,6 +31,7 @@ const assessmentSchema = z.object({
   passingMarks: num().min(0, 'Passing marks must be non-negative').max(1000, 'Passing marks cannot exceed 1000'),
   instructions: z.string().max(2000, 'Instructions too long').optional().nullable(),
   status: assessmentStatusEnum.default('scheduled'),
+  parts: testPartsDto.optional(),
   assessmentId: optionalId,
 });
 
