@@ -1,12 +1,10 @@
 import { describe, expect, it } from 'bun:test';
 import {
-  BEHAVIOR_RECOGNITION_LEVEL_VALUES,
   BEHAVIOR_REWARD_CATEGORY_VALUES,
   BEHAVIOR_REWARD_TYPE_VALUES,
 } from '@sms/contracts';
 
 import {
-  buildBehaviorRecognitionLevelOptions,
   buildBehaviorRewardCategoryOptions,
   buildBehaviorRewardTypeOptions,
 } from '@/features/BehaviorRewards/config/behaviorRewardOptions';
@@ -18,9 +16,6 @@ describe('behaviour reward option builders', () => {
     expect(buildBehaviorRewardCategoryOptions(echo).map((o) => o.value)).toEqual([
       ...BEHAVIOR_REWARD_CATEGORY_VALUES,
     ]);
-    expect(buildBehaviorRecognitionLevelOptions(echo).map((o) => o.value)).toEqual([
-      ...BEHAVIOR_RECOGNITION_LEVEL_VALUES,
-    ]);
     expect(buildBehaviorRewardTypeOptions(echo).map((o) => o.value)).toEqual([
       ...BEHAVIOR_REWARD_TYPE_VALUES,
     ]);
@@ -30,10 +25,6 @@ describe('behaviour reward option builders', () => {
     expect(buildBehaviorRewardCategoryOptions(echo)[0]).toEqual({
       value: 'academic_effort',
       label: 'behaviorRewards.categories.academic_effort',
-    });
-    expect(buildBehaviorRecognitionLevelOptions(echo)[0]).toEqual({
-      value: 'appreciation',
-      label: 'behaviorRewards.recognitionLevels.appreciation',
     });
     expect(buildBehaviorRewardTypeOptions(echo)[0]).toEqual({
       value: 'verbal_praise',

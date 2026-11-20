@@ -17,7 +17,7 @@ const rollback = Symbol('rollback');
 const reward = (id: string, studentId: string, behaviorAt: string, year: string, awardedBy = 'history-admin') => ({
   id, studentId, behaviorAt, awardedBy,
   classId: `history-class-${year}`, sectionId: `history-section-${year}-a`,
-  category: 'respect' as const, recognitionLevel: 'appreciation' as const, rewardType: 'verbal_praise' as const,
+  category: 'respect' as const, rewardType: 'verbal_praise' as const,
   description: `History reward ${id}`, points: 10,
 });
 const cases = [

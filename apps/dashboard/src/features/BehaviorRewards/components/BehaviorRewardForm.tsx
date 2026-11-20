@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Award, CalendarClock, FileText, Gift, Star, Trophy, UserRound } from 'lucide-react';
+import { Award, CalendarClock, FileText, Gift, Star, UserRound } from 'lucide-react';
 import { FormInput, NForm, NFormSectionHeader } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
@@ -11,11 +11,7 @@ import { FormStudentCombobox } from '@/features/Students/components/StudentCombo
 import { toLocalDateTimeInput } from '../behaviorRewardConstants';
 import { useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYear';
-import {
-  buildBehaviorRecognitionLevelOptions,
-  buildBehaviorRewardCategoryOptions,
-  buildBehaviorRewardTypeOptions,
-} from '../config/behaviorRewardOptions';
+import { buildBehaviorRewardCategoryOptions, buildBehaviorRewardTypeOptions } from '../config/behaviorRewardOptions';
 
 const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any }) => {
   const { t } = useTranslation();
@@ -33,7 +29,6 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
     behaviorDate: behaviorReward?.behaviorAt ? storedDate : teachingDateWithinYear(storedDate, yearCalendar),
     behaviorTime: toLocalDateTimeInput(behaviorReward?.behaviorAt).slice(11, 16),
     category: behaviorReward?.category || 'academic_effort',
-    recognitionLevel: behaviorReward?.recognitionLevel || 'appreciation',
     description: behaviorReward?.description || '',
     rewardType: behaviorReward?.rewardType || 'verbal_praise',
     points: behaviorReward?.points ?? 0,
@@ -87,26 +82,15 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <FormInput
-            name="category"
-            type="select"
-            icon={Star}
-            formLabel={t('behaviorRewards.form.category')}
-            placeholder={t('behaviorRewards.form.categoryPlaceholder')}
-            items={buildBehaviorRewardCategoryOptions(t)}
-            required
-          />
-          <FormInput
-            name="recognitionLevel"
-            type="select"
-            icon={Trophy}
-            formLabel={t('behaviorRewards.form.recognitionLevel')}
-            placeholder={t('behaviorRewards.form.recognitionLevelPlaceholder')}
-            items={buildBehaviorRecognitionLevelOptions(t)}
-            required
-          />
-        </div>
+        <FormInput
+          name="category"
+          type="select"
+          icon={Star}
+          formLabel={t('behaviorRewards.form.category')}
+          placeholder={t('behaviorRewards.form.categoryPlaceholder')}
+          items={buildBehaviorRewardCategoryOptions(t)}
+          required
+        />
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <FormInput

@@ -2527,10 +2527,10 @@
   "behaviorRewards": {
     "table": {
       "recordCount": "{{count}} سجلات تقدير",
+      "massarCode": "رقم مسار",
       "student": "الطالب",
       "classSection": "الفصل / الشعبة",
       "positiveBehavior": "السلوك الإيجابي",
-      "recognition": "التقدير",
       "reward": "المكافأة",
       "points": "النقاط",
       "behaviorDate": "تاريخ السلوك",
@@ -2541,7 +2541,6 @@
     "filters": {
       "search": "البحث باسم الطالب أو الرمز أو الوصف...",
       "category": "فئة السلوك",
-      "recognitionLevel": "مستوى التقدير",
       "rewardType": "نوع المكافأة",
       "class": "الفصل",
       "section": "الشعبة"
@@ -2558,8 +2557,6 @@
       "behaviorTime": "وقت السلوك",
       "category": "فئة السلوك الإيجابي",
       "categoryPlaceholder": "اختر فئة",
-      "recognitionLevel": "مستوى التقدير",
-      "recognitionLevelPlaceholder": "اختر مستوى التقدير",
       "description": "وصف السلوك",
       "descriptionPlaceholder": "صف السلوك الإيجابي بموضوعية",
       "rewardType": "نوع المكافأة",
@@ -2579,11 +2576,6 @@
       "community_service": "خدمة المجتمع",
       "excellent_attendance": "الحضور الممتاز",
       "other": "أخرى"
-    },
-    "recognitionLevels": {
-      "appreciation": "تقدير",
-      "achievement": "إنجاز",
-      "excellence": "تميز"
     },
     "rewardTypes": {
       "verbal_praise": "ثناء شفهي",

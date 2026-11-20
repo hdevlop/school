@@ -163,8 +163,6 @@ export const BEHAVIOR_REWARD_CATEGORY_VALUES = [
 ] as const;
 export type BehaviorRewardCategory = (typeof BEHAVIOR_REWARD_CATEGORY_VALUES)[number];
 
-export const BEHAVIOR_RECOGNITION_LEVEL_VALUES = ['appreciation', 'achievement', 'excellence'] as const;
-export type BehaviorRecognitionLevel = (typeof BEHAVIOR_RECOGNITION_LEVEL_VALUES)[number];
 
 export const BEHAVIOR_REWARD_TYPE_VALUES = [
   'verbal_praise',

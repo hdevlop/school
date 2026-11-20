@@ -139,29 +139,22 @@ export function AlertCardSkeleton() {
   );
 }
 
-/** BehaviorRewardCard: the student, the reward tags, then class and date. */
+/** BehaviorRewardCard: student and points, then reward, class and date. */
 export function BehaviorRewardCardSkeleton() {
   return (
     <div data-bordered="true" className={SURFACE}>
-      <div className="flex flex-col gap-3 p-4 pe-10">
-        <div className="flex items-center gap-3">
-          <NSkeleton className="size-12 shrink-0 rounded-full" />
-          <div className="space-y-2">
-            <Bar className="h-4 w-36" />
-            <Bar className="h-3 w-20" />
-          </div>
+      <div className="flex items-center gap-2 px-2.5 py-2 pe-10">
+        <NSkeleton className="size-8 shrink-0 rounded-full" />
+        <div className="min-w-0 flex-1 space-y-1">
+          <Bar className="h-3 w-32" />
+          <Bar className="h-2.5 w-24" />
         </div>
-        <div className="space-y-3">
-          <div className="flex gap-2">
-            <NSkeleton className="h-6 w-20 rounded-md" />
-            <NSkeleton className="h-6 w-16 rounded-full" />
-            <NSkeleton className="h-6 w-16 rounded-full" />
-          </div>
-          <div className="grid gap-2">
-            <div className="flex h-4 items-center gap-2"><NSkeleton className="size-4 rounded-sm" /><Bar className="h-3 w-24" /></div>
-            <div className="flex h-4 items-center gap-2"><NSkeleton className="size-4 rounded-sm" /><Bar className="h-3 w-32" /></div>
-          </div>
-        </div>
+        <Bar className="h-5 w-11 rounded-md" />
+      </div>
+      <div className="mx-2.5 flex h-8 items-center gap-1.5 border-t border-border/60">
+        <Bar className="h-5 w-14 rounded-md" />
+        <Bar className="h-5 w-14 rounded-md" />
+        <Bar className="ms-auto h-3 w-22" />
       </div>
     </div>
   );

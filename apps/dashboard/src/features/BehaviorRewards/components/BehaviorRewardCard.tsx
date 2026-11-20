@@ -1,64 +1,37 @@
 'use client';
 
-import { Award, CalendarClock, School, Star } from 'lucide-react';
-import { NBadge, NAvatar } from 'najm-kit';
-import { useTranslation } from 'najm-i18n/react';
+import { CalendarDays, School } from 'lucide-react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
-import {
-  recognitionClasses,
-  rewardClasses,
-  tagClass,
-} from '../behaviorRewardConstants';
-import { avatarVersion } from '@/lib/avatarVersion';
+import { BehaviorRewardStudentIdentity } from './BehaviorRewardStudentIdentity';
+import { PointsMark, RewardChip } from './BehaviorRewardTags';
 
 const BehaviorRewardCard = ({ data }: { data: any }) => {
-  const { t } = useTranslation();
-  const { displayDateTime } = useSchoolFormat();
+  const { displayDate, displayDateTime, displayTime } = useSchoolFormat();
   const reward = data;
+  const placement = `${reward.class?.name || '—'} / ${reward.section?.name || '—'}`;
+  const fullDate = displayDateTime(reward.behaviorAt);
+  const date = fullDate === '—' ? fullDate : `${displayDate(reward.behaviorAt, { day: '2-digit', month: '2-digit' })} · ${displayTime(reward.behaviorAt)}`;
 
-  // A narrow card (a phone, or one column of several) puts the student above
-  // the details: side by side, the name squeezed the badges past the edge.
   return (
-    <div className="@container">
-    <div className="flex flex-col gap-3 p-4 pe-10 @md:flex-row @md:pe-4">
-      <NAvatar
-        src={reward.student?.image}
-        title={reward.student?.name}
-        subtitle={reward.student?.studentCode || '—'}
-        size="lg"
-        version={avatarVersion(reward.student?.image, reward.updatedAt)}
-      />
-      <div className="min-w-0 flex-1 space-y-3">
-        <div className="flex flex-wrap gap-2">
-          <NBadge className="inline-flex rounded-md bg-emerald-50 font-semibold text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
-            <Star className="me-1 h-3.5 w-3.5" />
-            {t(`behaviorRewards.categories.${reward.category}`)}
-          </NBadge>
-          <NBadge className={tagClass(recognitionClasses, reward.recognitionLevel)}>
-            {t(`behaviorRewards.recognitionLevels.${reward.recognitionLevel}`)}
-          </NBadge>
-          <NBadge className={tagClass(rewardClasses, reward.rewardType)}>
-            {t(`behaviorRewards.rewardTypes.${reward.rewardType}`)}
-          </NBadge>
-          {reward.points > 0 ? (
-            <NBadge className="inline-flex items-center rounded-full bg-emerald-100 font-bold text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200">
-              <Award className="me-1 h-3.5 w-3.5" />+{reward.points}
-            </NBadge>
-          ) : null}
-        </div>
-
-        <div className="grid gap-2 text-xs text-muted-foreground sm:grid-cols-2">
-          <div className="flex items-center gap-2">
-            <School className="h-4 w-4 text-emerald-600" />
-            <span>{reward.class?.name || '—'} / {reward.section?.name || '—'}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <CalendarClock className="h-4 w-4 text-emerald-600" />
-            <span>{displayDateTime(reward.behaviorAt)}</span>
-          </div>
-        </div>
+    <div>
+      <div className="flex items-center gap-2 px-2.5 py-2 pe-10">
+        <BehaviorRewardStudentIdentity student={reward.student} updatedAt={reward.updatedAt} description={reward.description} className="flex-1" />
+        {reward.points > 0 && <PointsMark points={reward.points} className="shrink-0 rounded-md border border-amber-200 dark:border-amber-900" />}
       </div>
-    </div>
+
+      <div className="mx-2.5 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-border/60 py-1.5 text-xs text-muted-foreground">
+        <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+          <RewardChip type={reward.rewardType} className="border-0 bg-muted px-1.5" />
+          <span className="inline-flex min-w-0 items-center gap-1 rounded-md bg-muted px-1.5 py-0.5">
+            <School className="size-3.5 shrink-0" aria-hidden />
+            <bdi className="truncate" title={placement}>{placement}</bdi>
+          </span>
+        </div>
+        <span className="inline-flex min-w-0 items-center gap-1.5 tabular-nums">
+          <CalendarDays className="size-3.5 shrink-0" aria-hidden />
+          <time dateTime={reward.behaviorAt} title={fullDate}><bdi>{date}</bdi></time>
+        </span>
+      </div>
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { schoolI18n } from '@sms/contracts/locales';
 import {
-  BEHAVIOR_RECOGNITION_LEVEL_VALUES,
   BEHAVIOR_REWARD_CATEGORY_VALUES,
   BEHAVIOR_REWARD_TYPE_VALUES,
 } from '@sms/contracts';
@@ -17,19 +16,15 @@ const reward = {
   behaviorDate: '2026-02-01',
   behaviorTime: '09:30',
   category: 'leadership',
-  recognitionLevel: 'excellence',
   description: 'Ran the reading corner all week.',
   rewardType: 'badge',
   points: 10,
 };
 
 describe('behaviorRewardSchema', () => {
-  it('accepts every category, level and reward type the API accepts', () => {
+  it('accepts every category and reward type the API accepts', () => {
     for (const category of BEHAVIOR_REWARD_CATEGORY_VALUES) {
       expect(behaviorRewardSchema.safeParse({ ...reward, category }).success).toBe(true);
-    }
-    for (const recognitionLevel of BEHAVIOR_RECOGNITION_LEVEL_VALUES) {
-      expect(behaviorRewardSchema.safeParse({ ...reward, recognitionLevel }).success).toBe(true);
     }
     for (const rewardType of BEHAVIOR_REWARD_TYPE_VALUES) {
       expect(behaviorRewardSchema.safeParse({ ...reward, rewardType }).success).toBe(true);

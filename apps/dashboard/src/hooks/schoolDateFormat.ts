@@ -18,12 +18,14 @@ type FormatOptions = {
   timeFormat: SchoolTimeFormat;
   dateOnly?: boolean;
   withTime?: boolean;
+  /** The time of day alone, in the school's time zone and clock. */
+  timeOnly?: boolean;
 };
 
 /** Numeric school dates follow the saved pattern; instants use the selected time zone. */
 export function formatSchoolDate(
   value: Date | number | string | null | undefined,
-  { locale, timeZone, dateFormat, timeFormat, dateOnly = false, withTime = false }: FormatOptions,
+  { locale, timeZone, dateFormat, timeFormat, dateOnly = false, withTime = false, timeOnly = false }: FormatOptions,
 ): string {
   if (value == null || value === '') return '—';
   const calendarValue = dateOnly && typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value)
@@ -44,11 +46,11 @@ export function formatSchoolDate(
       : dateFormat === 'DD-MM-YY' ? `${day}-${month}-${year.slice(-2)}`
         : dateFormat === 'DD-MM-YYYY' ? `${day}-${month}-${year}`
           : `${month}/${day}/${year}`;
-  if (!withTime) return formattedDate;
+  if (!withTime && !timeOnly) return formattedDate;
   const formattedTime = new Intl.DateTimeFormat(locale, {
     hour: 'numeric', minute: '2-digit', hourCycle: timeFormat === '12' ? 'h12' : 'h23', timeZone,
   }).format(date);
-  return `${formattedDate}, ${formattedTime}`;
+  return timeOnly ? formattedTime : `${formattedDate}, ${formattedTime}`;
 }
 
 /**

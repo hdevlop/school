@@ -28,6 +28,9 @@ describe('school date formatting', () => {
     expect(formatSchoolDate(instant, { ...base, timeFormat: '24', withTime: true })).toBe('06/14/2026, 13:05');
     expect(formatSchoolDate(instant, { ...base, timeZone: 'UTC', withTime: true })).toBe('06/14/2026, 8:05 PM');
     expect(formatSchoolDate('2026-06-15T07:05:00Z', { ...base, timeFormat: '24', withTime: true })).toBe('06/15/2026, 00:05');
+    // The time alone, for a date and time shown on two lines.
+    expect(formatSchoolDate(instant, { ...base, timeFormat: '24', timeOnly: true })).toBe('13:05');
+    expect(formatSchoolDate(instant, { ...base, timeOnly: true })).toBe('1:05 PM');
   });
 
   test('uses saved-setting fallbacks for missing or invalid values', () => {

@@ -152,7 +152,6 @@ export { announcements } from '../../modules/announcements/announcementSchema';
 export {
   behaviorRewards,
   behaviorRewardCategoryDbEnum,
-  behaviorRecognitionLevelDbEnum,
   behaviorRewardTypeDbEnum,
 } from '../../modules/behaviorRewards/behaviorRewardSchema';
 export {

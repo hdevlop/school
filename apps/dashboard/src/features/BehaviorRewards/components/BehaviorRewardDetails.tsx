@@ -1,15 +1,11 @@
 'use client';
 
-import { Award, CalendarClock, Gift, School, Star, UserRound } from 'lucide-react';
-import { NBadge, NAvatar, NSectionInfo } from 'najm-kit';
+import { Award, CalendarClock, Gift, School, UserRound } from 'lucide-react';
+import { NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
-import {
-  recognitionClasses,
-  rewardClasses,
-  tagClass,
-} from '../behaviorRewardConstants';
-import { avatarVersion } from '@/lib/avatarVersion';
+import { CategoryLabel, PointsMark, RewardChip } from './BehaviorRewardTags';
+import { BehaviorRewardStudentIdentity } from './BehaviorRewardStudentIdentity';
 
 const BehaviorRewardDetails = ({ behaviorReward }: { behaviorReward: any }) => {
   const { t } = useTranslation();
@@ -20,25 +16,18 @@ const BehaviorRewardDetails = ({ behaviorReward }: { behaviorReward: any }) => {
   return (
     <div className="space-y-5 p-1">
       <div className="flex items-center gap-4 rounded-xl border border-emerald-100 bg-emerald-50/70 p-4 dark:border-emerald-900 dark:bg-emerald-950/30">
-        <NAvatar src={reward.student?.image} title={reward.student?.name} subtitle={reward.student?.studentCode || '—'} size="lg" version={avatarVersion(reward.student?.image, reward.updatedAt)} />
+        <BehaviorRewardStudentIdentity student={reward.student} updatedAt={reward.updatedAt} size="lg" />
         <div className="min-w-0 flex-1">
-          <div className="mt-2 flex flex-wrap gap-2">
-            <NBadge className={tagClass(recognitionClasses, reward.recognitionLevel)}>
-              {t(`behaviorRewards.recognitionLevels.${reward.recognitionLevel}`)}
-            </NBadge>
-            <NBadge className={tagClass(rewardClasses, reward.rewardType)}>
-              {t(`behaviorRewards.rewardTypes.${reward.rewardType}`)}
-            </NBadge>
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
+            <RewardChip type={reward.rewardType} className="bg-background" />
+            {reward.points > 0 ? <PointsMark points={reward.points} /> : null}
           </div>
         </div>
       </div>
 
       <div className="space-y-2 rounded-xl border p-4">
-        <div className="flex items-center gap-2 text-sm font-semibold text-emerald-700 dark:text-emerald-300">
-          <Star className="h-4 w-4" />
-          {t(`behaviorRewards.categories.${reward.category}`)}
-        </div>
-        <p className="whitespace-pre-wrap text-sm leading-6 text-foreground">{reward.description}</p>
+        <CategoryLabel category={reward.category} withIcon />
+        <p dir="auto" className="whitespace-pre-wrap text-sm leading-6 text-foreground">{reward.description}</p>
       </div>
 
       <div className="grid gap-3 md:grid-cols-2">

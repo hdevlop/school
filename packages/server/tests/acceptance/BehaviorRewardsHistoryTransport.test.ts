@@ -41,7 +41,7 @@ async function request(path: string, token: string, year?: string, method = 'GET
 }
 
 const reward = (studentId: string, behaviorAt: string) => ({
-  studentId, behaviorAt, category: 'respect', recognitionLevel: 'appreciation',
+  studentId, behaviorAt, category: 'respect',
   rewardType: 'verbal_praise', points: 10, description: 'History transport reward',
 });
 

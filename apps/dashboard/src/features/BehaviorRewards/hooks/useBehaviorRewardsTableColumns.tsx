@@ -1,104 +1,91 @@
 import { useMemo } from 'react';
-import { NBadge, NAvatar } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
-import {
-  recognitionClasses,
-  rewardClasses,
-  tagClass,
-} from '../behaviorRewardConstants';
-import { avatarVersion } from '@/lib/avatarVersion';
+import { CategoryLabel, CategoryTile, PointsMark, RewardChip } from '../components/BehaviorRewardTags';
+import { BehaviorRewardStudentIdentity } from '../components/BehaviorRewardStudentIdentity';
 
 import { exportLabel } from '@/shared/tableExport';
 export const useBehaviorRewardsTableColumns = () => {
   const { t } = useTranslation();
-  const { displayDateTime } = useSchoolFormat();
+  const { displayDate, displayTime } = useSchoolFormat();
 
   return useMemo(() => [
+    {
+      accessorKey: 'student.studentCode',
+      header: t('behaviorRewards.table.massarCode'),
+      size: 128,
+      cell: ({ getValue }) => {
+        const code = (getValue() as string | null | undefined)?.trim();
+        return <bdi dir="ltr" className="inline-block max-w-full truncate align-middle font-mono text-xs text-muted-foreground" title={code}>{code || '—'}</bdi>;
+      },
+    },
     {
       accessorKey: 'searchText',
       // The column filters on a search string but shows, and exports, the student.
       meta: { exportValue: (_search: unknown, row: { student?: { name?: string } }) => row.student?.name ?? '' },
       header: t('behaviorRewards.table.student'),
       enableSorting: false,
-      cell: ({ row }) => {
-        const student = row.original.student;
-        return (
-          <NAvatar
-            src={student?.image}
-            title={student?.name || '—'}
-            subtitle={student?.studentCode || '—'}
-            size="sm"
-            version={avatarVersion(student?.image, row.original.updatedAt)}
-          />
-        );
-      },
+      cell: ({ row }) => <BehaviorRewardStudentIdentity student={row.original.student} updatedAt={row.original.updatedAt} />,
     },
     {
       accessorKey: 'classSection',
+      size: 140,
       header: t('behaviorRewards.table.classSection'),
       cell: ({ row }) => (
-        <div className="text-sm font-medium">
-          {row.original.class?.name || '—'}
-          <span className="mx-1.5 text-muted-foreground">/</span>
-          {row.original.section?.name || '—'}
-        </div>
+        <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-md bg-muted px-2 py-0.5 text-xs font-semibold">
+          <bdi>{row.original.class?.name || '—'}</bdi>
+          <span className="text-muted-foreground">·</span>
+          <bdi>{row.original.section?.name || '—'}</bdi>
+        </span>
       ),
     },
     {
       accessorKey: 'category',
       meta: { exportValue: exportLabel(code => t(`behaviorRewards.categories.${code}`)) },
       header: t('behaviorRewards.table.positiveBehavior'),
+      // The category's coloured tile, its name, then what the pupil did.
       cell: ({ row }) => (
-        <div className="max-w-72 space-y-1.5">
-          <NBadge className="inline-flex rounded-md bg-emerald-50 font-semibold text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
-            {t(`behaviorRewards.categories.${row.original.category}`)}
-          </NBadge>
-          <p className="line-clamp-2 text-xs leading-5 text-muted-foreground">{row.original.description}</p>
+        <div className="flex min-w-0 items-center gap-2.5">
+          <CategoryTile category={row.original.category} />
+          <div className="min-w-0">
+            <CategoryLabel category={row.original.category} className="max-w-full" />
+            {row.original.description && (
+              <p title={row.original.description} className="line-clamp-1 text-xs text-muted-foreground"><bdi>{row.original.description}</bdi></p>
+            )}
+          </div>
         </div>
       ),
-    },
-    {
-      accessorKey: 'recognitionLevel',
-      meta: { exportValue: exportLabel(code => t(`behaviorRewards.recognitionLevels.${code}`)) },
-      header: t('behaviorRewards.table.recognition'),
-      cell: ({ getValue }) => {
-        const value = getValue() as string;
-        return <NBadge className={tagClass(recognitionClasses, value)}>{t(`behaviorRewards.recognitionLevels.${value}`)}</NBadge>;
-      },
     },
     {
       accessorKey: 'rewardType',
       meta: { exportValue: exportLabel(code => t(`behaviorRewards.rewardTypes.${code}`)) },
       header: t('behaviorRewards.table.reward'),
-      cell: ({ getValue }) => {
-        const value = getValue() as string;
-        return <NBadge className={tagClass(rewardClasses, value)}>{t(`behaviorRewards.rewardTypes.${value}`)}</NBadge>;
-      },
+      cell: ({ getValue }) => <RewardChip type={getValue() as string} />,
     },
     {
       accessorKey: 'points',
+      size: 90,
       header: t('behaviorRewards.table.points'),
       enableSorting: true,
-      cell: ({ getValue }) => {
-        const points = Number(getValue() || 0);
-        return points > 0 ? (
-          <NBadge className="inline-flex min-w-8 justify-center rounded-full bg-emerald-100 font-bold text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200">
-            +{points}
-          </NBadge>
-        ) : <span className="text-muted-foreground">—</span>;
-      },
+      cell: ({ getValue }) => <PointsMark points={getValue() as number} />,
     },
     {
       accessorKey: 'behaviorAt',
+      size: 200,
       header: t('behaviorRewards.table.behaviorDate'),
       enableSorting: true,
-      cell: ({ getValue }) => <span className="whitespace-nowrap text-sm">{displayDateTime(getValue() as string)}</span>,
+      // The day, and the time under it in grey: one line ran the column wide.
+      cell: ({ getValue }) => (
+        <div className="grid whitespace-nowrap leading-tight">
+          <span className="text-sm font-medium tabular-nums">{displayDate(getValue() as string)}</span>
+          <span className="text-xs tabular-nums text-muted-foreground">{displayTime(getValue() as string)}</span>
+        </div>
+      ),
     },
     {
       accessorKey: 'awardedByUser',
       header: t('behaviorRewards.table.awardedBy'),
       cell: ({ row }) => <span className="block max-w-44 truncate text-sm font-medium">{row.original.awardedByUser?.name || '—'}</span>,
     },
-  ], [displayDateTime, t]);
+  ], [displayDate, displayTime, t]);
 };

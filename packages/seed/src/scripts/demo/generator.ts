@@ -751,7 +751,6 @@ export function behaviorRewardsPack(
       'academic_effort', 'improvement', 'respect', 'helpfulness', 'leadership',
       'teamwork', 'responsibility', 'community_service', 'excellent_attendance', 'other',
    ];
-   const recognitionLevels = ['appreciation', 'achievement', 'excellence'];
    const rewardTypes = [
       'verbal_praise', 'written_praise', 'merit', 'badge',
       'certificate', 'privilege', 'prize', 'other',
@@ -769,16 +768,14 @@ export function behaviorRewardsPack(
          { length: contexts.length ? Math.max(0, count) : 0 },
          (_, i) => {
             const { student, teacher } = contexts[(i * 3) % contexts.length];
-            const recognitionLevel = recognitionLevels[i % recognitionLevels.length];
             return {
                teacherId: teacher.id,
                studentId: student.id,
                behaviorAt: recentMomentInSeedYear(student, i),
                category: categories[i % categories.length],
-               recognitionLevel,
                description: descriptions[i % descriptions.length],
                rewardType: rewardTypes[i % rewardTypes.length],
-               points: recognitionLevel === 'excellence' ? 30 : recognitionLevel === 'achievement' ? 20 : 10,
+               points: [10, 20, 30][i % 3],
                rewardNote: i % 4 === 0 ? 'Recognized during the weekly class celebration.' : null,
             };
          },

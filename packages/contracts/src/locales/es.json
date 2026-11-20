@@ -2513,10 +2513,10 @@
   "behaviorRewards": {
     "table": {
       "recordCount": "{{count}} reconocimientos",
+      "massarCode": "Código Massar",
       "student": "Estudiante",
       "classSection": "Clase / sección",
       "positiveBehavior": "Conducta positiva",
-      "recognition": "Reconocimiento",
       "reward": "Recompensa",
       "points": "Puntos",
       "behaviorDate": "Fecha de conducta",
@@ -2527,7 +2527,6 @@
     "filters": {
       "search": "Buscar estudiante, código o descripción...",
       "category": "Categoría de conducta",
-      "recognitionLevel": "Nivel de reconocimiento",
       "rewardType": "Tipo de recompensa",
       "class": "Clase",
       "section": "Sección"
@@ -2544,8 +2543,6 @@
       "behaviorTime": "Hora de la conducta",
       "category": "Categoría de conducta positiva",
       "categoryPlaceholder": "Seleccionar categoría",
-      "recognitionLevel": "Nivel de reconocimiento",
-      "recognitionLevelPlaceholder": "Seleccionar nivel",
       "description": "Descripción de la conducta",
       "descriptionPlaceholder": "Describe objetivamente la conducta positiva",
       "rewardType": "Tipo de recompensa",
@@ -2565,11 +2562,6 @@
       "community_service": "Servicio comunitario",
       "excellent_attendance": "Asistencia excelente",
       "other": "Otro"
-    },
-    "recognitionLevels": {
-      "appreciation": "Apreciación",
-      "achievement": "Logro",
-      "excellence": "Excelencia"
     },
     "rewardTypes": {
       "verbal_praise": "Elogio verbal",

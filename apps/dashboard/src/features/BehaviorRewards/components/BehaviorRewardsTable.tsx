@@ -13,6 +13,7 @@ import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import BehaviorRewardCard from './BehaviorRewardCard';
+import BehaviorRewardsMobileFilters from './BehaviorRewardsMobileFilters';
 import { BehaviorRewardCardSkeleton } from '@/shared/CardSkeletons';
 import BehaviorRewardDetails from './BehaviorRewardDetails';
 import BehaviorRewardForm from './BehaviorRewardForm';
@@ -49,7 +50,7 @@ const BehaviorRewardsTable = () => {
     .filter(scope.matches)
     .map((reward) => ({
       ...reward,
-      searchText: [reward.student?.name, reward.student?.studentCode, reward.description]
+      searchText: [reward.student?.name, reward.student?.arabicName, reward.student?.studentCode, reward.description]
         .filter(Boolean)
         .join(' '),
       classSection: `${reward.class?.name || ''} ${reward.section?.name || ''}`,
@@ -115,8 +116,18 @@ const BehaviorRewardsTable = () => {
         data={tableData}
         columns={columns}
         filters={filters}
+        inlinePhoneFilters={false}
+        classNames={{
+          header: 'max-md:[&_[data-ntable-mobile-toolbar]]:hidden',
+          content: '[&_table]:min-w-[80rem]',
+          tableHeader: '[&_th:last-child]:w-12',
+        }}
+        renderToolbar={isPhone ? ({ globalFilter, columnFilters }) => (
+          <BehaviorRewardsMobileFilters search={globalFilter} columnFilters={columnFilters} rewardFilters={rewardFilters} scopeFilters={scope.filters} />
+        ) : undefined}
         onCreate={isFamily ? undefined : handleCreate}
         onView={handleView}
+        onRowClick={isPhone ? handleView : undefined}
         onEdit={isFamily ? undefined : handleEdit}
         onDelete={canDelete ? handleDelete : undefined}
         loading={isBehaviorRewardsLoading}

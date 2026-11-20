@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import {
-  behaviorRecognitionLevelEnum,
   behaviorRewardCategoryEnum,
   behaviorRewardTypeEnum,
 } from '../../shared/enums';
@@ -9,7 +8,6 @@ const behaviorRewardInput = z.object({
   studentId: z.string().min(1, 'Student is required'),
   behaviorAt: z.string().datetime({ offset: true, message: 'Behavior date must be a valid ISO timestamp' }),
   category: behaviorRewardCategoryEnum,
-  recognitionLevel: behaviorRecognitionLevelEnum,
   description: z.string().trim().min(1, 'Description is required').max(2000, 'Description is too long'),
   rewardType: behaviorRewardTypeEnum,
   points: z.number().int('Points must be an integer')

@@ -1,10 +1,8 @@
 import {
-  BEHAVIOR_RECOGNITION_LEVEL_VALUES,
   BEHAVIOR_REWARD_CATEGORY_VALUES,
   BEHAVIOR_REWARD_TYPE_VALUES,
 } from '@sms/contracts';
 import type {
-  BehaviorRecognitionLevel,
   BehaviorRewardCategory,
   BehaviorRewardType,
 } from '@sms/contracts';
@@ -24,7 +22,7 @@ const optionsFromValues = <Value extends string>(
   values.map((value) => ({ value, label: t(`${translationPrefix}.${value}`) }));
 
 /**
- * The three selects on the reward form, and the three matching table filters.
+ * The two selects on the reward form, and the two matching table filters.
  *
  * Both used to build the same `.map(value => ({ value, label: t(...) }))` by
  * hand, which is how a filter list drifts from the form that writes it. One
@@ -32,7 +30,6 @@ const optionsFromValues = <Value extends string>(
  */
 
 export const BEHAVIOR_REWARD_CATEGORY_TRANSLATION_PREFIX = 'behaviorRewards.categories';
-export const BEHAVIOR_RECOGNITION_LEVEL_TRANSLATION_PREFIX = 'behaviorRewards.recognitionLevels';
 export const BEHAVIOR_REWARD_TYPE_TRANSLATION_PREFIX = 'behaviorRewards.rewardTypes';
 
 export const buildBehaviorRewardCategoryOptions = (
@@ -42,15 +39,6 @@ export const buildBehaviorRewardCategoryOptions = (
     BEHAVIOR_REWARD_CATEGORY_VALUES,
     t,
     BEHAVIOR_REWARD_CATEGORY_TRANSLATION_PREFIX,
-  );
-
-export const buildBehaviorRecognitionLevelOptions = (
-  t: Translate,
-): readonly EnumOption<BehaviorRecognitionLevel>[] =>
-  optionsFromValues(
-    BEHAVIOR_RECOGNITION_LEVEL_VALUES,
-    t,
-    BEHAVIOR_RECOGNITION_LEVEL_TRANSLATION_PREFIX,
   );
 
 export const buildBehaviorRewardTypeOptions = (

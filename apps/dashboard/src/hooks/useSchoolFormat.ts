@@ -47,6 +47,10 @@ export function useSchoolFormat() {
     formatSchoolDate(value, {
       locale: format.locale, timeZone: format.timeZone, dateFormat, timeFormat, withTime: true,
     }), [dateFormat, format.locale, format.timeZone, timeFormat]);
+  const displayTime = useCallback((value: Date | number | string | null | undefined) =>
+    formatSchoolDate(value, {
+      locale: format.locale, timeZone: format.timeZone, dateFormat, timeFormat, timeOnly: true,
+    }), [dateFormat, format.locale, format.timeZone, timeFormat]);
   const percentFromHundred = useCallback((value: number | null | undefined) =>
     percent(value == null ? null : value / 100, 1), [percent]);
 
@@ -57,6 +61,7 @@ export function useSchoolFormat() {
     displayDate,
     displayDateOnly,
     displayDateTime,
+    displayTime,
     percentFromHundred,
   };
 }
