@@ -114,6 +114,18 @@ the RAG studio (`/rag-studio`), whose dashboard counts the stale phrases.
 
 Reviewed questions and fake HTTP/MCP data live under
 `packages/server/tests/chat/fixtures/`; they never run a paid benchmark.
+`bun run eval:chat` (`scripts/chat-eval.ts`) is the paid one: it asks the running
+local chat the questions in `fixtures/answers/demo-school.json` several times
+and scores each answer (the needed read was called, the stated facts are there,
+no failure text, leaked planning or stray-language words). Run it before and
+after a prompt, routing or transport change; it needs the qualified flow
+(`CHATBOT_FLOW=jev-router-20b`) to measure what users get.
+
+`transport/schoolCompletionCorrection.ts` asks a turn again once, with a
+correction appended to the system message, when a successful OSS20B
+completion calls a tool routing did not offer, is only planning or tool
+syntax, or asks the user for an ID a list tool returns. Provider failures are
+never retried and the model never changes.
 Verification uses `bun run test:chat`, `test:academic-years`, `test:security`,
 `test:boundaries`, `lint`, `typecheck` and `build`.
 

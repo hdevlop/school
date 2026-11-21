@@ -32,12 +32,13 @@ test.each([
   const originalFlow = process.env.CHATBOT_FLOW, originalMode = process.env.CHATBOT_JEV_MODE;
   process.env.CHATBOT_FLOW = 'jev-router-20b'; process.env.CHATBOT_JEV_MODE = 'off';
   const fixture = await createJevFixture({ extraControllers: { ProviderAudit } });
-  let sends = 0;
+  let sends = 0, corrections = 0;
   try {
     const registry = fixture.server.container.get(MCP_REGISTRY) as { tools: Array<{ name: string }> };
     fixture.server.container.set(TOOL_PROVIDER, { findRelevantTools: async () => ({ status: 'routed', tools: registry.tools.filter(tool => tool.name === 'provider-audit_read') }) } as any);
-    globalThis.fetch = schoolChatFetch((async () => {
+    globalThis.fetch = schoolChatFetch((async (_url, init) => {
       sends++;
+      if (String(init?.body).includes('Correction:')) corrections++;
       const body = sends === 1
         ? frame({ content: 'We need private planning.' }) + frame({ tool_calls: [{ index: 0, id: 'call-1', type: 'function', function: { name: item.name, arguments: JSON.stringify(item.input) } }] }, 'tool_calls')
         : frame({ content: 'هادشي من القراءة المسموحة.' }, 'stop');
@@ -52,7 +53,11 @@ test.each([
     const audit = await fixture.server.container.resolve(ProviderAudit);
     expect(audit.inputs).toEqual(item.allowed ? ['actual-id'] : []);
     expect(body).toContain('هادشي من القراءة المسموحة.');
-    if (!item.allowed) expect(body).toContain(schoolChatToolFailureText(query));
+    // A call to a tool routing did not offer never reaches the SDK: the turn
+    // is asked again once with a correction (schoolCompletionCorrection).
+    expect(corrections).toBe(item.id === 'unoffered' ? 1 : 0);
+    if (item.id === 'unoffered') expect(body).not.toContain(schoolChatToolFailureText(query));
+    else if (!item.allowed) expect(body).toContain(schoolChatToolFailureText(query));
     else expect(body).not.toContain('schoolFailedToolCalls');
   } finally {
     globalThis.fetch = originalFetch;

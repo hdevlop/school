@@ -2,11 +2,35 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import { JEV_DECISIONS_URL } from '../jev/jevIntents';
 import { schoolOss20bProvider } from '../routing/schoolOpenRouterProvider';
 import { schoolProviderResponse } from './schoolProviderResponse';
+import { completionProblem, correctionNote, withCorrection } from './schoolCompletionCorrection';
 
 export interface SchoolChatTransportFrame {
   embeddingUrl: string;
   calls: number;
   failedGeneration?: boolean;
+  /** One corrective retry per chat turn (schoolCompletionCorrection). */
+  corrected?: boolean;
+}
+
+const COMPLETION_BYTES = 1_048_576;
+
+/** The whole provider stream, bounded like schoolProviderResponse; null when it is not a stream. */
+async function bufferedCompletion(response: Response): Promise<{ text: string; response: Response } | null> {
+  if (!response.body || !response.headers.get('content-type')?.includes('text/event-stream')) return null;
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let text = '', bytes = 0;
+  for (;;) {
+    const part = await reader.read();
+    if (part.done) break;
+    bytes += part.value.byteLength;
+    if (bytes > COMPLETION_BYTES) { await reader.cancel().catch(() => {}); throw Error('School provider completion exceeds stream bound'); }
+    text += decoder.decode(part.value, { stream: true });
+  }
+  text += decoder.decode();
+  const headers = new Headers(response.headers);
+  headers.delete('content-length'); headers.delete('content-encoding');
+  return { text, response: new Response(text, { status: response.status, statusText: response.statusText, headers }) };
 }
 
 // Share one request context across Next module graphs and hot reload.
@@ -66,8 +90,28 @@ export function schoolChatFetch(fetchImpl: typeof fetch): typeof fetch {
     init?.signal?.throwIfAborted();
     frame.calls++;
     try {
-      const response = await state.dispatch.run(true, () => fetchImpl(input, { ...init, body, redirect: 'error' }));
+      let response = await state.dispatch.run(true, () => fetchImpl(input, { ...init, body, redirect: 'error' }));
       if (generation && !response.ok) frame.failedGeneration = true;
+      // A successful completion with unusable content gets one corrected
+      // request per turn; a provider failure is never retried.
+      if (generation && response.ok && !frame.corrected && frame.calls < 12) {
+        const buffered = await bufferedCompletion(response);
+        if (buffered) {
+          response = buffered.response;
+          const problem = completionProblem(buffered.text, offered);
+          if (problem) {
+            frame.corrected = true;
+            const corrected = JSON.stringify(withCorrection(JSON.parse(body), correctionNote(problem, offered)));
+            if (new TextEncoder().encode(corrected).byteLength <= 200_000) {
+              init?.signal?.throwIfAborted();
+              frame.calls++;
+              response = await state.dispatch.run(true, () => fetchImpl(input, { ...init, body: corrected, redirect: 'error' }));
+              if (!response.ok) frame.failedGeneration = true;
+              console.info(`[school-chat] corrected a completion (${problem.kind})`);
+            }
+          }
+        }
+      }
       return generation ? schoolProviderResponse(response, offered, () => { frame.failedGeneration = true; }) : response;
     } catch (error) {
       if (generation) frame.failedGeneration = true;

@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "purpose": "Answer checks for the real chat on the local demo school (scripts/chat-eval.ts). Not run by bun test: every case calls the paid answer model.",
+  "factsCapturedAt": "2026-11-21",
+  "academicYear": "2026-2027",
+  "actor": "admin",
+  "notes": "Facts come from the demo database: JEBARA RIMA (CM1) has 8 marks and none in Arabic; CM1 A الإملاء averages 7.62/10, CM1 B Mathématiques 8.99, CM1 A Grammaire 8.03; 471 students enrolled this year (the KPI read counts 465), 22 teachers, 3753 marks recorded. Re-capture them after reseeding.",
+  "cases": [
+    { "id": "hello-en", "lang": "en", "q": "hello", "tools": [] },
+    { "id": "hello-ary", "lang": "ary", "q": "سلام عليكم، لاباس؟", "tools": [] },
+    {
+      "id": "student-all-ary", "lang": "ary", "q": "وريني نقط JEBARA RIMA",
+      "tools": ["grades_get_by_student", "grades_get_student_report", "student-profile_get_academic"],
+      "include": [["9.75"], ["10"]]
+    },
+    {
+      "id": "student-arabic-ary", "lang": "ary", "q": "وريني النقط ديال العربية عند jebara rima",
+      "tools": ["grades_get_by_student", "grades_get_student_report", "student-profile_get_academic"],
+      "include": [["ما كاين", "ماكاين", "ما كاينش", "ما كايناش", "لا توجد", "لا يوجد", "ما عندهاش", "ماعندهاش", "ما موجود", "ما كاينينش", "ما فيهاش", "ما تسجل", "ليست", "ما لقيت", "ما لقينا", "غير موجود"]],
+      "exclude": ["Grammaire", "Conjugaison"],
+      "note": "She has no Arabic marks; listing her French marks as Arabic is wrong."
+    },
+    {
+      "id": "student-french-fr", "lang": "fr", "q": "Quelles sont les notes de JEBARA RIMA en français ?",
+      "tools": ["grades_get_by_student", "grades_get_student_report", "student-profile_get_academic"],
+      "include": [["9.75"], ["Grammaire", "grammaire", "Conjugaison", "conjugaison", "Dictée", "dictée"]]
+    },
+    {
+      "id": "cm1a-dictation-ary", "lang": "ary", "q": "وريني نتائج فرض الإملاء ديال CM1 A",
+      "tools": ["grades_get_by_exam"],
+      "include": [["7.62", "7.63", "7.6"]],
+      "exclude": ["Orthographe"],
+      "note": "الإملاء is the Arabic test, not the French Orthographe one."
+    },
+    {
+      "id": "cm1b-maths-ary", "lang": "ary", "q": "نتائج امتحان الرياضيات ديال CM1 B",
+      "tools": ["grades_get_by_exam", "grades_get_by_section"],
+      "include": [["8.99", "8.98", "9.0"]]
+    },
+    {
+      "id": "cm1a-grammar-fr", "lang": "fr", "q": "les notes du contrôle de grammaire de la CM1 A",
+      "tools": ["grades_get_by_exam", "grades_get_by_section"],
+      "include": [["8.03", "8.0"]]
+    },
+    {
+      "id": "kpi-ar", "lang": "ar", "q": "ما متوسط الدرجات العام للمؤسسة وعدد الدرجات المسجلة؟",
+      "tools": ["academic-dashboard_get_kpis", "registrar-dashboard_get_overview"],
+      "include": [["3753", "3 753", "3,753", "3.753", "٣٧٥٣"]]
+    },
+    {
+      "id": "students-count-ary", "lang": "ary", "q": "شحال من تلميذ كاين فالمدرسة؟",
+      "tools": ["students_get_student_count", "academic-dashboard_get_kpis", "registrar-dashboard_get_overview"],
+      "include": [["471", "465", "٤٧١", "٤٦٥"]],
+      "note": "The count read gives 471 enrolled this year; the KPI read's totalStudents is 465. Either answers it."
+    },
+    {
+      "id": "teachers-count-fr", "lang": "fr", "q": "Combien d'enseignants dans l'école ?",
+      "tools": ["teachers_get_teacher_count", "academic-dashboard_get_kpis", "teachers_get_teachers"],
+      "include": [["22"]]
+    },
+    {
+      "id": "both-counts-ary", "lang": "ary", "q": "شحال من أستاذ وشحال من تلميذ فالمدرسة؟",
+      "tools": ["academic-dashboard_get_kpis", "students_get_student_count", "teachers_get_teacher_count"],
+      "include": [["465", "471", "٤٦٥", "٤٧١"], ["22", "٢٢"]]
+    }
+  ]
+}

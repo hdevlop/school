@@ -59,6 +59,65 @@ Promoting every pick gained 3 more grades but lost older ones.
 0.91-1.0 for greetings, follow-ups and "how do I change my password", and below
 0.85 for every question that needed a tool (2026-11-17): none were lost.
 
+## Class tests are exams (2026-11-21)
+
+`schoolRoutingContext.ts` (`classTests` vs `quizzes`), the exam, assessment and
+grades tool descriptions, `semantics/grades.json`, `semantics.json` and
+`toolDependencies.ts` (`exams_get_by_section` brings `grades_get_by_exam`).
+
+The demo school records every contrôle as an exam of type test (222 exams, 0
+assessments), but fard / contrôle wording routed to `grades_get_by_assessment`,
+which answered "none found". 18 of the 21 grades fixtures that expected the
+assessment read name a class test and now expect `grades_get_by_exam`; quizzes
+stay assessments. Retired phrases are deleted by migration
+`0137_retire_routing_phrases.sql` (the seed only adds). Qwen3 Embedding, Jev on,
+320 fixture questions on the dev server:
+
+| | Before (assessment read for tests) | After |
+| --- | --- | --- |
+| Test/exam results, the class's exam list or results read first, results offered | 31 of 40 led with the expected results read, 14 of them the (empty) assessment read | **32 of 37** |
+| `grades_get_by_exam` itself first | 17 of 19 | 14 of 37 |
+| Grades, right tool first (expected tool exactly) | 151-156 | 133 |
+| Older questions, right tool first | 56 | 58 |
+| Greetings and how-to given no tool | 12 of 14 | 12 of 14 |
+
+Jev is asked which tool to call **first**, and for a class test that is the
+class's exam list (the examId is there), so it promotes `exams_get_by_section`
+for about half of these questions; the dependency keeps the results read
+offered with it. "Right tool first" counts only the expected tool, so it fell
+with them. Real chat, "وريني نتائج فرض الإملاء ديال CM1 A": sections → the
+class's exams → `grades_get_by_exam`, each student's mark (OSS20B chose the
+Orthographe test over the Arabic الإملاء one).
+
+`academic-dashboard_get_kpis` returns marks recorded (`totalGrades`), not marks
+pending; its description and four phrases said otherwise, and the chat reported
+3,753 recorded marks as "tests still without marks". Both reworded; KPI fixtures
+14-15 of 15 right first.
+
+## Answers on OSS20B: flow, prompt and correction (2026-11-21)
+
+`bun run eval:chat --runs 3`: 12 questions on the demo school (greetings, a
+named student's marks, class tests, KPIs and counts), each asked 3 times as
+the admin, OSS20B throughout. A pass needs the read called, the facts stated
+and no failure text, leaked planning or stray-language words.
+
+| Setup | Passed of 36 | Median |
+| --- | --- | --- |
+| `CHATBOT_FLOW` unset (default temperature, Cerebras first) | 18 (50%) | 2.9 s |
+| `CHATBOT_FLOW=jev-router-20b` (temperature 0, CoreWeave, 4096 tokens) | 30 (83%) | 1.5 s |
+| + system prompt: a named student is not personal; class tests are exams | 30 (83%), different failures | 1.6 s |
+| + one corrective retry (`schoolCompletionCorrection.ts`) | **35 (97%)** | 1.8 s |
+
+The flow alone removed every failure notice, leaked planning and stray
+word. The prompt fixed the parent-account refusals for named students and the
+class-test chain; the remaining two questions failed every run the same way
+(temperature 0): an identity tool routing did not offer, and asking the user
+for an exam ID. The correction fired 3 times (unoffered tool) and rescued 2.
+Still wrong once: Rima's Arabic marks answered with her French ones.
+
+For comparison, OSS120B on the default flow answered 12 of 15 of a smaller
+set the same day; the qualified OSS20B flow with the correction does better.
+
 ## Phrases per tool: at most 12
 
 `MAX_PER_TOOL` in `packages/server/tests/chat/RoutingSemantics.test.ts`. A tool
