@@ -15,7 +15,7 @@ import { MAX_TRUSTED_PROXY_HOPS } from 'najm-rate';
  * variable's name; `assertServerEnv()` reads them all when the server is
  * built, so startup lists every problem at once.
  *
- * Variables Najm reads itself (NODE_ENV, NEXT_PHASE, OPENROUTER_API_KEY, ...)
+ * Variables Najm reads itself (NODE_ENV, NEXT_PHASE, ...)
  * are not here. All are set in `apps/dashboard/.env.local`. The dashboard's
  * server components and route handlers read the same `env` through
  * `@sms/server/env`; browser code reads only NODE_ENV and NEXT_PUBLIC_*.
@@ -70,6 +70,7 @@ const SOURCE = {
   CHATBOT_JEV_THRESHOLD: () => process.env.CHATBOT_JEV_THRESHOLD,
   CHATBOT_JEV_OPERATING_TIMEOUT_MS: () => process.env.CHATBOT_JEV_OPERATING_TIMEOUT_MS,
   CHATBOT_JEV_RERANK: () => process.env.CHATBOT_JEV_RERANK,
+  OPENROUTER_API_KEY: () => process.env.OPENROUTER_API_KEY,
 
   NOTIFICATIONS_DISPATCH_ENABLED: () => process.env.NOTIFICATIONS_DISPATCH_ENABLED,
   NOTIFICATIONS_PUSH_ENABLED: () => process.env.NOTIFICATIONS_PUSH_ENABLED,
@@ -243,6 +244,12 @@ export const env = {
     get jevOperatingTimeoutMs() { return int('CHATBOT_JEV_OPERATING_TIMEOUT_MS', { fallback: 3000, min: 1, max: 10_000 }); },
     /** CHATBOT_JEV_RERANK: Jev as a second judge after tool routing, independent of the flow and mode. Read at boot. Default off. */
     get jevRerank() { return flag('CHATBOT_JEV_RERANK'); },
+    /**
+     * OPENROUTER_API_KEY: used only when the AI settings choose OpenRouter on
+     * its own address and store no key (modules/chat/transport/openRouterKeyFallback.ts).
+     * A key saved in the AI settings always wins.
+     */
+    get openRouterApiKey() { return text('OPENROUTER_API_KEY'); },
   },
 
   notifications: {

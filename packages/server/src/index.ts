@@ -6,6 +6,7 @@ import { registerYearPropertyInjector, registerYearRequestScope } from './module
 import { yearRequestControllers } from './config/yearScope';
 import { registerSchoolChatRequest } from './modules/chat/transport/registerSchoolChatRequest';
 import { bindJevToolReranker } from './modules/chat/jev/JevToolReranker';
+import { installOpenRouterKeyFallback } from './modules/chat/transport/openRouterKeyFallback';
 import { assertServerEnv } from './env';
 
 export { loadActiveAcademicYearLabel, loadOwnSidebarOrder, loadSchoolUiSettings, type SchoolUiSettings } from './uiSettings';
@@ -20,5 +21,6 @@ registerYearPropertyInjector(server.container);
 registerYearRequestScope(server.container, yearRequestControllers);
 registerSchoolChatRequest(server.container);
 bindJevToolReranker(server.container);
+installOpenRouterKeyFallback();
 
 export default server;
