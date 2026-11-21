@@ -7,7 +7,6 @@ export type HomeworkPayload = {
   id?: string;
   sectionIds: string[];
   subjectId: string;
-  subSubject?: string | null;
   teacherId?: string;
   title: string;
   content?: string | null;
@@ -22,17 +21,6 @@ export const getHomeworkApi = async (): Promise<{ data: HomeworkRow[] }> => {
 
 export const getHomeworkByIdApi = async (id: string): Promise<{ data: HomeworkRow }> => {
   const res = await api.get(`/homework/${id}`);
-  return res.data;
-};
-
-/** The parts a subject is taught as in a class or its sections: Massar's that year, or the subject's own. */
-export const getHomeworkPartsApi = async (query: { subjectId: string; classId?: string; sectionIds?: string[] }): Promise<{ data: string[] }> => {
-  const res = await api.get('/homework/parts', {
-    params: {
-      subjectId: query.subjectId,
-      ...(query.sectionIds?.length ? { sectionIds: query.sectionIds.join(',') } : { classId: query.classId }),
-    },
-  });
   return res.data;
 };
 

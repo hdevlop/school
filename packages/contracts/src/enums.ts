@@ -151,6 +151,7 @@ export type AlertStatus = (typeof ALERT_STATUS_VALUES)[number];
 
 export const BEHAVIOR_REWARD_CATEGORY_VALUES = [
   'academic_effort',
+  'classwork',
   'improvement',
   'respect',
   'helpfulness',

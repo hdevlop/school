@@ -3,7 +3,7 @@
 import { FormInput, NErrorState, NForm, NFormSectionHeader as FormSectionHeader, NLoadingState } from 'najm-kit';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { BookMarked, BookOpen, Building, Calendar, CalendarClock, DoorOpen, FileText, NotebookPen, Paperclip, User } from 'lucide-react';
+import { BookOpen, Building, Calendar, CalendarClock, DoorOpen, FileText, NotebookPen, Paperclip, User } from 'lucide-react';
 import { localDateInput } from 'najm-kit/format';
 import { useTranslation } from 'najm-i18n/react';
 import type { HomeworkRow } from '@sms/contracts';
@@ -17,8 +17,6 @@ import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYe
 import { eligibleAssessmentTeachers } from '@/features/Assessments/config/assessmentTeachers';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useTeacherOverview } from '@/features/Dashboard/hooks/useTeacherDashboard';
-import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
-import { getHomeworkPartsApi } from '@/services/homeworkApi';
 import { createHomeworkSchema, type HomeworkSubmitValues } from '../config/homeworkSchemas';
 import { taughtClassIds, taughtSectionIds, taughtSubjectIds, type TeachingAssignment } from '../config/homeworkTeaching';
 import { liveAttachments } from '../config/homeworkFiles';
@@ -73,7 +71,7 @@ function useOwnTeaching(isTeacher: boolean): OwnTeaching {
   }, [isTeacher, teachers, overview, isOverviewLoading, isTeachersLoading]);
 }
 
-const HomeworkSubjectSelect = ({ own }: { own: OwnTeaching }) => {
+const HomeworkSubjectSelect = ({ own, wide }: { own: OwnTeaching; wide: boolean }) => {
   const { t } = useTranslation();
   const { setValue } = useFormContext();
   const { subjects, isSubjectsLoading } = useSubjects();
@@ -98,54 +96,20 @@ const HomeworkSubjectSelect = ({ own }: { own: OwnTeaching }) => {
   // A teacher with one subject never sees the field: it waits for their assignments rather than
   // showing while they load and vanishing once they say there is nothing to choose.
   if (own.isLoading || (taught && only)) return null;
+  // Alone in its row (a teacher names no teacher), it takes the whole width.
   return (
-    <FormInput
-      name="subjectId"
-      type="select"
-      formLabel={t('homework.form.subject')}
-      placeholder={t('homework.form.subjectPlaceholder')}
-      icon={BookOpen}
-      items={options}
-      required
-      disabled={isSubjectsLoading || own.isLoading}
-    />
-  );
-};
-
-// The part of the chosen subject as this class is taught it: Massar's parts for
-// the class's level that year (CP Français: Graphisme…), or without Massar the
-// subject's own sub-subjects. The server decides the list and checks it again.
-// Shown only when there is one; optional, and dropped when it no longer applies.
-const HomeworkSubSubjectSelect = () => {
-  const { t } = useTranslation();
-  const { setValue } = useFormContext();
-  const [classId, sectionIds, subjectId, subSubject] = useWatch({ name: ['classId', 'sectionIds', 'subjectId', 'subSubject'] });
-  const targets = useMemo(() => [...(sectionIds || [])].filter(Boolean).sort(), [sectionIds]);
-  const { data: parts, isLoading } = useYearScopedList({
-    resource: 'homework-parts',
-    parts: [subjectId, classId, targets.join(',')],
-    fetch: () => getHomeworkPartsApi({ subjectId, classId, sectionIds: targets }),
-    enabled: Boolean(subjectId && classId),
-  });
-  const options = useMemo(() => (subjectId && classId ? parts as string[] : [])
-    .map((part) => ({ value: part, label: part })), [parts, subjectId, classId]);
-
-  useEffect(() => {
-    if (!isLoading && subSubject && !options.some((option) => option.value === subSubject)) {
-      setValue('subSubject', null, { shouldDirty: true });
-    }
-  }, [isLoading, subSubject, options, setValue]);
-
-  if (!options.length) return null;
-  return (
-    <FormInput
-      name="subSubject"
-      type="select"
-      formLabel={t('homework.form.subSubject')}
-      placeholder={t('homework.form.subSubjectPlaceholder')}
-      icon={BookMarked}
-      items={options}
-    />
+    <div className={wide ? 'col-span-2 min-w-0' : 'min-w-0'}>
+      <FormInput
+        name="subjectId"
+        type="select"
+        formLabel={t('homework.form.subject')}
+        placeholder={t('homework.form.subjectPlaceholder')}
+        icon={BookOpen}
+        items={options}
+        required
+        disabled={isSubjectsLoading || own.isLoading}
+      />
+    </div>
   );
 };
 
@@ -156,6 +120,15 @@ const SectionsMultiselect = ({ initialClassId, own }: { initialClassId: string; 
   const classId = useWatch({ name: 'classId' });
   const taught = useMemo(() => taughtSectionIds(own.assignments, classId), [own.assignments, classId]);
 
+  const options = useMemo(() => (sections || [])
+    .filter((section: any) => !classId || section.classId === classId)
+    .filter((section: any) => !taught || taught.has(section.id))
+    .map((section: any) => ({ value: section.id, label: section.name })), [sections, classId, taught]);
+
+  // A teacher's homework goes to every section they teach in the class unless they untick one:
+  // filled when the class is chosen (or changed) and nothing is ticked yet. Others start empty,
+  // since the teacher they then name must teach every section chosen.
+  const sectionIds = useWatch({ name: 'sectionIds' }) as string[] | undefined;
   const hydrated = useRef(false);
   useEffect(() => {
     if (!hydrated.current) {
@@ -164,11 +137,10 @@ const SectionsMultiselect = ({ initialClassId, own }: { initialClassId: string; 
     }
     if (classId !== initialClassId) setValue('sectionIds', []);
   }, [classId, initialClassId, setValue]);
-
-  const options = (sections || [])
-    .filter((section: any) => !classId || section.classId === classId)
-    .filter((section: any) => !taught || taught.has(section.id))
-    .map((section: any) => ({ value: section.id, label: section.name }));
+  useEffect(() => {
+    if (!taught || own.isLoading || isSectionsLoading || !classId || sectionIds?.length || !options.length) return;
+    setValue('sectionIds', options.map((option) => option.value), { shouldValidate: true });
+  }, [taught, own.isLoading, isSectionsLoading, classId, sectionIds, options, setValue]);
 
   // Half a phone's width: the placeholder ends in "…" rather than wrapping the box.
   return (
@@ -187,6 +159,29 @@ const SectionsMultiselect = ({ initialClassId, own }: { initialClassId: string; 
       disabled={isSectionsLoading || own.isLoading || !classId}
     />
     </div>
+  );
+};
+
+// A teacher of a single class finds it chosen; anyone else, or a class already set, is left as is.
+const HomeworkClassSelect = ({ items, own, loading }: { items: { value: string; label: string }[]; own: OwnTeaching; loading: boolean }) => {
+  const { t } = useTranslation();
+  const { setValue } = useFormContext();
+  const classId = useWatch({ name: 'classId' });
+  const only = own.assignments && !own.isLoading && !loading && items.length === 1 ? items[0].value : null;
+  useEffect(() => {
+    if (only && !classId) setValue('classId', only, { shouldValidate: true });
+  }, [only, classId, setValue]);
+  return (
+    <FormInput
+      name="classId"
+      type="select"
+      formLabel={t('homework.form.class')}
+      placeholder={t('homework.form.classPlaceholder')}
+      icon={Building}
+      items={items}
+      required
+      disabled={loading || own.isLoading}
+    />
   );
 };
 
@@ -224,7 +219,6 @@ const HomeworkForm = ({ homework = null, place = null }: { homework?: HomeworkRo
     classId: initialClassId,
     sectionIds: initialSectionIds,
     subjectId: homework?.subject?.id || '',
-    subSubject: homework?.subSubject || null,
     teacherId: homework?.teacher?.id || '',
     date: homework?.date || (calendar ? teachingDateWithinYear(localDateInput(), calendar) : undefined),
     dueOn: homework?.dueOn || '',
@@ -242,7 +236,6 @@ const HomeworkForm = ({ homework = null, place = null }: { homework?: HomeworkRo
       ...(homework?.id ? { id: homework.id } : {}),
       sectionIds: [...new Set(values.sectionIds.filter(Boolean))],
       subjectId: values.subjectId,
-      subSubject: values.subSubject || null,
       ...(teacherRequired && values.teacherId ? { teacherId: values.teacherId } : {}),
       title: values.title,
       content: values.content || null,
@@ -263,22 +256,14 @@ const HomeworkForm = ({ homework = null, place = null }: { homework?: HomeworkRo
     <div className="flex w-full flex-col gap-4">
       <NForm key={viewingYear} id="homework-form" schema={schema} defaultValues={defaultValues} onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4">
-          {/* Where the homework goes comes first, filled in from where the list is filtered and
-              changed in place: nothing else in the form moves when the class or a section does. */}
+          {/* The section header opens the form; where the homework goes comes first under it, filled
+              in from where the list is filtered and changed in place: nothing else in the form moves
+              when the class or a section does. */}
+          <FormSectionHeader icon={NotebookPen} title={t('homework.form.details')} />
           <div className="grid grid-cols-2 gap-3 md:gap-4">
-            <FormInput
-              name="classId"
-              type="select"
-              formLabel={t('homework.form.class')}
-              placeholder={t('homework.form.classPlaceholder')}
-              icon={Building}
-              items={classOptions}
-              required
-              disabled={isClassesLoading || own.isLoading}
-            />
+            <HomeworkClassSelect items={classOptions} own={own} loading={isClassesLoading} />
             <SectionsMultiselect initialClassId={initialClassId} own={own} />
           </div>
-          <FormSectionHeader icon={NotebookPen} title={t('homework.form.details')} />
           <FormInput
             name="title"
             type="text"
@@ -295,12 +280,11 @@ const HomeworkForm = ({ homework = null, place = null }: { homework?: HomeworkRo
             icon={FileText}
           />
 
-          {/* The subject, its sub-subject and the teacher, each when there is a choice. Shown only
-              while a field in it is: a teacher of one subject without sub-subjects has none, and the
-              empty row would add a second gap between Détails and the dates. */}
+          {/* The subject and the teacher, each when there is a choice. Shown only while a field in
+              it is: a teacher of one subject has none, and the empty row would add a second gap
+              between Détails and the dates. One homework covers the whole subject: no sub-subject. */}
           <div className="hidden grid-cols-2 gap-3 has-[>:not(.hidden)]:grid md:gap-4">
-            <HomeworkSubjectSelect own={own} />
-            <HomeworkSubSubjectSelect />
+            <HomeworkSubjectSelect own={own} wide={!teacherRequired} />
             {teacherRequired && <HomeworkTeacherSelect />}
           </div>
 

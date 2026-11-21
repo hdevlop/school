@@ -8,7 +8,8 @@ const behaviorRewardInput = z.object({
   studentId: z.string().min(1, 'Student is required'),
   behaviorAt: z.string().datetime({ offset: true, message: 'Behavior date must be a valid ISO timestamp' }),
   category: behaviorRewardCategoryEnum,
-  description: z.string().trim().min(1, 'Description is required').max(2000, 'Description is too long'),
+  // Optional: the category and reward already say what happened; a note only adds detail.
+  description: z.string().trim().max(2000, 'Description is too long').optional(),
   rewardType: behaviorRewardTypeEnum,
   points: z.number().int('Points must be an integer')
     .min(0, 'validationMessages.pointsRange').max(100, 'validationMessages.pointsRange'),

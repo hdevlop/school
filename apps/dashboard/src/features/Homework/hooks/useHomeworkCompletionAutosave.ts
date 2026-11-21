@@ -43,9 +43,10 @@ export function useHomeworkCompletionAutosave(id: string, roster: HomeworkRoster
     return request.current;
   }
 
-  function change(entries: HomeworkCompletionEntry[]) {
+  /** Saves the edits, recording the default for the unchecked pupils of `defaultsFor` (the roster given). */
+  function change(entries: HomeworkCompletionEntry[], defaultsFor: readonly HomeworkRosterEntry[] = roster) {
     if (!scope.ready) return;
-    pending.current = queueCompletionEntries(roster, pending.current, entries);
+    pending.current = queueCompletionEntries(defaultsFor, pending.current, entries);
     setEdits(new Map(pending.current));
     void flush();
   }

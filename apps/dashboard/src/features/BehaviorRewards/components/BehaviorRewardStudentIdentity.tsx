@@ -1,6 +1,6 @@
 'use client';
 
-import { NAvatar } from 'najm-kit';
+import { NAvatar, cn } from 'najm-kit';
 import { accountAvatar } from '@/features/Home/config/accountAvatar';
 import { avatarVersion } from '@/lib/avatarVersion';
 
@@ -30,11 +30,16 @@ export function BehaviorRewardStudentIdentity({ student, updatedAt, description,
       version={avatarVersion(student?.image, updatedAt)}
       size={size}
       className={className}
-      classNames={{ root: 'min-w-0 gap-2', avatar: 'shrink-0', title: 'font-semibold leading-tight', meta: 'min-w-0' }}
+      classNames={{
+        root: 'min-w-0 gap-2',
+        avatar: 'shrink-0',
+        title: cn('font-semibold leading-tight', size === 'lg' && 'whitespace-normal wrap-anywhere'),
+        meta: 'min-w-0',
+      }}
       meta={arabicName || note ? (
         <span className="flex min-w-0 items-baseline gap-1.5">
           {arabicName && (
-            <bdi lang="ar" className={note ? 'max-w-3/5 shrink-0 truncate' : 'min-w-0 truncate'} title={arabicName}>
+            <bdi lang="ar" className={cn('min-w-0', note && 'max-w-3/5 shrink-0', size === 'lg' ? 'wrap-anywhere' : 'truncate')} title={arabicName}>
               {arabicName}
             </bdi>
           )}

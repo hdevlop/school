@@ -232,7 +232,7 @@ function StaffCompetencies() {
   const selected = view === 'students'
     ? shown.find((student) => student.id === studentId) ?? (splitRoster ? shown[0] : undefined)
     : undefined;
-  const { preview, classPreview, printMenu } = useFollowUpReport({
+  const { preview, classPreview, printMenu, roundPicker } = useFollowUpReport({
     assignment: catalog.isLoading || catalog.error ? undefined : assignment,
     // A report covers the months up to its Contrôle: it picks their competencies from the year's list.
     domains: yearDomains, students, studentId: selected?.id, highlightId: selected?.id ?? studentId,
@@ -337,7 +337,13 @@ function StaffCompetencies() {
     body = <CompetencyOverview domains={domains} index={index} studentIds={studentIds} month={month} onOpen={setRosterCompetencyId} />;
   } else if (view === 'report') {
     // The class report follows its Contrôle, picked in it, not the month.
-    body = assignment ? <div className="mx-auto w-full max-w-6xl">{classPreview}</div> : null;
+    // A phone has no room in its filters row: the Contrôle picker stays above the report.
+    body = assignment ? (
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-2">
+        {phone ? roundPicker : null}
+        {classPreview}
+      </div>
+    ) : null;
   } else if (splitRoster) {
     desktopWorkspace = (
       <div className="grid min-h-0 flex-1 grid-cols-[clamp(16rem,24%,24rem)_minmax(0,1fr)] gap-2">
@@ -442,6 +448,7 @@ function StaffCompetencies() {
             <div className="min-w-0 lg:w-48">
               <Filter value={month} onChange={setMonth} items={months.items} label={t('competencies.filters.month')} />
             </div>
+            {view === 'report' && assignment && roundPicker ? <div className="col-span-2 min-w-0 lg:w-64">{roundPicker}</div> : null}
             {!desktop && showSearch ? <div className="col-span-2 min-w-0 lg:w-72">{searchInput}</div> : null}
             <div className="col-span-2 lg:ms-auto">
               <ViewToggle view={view} onChange={setView} />

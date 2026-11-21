@@ -73,8 +73,11 @@ export class BehaviorRewardValidator {
     }
   }
 
-  ensureSchoolWide(actor: BehaviorRewardActor) {
-    if (!SCHOOL_WIDE_ROLES.includes(actor.role ?? '')) Err(403, this.bt('deleteAdminOnly'));
+  /** School-wide roles delete any reward; a teacher only one they gave; monitors and supervisors none. */
+  ensureCanDelete(record: { awardedBy: string }, actor: BehaviorRewardActor) {
+    if (SCHOOL_WIDE_ROLES.includes(actor.role ?? '')) return;
+    if (actor.role !== 'teacher') Err(403, this.bt('deleteAdminOnly'));
+    if (record.awardedBy !== actor.id) Err(403, this.bt('notOwner'));
   }
 
   ensureBehaviorDate(value: string) {

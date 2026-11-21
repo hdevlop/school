@@ -79,6 +79,16 @@ describe('Home cards', () => {
     expect(cards.map((card) => card.id)).toEqual(expect.arrayContaining(['/dashboard', '/staff', '/fees', '/grades', '/settings']));
   });
 
+  it.each(['teacher', 'parent'])('uses one Homework entry for a %s', (role) => {
+    const permissions = ['read:homework'];
+    const current = viewer(role, permissions);
+    const homeworkIds = (items: ReadonlyArray<{ id?: string; children?: readonly { id?: string }[] }>) =>
+      items.flatMap((item) => [item.id, ...(item.children ?? []).map((child) => child.id)])
+        .filter((id) => id === '/homework' || id === '/homework-follow-up');
+    expect(homeworkIds(createHomeCards(t, current, permissions))).toEqual(['/homework']);
+    expect(homeworkIds(createSidebarItems(t, current))).toEqual(['/homework']);
+  });
+
   it('offers no link to the disabled visit-request and public-page screens', () => {
     // Both routes render notFound() since 4429ad5; a card would open a 404.
     const ids = createHomeCards(t, viewer('admin', ['*:*']), ['*:*']).map((card) => card.id);

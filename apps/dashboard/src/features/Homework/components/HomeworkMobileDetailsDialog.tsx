@@ -1,15 +1,14 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { AlarmClock, ArrowLeft, BookOpen, Building, Calendar, Eye, NotebookPen, Paperclip, SquareCheckBig, User, X, type LucideIcon } from 'lucide-react';
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, NajmScroll } from 'najm-kit';
+import { AlarmClock, BookOpen, Building, Calendar, Eye, NotebookPen, Paperclip, SquareCheckBig, User, type LucideIcon } from 'lucide-react';
+import { NSheet } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import type { HomeworkRow } from '@sms/contracts';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import HomeworkAttachments from './HomeworkAttachments';
+import HomeworkMissedPupils from './HomeworkMissedPupils';
 import { CompletionBadge, homeworkSectionNames, ParentAcknowledgment } from './HomeworkCard';
-
-const closeControl = 'grid size-11 place-items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
 
 function DetailTile({ icon: Icon, label, children }: { icon: LucideIcon; label: string; children: ReactNode }) {
   return (
@@ -25,10 +24,10 @@ function DetailTile({ icon: Icon, label, children }: { icon: LucideIcon; label: 
   );
 }
 
-export default function HomeworkMobileDetailsDialog({ homework, onOpenChange, zIndex }: {
+/** One homework on a phone, in the app's standard sheet (as its follow-up opens). */
+export default function HomeworkMobileDetailsDialog({ homework, onClose }: {
   homework: HomeworkRow;
-  onOpenChange: (open: boolean) => void;
-  zIndex: number;
+  onClose: () => void;
 }) {
   const { t } = useTranslation();
   const { displayDateOnly } = useSchoolFormat();
@@ -43,26 +42,9 @@ export default function HomeworkMobileDetailsDialog({ homework, onOpenChange, zI
   const missed = counts ? counts.incomplete + counts.notDone : 0;
 
   return (
-    <Dialog open onOpenChange={onOpenChange}>
-      <DialogContent padding="none" hideClose aria-describedby={undefined} style={{ zIndex }}
-        className="flex h-dvh max-h-dvh min-h-0 max-w-none flex-col border-0 bg-background md:h-auto md:max-h-[90dvh] md:max-w-lg md:rounded-2xl">
-        <DialogHeader className="grid shrink-0 grid-cols-[2.75rem_minmax(0,1fr)_2.75rem] items-center gap-1 px-2 py-1 text-center">
-          <DialogClose type="button" aria-label={t('homework.card.backToList')} className={closeControl}>
-            <span className="grid size-8 place-items-center rounded-lg bg-muted text-foreground">
-              <ArrowLeft className="size-[1.125rem] rtl:rotate-180" aria-hidden />
-            </span>
-          </DialogClose>
-          <DialogTitle className="text-xl leading-tight font-bold">{t('homework.dialogs.viewTitle')}</DialogTitle>
-          <DialogClose type="button" aria-label={t('common.close')} className={closeControl}>
-            <span className="grid size-8 place-items-center rounded-full border border-primary text-primary">
-              <X className="size-4" aria-hidden />
-            </span>
-          </DialogClose>
-        </DialogHeader>
-
-        <NajmScroll axis="y" className="min-h-0 flex-1">
-          <div className="px-2.5 pt-1.5 pb-[max(.75rem,env(safe-area-inset-bottom))]">
-            <article className="flex min-w-0 flex-col gap-3.5 rounded-2xl border bg-card p-3 text-card-foreground shadow-sm">
+    <NSheet open onOpenChange={(open) => { if (!open) onClose(); }} icon={NotebookPen} title={t('homework.dialogs.viewTitle')}
+      description={displayDateOnly(homework.date)} width={560}>
+            <article className="flex min-w-0 flex-col gap-3.5">
               <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 px-1 py-0.5">
                 <span className="grid size-15 place-items-center rounded-full bg-primary text-primary-foreground">
                   <NotebookPen className="size-7" aria-hidden />
@@ -119,9 +101,6 @@ export default function HomeworkMobileDetailsDialog({ homework, onOpenChange, zI
                         <span className="rounded-md bg-emerald-500/15 px-1.5 py-0.5 text-emerald-700 dark:text-emerald-300">
                           {t('homework.completion.doneCount', { count: counts.reviewed - missed })}
                         </span>
-                        <span className={missed ? 'rounded-md bg-destructive/15 px-1.5 py-0.5 text-red-700 dark:text-red-300' : 'rounded-md bg-muted px-1.5 py-0.5 text-muted-foreground'}>
-                          {t('homework.completion.missed', { count: missed })}
-                        </span>
                       </span>
                     ) : t('homework.completion.notReviewed')}
                   </DetailTile>
@@ -131,11 +110,14 @@ export default function HomeworkMobileDetailsDialog({ homework, onOpenChange, zI
                   </DetailTile>
                 ) : null}
                 {homework.studentCount != null && (
-                  <DetailTile icon={Eye} label={t('homework.card.seenByParents')}>
+                  <DetailTile icon={Eye} label={t('homework.card.seenShort')}>
                     {t('homework.card.seenCount', { seen: homework.seenCount ?? 0, total: homework.studentCount })}
                   </DetailTile>
                 )}
               </div>
+
+              {/* Staff see who missed it once the follow-up recorded someone; families never get counts. */}
+              {counts && missed > 0 && <HomeworkMissedPupils homeworkId={homework.id} />}
 
               {attachments.length > 0 && (
                 <section className="grid gap-2.5 border-t pt-3">
@@ -148,9 +130,6 @@ export default function HomeworkMobileDetailsDialog({ homework, onOpenChange, zI
               )}
               {!!homework.children?.length && <ParentAcknowledgment homework={homework} />}
             </article>
-          </div>
-        </NajmScroll>
-      </DialogContent>
-    </Dialog>
+    </NSheet>
   );
 }

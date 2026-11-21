@@ -56,6 +56,11 @@ describe('behaviorRewardSchema', () => {
     }
   });
 
+  it('records a reward without a description', () => {
+    expect(behaviorRewardSchema.safeParse({ ...reward, description: '' }).success).toBe(true);
+    expect(behaviorRewardSchema.safeParse({ ...reward, description: undefined }).success).toBe(true);
+  });
+
   it('needs both halves of the timestamp the form joins', () => {
     expect(behaviorRewardSchema.safeParse({ ...reward, behaviorDate: '' }).success).toBe(false);
     expect(behaviorRewardSchema.safeParse({ ...reward, behaviorTime: '' }).success).toBe(false);

@@ -72,7 +72,7 @@ describe('a monitor recognizes behavior', () => {
   });
 
   it('but deletes none', () => {
-    expect(() => placedIn('managed-class').ensureSchoolWide(manager)).toThrow();
+    expect(() => placedIn('managed-class').ensureCanDelete({ awardedBy: manager.id }, manager)).toThrow();
   });
 });
 

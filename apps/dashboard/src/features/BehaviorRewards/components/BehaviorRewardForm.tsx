@@ -64,20 +64,20 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
           disabled={isStudentsLoading}
         />
 
-        {/* One per row on a phone, as the discipline form: side by side the long labels wrap and the fields misalign. */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 [&>*]:min-w-0">
+        {/* One row, even on a phone: the short labels keep the fields aligned, and the date gets the wider column. */}
+        <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-3 md:grid-cols-2 md:gap-4 [&>*]:min-w-0">
           <FormInput
             name="behaviorDate"
             type="date"
             icon={CalendarClock}
-            formLabel={t('behaviorRewards.form.behaviorDate')}
+            formLabel={t('behaviorRewards.form.date')}
             required
           />
           <FormInput
             name="behaviorTime"
             type="time"
             icon={CalendarClock}
-            formLabel={t('behaviorRewards.form.behaviorTime')}
+            formLabel={t('behaviorRewards.form.time')}
             required
           />
         </div>
@@ -117,7 +117,6 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
           icon={FileText}
           formLabel={t('behaviorRewards.form.description')}
           placeholder={t('behaviorRewards.form.descriptionPlaceholder')}
-          required
         />
       </div>
     </NForm>

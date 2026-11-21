@@ -25,7 +25,7 @@ export const createBehaviorRewardSchema = (t: T) => z.object({
   behaviorDate: z.string().min(1, t('validationMessages.behaviorDateIsRequired')),
   behaviorTime: z.string().min(1, t('validationMessages.behaviorTimeIsRequired')),
   category: z.enum(BEHAVIOR_REWARD_CATEGORY_VALUES),
-  description: z.string().trim().min(1, t('validationMessages.descriptionIsRequired')).max(2000, t('validationMessages.descriptionIsTooLong')),
+  description: z.string().trim().max(2000, t('validationMessages.descriptionIsTooLong')).optional(),
   rewardType: z.enum(BEHAVIOR_REWARD_TYPE_VALUES),
   points: z.coerce.number(t('validationMessages.pointsMustBeAnInteger'))
     .int(t('validationMessages.pointsMustBeAnInteger'))

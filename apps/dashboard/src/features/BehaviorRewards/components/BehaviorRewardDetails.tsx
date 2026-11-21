@@ -1,88 +1,103 @@
 'use client';
 
-import { Award, CalendarClock, Gift, School, UserRound } from 'lucide-react';
-import { NSectionInfo } from 'najm-kit';
+import type { ComponentProps, ReactNode } from 'react';
+import { CalendarClock, School, Star, UserRound, type LucideIcon } from 'lucide-react';
+import { cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import type { BehaviorRewardCategory, BehaviorRewardType } from '@sms/contracts';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
-import { CategoryLabel, PointsMark, RewardChip } from './BehaviorRewardTags';
+import { rewardIcon } from '../behaviorRewardConstants';
+import { CategoryTile, PointsMark } from './BehaviorRewardTags';
 import { BehaviorRewardStudentIdentity } from './BehaviorRewardStudentIdentity';
 
-const BehaviorRewardDetails = ({ behaviorReward }: { behaviorReward: any }) => {
-  const { t } = useTranslation();
-  const { displayDateTime } = useSchoolFormat();
-  const reward = behaviorReward;
-  const awardedBy = reward.awardedByUser?.name || '—';
-
-  return (
-    <div className="space-y-5 p-1">
-      <div className="flex items-center gap-4 rounded-xl border border-emerald-100 bg-emerald-50/70 p-4 dark:border-emerald-900 dark:bg-emerald-950/30">
-        <BehaviorRewardStudentIdentity student={reward.student} updatedAt={reward.updatedAt} size="lg" />
-        <div className="min-w-0 flex-1">
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
-            <RewardChip type={reward.rewardType} className="bg-background" />
-            {reward.points > 0 ? <PointsMark points={reward.points} /> : null}
-          </div>
-        </div>
-      </div>
-
-      <div className="space-y-2 rounded-xl border p-4">
-        <CategoryLabel category={reward.category} withIcon />
-        <p dir="auto" className="whitespace-pre-wrap text-sm leading-6 text-foreground">{reward.description}</p>
-      </div>
-
-      <div className="grid gap-3 md:grid-cols-2">
-        <NSectionInfo
-          icon={School}
-          iconColor="text-emerald-600"
-          label={t('behaviorRewards.table.classSection')}
-          value={`${reward.class?.name || '—'} / ${reward.section?.name || '—'}`}
-          valueColor="text-foreground font-medium"
-        />
-        <NSectionInfo
-          icon={CalendarClock}
-          iconColor="text-emerald-600"
-          label={t('behaviorRewards.table.behaviorDate')}
-          value={displayDateTime(reward.behaviorAt)}
-          valueColor="text-foreground font-medium"
-        />
-        <NSectionInfo
-          icon={Gift}
-          iconColor="text-emerald-600"
-          label={t('behaviorRewards.table.reward')}
-          value={t(`behaviorRewards.rewardTypes.${reward.rewardType}`)}
-          valueColor="text-foreground font-medium"
-        />
-        <NSectionInfo
-          icon={Award}
-          iconColor="text-emerald-600"
-          label={t('behaviorRewards.table.points')}
-          value={reward.points > 0 ? String(reward.points) : '—'}
-          valueColor="text-foreground font-medium"
-        />
-        <NSectionInfo
-          icon={UserRound}
-          iconColor="text-emerald-600"
-          label={t('behaviorRewards.table.awardedBy')}
-          value={awardedBy}
-          valueColor="text-foreground font-medium"
-        />
-      </div>
-
-      {reward.rewardNote ? (
-        <div className="rounded-xl border bg-muted/30 p-4">
-          <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            {t('behaviorRewards.form.rewardNote')}
-          </div>
-          <p className="whitespace-pre-wrap text-sm leading-6">{reward.rewardNote}</p>
-        </div>
-      ) : null}
-
-      <div className="grid gap-2 border-t pt-4 text-xs text-muted-foreground sm:grid-cols-2">
-        <span>{t('behaviorRewards.table.createdAt')}: {displayDateTime(reward.createdAt)}</span>
-        <span>{t('behaviorRewards.table.updatedAt')}: {displayDateTime(reward.updatedAt)}</span>
-      </div>
-    </div>
-  );
+export type BehaviorRewardDetail = {
+  id: string;
+  student?: ComponentProps<typeof BehaviorRewardStudentIdentity>['student'];
+  class?: { name?: string | null } | null;
+  section?: { name?: string | null } | null;
+  category: BehaviorRewardCategory;
+  description?: string | null;
+  rewardType: BehaviorRewardType;
+  points?: number | null;
+  rewardNote?: string | null;
+  awardedByUser?: { name?: string | null } | null;
+  behaviorAt: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
-export default BehaviorRewardDetails;
+function RewardDetailField({ icon: Icon, label, children, className }: {
+  icon: LucideIcon;
+  label: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn('grid min-w-0 content-start gap-1.5 rounded-xl border border-border/70 bg-muted/35 p-2.5 sm:p-3', className)}>
+      <dt className="flex items-center gap-1.5 text-xs leading-tight text-muted-foreground">
+        <Icon className="size-4 shrink-0 text-primary" aria-hidden />
+        <span className="wrap-anywhere">{label}</span>
+      </dt>
+      <dd className="text-sm leading-snug font-semibold wrap-anywhere">{children}</dd>
+    </div>
+  );
+}
+
+export default function BehaviorRewardDetails({ behaviorReward: reward }: { behaviorReward: BehaviorRewardDetail }) {
+  const { t } = useTranslation();
+  const { displayDateTime } = useSchoolFormat();
+  const description = reward.description?.trim();
+  const rewardNote = reward.rewardNote?.trim();
+
+  return (
+    <article className="grid min-w-0 gap-3.5">
+      <div className="min-w-0 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3.5">
+        <BehaviorRewardStudentIdentity student={reward.student} updatedAt={reward.updatedAt} size="lg" />
+      </div>
+
+      <section className="grid gap-2.5 rounded-xl border border-border/70 bg-card p-3">
+        <h3 className="flex min-w-0 items-center gap-2.5 text-sm font-semibold">
+          <CategoryTile category={reward.category} />
+          <span className="wrap-anywhere">{t(`behaviorRewards.categories.${reward.category}`)}</span>
+        </h3>
+        {description && <p dir="auto" className="text-sm leading-relaxed wrap-anywhere whitespace-pre-wrap">{description}</p>}
+      </section>
+
+      <dl className="grid grid-cols-2 gap-2.5">
+        <RewardDetailField icon={rewardIcon(reward.rewardType)} label={t('behaviorRewards.table.reward')}>
+          {t(`behaviorRewards.rewardTypes.${reward.rewardType}`)}
+        </RewardDetailField>
+        <RewardDetailField icon={Star} label={t('behaviorRewards.table.points')}>
+          <PointsMark points={reward.points} />
+        </RewardDetailField>
+        <RewardDetailField icon={School} label={t('behaviorRewards.table.classSection')}>
+          <bdi>{reward.class?.name || '—'}</bdi> / <bdi>{reward.section?.name || '—'}</bdi>
+        </RewardDetailField>
+        <RewardDetailField icon={CalendarClock} label={t('behaviorRewards.table.behaviorDate')}>
+          <time dateTime={reward.behaviorAt} className="tabular-nums"><bdi>{displayDateTime(reward.behaviorAt)}</bdi></time>
+        </RewardDetailField>
+        <RewardDetailField icon={UserRound} label={t('behaviorRewards.table.awardedBy')} className="col-span-2">
+          <bdi>{reward.awardedByUser?.name || '—'}</bdi>
+        </RewardDetailField>
+      </dl>
+
+      {rewardNote && (
+        <section className="grid gap-1 rounded-xl border border-border/70 bg-card p-3">
+          <h3 className="text-sm font-semibold">{t('behaviorRewards.form.rewardNote')}</h3>
+          <p dir="auto" className="text-sm leading-relaxed wrap-anywhere whitespace-pre-wrap">{rewardNote}</p>
+        </section>
+      )}
+
+      <dl className="grid grid-cols-2 gap-2.5 border-t border-border/70 px-1 pt-3 text-xs text-muted-foreground">
+        <div className="min-w-0 space-y-1">
+          <dt>{t('behaviorRewards.table.createdAt')}</dt>
+          <dd className="wrap-anywhere tabular-nums"><time dateTime={reward.createdAt}><bdi>{displayDateTime(reward.createdAt)}</bdi></time></dd>
+        </div>
+        <div className="min-w-0 space-y-1">
+          <dt>{t('behaviorRewards.table.updatedAt')}</dt>
+          <dd className="wrap-anywhere tabular-nums"><time dateTime={reward.updatedAt}><bdi>{displayDateTime(reward.updatedAt)}</bdi></time></dd>
+        </div>
+      </dl>
+    </article>
+  );
+}

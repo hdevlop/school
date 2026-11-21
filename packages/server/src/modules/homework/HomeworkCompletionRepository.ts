@@ -54,12 +54,12 @@ export class HomeworkCompletionRepository {
    * the homework through ownership first, and only staff reach this.
    */
   async roster(homeworkId: string): Promise<HomeworkRosterEntry[]> {
-    const rows = await this.db.execute<RosterRow & { massarPosition: number | null; sectionName: string }>(sql`
+    const rows = await this.db.execute<RosterRow & { massarPosition: number | null }>(sql`
       select distinct on (student.id)
         student.id as "studentId", student.name as "name",
         ${studentAvatar(sql`account.image`, sql`student.image`, sql`student.gender`)} as "image",
         completion.status as "status", completion.note as "note",
-        listed.position as "massarPosition", placed.name as "sectionName"
+        listed.position as "massarPosition", placed.id as "sectionId", placed.name as "sectionName"
       from homework
       join student_enrollments enrollment on true
       join student_enrollment_placements placement on placement.enrollment_id = enrollment.id
@@ -79,7 +79,7 @@ export class HomeworkCompletionRepository {
       .sort((left, right) => left.sectionName.localeCompare(right.sectionName, 'fr', { numeric: true })
         || (position(left) === position(right) ? 0 : position(left) - position(right))
         || left.name.localeCompare(right.name))
-      .map(({ massarPosition: _position, sectionName: _section, ...entry }) => entry);
+      .map(({ massarPosition: _position, ...entry }) => entry);
   }
 
   /** Writes each pupil's follow-up and preserves any omitted remarks. */

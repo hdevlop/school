@@ -4,7 +4,7 @@ import { missedByStudent, missedThisMonth, personInitials, queueCompletionEntrie
 import { familyCompletions } from '@/features/Homework/hooks/useHomeworkTableColumns';
 
 const pupil = (studentId: string, status: HomeworkRosterEntry['status'] = null, note: string | null = null): HomeworkRosterEntry =>
-  ({ studentId, name: studentId, image: null, status, note });
+  ({ studentId, name: studentId, image: null, status, note, sectionId: 'A', sectionName: 'A' });
 
 let id = 0;
 const missed = (studentId: string, date: string, status: HomeworkMissedRecord['status'] = 'not_done', subject = 'Maths'): HomeworkMissedRecord => ({

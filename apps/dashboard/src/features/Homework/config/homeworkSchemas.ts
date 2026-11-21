@@ -28,8 +28,6 @@ export const createHomeworkSchema = (t: T, { teacherRequired }: { teacherRequire
     classId: requiredId,
     sectionIds: z.array(requiredId).min(1, t('validationMessages.selectAtLeastOneSection')),
     subjectId: requiredId,
-    // Offered only when the subject has parts in the class, and never required.
-    subSubject: z.string().optional().nullable(),
     teacherId: z.preprocess(
       (value) => value ?? '',
       teacherRequired ? z.string().trim().min(1, t('homework.errors.teacherRequired')) : z.string(),

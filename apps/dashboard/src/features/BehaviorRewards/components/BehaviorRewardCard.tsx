@@ -6,11 +6,12 @@ import { BehaviorRewardStudentIdentity } from './BehaviorRewardStudentIdentity';
 import { PointsMark, RewardChip } from './BehaviorRewardTags';
 
 const BehaviorRewardCard = ({ data }: { data: any }) => {
-  const { displayDate, displayDateTime, displayTime } = useSchoolFormat();
+  const { displayDate } = useSchoolFormat();
   const reward = data;
   const placement = `${reward.class?.name || '—'} / ${reward.section?.name || '—'}`;
-  const fullDate = displayDateTime(reward.behaviorAt);
-  const date = fullDate === '—' ? fullDate : `${displayDate(reward.behaviorAt, { day: '2-digit', month: '2-digit' })} · ${displayTime(reward.behaviorAt)}`;
+  // The card shows the day only; the full date stays in the tooltip.
+  const fullDate = displayDate(reward.behaviorAt);
+  const date = fullDate === '—' ? fullDate : displayDate(reward.behaviorAt, { day: '2-digit', month: '2-digit' });
 
   return (
     <div>

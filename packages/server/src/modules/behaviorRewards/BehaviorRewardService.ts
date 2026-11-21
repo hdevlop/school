@@ -37,7 +37,7 @@ export class BehaviorRewardService {
       studentId: data.studentId,
       behaviorAt: data.behaviorAt,
       category: data.category,
-      description: data.description,
+      description: data.description ?? '',
       rewardType: data.rewardType,
       points: data.points,
       rewardNote: data.rewardNote || null,
@@ -70,8 +70,8 @@ export class BehaviorRewardService {
   }
 
   async delete(id: string, actor: BehaviorRewardActor) {
-    this.behaviorRewardValidator.ensureSchoolWide(actor);
-    await this.behaviorRewardValidator.ensureExists(id);
+    const existing = await this.behaviorRewardValidator.ensureExists(id);
+    this.behaviorRewardValidator.ensureCanDelete(existing, actor);
     return this.behaviorRewardRepository.delete(id);
   }
 

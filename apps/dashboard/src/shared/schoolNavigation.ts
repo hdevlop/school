@@ -50,8 +50,6 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
   // What the class has to do at home. Its own entry, beside the evaluations
   // it is not: homework carries no marks.
   const homework: GatedNavItem = { id: '/homework', label: t('navigation.homework'), icon: FEATURE_ICONS.homework, href: '/homework', access: 'homework' };
-  // Homework recorded incomplete or not done, by pupil: conduct, read beside discipline.
-  const homeworkFollowUp: GatedNavItem = { id: '/homework-follow-up', label: t('navigation.homeworkFollowUp'), icon: FEATURE_ICONS.homeworkFollowUp, href: '/homework-follow-up', access: 'homeworkFollowUp' };
   // A pupil's competencies month by month: the teacher sets them, the family reads them.
   const competencies: GatedNavItem = { id: '/competencies', label: t('navigation.competencies'), icon: FEATURE_ICONS.competencies, href: '/competencies', access: 'competencies' };
 
@@ -74,7 +72,6 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
         children: [
           { id: '/behavior-rewards', label: t('navigation.behaviorRewardsShort'), icon: FEATURE_ICONS.behaviorRewards, href: '/behavior-rewards', access: 'behaviorRewards' },
           { id: '/discipline', label: t('navigation.discipline'), icon: FEATURE_ICONS.discipline, href: '/discipline', access: 'discipline' },
-          homeworkFollowUp,
         ],
       },
       evaluations,
@@ -118,7 +115,6 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
       children: [
         { id: '/discipline', label: t('navigation.discipline'), icon: FEATURE_ICONS.discipline, href: '/discipline', access: 'discipline' },
         { id: '/behavior-rewards', label: t('navigation.behaviorRewardsShort'), icon: FEATURE_ICONS.behaviorRewards, href: '/behavior-rewards', access: 'behaviorRewards' },
-        homeworkFollowUp,
       ],
     },
     homework,

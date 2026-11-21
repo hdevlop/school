@@ -30,7 +30,11 @@ export function useClassSectionTableScope({ includeSection = true, placements }:
       id: row.sectionId!, name: row.sectionName || row.sectionId!, classId: row.classId,
     }])).values()) : catalogSections, [placements, catalogSections]);
   const [selection, setSelection] = useState({ yearKey, classId: '', sectionId: '' });
-  const classId = selection.yearKey === yearKey ? selection.classId : '';
+  // A single class (a teacher of one class) is the filter from the start: "all classes" would show
+  // the same rows, and choosing it opens the section filter. Clearing it comes back to it.
+  const onlyClassId = classes?.length === 1 ? classes[0].id : '';
+  const chosenClassId = selection.yearKey === yearKey ? selection.classId : '';
+  const classId = chosenClassId || onlyClassId;
   const sectionId = selection.yearKey === yearKey ? selection.sectionId : '';
   const setClassId = useCallback((value: string) => setSelection({
     yearKey, classId: value === '__clear__' ? '' : value, sectionId: '',
@@ -88,5 +92,7 @@ export function useClassSectionTableScope({ includeSection = true, placements }:
   const matches = useCallback((row: ScopedRow) =>
     matchesClassSection(row, classId, sectionId), [classId, sectionId]);
 
-  return { filters, matches, classId, sectionId, hasSelection: Boolean(classId || sectionId) };
+  // The class a single-class viewer starts on is not a filter they chose: an empty list still
+  // invites them to add the first record rather than to clear filters.
+  return { filters, matches, classId, sectionId, hasSelection: Boolean(chosenClassId || sectionId) };
 }

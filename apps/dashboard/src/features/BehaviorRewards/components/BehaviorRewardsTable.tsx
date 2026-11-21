@@ -2,12 +2,14 @@
 
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { HeaderActionsMenu } from '@/components/HeaderActionsMenu';
+import { HeaderSearchButton, normalizeSearch } from '@/components/HeaderSearchButton';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import { Plus } from 'lucide-react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
-import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, useMediaQuery } from 'najm-kit';
+import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NSheet, useMediaQuery } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
@@ -15,7 +17,7 @@ import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import BehaviorRewardCard from './BehaviorRewardCard';
 import BehaviorRewardsMobileFilters from './BehaviorRewardsMobileFilters';
 import { BehaviorRewardCardSkeleton } from '@/shared/CardSkeletons';
-import BehaviorRewardDetails from './BehaviorRewardDetails';
+import BehaviorRewardDetails, { type BehaviorRewardDetail } from './BehaviorRewardDetails';
 import BehaviorRewardForm from './BehaviorRewardForm';
 import { useBehaviorRewards } from '../hooks/useBehaviorRewards';
 import { useBehaviorRewardsTableColumns } from '../hooks/useBehaviorRewardsTableColumns';
@@ -25,10 +27,15 @@ import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/service
 const BehaviorRewardsTable = () => {
   const { t } = useTranslation();
   const isPhone = useMediaQuery('(max-width: 767px)');
+  // On a phone the search lives in the header, outside the table, so the page filters by it.
+  const [search, setSearch] = useState('');
+  const [viewing, setViewing] = useState<BehaviorRewardDetail | null>(null);
+  const query = isPhone ? normalizeSearch(search.trim()) : '';
   // Parents and students read their own or their children's records only.
-  // Deleting is never a teacher's, whatever they are granted (as on the server).
-  const { isFamily, isSchoolWide, can } = useViewerRole();
-  const canDelete = isSchoolWide && can('delete:behavior-rewards');
+  // School-wide roles delete any reward and a teacher the ones they gave (the server checks which);
+  // monitors and supervisors delete none, whatever they are granted.
+  const { isFamily, isSchoolWide, role, can } = useViewerRole();
+  const canDelete = (isSchoolWide || role === 'teacher') && can('delete:behavior-rewards');
   const columns = useBehaviorRewardsTableColumns();
   const scope = useClassSectionTableScope();
   const rewardFilters = useBehaviorRewardsTableFilters();
@@ -54,7 +61,9 @@ const BehaviorRewardsTable = () => {
         .filter(Boolean)
         .join(' '),
       classSection: `${reward.class?.name || ''} ${reward.section?.name || ''}`,
-    })), [behaviorRewards, scope.matches]);
+    }))
+    .filter((reward) => !query || normalizeSearch(reward.searchText).includes(query)), [behaviorRewards, scope.matches, query]);
+  const hasSelection = scope.hasSelection || Boolean(query);
 
   const handleCreate = () => openDialog({
     title: t('behaviorRewards.dialogs.createTitle'),
@@ -67,11 +76,17 @@ const BehaviorRewardsTable = () => {
     },
   });
 
-  const handleView = (reward) => openDialog({
-    title: t('behaviorRewards.dialogs.viewTitle'),
-    children: <BehaviorRewardDetails behaviorReward={reward} />,
-    showButtons: false,
-  });
+  const handleView = (reward: BehaviorRewardDetail) => {
+    if (isPhone) {
+      setViewing(reward);
+      return;
+    }
+    openDialog({
+      title: t('behaviorRewards.dialogs.viewTitle'),
+      children: <BehaviorRewardDetails behaviorReward={reward} />,
+      showButtons: false,
+    });
+  };
 
   const handleEdit = (reward) => openDialog({
     title: t('behaviorRewards.dialogs.editTitle'),
@@ -102,6 +117,14 @@ const BehaviorRewardsTable = () => {
         icon={FEATURE_ICONS.behaviorRewards}
         title={t(isPhone ? 'navigation.behaviorRewardsShort' : 'navigation.behaviorRewards')}
         subtitle={isCountUnknown(error, tableData, isBehaviorRewardsLoading) ? undefined : t('behaviorRewards.table.recordCount', { count: total })}
+        // On a phone the search is an icon beside the actions menu, as on the homework list.
+        compactActions={isPhone ? (
+          <div className="flex shrink-0 items-center">
+            <HeaderSearchButton search={search} onSearch={setSearch}
+              label={t('behaviorRewards.filters.searchLabel')} placeholder={t('behaviorRewards.filters.search')} />
+            <HeaderActionsMenu contentClassName="md:hidden" hasOwnActions={false}><PageHeaderGlobalActions /></HeaderActionsMenu>
+          </div>
+        ) : undefined}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -122,9 +145,16 @@ const BehaviorRewardsTable = () => {
           content: '[&_table]:min-w-[80rem]',
           tableHeader: '[&_th:last-child]:w-12',
         }}
-        renderToolbar={isPhone ? ({ globalFilter, columnFilters }) => (
-          <BehaviorRewardsMobileFilters search={globalFilter} columnFilters={columnFilters} rewardFilters={rewardFilters} scopeFilters={scope.filters} />
+        renderToolbar={isPhone ? ({ columnFilters }) => (
+          <BehaviorRewardsMobileFilters columnFilters={columnFilters} rewardFilters={rewardFilters} scopeFilters={scope.filters}
+            addButton={isFamily ? undefined : (
+              <PermissionButton permission="create:behavior-rewards" onClick={handleCreate} aria-label={t('behaviorRewards.dialogs.createButton')}
+                title={t('behaviorRewards.dialogs.createButton')} className="size-10 shrink-0 p-0">
+                <Plus className="size-5" aria-hidden />
+              </PermissionButton>
+            )} />
         ) : undefined}
+        isFilteredEmpty={hasSelection && (behaviorRewards?.length ?? 0) > 0 && tableData.length === 0}
         onCreate={isFamily ? undefined : handleCreate}
         onView={handleView}
         onRowClick={isPhone ? handleView : undefined}
@@ -165,6 +195,12 @@ const BehaviorRewardsTable = () => {
         defaultMode="table"
         dynamicHeight
       />
+      {viewing && (
+        <NSheet open onOpenChange={(open) => { if (!open) setViewing(null); }} icon={FEATURE_ICONS.behaviorRewards}
+          title={t('behaviorRewards.dialogs.viewTitle')} width={560}>
+          <BehaviorRewardDetails behaviorReward={viewing} />
+        </NSheet>
+      )}
     </div>
   );
 };

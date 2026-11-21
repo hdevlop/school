@@ -748,7 +748,7 @@ export function behaviorRewardsPack(
 ) {
    const contexts = conductContexts(students, teachers);
    const categories = [
-      'academic_effort', 'improvement', 'respect', 'helpfulness', 'leadership',
+      'academic_effort', 'classwork', 'improvement', 'respect', 'helpfulness', 'leadership',
       'teamwork', 'responsibility', 'community_service', 'excellent_attendance', 'other',
    ];
    const rewardTypes = [

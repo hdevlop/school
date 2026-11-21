@@ -220,9 +220,9 @@ export function useFollowUpReport({ assignment, domains, students, studentId, hi
       {body}
     </div>
   );
+  // The page puts the Contrôle picker in its filters row, beside the class, section and subject.
   const classPreview = (
     <div className="flex min-w-0 flex-col gap-2">
-      {roundPicker}
       {shared ?? (!reports.length || !classOptions
         ? <NEmptyState surface="panel" icon={FEATURE_ICONS.competencies} title={t('competencies.classReport.empty')} />
         : <>
@@ -233,7 +233,7 @@ export function useFollowUpReport({ assignment, domains, students, studentId, hi
     </div>
   );
 
-  return { preview, classPreview, printMenu };
+  return { preview, classPreview, printMenu, roundPicker };
 }
 
 /** The class report as it prints, reflowed to the page's width; its wide table scrolls on its own. */

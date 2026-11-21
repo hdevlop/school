@@ -1354,6 +1354,7 @@
     }
   },
   "common": {
+    "clearSearch": "Borrar la búsqueda",
     "allStatuses": "Todos los estados",
     "allRoles": "Todos los roles",
     "filters": "Filtros",
@@ -2526,6 +2527,7 @@
     },
     "filters": {
       "search": "Buscar estudiante, código o descripción...",
+      "searchLabel": "Buscar recompensas",
       "category": "Categoría de conducta",
       "rewardType": "Tipo de recompensa",
       "class": "Clase",
@@ -2541,7 +2543,9 @@
       "behaviorAt": "Fecha y hora de la conducta",
       "behaviorDate": "Fecha de la conducta",
       "behaviorTime": "Hora de la conducta",
-      "category": "Categoría de conducta positiva",
+      "date": "Fecha",
+      "time": "Hora",
+      "category": "Categoría",
       "categoryPlaceholder": "Seleccionar categoría",
       "description": "Descripción de la conducta",
       "descriptionPlaceholder": "Describe objetivamente la conducta positiva",
@@ -2553,6 +2557,7 @@
     },
     "categories": {
       "academic_effort": "Esfuerzo académico",
+      "classwork": "Buen trabajo en clase",
       "improvement": "Mejora",
       "respect": "Respeto",
       "helpfulness": "Colaboración",
@@ -7540,7 +7545,7 @@
       "context": "Clase y asignatura",
       "dates": "Fechas",
       "title": "Título",
-      "titlePlaceholder": "Ejercicios 4 y 5, pág. 32",
+      "titlePlaceholder": "Lectura, Escritura, Fracciones…",
       "content": "Detalles",
       "contentPlaceholder": "Qué hay que hacer y traer (opcional)",
       "class": "Clase",
@@ -7551,8 +7556,6 @@
       "noSections": "No se encontraron secciones",
       "subject": "Asignatura",
       "subjectPlaceholder": "Seleccionar asignatura",
-      "subSubject": "Subasignatura",
-      "subSubjectPlaceholder": "Elegir la subasignatura (opcional)",
       "teacher": "Profesor",
       "teacherPlaceholder": "Seleccionar profesor",
       "date": "Dados el",
@@ -7568,8 +7571,8 @@
       "tooManyFiles": "Unos deberes admiten como máximo {{max}} archivos."
     },
     "dialogs": {
-      "createTitle": "Publicar deberes",
-      "createButton": "Publicar",
+      "createTitle": "Añadir deberes",
+      "createButton": "Añadir deberes",
       "viewTitle": "Deberes",
       "editTitle": "Editar deberes",
       "updateButton": "Guardar",
@@ -7593,10 +7596,10 @@
       "noDueDate": "Sin fecha de entrega",
       "seenCount": "{{seen}} de {{total}}",
       "seenByParents": "Visto por los padres",
-      "backToList": "Volver a las tareas",
       "markSeen": "Marcar como visto",
       "seenOn": "Visto el {{date}}",
-      "child": "Para"
+      "child": "Para",
+      "seenShort": "Visto (padres)"
     },
     "attachments": {
       "title": "Fotos y archivos",
@@ -7609,7 +7612,7 @@
     },
     "success": {
       "retrieved": "Deberes obtenidos correctamente",
-      "created": "Deberes publicados",
+      "created": "Deberes añadidos",
       "updated": "Deberes actualizados",
       "deleted": "Deberes eliminados",
       "attached": "Archivos añadidos",
@@ -7619,7 +7622,7 @@
     },
     "errors": {
       "notFound": "Deberes no encontrados",
-      "writeNotAllowed": "Solo un profesor o la administración del centro pueden publicar o cambiar deberes",
+      "writeNotAllowed": "Solo un profesor o la administración del centro pueden añadir o cambiar deberes",
       "noTeacherRecord": "Tu cuenta no está vinculada a una ficha de profesor",
       "teacherRequired": "Se requiere un profesor",
       "notAssigned": "El profesor no imparte esta asignatura en todas las secciones seleccionadas",
@@ -7637,7 +7640,7 @@
       "pdfTooLarge": "Un PDF no puede superar {{max}} MB",
       "storedImageTooLarge": "Esta foto sigue superando {{max}} MB después de reducirla. Tómala de nuevo más cerca de la página.",
       "unsupportedFile": "Solo se pueden adjuntar fotos (JPEG, PNG, WebP) y archivos PDF",
-      "quotaExceeded": "Este profesor ha usado los {{max}} MB permitidos para archivos de deberes este año. El texto aún se puede publicar.",
+      "quotaExceeded": "Este profesor ha usado los {{max}} MB permitidos para archivos de deberes este año. El texto aún se puede guardar.",
       "attachmentNotFound": "Archivo no encontrado",
       "attachmentPurged": "Este archivo se eliminó tras su periodo de conservación",
       "attachmentMissing": "Este archivo ya no está disponible",
@@ -7671,7 +7674,9 @@
       "missed": "Faltantes: {{count}}",
       "label": "Seguimiento",
       "search": "Buscar un alumno",
-      "noMatch": "Ningún alumno coincide."
+      "noMatch": "Ningún alumno coincide.",
+      "missedPupils": "Alumnos que no lo hicieron",
+      "allSections": "Todas"
     }
   },
   "competencies": {
@@ -7818,8 +7823,7 @@
       "noLevels": "No hay niveles de competencia registrados hasta el mes del control.",
       "parts": "Resultados por pregunta",
       "partsHint": "Introduce cuántos alumnos respondieron bien cada pregunta. Se guarda automáticamente.",
-      "partsSaveFailed": "No se guardó el número.",
-      "noQuestions": "Esta prueba aún no tiene preguntas. Añádelas en el formulario del examen o de la evaluación (Exámenes o Evaluaciones → Editar) para contar aquí las respuestas correctas."
+      "partsSaveFailed": "No se guardó el número."
     },
     "remark": {
       "title": "Observación para los padres",

@@ -27,16 +27,7 @@ export function PartCounts({ parts, marked, t, statusOf, onChange, onBlur, onRet
   onReload: () => void;
 }) {
   if (error) return <NErrorState surface="panel" title={t('competencies.classReport.parts')} onRetry={onReload} />;
-  if (loading) return null;
-  // No questions on the test yet: say where they are listed, rather than show nothing.
-  if (!parts.length) {
-    return (
-      <p className="flex items-start gap-2 rounded-xl border border-dashed border-border bg-muted/30 px-3 py-2.5 text-sm text-muted-foreground">
-        <ListChecks className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-        {t('competencies.classReport.noQuestions')}
-      </p>
-    );
-  }
+  if (loading || !parts.length) return null;
   return (
     <section className="flex flex-col gap-2 rounded-xl border border-border/60 bg-card p-3" aria-labelledby="part-counts-title">
       <header className="flex flex-col gap-0.5">

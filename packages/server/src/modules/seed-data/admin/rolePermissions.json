@@ -243,6 +243,7 @@
       "create:behavior-rewards",
       "read:behavior-rewards",
       "update:behavior-rewards",
+      "delete:behavior-rewards",
       "create:discipline",
       "read:discipline",
       "update:discipline",

@@ -1,8 +1,10 @@
 "use client"
 
 import React, { useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { useSearchParams } from 'next/navigation';
 import { ClipboardCheck, Eye, Pencil, Plus, Trash2 } from 'lucide-react';
-import { NEmptyState, NErrorState, NForbiddenState, NPageHeaderActions, useMediaQuery, type NTableProps } from 'najm-kit';
+import { NButton, NEmptyState, NErrorState, NForbiddenState, NPageHeaderActions, useMediaQuery, type NTableProps } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import type { HomeworkRow } from '@sms/contracts';
 import { PermissionButton } from '@/components/PermissionButton';
@@ -11,27 +13,33 @@ import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { HomeworkCardSkeleton } from '@/shared/CardSkeletons';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { HeaderActionsMenu } from '@/components/HeaderActionsMenu';
+import { normalizeSearch } from '@/components/HeaderSearchButton';
+import { useSchoolToday } from '@/hooks/useSchoolFormat';
 import { useDialog } from '@/shared/useDialog';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import { useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
-import { useHomework, type HomeworkSave } from '../hooks/useHomework';
+import { useHomework, useMissedHomework, type HomeworkSave } from '../hooks/useHomework';
+import { missedByStudent } from '../config/homeworkCompletion';
 import { useHomeworkTableColumns } from '../hooks/useHomeworkTableColumns';
 import HomeworkCard, { homeworkPlacementLabel } from './HomeworkCard';
 import HomeworkCompletionSheet from './HomeworkCompletionSheet';
 import HomeworkForm from './HomeworkForm';
 import { homeworkTones } from '../config/homeworkTones';
 import { HomeworkMobileCard, HomeworkMobileCardSkeleton, HomeworkToneContext } from './HomeworkMobileCard';
-import { HomeworkMobileControls } from './HomeworkMobileControls';
+import { HomeworkMobileControls, HomeworkSearchButton } from './HomeworkMobileControls';
 import HomeworkMobileDetailsDialog from './HomeworkMobileDetailsDialog';
 import styles from './HomeworkMobile.module.css';
 
-const normalizeSearch = (value: string) => value.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '');
+const HomeworkFollowUpTable = dynamic(() => import('./HomeworkFollowUpTable'));
 
 function HomeworkTable() {
   const { t, language } = useTranslation();
   const isPhone = useMediaQuery('(max-width: 767px)');
+  const showMissed = useSearchParams().get('view') === 'missed';
+  const today = useSchoolToday();
   const yearKey = useViewingYearKey();
   const [search, setSearch] = useState('');
   const [subjectSelection, setSubjectSelection] = useState<{ yearKey: string; id: string }>();
@@ -42,6 +50,7 @@ function HomeworkTable() {
   const { role, isFamily, isSchoolWide } = useViewerRole();
   const mayWrite = role === 'teacher' || isSchoolWide;
   const [followUp, setFollowUp] = useState<HomeworkRow | null>(null);
+  const [viewing, setViewing] = useState<HomeworkRow | null>(null);
   const columns = useHomeworkTableColumns(
     role === 'parent' ? 'parent' : role === 'student' ? 'student' : 'staff',
     mayWrite ? setFollowUp : undefined,
@@ -49,7 +58,9 @@ function HomeworkTable() {
   const scope = useClassSectionTableScope();
   const { filters, matches } = scope;
 
-  const { homework, saveHomework, deleteHomework, error, isHomeworkLoading, isSaving, isDeleting } = useHomework();
+  const { homework, saveHomework, deleteHomework, error, isHomeworkLoading, isSaving, isDeleting } = useHomework({ enabled: !showMissed });
+  const { records, isLoading: isMissedLoading, error: missedError } = useMissedHomework({ enabled: showMissed });
+  const missedRows = useMemo(() => missedByStudent(records, today).filter(matches), [records, today, matches]);
   const subjects = useMemo(() => {
     const names = new Map<string, string>();
     for (const row of homework ?? []) {
@@ -71,6 +82,13 @@ function HomeworkTable() {
   const sorting = useMemo(() => isPhone ? [{ id: 'date', desc: newestFirst }] : undefined, [isPhone, newestFirst]);
   const { openDialog, confirmDelete } = useDialog();
 
+  const toggleView = () => {
+    const url = new URL(window.location.href);
+    if (showMissed) url.searchParams.delete('view');
+    else url.searchParams.set('view', 'missed');
+    window.history.replaceState(null, '', url);
+  };
+
   const handleAddClick = () => {
     openDialog({
       title: t('homework.dialogs.createTitle'),
@@ -87,10 +105,12 @@ function HomeworkTable() {
 
   const handleView = (row: HomeworkRow) => {
     const title = t('homework.dialogs.viewTitle');
-    openDialog(isPhone ? {
-      title,
-      render: ({ onOpenChange, zIndex }) => <HomeworkMobileDetailsDialog homework={row} onOpenChange={onOpenChange} zIndex={zIndex} />,
-    } : {
+    // A phone opens the homework in a sheet, as its follow-up; a wider screen shows the card in a dialog.
+    if (isPhone) {
+      setViewing(row);
+      return;
+    }
+    openDialog({
       title,
       children: <HomeworkCard data={row} detailed />,
       showButtons: false,
@@ -123,8 +143,28 @@ function HomeworkTable() {
   };
 
   const total = homework?.length ?? 0;
-  const countUnknown = isCountUnknown(error, homework, isHomeworkLoading);
+  const countUnknown = showMissed
+    ? isCountUnknown(missedError, records, isMissedLoading)
+    : isCountUnknown(error, homework, isHomeworkLoading);
   const hasSelection = scope.hasSelection || Boolean(query || subjectId);
+  const followUpTitle = t('homeworkFollowUp.title');
+  const homeworkTitle = t('navigation.homework');
+  const toggleLabel = showMissed ? homeworkTitle : followUpTitle;
+  const ToggleIcon = showMissed ? FEATURE_ICONS.homework : FEATURE_ICONS.homeworkFollowUp;
+  const toggleButton = (
+    <NButton
+      type="button"
+      size={isPhone ? 'icon' : 'sm'}
+      variant="outline"
+      aria-label={toggleLabel}
+      title={toggleLabel}
+      className={`bg-transparent hover:bg-transparent ${isPhone ? 'size-10 shrink-0 p-0' : 'hidden md:inline-flex'}`}
+      onClick={toggleView}
+    >
+      <ToggleIcon className="size-4" aria-hidden />
+      {!isPhone && toggleLabel}
+    </NButton>
+  );
   // An empty list, filtered or not, offers to publish one to whoever may.
   const addAction = mayWrite ? (
     <PermissionButton permission="create:homework" size="sm" onClick={handleAddClick}>
@@ -136,22 +176,53 @@ function HomeworkTable() {
   return (
     <div className="flex h-full min-h-0 w-full flex-col gap-2">
       <NPageHeader
-        icon={FEATURE_ICONS.homework}
-        title={t('navigation.homework')}
-        subtitle={countUnknown ? undefined : t('homework.subtitle.count', { count: total })}
+        icon={showMissed ? FEATURE_ICONS.homeworkFollowUp : FEATURE_ICONS.homework}
+        title={showMissed ? followUpTitle : homeworkTitle}
+        subtitle={countUnknown ? undefined : showMissed
+          ? t('homeworkFollowUp.subtitle', { count: missedRows.length })
+          : t('homework.subtitle.count', { count: total })}
+        // On a phone the search is an icon beside the actions menu, which keeps what it lists.
+        compactActions={isPhone ? (
+          <div className="flex shrink-0 items-center">
+            {!showMissed && <HomeworkSearchButton search={search} onSearch={setSearch} />}
+            <HeaderActionsMenu contentClassName="md:hidden" hasOwnActions={false}><PageHeaderGlobalActions /></HeaderActionsMenu>
+          </div>
+        ) : undefined}
       >
         <NPageHeaderActions>
+          {!isPhone && toggleButton}
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
       </NPageHeader>
 
-      {isPhone && <HomeworkMobileControls filters={filters} subjects={subjects} subjectId={subjectId}
-        onSubjectChange={(id) => setSubjectSelection({ yearKey, id })} search={search} onSearch={setSearch}
-        count={countUnknown ? undefined : rows.length} newestFirst={newestFirst} onSort={setNewestFirst} />}
+      {isPhone && <HomeworkMobileControls
+        filters={filters}
+        homework={showMissed ? undefined : {
+          subjects, subjectId, newestFirst, onSort: setNewestFirst,
+          onSubjectChange: (id) => setSubjectSelection({ yearKey, id }),
+        }}
+        count={countUnknown ? undefined : showMissed ? missedRows.length : rows.length}
+        toggleButton={toggleButton}
+        addButton={mayWrite ? (
+          <PermissionButton permission="create:homework" onClick={handleAddClick} aria-label={t('homework.dialogs.createButton')}
+            title={t('homework.dialogs.createButton')} className="size-10 shrink-0 p-0">
+            <Plus className="size-5" aria-hidden />
+          </PermissionButton>
+        ) : undefined} />}
 
-      <HomeworkToneContext.Provider value={toneOf}>
+      {showMissed ? (
+        <HomeworkFollowUpTable
+          rows={missedRows}
+          filters={filters}
+          hasSelection={scope.hasSelection}
+          isPhone={isPhone}
+          isLoading={isMissedLoading}
+          error={hasFailedToLoad(missedError, records) ? missedError : null}
+          today={today}
+        />
+      ) : <HomeworkToneContext.Provider value={toneOf}>
       <NTable
-        exportTitle={t('navigation.homework')}
+        exportTitle={homeworkTitle}
         permissionResource="homework"
         responsiveSkeleton
         className={`min-h-0 flex-1 ${styles.table}`}
@@ -211,7 +282,8 @@ function HomeworkTable() {
         onModeChange={setDesktopMode}
         dynamicHeight={true}
       />
-      </HomeworkToneContext.Provider>
+      </HomeworkToneContext.Provider>}
+      {viewing && <HomeworkMobileDetailsDialog key={viewing.id} homework={viewing} onClose={() => setViewing(null)} />}
       {followUp && (
         <HomeworkCompletionSheet key={followUp.id} homework={followUp} onClose={() => setFollowUp(null)} />
       )}

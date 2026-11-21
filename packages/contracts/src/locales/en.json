@@ -1240,6 +1240,7 @@
     }
   },
   "common": {
+    "clearSearch": "Clear search",
     "allStatuses": "All Statuses",
     "allRoles": "All Roles",
     "filters": "Filters",
@@ -6165,6 +6166,7 @@
     },
     "filters": {
       "search": "Search student, code, or description...",
+      "searchLabel": "Search rewards",
       "category": "Behavior category",
       "rewardType": "Reward type",
       "class": "Class",
@@ -6180,7 +6182,9 @@
       "behaviorAt": "Behavior date and time",
       "behaviorDate": "Behavior date",
       "behaviorTime": "Behavior time",
-      "category": "Positive behavior category",
+      "date": "Date",
+      "time": "Time",
+      "category": "Category",
       "categoryPlaceholder": "Select a category",
       "description": "Behavior description",
       "descriptionPlaceholder": "Describe the positive behavior factually",
@@ -6192,6 +6196,7 @@
     },
     "categories": {
       "academic_effort": "Academic effort",
+      "classwork": "Good classwork",
       "improvement": "Improvement",
       "respect": "Respect",
       "helpfulness": "Helpfulness",
@@ -8247,7 +8252,7 @@
       "context": "Class and subject",
       "dates": "Dates",
       "title": "Title",
-      "titlePlaceholder": "Exercises 4 and 5, p. 32",
+      "titlePlaceholder": "Reading, Writing, Fractions…",
       "content": "Details",
       "contentPlaceholder": "What to do and what to bring (optional)",
       "class": "Class",
@@ -8258,8 +8263,6 @@
       "noSections": "No sections found",
       "subject": "Subject",
       "subjectPlaceholder": "Select subject",
-      "subSubject": "Sub-subject",
-      "subSubjectPlaceholder": "Choose the sub-subject (optional)",
       "teacher": "Teacher",
       "teacherPlaceholder": "Select teacher",
       "date": "Given on",
@@ -8275,8 +8278,8 @@
       "tooManyFiles": "A homework holds at most {{max}} files."
     },
     "dialogs": {
-      "createTitle": "Post homework",
-      "createButton": "Post",
+      "createTitle": "Add homework",
+      "createButton": "Add homework",
       "viewTitle": "Homework",
       "editTitle": "Edit homework",
       "updateButton": "Save",
@@ -8300,10 +8303,10 @@
       "noDueDate": "No due date",
       "seenCount": "{{seen}} of {{total}}",
       "seenByParents": "Seen by parents",
-      "backToList": "Back to homework",
       "markSeen": "Mark as seen",
       "seenOn": "Seen on {{date}}",
-      "child": "For"
+      "child": "For",
+      "seenShort": "Seen (parents)"
     },
     "attachments": {
       "title": "Photos and files",
@@ -8316,7 +8319,7 @@
     },
     "success": {
       "retrieved": "Homework retrieved successfully",
-      "created": "Homework posted",
+      "created": "Homework added",
       "updated": "Homework updated",
       "deleted": "Homework deleted",
       "attached": "Files added",
@@ -8326,7 +8329,7 @@
     },
     "errors": {
       "notFound": "Homework not found",
-      "writeNotAllowed": "Only a teacher or the school administration can post or change homework",
+      "writeNotAllowed": "Only a teacher or the school administration can add or change homework",
       "noTeacherRecord": "Your account is not linked to a teacher record",
       "teacherRequired": "A teacher is required",
       "notAssigned": "The teacher does not teach this subject in every selected section",
@@ -8344,7 +8347,7 @@
       "pdfTooLarge": "A PDF cannot exceed {{max}} MB",
       "storedImageTooLarge": "This photo is still larger than {{max}} MB after it was reduced. Take it again closer to the page.",
       "unsupportedFile": "Only photos (JPEG, PNG, WebP) and PDF files can be attached",
-      "quotaExceeded": "This teacher has used the {{max}} MB allowed for homework files this year. The text can still be posted.",
+      "quotaExceeded": "This teacher has used the {{max}} MB allowed for homework files this year. The text can still be saved.",
       "attachmentNotFound": "File not found",
       "attachmentPurged": "This file was removed after its keeping period",
       "attachmentMissing": "This file is no longer available",
@@ -8378,7 +8381,9 @@
       "missed": "Missed: {{count}}",
       "label": "Follow-up",
       "search": "Search a student",
-      "noMatch": "No student matches."
+      "noMatch": "No student matches.",
+      "missedPupils": "Pupils who missed it",
+      "allSections": "All"
     }
   },
   "competencies": {
@@ -8525,8 +8530,7 @@
       "noLevels": "No competency level recorded up to this test’s month.",
       "parts": "Results by question",
       "partsHint": "Enter how many pupils answered each question correctly. Saved automatically.",
-      "partsSaveFailed": "The count was not saved.",
-      "noQuestions": "This test has no questions yet. List them in the exam or assessment form (Exams or Assessments → Edit) to count the correct answers here."
+      "partsSaveFailed": "The count was not saved."
     },
     "remark": {
       "title": "Remark for the parents",

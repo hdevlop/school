@@ -84,6 +84,9 @@ export interface HomeworkRosterEntry {
   image: string | null;
   status: HomeworkCompletionStatus | null;
   note: string | null;
+  /** The section the pupil sat in on the homework's date, for a follow-up shown section by section. */
+  sectionId: string;
+  sectionName: string;
 }
 
 /** Maximum pupils in one request to save homework follow-up. */

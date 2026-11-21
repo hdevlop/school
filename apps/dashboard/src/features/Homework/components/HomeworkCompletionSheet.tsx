@@ -1,9 +1,12 @@
 'use client'
 
 import { useMemo, useState } from 'react';
-import { Check, CheckCheck, CircleDashed, ClipboardCheck, Search, X, type LucideIcon } from 'lucide-react';
+import { Check, CircleDashed, DoorOpen, ClipboardCheck, Search, X, type LucideIcon } from 'lucide-react';
 import { HOMEWORK_COMPLETION_STATUS_VALUES, type HomeworkCompletionStatus, type HomeworkRow } from '@sms/contracts';
-import { Input, NAvatar, NButton, NErrorState, NLoadingState, NSheet, cn } from 'najm-kit';
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger,
+  Input, NAvatar, NButton, NErrorState, NLoadingState, NSheet, cn,
+} from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { personInitials } from '../config/homeworkCompletion';
@@ -15,7 +18,7 @@ import { homeworkPlacementLabel } from './HomeworkCard';
 const SEARCH_FROM = 12;
 
 // Each status keeps one color everywhere: the chosen button, the summary, the row.
-const STATUS_LOOK: Record<HomeworkCompletionStatus, { icon: LucideIcon; chosen: string; chip: string; row: string }> = {
+export const STATUS_LOOK: Record<HomeworkCompletionStatus, { icon: LucideIcon; chosen: string; chip: string; row: string }> = {
   done: {
     icon: Check,
     chosen: 'border-emerald-600 bg-emerald-600 text-white dark:border-emerald-500 dark:bg-emerald-500',
@@ -77,30 +80,51 @@ export default function HomeworkCompletionSheet({ homework, onClose }: { homewor
   const { t } = useTranslation();
   const { displayDateOnly } = useSchoolFormat();
   const { roster, isLoading, error } = useHomeworkRoster(homework.id);
-  const { edits, state, change, flush } = useHomeworkCompletionAutosave(homework.id, roster);
   const [closing, setClosing] = useState(false);
   const [query, setQuery] = useState('');
+  // The section shown: null until the teacher picks one ('' is every section).
+  const [pickedSection, setSectionId] = useState<string | null>(null);
+  // The sections the pupils sat in on the homework's date, in the roster's order (section by section).
+  const sections = useMemo(() => Array.from(new Map(roster.map((entry) => [entry.sectionId, entry.sectionName]))
+    , ([value, label]) => ({ value, label })), [roster]);
+  // A homework for several sections opens on the first (A): one class at a time, as it is checked.
+  const sectionId = pickedSection ?? (sections.length > 1 ? sections[0].value : '');
+  const sectionLabel = t('homework.table.section');
+  const sectionItems = [{ value: '', label: t('homework.completion.allSections') }, ...sections];
+  const chosenSection = sections.find((item) => item.value === sectionId);
+  const inSection = (id: string) => (entry: { sectionId: string }) => !id || entry.sectionId === id;
+  // Only the section on screen gets the default "done": a section not looked at stays unchecked.
+  const sectionRoster = useMemo(() => roster.filter(inSection(sectionId)), [roster, sectionId]);
+  const { edits, state, change, flush } = useHomeworkCompletionAutosave(homework.id, sectionRoster);
+  const unchecked = (rows: typeof roster) => rows.some((entry) => entry.status === null && !edits.has(entry.studentId));
+  // Leaving a section records it as looked at: its pupils not marked otherwise did it.
+  const pickSection = (next: string) => {
+    if (next !== sectionId && unchecked(sectionRoster)) change([], sectionRoster);
+    setSectionId(next);
+  };
 
   const statuses = useMemo(() => Object.fromEntries(
     roster.map(({ studentId, status }) => [studentId, edits.get(studentId)?.status ?? status ?? 'done']),
   ), [roster, edits]);
 
+  // The counts follow the chosen section, as the list does (the name search does not change them).
   const counts = useMemo(() => {
-    const rows = Object.values(statuses);
+    const rows = sectionRoster.map((entry) => statuses[entry.studentId]);
     return Object.fromEntries(HOMEWORK_COMPLETION_STATUS_VALUES.map((status) => [status, rows.filter((value) => value === status).length])) as Record<HomeworkCompletionStatus, number>;
-  }, [statuses]);
+  }, [sectionRoster, statuses]);
 
   const shown = useMemo(() => {
     const needle = query.trim().toLocaleLowerCase();
-    return needle ? roster.filter((entry) => entry.name.toLocaleLowerCase().includes(needle)) : roster;
-  }, [roster, query]);
+    return needle ? sectionRoster.filter((entry) => entry.name.toLocaleLowerCase().includes(needle)) : sectionRoster;
+  }, [sectionRoster, query]);
 
-  const allDone = () => change(roster.filter((entry) => entry.status !== 'done' || statuses[entry.studentId] !== 'done')
-    .map(({ studentId }) => ({ studentId, status: 'done' })));
-  const hasUnreviewed = roster.some((entry) => entry.status === null && !edits.has(entry.studentId));
+  const hasUnreviewed = unchecked(sectionRoster);
   const close = async () => {
     if (closing || state === 'failed') return;
     setClosing(true);
+    // Every pupil is done unless marked otherwise: closing records that for the section on screen's pupils left
+    // unchecked, so a class that all did it needs no button press.
+    if (hasUnreviewed) change([]);
     if (await flush()) onClose();
     else setClosing(false);
   };
@@ -113,7 +137,7 @@ export default function HomeworkCompletionSheet({ homework, onClose }: { homewor
       ) : (
         <>
           <div className="sticky top-0 z-10 grid gap-2 bg-background py-1">
-            <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <div className="flex flex-wrap gap-1.5" aria-live="polite">
                 {HOMEWORK_COMPLETION_STATUS_VALUES.map((status) => (
                   <span key={status} className={cn('inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium tabular-nums', STATUS_LOOK[status].chip)}>
@@ -122,10 +146,28 @@ export default function HomeworkCompletionSheet({ homework, onClose }: { homewor
                   </span>
                 ))}
               </div>
-              <NButton type="button" size="sm" variant="outline" onClick={allDone} disabled={counts.done === roster.length && !hasUnreviewed}>
-                <CheckCheck className="h-4 w-4" aria-hidden />
-                {t('homework.completion.allDone')}
-              </NButton>
+              {/* A homework for several sections is followed one section at a time. */}
+              {/* An icon, not a wide select: the chosen section's name shows beside it. */}
+              {sections.length > 1 && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button type="button" aria-label={`${sectionLabel} · ${chosenSection?.label ?? sectionItems[0].label}`}
+                      title={chosenSection?.label ?? sectionItems[0].label}
+                      className={cn('ms-auto inline-flex h-8 min-w-8 items-center justify-center gap-1 rounded-md border px-2 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                        chosenSection ? 'border-primary/50 bg-primary/10 text-primary' : 'border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground')}>
+                      <DoorOpen className="size-4 shrink-0" aria-hidden />
+                      {chosenSection && <bdi className="max-w-16 truncate">{chosenSection.label}</bdi>}
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuRadioGroup value={sectionId} onValueChange={pickSection}>
+                      {sectionItems.map((item) => (
+                        <DropdownMenuRadioItem key={item.value || 'all'} value={item.value}>{item.label}</DropdownMenuRadioItem>
+                      ))}
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
             {roster.length >= SEARCH_FROM && (
               <div className="relative">
@@ -150,7 +192,7 @@ export default function HomeworkCompletionSheet({ homework, onClose }: { homewor
                   <div className="flex min-w-0 flex-1 items-center gap-2 md:flex-none">
                     <span className="w-4 shrink-0 text-end text-xs tabular-nums text-muted-foreground md:w-5">{index + 1}</span>
                     <NAvatar src={entry.image} fallback={personInitials(entry.name)} size="sm" className="shrink-0" />
-                    <bdi className="line-clamp-2 wrap-anywhere text-sm leading-tight font-medium md:line-clamp-none md:truncate md:leading-normal" title={entry.name}>{entry.name}</bdi>
+                    <bdi className="line-clamp-2 wrap-anywhere text-xs leading-tight font-medium md:line-clamp-none md:truncate md:leading-normal" title={entry.name}>{entry.name}</bdi>
                   </div>
                   <StatusPicker
                     value={status}
