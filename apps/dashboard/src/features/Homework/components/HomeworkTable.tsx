@@ -175,8 +175,9 @@ function HomeworkTable() {
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col gap-2">
+      {/* The header keeps the sidebar's /homework mark in both views; the toggle shows the other view's icon. */}
       <NPageHeader
-        icon={showMissed ? FEATURE_ICONS.homeworkFollowUp : FEATURE_ICONS.homework}
+        icon={FEATURE_ICONS.homework}
         title={showMissed ? followUpTitle : homeworkTitle}
         subtitle={countUnknown ? undefined : showMissed
           ? t('homeworkFollowUp.subtitle', { count: missedRows.length })
