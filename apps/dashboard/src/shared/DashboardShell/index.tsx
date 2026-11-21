@@ -94,6 +94,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
   const compactSidebar = useMediaQuery('(max-width: 1279px)');
   const isMobile = useCardViewport();
   const isHome = pathname === '/home';
+  const isDashboardLanding = isHome || pathname === '/dashboard';
   const { user, accessToken } = useAuth();
   const { t } = useTranslation();
   const role = (user as any)?.role ?? 'teacher';
@@ -181,7 +182,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
         <ViewingYearBanner />
         <PushPromptBanner />
         <div className="flex min-h-0 flex-1 flex-col">
-          <FeatureActionsProvider key={pathname} enabled={pathname !== '/dashboard' && pathname !== '/home'}>{children}</FeatureActionsProvider>
+          <FeatureActionsProvider key={pathname} enabled={!isDashboardLanding}>{children}</FeatureActionsProvider>
         </div>
       </div>
 
@@ -189,7 +190,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
       <PageWarmup navItems={navItems} />
 
 
-      {pathname === '/dashboard' && accessToken && (
+      {isDashboardLanding && accessToken && (
         <YearScopedChatbot
           className="school-chatbot"
           settingsApiPath="/api/ai-settings"
