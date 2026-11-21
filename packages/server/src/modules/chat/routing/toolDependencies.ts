@@ -52,6 +52,10 @@ export const TOOL_DEPENDENCIES: Record<string, string[]> = {
   // 10 KB), never the year's 222 exams (160 KB, which left OSS20B unable to
   // reply). A teacher's marks need the teacher found by name.
   grades_get_by_exam: ['sections_get_sections', 'exams_get_by_section'],
+  // A class test's marks start from the class's exam list (where its examId
+  // is), which Jev picks first for 19 of 37 test-results questions; the results
+  // read must come with it (2026-11-21).
+  exams_get_by_section: ['sections_get_sections', 'grades_get_by_exam'],
   grades_get_by_assessment: ['sections_get_sections', 'assessments_get_by_section'],
   grades_get_by_teacher: ['search_search_teachers'],
   exams_get_upcoming_exams: ['exams_get_all'],

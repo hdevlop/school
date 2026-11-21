@@ -6,7 +6,7 @@ import { normalizeReplyText } from 'najm-chatbot';
  * changes. najm-rag then marks every phrase stale; run "Reindex semantics" in
  * the RAG studio after the deploy.
  */
-export const ROUTING_TEXT_VERSION = '2026-11-17 result reads lead';
+export const ROUTING_TEXT_VERSION = '2026-11-21 class tests are exams';
 
 /** Query-only discovery hints. No role, identity lookup or access decision. */
 // najm-rag lowercases the message and folds these letters before this hook
@@ -27,7 +27,11 @@ export function schoolRoutingContext(query: string, routingQuery = query): strin
     || mentions('n?no9ati|[وفب]?(?:نقطي|غيابي|حضوري)');
   const teaching = mentions('kan9erri|ken9erri|[وفب]?كنقري|i teach|j enseigne');
   const pending = mentions('pending grading|ns7ho|ns7h|[وفب]?نصحح(?:و|هم)?|بلا نقط|ما تسجل|ma tsjjel');
-  const assessments = mentions('l?forod|l?fard|assessments?|assignments?|quizzes|[وفب]?(?:الفروض|فروض|فرض)');
+  // A class test (fard, contrôle, devoir surveillé) is recorded as an exam of
+  // type "test": all 222 tests of the demo school are exams, with no
+  // assessments (2026-11-21). Quizzes, assignments and projects are assessments.
+  const classTests = mentions('l?forod|l?fard|contr[oô]les?|ds|devoirs? surveill[eé]s?|class tests?|[وفب]?(?:الفروض|فروض|الفرض|فرض|الكونطرول|كونطرول|الكونطرولات|كونطرولات)');
+  const quizzes = mentions('assessments?|assignments?|quiz(?:zes)?|projects?|[وفب]?(?:الاختبار القصير|الاختبارات القصيرة)');
   // One class or level named by code or ordinal, not only by the word "class".
   const classCode = /(?<![\p{L}\p{N}])(?:cp|ce[12]|cm[12]|[1-6](?:ap|ac|bac)|[1-6][a-f])(?![\p{L}\p{N}])/iu.test(text);
   const namedClass = placement || classCode
@@ -81,8 +85,8 @@ export function schoolRoutingContext(query: string, routingQuery = query): strin
     // one subject everywhere, a class, a class code (often a student's), or a student.
     if (own) hints.push('student academic grades student-profile_get_academic grades_get_by_student');
     else if (teacher && !teaching) hints.push('marks one teacher recorded grades_get_by_teacher search_search_teachers');
-    else if (exam && !upcoming) hints.push('one exam results grades_get_by_exam');
-    else if (assessments && !upcoming) hints.push('one class test results grades_get_by_assessment');
+    else if ((exam || classTests) && !upcoming) hints.push('one exam or class test results grades_get_by_exam');
+    else if (quizzes && !upcoming) hints.push('one quiz or assignment results grades_get_by_assessment');
     else if (everyClass) hints.push('one subject in every class grades_get_by_subject');
     else if (placement) hints.push('class subject grades grades_get_by_section grades_get_by_subject');
     else if (classCode) hints.push('class or student grades grades_get_by_section grades_get_by_student search_search_students');
@@ -116,11 +120,15 @@ export function schoolRoutingContext(query: string, routingQuery = query): strin
     hints.push('teachers_get_my_identity teacher-profile_get_my_classes teacher-profile_get_my_students own teaching assignments subjects');
   if (pending)
     hints.push('teacher pending assessments teachers_get_my_identity teacher-profile_get_pending_grading');
-  // Upcoming tests are read from the exam calendar; today's assessments only
-  // answer "today" (upcoming forod routed to them in 5 of 113 cases).
-  else if (assessments && upcoming)
+  // Upcoming tests are read from the exam calendar (upcoming forod routed to
+  // today's assessments in 5 of 113 cases). Class tests are exams; their marks
+  // already have a hint above, so only a question about the tests themselves
+  // gets the exam lists. Quizzes and assignments are assessment records.
+  else if ((classTests || quizzes) && upcoming)
     hints.push('upcoming exams calendar exams_get_upcoming_exams exams_get_all');
-  else if (assessments)
+  else if (classTests && !grades && !got)
+    hints.push('class tests exams exams_get_today_exams exams_get_upcoming_exams exams_get_by_section');
+  else if (quizzes)
     hints.push('assessment quizzes assignments assessments_get_all assessments_get_today_assessments');
   return hints.length ? `${hints.join('\n')}\n${routingQuery}` : routingQuery;
 }

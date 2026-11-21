@@ -64,7 +64,7 @@ export class GradeController {
   @Post('/mcp/assessment')
   @CanList()
   @Validate({ body: assessmentIdParam })
-  @McpTool({ description: "Read the results of one class test, quiz or assignment by assessmentId: each student's mark on that test, the average and how many passed. A class test is a fard, contrôle or devoir surveillé; exam-session results are the exam read, and test dates are the exam calendar. Résultats d'un contrôle, نتائج الفرض.", readOnly: true })
+  @McpTool({ description: "Read the results of one quiz, assignment or project by assessmentId: each student's mark on it, the average and how many passed. A class test (fard, contrôle, devoir surveillé) is an exam of type test, so its results are the exam read. Résultats d'un quiz ou d'un devoir, نتائج الاختبار القصير.", readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getByAssessment(@Body() body: AssessmentIdDto) {
     return sourceGradesSummary(await this.gradeService.getByAssessment(body.assessmentId));
@@ -81,7 +81,7 @@ export class GradeController {
   @Post('/mcp/exam')
   @CanList()
   @Validate({ body: examIdParam })
-  @McpTool({ description: "Read the results of one exam by examId: each student's mark on that exam, the average and who passed. An exam is a scheduled exam session (imti7an, examen, midterm, final); class tests and quizzes are the assessment read, and exam dates are the exam calendar. Résultats d'un examen, نتائج الامتحان.", readOnly: true })
+  @McpTool({ description: "Read the results of one class test or exam by examId: each student's mark on it, the average and who passed. Class tests (fard, contrôle, devoir surveillé, الفرض المحروس) are exams of type test, as are midterms and finals (imti7an, examen); quizzes and assignments are the assessment read, and dates are the exam calendar. Find the examId in the class section's exam list. Résultats d'un contrôle ou d'un examen, نتائج الفرض أو الامتحان.", readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getByExam(@Body() body: ExamIdDto) {
     return sourceGradesSummary(await this.gradeService.getByExam(body.examId));

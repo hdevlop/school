@@ -165,17 +165,19 @@
         { "lang": "darija-latn", "phrase": "wach kayn chi imti7an lyoum" },
         { "lang": "fr", "phrase": "y a-t-il un examen aujourd'hui" },
         { "lang": "ar", "phrase": "امتحانات اليوم" },
-        { "lang": "en", "phrase": "exams scheduled today" }
+        { "lang": "en", "phrase": "exams scheduled today" },
+        { "lang": "darija", "phrase": "الفروض والكونطرولات ديال اليوم" },
+        { "lang": "darija-latn", "phrase": "forod lyoum f l9ism" },
+        { "lang": "fr", "phrase": "les contrôles et devoirs en classe d'aujourd'hui" },
+        { "lang": "ar", "phrase": "فروض المراقبة المستمرة اليوم" }
       ]
     },
     {
       "toolName": "assessments_get_today_assessments",
       "phrases": [
-        { "lang": "darija", "phrase": "الفروض والكونطرولات ديال اليوم" },
-        { "lang": "darija-latn", "phrase": "forod lyoum f l9ism" },
-        { "lang": "fr", "phrase": "les contrôles et devoirs en classe d'aujourd'hui" },
-        { "lang": "ar", "phrase": "فروض المراقبة المستمرة اليوم" },
-        { "lang": "en", "phrase": "today's quizzes and class tests" }
+        { "lang": "darija-latn", "phrase": "kayn chi quiz lyoum?" },
+        { "lang": "fr", "phrase": "les quiz prévus aujourd'hui" },
+        { "lang": "en", "phrase": "today's quizzes and assignments" }
       ]
     },
     {

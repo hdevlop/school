@@ -35,7 +35,7 @@ export class AssessmentController {
 
   @Get('/today')
   @CanList()
-  @McpTool({ description: "List today's assessments: quizzes, assignments and class tests (فروض اليوم / forod lyom). These are assessment records, distinct from exams. An empty result means no assessments in this account's selected-year scope today.", readOnly: true })
+  @McpTool({ description: "List today's assessments: quizzes, assignments and projects. Class tests (forod lyom, فروض اليوم) are exams, read from today's exams. An empty result means no assessments in this account's selected-year scope today.", readOnly: true })
   @ResMsg('assessments.success.retrieved')
   async getTodayAssessments() {
     return this.assessmentService.getTodayAssessments();
@@ -77,7 +77,7 @@ export class AssessmentController {
   @Get('/section/:sectionId')
   @CanList()
   @Validate({ params: sectionIdParam })
-  @McpTool({ description: "List one class section's tests, quizzes and assignments by sectionId: each one's id (assessmentId), title, date and marks out of. Contrôles d'une classe, فروض القسم.", readOnly: true })
+  @McpTool({ description: "List one class section's quizzes, assignments and projects by sectionId: each one's id (assessmentId), title, date and marks out of. Class tests (contrôles, فروض) are the section's exams. Quiz et devoirs d'une classe.", readOnly: true })
   @ResMsg('assessments.success.retrieved')
   async getBySection(@Params('sectionId') sectionId: string) {
     return this.assessmentService.getAll({ sectionId });

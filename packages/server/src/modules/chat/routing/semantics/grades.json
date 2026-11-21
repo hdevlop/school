@@ -80,16 +80,14 @@
     {
       "toolName": "grades_get_by_assessment",
       "phrases": [
-        { "lang": "darija", "phrase": "بغيت النقط ديال الفرض الأول فالرياضيات ديال 5AP B" },
         { "lang": "darija", "phrase": "شحال جابو التلاميذ فالكويز الأخير ديال العلوم؟" },
-        { "lang": "darija", "phrase": "وريني نتائج الفرض المحروس الثاني فالفرنسية" },
-        { "lang": "darija-latn", "phrase": "nno9at dyal lfard tani f l3arabiya dyal 6AP A" },
+        { "lang": "darija", "phrase": "بغيت النقط ديال المشروع ديال العلوم ف 6AP A" },
         { "lang": "darija-latn", "phrase": "bghit natayj lquiz li daz f 9ism 4AP B" },
-        { "lang": "darija-fr", "phrase": "les notes dyal le contrôle numéro 2 en maths" },
-        { "lang": "fr", "phrase": "Les notes obtenues au devoir surveillé de français numéro 1" },
+        { "lang": "darija-latn", "phrase": "nno9at dyal lprojet dyal lfrançais f CM2 B" },
         { "lang": "fr", "phrase": "Afficher les résultats du dernier quiz de sciences" },
+        { "lang": "fr", "phrase": "Les notes du projet de technologie de la 3AC" },
         { "lang": "ar", "phrase": "اعرض درجات التلاميذ في الاختبار القصير الأول لمادة الرياضيات" },
-        { "lang": "en", "phrase": "Show each student's mark on the second French class test" }
+        { "lang": "en", "phrase": "Show the marks on the last vocabulary quiz" }
       ]
     },
     {
@@ -97,14 +95,16 @@
       "phrases": [
         { "lang": "darija", "phrase": "بغيت نتائج الامتحان النهائي ديال الرياضيات" },
         { "lang": "darija", "phrase": "شكون نجح فامتحان العربية ديال 6AP؟" },
-        { "lang": "darija", "phrase": "وريني النقط اللي جابو التلاميذ فالامتحان الموحد ديال الفرنسية" },
-        { "lang": "darija-latn", "phrase": "bghit nno9at dyal l imti7an nihai f sciences" },
+        { "lang": "darija", "phrase": "بغيت النقط ديال الفرض الأول فالرياضيات ديال 5AP B" },
+        { "lang": "darija", "phrase": "وريني نتائج الفرض المحروس الثاني فالفرنسية" },
         { "lang": "darija-latn", "phrase": "ch7al jab kol tilmid f l imti7an lmowa7ad dyal riyadiyat?" },
+        { "lang": "darija-latn", "phrase": "nno9at dyal lfard tani f l3arabiya dyal 6AP A" },
         { "lang": "darija-fr", "phrase": "les résultats dyal l'examen final d'anglais" },
-        { "lang": "fr", "phrase": "Les notes des candidats à l'examen final de français" },
+        { "lang": "darija-fr", "phrase": "les notes dyal le contrôle numéro 2 en maths" },
         { "lang": "fr", "phrase": "Qui a réussi l'examen de maths de 6AP ?" },
+        { "lang": "fr", "phrase": "Les notes obtenues au devoir surveillé de français numéro 1" },
         { "lang": "ar", "phrase": "اعرض نتائج الامتحان الموحد في مادة اللغة العربية" },
-        { "lang": "en", "phrase": "Show the recorded results of the final maths exam" }
+        { "lang": "en", "phrase": "Show each student's mark on the second French class test" }
       ]
     },
     {
@@ -142,13 +142,13 @@
       "phrases": [
         { "lang": "darija", "phrase": "شحال هو المعدل العام ديال المدرسة كاملة؟" },
         { "lang": "darija", "phrase": "بغيت المؤشرات الدراسية الإجمالية ديال المؤسسة" },
-        { "lang": "darija", "phrase": "شحال من تقييم باقي بلا نقط على صعيد المدرسة؟" },
+        { "lang": "darija", "phrase": "شحال من نقطة تسجلات فالمدرسة كاملة هاد العام؟" },
         { "lang": "darija-latn", "phrase": "ch7al lmo3adal l3am dyal lmdrassa kamla?" },
-        { "lang": "darija-latn", "phrase": "bghit 3adad ta9yimat li ba9in bla nno9at f lmo2assasa kamla" },
+        { "lang": "darija-latn", "phrase": "bghit 3adad nno9at lmsajla f lmo2assasa kamla" },
         { "lang": "darija-fr", "phrase": "les KPI académiques dyal toute l'école" },
-        { "lang": "fr", "phrase": "La moyenne générale de l'établissement et le nombre de corrections en attente" },
+        { "lang": "fr", "phrase": "La moyenne générale de l'établissement et le nombre de notes saisies" },
         { "lang": "fr", "phrase": "Afficher les indicateurs scolaires globaux de l'école" },
-        { "lang": "ar", "phrase": "ما متوسط الدرجات العام للمؤسسة وعدد التقييمات التي لم ترصد درجاتها؟" },
+        { "lang": "ar", "phrase": "ما متوسط الدرجات العام للمؤسسة وكم عدد الدرجات المسجلة؟" },
         { "lang": "en", "phrase": "Show schoolwide academic KPIs, including the overall average grade" }
       ]
     },

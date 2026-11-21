@@ -71,7 +71,7 @@
       "q": "عندي 1AC C بغيت نقط الفرض 2 ديال الفيزياء",
       "want": "Show physics test 2 results for the monitor's 1AC C.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -161,7 +161,7 @@
       "q": "شنو خرج فالتنقيط ديال الإملاء 3 اللي درت ل CE1 C",
       "want": "Show results for the teacher's third CE1 C dictation test.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -191,7 +191,7 @@
       "q": "نقط فرض الاجتماعيات رقم 1 فـ2AC B واش باينين",
       "want": "Show results for social studies test 1 in 2AC B.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -331,7 +331,7 @@
       "q": "كيف داير تنقيط فرض الحساب الأول فـCP C ديالي",
       "want": "Show mathematics test 1 results for the monitor's CP C.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -441,7 +441,7 @@
       "q": "الفرض الرابع ديال الرياضيات فـ3AC B شحال جاب كل تلميذ",
       "want": "Show mathematics test 4 results for 3AC B.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -531,7 +531,7 @@
       "q": "فرض القراءة 2 فـCE1 C ديالي وريني شنو تسجل فيه",
       "want": "Show reading test 2 results for the supervisor's CE1 C.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -631,7 +631,7 @@
       "q": "شحال جابو عندي فـCM1 C ففرض النشاط العلمي 1",
       "want": "Show science test 1 results for the monitor's CM1 C.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -721,7 +721,7 @@
       "q": "فـ2AC C ديالي شنو نتائج الفرض الثالث ديال الإنجليزية",
       "want": "Show English test 3 results for the supervisor's 2AC C.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -801,7 +801,7 @@
       "q": "فرض الهندسة رقم 2 فـCM2 C بغيت نتيجتو عند كل واحد",
       "want": "Show geometry test 2 results for CM2 C.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -851,7 +851,7 @@
       "q": "1AC C li m3aya chno jabo f lfard 2 dyal l3arbiya",
       "want": "Show Arabic test 2 results for the supervisor's 1AC C.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -1001,7 +1001,7 @@
       "q": "lfard 1 dyal lhandassa 5AP C chno natija dyal kol tilmid",
       "want": "Show geometry test 1 results for 5AP C.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -1051,7 +1051,7 @@
       "q": "nno9at dyal lfard 4 informatique f 1AC B",
       "want": "Show computing test 4 results for 1AC B.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -1141,7 +1141,7 @@
       "q": "lfard 3 dyal nchat l3ilmi f 5AP C ta7t mas2oliyti nno9at",
       "want": "Show science test 3 results for the supervisor's 5AP C.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -1341,7 +1341,7 @@
       "q": "les resultats du controle 1 de conjugaison CE1 C dyali",
       "want": "Show conjugation test 1 results for the monitor's CE1 C.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -1471,7 +1471,7 @@
       "q": "resultats du ds 2 de physique 2AC C eleve par eleve",
       "want": "Show physics test 2 results for 2AC C.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -1581,7 +1581,7 @@
       "q": "mon CE2 C a eu combien au controle de lecture numero 4",
       "want": "Show reading test 4 results for the monitor's CE2 C.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -1651,7 +1651,7 @@
       "q": "controle 3 de grammaire CM2 C montre les scores enregistres",
       "want": "Show grammar test 3 results for CM2 C.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {
@@ -1991,7 +1991,7 @@
       "q": "resultados del segundo control de mates de mi grupo CM2 C",
       "want": "Show mathematics test 2 results for the supervisor's CM2 C.",
       "tools": [
-        "grades_get_by_assessment"
+        "grades_get_by_exam"
       ]
     },
     {

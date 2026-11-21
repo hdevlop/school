@@ -44,11 +44,23 @@ test('upcoming assessments read the exam calendar, not today\'s assessments', ()
   }
 });
 
-test('assessments discover assessment records separately from exams and pending grading', () => {
-  const result = schoolRoutingContext('شنو هما الفروض اللي عندنا اليوم؟');
-  expect(result).toContain('assessments_get_today_assessments');
+test('class tests (forod, contrôles) are exams; quizzes and assignments are assessments', () => {
+  for (const query of ['شنو هما الفروض اللي عندنا اليوم؟', 'les contrôles de la 5AP B', 'forod lyoum f l9ism']) {
+    const result = schoolRoutingContext(query);
+    expect(result).toContain('exams_get_today_exams');
+    expect(result).not.toContain('assessments_get_today_assessments');
+    expect(result).not.toContain('teacher-profile_get_pending_grading');
+  }
+  const quizzes = schoolRoutingContext("today's quizzes and assignments");
+  expect(quizzes).toContain('assessments_get_today_assessments');
+  expect(quizzes).not.toContain('exams_get_today_exams');
+});
+
+test('a class test\'s marks do not also offer the year\'s exam list', () => {
+  const result = schoolRoutingContext('cm1 وريني نتائج الفرض المحروس الثاني فالفرنسية');
+  expect(result).toContain('grades_get_by_exam');
+  expect(result).not.toContain('grades_get_by_assessment');
   expect(result).not.toContain('exams_get_today_exams');
-  expect(result).not.toContain('teacher-profile_get_pending_grading');
 });
 
 test.each(['ch7al mn bent kayna f lmdrasa?', 'شحال من بنت فالأقسام؟',
@@ -187,7 +199,9 @@ test.each([
   ['شنو التنقيط ديال الأستاذة العلوي', 'grades_get_by_teacher'],
   ['les notes données par le professeur de maths', 'grades_get_by_teacher'],
   ['نتائج امتحان الرياضيات ديال 3AC A', 'grades_get_by_exam'],
-  ['chno jabo tlamd f lfard dyal l3arabiya', 'grades_get_by_assessment'],
+  ['chno jabo tlamd f lfard dyal l3arabiya', 'grades_get_by_exam'],
+  ['les notes du ds 2 de physique', 'grades_get_by_exam'],
+  ['results of the vocabulary quiz in 5AP C', 'grades_get_by_assessment'],
   ['tan9it lfrançais f kol la9sam', 'grades_get_by_subject'],
   ['notes de calcul pour mon groupe CP B', 'grades_get_by_section'],
   ['بغيت البيان ديال سارة من 5AP B', 'grades_get_student_report'],

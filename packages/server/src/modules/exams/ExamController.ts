@@ -34,7 +34,7 @@ export class ExamController {
 
   @Get('/today')
   @CanList()
-  @McpTool({ description: "List today's exams. Examens d’aujourd’hui. امتحانات اليوم.", readOnly: true })
+  @McpTool({ description: "List today's class tests and exams (forod lyom). Contrôles et examens d’aujourd’hui. فروض وامتحانات اليوم.", readOnly: true })
   @ResMsg('exams.success.retrieved')
   async getTodayExams() {
     return this.examService.getTodayExams();
@@ -42,7 +42,7 @@ export class ExamController {
 
   @Get('/upcoming')
   @CanList()
-  @McpTool({ description: 'List upcoming exams. Prochains examens. الامتحانات القادمة.', readOnly: true })
+  @McpTool({ description: 'List upcoming class tests and exams. Prochains contrôles et examens. الفروض والامتحانات القادمة.', readOnly: true })
   @ResMsg('exams.success.retrieved')
   async getUpcomingExams() {
     return this.examService.getUpcomingExams();
@@ -51,7 +51,7 @@ export class ExamController {
   @Get('/section/:sectionId')
   @CanList()
   @Validate({ params: sectionIdParam })
-  @McpTool({ description: "List one class section's exams by sectionId: each exam's id (examId), title (often the subject), date and marks out of. Examens d'une classe, امتحانات القسم.", readOnly: true })
+  @McpTool({ description: "List one class section's exams by sectionId, class tests included: each one's id (examId), title (the subject or the part of a test), type, subject, date and marks out of. No marks: a test's or exam's marks are the exam results read, which takes the examId found here. Examens d'une classe, امتحانات القسم.", readOnly: true })
   @ResMsg('exams.success.retrieved')
   async getBySection(@Params('sectionId') sectionId: string) {
     return this.examService.getAll({ sectionId });
