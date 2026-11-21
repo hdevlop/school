@@ -98,7 +98,7 @@ export function schoolChatFetch(fetchImpl: typeof fetch): typeof fetch {
         const buffered = await bufferedCompletion(response);
         if (buffered) {
           response = buffered.response;
-          const problem = completionProblem(buffered.text, offered);
+          const problem = completionProblem(buffered.text, offered, JSON.parse(body));
           if (problem) {
             frame.corrected = true;
             const corrected = JSON.stringify(withCorrection(JSON.parse(body), correctionNote(problem, offered)));

@@ -13,7 +13,11 @@ export function schoolChatFailureText(query: string): string {
           : 'I could not complete the reply. Try again or check the data in the dashboard.';
 }
 
-/** An actual failed read is visible even if a later model step recovers. */
+/**
+ * A failed read stays visible even if the model answers anyway. Only a later
+ * successful call of the same tool (the read retried with a resolved ID)
+ * recovers it.
+ */
 export function schoolChatToolFailureText(query: string): string {
   const language = schoolReplyLanguage(query);
   return language === 'ary' ? 'شي محاولة لجلب المعطيات ما نجحاتش فهاد الجواب. ما نقدرش نأكد المعلومات اللي ما رجعاتش من قراءة ناجحة.'
@@ -44,7 +48,9 @@ export function schoolChatResponse(response: Response, query: string, signal?: A
   const partId = 'school-unavailable-' + crypto.randomUUID();
   const encodeEvent = (value: unknown) => `data: ${JSON.stringify(value)}\n\n`;
   let buffer = '', oversized = false, hasText = false, hasStart = false, terminal = false, aborted = false, repaired = false;
-  const failedCalls = new Set<string>();
+  // Failed call ID → its tool name ('' when the stream never named it).
+  const failedCalls = new Map<string, string>();
+  const toolNames = new Map<string, string>();
   const maxFrameChars = 262144;
   const body = new ReadableStream<Uint8Array>({
     async pull(controller) {
@@ -84,15 +90,21 @@ export function schoolChatResponse(response: Response, query: string, signal?: A
         if (event.type === 'start') hasStart = true;
         if (event.type === 'text-delta' && typeof event.delta === 'string' && event.delta.trim()) hasText = true;
         if (event.type === 'abort') aborted = true;
-        if (!aborted && !signal?.aborted && (event.type === 'tool-input-error' || event.type === 'tool-output-error'
+        const callId = typeof event.toolCallId === 'string' ? event.toolCallId : 'unknown';
+        if (typeof event.toolName === 'string' && typeof event.type === 'string' && event.type.startsWith('tool-input-')) toolNames.set(callId, event.toolName);
+        const failed = event.type === 'tool-input-error' || event.type === 'tool-output-error'
           || event.type === 'tool-output-available' && typeof event.output === 'string'
-            && (/^Error \([A-Z_]+\):/u.test(event.output) || event.output === 'Tool execution failed'))) {
+            && (/^Error \([A-Z_]+\):/u.test(event.output) || event.output === 'Tool execution failed');
+        if (!aborted && !signal?.aborted && failed) {
           // SDK errors may contain validation inputs or upstream bodies. Keep
           // the original stream shape but replace only its error description.
-          failedCalls.add(typeof event.toolCallId === 'string' ? event.toolCallId : 'unknown');
+          failedCalls.set(callId, toolNames.get(callId) ?? '');
           if (event.type !== 'tool-output-available') {
             emit(encodeEvent({ ...event, errorText: schoolChatToolFailureText(query) })); return;
           }
+        } else if (event.type === 'tool-output-available' && !failed) {
+          const name = toolNames.get(callId);
+          if (name) for (const [id, failedName] of failedCalls) if (failedName === name) failedCalls.delete(id);
         }
         if (event.type === 'error' && !aborted && !signal?.aborted) {
           notice(); emit(encodeEvent({ ...event, errorText: failureText() })); return;
@@ -122,7 +134,7 @@ export function schoolChatResponse(response: Response, query: string, signal?: A
           if (!oversized && /^data:\s*\{\s*"type"\s*:\s*"tool-(?:input|output)-error"/u.test(buffer)) {
             // The SDK puts the event type first. Observe an oversized error
             // without accumulating its input/error body or reparsing it.
-            failedCalls.add('oversized-error-' + failedCalls.size);
+            failedCalls.set('oversized-error-' + failedCalls.size, '');
           }
           // Large tool payloads pass through without accumulating or parsing.
           // Unknown/large text frames conservatively count as visible output.

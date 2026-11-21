@@ -44,6 +44,52 @@ test('ordinary answers and clarifying questions without an ID are kept', () => {
   expect(completionProblem(answer('Wach kat9sed CM1 A wla CM1 B?'), offered)).toBeNull();
 });
 
+test('an empty quiz list answered without reading the class exams is corrected once', () => {
+  const read = (name: string, content: string, id = name) => [
+    { role: 'assistant', content: null, tool_calls: [{ id, type: 'function', function: { name, arguments: '{"sectionId":"s1"}' } }] },
+    { role: 'tool', tool_call_id: id, content },
+  ];
+  const turn = (...reads: object[][]) => ({ messages: [{ role: 'system', content: 'x' }, { role: 'user', content: 'CM1A' }, ...reads.flat()] });
+  const none = answer('ما كاينش كويز فـ CM1 A.');
+  const quizOffered = new Set([...offered, 'assessments_get_by_section', 'grades_get_by_exam']);
+  expect(completionProblem(none, quizOffered, turn(read('assessments_get_by_section', '[]')))).toEqual({ kind: 'empty_quiz_list' });
+  expect(completionProblem(none, quizOffered, turn(read('assessments_get_by_section', '{"data":[]}')))).toEqual({ kind: 'empty_quiz_list' });
+  // The exams were read, the quiz list had records, or the exam list is not offered.
+  expect(completionProblem(none, quizOffered, turn(read('assessments_get_by_section', '[]'), read('exams_get_by_section', '[]')))).toBeNull();
+  expect(completionProblem(none, quizOffered, turn(read('assessments_get_by_section', '[{"id":"a1"}]')))).toBeNull();
+  expect(completionProblem(none, new Set(['assessments_get_by_section']), turn(read('assessments_get_by_section', '[]')))).toBeNull();
+  // An earlier turn's empty read does not count.
+  const earlier = { messages: [...turn(read('assessments_get_by_section', '[]')).messages, { role: 'assistant', content: 'ما كاينش.' }, { role: 'user', content: 'merci' }] };
+  expect(completionProblem(none, quizOffered, earlier)).toBeNull();
+  const note = correctionNote({ kind: 'empty_quiz_list' }, quizOffered);
+  expect(note).toContain('exams_get_by_section');
+  expect(note).toContain('grades_get_by_exam');
+});
+
+test('"no results" said from the class exam list without reading them is corrected', () => {
+  const read = (name: string, content: string) => [
+    { role: 'assistant', content: null, tool_calls: [{ id: name, type: 'function', function: { name, arguments: '{}' } }] },
+    { role: 'tool', tool_call_id: name, content },
+  ];
+  const turn = (...reads: object[][]) => ({ messages: [{ role: 'user', content: 'CM1A' }, ...reads.flat()] });
+  const withResults = new Set([...offered, 'grades_get_by_exam']);
+  const exams = read('exams_get_by_section', '[{"id":"e1","title":"Sciences"}]');
+  for (const none of ['ما كاينش كويز فـ العلوم فـ CM1 A.', 'الإملاء مازال ما كاينش نتيجات.', 'Aucune note pour ce contrôle.'])
+    expect(completionProblem(answer(none), withResults, turn(exams))).toEqual({ kind: 'results_not_read' });
+  // Listing the exams, results already read, an empty exam list, or no results read offered.
+  expect(completionProblem(answer('CM1 A: Sciences (2026-11-12), Anglais (2026-11-11).'), withResults, turn(exams))).toBeNull();
+  expect(completionProblem(answer('ما كاينش نقط.'), withResults, turn(exams, read('grades_get_by_exam', '[]')))).toBeNull();
+  expect(completionProblem(answer('ما كاينش امتحانات.'), withResults, turn(read('exams_get_by_section', '[]')))).toBeNull();
+  expect(completionProblem(answer('ما كاينش كويز.'), offered, turn(exams))).toBeNull();
+  expect(correctionNote({ kind: 'results_not_read' }, withResults)).toContain('grades_get_by_exam');
+});
+
+test('an answer that names tool IDs is planning, with or without offered tools', () => {
+  const plan = 'الخطوة 1: تحقق من حساب ولي الأمر\n```\nparents_get_my_identity\n```\nالخطوة 4: student-profile_get_academic';
+  expect(completionProblem(answer(plan), new Set())).toEqual({ kind: 'planning_only' });
+  expect(completionProblem(answer('ريما جابت 10/10 فـ Mathématiques.'), new Set())).toBeNull();
+});
+
 test('the correction is added to the system message and names the offered tools', () => {
   const note = correctionNote({ kind: 'unoffered_tool', names: ['parents_get_my_identity'] }, offered);
   expect(note).toContain('parents_get_my_identity');

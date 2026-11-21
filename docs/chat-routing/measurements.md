@@ -118,6 +118,43 @@ Still wrong once: Rima's Arabic marks answered with her French ones.
 For comparison, OSS120B on the default flow answered 12 of 15 of a smaller
 set the same day; the qualified OSS20B flow with the correction does better.
 
+## Quizzes may be class tests; one class's sections (2026-11-21)
+
+A real chat, "شحال جابو التلاميذ فالكويز الأخير ديال العلوم" then "CM1A",
+answered "no quiz in CM1 A", showed a section ID and the failed-read notice:
+
+- "الكويز" matched no quiz word, so the hint was a student lookup, and no
+  exam read was offered. Arabic and Arabizi quiz words were added, a quiz's
+  results hint names `grades_get_by_exam` too, the generic quiz-list hint is
+  left out of results questions (12 tools at most are offered), and
+  `grades_get_by_assessment` brings `exams_get_by_section`.
+- OSS20B took MS B's id from the 12.5 KB section list for "CM1 A".
+  `sections_get_sections` takes `q` ("CM1 A", "cm1a", "CM1"): 527 characters.
+- After the empty assessment list it answered without the class's exams,
+  although the prompt says to read them: `schoolCompletionCorrection.ts`
+  corrects that (`empty_quiz_list`).
+- The notice now skips a failed read the same tool later retried successfully.
+
+The same conversation then reads sections (q), the class's exams and
+`grades_get_by_exam`: the Sciences test of 2026-11-12, every mark, 9/10
+average.
+
+Then, the same day:
+
+- "وريني نقط JEBARA RIMA" listed her 8 marks as if they were every subject;
+  6 of CE1 B's 14 tests have no marks yet. `student-profile_get_academic`
+  returns `examsWithoutMarks` (no `totalMarks`: OSS20B printed "10/10" beside
+  them), and a named student's marks are read there, not `grades_get_by_student`.
+- After the class's exam list (which has no marks) OSS20B answered "no
+  quiz" or "no results yet" in 4 of 39 answers without reading the results:
+  corrected as `results_not_read`.
+- "chhal jabt rima jebara f l math" got no tools ("jabt" was not a got word)
+  and the answer was a numbered plan naming tool IDs. "jabt" and its forms were
+  added, and an answer naming a tool ID counts as planning.
+
+`bun run eval:chat --runs 3`, 13 questions: **39 of 39**, median 1.8 s; the
+correction fired 5 times (4 `results_not_read`, 1 `unoffered_tool`).
+
 ## Phrases per tool: at most 12
 
 `MAX_PER_TOOL` in `packages/server/tests/chat/RoutingSemantics.test.ts`. A tool

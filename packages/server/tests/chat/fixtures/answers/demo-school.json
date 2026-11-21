@@ -4,20 +4,21 @@
   "factsCapturedAt": "2026-11-21",
   "academicYear": "2026-2027",
   "actor": "admin",
-  "notes": "Facts come from the demo database: JEBARA RIMA (CM1) has 8 marks and none in Arabic; CM1 A الإملاء averages 7.62/10, CM1 B Mathématiques 8.99, CM1 A Grammaire 8.03; 471 students enrolled this year (the KPI read counts 465), 22 teachers, 3753 marks recorded. Re-capture them after reseeding.",
+  "notes": "Facts come from the demo database: JEBARA RIMA (CE1 B) has 8 marks and none in Arabic, and 6 of her class's 14 tests have no marks yet (Production écrite, Compréhension, الخط / الإملاء, Orthographe, Vocabulaire, اللغة العربية); CM1 A الإملاء averages 7.62/10, CM1 B Mathématiques 8.99, CM1 A Grammaire 8.03; 471 students enrolled this year (the KPI read counts 465), 22 teachers, 3753 marks recorded. Re-capture them after reseeding.",
   "cases": [
     { "id": "hello-en", "lang": "en", "q": "hello", "tools": [] },
     { "id": "hello-ary", "lang": "ary", "q": "سلام عليكم، لاباس؟", "tools": [] },
     {
       "id": "student-all-ary", "lang": "ary", "q": "وريني نقط JEBARA RIMA",
       "tools": ["grades_get_by_student", "grades_get_student_report", "student-profile_get_academic"],
-      "include": [["9.75"], ["10"]]
+      "include": [["9.75"], ["10"], ["Orthographe", "Vocabulaire", "Production écrite", "Compréhension"]],
+      "note": "Her 8 marks, and the tests with no mark yet named, so the list does not read as every subject."
     },
     {
       "id": "student-arabic-ary", "lang": "ary", "q": "وريني النقط ديال العربية عند jebara rima",
       "tools": ["grades_get_by_student", "grades_get_student_report", "student-profile_get_academic"],
-      "include": [["ما كاين", "ماكاين", "ما كاينش", "ما كايناش", "لا توجد", "لا يوجد", "ما عندهاش", "ماعندهاش", "ما موجود", "ما كاينينش", "ما فيهاش", "ما تسجل", "ليست", "ما لقيت", "ما لقينا", "غير موجود"]],
-      "exclude": ["Grammaire", "Conjugaison"],
+      "include": [["ما كاين", "ماكاين", "ما كاينش", "ما كايناش", "لا توجد", "لا يوجد", "ما عندهاش", "ماعندهاش", "ما موجود", "ما كاينينش", "ما فيهاش", "ما تسجل", "ليست", "ما لقيت", "ما لقينا", "غير موجود", "ما عندناش", "مازال ما"]],
+      "exclude": ["Grammaire", "Conjugaison", "9/10", "10/10"],
       "note": "She has no Arabic marks; listing her French marks as Arabic is wrong."
     },
     {
@@ -31,6 +32,13 @@
       "include": [["7.62", "7.63", "7.6"]],
       "exclude": ["Orthographe"],
       "note": "الإملاء is the Arabic test, not the French Orthographe one."
+    },
+    {
+      "id": "cm1a-latest-science-quiz-ary", "lang": "ary", "q": "شحال جابو التلاميذ فالكويز الأخير ديال العلوم فـ CM1 A",
+      "tools": ["grades_get_by_exam"],
+      "include": [["9/10", "9.0", "9 /10", "9 على 10", "9 من 10"]],
+      "exclude": ["4qzej", "LYJSo"],
+      "note": "The demo has no quizzes: the latest Sciences test (2026-11-12, average 9/10) is an exam. No internal IDs."
     },
     {
       "id": "cm1b-maths-ary", "lang": "ary", "q": "نتائج امتحان الرياضيات ديال CM1 B",

@@ -13,9 +13,16 @@ export class SectionService {
   ) { }
 
   // The selected year's sections. A section belongs to its class's year, so
-  // its students and parents come from that year's placements.
-  async getAll() {
-    return this.withRosterCounts(await this.sectionRepository.getAll());
+  // its students and parents come from that year's placements. `q` keeps one
+  // class's sections, or one section: "CM1", "CM1 A", "cm1-a" and "CM1A" all
+  // match class CM1 (section A), ignoring case, spaces and punctuation.
+  async getAll(q?: string) {
+    const rows = await this.sectionRepository.getAll();
+    const code = (value: unknown) => String(value ?? '').toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
+    const wanted = code(q);
+    return this.withRosterCounts(wanted
+      ? rows.filter(row => wanted === code(row.class?.name) || wanted === code(row.class?.name) + code(row.name))
+      : rows);
   }
 
   private async withRosterCounts(rows: Awaited<ReturnType<SectionRepository['getAll']>>) {

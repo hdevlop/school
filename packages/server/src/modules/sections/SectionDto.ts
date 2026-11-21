@@ -18,7 +18,10 @@ export const updateSectionDto = createSectionDto.partial().extend({
   status: sectionStatusEnum.optional(),
 });
 export const sectionIdParam = z.object({ id: z.string().min(1) });
+/** `q`: a class code, alone or with its section ("CM1", "CM1 A", "cm1a"). */
+export const sectionListQuery = z.object({ q: z.string().trim().min(1).max(40).optional() });
 
 export type CreateSectionDto = z.infer<typeof createSectionDto>;
 export type UpdateSectionDto = z.infer<typeof updateSectionDto>;
 export type CreateSectionsBulkDto = z.infer<typeof createSectionsBulkDto>;
+export type SectionListQuery = z.infer<typeof sectionListQuery>;

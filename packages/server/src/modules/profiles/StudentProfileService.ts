@@ -10,6 +10,7 @@ import { AssessmentService } from '../assessments/AssessmentService';
 import { ExamService } from '../exams/ExamService';
 import { GradeService } from '../grades/GradeService';
 import { StudentRouteService } from '../transport/studentRoutes/StudentRouteService';
+import { getBusinessDateOnly } from '../../shared/businessDate';
 
 @Injectable()
 export class StudentProfileService {
@@ -51,12 +52,22 @@ export class StudentProfileService {
     await this.ensureReadable(studentId);
     // The student's own assessments and exams: those of the section they sat in on
     // each date, not everything the reader may see.
-    const [grades, assessments, upcomingExams] = await Promise.all([
+    const [grades, assessments, upcomingExams, sat] = await Promise.all([
       this.gradeService.getByStudent(studentId),
       this.assessmentService.getForStudent(studentId),
       this.examService.getForStudent(studentId, { upcoming: true }),
+      this.examService.getForStudent(studentId),
     ]);
-    return { grades, upcomingExams, assessments };
+    // Their tests already held that have no mark for them (not entered yet, or
+    // missed): without these a list of marks reads as every subject. CE1 B held
+    // 14 tests by 2026-11-21 and 6 had no marks yet.
+    const today = getBusinessDateOnly();
+    const marked = new Set(grades.map((grade) => grade.examId).filter(Boolean));
+    const examsWithoutMarks = sat
+      .filter((exam) => exam.date <= today && !marked.has(exam.id))
+      // No totalMarks: OSS20B printed "10/10" beside a test with no mark.
+      .map((exam) => ({ id: exam.id, title: exam.title, subject: exam.subject?.name ?? null, date: exam.date }));
+    return { grades, upcomingExams, assessments, examsWithoutMarks };
   }
 
   // The selected year's marks. With none there is no rate: 0% would read as

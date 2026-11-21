@@ -124,8 +124,14 @@ after a prompt, routing or transport change; it needs the qualified flow
 `transport/schoolCompletionCorrection.ts` asks a turn again once, with a
 correction appended to the system message, when a successful OSS20B
 completion calls a tool routing did not offer, is only planning or tool
-syntax, or asks the user for an ID a list tool returns. Provider failures are
-never retried and the model never changes.
+syntax, asks the user for an ID a list tool returns, or answers after an
+empty assessment list without reading the class's exams (schools often record
+quizzes as class tests). Provider failures are never retried and the model
+never changes.
+
+`transport/schoolChatResponse.ts` adds the "a read failed" notice to a reply
+that had a failed read, unless a later call of the same tool succeeded (the
+read retried with a resolved ID).
 Verification uses `bun run test:chat`, `test:academic-years`, `test:security`,
 `test:boundaries`, `lint`, `typecheck` and `build`.
 

@@ -77,8 +77,9 @@ function score(c: Case, reply: Awaited<ReturnType<typeof ask>>) {
   if ((c.lang === 'ar' || c.lang === 'ary') && reply.answer && !ARABIC.test(reply.answer)) problems.push('not in Arabic script');
   if (c.tools.length === 0 && tools.length) problems.push(`called ${tools.join(',')} for no data`);
   if (c.tools.length && !c.tools.some((t) => tools.includes(t))) problems.push(`needed one of ${c.tools.join('|')}`);
-  // "8,03" and "8.03" state the same fact (French answers use a decimal comma).
-  const answer = reply.answer.replace(/(\d),(\d)/g, '$1.$2');
+  // "8,03" and "8.03" state the same fact (French answers use a decimal comma),
+  // and OSS20B writes names with no-break spaces and hyphens ("EN‑NSAL").
+  const answer = reply.answer.replace(/(\d),(\d)/g, '$1.$2').replace(/\s+/gu, ' ').replace(/[‐‑]/gu, '-');
   for (const group of c.include ?? []) if (!group.some((fact) => answer.includes(fact))) problems.push(`missing ${group[0]}`);
   for (const wrong of c.exclude ?? []) if (reply.answer.includes(wrong)) problems.push(`says ${wrong}`);
   return { tools, problems, pass: problems.length === 0 };

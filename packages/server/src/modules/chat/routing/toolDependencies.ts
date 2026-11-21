@@ -56,7 +56,9 @@ export const TOOL_DEPENDENCIES: Record<string, string[]> = {
   // is), which Jev picks first for 19 of 37 test-results questions; the results
   // read must come with it (2026-11-21).
   exams_get_by_section: ['sections_get_sections', 'grades_get_by_exam'],
-  grades_get_by_assessment: ['sections_get_sections', 'assessments_get_by_section'],
+  // Many schools record every quiz as a class test (the demo has 222 exams and
+  // no assessments), so a quiz's results also bring the class's exam list.
+  grades_get_by_assessment: ['sections_get_sections', 'assessments_get_by_section', 'exams_get_by_section'],
   grades_get_by_teacher: ['search_search_teachers'],
   exams_get_upcoming_exams: ['exams_get_all'],
   // "This month" may retrieve today's exam tool; the list is needed to

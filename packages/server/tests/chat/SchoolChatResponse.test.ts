@@ -41,6 +41,23 @@ test('failed tool attempts stay visible after a later successful answer without 
   expect(events(body).filter(x => x.type === 'text-end').at(-1)).toBeDefined();
   expect(events(body).findIndex(x => x.id?.startsWith('school-unavailable-'))).toBeLessThan(events(body).findIndex(x => x.type === 'finish'));
 });
+test('a failed read retried successfully with the same tool needs no warning; another tool succeeding does not recover it', async () => {
+  const call = (id: string, toolName: string) => frame({ type: 'tool-input-available', toolCallId: id, toolName, input: {} });
+  const answer = frame({ type: 'text-delta', id: 'a', delta: 'CM1 A ما عندهاش كويز.' });
+  const failed = call('first', 'assessments_get_by_section') + frame({ type: 'tool-output-error', toolCallId: 'first', errorText: 'Section not found' });
+  const sections = call('list', 'sections_get_sections') + frame({ type: 'tool-output-available', toolCallId: 'list', output: [{ id: 's1' }] });
+  const retried = call('again', 'assessments_get_by_section') + frame({ type: 'tool-output-available', toolCallId: 'again', output: [] });
+  const recovered = await schoolChatResponse(reply(start + failed + sections + retried + answer + finish + done), 'CM1A').text();
+  expect(text(recovered)).toBe('CM1 A ما عندهاش كويز.');
+  expect(recovered).not.toContain('schoolReplyOutcome');
+  expect(recovered).not.toContain('Section not found');
+  const unrecovered = await schoolChatResponse(reply(start + failed + sections + answer + finish + done), 'CM1A').text();
+  expect(text(unrecovered)).toContain(schoolChatToolFailureText('CM1A'));
+  expect(events(unrecovered).find(x => x.type === 'finish').messageMetadata).toEqual({ schoolReplyOutcome: 'tool_failure', schoolFailedToolCalls: 1 });
+  // A success before the failure is not a retry of it.
+  const earlier = await schoolChatResponse(reply(start + retried + failed + answer + finish + done), 'CM1A').text();
+  expect(text(earlier)).toContain(schoolChatToolFailureText('CM1A'));
+});
 test('MCP error results are failures, while empty reads and ordinary Error-like record fields are not', async () => {
   const answer = frame({ type: 'text-delta', id: 'a', delta: 'جواب' });
   for (const output of ['Error (FORBIDDEN): Access denied', 'Tool execution failed']) {

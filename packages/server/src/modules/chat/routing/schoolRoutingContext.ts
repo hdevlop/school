@@ -6,7 +6,7 @@ import { normalizeReplyText } from 'najm-chatbot';
  * changes. najm-rag then marks every phrase stale; run "Reindex semantics" in
  * the RAG studio after the deploy.
  */
-export const ROUTING_TEXT_VERSION = '2026-11-21 class tests are exams';
+export const ROUTING_TEXT_VERSION = '2026-11-21 jabt is got';
 
 /** Query-only discovery hints. No role, identity lookup or access decision. */
 // najm-rag lowercases the message and folds these letters before this hook
@@ -31,7 +31,7 @@ export function schoolRoutingContext(query: string, routingQuery = query): strin
   // type "test": all 222 tests of the demo school are exams, with no
   // assessments (2026-11-21). Quizzes, assignments and projects are assessments.
   const classTests = mentions('l?forod|l?fard|contr[oô]les?|ds|devoirs? surveill[eé]s?|class tests?|[وفب]?(?:الفروض|فروض|الفرض|فرض|الكونطرول|كونطرول|الكونطرولات|كونطرولات)');
-  const quizzes = mentions('assessments?|assignments?|quiz(?:zes)?|projects?|[وفب]?(?:الاختبار القصير|الاختبارات القصيرة)');
+  const quizzes = mentions('assessments?|assignments?|quizz?(?:es)?|l?kwiz|l?kouiz|projects?|[وفب]?(?:الكويز|كويز|الكويزات|كويزات|الاختبار القصير|الاختبارات القصيرة)');
   // One class or level named by code or ordinal, not only by the word "class".
   const classCode = /(?<![\p{L}\p{N}])(?:cp|ce[12]|cm[12]|[1-6](?:ap|ac|bac)|[1-6][a-f])(?![\p{L}\p{N}])/iu.test(text);
   const namedClass = placement || classCode
@@ -76,7 +76,7 @@ export function schoolRoutingContext(query: string, routingQuery = query): strin
   const everyClass = mentions('kol l?a?9sam|jami3 l?a?9sam|jami3 l?mostawayat|kol l?mostawayat|toutes les classes|tous les niveaux|all classes|every class|[وفب]?(?:كل الاقسام|جميع الاقسام|كل المستويات|جميع المستويات)');
   const average = mentions('l?mo3adal|moyennes?|averages?|gpa|[وفب]?(?:المعدل|معدل|المعدلات|معدلات)');
   // "What did X get": the marks of a named student, test or exam.
-  const got = mentions('jab|jabat|jabet|jabo|jabou|[وفب]?(?:جاب|جابت|جابو)');
+  const got = mentions('jab|jabt|jabat|jabet|jabit|jabo|jabou|jabto|jabti|[وفب]?(?:جاب|جابت|جابو|جابتي|جابتو)');
   if (reportCard && !own) hints.push('student report card grades_get_student_report search_search_students');
   else if (average && !own && !classCode && !grades)
     hints.push('school averages pass rate registrar-dashboard_get_overview academic-dashboard_get_kpis');
@@ -86,11 +86,12 @@ export function schoolRoutingContext(query: string, routingQuery = query): strin
     if (own) hints.push('student academic grades student-profile_get_academic grades_get_by_student');
     else if (teacher && !teaching) hints.push('marks one teacher recorded grades_get_by_teacher search_search_teachers');
     else if ((exam || classTests) && !upcoming) hints.push('one exam or class test results grades_get_by_exam');
-    else if (quizzes && !upcoming) hints.push('one quiz or assignment results grades_get_by_assessment');
+    // A school may record its quizzes as class tests: offer both results reads.
+    else if (quizzes && !upcoming) hints.push('one quiz or assignment results grades_get_by_assessment grades_get_by_exam');
     else if (everyClass) hints.push('one subject in every class grades_get_by_subject');
     else if (placement) hints.push('class subject grades grades_get_by_section grades_get_by_subject');
     else if (classCode) hints.push('class or student grades grades_get_by_section grades_get_by_student search_search_students');
-    else hints.push('student grades grades_get_by_student search_search_students');
+    else hints.push('student grades student-profile_get_academic grades_get_by_student search_search_students');
   }
   if (attendance || (absence && personal)) hints.push(personal
     ? 'student attendance summary student-profile_get_attendance_summary'
@@ -128,7 +129,7 @@ export function schoolRoutingContext(query: string, routingQuery = query): strin
     hints.push('upcoming exams calendar exams_get_upcoming_exams exams_get_all');
   else if (classTests && !grades && !got)
     hints.push('class tests exams exams_get_today_exams exams_get_upcoming_exams exams_get_by_section');
-  else if (quizzes)
+  else if (quizzes && !grades && !got)
     hints.push('assessment quizzes assignments assessments_get_all assessments_get_today_assessments');
   return hints.length ? `${hints.join('\n')}\n${routingQuery}` : routingQuery;
 }
