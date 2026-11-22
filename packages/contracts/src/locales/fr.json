@@ -7943,6 +7943,21 @@
       "partsHint": "Saisissez le nombre d’élèves ayant bien répondu à chaque question. Enregistré automatiquement.",
       "partsSaveFailed": "Le nombre n’a pas été enregistré."
     },
+    "supportList": {
+      "title": "Élèves ayant besoin de soutien",
+      "byPupil": "Liste de soutien par élève",
+      "bySkill": "Groupes de soutien par compétence",
+      "no": "N°",
+      "marks": "Notes du contrôle",
+      "count": "Nb",
+      "actions": "Actions de soutien / observations",
+      "summary": "{{count}} élève(s) sur {{total}} ont besoin d’un soutien dans au moins une compétence",
+      "none": "Aucun élève n’a besoin de soutien (niveau ≤ 2).",
+      "print": "Liste de soutien",
+      "choose": "Nombre d’élèves les plus en difficulté",
+      "limited": "Liste limitée aux {{count}} élèves les plus en difficulté",
+      "completed": "complétée par {{count}} élève(s) en cours d’acquisition (niveau 3)"
+    },
     "remark": {
       "title": "Remarque pour les parents",
       "propose": "Proposer une remarque",

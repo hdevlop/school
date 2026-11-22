@@ -8549,6 +8549,21 @@
       "partsHint": "Enter how many pupils answered each question correctly. Saved automatically.",
       "partsSaveFailed": "The count was not saved."
     },
+    "supportList": {
+      "title": "Pupils needing support",
+      "byPupil": "Support list by pupil",
+      "bySkill": "Support groups by competency",
+      "no": "No.",
+      "marks": "Test marks",
+      "count": "Count",
+      "actions": "Support actions / observations",
+      "summary": "{{count}} of {{total}} pupils need support in at least one competency",
+      "none": "No pupil needs support (level ≤ 2).",
+      "print": "Support list",
+      "choose": "Number of pupils who need it most",
+      "limited": "List limited to the {{count}} pupils who need it most",
+      "completed": "completed with {{count}} pupil(s) still in progress (level 3)"
+    },
     "remark": {
       "title": "Remark for the parents",
       "propose": "Suggest a remark",

@@ -185,6 +185,64 @@ export function supportGroups(report: Pick<ClassReport, 'domains'>) {
     .sort((a, b) => b.support.length - a.support.length || b.consolidate.length - a.consolidate.length || (a.current ?? 5) - (b.current ?? 5));
 }
 
+export type SupportPupil = {
+  report: FollowUp;
+  /** The pupil's current level on each competency, by its id. */
+  levels: ClassRow['levels'];
+  /** The competencies at Début or less, in the catalog's order, with the pupil's current level. */
+  skills: { id: string; name: string; level: CompetencyLevel }[];
+  /** The competencies at En cours. */
+  consolidate: { id: string; name: string; level: CompetencyLevel }[];
+  /** Not at Début or less anywhere: added at En cours to make up the group the teacher asked for. */
+  added: boolean;
+};
+
+/**
+ * Every pupil at En cours or less on some competency, the most in need first:
+ * the most competencies at Début or less, then at En cours, then the weakest
+ * overall level, then the class table's order.
+ */
+function supportCandidates(report: Pick<ClassReport, 'domains' | 'rows'>): SupportPupil[] {
+  const skills = report.domains.flatMap((domain) => domain.skills);
+  const at = (levels: ClassRow['levels'], keep: (rank: number) => boolean) => skills.flatMap((skill) => {
+    const value = levels[skill.id];
+    return value && keep(LEVEL_RANK[value]) ? [{ id: skill.id, name: skill.name, level: value }] : [];
+  });
+  return report.rows.map((row, index) => ({
+    index,
+    level: row.level,
+    pupil: {
+      report: row.report,
+      levels: row.levels,
+      skills: at(row.levels, (rank) => rank <= SUPPORT_RANK),
+      consolidate: at(row.levels, (rank) => rank === LEVEL_RANK.in_progress),
+      added: false,
+    },
+  }))
+    .filter(({ pupil }) => pupil.skills.length || pupil.consolidate.length)
+    .sort((a, b) => b.pupil.skills.length - a.pupil.skills.length || b.pupil.consolidate.length - a.pupil.consolidate.length
+      || (a.level ?? 5) - (b.level ?? 5) || a.index - b.index)
+    .map(({ pupil }) => pupil);
+}
+
+/** How many pupils a support list can hold: every one at En cours or less somewhere. */
+export const supportCapacity = (report: Pick<ClassReport, 'domains' | 'rows'>) => supportCandidates(report).length;
+
+/**
+ * The pupils at Début or less on at least one competency, for the support
+ * sessions, the most in need first. With `most`, the teacher's group size:
+ * fewer pupils when more need support, or, when fewer do, the group made up
+ * with the next weakest, those at En cours (marked `added`).
+ */
+export function supportList(report: Pick<ClassReport, 'domains' | 'rows'>, most?: number | null): SupportPupil[] {
+  const candidates = supportCandidates(report);
+  const needing = candidates.filter((pupil) => pupil.skills.length);
+  if (most == null) return needing;
+  if (most <= needing.length) return needing.slice(0, Math.max(most, 0));
+  const added = candidates.filter((pupil) => !pupil.skills.length).slice(0, most - needing.length);
+  return [...needing, ...added.map((pupil) => ({ ...pupil, added: true }))];
+}
+
 // ---------------------------------------------------------------------------
 // قراءة تحليلية: rules, not a model; the same figures always give the same text.
 // ---------------------------------------------------------------------------

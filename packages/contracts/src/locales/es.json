@@ -7842,6 +7842,21 @@
       "partsHint": "Introduce cuántos alumnos respondieron bien cada pregunta. Se guarda automáticamente.",
       "partsSaveFailed": "No se guardó el número."
     },
+    "supportList": {
+      "title": "Alumnos que necesitan refuerzo",
+      "byPupil": "Lista de refuerzo por alumno",
+      "bySkill": "Grupos de refuerzo por competencia",
+      "no": "N.º",
+      "marks": "Notas del control",
+      "count": "N.º",
+      "actions": "Acciones de refuerzo / observaciones",
+      "summary": "{{count}} de {{total}} alumnos necesitan refuerzo en al menos una competencia",
+      "none": "Ningún alumno necesita refuerzo (nivel ≤ 2).",
+      "print": "Lista de refuerzo",
+      "choose": "Número de alumnos con más dificultad",
+      "limited": "Lista limitada a los {{count}} alumnos con más dificultad",
+      "completed": "completada con {{count}} alumno(s) en proceso (nivel 3)"
+    },
     "remark": {
       "title": "Observación para los padres",
       "propose": "Proponer una observación",

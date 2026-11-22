@@ -31,15 +31,15 @@ const BAND_COLOR: Record<Appreciation, string> = {
 };
 const CURRENT = '#1e3a8a';
 
-const level = (value: CompetencyLevel | null) => (value
+export const level = (value: CompetencyLevel | null) => (value
   ? `<span class="lv" style="background:${CLASS_LEVEL_COLOR[value].bg};color:${CLASS_LEVEL_COLOR[value].fg}">${LEVEL_RANK[value]}</span>`
   : '<span class="lv none">–</span>');
-const captionOf = (options: ClassReportPrintOptions, key: string) => (options.caption ? options.caption(key) : '');
+export const captionOf = (options: ClassReportPrintOptions, key: string) => (options.caption ? options.caption(key) : '');
 
-function header(options: ClassReportPrintOptions, images: { logo: string; ministry: string }) {
+export function header(options: ClassReportPrintOptions, images: { logo: string; ministry: string }, titleKey = 'competencies.classReport.title') {
   const { t } = options;
-  const title = `${t('competencies.classReport.title')} : ${options.subjectName} - ${options.examLabel} - ${options.termLabel}`;
-  const second = captionOf(options, 'competencies.classReport.title');
+  const title = `${t(titleKey)} : ${options.subjectName} - ${options.examLabel} - ${options.termLabel}`;
+  const second = captionOf(options, titleKey);
   return `<header class="head">
       <div class="emblem">${images.ministry ? `<img src="${e(images.ministry)}" alt="">` : ''}</div>
       <div class="title"><h1>${e(title)}</h1><p>${second ? `${e(second)} · ` : ''}${e(t('competencies.report.year'))} ${num(options.yearLabel)}</p></div>
@@ -47,7 +47,7 @@ function header(options: ClassReportPrintOptions, images: { logo: string; minist
     </header>`;
 }
 
-function info(report: ClassReport, options: ClassReportPrintOptions) {
+export function info(report: Pick<ClassReport, 'pupils'>, options: ClassReportPrintOptions) {
   const { t } = options;
   const item = (label: string, value: string) => `<div><dt>${e(label)}</dt><dd><bdi>${e(value)}</bdi></dd></div>`;
   return `<dl class="info">
@@ -255,6 +255,20 @@ function page(report: ClassReport, options: ClassReportPrintOptions, images: { l
   </section>`;
 }
 
+/** The A4 sheet, its header and class details, and the level badges: shared with the support list. */
+export const SHEET_STYLES = `
+    *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}html{color-scheme:light}
+    body{margin:0;background:#e9edf2;color:#1f2a3a;font:8pt/1.3 MassarArabic,MassarLatin,serif}
+    .sheet{display:flex;flex-direction:column;gap:1.2mm;width:210mm;min-height:297mm;margin:0 auto 6mm;padding:6mm 7mm;background:#fff;box-shadow:0 2px 9px #0001}
+    .head{display:grid;grid-template-columns:30mm 1fr 30mm;align-items:center;gap:3mm;padding-bottom:1.4mm;border-bottom:1.2pt solid #be123c}
+    .emblem{display:flex;justify-content:center}.emblem img{max-width:26mm;max-height:13mm;object-fit:contain}.emblem b{font-size:9pt;text-align:center}
+    .title{text-align:center}.title h1{margin:0;font-size:12.5pt;font-weight:700;line-height:1.2}.title p{margin:1mm 0 0;font:8.5pt MassarLatin,MassarArabic,sans-serif;color:#64748b}
+    .info{display:flex;flex-wrap:wrap;gap:2mm;margin:0}.info div{display:flex;align-items:baseline;gap:1.5mm;flex:1 1 auto;padding:1.4mm 2.5mm;border:.6pt solid #cfd8e3;border-radius:1.5mm}
+    .info dt{color:#64748b;font-size:7.5pt}.info dt::after{content:" :"}.info dd{margin:0;font-weight:700;font-size:9pt;white-space:nowrap}
+    .lv{display:block;min-width:4mm;padding:0;border-radius:.8mm;font:700 7pt/1.3 MassarLatin,sans-serif}
+    .lv.none{background:#fff;color:#94a3b8;border:.5pt dashed #cbd5e1}
+`;
+
 const PREVIEW_STYLES = `
   html{overflow:hidden}
   body{background:#fff;font:13px/1.45 MassarLatin,MassarArabic,system-ui,sans-serif}
@@ -293,14 +307,7 @@ export function buildClassReportDocument(report: ClassReport, options: ClassRepo
   const images = { logo: safeUrl(options.school.logo, origin), ministry: safeUrl('/images/massar/ministry.png', origin) };
   return `<!doctype html><html lang="${e(options.language)}" dir="${options.dir}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${e(options.t('competencies.classReport.title'))}</title><style>
     ${massarFontFaces(origin)}
-    *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}html{color-scheme:light}
-    body{margin:0;background:#e9edf2;color:#1f2a3a;font:8pt/1.3 MassarArabic,MassarLatin,serif}
-    .sheet{display:flex;flex-direction:column;gap:1.2mm;width:210mm;min-height:297mm;margin:0 auto 6mm;padding:6mm 7mm;background:#fff;box-shadow:0 2px 9px #0001}
-    .head{display:grid;grid-template-columns:30mm 1fr 30mm;align-items:center;gap:3mm;padding-bottom:1.4mm;border-bottom:1.2pt solid #be123c}
-    .emblem{display:flex;justify-content:center}.emblem img{max-width:26mm;max-height:13mm;object-fit:contain}.emblem b{font-size:9pt;text-align:center}
-    .title{text-align:center}.title h1{margin:0;font-size:12.5pt;font-weight:700;line-height:1.2}.title p{margin:1mm 0 0;font:8.5pt MassarLatin,MassarArabic,sans-serif;color:#64748b}
-    .info{display:flex;flex-wrap:wrap;gap:2mm;margin:0}.info div{display:flex;align-items:baseline;gap:1.5mm;flex:1 1 auto;padding:1.4mm 2.5mm;border:.6pt solid #cfd8e3;border-radius:1.5mm}
-    .info dt{color:#64748b;font-size:7.5pt}.info dt::after{content:" :"}.info dd{margin:0;font-weight:700;font-size:9pt;white-space:nowrap}
+    ${SHEET_STYLES}
     .tiles{display:grid;grid-template-columns:repeat(8,1fr);gap:1.5mm}
     .tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3mm;min-height:10mm;padding:.8mm;border:.5pt solid #e2e8f0;border-radius:1.5mm;text-align:center}
     .tile b{font:700 12pt MassarLatin,sans-serif;color:#1f2a3a}.tile b small{font-size:7.5pt;color:#64748b;font-weight:400}.tile>span{font-size:6.6pt;line-height:1.2;color:#475569}
@@ -322,12 +329,10 @@ export function buildClassReportDocument(report: ClassReport, options: ClassRepo
     .grid tbody tr:nth-child(even) td{background:#fbfcfe}.grid tbody tr.me td{background:#ecfdf5}
     .grid tfoot th.label{text-align:start;background:#f8fafc;font-size:7.4pt;font-weight:600}
     .grid tfoot td,.grid tfoot th{padding:.3mm .6mm}.grid tfoot td{font:7.4pt/1.15 MassarLatin,sans-serif}.grid tfoot tr:first-child>*{border-top:.9pt solid #94a3b8}.grid tfoot tr.soft td{color:#64748b}
-    .lv{display:block;min-width:4mm;padding:0;border-radius:.8mm;font:700 7pt/1.3 MassarLatin,sans-serif}
-    .lv.none{background:#fff;color:#94a3b8;border:.5pt dashed #cbd5e1}
     .up{color:#15803d}.down{color:#be123c}.muted{color:#94a3b8}
     .legend-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1mm 3mm;font-size:7pt;color:#475569}
     .legend-row .scale{display:flex;flex-wrap:wrap;align-items:center;gap:1mm 2.4mm}.legend-row .scale span{display:inline-flex;align-items:center;gap:.8mm}
-    .legend-row .lv{display:inline-block;min-width:3.6mm;text-align:center}.legend-row small{font-size:6.8pt;color:#64748b}
+    .legend-row .lv{display:inline-flex;align-items:center;justify-content:center;width:3.6mm;height:3.6mm;line-height:1;text-align:center}.legend-row small{font-size:6.8pt;color:#64748b}
     .cards{display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:2.2mm}
     .radar{width:100%;height:auto;max-height:42mm;overflow:visible}.radar text{font-size:10.5px;fill:#25354a}
     .legend{display:flex;justify-content:center;gap:4mm;font-size:7pt;color:#475569}.legend span{display:inline-flex;align-items:center;gap:1mm}

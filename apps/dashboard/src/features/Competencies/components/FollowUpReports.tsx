@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode, type SyntheticEvent } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronDown, FileChartColumn, Printer, School, UserRound, Users } from 'lucide-react';
+import { ChevronDown, FileChartColumn, LifeBuoy, Printer, School, UserRound, Users } from 'lucide-react';
 import type { CompetencyAssignment, CompetencyDomain, MassarGradeSource, MassarSheetDetail } from '@sms/contracts';
 import { MASSAR_ANALYSIS_MAX_LENGTH } from '@sms/contracts';
 import { schoolI18n, type SchoolTranslationKey } from '@sms/contracts/locales';
@@ -21,11 +21,12 @@ import { followUps, isRoomy, type FollowUp } from '../config/followUpReport';
 import { skillNeed } from '../config/competencyRemarks';
 import { analyze, comparableClassMean, rankLabel } from '../config/followUpAnalysis';
 import { buildFollowUpDocument, followUpRoundLabels, type FollowUpPrintOptions } from '../config/followUpDocument';
-import { analyzeClass, classNote, classReport, type ClassReport } from '../config/classReport';
+import { analyzeClass, classNote, classReport, supportCapacity, type ClassReport } from '../config/classReport';
 import { classParts, type ClassPart } from '../config/partCounts';
 import { useSheetParts } from '../hooks/useSheetParts';
 import { PartCounts } from './PartCounts';
 import { buildClassReportDocument, type ClassReportPrintOptions } from '../config/classReportDocument';
+import { buildSupportListDocument, SUPPORT_LIST_SIZE } from '../config/supportListDocument';
 import { monthLabel } from '../config/competencyLevels';
 import { useListText } from './CompetencyText';
 import type { SheetStudent } from './StudentCompetencySheet';
@@ -119,6 +120,15 @@ export function useFollowUpReport({ assignment, domains, students, studentId, hi
   const printClass = () => {
     if (classOptions) return printSchoolDocument(buildClassReportDocument(klass, classOptions));
   };
+  // لائحة الدعم: the pupils at Début or less on a competency, for the support sessions;
+  // the teacher may keep only the ones who need it most.
+  const [supportSize, setSupportSize] = useState(SUPPORT_LIST_SIZE);
+  // Up to every pupil at En cours or less somewhere: fewer needing support are made up with them.
+  const supportMax = useMemo(() => supportCapacity(klass), [klass]);
+  const supportCount = Math.min(supportSize, supportMax);
+  const printSupport = () => {
+    if (classOptions) return printSchoolDocument(buildSupportListDocument(klass, classOptions, supportCount));
+  };
   // How many pupils answered each question of the Contrôle's School test correctly: entered here,
   // kept apart from the report's page.
   const sheetParts = useSheetParts(round?.sheetId);
@@ -204,6 +214,27 @@ export function useFollowUpReport({ assignment, domains, students, studentId, hi
               <School aria-hidden="true" />
               <span><strong>{page.t('competencies.classReport.title')}</strong></span>
             </DropdownMenuItem>
+            <div className="flex items-center gap-1">
+              <DropdownMenuItem className={cn(printStyles.printItem, 'min-w-0 flex-1')} onSelect={() => void printSupport()}>
+                <LifeBuoy aria-hidden="true" />
+                <span><strong>{page.t('competencies.supportList.print')}</strong></span>
+              </DropdownMenuItem>
+              {supportMax > 1 && (
+                // How many of the pupils who need it most to keep; outside the item, so typing does not print.
+                <label className="flex shrink-0 items-center gap-1 pe-2 text-xs text-muted-foreground" dir="ltr">
+                  <input type="number" inputMode="numeric" min={1} max={supportMax} value={supportCount}
+                    aria-label={page.t('competencies.supportList.choose')}
+                    title={page.t('competencies.supportList.choose')}
+                    className="h-8 w-12 rounded-md border border-input bg-background px-1 text-center text-sm text-foreground tabular-nums"
+                    onKeyDown={(event) => event.stopPropagation()}
+                    onChange={(event) => {
+                      const value = Number(event.currentTarget.value);
+                      if (Number.isInteger(value) && value >= 1) setSupportSize(value);
+                    }} />
+                  <span className="tabular-nums">/ {supportMax}</span>
+                </label>
+              )}
+            </div>
           </DropdownMenuGroup>
         </div>
       </DropdownMenuContent>
