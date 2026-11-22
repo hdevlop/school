@@ -5,6 +5,7 @@ import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React, { useMemo } from 'react'
 import { useWatch } from 'react-hook-form'
+import { format } from 'date-fns'
 import { Megaphone, FileText, Users, Building, Calendar } from 'lucide-react'
 import { useDialog } from '@/shared/useDialog'
 import { createAnnouncementSchema } from '../config/announcementSchemas'
@@ -74,7 +75,10 @@ const AnnouncementForm = ({ announcement = null, defaultPublishDate = null }) =>
     targetAudience: announcement?.targetAudience || 'all',
     classId: initialClassIds[0] || '',
     classIds: initialClassIds,
-    publishDate: toDateInput(announcement?.publishDate || defaultPublishDate),
+    // A new announcement publishes today unless the caller (the calendar) picked a day.
+    publishDate: announcement?.id
+      ? toDateInput(announcement.publishDate)
+      : toDateInput(announcement?.publishDate || defaultPublishDate || format(new Date(), 'yyyy-MM-dd')),
     expiryDate: toDateInput(announcement?.expiryDate),
   };
 
