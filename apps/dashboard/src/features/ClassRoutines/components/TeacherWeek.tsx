@@ -1,9 +1,9 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { DoorOpen } from 'lucide-react';
 import { NajmScroll } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { describeRoutineContent, type RoutineContentGroup } from '@sms/contracts/routines';
 import { ROUTINE_DAYS, type RoutineDay, type RoutineSchedule } from '../types';
 import { routineDayLabel, routinePeriodLabel } from '../utils/labels';
 import { subjectColors } from '../utils/subjectColors';
@@ -13,8 +13,9 @@ interface WeekLesson {
   subjectId: string;
   subjectCode?: string;
   subjectName: string;
+  /** What the lesson covers (القراءة، الإملاء…), as the class timetable shows it. */
+  contentGroups: RoutineContentGroup[];
   place: string;
-  room?: string | null;
 }
 
 interface WeekSlot {
@@ -52,8 +53,8 @@ function buildWeek(schedules: RoutineSchedule[]) {
         subjectId: entry.subjectId,
         subjectCode: entry.subjectCode,
         subjectName: entry.subjectName,
+        contentGroups: entry.contentGroups ?? [],
         place: `${schedule.className} · ${schedule.sectionName}`,
-        room: entry.roomNumber || schedule.roomNumber,
       });
     }
   }
@@ -65,30 +66,35 @@ function buildWeek(schedules: RoutineSchedule[]) {
   };
 }
 
+/**
+ * The line under the class: the lesson's sub-subjects when the timetable sets
+ * them ("القراءة · الإملاء", "التعبير أو الخط"), else the subject when the
+ * teacher teaches more than one.
+ */
+function useLessonTopic() {
+  const { t } = useTranslation();
+  return (lesson: WeekLesson, showSubject: boolean) => lesson.contentGroups.length
+    ? describeRoutineContent(lesson.contentGroups, lesson.subjectName, t('classRoutines.ui.content.or'))
+    : showSubject ? lesson.subjectName : null;
+}
+
 function LessonCard({ lesson, showSubject, color }: { lesson: WeekLesson; showSubject: boolean; color: string }) {
+  const topic = useLessonTopic()(lesson, showSubject);
   return (
     <div className={`flex h-full min-w-0 flex-col justify-center gap-0.5 rounded-md px-2 py-1.5 ${color}`}>
       <span className="truncate text-sm font-bold leading-tight">{lesson.place}</span>
-      <span className="flex min-w-0 items-center justify-between gap-2 text-xs opacity-80">
-        <span dir="auto" className="truncate">{showSubject ? lesson.subjectName : null}</span>
-        {lesson.room ? (
-          <span className="flex shrink-0 items-center gap-1"><DoorOpen className="size-3" aria-hidden="true" />{lesson.room}</span>
-        ) : null}
-      </span>
+      {topic ? <span dir="auto" title={topic} className="truncate text-xs font-semibold text-foreground">{topic}</span> : null}
     </div>
   );
 }
 
-// A teacher's own sheet names the class first; the subject joins it only when
-// they teach more than one.
+// A teacher's own sheet names the class first, then what the lesson covers.
 function ClassCell({ lesson, showSubject, color }: { lesson: WeekLesson; showSubject: boolean; color: string }) {
+  const topic = useLessonTopic()(lesson, showSubject);
   return (
     <div className={`flex h-full min-w-0 flex-col items-center justify-center gap-0.5 rounded-md px-1.5 py-1 text-center ${color}`}>
       <span title={lesson.place} className="max-w-full truncate text-base font-bold leading-tight">{lesson.place}</span>
-      {showSubject ? <span dir="auto" className="max-w-full truncate text-xs font-medium opacity-85">{lesson.subjectName}</span> : null}
-      {lesson.room ? (
-        <span className="flex items-center gap-1 text-[0.7rem] opacity-75"><DoorOpen className="size-3" aria-hidden="true" />{lesson.room}</span>
-      ) : null}
+      {topic ? <span dir="auto" title={topic} className="line-clamp-2 max-w-full break-words text-xs font-semibold leading-tight text-foreground">{topic}</span> : null}
     </div>
   );
 }

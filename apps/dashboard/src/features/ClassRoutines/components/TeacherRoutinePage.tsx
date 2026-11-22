@@ -16,10 +16,10 @@ import ClassRoutineSkeleton from './ClassRoutineSkeleton';
 import TeacherWeek from './TeacherWeek';
 
 const Chip = ({ icon: Icon, label, value }: { icon: typeof Clock; label: string; value: string }) => (
-  <span className="flex items-center gap-2 rounded-lg border bg-card px-3 py-1.5 text-xs text-muted-foreground">
-    <Icon className="size-4 text-primary" aria-hidden="true" />
-    {label}
-    <span className="text-sm font-semibold text-foreground">{value}</span>
+  <span className="flex min-w-0 items-center gap-2 rounded-lg border bg-card px-3 py-1.5 text-xs text-muted-foreground">
+    <Icon className="size-4 shrink-0 text-primary" aria-hidden="true" />
+    <span className="min-w-0 truncate" title={label}>{label}</span>
+    <span className="ms-auto shrink-0 text-sm font-semibold text-foreground md:ms-0">{value}</span>
   </span>
 );
 
@@ -70,7 +70,8 @@ export default function TeacherRoutinePage() {
         </NajmScroll>
       ) : schedules.length ? (
         <>
-          <div className="flex shrink-0 flex-wrap gap-2">
+          {/* Phones: the two counts share the full width; wider screens keep them compact. */}
+          <div className="grid shrink-0 grid-cols-2 gap-2 md:flex md:flex-wrap">
             <Chip icon={Clock} label={t('classRoutines.ui.teacher.weeklyLessons')} value={number(lessonCount)} />
             <Chip icon={Layers3} label={t('classRoutines.ui.teacher.sections')} value={number(schedules.length)} />
           </div>
