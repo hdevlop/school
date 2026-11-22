@@ -142,7 +142,8 @@
       "*": "All modules",
       "general": "General",
       "massar": "Massar",
-      "massar-marks": "Massar marks"
+      "massar-marks": "Massar marks",
+      "exam-planning": "Exam planning"
     },
     "errors": {
       "notFound": "Role not found.",
@@ -7750,7 +7751,13 @@
     "wholeSubject": "Whole subject",
     "chooseSubSubject": "Choose a sub-subject",
     "noSubSubjects": "No sub-subjects",
-    "time": "Time"
+    "time": "Time",
+    "teacherSubtitle": "Plan the exams of the subjects you teach in your classes.",
+    "otherSubject": "Planned for another subject: only the subjects you teach in this class can be changed here.",
+    "errors": {
+      "notAllowed": "Your role cannot plan exams.",
+      "notYourSubject": "You can plan only the subjects you teach in this class. Reload the planning: another subject may have changed meanwhile."
+    }
   },
   "insurance": {
     "title": "Insurance",

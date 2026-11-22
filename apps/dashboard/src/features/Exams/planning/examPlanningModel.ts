@@ -1,9 +1,33 @@
-import { examPlanningMonths, examPlanningSemester, massarPlanningControls, type ExamPlanningClass, type ExamPlanningEntry } from '@sms/contracts';
+import { examPlanningMonths, examPlanningSemester, massarPlanningControls, resolvePlanningSubject, type ExamPlanningClass, type ExamPlanningEntry } from '@sms/contracts';
 import type { PlanningAssessment } from '@/features/Assessments/planning/planningModel';
 
 export type PlanningDateRange = { from: string; to: string };
 export type ExamPlanningDrafts = Record<string, Record<string, ExamPlanningEntry[]>>;
 export type PlanningEntrySelection = { classId: string; month: string; entryId: string };
+/** What this account may plan in each class (GET /exam-planning/subjects): null is every subject. */
+export type PlannableSubjects = Record<string, string[]> | null;
+type PlanningSubjectCatalog = ReadonlyArray<{ id: string; name: string; subSubjects: ReadonlyArray<{ name: string }> }>;
+
+/**
+ * The subjects a planner may plan in one class: null for every subject (the
+ * school-wide roles), a teacher's own otherwise, none until the list loads.
+ */
+export function plannableInClass(plannable: PlannableSubjects | undefined, classId: string): ReadonlySet<string> | null {
+  if (plannable === null) return null;
+  return new Set(plannable?.[classId] ?? []);
+}
+
+/**
+ * Whether a planner may change an entry: one of their subjects, or a new
+ * entry with no subject picked yet. The server checks the same rule on save
+ * (ExamPlanningValidator.ensureMayChange).
+ */
+export function mayPlanEntry(allowed: ReadonlySet<string> | null, subjects: PlanningSubjectCatalog | undefined, subject: string) {
+  if (!allowed || !subject.trim()) return true;
+  const list = subjects ?? [];
+  const subjectId = resolvePlanningSubject(subject.trim(), list.flatMap(item => item.subSubjects.map(part => ({ subjectId: item.id, name: part.name }))), list);
+  return !!subjectId && allowed.has(subjectId);
+}
 
 /** Like `dir="auto"`, the first letter decides: Arabic text gets the Arabic font and right-to-left layout. */
 export function planningTextLanguage(text: string | readonly string[]): 'ar' | 'fr' {

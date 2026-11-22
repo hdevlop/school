@@ -33,8 +33,5 @@ export function suggestSubject(name: string, subjects: Array<{ id: string; name:
   return null;
 }
 
-/** The subject a Planning name is an exam of: its sub-subject's subject, or the subject of that name. */
-export function resolveSubject(name: string, subSubjects: Array<{ subjectId: string; name: string }>, subjects: Array<{ id: string; name: string }>) {
-  const folded = fold(name);
-  return subSubjects.find(part => fold(part.name) === folded)?.subjectId ?? subjects.find(subject => fold(subject.name) === folded)?.id ?? null;
-}
+/** The subject a Planning name is an exam of; the dashboard resolves names the same way. */
+export { resolvePlanningSubject as resolveSubject } from '@sms/contracts';

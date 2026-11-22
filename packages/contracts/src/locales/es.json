@@ -142,7 +142,8 @@
       "*": "Todos los módulos",
       "general": "General",
       "massar": "Massar",
-      "massar-marks": "Notas de Massar"
+      "massar-marks": "Notas de Massar",
+      "exam-planning": "Planificación de exámenes"
     },
     "errors": {
       "notFound": "Rol no encontrado.",
@@ -7043,7 +7044,13 @@
     "wholeSubject": "Toda la asignatura",
     "chooseSubSubject": "Elegir una subasignatura",
     "noSubSubjects": "Sin subasignaturas",
-    "time": "Horario"
+    "time": "Horario",
+    "teacherSubtitle": "Planifica los exámenes de las asignaturas que impartes en tus clases.",
+    "otherSubject": "Planificado para otra asignatura: aquí solo se pueden cambiar las asignaturas que impartes en esta clase.",
+    "errors": {
+      "notAllowed": "Tu rol no permite planificar exámenes.",
+      "notYourSubject": "Solo puedes planificar las asignaturas que impartes en esta clase. Recarga la planificación: puede que otra asignatura haya cambiado mientras tanto."
+    }
   },
   "insurance": {
     "title": "Seguro",

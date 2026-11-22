@@ -142,7 +142,8 @@
       "*": "Tous les modules",
       "general": "Général",
       "massar": "Massar",
-      "massar-marks": "Notes Massar"
+      "massar-marks": "Notes Massar",
+      "exam-planning": "Planification des examens"
     },
     "errors": {
       "notFound": "Rôle introuvable.",
@@ -7144,7 +7145,13 @@
     "wholeSubject": "Toute la matière",
     "chooseSubSubject": "Choisir une sous-matière",
     "noSubSubjects": "Aucune sous-matière",
-    "time": "Horaire"
+    "time": "Horaire",
+    "teacherSubtitle": "Planifiez les examens des matières que vous enseignez dans vos classes.",
+    "otherSubject": "Planifié pour une autre matière : seules les matières que vous enseignez dans cette classe peuvent être modifiées ici.",
+    "errors": {
+      "notAllowed": "Votre rôle ne permet pas de planifier les examens.",
+      "notYourSubject": "Vous ne pouvez planifier que les matières que vous enseignez dans cette classe. Rechargez la planification : une autre matière a peut-être changé entre-temps."
+    }
   },
   "insurance": {
     "title": "Assurance",

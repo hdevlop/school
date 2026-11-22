@@ -432,6 +432,12 @@
     "action": "update"
   },
   {
+    "name": "update:exam-planning",
+    "description": "Permission to plan exams: every class school-wide, a teacher's own subjects otherwise",
+    "resource": "exam-planning",
+    "action": "update"
+  },
+  {
     "name": "delete:exams",
     "description": "Permission to delete exams",
     "resource": "exams",

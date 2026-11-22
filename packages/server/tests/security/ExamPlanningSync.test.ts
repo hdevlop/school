@@ -5,6 +5,7 @@ import { SubjectService } from '../../src/modules/subjects/SubjectService';
 import { SubjectValidator } from '../../src/modules/subjects/SubjectValidator';
 
 const entry = { id: 'arabic', date: '2026-11-09', subject: 'اللغة العربية', lessons: ['الجملة الاسمية'] };
+const admin = { id: 'admin-user', role: 'admin' };
 type Part = { id: string; subjectId: string; name: string };
 type Planned = { id: string; planningEntryId: string; sectionIds: string[]; teacherAssignmentId: string; title: string; description: string | null; date: string; status: string; graded: boolean; startTime: string | null; endTime: string | null };
 
@@ -13,7 +14,7 @@ function syncing(options: { visible?: boolean; entries?: typeof entry[]; planned
   const months = { '2026-11': options.entries ?? [entry] };
   const instance = Object.create(ExamPlanningService.prototype) as ExamPlanningService;
   Object.defineProperty(instance, 'year', { value: { id: 'year', label: '2026-2027' } });
-  Object.assign(instance, { t: (key: string) => key, repository: {
+  Object.assign(instance, { t: (key: string) => key, validator: { ensureMayChange: async () => {}, plannableSubjects: async () => null }, repository: {
     getAll: async () => [{ id: 'cp', name: 'CP', visible: options.visible ?? true, months }],
     openPlans: async () => [{ academicYearId: 'next-year', id: 'cp', visible: options.visible ?? true, months }],
     renameEverywhere: async (renames: unknown[]) => { calls.push(`rename ${JSON.stringify(renames)}`); },
@@ -47,43 +48,43 @@ const exam = (section: string, assignment: string) => ({ teacherAssignmentId: as
 describe('Planning creates the Exams page exams', () => {
   it('creates one Contrôle per section, with an empty slot where the subject has no teacher yet', async () => {
     const { instance, calls, inserted } = syncing();
-    await instance.saveMonth('cp', { month: '2026-11', entries: [entry] });
+    await instance.saveMonth('cp', { month: '2026-11', entries: [entry] }, admin);
     expect(calls).toEqual(['slot cp cp-b arabic']);
     expect(inserted).toEqual([exam('cp-a', 'arabic-a'), exam('cp-b', 'slot-cp-b')]);
   });
   it('gives the exam the entry time, from and to, with the duration between them', async () => {
     const timed = { ...entry, startTime: '08:30', endTime: '10:00' };
     const created = syncing({ entries: [timed] });
-    await created.instance.saveMonth('cp', { month: '2026-11', entries: [timed] });
+    await created.instance.saveMonth('cp', { month: '2026-11', entries: [timed] }, admin);
     expect(created.inserted[0]).toMatchObject({ startTime: '08:30', endTime: '10:00', duration: 90 });
     // The database reads times back as "08:30:00": the same time is no change.
     const same = syncing({ entries: [timed], planned: [planned({ startTime: '08:30:00', endTime: '10:00:00' })] });
-    await same.instance.saveMonth('cp', { month: '2026-11', entries: [timed] });
+    await same.instance.saveMonth('cp', { month: '2026-11', entries: [timed] }, admin);
     expect(same.calls.filter(call => call.startsWith('update'))).toEqual([]);
     const moved = { ...timed, startTime: '10:00', endTime: '11:00' };
     const later = syncing({ entries: [moved], planned: [planned({ startTime: '08:30:00', endTime: '10:00:00' })] });
-    await later.instance.saveMonth('cp', { month: '2026-11', entries: [moved] });
+    await later.instance.saveMonth('cp', { month: '2026-11', entries: [moved] }, admin);
     expect(later.calls.find(call => call.startsWith('update exam-a'))).toContain('"startTime":"10:00","endTime":"11:00","duration":60');
   });
   it('marks collège out of 20', async () => {
     const { instance, inserted } = syncing({ cycle: 'Collège' });
-    await instance.saveMonth('cp', { month: '2026-11', entries: [entry] });
+    await instance.saveMonth('cp', { month: '2026-11', entries: [entry] }, admin);
     expect(inserted[0]).toMatchObject({ totalMarks: '20', passingMarks: '10' });
   });
   it('follows Planning: a moved entry moves its exam, a removed one is deleted, or cancelled once marked', async () => {
     const moved = syncing({ slot: true, entries: [{ ...entry, date: '2026-11-12' }], planned: [planned(), planned({ id: 'exam-b', sectionIds: ['cp-b'], teacherAssignmentId: 'slot-cp-b' })] });
-    await moved.instance.saveMonth('cp', { month: '2026-11', entries: [{ ...entry, date: '2026-11-12' }] });
+    await moved.instance.saveMonth('cp', { month: '2026-11', entries: [{ ...entry, date: '2026-11-12' }] }, admin);
     // CP B already has its exam: no new slot, no new exam; both exams move.
     expect(moved.calls.map(call => call.split(' ').slice(0, 2).join(' '))).toEqual(['update exam-a', 'update exam-b']);
     expect(moved.calls[0]).toContain('"date":"2026-11-12"');
     expect(moved.inserted).toEqual([]);
     const removed = syncing({ entries: [], planned: [planned(), planned({ id: 'exam-b', sectionIds: ['cp-b'], graded: true })] });
-    await removed.instance.saveMonth('cp', { month: '2026-11', entries: [] });
+    await removed.instance.saveMonth('cp', { month: '2026-11', entries: [] }, admin);
     expect(removed.calls).toEqual(['update exam-b {"status":"cancelled"}', 'delete exam-a']);
   });
   it('makes no exam for a name Subjects does not have, and removes the exams of a hidden class', async () => {
     const missing = syncing({ subSubjects: [] });
-    await missing.instance.saveMonth('cp', { month: '2026-11', entries: [entry] });
+    await missing.instance.saveMonth('cp', { month: '2026-11', entries: [entry] }, admin);
     expect(missing.inserted).toEqual([]);
     const hidden = syncing({ visible: false, planned: [planned()] });
     await hidden.instance.saveVisibility([]);
@@ -98,11 +99,11 @@ describe('Planning creates the Exams page exams', () => {
   it('lists the names Subjects lacks with a suggestion, and adding them makes their exams', async () => {
     const added: unknown[] = [];
     const { instance, inserted } = syncing({ subSubjects: [], added });
-    expect((await instance.subjectOptions()).missing).toEqual([{ name: 'اللغة العربية', suggestedSubjectId: 'arabic' }]);
-    await instance.addSubSubjects([{ name: 'اللغة العربية', subjectId: 'arabic' }]);
+    expect((await instance.subjectOptions(admin)).missing).toEqual([{ name: 'اللغة العربية', suggestedSubjectId: 'arabic' }]);
+    await instance.addSubSubjects([{ name: 'اللغة العربية', subjectId: 'arabic' }], admin);
     expect(added).toEqual([{ name: 'اللغة العربية', subjectId: 'arabic' }]);
     // Every open year follows, not only the one on screen.
-    await expect(instance.addSubSubjects([{ name: 'x', subjectId: 'unknown' }])).rejects.toThrow('subjects.errors.notFound');
+    await expect(instance.addSubSubjects([{ name: 'x', subjectId: 'unknown' }], admin)).rejects.toThrow('subjects.errors.notFound');
     // The mock store does not keep what was added: nothing resolves yet.
     expect(inserted).toEqual([]);
   });

@@ -12,7 +12,8 @@ import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 
 type Subject = { id: string; name: string; subSubjects: Array<{ id: string; name: string }> };
 // missing: names this year's Planning uses that are neither a subject nor a sub-subject; they have no exam.
-type PlanningSubjects = { subjects: Subject[]; missing: Array<{ name: string; suggestedSubjectId: string | null }> };
+// plannable: the subjects this account may plan in each class; null for every subject.
+type PlanningSubjects = { subjects: Subject[]; missing: Array<{ name: string; suggestedSubjectId: string | null }>; plannable: Record<string, string[]> | null };
 
 /** What Planning picks a subject from, and the names it uses that Subjects does not have yet. */
 export function usePlanningSubjects(enabled: boolean) {
@@ -24,7 +25,7 @@ export function usePlanningSubjects(enabled: boolean) {
     onSuccess: () => Promise.all(['exam-planning', 'exams', 'subjects'].map(key => client.invalidateQueries({ queryKey: [key] }))),
   });
   const data = read.data as PlanningSubjects | null;
-  return { data, missing: data?.missing ?? [], add: mutation.mutateAsync, adding: mutation.isPending };
+  return { data, missing: data?.missing ?? [], plannable: data ? data.plannable ?? null : undefined, add: mutation.mutateAsync, adding: mutation.isPending };
 }
 
 const STORED = '__stored__', WHOLE = '__whole__';

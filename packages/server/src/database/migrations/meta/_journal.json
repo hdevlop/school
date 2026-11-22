@@ -974,6 +974,13 @@
       "when": 1795284000000,
       "tag": "0138_name_search_extensions",
       "breakpoints": true
+    },
+    {
+      "idx": 139,
+      "version": "7",
+      "when": 1795284060000,
+      "tag": "0139_exam_planning_permission",
+      "breakpoints": true
     }
   ]
 }

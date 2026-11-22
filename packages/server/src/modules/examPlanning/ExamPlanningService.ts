@@ -7,6 +7,7 @@ import type { SaveExamPlanningDto } from './ExamPlanningDto';
 import { SubjectRepository } from '../subjects/SubjectRepository';
 import { SubjectValidator } from '../subjects/SubjectValidator';
 import { resolveSubject, suggestSubject } from './planningSubjects';
+import { ExamPlanningValidator, type PlanningActor } from './ExamPlanningValidator';
 
 /** Collège is marked out of 20, primary out of 10, as Massar does. */
 const outOf = (cls: { level: string | null; cycle: string | null }) => /coll|إعداد|secondaire|middle/i.test(`${cls.level ?? ''} ${cls.cycle ?? ''}`) ? 20 : 10;
@@ -15,17 +16,19 @@ const outOf = (cls: { level: string | null; cycle: string | null }) => /coll|إ�
 export class ExamPlanningService {
   @Year() private readonly year!: ResolvedAcademicYear;
   @I18n() private t!: (key: string) => string;
-  constructor(private repository: ExamPlanningRepository, private subjectRepository: SubjectRepository, private subjectValidator: SubjectValidator) {}
+  constructor(private repository: ExamPlanningRepository, private subjectRepository: SubjectRepository, private subjectValidator: SubjectValidator, private validator: ExamPlanningValidator) {}
 
   async getAll() {
     return (await this.repository.getAll()).map(row => ({ ...row, visible: row.visible ?? true, months: row.months ?? {} }));
   }
 
   @Transaction()
-  async saveMonth(classId: string, data: SaveExamPlanningDto) {
+  async saveMonth(classId: string, data: SaveExamPlanningDto, actor: PlanningActor) {
     const classes = await this.getAll();
-    if (!classes.some(row => row.id === classId)) Err(404, this.t('classes.errors.notFound'));
+    const target = classes.find(row => row.id === classId);
+    if (!target) Err(404, this.t('classes.errors.notFound'));
     if (!examPlanningMonths(this.year.label).includes(data.month)) Err(400, this.t('validation.theDateMustFallInsideThisSchoolYear'));
+    await this.validator.ensureMayChange(actor, classId, target.months[data.month] ?? [], data.entries);
     await this.repository.saveMonth(classId, data);
     await this.syncExams([classId]);
     return this.getAll();
@@ -66,19 +69,22 @@ export class ExamPlanningService {
    * What Planning picks from: every subject with its sub-subjects. And the
    * names this year's Planning uses that are in neither (typed before
    * sub-subjects existed, or imported): they have no exam until added.
+   * `plannable` is what this account may plan in each class: null for the
+   * school-wide roles, a teacher's own subjects otherwise.
    */
-  async subjectOptions() {
+  async subjectOptions(actor: PlanningActor) {
     const classes = await this.getAll();
+    const plannable = await this.validator.plannableSubjects(actor, classes.map(cls => cls.id));
     const subjects = await this.subjectRepository.getAll();
     const parts = subjects.flatMap(subject => subject.subSubjects.map(part => ({ subjectId: subject.id, name: part.name })));
     const names = [...new Set(classes.flatMap(cls => Object.values(cls.months).flat().map(entry => entry.subject.trim())).filter(Boolean))].sort((x, y) => x.localeCompare(y));
     const missing = names.filter(name => !resolveSubject(name, parts, subjects)).map(name => ({ name, suggestedSubjectId: suggestSubject(name, subjects) }));
-    return { subjects: subjects.map(({ id, name, subSubjects }) => ({ id, name, subSubjects })), missing };
+    return { subjects: subjects.map(({ id, name, subSubjects }) => ({ id, name, subSubjects })), missing, plannable };
   }
 
   /** Adds Planning's missing names to Subjects as sub-subjects; their exams follow. */
   @Transaction()
-  async addSubSubjects(items: Array<{ name: string; subjectId: string }>) {
+  async addSubSubjects(items: Array<{ name: string; subjectId: string }>, actor: PlanningActor) {
     const subjects = await this.subjectRepository.getAll();
     for (const subjectId of new Set(items.map(item => item.subjectId))) {
       const subject = subjects.find(row => row.id === subjectId);
@@ -87,7 +93,7 @@ export class ExamPlanningService {
     }
     await this.subjectRepository.addSubSubjects(items);
     await this.syncOpenYears();
-    return this.subjectOptions();
+    return this.subjectOptions(actor);
   }
 
   /**

@@ -9,9 +9,11 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { planningTextLanguage, type PlanningEntrySelection } from './examPlanningModel';
 import styles from './ExamPlanning.module.css';
 
-export function PlanningSchedule({ classes, entriesFor, selected, saving, onSelect, onAdd, onDelete }: {
+export function PlanningSchedule({ classes, entriesFor, selected, saving, canAdd, canChange, onSelect, onAdd, onDelete }: {
   classes: ExamPlanningClass[]; entriesFor: (cls: ExamPlanningClass) => ExamPlanningEntry[];
   selected?: PlanningEntrySelection | null; saving: boolean;
+  /** A teacher adds to and removes from only the subjects they teach in the class. */
+  canAdd: (cls: ExamPlanningClass) => boolean; canChange: (cls: ExamPlanningClass, entry: ExamPlanningEntry) => boolean;
   onSelect: (value: PlanningEntrySelection) => void; onAdd: (cls: ExamPlanningClass) => void;
   onDelete: (cls: ExamPlanningClass, entry: ExamPlanningEntry) => void;
 }) {
@@ -32,7 +34,7 @@ export function PlanningSchedule({ classes, entriesFor, selected, saving, onSele
         </div>
         <div className={styles.sectionTools}>
           {dates.length > 0 && <NButton type="button" variant="outline" size="sm" className={styles.scheduleAction} aria-pressed={compact} leftIcon={compact ? <ChevronsUpDown /> : <ChevronsDownUp />} onClick={() => setCollapsedDays(current => ({ ...current, ...Object.fromEntries(dates.map(date => [`${cls.id}:${date}`, !compact])) }))}>{compactLabel}</NButton>}
-          <NButton type="button" variant="outline" size="sm" className={styles.scheduleAction} disabled={saving} onClick={() => onAdd(cls)} leftIcon={<Plus />}>{t('examPlanning.addEntry')}</NButton>
+          {canAdd(cls) && <NButton type="button" variant="outline" size="sm" className={styles.scheduleAction} disabled={saving} onClick={() => onAdd(cls)} leftIcon={<Plus />}>{t('examPlanning.addEntry')}</NButton>}
         </div>
       </div>
       {!entries.length ? <p className={styles.empty}>{t('examPlanning.emptyDescription')}</p> : dates.map(date => {
@@ -57,7 +59,7 @@ export function PlanningSchedule({ classes, entriesFor, selected, saving, onSele
                 <span><span className={styles.entryLabel} lang={planningTextLanguage(entry.subject)} dir="auto">{name}</span><span className={styles.entryTopic}>{entry.startTime && entry.endTime && <><span className={styles.entryTime}>{entry.startTime} – {entry.endTime}</span> · </>}{t('examPlanning.lessonCount', { count: entry.lessons.filter(line => line.trim()).length })}</span></span>
                 <ChevronRight className={styles.entryArrow} aria-hidden="true" />
               </button>
-              <button type="button" disabled={saving} className={styles.entryDelete} aria-label={`${t('common.delete')} · ${name}`} title={t('common.delete')} onClick={() => onDelete(cls, entry)}><Trash2 aria-hidden="true" /></button>
+              {canChange(cls, entry) && <button type="button" disabled={saving} className={styles.entryDelete} aria-label={`${t('common.delete')} · ${name}`} title={t('common.delete')} onClick={() => onDelete(cls, entry)}><Trash2 aria-hidden="true" /></button>}
             </div>;
           })}
           </div>

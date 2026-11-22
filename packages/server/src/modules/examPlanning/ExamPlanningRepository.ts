@@ -12,7 +12,8 @@ import { cycles } from '../cycles/cycleSchema';
 import { sections } from '../sections/sectionSchema';
 import { subjects, subSubjects } from '../subjects/subjectSchema';
 import { foldSubjectName } from '@sms/contracts';
-import { teacherAssignments } from '../teachers/teacherSchema';
+import { teacherAssignments, teachers } from '../teachers/teacherSchema';
+import { staff } from '../staff/staffSchema';
 import { exams } from '../exams/examSchema';
 import type { SaveExamPlanningDto } from './ExamPlanningDto';
 import type { ExamPlanningClass } from '@sms/contracts';
@@ -61,6 +62,16 @@ export class ExamPlanningRepository {
     if (!classIds.length) return;
     await this.db.update(examPlanning).set({ months: {}, updatedAt: sql`CURRENT_TIMESTAMP` })
       .where(and(eq(examPlanning.academicYearId, this.year.id), inArray(examPlanning.classId, classIds)));
+  }
+
+  /** The subjects this account teaches in each of these classes: what a teacher may plan there. */
+  async taughtSubjects(userId: string, classIds: string[]) {
+    if (!classIds.length) return [];
+    return this.db.selectDistinct({ classId: teacherAssignments.classId, subjectId: teacherAssignments.subjectId })
+      .from(teacherAssignments)
+      .innerJoin(teachers, eq(teachers.id, teacherAssignments.teacherId))
+      .innerJoin(staff, eq(staff.id, teachers.staffId))
+      .where(and(eq(staff.userId, userId), inArray(teacherAssignments.classId, classIds)));
   }
 
   /**

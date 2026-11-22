@@ -22,7 +22,7 @@ import { classDocumentColors } from '@/features/Assessments/planning/planningMod
 import { buildPlanningDocument, printPlanningDocument, type PlanningDocumentOptions } from '@/features/Assessments/planning/planningDocument';
 import { PlanningPreview } from '@/features/Assessments/planning/PlanningPreview';
 import { useExamPlanning } from './useExamPlanning';
-import { examPlanningControlNumbers, examPlanningEntries, examPlanningRecords, initialPlanningMonth, planningMonthRange, updatePlanningMonthDraft, type ExamPlanningDrafts, type PlanningDateRange, type PlanningEntrySelection } from './examPlanningModel';
+import { examPlanningControlNumbers, examPlanningEntries, examPlanningRecords, initialPlanningMonth, mayPlanEntry, plannableInClass, planningMonthRange, updatePlanningMonthDraft, type ExamPlanningDrafts, type PlanningDateRange, type PlanningEntrySelection } from './examPlanningModel';
 import { PlanningEntryEditor } from './PlanningEntryEditor';
 import { PlanningClassSettings } from './PlanningClassSettings';
 import { PlanningMissingSubjects, usePlanningSubjects } from './PlanningSubjects';
@@ -62,10 +62,16 @@ function PlanningContent() {
   const classId = pickedClass !== null && (!pickedClass || visibleClasses.some(cls => cls.id === pickedClass))
     ? pickedClass : visibleClasses.find(cls => entriesFor(cls).length)?.id ?? visibleClasses[0]?.id ?? '';
   const shownClasses = visibleClasses.filter(cls => !classId || cls.id === classId);
-  const canEdit = viewer.isSchoolWide && viewer.can('update:exams');
+  // The page's tools (which classes show, import, clear, missing subjects) stay school-wide.
+  const canManage = viewer.isSchoolWide && viewer.can('update:exams');
+  // Planning a class's exams: the school-wide roles every subject, a teacher the subjects they teach there.
+  const canEdit = viewer.can('update:exam-planning') && (viewer.isSchoolWide || viewer.role === 'teacher');
   // Each Planning subject becomes an exam of its linked School subject on the Exams page.
   // Planning picks from Subjects; names Subjects lacks are added there (the Subjects permission decides).
   const planningSubjects = usePlanningSubjects(canEdit), [missingOpen, setMissingOpen] = useState(false), canAddSubjects = viewer.can('update:subjects');
+  const allowedIn = (cls: ExamPlanningClass) => plannableInClass(planningSubjects.plannable, cls.id);
+  const canChange = (cls: ExamPlanningClass, entry: ExamPlanningEntry) => mayPlanEntry(allowedIn(cls), planningSubjects.data?.subjects, entry.subject);
+  const canAdd = (cls: ExamPlanningClass) => { const allowed = allowedIn(cls); return !allowed || allowed.size > 0; };
   // The planning tab is the editor; whoever cannot edit reads the printed calendar.
   const view = canEdit ? pickedView : 'preview';
   const defaultClass = shownClasses.find(cls => entriesFor(cls).length);
@@ -74,6 +80,10 @@ function PlanningContent() {
   const selectedEntry = pickedEntryClass && selected ? monthEntriesFor(pickedEntryClass, selected.month).find(entry => entry.id === selected.entryId) : selectedClass ? entriesFor(selectedClass)[0] : undefined;
   const selectedMonth = pickedEntryClass && selected ? selected.month : selectedEntry?.date.slice(0, 7);
   const effectiveSelection = selectedClass && selectedEntry && selectedMonth ? { classId: selectedClass.id, month: selectedMonth, entryId: selectedEntry.id } : null;
+  // A teacher picks among the subjects they teach in the class, and reads the others' entries.
+  const selectedLocked = !!selectedClass && !!selectedEntry && !canChange(selectedClass, selectedEntry);
+  const selectedAllowed = selectedClass ? allowedIn(selectedClass) : null;
+  const editorSubjects = selectedLocked || !selectedAllowed ? planningSubjects.data?.subjects : planningSubjects.data?.subjects.filter(subject => selectedAllowed.has(subject.id));
   const dirty = Object.keys(drafts).length > 0;
   const invalidDraft = Object.values(drafts).some(months => Object.entries(months).some(([month, entries]) => entries.some(entry => !entry.subject.trim() || !isDateOnly(entry.date) || !entry.date.startsWith(`${month}-`) || entry.lessons.filter(line => line.trim()).length > 40 || entry.lessons.some(line => line.trim().length > 500))));
   const records = invalidRange ? [] : examPlanningRecords(shownClasses, range, drafts);
@@ -124,7 +134,11 @@ function PlanningContent() {
       }
       toast.success(t('examPlanning.saved'));
       return true;
-    } catch { toast.error(t('examPlanning.saveFailed')); return false; }
+    } catch (failure) {
+      // A refused save says why (a subject this teacher does not teach there); anything else is generic.
+      toast.error(isAuthorizationError(failure) && failure instanceof Error && failure.message ? failure.message : t('examPlanning.saveFailed'));
+      return false;
+    }
     finally { setSavingDrafts(false); }
   };
   const saveClasses = async () => {
@@ -147,7 +161,7 @@ function PlanningContent() {
   );
 
   return <div className={styles.page} data-exam-planning>
-    <NPageHeader icon={FEATURE_ICONS.assessmentPlanning} title={t('examPlanning.title')} subtitle={canEdit ? t('examPlanning.subtitle') : undefined}>
+    <NPageHeader icon={FEATURE_ICONS.assessmentPlanning} title={t('examPlanning.title')} subtitle={canManage ? t('examPlanning.subtitle') : canEdit ? t('examPlanning.teacherSubtitle') : undefined}>
       <NPageHeaderActions>
         <PageHeaderGlobalActions />
       </NPageHeaderActions>
@@ -169,9 +183,9 @@ function PlanningContent() {
             </div>
           </fieldset>
           <MobileFeatureActions><div className={styles.toolbarActions}>
-            {canEdit && <PlanningClearAction schoolYear={viewingYear ?? ''} disabled={isLoading || !!error || (!dirty && !classes.some(cls => Object.values(cls.months).some(entries => entries.length)))} saving={saving} onClear={async () => { await save({ clear: true }); discard(); setView('planning'); }} />}
-            {canEdit && <PlanningJsonActions classes={classes} schoolYear={viewingYear ?? ''} disabled={dirty || saving || isLoading || !!error} saving={saving} onImport={async document => { await save({ document }); setSelected(null); }} />}
-            {canEdit && <NButton variant="outline" size="icon" aria-label={t('examPlanning.classSettings')} title={t('examPlanning.classSettings')} disabled={isLoading || !!error || dirty || saving} onClick={() => setClassSettings(visibleClasses.map(cls => cls.id))}><Settings className="size-4" aria-hidden="true" /></NButton>}
+            {canManage && <PlanningClearAction schoolYear={viewingYear ?? ''} disabled={isLoading || !!error || (!dirty && !classes.some(cls => Object.values(cls.months).some(entries => entries.length)))} saving={saving} onClear={async () => { await save({ clear: true }); discard(); setView('planning'); }} />}
+            {canManage && <PlanningJsonActions classes={classes} schoolYear={viewingYear ?? ''} disabled={dirty || saving || isLoading || !!error} saving={saving} onImport={async document => { await save({ document }); setSelected(null); }} />}
+            {canManage && <NButton variant="outline" size="icon" aria-label={t('examPlanning.classSettings')} title={t('examPlanning.classSettings')} disabled={isLoading || !!error || dirty || saving} onClick={() => setClassSettings(visibleClasses.map(cls => cls.id))}><Settings className="size-4" aria-hidden="true" /></NButton>}
             <NButton variant="outline" size="icon" aria-label={t('assessmentPlanning.print')} title={t('assessmentPlanning.print')} disabled={outputDisabled} onClick={print} leftIcon={<Printer className="size-4" />} />
           </div></MobileFeatureActions>
           </div>
@@ -179,9 +193,9 @@ function PlanningContent() {
         {error ? isAuthorizationError(error) ? <NForbiddenState surface="panel" /> : <NErrorState surface="panel" />
           : isLoading ? <NLoadingState surface="panel" label={t('common.loading')} />
             : <>
-              {canEdit && planningSubjects.missing.length > 0 && <p className={styles.alert} role="status">{t('examPlanning.subjects.missing', { count: planningSubjects.missing.length })} {canAddSubjects && <button type="button" className="font-medium text-primary underline underline-offset-2" disabled={dirty || saving} onClick={() => setMissingOpen(true)}>{t('examPlanning.subjects.addThem')}</button>}</p>}
+              {canManage && planningSubjects.missing.length > 0 && <p className={styles.alert} role="status">{t('examPlanning.subjects.missing', { count: planningSubjects.missing.length })} {canAddSubjects && <button type="button" className="font-medium text-primary underline underline-offset-2" disabled={dirty || saving} onClick={() => setMissingOpen(true)}>{t('examPlanning.subjects.addThem')}</button>}</p>}
               {invalidRange ? <p className={styles.alert} role="alert">{t('assessmentPlanning.invalidRange')}</p>
-                : !shownClasses.length ? <NEmptyState icon={FEATURE_ICONS.assessmentPlanning} surface="panel" title={t('examPlanning.noClasses')} description={canEdit ? t('examPlanning.chooseClasses') : undefined} />
+                : !shownClasses.length ? <NEmptyState icon={FEATURE_ICONS.assessmentPlanning} surface="panel" title={t('examPlanning.noClasses')} description={canManage ? t('examPlanning.chooseClasses') : undefined} />
                 : <TabsContent value={view} className="mt-0 min-w-0">
                   {view === 'preview' ? invalidDraft ? <p role="alert" className={styles.alert}>{t('examPlanning.invalidDraft')}</p>
                     : !records.length ? <NEmptyState icon={FEATURE_ICONS.assessmentPlanning} surface="panel" title={t('examPlanning.emptyTitle')} description={canEdit ? t('examPlanning.emptyDescription') : undefined} />
@@ -191,8 +205,8 @@ function PlanningContent() {
                       <p className={styles.previewTip}>{t('examPlanning.previewTip')}</p>
                     </>
                     : <div className={styles.editorLayout}>
-                      <PlanningSchedule classes={shownClasses} entriesFor={entriesFor} selected={effectiveSelection} saving={saving} onSelect={setSelected} onAdd={addEntry} onDelete={deleteEntry} />
-                      {selectedEntry && selectedClass && selectedMonth ? <PlanningEntryEditor key={selectedClass.id + ':' + selectedMonth + ':' + selectedEntry.id} entry={selectedEntry} subjects={planningSubjects.data?.subjects} className={toOfficialClassName(selectedClass.name)} month={selectedMonth} disabled={saving} dirty={dirty} valid={!invalidDraft} onChange={updateEntry} onCancel={discard} onSave={() => { void saveDrafts(); }} />
+                      <PlanningSchedule classes={shownClasses} entriesFor={entriesFor} selected={effectiveSelection} saving={saving} canAdd={canAdd} canChange={canChange} onSelect={setSelected} onAdd={addEntry} onDelete={deleteEntry} />
+                      {selectedEntry && selectedClass && selectedMonth ? <PlanningEntryEditor key={selectedClass.id + ':' + selectedMonth + ':' + selectedEntry.id} entry={selectedEntry} subjects={editorSubjects} locked={selectedLocked} className={toOfficialClassName(selectedClass.name)} month={selectedMonth} disabled={saving} dirty={dirty} valid={!invalidDraft} onChange={updateEntry} onCancel={discard} onSave={() => { void saveDrafts(); }} />
                         : <aside className={styles.editPanel} aria-label={t('examPlanning.editLessons')}>
                           <p className={styles.secondary}>{t(dirty ? 'examPlanning.unsaved' : 'examPlanning.selectSubject')}</p>
                           {dirty && <div className={styles.editorActions}>
@@ -206,8 +220,8 @@ function PlanningContent() {
         </Tabs>
       </main>
     </NajmScroll>
-    {canEdit && canAddSubjects && <PlanningMissingSubjects open={missingOpen} onOpenChange={setMissingOpen} state={planningSubjects} />}
-    {canEdit && <PlanningClassSettings classes={classes} selection={classSettings} saving={saving} onChange={setClassSettings} onClose={() => setClassSettings(null)} onSave={saveClasses} />}
+    {canManage && canAddSubjects && <PlanningMissingSubjects open={missingOpen} onOpenChange={setMissingOpen} state={planningSubjects} />}
+    {canManage && <PlanningClassSettings classes={classes} selection={classSettings} saving={saving} onChange={setClassSettings} onClose={() => setClassSettings(null)} onSave={saveClasses} />}
   </div>;
 }
 

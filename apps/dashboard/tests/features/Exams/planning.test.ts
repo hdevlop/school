@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { examPlanningMonths, examPlanningSemester, type ExamPlanningClass } from '@sms/contracts';
-import { examPlanningControlNumbers, examPlanningEntries, examPlanningRecords, initialPlanningMonth, planningMonthRange, planningTextLanguage, updatePlanningMonthDraft } from '@/features/Exams/planning/examPlanningModel';
+import { examPlanningControlNumbers, examPlanningEntries, examPlanningRecords, initialPlanningMonth, mayPlanEntry, plannableInClass, planningMonthRange, planningTextLanguage, updatePlanningMonthDraft } from '@/features/Exams/planning/examPlanningModel';
 
 const classes: ExamPlanningClass[] = [
   { id: 'ps', name: 'PS', visible: true, months: {} },
@@ -86,5 +86,24 @@ describe('exam planning Contrôle numbers', () => {
     expect(examPlanningControlNumbers(year, ['2026-10-05'])).toEqual([]);
     const drafts = { cp: { '2026-10': [{ id: 'd', date: '2026-10-05', subject: 'Arabe', lessons: [] }] } };
     expect(examPlanningControlNumbers(year, ['2026-11-09'], drafts)).toEqual([2]);
+  });
+});
+
+describe('what a teacher may plan', () => {
+  const subjects = [{ id: 'fr', name: 'Langue française', subSubjects: [{ name: 'Grammaire' }] }, { id: 'ar', name: 'اللغة العربية', subSubjects: [] }];
+  it('plans every subject school-wide, nothing until the list loads, and a teacher their own per class', () => {
+    expect(plannableInClass(null, 'cp')).toBeNull();
+    expect([...plannableInClass(undefined, 'cp') ?? ['x']]).toEqual([]);
+    expect([...plannableInClass({ cp: ['fr'] }, 'cp') ?? []]).toEqual(['fr']);
+    expect([...plannableInClass({ cp: ['fr'] }, 'ce1') ?? ['x']]).toEqual([]);
+  });
+  it('changes an entry of their subject or sub-subject, or a new one with none picked, and reads the others', () => {
+    const allowed = plannableInClass({ cp: ['fr'] }, 'cp');
+    expect(mayPlanEntry(allowed, subjects, ' grammaire ')).toBe(true);
+    expect(mayPlanEntry(allowed, subjects, 'Langue française')).toBe(true);
+    expect(mayPlanEntry(allowed, subjects, '')).toBe(true);
+    expect(mayPlanEntry(allowed, subjects, 'اللغة العربية')).toBe(false);
+    expect(mayPlanEntry(allowed, subjects, 'Robotique')).toBe(false);
+    expect(mayPlanEntry(null, subjects, 'Robotique')).toBe(true);
   });
 });

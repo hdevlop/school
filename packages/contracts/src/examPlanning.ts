@@ -1,3 +1,5 @@
+import { foldSubjectName } from './subjectNames';
+
 export type ExamPlanningEntry = {
   id: string;
   date: string;
@@ -44,4 +46,30 @@ export function examPlanningMonths(academicYear: string): string[] {
     const date = new Date(Date.UTC(start, 8 + index, 1));
     return date.toISOString().slice(0, 7);
   });
+}
+
+/**
+ * The subject a Planning name is an exam of: its sub-subject's subject, or
+ * the subject of that name; null while Subjects has neither.
+ */
+export function resolvePlanningSubject(name: string, subSubjects: ReadonlyArray<{ subjectId: string; name: string }>, subjects: ReadonlyArray<{ id: string; name: string }>) {
+  const folded = foldSubjectName(name);
+  return subSubjects.find(part => foldSubjectName(part.name) === folded)?.subjectId ?? subjects.find(subject => foldSubjectName(subject.name) === folded)?.id ?? null;
+}
+
+const sameEntry = (a: ExamPlanningEntry, b: ExamPlanningEntry) => a.date === b.date && a.subject.trim() === b.subject.trim()
+  && (a.startTime ?? null) === (b.startTime ?? null) && (a.endTime ?? null) === (b.endTime ?? null)
+  && a.lessons.length === b.lessons.length && a.lessons.every((line, index) => line.trim() === b.lessons[index]?.trim());
+
+/**
+ * What saving a month changes: every entry added or removed, and both the
+ * old and the new version of an entry edited. An entry left as it was is
+ * not a change, wherever it sits in the list.
+ */
+export function changedPlanningEntries(before: readonly ExamPlanningEntry[], after: readonly ExamPlanningEntry[]): ExamPlanningEntry[] {
+  const previous = new Map(before.map(entry => [entry.id, entry])), next = new Map(after.map(entry => [entry.id, entry]));
+  const changed: ExamPlanningEntry[] = [];
+  for (const entry of before) { const now = next.get(entry.id); if (!now || !sameEntry(entry, now)) changed.push(entry); }
+  for (const entry of after) { const was = previous.get(entry.id); if (!was || !sameEntry(was, entry)) changed.push(entry); }
+  return changed;
 }
