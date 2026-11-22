@@ -5231,6 +5231,16 @@
         "invalidBirthplace": "El lugar de nacimiento no debe superar los 200 caracteres."
       }
     },
+    "photoSheet": {
+      "label": "Hoja de fotos",
+      "help": "Fotos y nombres, una página por clase",
+      "title": "Hoja de fotos de los alumnos",
+      "empty": "No hay alumnos activos para imprimir."
+    },
+    "printMenu": {
+      "list": "Lista de alumnos",
+      "listHelp": "La tabla con los filtros actuales"
+    },
     "card": {
       "massarCode": "Código"
     }

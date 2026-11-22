@@ -5380,6 +5380,16 @@
         "invalidBirthplace": "Le lieu de naissance ne doit pas dépasser 200 caractères."
       }
     },
+    "photoSheet": {
+      "label": "Trombinoscope",
+      "help": "Photos et noms, une page par classe",
+      "title": "Trombinoscope des élèves",
+      "empty": "Aucun élève actif à imprimer."
+    },
+    "printMenu": {
+      "list": "Liste des élèves",
+      "listHelp": "Le tableau avec les filtres actuels"
+    },
     "card": {
       "massarCode": "Code"
     }

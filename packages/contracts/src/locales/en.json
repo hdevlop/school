@@ -2917,6 +2917,16 @@
         "feeBeforeEnrollment": "the fee starts on {{value}}, before the student's enrollment",
         "invalidBirthplace": "Birthplace names must be at most 200 characters."
       }
+    },
+    "photoSheet": {
+      "label": "Photo sheet",
+      "help": "Photos and names, one page per class",
+      "title": "Student photo sheet",
+      "empty": "No active students to print."
+    },
+    "printMenu": {
+      "list": "Student list",
+      "listHelp": "The table with the current filters"
     }
   },
   "parents": {

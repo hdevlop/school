@@ -7,7 +7,6 @@ import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
 import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, useMediaQuery, useTableStore, useResolvedToolbarLabels, type ContextMenuItem } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { TablePrintButton } from '@/components/TablePrintButton';
 import { Eye, Pencil, Trash2, LogOut, Plus, Upload } from 'lucide-react';
 import FullStudentForm from './FullStudentForm';
 import { useStudents } from '../hooks/useStudents';
@@ -28,6 +27,8 @@ import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
 import { useMemo, useRef, useState } from 'react';
 import type { Table } from '@tanstack/react-table';
 import { useStudentsPrint } from '../hooks/useStudentsPrint';
+import { useStudentPhotoSheet } from '../hooks/useStudentPhotoSheet';
+import { StudentsPrintMenu } from './StudentsPrintMenu';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
@@ -126,6 +127,7 @@ function StudentsTable() {
       value: filter.options.find(option => option.value === filter.value)?.label ?? '',
     }));
   const printStudents = useStudentsPrint({ title, academicYear: viewingYear ?? activeYear, details: printDetails });
+  const printPhotoSheet = useStudentPhotoSheet({ academicYear: viewingYear ?? activeYear });
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
   const [importProgress, setImportProgress] = useState<StudentImportProgress | null>(null);
 
@@ -380,7 +382,14 @@ function StudentsTable() {
         toolbarActionDisplay='settings'
         headerSlot={<>
           <ClassSectionTableFilters sectionFilter={sectionFilter} viewFilter={viewFilter} searchFilter={searchFilter} />
-          <TablePrintButton loading={isStudentsLoading} tableRef={printTable} />
+          <StudentsPrintMenu
+            loading={isStudentsLoading}
+            count={total}
+            showPhotoSheet={!isFamily}
+            tableRef={printTable}
+            onPrintList={printStudents}
+            onPrintPhotoSheet={printPhotoSheet}
+          />
         </>}
         showImportButton={canCreate}
         onDataChange={canCreate ? handleImport : undefined}
