@@ -75,6 +75,8 @@ const SimpleStudentForm = ({ student = null, classes = [] }) => {
     <>
       <NForm
         id='student-form'
+        // NForm fills its container's height; with the parents section after it, that pushed the section a screen down.
+        className='h-auto'
         schema={studentProfileEditSchema}
         defaultValues={getStudentDefaultValues(student)}
         onSubmit={handleSubmit}

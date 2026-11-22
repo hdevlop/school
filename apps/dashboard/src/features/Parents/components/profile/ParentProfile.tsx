@@ -519,7 +519,10 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                       {t('dashboard.attendance.late')}
                     </div>
                   </div>
-                  <div className="min-h-[220px] flex-1">
+                  {/* Out of the flow: in the scrolling card body, a chart sized by its box resized
+                      that box and the scrollbars came and went in a loop. */}
+                  <div className="relative min-h-[220px] flex-1 overflow-hidden">
+                    <div className="absolute inset-0">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={dashboard.attendanceChart} margin={{ top: 8, right: 14, left: -14, bottom: 0 }} barGap={4} barCategoryGap="30%">
                         <CartesianGrid vertical={false} stroke="var(--border)" strokeDasharray="3 3" />
@@ -562,6 +565,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                         />
                       </BarChart>
                     </ResponsiveContainer>
+                    </div>
                   </div>
                 </div>
               )}
