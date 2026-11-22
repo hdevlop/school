@@ -16,10 +16,14 @@ const PLANNING_OPENING = /^\s*(?:we need|we should|we must|we can(?:not|'t)? (?:
 const GLUED_SENTENCE = /(?<![\p{N}])[.?!](?=[^\s\p{N}.?!)\]"'»”’])/u;
 const TOOL_NAME = /\b[a-z][a-z-]*_[a-z_]*get[a-z_]*\b|\bcall (?:the )?tool\b/;
 
+// A channel label glued before the answer: "Answer.المجموع ديال النقط ..." (2026-11-21).
+const ANSWER_LABEL = /^\s*(?:final(?:\s+answer)?|answer)\s*[:.]\s*(?=\S)/i;
+
 export type PlanningCheck = { text: string } | { planningOnly: true };
 
 /** The answer without leaked planning; `planningOnly` when nothing else is there. */
 export function withoutLeakedPlanning(answer: string): PlanningCheck {
+  answer = answer.replace(ANSWER_LABEL, '');
   if (!PLANNING_OPENING.test(answer)) return { text: answer };
   let rest = answer, cut = false;
   for (let glued = GLUED_SENTENCE.exec(rest); glued; glued = GLUED_SENTENCE.exec(rest)) {

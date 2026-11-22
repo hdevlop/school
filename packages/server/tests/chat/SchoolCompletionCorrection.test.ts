@@ -74,14 +74,41 @@ test('"no results" said from the class exam list without reading them is correct
   const turn = (...reads: object[][]) => ({ messages: [{ role: 'user', content: 'CM1A' }, ...reads.flat()] });
   const withResults = new Set([...offered, 'grades_get_by_exam']);
   const exams = read('exams_get_by_section', '[{"id":"e1","title":"Sciences"}]');
-  for (const none of ['ما كاينش كويز فـ العلوم فـ CM1 A.', 'الإملاء مازال ما كاينش نتيجات.', 'Aucune note pour ce contrôle.'])
+  for (const none of ['ما كاينش كويز فـ العلوم فـ CM1 A.', 'الإملاء مازال ما كاينش نتيجات.', 'Aucune note pour ce contrôle.', 'آخر كويز كان في 12/11/2026. كل التلاميذ جابو 10/10.'])
     expect(completionProblem(answer(none), withResults, turn(exams))).toEqual({ kind: 'results_not_read' });
   // Listing the exams, results already read, an empty exam list, or no results read offered.
   expect(completionProblem(answer('CM1 A: Sciences (2026-11-12), Anglais (2026-11-11).'), withResults, turn(exams))).toBeNull();
+  expect(completionProblem(answer('CM1 A: Sciences le 12/11/2026, Anglais le 11/11/2026.'), withResults, turn(exams))).toBeNull();
   expect(completionProblem(answer('ما كاينش نقط.'), withResults, turn(exams, read('grades_get_by_exam', '[]')))).toBeNull();
   expect(completionProblem(answer('ما كاينش امتحانات.'), withResults, turn(read('exams_get_by_section', '[]')))).toBeNull();
   expect(completionProblem(answer('ما كاينش كويز.'), offered, turn(exams))).toBeNull();
   expect(correctionNote({ kind: 'results_not_read' }, withResults)).toContain('grades_get_by_exam');
+});
+
+test('a mark stated when nothing in the conversation was read is corrected', () => {
+  const invented = answer('JEBARA RIMA – Notes en Français\n- Français : 8,5 / 10');
+  const nothingRead = { messages: [{ role: 'user', content: 'combien a eu JEBARA RIMA en francais' }] };
+  expect(completionProblem(invented, new Set(), nothingRead)).toEqual({ kind: 'unread_mark' });
+  expect(correctionNote({ kind: 'unread_mark' }, new Set())).toContain('without any mark');
+  // A mark from an earlier read in the conversation, or no mark at all, is fine.
+  const readEarlier = { messages: [...nothingRead.messages, { role: 'tool', tool_call_id: 'x', content: '{"grades":[]}' }, { role: 'user', content: 'en math' }] };
+  expect(completionProblem(answer('Mathématiques : 10/10'), offered, readEarlier)).toBeNull();
+  expect(completionProblem(answer('Je ne trouve pas cette information.'), new Set(), nothingRead)).toBeNull();
+});
+
+test('a follow-up about a student already found does not turn to the parent account', () => {
+  const found = [
+    { role: 'user', content: 'chhal jab jebara barae f math' },
+    { role: 'assistant', content: null, tool_calls: [{ id: 's1', type: 'function', function: { name: 'search_search_students', arguments: '{"q":"jebara barae"}' } }] },
+    { role: 'tool', tool_call_id: 's1', content: '[{"id":"kSRmE","name":"JEBARA MOHAMED BARAA"}]' },
+    { role: 'assistant', content: 'جبارة براء جاب 20.00 فـ Mathématiques.' },
+    { role: 'user', content: 'w chhal f HG' },
+  ];
+  const detour = answer('أولاً، خاصني نعرف شكون هو ولي أمرك. واش عندك حساب ديال ولي أمر مرتبط بحسابك؟');
+  expect(completionProblem(detour, offered, { messages: found })).toEqual({ kind: 'parent_account_detour' });
+  // No student found yet (a parent asking about their own child), or an ordinary answer.
+  expect(completionProblem(detour, offered, { messages: [{ role: 'user', content: 'nno9at dyal bnti' }] })).toBeNull();
+  expect(completionProblem(answer('Histoire-géographie : 14/20'), offered, { messages: found })).toBeNull();
 });
 
 test('an answer that names tool IDs is planning, with or without offered tools', () => {

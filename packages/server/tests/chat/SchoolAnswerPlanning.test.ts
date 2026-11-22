@@ -1,6 +1,12 @@
 import { expect, test } from 'bun:test';
 import { withoutLeakedPlanning } from '../../src/modules/chat/transport/schoolAnswerPlanning';
 
+test('a glued "Answer." label is removed, and an answer that merely uses the word is kept', () => {
+  expect(withoutLeakedPlanning('Answer.المجموع ديال النقط هو 400.')).toEqual({ text: 'المجموع ديال النقط هو 400.' });
+  expect(withoutLeakedPlanning('Final answer: 12 élèves.')).toEqual({ text: '12 élèves.' });
+  expect(withoutLeakedPlanning('The answer is 12 students.')).toEqual({ text: 'The answer is 12 students.' });
+});
+
 // The three leaks seen in 180 real chat answers on 2026-11-16, shortened.
 test.each([
   ['We need to answer in Darija. Provide grades list.**نتائج CHAABI ABDELHAMID**', '**نتائج CHAABI ABDELHAMID**'],

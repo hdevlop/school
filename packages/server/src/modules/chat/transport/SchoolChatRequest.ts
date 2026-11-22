@@ -8,6 +8,7 @@ import { SettingsRepository } from '../../settings/SettingsRepository';
 import { schoolClock } from '../../dashboard/teacher/teacherDashboardMetrics';
 import { getBusinessDateOverride } from '../../../shared/businessDate';
 import { answerLanguageInstruction } from '../replies/schoolAnswerLanguage';
+import { schoolDateRanges } from './schoolDateRanges';
 
 export const schoolChatRequest = new AsyncLocalStorage<{ academicYear: string; schoolDate: string }>();
 
@@ -29,6 +30,7 @@ export class SchoolChatRequest implements ChatbotContextProvider {
     const frame = schoolChatRequest.getStore();
     const knowledge = await this.knowledge.getContext(userText);
     return [frame ? `The selected academic year is ${frame.academicYear}; today is ${frame.schoolDate} in the school's time zone. Use this academicYear for scoped tools. If another year is requested, ask the user to select it in the dashboard first.` : null,
+      frame ? schoolDateRanges(frame.schoolDate) : null,
       answerLanguageInstruction(userText), knowledge].filter(Boolean).join('\n\n') || null;
   }
   getContextTrace(userText: string) { return this.knowledge.getContextTrace(userText); }

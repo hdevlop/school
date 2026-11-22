@@ -6,7 +6,7 @@ import { normalizeReplyText } from 'najm-chatbot';
  * changes. najm-rag then marks every phrase stale; run "Reindex semantics" in
  * the RAG studio after the deploy.
  */
-export const ROUTING_TEXT_VERSION = '2026-11-21 jabt is got';
+export const ROUTING_TEXT_VERSION = '2026-11-21 subject follow-ups ask for marks';
 
 /** Query-only discovery hints. No role, identity lookup or access decision. */
 // najm-rag lowercases the message and folds these letters before this hook
@@ -76,7 +76,17 @@ export function schoolRoutingContext(query: string, routingQuery = query): strin
   const everyClass = mentions('kol l?a?9sam|jami3 l?a?9sam|jami3 l?mostawayat|kol l?mostawayat|toutes les classes|tous les niveaux|all classes|every class|[وفب]?(?:كل الاقسام|جميع الاقسام|كل المستويات|جميع المستويات)');
   const average = mentions('l?mo3adal|moyennes?|averages?|gpa|[وفب]?(?:المعدل|معدل|المعدلات|معدلات)');
   // "What did X get": the marks of a named student, test or exam.
-  const got = mentions('jab|jabt|jabat|jabet|jabit|jabo|jabou|jabto|jabti|[وفب]?(?:جاب|جابت|جابو|جابتي|جابتو)');
+  // "Combien a eu JEBARA RIMA en français" routed to no tool and the answer
+  // invented a mark (2026-11-21): French and English "got" count too.
+  const got = mentions('jab|jabt|jabat|jabet|jabit|jabo|jabou|jabto|jabti|a eu|ont eu|a obtenu|ont obtenu|obtenu|got|scored|[وفب]?(?:جاب|جابت|جابو|جابتي|جابتو)');
+  // A subject asked "how much" of, or alone as a short follow-up ("w chhal f
+  // HG", "en math", "histoire geo"), asks for marks. Without this, the follow-up
+  // carried no data word and Jev's "none" dropped every tool (2026-11-21).
+  const subject = mentions('maths?|math[eé]matiques|hg|histoire(?:[- ]?g[eé]o(?:graphie)?)?|g[eé]o(?:graphie)?|fran[cç]ais|anglais|english|svt|sciences?|physique|conjugaison|grammaire|dict[eé]e|orthographe|vocabulaire|l3arbiya|lfransawiya|riyadiyat|[وفب]?(?:الرياضيات|رياضيات|الماط|العربية|الفرنسية|الانجليزية|الاجتماعيات|الاجتماعيات|العلوم|التربية الاسلامية|الاملاء)');
+  const howMuch = mentions('ch7al|chhal|combien|how much|how many|شحال|كم');
+  const shortMessage = text.trim().split(/\s+/).length <= 4;
+  if (subject && !grades && !got && (howMuch || shortMessage) && !attendance && !absence && !upcoming)
+    hints.push('student subject marks student-profile_get_academic grades_get_by_student grades_get_by_subject search_search_students');
   if (reportCard && !own) hints.push('student report card grades_get_student_report search_search_students');
   else if (average && !own && !classCode && !grades)
     hints.push('school averages pass rate registrar-dashboard_get_overview academic-dashboard_get_kpis');
@@ -93,9 +103,12 @@ export function schoolRoutingContext(query: string, routingQuery = query): strin
     else if (classCode) hints.push('class or student grades grades_get_by_section grades_get_by_student search_search_students');
     else hints.push('student grades student-profile_get_academic grades_get_by_student search_search_students');
   }
-  if (attendance || (absence && personal)) hints.push(personal
-    ? 'student attendance summary student-profile_get_attendance_summary'
-    : 'attendance date records attendance_get_by_date attendance_get_all');
+  // A week or a month of absences is one ranged read, not a date per day
+  // ("combien d'élèves absents la semaine dernière" asked the user for dates).
+  const period = mentions('semaines?|weeks?|mois|months?|p[eé]riodes?|periods?|simana|ssimana|chhar|[وفبل]?(?:الاسبوع|اسبوع|السيمانة|سيمانة|الشهر|شهر)');
+  if (personal && (attendance || absence)) hints.push('student attendance summary student-profile_get_attendance_summary');
+  else if ((attendance || absence) && period) hints.push('attendance absences over a period from to dates attendance_get_all');
+  else if (attendance) hints.push('attendance date records attendance_get_by_date attendance_get_all');
   // Family questions retrieved staff fee reports (4 of 42 real chat questions,
   // 2026-11-15); a named student's fees retrieved nothing or the school list.
   if (familyFees) hints.push('family fees balance parent-profile_get_all_fees_due student-profile_get_financial');

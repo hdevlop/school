@@ -155,6 +155,32 @@ Then, the same day:
 `bun run eval:chat --runs 3`, 13 questions: **39 of 39**, median 1.8 s; the
 correction fired 5 times (4 `results_not_read`, 1 `unoffered_tool`).
 
+## Follow-ups, French, misspelled names (2026-11-21, evening)
+
+Real chats: "combien a eu JEBARA RIMA en français" got no tool and the answer
+invented "8,5/10"; "en conjugaison" / "en math" and "w chhal f HG" got no tool
+or the parent-account question; "combien d'élèves absents la semaine
+dernière" asked for dates; "jbara rima" found no student.
+
+- Jev answered "none" at 1.0 for these, which drops every tool. A "none" for a
+  message School's own words read as a data question now keeps the router's
+  order (`keepToolsForDataQuestions`); greetings and how-to are unchanged.
+  French and English "got" (a eu, obtenu, scored) and a subject asked "how
+  much" of or alone as a short follow-up (math, HG, histoire geo) now hint the
+  marks reads.
+- Name search matches spellings by pg_trgm closeness ≥ 0.5, best first
+  (migration 0138): "jbara rima" 0.73, "jebara rimma" 0.79, "zakarya achir"
+  0.64; unrelated names 0.25-0.56.
+- The context lists yesterday, this/last week (Monday-Sunday) and this/last
+  month as dates; `attendance_get_all` takes from/to. Last week's absences: 15
+  students (26 records), as the database counts them.
+- Corrections added: a mark stated when the conversation read nothing
+  (`unread_mark`), a mark or "none" read off the class exam list
+  (`results_not_read`), and the parent-account question after a student was
+  already found (`parent_account_detour`).
+
+Still seen: OSS20B rewrites Latin names in Arabic letters, sometimes wrongly.
+
 ## Phrases per tool: at most 12
 
 `MAX_PER_TOOL` in `packages/server/tests/chat/RoutingSemantics.test.ts`. A tool

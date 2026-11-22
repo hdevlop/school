@@ -104,6 +104,11 @@ export const studentIdParam = z.object({ studentId: z.string().min(1) });
 export const staffIdParam = z.object({ staffId: z.string().min(1) });
 export const teacherIdParam = z.object({ teacherId: z.string().min(1) });
 export const typeQueryParam = z.object({ type: attendanceTypeEnum.optional() });
+/** The chat's attendance list: a type and an inclusive YYYY-MM-DD range, all optional. */
+export const attendanceRangeDto = typeQueryParam.extend({
+  from: dateField.optional(),
+  to: dateField.optional(),
+});
 export const attendanceDateFilterDto = attendanceDateParam.merge(typeQueryParam);
 export const staffAttendanceReadQueryDto = z.object({ date: dateField.optional() });
 type AttendanceStatus = z.infer<typeof attendanceStatusEnum>;
@@ -135,5 +140,6 @@ export type StaffAttendanceRosterItemDto = z.infer<typeof staffAttendanceRosterI
 export type UpsertStaffAttendanceRosterDto = z.infer<typeof upsertStaffAttendanceRosterDto>;
 export type SeedAttendanceDto = z.input<typeof seedAttendanceDto>;
 export type AttendanceTypeQueryDto = z.infer<typeof typeQueryParam>;
+export type AttendanceRangeDto = z.infer<typeof attendanceRangeDto>;
 export type AttendanceDateFilterDto = z.infer<typeof attendanceDateFilterDto>;
 export type StaffAttendanceReadQueryDto = z.infer<typeof staffAttendanceReadQueryDto>;

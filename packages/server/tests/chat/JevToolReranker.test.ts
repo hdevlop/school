@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { describe, expect, mock, test } from 'bun:test';
 import {
-  buildToolPickRequest, createJevToolReranker, parseToolPick, NO_TOOL, RERANK_FAILURE_COOLDOWN_MS, RERANK_FAILURES_BEFORE_COOLDOWN, withArabicRewrite, type ToolCandidate,
+  buildToolPickRequest, createJevToolReranker, keepToolsForDataQuestions, parseToolPick, NO_TOOL, RERANK_FAILURE_COOLDOWN_MS, RERANK_FAILURES_BEFORE_COOLDOWN, withArabicRewrite, type ToolCandidate,
 } from '../../src/modules/chat/jev/JevToolReranker';
 import { JEV_DECISIONS_URL, JEV_MODEL } from '../../src/modules/chat/jev/jevIntents';
 
@@ -143,5 +143,26 @@ describe('Jev as the tool reranker', () => {
     const body = JSON.parse((transport.mock.calls[0] as any)[1].body);
     expect(body.state).toBe(query + ' (rewritten)');
     expect(Object.keys(body.questions.tool.criteria)).toEqual(['grades_get_by_student', 'grades_get_by_section', NO_TOOL]);
+  });
+});
+
+describe('a confident none does not drop the tools of a data question', () => {
+  const keep = keepToolsForDataQuestions(async () => ({ toolName: null, confidence: 1 }));
+  const ask = (q: string) => keep({ query: q, candidates, signal: new AbortController().signal });
+
+  test('School already reads it as a data question: the router order is kept', async () => {
+    for (const q of ['combien a eu JEBARA RIMA en français', 'combie a eu jebara rima en francais\n---\nen conjugaison\n---\nen math', "combien d'élèves absents la semaine dernière"])
+      expect(await ask(q)).toBeNull();
+  });
+
+  test('greetings and how-to questions are still left without tools', async () => {
+    for (const q of ['hello', 'merci beaucoup', 'comment changer mon mot de passe ?'])
+      expect(await ask(q)).toEqual({ toolName: null, confidence: 1 });
+  });
+
+  test('a picked tool passes through unchanged', async () => {
+    const picked = keepToolsForDataQuestions(async () => ({ toolName: 'grades_get_by_student', confidence: 0.9 }));
+    expect(await picked({ query: 'combien a eu JEBARA RIMA', candidates, signal: new AbortController().signal }))
+      .toEqual({ toolName: 'grades_get_by_student', confidence: 0.9 });
   });
 });

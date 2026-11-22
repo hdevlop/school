@@ -4,6 +4,7 @@ import { JEV_DECISIONS_URL, JEV_MODEL } from './jevIntents';
 import { modelMatches } from './jevDecision';
 import { responseText } from './JevIntentClassifier';
 import { rewriteDarijaForRouting } from '../routing/darijaRouting';
+import { schoolRoutingContext } from '../routing/schoolRoutingContext';
 
 /**
  * Jev as najm-rag's `rerankTools` judge: it picks which of the router's
@@ -124,11 +125,25 @@ export function withArabicRewrite(query: string) {
   return rewritten && rewritten !== query ? `${query}\n(${rewritten})` : query;
 }
 
+/**
+ * A "none" pick drops every tool (dropAt), which is right for a greeting but
+ * not for a message School's own words already read as a data question: Jev
+ * said none at 1.0 to "combien a eu JEBARA RIMA en français" and to the
+ * follow-up "en math" (2026-11-21), and the model then invented marks. For
+ * such a message "none" keeps the router's order instead.
+ */
+export function keepToolsForDataQuestions(rerank: ReturnType<typeof createJevToolReranker>): typeof rerank {
+  return async (request) => {
+    const pick = await rerank(request);
+    return pick && pick.toolName === null && schoolRoutingContext(request.query, '') ? null : pick;
+  };
+}
+
 /** The instance ragConfig passes to najm-rag. */
-export const schoolJevToolReranker = createJevToolReranker({
+export const schoolJevToolReranker = keepToolsForDataQuestions(createJevToolReranker({
   settings: async () => (settingsSource ? settingsSource() : null),
   state: withArabicRewrite,
-});
+}));
 
 /**
  * najm-rag's `rerankTools` thresholds for Jev's pick, measured on the router's

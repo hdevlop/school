@@ -191,6 +191,22 @@ test.each([
   expect(routed(query)).toContain(tool);
 });
 
+test('a subject asked "how much" of, or alone as a follow-up, asks for marks', () => {
+  for (const query of ['w chhal f HG', 'en math', 'Maths', 'histoire geo', 'en conjugaison', 'combien en français ?', 'و شحال فالعربية'])
+    expect(schoolRoutingContext(query)).toContain('student-profile_get_academic');
+  // Not every mention of a subject is about marks.
+  for (const query of ['qui enseigne les maths en CM1 A et à quelle heure le lundi ?', 'hello', 'le prochain contrôle de maths'])
+    expect(schoolRoutingContext(query)).not.toContain('student subject marks');
+});
+
+test('absences over a week or a month read the ranged attendance list', () => {
+  for (const query of ["combien d'eleves absents la semaine derniere ?", 'chkoun ghab had simana', 'شحال من تلميذ غاب هاد الشهر']) {
+    expect(schoolRoutingContext(query)).toContain('attendance_get_all');
+    expect(schoolRoutingContext(query)).not.toContain('student-profile_get_attendance_summary');
+  }
+  expect(schoolRoutingContext('chhal ghab weldi had simana')).toContain('student-profile_get_attendance_summary');
+});
+
 test('monthly-fee wording "الواجبات الشهرية" is not homework', () => {
   expect(routed('شحال باقي عليا ديال الواجبات الشهرية؟')).not.toContain('homework_get');
 });
@@ -205,6 +221,7 @@ test.each([
   ['شحال جابو التلاميذ فالكويز الأخير ديال العلوم', 'grades_get_by_assessment'],
   ['chno jabo f lkwiz dyal lfrançais', 'grades_get_by_assessment'],
   ['chhal jabt rima jebara f l math', 'student-profile_get_academic'],
+  ['combien a eu JEBARA RIMA en francais', 'student-profile_get_academic'],
   ['tan9it lfrançais f kol la9sam', 'grades_get_by_subject'],
   ['notes de calcul pour mon groupe CP B', 'grades_get_by_section'],
   ['بغيت البيان ديال سارة من 5AP B', 'grades_get_student_report'],

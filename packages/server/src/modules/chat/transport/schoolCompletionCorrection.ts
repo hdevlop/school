@@ -16,7 +16,9 @@ import { offeredToolName } from './schoolProviderResponse';
  * no assessments), and OSS20B answered "no quiz in CM1 A" without opening the
  * class's exams although the prompt says to (2026-11-21). And a "none / not
  * yet" answer given from a class's exam list (which carries no marks) without
- * reading the exam's results: 4 of 39 eval answers the same day.
+ * reading the exam's results: 4 of 39 eval answers the same day. And a mark
+ * stated when the conversation read nothing ("Français : 8,5 / 10" for a
+ * question routing gave no tool).
  *
  * The temperature is 0, so the same request would return the same completion:
  * the retry adds a correction to the system message. Provider failures (an
@@ -28,7 +30,36 @@ export type CompletionProblem =
   | { kind: 'planning_only' }
   | { kind: 'asks_for_id' }
   | { kind: 'empty_quiz_list' }
-  | { kind: 'results_not_read' };
+  | { kind: 'results_not_read' }
+  | { kind: 'unread_mark' }
+  | { kind: 'parent_account_detour' };
+
+// An answer turning to the reader's parent account ("واش عندك حساب ديال ولي أمر").
+const PARENT_ACCOUNT = /ولي\s*(?:ال)?[أا]مر|compte\s+(?:de\s+)?parent|parent\s+account/iu;
+
+/**
+ * The conversation already found a student by name, yet the answer asks about
+ * the reader's parent account: "w chhal f HG" after "chhal jab jebara barae f
+ * math" (2026-11-21). Identity tools come with every student read as
+ * dependencies, which invites the detour.
+ */
+function parentAccountDetour(answer: string, request: CompletionRequest): boolean {
+  if (!PARENT_ACCOUNT.test(answer)) return false;
+  const messages = request.messages ?? [];
+  const searches = new Set<string>();
+  for (const message of messages) for (const call of message.tool_calls ?? [])
+    if (call.id && call.function?.name === 'search_search_students') searches.add(call.id);
+  return messages.some(message => message.role === 'tool' && searches.has(message.tool_call_id ?? '') && !isEmptyList(message.content));
+}
+
+// A mark written as "8,5 / 10" or "9.75/10"; a date such as 12/11/2026 is not one.
+const MARK = /(?<![\d/])\d+(?:[.,]\d+)?\s*\/\s*\d+(?![\d/])/u;
+
+/** A mark stated although nothing in the conversation was read: it can only be invented. */
+function unreadMark(answer: string, request: CompletionRequest): boolean {
+  const messages = request.messages ?? [];
+  return messages.length > 0 && MARK.test(answer) && !messages.some(message => message.role === 'tool');
+}
 
 /** The OpenAI-compatible request the completion answered (its messages only). */
 export interface CompletionRequest {
@@ -74,9 +105,13 @@ function emptyQuizListWithoutExams(request: CompletionRequest, offered: Readonly
 // An answer saying there are no results, or none yet.
 const SAYS_NONE = /ما\s*كاين(?:ش|اش|ينش)?|ما\s*كايناش|مازال\s*ما|لا\s*توجد|لا\s*يوجد|ليس(?:ت)?\s*هناك|لم\s*(?:يتم|تسجل|تُسجل)|\baucun(?:e|s)?\b|\bpas\s+(?:de|d'|encore)|\bno\s+(?:results?|marks?|grades?|quiz(?:zes)?)\b|\bnone\b|\bnot\s+(?:yet|found)\b/iu;
 
-/** "None" said from a class's exam list that has exams, with no results read this turn. */
+/**
+ * "None", or a mark ("كل التلاميذ جابو 10/10", read off the marks-out-of
+ * field), said from a class's exam list that has exams, with no results read
+ * this turn.
+ */
 function resultsNotRead(answer: string, request: CompletionRequest, offered: ReadonlySet<string>): boolean {
-  if (!offered.has('grades_get_by_exam') || !SAYS_NONE.test(answer)) return false;
+  if (!offered.has('grades_get_by_exam') || !(SAYS_NONE.test(answer) || MARK.test(answer))) return false;
   const { names, results } = turnReads(request, offered);
   if (names.some(name => name.startsWith('grades_'))) return false;
   return results.some(result => result.name === 'exams_get_by_section' && !isEmptyList(result.content));
@@ -115,6 +150,8 @@ export function completionProblem(raw: string, offered: ReadonlySet<string>, req
   if (offered.size && ASKS_FOR_ID.test(answer) && /[?؟]\s*$/u.test(answer.trim())) return { kind: 'asks_for_id' };
   if (emptyQuizListWithoutExams(request, offered)) return { kind: 'empty_quiz_list' };
   if (resultsNotRead(answer, request, offered)) return { kind: 'results_not_read' };
+  if (unreadMark(answer, request)) return { kind: 'unread_mark' };
+  if (parentAccountDetour(answer, request)) return { kind: 'parent_account_detour' };
   return null;
 }
 
@@ -130,6 +167,12 @@ export function correctionNote(problem: CompletionProblem, offered: ReadonlySet<
       return `Correction: the previous attempt asked the user for an ID. Never ask for an ID: find it with the offered list tools (${tools}) and continue to the requested read.`;
     case 'empty_quiz_list':
       return `Correction: the assessment list was empty, but this school may record its quizzes as class tests (exams). Before answering, call exams_get_by_section with the same sectionId, pick the requested one (the latest dated on or before the school date, matching the subject named)${offered.has('grades_get_by_exam') ? ', then grades_get_by_exam with its examId' : ''}. Say none exists only if the exam list is also empty.`;
+    case 'parent_account_detour':
+      return 'Correction: this conversation already found the student by name with search_search_students. The latest message is a follow-up about that same student: reuse their id from that result and read the requested data. Do not ask about a parent account or call an identity tool.';
+    case 'unread_mark':
+      return offered.size
+        ? `Correction: the previous attempt stated a mark although no tool was called, so it was invented. Read it with the offered tools (${[...offered].join(', ')}) and answer only from their results.`
+        : 'Correction: the previous attempt stated a mark although nothing was read, so it was invented. No data tool is available in this turn: say briefly that you could not read it and ask the user to rephrase the full question (student, subject), without any mark or number.';
     case 'results_not_read':
       return 'Correction: the previous attempt said there are no results, but the class exam list has no marks in it, so it cannot show that. Pick the requested exam from that list (by title or subject; the latest dated on or before the school date when asked for the last one), call grades_get_by_exam with its examId, and answer with each student\'s mark and the average. Say no marks exist only if that read returns none.';
   }

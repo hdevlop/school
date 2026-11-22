@@ -65,8 +65,9 @@ export class StudentProfileService {
     const marked = new Set(grades.map((grade) => grade.examId).filter(Boolean));
     const examsWithoutMarks = sat
       .filter((exam) => exam.date <= today && !marked.has(exam.id))
-      // No totalMarks: OSS20B printed "10/10" beside a test with no mark.
-      .map((exam) => ({ id: exam.id, title: exam.title, subject: exam.subject?.name ?? null, date: exam.date }));
+      // No totalMarks, and the missing mark spelled out: OSS20B printed
+      // "10/10", then "9/10", beside a test with no mark (2026-11-21).
+      .map((exam) => ({ id: exam.id, title: exam.title, subject: exam.subject?.name ?? null, date: exam.date, marksObtained: null, status: 'not_marked_yet' }));
     return { grades, upcomingExams, assessments, examsWithoutMarks };
   }
 

@@ -36,6 +36,9 @@ export type AttendanceListFilters = {
   sectionId?: string;
   studentId?: string;
   staffId?: string;
+  /** Inclusive YYYY-MM-DD bounds ("last week" in the chat). */
+  from?: string;
+  to?: string;
 };
 
 @Repository()
@@ -120,12 +123,14 @@ export class AttendanceRepository {
   // The year's marks the user may read (stored year, else the date in the
   // year's reporting interval), optionally of one type, section, student or
   // staff member. Year, filters and ownership are one WHERE.
-  async getAll({ type, sectionId, studentId, staffId }: AttendanceListFilters = {}) {
+  async getAll({ type, sectionId, studentId, staffId, from, to }: AttendanceListFilters = {}) {
     return await this.buildAttendanceQuery()
       .where(and(
         this.ownedWhere(),
         inYear(this.year),
         type ? eq(attendance.type, type) : undefined,
+        from ? gte(attendance.date, from) : undefined,
+        to ? lte(attendance.date, to) : undefined,
         sectionId ? eq(sections.id, sectionId) : undefined,
         studentId ? and(eq(attendance.studentId, studentId), eq(attendance.type, 'student')) : undefined,
         staffId ? and(eq(attendance.staffId, staffId), eq(attendance.type, 'staff')) : undefined,

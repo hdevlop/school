@@ -5,6 +5,7 @@ import { Attendance, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete }
 import { isAdmin, CanSchoolWide } from '../../auth';
 import {
   attendanceDateFilterDto,
+  attendanceRangeDto,
   typeQueryParam,
   staffAttendanceReadQueryDto,
   attendanceDateParam,
@@ -16,6 +17,7 @@ import {
   studentIdParam,
   teacherIdParam,
   type AttendanceDateFilterDto,
+  type AttendanceRangeDto,
   type AttendanceTypeQueryDto,
   type StaffAttendanceReadQueryDto,
   type SeedAttendanceDto,
@@ -56,11 +58,11 @@ export class AttendanceController {
 
   @Post('/mcp/all')
   @CanList()
-  @Validate({ body: typeQueryParam })
-  @McpTool({ description: 'List attendance evidence: records and recordState. no_records means attendance is unknown, not zero absentees.', readOnly: true })
+  @Validate({ body: attendanceRangeDto })
+  @McpTool({ description: 'List attendance evidence: records and recordState, optionally from and to dates (YYYY-MM-DD, inclusive), e.g. last week or this month from the context school date. no_records means attendance is unknown, not zero absentees. Absences d’une période, الغياب خلال فترة.', readOnly: true })
   @ResMsg('attendance.success.retrieved')
-  async getAll(@Body() body: AttendanceTypeQueryDto) {
-    return attendanceReadEvidence(await this.attendanceService.getAll({ type: body?.type }));
+  async getAll(@Body() body: AttendanceRangeDto) {
+    return attendanceReadEvidence(await this.attendanceService.getAll({ type: body?.type, from: body?.from, to: body?.to }));
   }
 
   @Get('/today')
