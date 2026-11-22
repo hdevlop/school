@@ -52,9 +52,27 @@ export function examPlanningMonths(academicYear: string): string[] {
  * The subject a Planning name is an exam of: its sub-subject's subject, or
  * the subject of that name; null while Subjects has neither.
  */
-export function resolvePlanningSubject(name: string, subSubjects: ReadonlyArray<{ subjectId: string; name: string }>, subjects: ReadonlyArray<{ id: string; name: string }>) {
+export function resolvePlanningSubject(name: string, subSubjects: ReadonlyArray<{ subjectId: string; name: string }>, subjects: ReadonlyArray<{ id: string; name: string; nameAr?: string | null }>) {
   const folded = foldSubjectName(name);
-  return subSubjects.find(part => foldSubjectName(part.name) === folded)?.subjectId ?? subjects.find(subject => foldSubjectName(subject.name) === folded)?.id ?? null;
+  return subSubjects.find(part => foldSubjectName(part.name) === folded)?.subjectId
+    ?? subjects.find(subject => foldSubjectName(subject.name) === folded || (!!subject.nameAr && foldSubjectName(subject.nameAr) === folded))?.id ?? null;
+}
+
+/** A level is a class name (CE2, 3APG), compared without case or outer spaces. */
+export const sameSubjectLevel = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase();
+
+/** A level's own sub-subject list for a subject; a level without one uses the school's list. */
+export type SubjectLevelList = { subjectId: string; level: string; names: string[] };
+
+/**
+ * The subjects as one level (class name) is taught them: each subject's
+ * sub-subjects are the level's own list when it has one, the school's otherwise.
+ */
+export function subjectsForLevel<S extends { id: string; subSubjects: ReadonlyArray<{ name: string }> }>(subjects: readonly S[], levels: readonly SubjectLevelList[], level: string): Array<S & { subSubjects: Array<{ name: string }> }> {
+  return subjects.map(subject => {
+    const own = levels.find(list => list.subjectId === subject.id && sameSubjectLevel(list.level, level));
+    return { ...subject, subSubjects: own ? own.names.map(name => ({ name })) : subject.subSubjects.map(part => ({ name: part.name })) };
+  });
 }
 
 const sameEntry = (a: ExamPlanningEntry, b: ExamPlanningEntry) => a.date === b.date && a.subject.trim() === b.subject.trim()

@@ -5,15 +5,16 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AlertTriangle, BookPlus, ChevronDown, Sparkles } from 'lucide-react';
 import { cn, DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger, NButton, NSheet } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { foldSubjectName } from '@sms/contracts';
+import { foldSubjectName, subjectsForLevel, type SubjectLevelList } from '@sms/contracts';
 import { api } from '@/services/http';
 import { useYearScopedDetail } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 
-type Subject = { id: string; name: string; subSubjects: Array<{ id: string; name: string }> };
+type Subject = { id: string; name: string; nameAr?: string | null; subSubjects: Array<{ id?: string; name: string }> };
+// subjects: each with the school's sub-subjects; levels: a level's (class name's) own list instead.
 // missing: names this year's Planning uses that are neither a subject nor a sub-subject; they have no exam.
 // plannable: the subjects this account may plan in each class; null for every subject.
-type PlanningSubjects = { subjects: Subject[]; missing: Array<{ name: string; suggestedSubjectId: string | null }>; plannable: Record<string, string[]> | null };
+type PlanningSubjects = { subjects: Subject[]; levels?: SubjectLevelList[]; missing: Array<{ name: string; suggestedSubjectId: string | null }>; plannable: Record<string, string[]> | null };
 
 /** What Planning picks a subject from, and the names it uses that Subjects does not have yet. */
 export function usePlanningSubjects(enabled: boolean) {
@@ -25,7 +26,14 @@ export function usePlanningSubjects(enabled: boolean) {
     onSuccess: () => Promise.all(['exam-planning', 'exams', 'subjects'].map(key => client.invalidateQueries({ queryKey: [key] }))),
   });
   const data = read.data as PlanningSubjects | null;
-  return { data, missing: data?.missing ?? [], plannable: data ? data.plannable ?? null : undefined, add: mutation.mutateAsync, adding: mutation.isPending };
+  const levels = data?.levels ?? [];
+  return {
+    data, missing: data?.missing ?? [], plannable: data ? data.plannable ?? null : undefined, isLoading: read.isLoading, error: read.error, add: mutation.mutateAsync, adding: mutation.isPending,
+    /** The subjects as one class (its level: the class name) is taught them. */
+    forClass: (className: string) => data ? subjectsForLevel(data.subjects, levels, className) : undefined,
+    /** Every name that finds a subject: the school's list and every level's own (and Arabic names). */
+    resolvable: data?.subjects.map(subject => ({ ...subject, subSubjects: [...subject.subSubjects, ...levels.filter(list => list.subjectId === subject.id).flatMap(list => list.names.map(name => ({ name })))] })),
+  };
 }
 
 const STORED = '__stored__', WHOLE = '__whole__';
@@ -38,7 +46,7 @@ const STORED = '__stored__', WHOLE = '__whole__';
  */
 export function planningSubjectPicker(subjects: Subject[] | undefined, current: string, labels: { notInSubjects: string; wholeSubject: string }) {
   const list = subjects ?? [], folded = foldSubjectName(current);
-  const own = list.find(subject => foldSubjectName(subject.name) === folded);
+  const own = list.find(subject => foldSubjectName(subject.name) === folded || (!!subject.nameAr && foldSubjectName(subject.nameAr) === folded));
   const parent = own ?? list.find(subject => subject.subSubjects.some(part => foldSubjectName(part.name) === folded));
   const part = own ? undefined : parent?.subSubjects.find(item => foldSubjectName(item.name) === folded);
   const stored = !parent && current.trim() ? [{ value: STORED, label: `${current} · ${labels.notInSubjects}` }] : [];

@@ -6,7 +6,7 @@ import { Owned, type OwnedWhere } from '../../auth';
 import { DB } from '../../database/db';
 import {
   assessments, classes, homework, homeworkAcknowledgments, massarClasses, massarLevels, massarSubjects, sections, staff, subjects,
-  subSubjects, teacherAssignments, teachers, users,
+  subjectLevelLists, subSubjects, teacherAssignments, teachers, users,
 } from '../../database/schema';
 import { homeworkParts } from './homeworkParts';
 import { inReportingYear } from '../academicYears/academicRecordYear';
@@ -241,11 +241,17 @@ export class HomeworkRepository {
         eq(massarLevels.kind, 'components'),
         inClass,
       ));
+    // The class's own list when its level (class name) has one, the school's otherwise.
+    const classNames = await this.db.selectDistinct({ name: classes.name }).from(sections).innerJoin(classes, eq(classes.id, sections.classId)).where(inClass);
+    const level = classNames.length === 1 ? classNames[0].name : null;
+    const [levelList] = level ? await this.db.select({ id: subjectLevelLists.id }).from(subjectLevelLists)
+      .where(and(eq(subjectLevelLists.subjectId, subjectId), sql`lower(btrim(${subjectLevelLists.level})) = lower(btrim(${level}))`)).limit(1) : [];
     const own = await this.db.select({ name: subSubjects.name }).from(subSubjects)
-      .where(eq(subSubjects.subjectId, subjectId)).orderBy(asc(subSubjects.position), asc(subSubjects.name));
-    const [subject] = await this.db.select({ name: subjects.name }).from(subjects).where(eq(subjects.id, subjectId)).limit(1);
-    // The subject's own names, in the school's language and in Massar's: a part named so is the whole subject.
-    const names = [subject?.name, ...massar.map((row) => row.name)].filter((name): name is string => !!name);
+      .where(and(eq(subSubjects.subjectId, subjectId), levelList && level ? sql`lower(btrim(${subSubjects.level})) = lower(btrim(${level}))` : sql`${subSubjects.level} is null`))
+      .orderBy(asc(subSubjects.position), asc(subSubjects.name));
+    const [subject] = await this.db.select({ name: subjects.name, nameAr: subjects.nameAr }).from(subjects).where(eq(subjects.id, subjectId)).limit(1);
+    // The subject's own names, in the school's language, in Arabic and in Massar's: a part named so is the whole subject.
+    const names = [subject?.name, subject?.nameAr, ...massar.map((row) => row.name)].filter((name): name is string => !!name);
     return homeworkParts(massar.map((row) => row.components), own.map((row) => row.name), names);
   }
 

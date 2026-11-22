@@ -40,7 +40,8 @@ describe('subject seeding without changing historical references', () => {
     const defaults = schoolSubjectsForLevels(['Primaire']);
     expect(await service.seedDemoSubjects(defaults)).toHaveLength(defaults.length);
     expect(await service.seedDemoSubjects(defaults)).toEqual([]);
-    expect([...rows.values()]).toEqual(defaults.map(stored));
+    // A created subject without an Arabic name stores none (null).
+    expect([...rows.values()]).toEqual(defaults.map(stored).map(row => ({ ...row, nameAr: row.nameAr ?? null })));
     expect(repository.create).toHaveBeenCalledTimes(defaults.length);
     expect(repository.update).not.toHaveBeenCalled();
   });

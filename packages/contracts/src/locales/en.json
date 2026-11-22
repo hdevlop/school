@@ -143,7 +143,8 @@
       "general": "General",
       "massar": "Massar",
       "massar-marks": "Massar marks",
-      "exam-planning": "Exam planning"
+      "exam-planning": "Exam planning",
+      "sub-subjects": "Sub-subjects by level"
     },
     "errors": {
       "notFound": "Role not found.",
@@ -5065,7 +5066,8 @@
   },
   "subjects": {
     "subtitle": {
-      "count": "Total: {{count}}"
+      "count": "Total: {{count}}",
+      "mine": "{{count}} subject(s) you teach"
     },
     "success": {
       "retrieved": "Subject retrieved successfully",
@@ -5086,7 +5088,8 @@
       "someInUse": "Some subjects are used by teachers or alerts, so they cannot all be deleted",
       "subSubjectTwice": "\"{{name}}\" is written twice.",
       "subSubjectIsSubject": "\"{{name}}\" is already the name of a subject.",
-      "subSubjectTaken": "\"{{name}}\" is already a sub-subject of {{subject}}."
+      "subSubjectTaken": "\"{{name}}\" is already a sub-subject of {{subject}}.",
+      "notYourLevel": "You can only edit the sub-subjects of a subject you teach in this class."
     },
     "validation": {
       "codeRequired": "Subject code is required",
@@ -5103,12 +5106,16 @@
       "description": "Description",
       "descriptionPlaceholder": "Enter subject description...",
       "subSubjects": "Sub-subjects",
-      "subSubjectsHelp": "What this subject is taught as (Grammaire, Dictée…). The same list for every class; Planning picks from it.",
+      "subSubjectsHelp": "The subject’s components (المكونات) — not lesson titles. Click a name to rename it.",
       "subSubjectPlaceholder": "e.g. Grammaire",
       "addSubSubject": "Add a sub-subject",
       "removeSubSubject": "Remove {{name}}",
       "renameSubSubject": "Rename {{name}}",
-      "moreSubSubjects": "{{count}} more sub-subjects"
+      "nameAr": "Arabic name",
+      "nameArPlaceholder": "e.g. التربية الإسلامية",
+      "nameArHelp": "Planning and Massar rows written in Arabic find the subject by this name.",
+      "add": "Add",
+      "subSubjectPlaceholderAr": "مثال: القراءة"
     },
     "dialogs": {
       "createTitle": "Create New Subject",
@@ -5130,6 +5137,20 @@
     "filters": {
       "searchByName": "Search by subject name...",
       "searchByCode": "Search by code..."
+    },
+    "levels": {
+      "title": "Sub-subjects by class",
+      "chooseClass": "Choose a class",
+      "edit": "Edit the list",
+      "pickerHelp": "Each class has its own list: choose a class to edit it.",
+      "help": "The components (المكونات) taught in {{level}} — not lesson titles. Click a name to rename it.",
+      "saved": "Sub-subjects saved.",
+      "saveFailed": "Could not save the sub-subjects. Please try again."
+    },
+    "mine": {
+      "emptyTitle": "No subject to show",
+      "emptyDescription": "Subjects appear here once you are assigned to teach them in a class this school year.",
+      "noSubSubjects": "No sub-subject: the subject is taught whole."
     }
   },
   "expenses": {
@@ -7718,6 +7739,18 @@
     "editPlanning": "Edit planning",
     "savedStatus": "Saved",
     "viewLabel": "Planning view",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "noOwnExams": "None of your subjects has an exam in this period. Add one; the A4 preview shows the whole class programme.",
+    "control": "Contrôle",
+    "noControlTitle": "No Contrôle planned yet",
+    "noControlDescription": "The school sets each Contrôle’s exam days in Planning. Once it does, choose the Contrôle here and add your subjects.",
+    "noTeachingClasses": "You do not teach a subject in any class shown in Planning.",
+    "subSubjects": "Sub-subjects in this exam",
+    "alreadyPlanned": "Already planned in this Contrôle",
+    "pickSubSubjects": "Choose a subject and at least one sub-subject not already planned, and a day within the Contrôle. Maximum: 40 lessons per sub-subject and 500 characters per lesson.",
+    "scheduleNote": "The school sets each exam’s day and time. A new exam is placed on the Contrôle’s first day until then.",
+    "loadFailed": "Could not load the exam planning. Please try again.",
     "paperFormat": "A4 portrait · Original document style",
     "previewTip": "Check the revision lessons, then print or save your class schedule as PDF.",
     "selectSubject": "Select a subject to edit its revision lessons.",
@@ -7766,7 +7799,9 @@
     "otherSubject": "Planned for another subject: only the subjects you teach in this class can be changed here.",
     "errors": {
       "notAllowed": "Your role cannot plan exams.",
-      "notYourSubject": "You can plan only the subjects you teach in this class. Reload the planning: another subject may have changed meanwhile."
+      "notYourSubject": "You can plan only the subjects you teach in this class. Reload the planning: another subject may have changed meanwhile.",
+      "scheduleBySchool": "Only the school sets an exam’s day and time. Reload the planning and save your subjects and lessons again.",
+      "controlNotOpen": "This Contrôle is not open yet: the school must first plan its exam days."
     }
   },
   "insurance": {

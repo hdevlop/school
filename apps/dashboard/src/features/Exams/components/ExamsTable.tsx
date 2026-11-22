@@ -3,7 +3,8 @@
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
-import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { NButton, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { TeacherExamForm } from '../planning/TeacherExamForm';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Plus } from 'lucide-react';
@@ -25,7 +26,16 @@ import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/service
 function ExamsTable() {
   const { t } = useTranslation();
   // Parents and students read these records; they change none of them.
-  const { isFamily } = useViewerRole();
+  const viewer = useViewerRole();
+  const { isFamily } = viewer;
+  const { openDialog, confirmDelete } = useDialog();
+  // A teacher adds an exam of their subjects for a Contrôle the school opened; it is
+  // saved in Planning, which writes it to this list (TeacherExamForm).
+  const plansInPlanning = !isFamily && !viewer.can('create:exams') && viewer.can('update:exam-planning');
+  const openTeacherExamForm = () => openDialog({ title: t('examPlanning.addEntry'), children: <TeacherExamForm />, showButtons: false });
+  const planExamButton = plansInPlanning ? (
+    <NButton size="sm" onClick={openTeacherExamForm} leftIcon={<Plus className="size-4" />}>{t('examPlanning.addEntry')}</NButton>
+  ) : null;
   const columns = useExamsTableColumns();
   const scope = useClassSectionTableScope();
   const typeFilters = useExamsTableFilters();
@@ -54,8 +64,6 @@ function ExamsTable() {
     const time = (row: ExamRow) => row.startTime?.slice(0, 5) ?? '99:99';
     return time(a).localeCompare(time(b)) || compareClassNames(a.class?.name ?? '', b.class?.name ?? '') || examTitle(a).localeCompare(examTitle(b));
   }), [exams, scope.matches, today]);
-
-  const { openDialog, confirmDelete } = useDialog();
 
   const handleAddClick = () => {
     openDialog({
@@ -152,13 +160,14 @@ function ExamsTable() {
         renderCard={ExamCard}
         renderCardSkeleton={ExamCardSkeleton}
         addButtonText={t('exams.dialogs.createButton')}
+        renderToolbar={planExamButton ? () => planExamButton : undefined}
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
             icon={FEATURE_ICONS.exams}
             title={scope.hasSelection ? t('emptyStates.filtered.title') : t('emptyStates.exams.title')}
             description={scope.hasSelection ? t('emptyStates.filtered.description') : isFamily ? t('emptyStates.familyDescription') : t('emptyStates.exams.description')}
-            action={scope.hasSelection || isFamily ? undefined : (
+            action={scope.hasSelection || isFamily ? undefined : planExamButton ?? (
               <PermissionButton permission="create:exams" size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('exams.dialogs.createButton')}

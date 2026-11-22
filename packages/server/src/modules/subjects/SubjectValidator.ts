@@ -1,6 +1,7 @@
 import { Service, Err, I18n } from '../../najm';
 import { SubjectRepository } from './SubjectRepository';
 import { foldSubjectName } from '@sms/contracts';
+import { SCHOOL_WIDE_ROLES } from '../../auth';
 
 @Service()
 export class SubjectValidator {
@@ -46,26 +47,43 @@ export class SubjectValidator {
   }
 
   /**
-   * Planning finds a subject by name, so a name may name only one subject or
-   * sub-subject in the school. subjectId is the subject the names belong to
-   * (null while it is being created), subjectName its own name.
+   * Planning finds a subject by name, so a name may name only one subject:
+   * a subject's name or Arabic name, or a sub-subject of any of its lists
+   * (the school's or a level's). subjectId is the subject the names belong to
+   * (null while it is being created), subjectName and nameAr its own names.
    */
-  async ensureNamesFree(subjectId: string | null, subjectName: string, names: string[]) {
+  async ensureNamesFree(subjectId: string | null, subjectName: string, names: string[], nameAr?: string | null) {
     const all = await this.subjectRepository.allNames();
     const owner = (id: string) => all.subjects.find(subject => subject.id === id)?.name ?? '';
-    const seen = new Set<string>([foldSubjectName(subjectName)]);
+    const ownNames = [subjectName, ...(nameAr?.trim() ? [nameAr] : [])];
+    const seen = new Set<string>(ownNames.map(foldSubjectName));
+    const namedSubject = (folded: string) => all.subjects.find(row => row.id !== subjectId
+      && (foldSubjectName(row.name) === folded || (!!row.nameAr && foldSubjectName(row.nameAr) === folded)));
     for (const name of names) {
       const folded = foldSubjectName(name);
       if (seen.has(folded)) Err(409, this.t('subSubjectTwice', { name }));
       seen.add(folded);
-      const subject = all.subjects.find(row => row.id !== subjectId && foldSubjectName(row.name) === folded);
-      if (subject) Err(409, this.t('subSubjectIsSubject', { name }));
+      if (namedSubject(folded)) Err(409, this.t('subSubjectIsSubject', { name }));
       const part = all.subSubjects.find(row => row.subjectId !== subjectId && foldSubjectName(row.name) === folded);
       if (part) Err(409, this.t('subSubjectTaken', { name, subject: owner(part.subjectId) }));
     }
-    // The subject's own name must not be another subject's sub-subject either.
-    const own = all.subSubjects.find(row => row.subjectId !== subjectId && foldSubjectName(row.name) === foldSubjectName(subjectName));
-    if (own) Err(409, this.t('subSubjectTaken', { name: subjectName, subject: owner(own.subjectId) }));
+    // The subject's own names must not name another subject or its sub-subject either.
+    for (const name of ownNames.slice(1)) if (namedSubject(foldSubjectName(name))) Err(409, this.t('nameExists'));
+    for (const name of ownNames) {
+      const own = all.subSubjects.find(row => row.subjectId !== subjectId && foldSubjectName(row.name) === foldSubjectName(name));
+      if (own) Err(409, this.t('subSubjectTaken', { name, subject: owner(own.subjectId) }));
+    }
+  }
+
+  /**
+   * A level's sub-subjects: the school-wide roles edit every subject's, a
+   * teacher a subject they teach in a class of that name, any other role
+   * granted the permission none.
+   */
+  async ensureMayEditLevel(actor: { id?: string; role?: string | null }, subjectId: string, level: string) {
+    if (SCHOOL_WIDE_ROLES.includes(actor.role ?? '')) return;
+    if (actor.role === 'teacher' && actor.id && await this.subjectRepository.teachesInLevel(actor.id, subjectId, level)) return;
+    Err(403, this.t('notYourLevel'));
   }
 
   async ensureExistsByCode(code: string) {

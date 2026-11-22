@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Put, Delete, Params, Body, Validate, ResMsg } from '../../najm';
+import { Controller, Get, Post, Put, Delete, Params, Body, Validate, ResMsg, User } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { SubjectService } from './SubjectService';
-import { canAccessSubject, canUpdateSubject, canCreateSubject, canDeleteSubject } from './SubjectGuards';
-import { createSubjectDto, createSubjectsBulkDto, updateSubjectDto, subjectIdParam, type CreateSubjectDto, type CreateSubjectsBulkDto, type UpdateSubjectDto } from './SubjectDto';
+import { canAccessSubject, canUpdateSubject, canCreateSubject, canDeleteSubject, canUpdateLevelSubSubjects } from './SubjectGuards';
+import { createSubjectDto, createSubjectsBulkDto, updateSubjectDto, subjectIdParam, subjectLevelParam, saveSubjectLevelDto, type CreateSubjectDto, type CreateSubjectsBulkDto, type UpdateSubjectDto, type SaveSubjectLevelDto } from './SubjectDto';
 
 @ToolGroup('subjects')
 @Controller('/subjects')
@@ -51,6 +51,25 @@ export class SubjectController {
   @ResMsg('subjects.success.updated')
   async update(@Params('id') id: string, @Body() body: UpdateSubjectDto) {
     return this.subjectService.update(id, body);
+  }
+
+  @Get('/:id/levels/:level')
+  @canAccessSubject()
+  @Validate({ params: subjectLevelParam })
+  @McpTool({ description: "Get the sub-subjects a level (class name) is taught for a subject: its own list, or the school's", readOnly: true })
+  @ResMsg('subjects.success.retrieved')
+  async getLevelList(@Params('id') id: string, @Params('level') level: string) {
+    return this.subjectService.getLevelList(id, level);
+  }
+
+  // A teacher edits only a subject they teach in that level (SubjectValidator.ensureMayEditLevel).
+  @Put('/:id/levels/:level')
+  @canUpdateLevelSubSubjects()
+  @Validate({ params: subjectLevelParam, body: saveSubjectLevelDto })
+  @McpTool({ description: "Set the sub-subjects one level (class name) is taught for a subject", confirm: { level: 'warning', message: 'confirm.subjects.update' } })
+  @ResMsg('subjects.success.updated')
+  async saveLevelList(@Params('id') id: string, @Params('level') level: string, @Body() body: SaveSubjectLevelDto, @User() actor: { id?: string; role?: string | null }) {
+    return this.subjectService.saveLevelList(id, level, body.names, actor);
   }
 
   @Delete('/:id')

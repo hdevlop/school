@@ -40,6 +40,7 @@
       "create:subjects",
       "read:subjects",
       "update:subjects",
+      "update:sub-subjects",
       "delete:subjects",
       "create:grades",
       "read:grades",
@@ -265,7 +266,8 @@
       "update:competencies",
       "delete:competencies",
       "read:exams",
-      "update:exam-planning"
+      "update:exam-planning",
+      "update:sub-subjects"
     ]
   },
   {

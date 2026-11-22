@@ -9,7 +9,7 @@ const admin = { id: 'admin-user', role: 'admin' };
 type Part = { id: string; subjectId: string; name: string };
 type Planned = { id: string; planningEntryId: string; sectionIds: string[]; teacherAssignmentId: string; title: string; description: string | null; date: string; status: string; graded: boolean; startTime: string | null; endTime: string | null };
 
-function syncing(options: { visible?: boolean; entries?: typeof entry[]; planned?: Planned[]; subSubjects?: Part[]; added?: unknown[]; cycle?: string; slot?: boolean } = {}) {
+function syncing(options: { visible?: boolean; entries?: typeof entry[]; planned?: Planned[]; subSubjects?: Part[]; added?: unknown[]; cycle?: string; slot?: boolean; levels?: Array<{ subjectId: string; level: string; names: string[] }> } = {}) {
   const calls: string[] = [], inserted: unknown[] = [];
   const months = { '2026-11': options.entries ?? [entry] };
   const instance = Object.create(ExamPlanningService.prototype) as ExamPlanningService;
@@ -37,6 +37,8 @@ function syncing(options: { visible?: boolean; entries?: typeof entry[]; planned
     deleteExams: async (ids: string[]) => { if (ids.length) calls.push(`delete ${ids.join(',')}`); },
   }, subjectRepository: {
     getAll: async () => [{ id: 'arabic', name: 'العربية', subSubjects: (options.subSubjects ?? []).filter(part => part.subjectId === 'arabic') }, { id: 'french', name: 'Français', subSubjects: [] }],
+    allNames: async () => ({ subjects: [{ id: 'arabic', name: 'العربية' }, { id: 'french', name: 'Français' }], subSubjects: options.subSubjects ?? [] }),
+    levelLists: async () => options.levels ?? [],
     addSubSubjects: async (items: unknown[]) => { options.added?.push(...items); },
   }, subjectValidator: { ensureNamesFree: async () => {} } });
   return { instance, calls, inserted };
@@ -107,6 +109,13 @@ describe('Planning creates the Exams page exams', () => {
     // The mock store does not keep what was added: nothing resolves yet.
     expect(inserted).toEqual([]);
   });
+  it("hands Planning each level's own list, and a name of a level's list is no longer missing", async () => {
+    const levels = [{ subjectId: 'arabic', level: 'CE2', names: ['اللغة العربية'] }];
+    const { instance } = syncing({ subSubjects: [{ id: 'p1', subjectId: 'arabic', name: 'اللغة العربية' }], levels });
+    const options = await instance.subjectOptions(admin);
+    expect(options.levels).toEqual(levels);
+    expect(options.missing).toEqual([]);
+  });
 });
 
 describe('Planning subject suggestions', () => {
@@ -122,6 +131,11 @@ describe('Planning subject suggestions', () => {
     expect(resolveSubject('Mathematiques', parts, subjects)).toBe('math');
     expect(resolveSubject('Robotique', parts, subjects)).toBeNull();
   });
+  it('finds a subject by its Arabic name, which no longer has to be one of its sub-subjects', () => {
+    const named = subjects.map(subject => subject.id === 'islam' ? { ...subject, nameAr: 'التربية الإسلامية' } : subject);
+    expect(resolveSubject('التربية الاسلامية', [], named)).toBe('islam');
+    expect(suggestSubject('التربية الإسلامية', named)).toBe('islam');
+  });
 });
 
 describe('Subjects own the sub-subjects Planning picks from', () => {
@@ -136,6 +150,34 @@ describe('Subjects own the sub-subjects Planning picks from', () => {
     await expect(check.ensureNamesFree('fr', 'Français', ['français'])).rejects.toThrow('subSubjectTwice');
     // Its own sub-subjects may stay as they are.
     await check.ensureNamesFree('ar', 'العربية', ['الإملاء']);
+  });
+  it('keeps an Arabic name to one subject: not another subject\'s name, Arabic name or sub-subject, nor one of its own sub-subjects', async () => {
+    const check = validator({ allNames: async () => ({ ...names, subjects: [...names.subjects, { id: 'islam', name: 'Éducation islamique', nameAr: 'التربية الإسلامية' }] }) });
+    await check.ensureNamesFree('ar', 'العربية', ['الإملاء'], 'اللغة العربية');
+    await expect(check.ensureNamesFree('ar', 'العربية', ['الإملاء'], 'التربية الاسلامية')).rejects.toThrow('nameExists');
+    await expect(check.ensureNamesFree('ar', 'العربية', ['الإملاء'], 'Français')).rejects.toThrow('nameExists');
+    await expect(check.ensureNamesFree('fr', 'Français', [], 'الإملاء')).rejects.toThrow('subSubjectTaken');
+    await expect(check.ensureNamesFree('ar', 'العربية', ['اللغة العربية'], 'اللغة العربية')).rejects.toThrow('subSubjectTwice');
+    // A sub-subject named like another subject's Arabic name would find that subject.
+    await expect(check.ensureNamesFree('ar', 'العربية', ['التربية الإسلامية'])).rejects.toThrow('subSubjectIsSubject');
+  });
+  it("lets a level's list repeat its own subject's names, never another subject's", async () => {
+    // الإملاء is in العربية's school list and in its CE2 list; Grammaire only in Français's CE2 list.
+    const check = validator({ allNames: async () => ({ subjects: names.subjects, subSubjects: [...names.subSubjects, { id: 'p2', subjectId: 'ar', name: 'الإملاء', level: 'CE2' }, { id: 'p3', subjectId: 'fr', name: 'Grammaire', level: 'CE2' }] }) });
+    await check.ensureNamesFree('ar', 'العربية', ['الإملاء', 'القراءة']);
+    await expect(check.ensureNamesFree('ar', 'العربية', ['Grammaire'])).rejects.toThrow('subSubjectTaken');
+  });
+  it("lets the school-wide roles edit every level's list, and a teacher only a subject they teach in that class", async () => {
+    const asked: unknown[] = [];
+    const check = validator({ teachesInLevel: async (...args: unknown[]) => { asked.push(args); return args[1] === 'islam' && args[2] === 'CE2'; } });
+    await check.ensureMayEditLevel({ id: 'u', role: 'principal' }, 'islam', '3APG');
+    expect(asked).toHaveLength(0);
+    await check.ensureMayEditLevel({ id: 'teacher-user', role: 'teacher' }, 'islam', 'CE2');
+    expect(asked).toEqual([['teacher-user', 'islam', 'CE2']]);
+    await expect(check.ensureMayEditLevel({ id: 'teacher-user', role: 'teacher' }, 'islam', '3APG')).rejects.toThrow('notYourLevel');
+    await expect(check.ensureMayEditLevel({ id: 'teacher-user', role: 'teacher' }, 'fr', 'CE2')).rejects.toThrow('notYourLevel');
+    // Any other role granted the permission edits none.
+    await expect(check.ensureMayEditLevel({ id: 'u', role: 'monitor' }, 'islam', 'CE2')).rejects.toThrow('notYourLevel');
   });
   it('renames a renamed subject or sub-subject in Planning too', async () => {
     const renames: unknown[] = [];

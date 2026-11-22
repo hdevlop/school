@@ -115,7 +115,8 @@ describe('a teacher plans the subjects they teach in their own classes', () => {
     const instance = Object.create(ExamPlanningValidator.prototype) as ExamPlanningValidator;
     Object.assign(instance, { et: (key: string) => key,
       repository: { taughtSubjects: async (...args: unknown[]) => { asked.push(args); return taught; } },
-      subjectRepository: { getAll: async () => subjects } });
+      // Every list's names, as the repository reads them for Planning.
+      subjectRepository: { allNames: async () => ({ subjects, subSubjects: subjects.flatMap(subject => subject.subSubjects.map(part => ({ subjectId: subject.id, name: part.name }))) }) } });
     return { instance, asked };
   }
 
@@ -128,7 +129,7 @@ describe('a teacher plans the subjects they teach in their own classes', () => {
 
   it('accepts adding, editing and removing an entry of a subject the teacher teaches there, through its sub-subject', async () => {
     const { instance, asked } = validator([{ classId: 'cp', subjectId: 'fr' }]);
-    await instance.ensureMayChange(teacher, 'cp', [arabic], [arabic, french]);
+    await instance.ensureMayChange(teacher, 'cp', [arabic], [arabic, french], french.date);
     await instance.ensureMayChange(teacher, 'cp', [arabic, french], [arabic, { ...french, subject: 'Dictée', lessons: ['Les accents'] }]);
     await instance.ensureMayChange(teacher, 'cp', [arabic, french], [arabic]);
     expect(asked[0]).toEqual([teacher.id, ['cp']]);
@@ -150,6 +151,33 @@ describe('a teacher plans the subjects they teach in their own classes', () => {
     ] as const) {
       await expect(instance.ensureMayChange(teacher, 'cp', before, after)).rejects.toThrow('notYourSubject');
     }
+  });
+
+  it('leaves the day and time to the school: a teacher keeps them, and a new exam takes the Contrôle’s first day with no time', async () => {
+    const { instance } = validator([{ classId: 'cp', subjectId: 'fr' }]);
+    const timed = { ...french, startTime: '08:30', endTime: '09:30' };
+    for (const [before, after, firstDay] of [
+      [[french], [{ ...french, date: '2026-11-12' }], '2026-11-09'],
+      [[french], [timed], '2026-11-09'],
+      [[timed], [{ ...timed, startTime: '10:00', endTime: '11:00' }], '2026-11-09'],
+      [[], [{ ...french, id: 'new' }], '2026-11-09'],
+      [[], [{ ...timed, id: 'new', date: '2026-11-09' }], '2026-11-09'],
+    ] as const) {
+      await expect(instance.ensureMayChange(teacher, 'cp', before, after, firstDay)).rejects.toThrow('scheduleBySchool');
+    }
+    // The lessons are the teacher's: changing them keeps the school's day and time.
+    await instance.ensureMayChange(teacher, 'cp', [timed], [{ ...timed, lessons: ['Le verbe'] }], '2026-11-09');
+    await instance.ensureMayChange(teacher, 'cp', [], [{ ...french, id: 'new', date: '2026-11-09' }], '2026-11-09');
+  });
+
+  it('refuses a new exam in a month the school has not opened as a Contrôle', async () => {
+    const { instance } = validator([{ classId: 'cp', subjectId: 'fr' }]);
+    await expect(instance.ensureMayChange(teacher, 'cp', [], [{ ...french, id: 'new' }], null)).rejects.toThrow('controlNotOpen');
+  });
+
+  it('lets the school-wide roles set any day and time', async () => {
+    const { instance } = validator([]);
+    await instance.ensureMayChange({ id: 'u', role: 'principal' }, 'cp', [french], [{ ...french, date: '2026-11-20', startTime: '10:00', endTime: '11:00' }], null);
   });
 
   it('refuses a subject the teacher teaches only in another class', async () => {
@@ -177,7 +205,7 @@ describe('a teacher plans the subjects they teach in their own classes', () => {
       validator: { ensureMayChange: async (...args: unknown[]) => { checked.push(args); throw new Error('notYourSubject'); } },
       repository: { getAll: async () => [{ id: 'cp', name: 'CP', visible: true, months: { '2026-11': [arabic] } }], saveMonth: async (...args: unknown[]) => { writes.push(args); } } });
     await expect(instance.saveMonth('cp', { month: '2026-11', entries: [] }, teacher)).rejects.toThrow('notYourSubject');
-    expect(checked).toEqual([[teacher, 'cp', [arabic], []]]);
+    expect(checked).toEqual([[teacher, 'cp', [arabic], [], arabic.date]]);
     expect(writes).toHaveLength(0);
   });
 });

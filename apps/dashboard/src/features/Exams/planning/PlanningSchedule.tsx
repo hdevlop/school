@@ -9,8 +9,10 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { planningTextLanguage, type PlanningEntrySelection } from './examPlanningModel';
 import styles from './ExamPlanning.module.css';
 
-export function PlanningSchedule({ classes, entriesFor, selected, saving, canAdd, canChange, onSelect, onAdd, onDelete }: {
+export function PlanningSchedule({ classes, entriesFor, emptyText, selected, saving, canAdd, canChange, onSelect, onAdd, onDelete }: {
   classes: ExamPlanningClass[]; entriesFor: (cls: ExamPlanningClass) => ExamPlanningEntry[];
+  /** What an empty class says instead of the default, e.g. when only the teacher's own subjects are listed. */
+  emptyText?: (cls: ExamPlanningClass) => string | undefined;
   selected?: PlanningEntrySelection | null; saving: boolean;
   /** A teacher adds to and removes from only the subjects they teach in the class. */
   canAdd: (cls: ExamPlanningClass) => boolean; canChange: (cls: ExamPlanningClass, entry: ExamPlanningEntry) => boolean;
@@ -37,7 +39,7 @@ export function PlanningSchedule({ classes, entriesFor, selected, saving, canAdd
           {canAdd(cls) && <NButton type="button" variant="outline" size="sm" className={styles.scheduleAction} disabled={saving} onClick={() => onAdd(cls)} leftIcon={<Plus />}>{t('examPlanning.addEntry')}</NButton>}
         </div>
       </div>
-      {!entries.length ? <p className={styles.empty}>{t('examPlanning.emptyDescription')}</p> : dates.map(date => {
+      {!entries.length ? <p className={styles.empty}>{emptyText?.(cls) ?? t('examPlanning.emptyDescription')}</p> : dates.map(date => {
         const dayEntries = entries.filter(entry => entry.date === date);
         const dayKey = `${cls.id}:${date}`;
         const contentId = `${scheduleId}-${cls.id}-${date}`;

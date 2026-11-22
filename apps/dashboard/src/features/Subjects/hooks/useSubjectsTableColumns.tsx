@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'najm-i18n/react';
-import { SubSubjectTags } from '../components/SubSubjectsEditor';
 
 export const useSubjectsTableColumns = () => {
   const { t } = useTranslation();
@@ -31,24 +30,17 @@ export const useSubjectsTableColumns = () => {
     {
       accessorKey: "name",
       size: 240,
-      filterFn: (row, _columnId, value) => [row.original.name, row.original.code]
+      filterFn: (row, _columnId, value) => [row.original.name, row.original.nameAr, row.original.code]
         .some(field => String(field ?? '').toLocaleLowerCase().includes(String(value ?? '').trim().toLocaleLowerCase())),
       header: t('subjects.table.name'),
       enableSorting: true,
-      cell: ({ getValue }) => (
-        <div className="font-medium text-sm">
-          {getValue()}
+      // The Arabic name, when set, under the school's.
+      cell: ({ getValue, row }) => (
+        <div className="flex min-w-0 flex-col">
+          <span className="font-medium text-sm">{getValue()}</span>
+          {row.original.nameAr && <bdi dir="rtl" className="truncate text-xs text-muted-foreground">{row.original.nameAr}</bdi>}
         </div>
       ),
-    },
-    {
-      id: "subSubjects",
-      size: 480,
-      accessorFn: (row) => (row.subSubjects ?? []).map(part => part.name).join(' '),
-      header: t('subjects.table.subSubjects'),
-      enableSorting: false,
-      // One line: as many as the column holds, then +N; a row click opens the subject with all of them.
-      cell: ({ row }) => <SubSubjectTags items={row.original.subSubjects} oneLine />,
     },
     {
       accessorKey: "description",

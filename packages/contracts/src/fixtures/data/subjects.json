@@ -39,9 +39,9 @@
     "id": "SB02",
     "code": "AR",
     "name": "العربية",
+    "nameAr": "اللغة العربية",
     "description": "اللغة العربية والأدب العربي والقواعد النحوية",
     "subSubjects": [
-      "اللغة العربية",
       "القراءة",
       "التعبير الشفهي",
       "التعبير الكتابي",
@@ -112,34 +112,29 @@
     "id": "SB10",
     "code": "EI",
     "name": "Éducation islamique",
+    "nameAr": "التربية الإسلامية",
     "description": "Coran, croyance, pratiques religieuses, éthique et valeurs de l'islam",
     "subSubjects": [
-      "التربية الإسلامية",
-      "القرآن الكريم",
-      "التزكية",
-      "الاقتداء",
-      "الاستجابة",
-      "القسط",
-      "الحكمة"
+      "القرآن الكريم"
     ]
   },
   {
     "id": "SB11",
     "code": "SCI",
     "name": "Activité scientifique",
+    "nameAr": "النشاط العلمي",
     "description": "Éveil scientifique au primaire : observation, expérimentation, vivant, matière et environnement",
     "subSubjects": [
-      "Sciences",
-      "النشاط العلمي"
+      "Sciences"
     ]
   },
   {
     "id": "SB12",
     "code": "ART",
     "name": "Éducation artistique",
+    "nameAr": "التربية الفنية",
     "description": "Arts plastiques, musique, théâtre et expression artistique",
     "subSubjects": [
-      "التربية الفنية",
       "Arts plastiques",
       "Musique",
       "Théâtre"
@@ -149,9 +144,9 @@
     "id": "SB13",
     "code": "HG",
     "name": "Histoire-géographie",
+    "nameAr": "الاجتماعيات",
     "description": "Histoire, géographie et éducation à la citoyenneté : le Maroc, le monde et la vie en société",
     "subSubjects": [
-      "الاجتماعيات",
       "التاريخ",
       "الجغرافيا",
       "التربية على المواطنة"

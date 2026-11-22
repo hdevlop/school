@@ -2,8 +2,14 @@ import subjects from './fixtures/data/subjects.json';
 import { schoolCycleForLevel } from './academicStructure';
 import { toAppClassName } from './classNames';
 
+/**
+ * A catalogue subject: its Arabic name (nameAr) finds it from Planning's
+ * Arabic rows, and its sub-subjects are the school's default list.
+ */
+export type SchoolSubjectDefault = { id: string; code: string; name: string; nameAr?: string; description: string; subSubjects?: string[] };
+
 /** One catalogue, including legacy IDs still referenced by older demo records. */
-export const schoolSubjectsData = subjects;
+export const schoolSubjectsData: SchoolSubjectDefault[] = subjects;
 
 type SchoolCycle = NonNullable<ReturnType<typeof schoolCycleForLevel>>['name'];
 
@@ -23,7 +29,7 @@ export function schoolSubjectsForLevels(levels: readonly string[]) {
     if (!cycle) throw new Error(`Unknown school level "${level}"`);
     return subjectCodesByCycle[cycle.name];
   }));
-  return subjects.filter(subject => codes.has(subject.code));
+  return schoolSubjectsData.filter(subject => codes.has(subject.code));
 }
 
 /** Demo assignments also respect the start of social studies in primary year four. */

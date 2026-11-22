@@ -28,7 +28,10 @@ export class ExamPlanningService {
     const target = classes.find(row => row.id === classId);
     if (!target) Err(404, this.t('classes.errors.notFound'));
     if (!examPlanningMonths(this.year.label).includes(data.month)) Err(400, this.t('validation.theDateMustFallInsideThisSchoolYear'));
-    await this.validator.ensureMayChange(actor, classId, target.months[data.month] ?? [], data.entries);
+    // The Contrôle's first day: the earliest exam the school planned that month, in any class.
+    const firstDay = classes.flatMap(row => row.months[data.month] ?? []).map(entry => entry.date)
+      .filter(date => typeof date === 'string' && date.startsWith(`${data.month}-`)).sort()[0] ?? null;
+    await this.validator.ensureMayChange(actor, classId, target.months[data.month] ?? [], data.entries, firstDay);
     await this.repository.saveMonth(classId, data);
     await this.syncExams([classId]);
     return this.getAll();
@@ -76,10 +79,13 @@ export class ExamPlanningService {
     const classes = await this.getAll();
     const plannable = await this.validator.plannableSubjects(actor, classes.map(cls => cls.id));
     const subjects = await this.subjectRepository.getAll();
-    const parts = subjects.flatMap(subject => subject.subSubjects.map(part => ({ subjectId: subject.id, name: part.name })));
+    // A name of any list (the school's or a level's) finds its subject.
+    const { subSubjects: parts } = await this.subjectRepository.allNames();
     const names = [...new Set(classes.flatMap(cls => Object.values(cls.months).flat().map(entry => entry.subject.trim())).filter(Boolean))].sort((x, y) => x.localeCompare(y));
     const missing = names.filter(name => !resolveSubject(name, parts, subjects)).map(name => ({ name, suggestedSubjectId: suggestSubject(name, subjects) }));
-    return { subjects: subjects.map(({ id, name, subSubjects }) => ({ id, name, subSubjects })), missing, plannable };
+    // Each subject's school list, and each level's own list (a class name: CE2, 3APG).
+    const levels = await this.subjectRepository.levelLists();
+    return { subjects: subjects.map(({ id, name, nameAr, subSubjects }) => ({ id, name, nameAr, subSubjects })), levels, missing, plannable };
   }
 
   /** Adds Planning's missing names to Subjects as sub-subjects; their exams follow. */
@@ -89,7 +95,7 @@ export class ExamPlanningService {
     for (const subjectId of new Set(items.map(item => item.subjectId))) {
       const subject = subjects.find(row => row.id === subjectId);
       if (!subject) Err(404, this.t('subjects.errors.notFound'));
-      await this.subjectValidator.ensureNamesFree(subject.id, subject.name, [...subject.subSubjects.map(part => part.name), ...items.filter(item => item.subjectId === subjectId).map(item => item.name)]);
+      await this.subjectValidator.ensureNamesFree(subject.id, subject.name, [...subject.subSubjects.map(part => part.name), ...items.filter(item => item.subjectId === subjectId).map(item => item.name)], subject.nameAr);
     }
     await this.subjectRepository.addSubSubjects(items);
     await this.syncOpenYears();

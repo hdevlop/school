@@ -186,6 +186,12 @@
     "action": "update"
   },
   {
+    "name": "update:sub-subjects",
+    "description": "Permission to edit a level's sub-subjects: every subject school-wide, a teacher's own subjects in their levels otherwise",
+    "resource": "sub-subjects",
+    "action": "update"
+  },
+  {
     "name": "delete:subjects",
     "description": "Permission to delete subjects",
     "resource": "subjects",

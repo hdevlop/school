@@ -143,7 +143,8 @@
       "general": "Général",
       "massar": "Massar",
       "massar-marks": "Notes Massar",
-      "exam-planning": "Planification des examens"
+      "exam-planning": "Planification des examens",
+      "sub-subjects": "Sous-matières par niveau"
     },
     "errors": {
       "notFound": "Rôle introuvable.",
@@ -5405,10 +5406,12 @@
       "someInUse": "Certaines matières sont utilisées par des enseignants ou des alertes ; elles ne peuvent pas toutes être supprimées",
       "subSubjectTwice": "« {{name}} » est écrit deux fois.",
       "subSubjectIsSubject": "« {{name}} » est déjà le nom d’une matière.",
-      "subSubjectTaken": "« {{name}} » est déjà une sous-matière de {{subject}}."
+      "subSubjectTaken": "« {{name}} » est déjà une sous-matière de {{subject}}.",
+      "notYourLevel": "Vous ne pouvez modifier que les sous-matières d’une matière que vous enseignez dans cette classe."
     },
     "subtitle": {
-      "count": "Total : {{count}}"
+      "count": "Total : {{count}}",
+      "mine": "{{count}} matière(s) que vous enseignez"
     },
     "dialogs": {
       "createButton": "Créer",
@@ -5430,12 +5433,16 @@
       "namePlaceholder": "Entrez le nom",
       "subjectInformation": "Informations sur la matière",
       "subSubjects": "Sous-matières",
-      "subSubjectsHelp": "Ce que cette matière enseigne (Grammaire, Dictée…). La même liste pour toutes les classes ; le Planning la propose.",
+      "subSubjectsHelp": "Les composantes (المكونات) de la matière — pas les titres des leçons. Cliquez sur un nom pour le renommer.",
       "subSubjectPlaceholder": "ex. Grammaire",
       "addSubSubject": "Ajouter une sous-matière",
       "removeSubSubject": "Retirer {{name}}",
       "renameSubSubject": "Renommer {{name}}",
-      "moreSubSubjects": "{{count}} sous-matières de plus"
+      "nameAr": "Nom en arabe",
+      "nameArPlaceholder": "ex. التربية الإسلامية",
+      "nameArHelp": "Les lignes du planning et de Massar écrites en arabe retrouvent la matière par ce nom.",
+      "add": "Ajouter",
+      "subSubjectPlaceholderAr": "مثال: القراءة"
     },
     "table": {
       "code": "Code",
@@ -5451,6 +5458,20 @@
       "retrieved": "Matière récupérée avec succès",
       "seeded": "Matière initialisé avec succès",
       "updated": "Matière mise à jour avec succès"
+    },
+    "levels": {
+      "title": "Sous-matières par classe",
+      "chooseClass": "Choisir une classe",
+      "edit": "Modifier la liste",
+      "pickerHelp": "Chaque classe a sa propre liste : choisissez une classe pour la modifier.",
+      "help": "Les composantes (المكونات) enseignées en {{level}} — pas les titres des leçons. Cliquez sur un nom pour le renommer.",
+      "saved": "Sous-matières enregistrées.",
+      "saveFailed": "Impossible d’enregistrer les sous-matières. Veuillez réessayer."
+    },
+    "mine": {
+      "emptyTitle": "Aucune matière",
+      "emptyDescription": "Vos matières apparaissent ici dès que vous êtes affecté(e) à une classe pour cette année scolaire.",
+      "noSubSubjects": "Aucune sous-matière : la matière est enseignée en entier."
     }
   },
   "teachers": {
@@ -7112,6 +7133,18 @@
     "editPlanning": "Modifier le planning",
     "savedStatus": "Enregistré",
     "viewLabel": "Vue du planning",
+    "previousMonth": "Mois précédent",
+    "nextMonth": "Mois suivant",
+    "noOwnExams": "Aucune de vos matières n’a d’examen sur cette période. Ajoutez-en un ; l’aperçu A4 montre tout le programme de la classe.",
+    "control": "Contrôle",
+    "noControlTitle": "Aucun contrôle planifié",
+    "noControlDescription": "L’administration fixe les jours de chaque contrôle dans le planning. Ensuite, choisissez le contrôle ici et ajoutez vos matières.",
+    "noTeachingClasses": "Vous n’enseignez aucune matière dans les classes du planning.",
+    "subSubjects": "Sous-matières de cet examen",
+    "alreadyPlanned": "Déjà planifiées dans ce contrôle",
+    "pickSubSubjects": "Choisissez une matière et au moins une sous-matière non encore planifiée, et un jour du contrôle. Maximum : 40 leçons par sous-matière et 500 caractères par leçon.",
+    "scheduleNote": "L’administration fixe le jour et l’horaire de chaque examen. En attendant, un nouvel examen est placé au premier jour du contrôle.",
+    "loadFailed": "Impossible de charger le planning des examens. Veuillez réessayer.",
     "paperFormat": "A4 portrait · Modèle de votre document",
     "previewTip": "Vérifiez les leçons, puis imprimez ou enregistrez le calendrier de la classe en PDF.",
     "selectSubject": "Sélectionnez une matière pour modifier les leçons à réviser.",
@@ -7160,7 +7193,9 @@
     "otherSubject": "Planifié pour une autre matière : seules les matières que vous enseignez dans cette classe peuvent être modifiées ici.",
     "errors": {
       "notAllowed": "Votre rôle ne permet pas de planifier les examens.",
-      "notYourSubject": "Vous ne pouvez planifier que les matières que vous enseignez dans cette classe. Rechargez la planification : une autre matière a peut-être changé entre-temps."
+      "notYourSubject": "Vous ne pouvez planifier que les matières que vous enseignez dans cette classe. Rechargez la planification : une autre matière a peut-être changé entre-temps.",
+      "scheduleBySchool": "Seule l’administration fixe le jour et l’horaire d’un examen. Rechargez la planification puis enregistrez à nouveau vos matières et leçons.",
+      "controlNotOpen": "Ce contrôle n’est pas encore ouvert : l’administration doit d’abord planifier ses jours d’examen."
     }
   },
   "insurance": {

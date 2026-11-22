@@ -981,6 +981,13 @@
       "when": 1795284060000,
       "tag": "0139_exam_planning_permission",
       "breakpoints": true
+    },
+    {
+      "idx": 140,
+      "version": "7",
+      "when": 1795284120000,
+      "tag": "0140_sub_subjects_by_level",
+      "breakpoints": true
     }
   ]
 }

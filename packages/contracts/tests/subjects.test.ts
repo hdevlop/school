@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { schoolSubjectsData, schoolSubjectsForClass, schoolSubjectsForLevels } from '../src/subjects';
 import { foldSubjectName } from '../src/subjectNames';
+import { subjectsForLevel } from '../src/examPlanning';
 
 describe('Moroccan subject defaults', () => {
   it('keeps legacy IDs available without seeding separate history and geography as defaults', () => {
@@ -42,10 +43,33 @@ describe('Moroccan subject defaults', () => {
     expect(() => schoolSubjectsForLevels(['University'])).toThrow('Unknown school level');
   });
 
-  it('gives each default sub-subject one subject: no name twice, none a subject name', () => {
-    const names = [...schoolSubjectsData.map(subject => subject.name), ...schoolSubjectsData.flatMap(subject => subject.subSubjects ?? [])].map(foldSubjectName);
+  it('gives each default sub-subject one subject: no name twice, none a subject name or Arabic name', () => {
+    const arabic = schoolSubjectsData.flatMap(subject => 'nameAr' in subject && subject.nameAr ? [subject.nameAr] : []);
+    const names = [...schoolSubjectsData.map(subject => subject.name), ...arabic, ...schoolSubjectsData.flatMap(subject => subject.subSubjects ?? [])].map(foldSubjectName);
     expect(new Set(names).size).toBe(names.length);
     const primary = schoolSubjectsForLevels(['Primaire']).find(subject => subject.code === 'FR')!;
     expect(primary.subSubjects).toEqual(expect.arrayContaining(['Grammaire', 'Dictée', 'Étude du son']));
+  });
+
+  it('names Arabic subjects by their Arabic name, not as one of their own sub-subjects', () => {
+    const byCode = (code: string) => schoolSubjectsData.find(subject => subject.code === code)!;
+    expect(byCode('AR')).toMatchObject({ nameAr: 'اللغة العربية' });
+    expect(byCode('AR').subSubjects).not.toContain('اللغة العربية');
+    // Éducation islamique starts with the Quran only; each level adds what it teaches.
+    expect(byCode('EI')).toMatchObject({ nameAr: 'التربية الإسلامية', subSubjects: ['القرآن الكريم'] });
+  });
+});
+
+describe('a level (class name) taught its own sub-subjects', () => {
+  const subjects = [
+    { id: 'islam', name: 'Éducation islamique', subSubjects: [{ name: 'القرآن الكريم' }] },
+    { id: 'ar', name: 'العربية', subSubjects: [{ name: 'القراءة' }, { name: 'الإملاء' }] },
+  ];
+  it("uses the level's own list, even an empty one, and the school's list elsewhere", () => {
+    const levels = [{ subjectId: 'islam', level: 'CE2', names: ['القرآن الكريم', 'التزكية'] }, { subjectId: 'ar', level: '3APG', names: [] }];
+    const ce2 = subjectsForLevel(subjects, levels, ' ce2 ');
+    expect(ce2.find(subject => subject.id === 'islam')?.subSubjects).toEqual([{ name: 'القرآن الكريم' }, { name: 'التزكية' }]);
+    expect(ce2.find(subject => subject.id === 'ar')?.subSubjects).toEqual([{ name: 'القراءة' }, { name: 'الإملاء' }]);
+    expect(subjectsForLevel(subjects, levels, '3APG').find(subject => subject.id === 'ar')?.subSubjects).toEqual([]);
   });
 });

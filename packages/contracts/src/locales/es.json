@@ -143,7 +143,8 @@
       "general": "General",
       "massar": "Massar",
       "massar-marks": "Notas de Massar",
-      "exam-planning": "Planificación de exámenes"
+      "exam-planning": "Planificación de exámenes",
+      "sub-subjects": "Subasignaturas por nivel"
     },
     "errors": {
       "notFound": "Rol no encontrado.",
@@ -5304,10 +5305,12 @@
       "someInUse": "Algunas asignaturas las usan profesores o alertas, así que no se pueden eliminar todas",
       "subSubjectTwice": "«{{name}}» está escrito dos veces.",
       "subSubjectIsSubject": "«{{name}}» ya es el nombre de una asignatura.",
-      "subSubjectTaken": "«{{name}}» ya es una subasignatura de {{subject}}."
+      "subSubjectTaken": "«{{name}}» ya es una subasignatura de {{subject}}.",
+      "notYourLevel": "Solo puede editar las subasignaturas de una asignatura que imparte en esta clase."
     },
     "subtitle": {
-      "count": "Total: {{count}}"
+      "count": "Total: {{count}}",
+      "mine": "{{count}} asignatura(s) que imparte"
     },
     "dialogs": {
       "createButton": "Crear",
@@ -5329,12 +5332,16 @@
       "namePlaceholder": "Ingrese el nombre",
       "subjectInformation": "Información de la asignatura",
       "subSubjects": "Subasignaturas",
-      "subSubjectsHelp": "Lo que enseña esta asignatura (Grammaire, Dictée…). La misma lista para todas las clases; la Planificación elige de ella.",
+      "subSubjectsHelp": "Los componentes (المكونات) de la asignatura — no los títulos de las lecciones. Haga clic en un nombre para cambiarlo.",
       "subSubjectPlaceholder": "p. ej. Grammaire",
       "addSubSubject": "Añadir una subasignatura",
       "removeSubSubject": "Quitar {{name}}",
       "renameSubSubject": "Cambiar el nombre de {{name}}",
-      "moreSubSubjects": "{{count}} subasignaturas más"
+      "nameAr": "Nombre en árabe",
+      "nameArPlaceholder": "p. ej. التربية الإسلامية",
+      "nameArHelp": "Las filas del calendario y de Massar escritas en árabe encuentran la asignatura por este nombre.",
+      "add": "Añadir",
+      "subSubjectPlaceholderAr": "مثال: القراءة"
     },
     "table": {
       "code": "Código",
@@ -5350,6 +5357,20 @@
       "retrieved": "Asignatura obtenido correctamente",
       "seeded": "Asignatura inicializado correctamente",
       "updated": "Asignatura actualizado correctamente"
+    },
+    "levels": {
+      "title": "Subasignaturas por clase",
+      "chooseClass": "Elegir una clase",
+      "edit": "Editar la lista",
+      "pickerHelp": "Cada clase tiene su propia lista: elija una clase para editarla.",
+      "help": "Los componentes (المكونات) que se imparten en {{level}} — no los títulos de las lecciones. Haga clic en un nombre para cambiarlo.",
+      "saved": "Subasignaturas guardadas.",
+      "saveFailed": "No se pudieron guardar las subasignaturas. Inténtelo de nuevo."
+    },
+    "mine": {
+      "emptyTitle": "Ninguna asignatura",
+      "emptyDescription": "Sus asignaturas aparecen aquí en cuanto se le asigna una clase para este año escolar.",
+      "noSubSubjects": "Sin subasignaturas: la asignatura se imparte completa."
     }
   },
   "teachers": {
@@ -7011,6 +7032,18 @@
     "editPlanning": "Editar planificación",
     "savedStatus": "Guardado",
     "viewLabel": "Vista del calendario",
+    "previousMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente",
+    "noOwnExams": "Ninguna de sus asignaturas tiene examen en este periodo. Añada uno; la vista A4 muestra todo el programa de la clase.",
+    "control": "Control",
+    "noControlTitle": "Ningún control planificado",
+    "noControlDescription": "La dirección fija los días de cada control en el calendario. Después, elija el control aquí y añada sus asignaturas.",
+    "noTeachingClasses": "No imparte ninguna asignatura en las clases del calendario.",
+    "subSubjects": "Subasignaturas de este examen",
+    "alreadyPlanned": "Ya planificadas en este control",
+    "pickSubSubjects": "Elija una asignatura y al menos una subasignatura aún no planificada, y un día del control. Máximo: 40 lecciones por subasignatura y 500 caracteres por lección.",
+    "scheduleNote": "La dirección fija el día y el horario de cada examen. Mientras tanto, un examen nuevo se coloca en el primer día del control.",
+    "loadFailed": "No se pudo cargar el calendario de exámenes. Inténtelo de nuevo.",
     "paperFormat": "A4 vertical · Estilo del documento original",
     "previewTip": "Revisa las lecciones y después imprime o guarda el calendario de la clase en PDF.",
     "selectSubject": "Selecciona una asignatura para editar las lecciones de repaso.",
@@ -7059,7 +7092,9 @@
     "otherSubject": "Planificado para otra asignatura: aquí solo se pueden cambiar las asignaturas que impartes en esta clase.",
     "errors": {
       "notAllowed": "Tu rol no permite planificar exámenes.",
-      "notYourSubject": "Solo puedes planificar las asignaturas que impartes en esta clase. Recarga la planificación: puede que otra asignatura haya cambiado mientras tanto."
+      "notYourSubject": "Solo puedes planificar las asignaturas que impartes en esta clase. Recarga la planificación: puede que otra asignatura haya cambiado mientras tanto.",
+      "scheduleBySchool": "Solo la dirección fija el día y el horario de un examen. Recargue el calendario y guarde de nuevo sus asignaturas y lecciones.",
+      "controlNotOpen": "Este control aún no está abierto: la dirección debe planificar primero sus días de examen."
     }
   },
   "insurance": {

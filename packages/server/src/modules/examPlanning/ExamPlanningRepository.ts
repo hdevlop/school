@@ -84,7 +84,7 @@ export class ExamPlanningRepository {
     const sectionRows = await this.db.select({ id: sections.id, classId: sections.classId }).from(sections).where(inArray(sections.classId, classIds));
     const assignmentRows = await this.db.select({ id: teacherAssignments.id, classId: teacherAssignments.classId, sectionId: teacherAssignments.sectionId, subjectId: teacherAssignments.subjectId, teacherId: teacherAssignments.teacherId })
       .from(teacherAssignments).where(inArray(teacherAssignments.classId, classIds));
-    const subjectRows = await this.db.select({ id: subjects.id, name: subjects.name }).from(subjects).orderBy(subjects.name);
+    const subjectRows = await this.db.select({ id: subjects.id, name: subjects.name, nameAr: subjects.nameAr }).from(subjects).orderBy(subjects.name);
     const partRows = await this.db.select({ id: subSubjects.id, subjectId: subSubjects.subjectId, name: subSubjects.name }).from(subSubjects).orderBy(subSubjects.position, subSubjects.name);
     const planned = await this.db.select({ id: exams.id, planningEntryId: exams.planningEntryId, sectionIds: exams.sectionIds, teacherAssignmentId: exams.teacherAssignmentId, title: exams.title, description: exams.description, date: exams.date, status: exams.status, startTime: exams.startTime, endTime: exams.endTime,
       graded: sql<boolean>`exists (select 1 from grades mark where mark.exam_id = ${exams.id})` })

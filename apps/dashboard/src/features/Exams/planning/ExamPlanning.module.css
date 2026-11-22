@@ -97,6 +97,17 @@
 .page .lessonsInput[lang='ar'] { font: 400 18px/1.7 PlanningArabic, serif; }
 .labelNote { color: var(--planning-muted); font-size: 11px; font-weight: 400; margin-inline-start: 6px; }
 .editPanel .lessonsInput { margin-bottom: 12px; }
+.note { display: block; margin: 0 0 14px; line-height: 1.5; }
+/* The editor in a phone's sheet: the sheet is the frame. */
+.sheetEditor { min-width: 0; color: var(--planning-text); font: 14px/1.5 var(--font-sans); }
+/* The sheet is portaled out of .page, so the lessons box is styled here too. */
+.sheetEditor .lessonsInput { display: block; width: 100%; min-height: 220px; padding: 11px; resize: vertical; font: 400 16px/1.7 var(--font-sans); }
+.sheetEditor .lessonsInput[lang='ar'] { font: 400 18px/1.7 PlanningArabic, serif; }
+.sheetTitle { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sheetTitle[lang='ar'] { font: 700 20px/1.4 PlanningArabic, serif; }
+/* Changes left after the sheet closed: saved or dropped from here. */
+.unsavedBar { position: sticky; bottom: 0; z-index: 5; display: flex; align-items: center; gap: 8px; margin-top: 12px; padding: 10px 12px; border: var(--border-width, 1px) solid var(--planning-line); border-radius: var(--radius); background: var(--planning-panel); box-shadow: 0 -4px 16px rgb(0 0 0 / .08); }
+.unsavedBar p { flex: 1; min-width: 0; margin: 0; color: var(--planning-muted); font-size: 12px; }
 .applyButton { font-size: 12px; white-space: normal; }
 .editorStatus { min-height: 18px; color: var(--planning-muted); font-size: 11px; margin: 10px 0 0; }
 .details { margin: 0 0 15px; border-bottom: var(--border-width, 1px) solid var(--planning-line); padding-bottom: 15px; }
@@ -121,15 +132,21 @@
   .page .lessonsInput { min-height: 150px; }
 }
 @media (max-width: 620px) {
-  .toolbar > .classRow { flex-basis: 100%; }
+  /* The classes share the view switch's line and scroll sideways when they outgrow it. */
+  .toolbar > .classRow { flex: 1 1 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .toolbar > .classRow::-webkit-scrollbar { display: none; }
+  .toolbar > .classRow > * { flex-shrink: 0; }
   .toolbarControls { width: 100%; }
   .toolbarActions { margin-inline-start: auto; }
   .dateFilters { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; gap: 12px; }
-  .dateField { flex-direction: column; align-items: stretch; gap: 5px; }
+  .dateField { gap: 6px; }
   .toolbarControls[data-preview-only='true'] { flex-wrap: nowrap; gap: 8px; }
   .toolbarControls[data-preview-only='true'] .dateFilters { flex: 1; width: auto; }
   .toolbarControls[data-preview-only='true'] .toolbarActions { flex-shrink: 0; }
   .classButton { padding: 0 9px; }
+  /* The programme's tools share a full row under its title. */
+  .sectionTools { width: 100%; margin-inline-start: 0; flex-wrap: nowrap; }
+  .sectionTools > * { flex: 1; min-width: 0; }
   .paperStage { padding: 5px; }
 }
 @media (pointer: coarse) {

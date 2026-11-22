@@ -6,7 +6,7 @@ export type ExamPlanningDrafts = Record<string, Record<string, ExamPlanningEntry
 export type PlanningEntrySelection = { classId: string; month: string; entryId: string };
 /** What this account may plan in each class (GET /exam-planning/subjects): null is every subject. */
 export type PlannableSubjects = Record<string, string[]> | null;
-type PlanningSubjectCatalog = ReadonlyArray<{ id: string; name: string; subSubjects: ReadonlyArray<{ name: string }> }>;
+type PlanningSubjectCatalog = ReadonlyArray<{ id: string; name: string; nameAr?: string | null; subSubjects: ReadonlyArray<{ name: string }> }>;
 
 /**
  * The subjects a planner may plan in one class: null for every subject (the

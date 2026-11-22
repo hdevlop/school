@@ -19,9 +19,9 @@ const SUGGESTIONS: Array<[RegExp, string[]]> = [
 ];
 const ARABIC = /[؀-ۿ]/;
 
-export function suggestSubject(name: string, subjects: Array<{ id: string; name: string }>) {
+export function suggestSubject(name: string, subjects: Array<{ id: string; name: string; nameAr?: string | null }>) {
   const folded = fold(name), named = subjects.map(subject => ({ ...subject, folded: fold(subject.name) }));
-  const exact = named.find(subject => subject.folded === folded);
+  const exact = named.find(subject => subject.folded === folded || (!!subject.nameAr && fold(subject.nameAr) === folded));
   if (exact) return exact.id;
   for (const [pattern, words] of SUGGESTIONS) {
     if (!pattern.test(folded)) continue;

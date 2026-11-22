@@ -20,6 +20,8 @@ import { useSubjectsTableColumns } from '../hooks/useSubjectsTableColumns';
 import { useSubjectsTableFilters } from '../hooks/useSubjectsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
+import TeacherSubjects from './TeacherSubjects';
 
 function SubjectsTable() {
 
@@ -144,4 +146,11 @@ function SubjectsTable() {
   );
 }
 
-export default SubjectsTable;
+/**
+ * A teacher sees only the subjects they teach, per class, with that class's
+ * sub-subjects; the school-wide roles manage the whole catalogue.
+ */
+export default function SubjectsPage() {
+  const viewer = useViewerRole();
+  return viewer.role === 'teacher' && !viewer.isSchoolWide ? <TeacherSubjects /> : <SubjectsTable />;
+}

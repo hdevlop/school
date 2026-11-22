@@ -24,9 +24,9 @@ export class SubjectService {
 
   @Transaction()
   async create(input: CreateSubjectDto) {
-    const { subSubjects: parts, ...data } = { ...input, code: input.code.trim().toUpperCase() };
+    const { subSubjects: parts, ...data } = { ...input, code: input.code.trim().toUpperCase(), nameAr: input.nameAr?.trim() || null };
     await this.subjectValidator.ensureCodeUnique(data.code);
-    await this.subjectValidator.ensureNamesFree(null, data.name, (parts ?? []).map(part => part.name));
+    await this.subjectValidator.ensureNamesFree(null, data.name, (parts ?? []).map(part => part.name), data.nameAr);
     let created;
     try {
       created = await this.subjectRepository.create(data);
@@ -45,13 +45,18 @@ export class SubjectService {
    */
   @Transaction()
   async update(id: string, input: UpdateSubjectDto) {
-    const { subSubjects: parts, ...data } = input.code !== undefined ? { ...input, code: input.code.trim().toUpperCase() } : input;
+    const { subSubjects: parts, ...data } = {
+      ...input,
+      ...(input.code !== undefined ? { code: input.code.trim().toUpperCase() } : {}),
+      ...(input.nameAr !== undefined ? { nameAr: input.nameAr?.trim() || null } : {}),
+    };
     const existing = await this.subjectValidator.ensureExists(id);
     if (data.code) {
       await this.subjectValidator.ensureCodeUnique(data.code, id);
     }
-    if (data.name !== undefined || parts) {
-      await this.subjectValidator.ensureNamesFree(id, data.name ?? existing.name, (parts ?? existing.subSubjects).map(part => part.name));
+    const nameAr = data.nameAr !== undefined ? data.nameAr : existing.nameAr;
+    if (data.name !== undefined || data.nameAr !== undefined || parts) {
+      await this.subjectValidator.ensureNamesFree(id, data.name ?? existing.name, (parts ?? existing.subSubjects).map(part => part.name), nameAr);
     }
     if (Object.keys(data).length) {
       try {
@@ -62,8 +67,32 @@ export class SubjectService {
     }
     const renamed = parts ? await this.subjectRepository.saveSubSubjects(id, parts) : [];
     if (data.name !== undefined && data.name !== existing.name) renamed.push({ from: existing.name, to: data.name });
+    // Planning rows named by the old Arabic name take the new one.
+    if (existing.nameAr && nameAr && nameAr !== existing.nameAr) renamed.push({ from: existing.nameAr, to: nameAr });
     await this.examPlanning.followSubjects(renamed);
     return this.subjectRepository.getById(id);
+  }
+
+  /** The sub-subjects one level (a class name) is taught, and whether they are its own list. */
+  async getLevelList(id: string, level: string) {
+    await this.subjectValidator.ensureExists(id);
+    return this.subjectRepository.levelList(id, level);
+  }
+
+  /**
+   * Sets the sub-subjects a level (class name) is taught. A
+   * teacher edits only a subject they teach in that level. Names already in
+   * Planning keep their exams; a new name lets Planning rows of that name
+   * find their subject.
+   */
+  @Transaction()
+  async saveLevelList(id: string, level: string, names: string[], actor: { id?: string; role?: string | null }) {
+    const subject = await this.subjectValidator.ensureExists(id);
+    await this.subjectValidator.ensureMayEditLevel(actor, id, level);
+    await this.subjectValidator.ensureNamesFree(id, subject.name, names, subject.nameAr);
+    await this.subjectRepository.saveLevelList(id, level, names);
+    await this.examPlanning.followSubjects();
+    return this.subjectRepository.levelList(id, level);
   }
 
   // A subject is shared by every year; one that any year uses stays.
