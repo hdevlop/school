@@ -51,6 +51,25 @@ describe('identity search ownership', () => {
     expect(parent.params).toContain('search-user');
   });
 
+  // A misspelled name ("jbara rima") still finds JEBARA RIMA, but only inside
+  // the reader's ownership: the closeness test is one more alternative of the
+  // OR, which the ownership condition ANDs, and the closest names come first.
+  it('matches close spellings inside the ownership condition, closest first', async () => {
+    for (const [role, method, owned] of [
+      ['parent', 'searchStudents', '"students"."id" in (select'],
+      ['teacher', 'searchTeachers', '"teachers"."id" in (select'],
+      ['student', 'searchParents', '"parents"."id" in (select'],
+    ] as const) {
+      const { sql, params } = await searchSql(role, method);
+      const where = sql.slice(sql.indexOf(' where '), sql.indexOf(' order by '));
+      expect(where.indexOf(owned)).toBeGreaterThan(-1);
+      expect(where.indexOf('word_similarity')).toBeGreaterThan(where.indexOf(owned));
+      expect(where).toMatch(/\) and \(.*word_similarity.*>= \$\d+\)\)$/s);
+      expect(sql.slice(sql.indexOf(' order by '))).toContain('greatest(coalesce(word_similarity(lower(unaccent(');
+      expect(params).toContain(0.5);
+    }
+  });
+
   it('denies resources without an ownership rule and keeps school-wide identities shared', async () => {
     for (const method of ['searchStudents', 'searchTeachers', 'searchParents'] as const) {
       const unknown = await searchSql('custom-role', method);

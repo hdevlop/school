@@ -1,7 +1,7 @@
 import { Repository } from '../../najm';
 import { DB } from '../../database/db';
 import { students, teachers, staff, parents, users } from '../../database/schema';
-import { and, ilike, or, sql, type SQL, type SQLWrapper } from 'drizzle-orm';
+import { and, desc, ilike, or, sql, type SQL, type SQLWrapper } from 'drizzle-orm';
 import { Owned, type OwnedWhere, ownershipCondition, type ScopeContext } from '../../auth';
 import { Student } from '../students/StudentGuards';
 import { Teacher } from '../teachers/TeacherGuards';
@@ -25,6 +25,24 @@ export function nameWordsMatch(query: string, columns: SQLWrapper[]): SQL | unde
   return and(...words.map((word) => or(...columns.map((column) => ilike(folded(column), `%${foldArabic(word)}%`)))));
 }
 
+/**
+ * Names spelled close to the query also match, best first: "jbara rima" and
+ * "jebara rimma" find JEBARA RIMA (0.73, 0.79), "mohammed adanguir" ADANGUIR
+ * MOHAMED (0.84), "zakarya achir" AACHIR ZAKARIA (0.64), while the next
+ * unrelated names scored 0.25-0.56 and "xyz abc" nothing above 0.25 on the demo
+ * school (2026-11-21). The score is pg_trgm's word_similarity of the query to
+ * the closest part of the name, accents and Arabic letter forms folded
+ * (migration 0138 enables pg_trgm and unaccent).
+ */
+export const NAME_CLOSENESS_MIN = 0.5;
+
+export function nameCloseness(query: string, columns: SQLWrapper[]): SQL {
+  const wanted = foldArabic(query.trim());
+  const scores = columns.map((column) =>
+    sql`coalesce(word_similarity(lower(unaccent(${wanted})), lower(unaccent(${folded(column)}))), 0)`);
+  return sql`greatest(${sql.join(scores, sql`, `)})`;
+}
+
 @Repository()
 export class SearchRepository {
   declare db: DB;
@@ -34,6 +52,7 @@ export class SearchRepository {
 
   async searchStudents(query: string, limit = 20) {
     const pattern = `%${query}%`;
+    const closeness = nameCloseness(query, [students.name, students.arabicName]);
     return await this.db
       .select({
         id: students.id,
@@ -55,13 +74,16 @@ export class SearchRepository {
           ilike(students.studentCode, pattern),
           ilike(students.phone, pattern),
           ilike(users.email, pattern),
+          sql`${closeness} >= ${NAME_CLOSENESS_MIN}`,
         ))
       )
+      .orderBy(desc(closeness), students.name)
       .limit(limit);
   }
 
   async searchTeachers(query: string, limit = 20) {
     const pattern = `%${query}%`;
+    const closeness = nameCloseness(query, [staff.name]);
     return await this.db
       .select({
         id: teachers.id,
@@ -85,13 +107,16 @@ export class SearchRepository {
           ilike(staff.phone, pattern),
           ilike(users.email, pattern),
           ilike(teachers.specialization, pattern),
+          sql`${closeness} >= ${NAME_CLOSENESS_MIN}`,
         ))
       )
+      .orderBy(desc(closeness), staff.name)
       .limit(limit);
   }
 
   async searchParents(query: string, limit = 20) {
     const pattern = `%${query}%`;
+    const closeness = nameCloseness(query, [parents.name]);
     return await this.db
       .select({
         id: parents.id,
@@ -108,11 +133,14 @@ export class SearchRepository {
       .where(
         and(ownershipCondition(this.db, [Parent], this._scopeCtx), or(
           ilike(parents.name, pattern),
+          nameWordsMatch(query, [parents.name]),
           ilike(parents.cin, pattern),
           ilike(parents.phone, pattern),
           ilike(users.email, pattern),
+          sql`${closeness} >= ${NAME_CLOSENESS_MIN}`,
         ))
       )
+      .orderBy(desc(closeness), parents.name)
       .limit(limit);
   }
 

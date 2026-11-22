@@ -12767,223 +12767,11 @@
     }
    ]
   },
-  "ed5299ce619ff6b9": {
-   "statements": [
-    {
-     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"students\".\"id\" from \"students\" inner join \"student_enrollments\" \"_sc_student_enrollments_1\" on \"students\".\"id\" = \"_sc_student_enrollments_1\".\"student_id\" inner join \"student_enrollment_placements\" \"_sc_student_enrollment_placements_2\" on \"_sc_student_enrollments_1\".\"id\" = \"_sc_student_enrollment_placements_2\".\"enrollment_id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_3\" on \"_sc_student_enrollment_placements_2\".\"section_id\" = \"_sc_teacher_assignments_3\".\"section_id\" inner join \"teachers\" \"_sc_teachers_4\" on \"_sc_teacher_assignments_3\".\"teacher_id\" = \"_sc_teachers_4\".\"id\" inner join \"staff\" \"_sc_staff_5\" on \"_sc_teachers_4\".\"staff_id\" = \"_sc_staff_5\".\"id\" where \"_sc_staff_5\".\"user_id\" = $1) and (\"students\".\"name\" ilike $2 or (translate(\"students\".\"name\", $3, $4) ilike $5 or translate(\"students\".\"arabic_name\", $6, $7) ilike $8) or \"students\".\"student_code\" ilike $9 or \"students\".\"phone\" ilike $10 or \"users\".\"email\" ilike $11)) limit $12",
-     "params": [
-      "user-1",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      20
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "a18a4e48dd34928f": {
-   "statements": [
-    {
-     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"id\" from \"students\" where exists (select 1 from student_enrollments managed_enrollment\n    join student_enrollment_placements managed_placement on managed_placement.enrollment_id = managed_enrollment.id\n    where managed_enrollment.student_id = \"students\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_placement.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) and (\"students\".\"name\" ilike $4 or (translate(\"students\".\"name\", $5, $6) ilike $7 or translate(\"students\".\"arabic_name\", $8, $9) ilike $10) or \"students\".\"student_code\" ilike $11 or \"students\".\"phone\" ilike $12 or \"users\".\"email\" ilike $13)) limit $14",
-     "params": [
-      "user-1",
-      "2026-03-15",
-      "2026-03-15",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      20
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "2cc480bac030f3e2": {
-   "statements": [
-    {
-     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"students\".\"id\" from \"students\" inner join \"student_parents\" \"_sc_student_parents_1\" on \"students\".\"id\" = \"_sc_student_parents_1\".\"student_id\" inner join \"parents\" \"_sc_parents_2\" on \"_sc_student_parents_1\".\"parent_id\" = \"_sc_parents_2\".\"id\" where \"_sc_parents_2\".\"user_id\" = $1) and (\"students\".\"name\" ilike $2 or (translate(\"students\".\"name\", $3, $4) ilike $5 or translate(\"students\".\"arabic_name\", $6, $7) ilike $8) or \"students\".\"student_code\" ilike $9 or \"students\".\"phone\" ilike $10 or \"users\".\"email\" ilike $11)) limit $12",
-     "params": [
-      "user-1",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      20
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "a5184c7dba04741a": {
-   "statements": [
-    {
-     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"id\" from \"students\" where \"students\".\"user_id\" = $1) and (\"students\".\"name\" ilike $2 or (translate(\"students\".\"name\", $3, $4) ilike $5 or translate(\"students\".\"arabic_name\", $6, $7) ilike $8) or \"students\".\"student_code\" ilike $9 or \"students\".\"phone\" ilike $10 or \"users\".\"email\" ilike $11)) limit $12",
-     "params": [
-      "user-1",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      20
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "8ecb28c510a64b28": {
-   "statements": [
-    {
-     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"name\" ilike $1 or (translate(\"students\".\"name\", $2, $3) ilike $4 or translate(\"students\".\"arabic_name\", $5, $6) ilike $7) or \"students\".\"student_code\" ilike $8 or \"students\".\"phone\" ilike $9 or \"users\".\"email\" ilike $10) limit $11",
-     "params": [
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      20
-     ],
-     "method": "all"
-    }
-   ]
-  },
   "d63500841e6c5d22": {
    "statements": [
     {
      "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"name\" ilike $1 or \"students\".\"student_code\" ilike $2 or \"students\".\"phone\" ilike $3 or \"users\".\"email\" ilike $4) limit $5",
      "params": [
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      20
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "bac7ac10edd70651": {
-   "statements": [
-    {
-     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"students\".\"name\" ilike $1 or (translate(\"students\".\"name\", $2, $3) ilike $4 or translate(\"students\".\"arabic_name\", $5, $6) ilike $7) or \"students\".\"student_code\" ilike $8 or \"students\".\"phone\" ilike $9 or \"users\".\"email\" ilike $10)) limit $11",
-     "params": [
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      20
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "f5c2f25071eb0c9d": {
-   "statements": [
-    {
-     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (\"teachers\".\"id\" in (select \"teachers\".\"id\" from \"teachers\" inner join \"staff\" \"_sc_staff_1\" on \"teachers\".\"staff_id\" = \"_sc_staff_1\".\"id\" where \"_sc_staff_1\".\"user_id\" = $1) and (\"staff\".\"name\" ilike $2 or translate(\"staff\".\"name\", $3, $4) ilike $5 or \"staff\".\"cin\" ilike $6 or \"staff\".\"phone\" ilike $7 or \"users\".\"email\" ilike $8 or \"teachers\".\"specialization\" ilike $9)) limit $10",
-     "params": [
-      "user-1",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      20
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "60fd302785681dd2": {
-   "statements": [
-    {
-     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (\"teachers\".\"id\" in (select \"id\" from \"teachers\" where exists (select 1 from teacher_assignments assignment\n    where assignment.teacher_id = \"teachers\".\"id\" and exists (select 1 from sections managed_section\n    where managed_section.id = assignment.section_id and exists (select 1 from classes managed_class\n    where managed_class.id = managed_section.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3)))))) and (\"staff\".\"name\" ilike $4 or translate(\"staff\".\"name\", $5, $6) ilike $7 or \"staff\".\"cin\" ilike $8 or \"staff\".\"phone\" ilike $9 or \"users\".\"email\" ilike $10 or \"teachers\".\"specialization\" ilike $11)) limit $12",
-     "params": [
-      "user-1",
-      "2026-03-15",
-      "2026-03-15",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      20
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "adcd4818299e6055": {
-   "statements": [
-    {
-     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"staff\".\"name\" ilike $1 or translate(\"staff\".\"name\", $2, $3) ilike $4 or \"staff\".\"cin\" ilike $5 or \"staff\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7 or \"teachers\".\"specialization\" ilike $8)) limit $9",
-     "params": [
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      20
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "34d9f190b7bd23db": {
-   "statements": [
-    {
-     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (\"staff\".\"name\" ilike $1 or translate(\"staff\".\"name\", $2, $3) ilike $4 or \"staff\".\"cin\" ilike $5 or \"staff\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7 or \"teachers\".\"specialization\" ilike $8) limit $9",
-     "params": [
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
       "%Adam%",
       "%Adam%",
       "%Adam%",
@@ -13010,72 +12798,6 @@
     }
    ]
   },
-  "6b36b2351ee925cb": {
-   "statements": [
-    {
-     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"parents\".\"id\" from \"parents\" inner join \"student_parents\" \"_sc_student_parents_1\" on \"parents\".\"id\" = \"_sc_student_parents_1\".\"parent_id\" inner join \"students\" \"_sc_students_2\" on \"_sc_student_parents_1\".\"student_id\" = \"_sc_students_2\".\"id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_3\" on \"_sc_students_2\".\"section_id\" = \"_sc_teacher_assignments_3\".\"section_id\" inner join \"teachers\" \"_sc_teachers_4\" on \"_sc_teacher_assignments_3\".\"teacher_id\" = \"_sc_teachers_4\".\"id\" inner join \"staff\" \"_sc_staff_5\" on \"_sc_teachers_4\".\"staff_id\" = \"_sc_staff_5\".\"id\" where \"_sc_staff_5\".\"user_id\" = $1) and (\"parents\".\"name\" ilike $2 or \"parents\".\"cin\" ilike $3 or \"parents\".\"phone\" ilike $4 or \"users\".\"email\" ilike $5)) limit $6",
-     "params": [
-      "user-1",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      20
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "a865cc0aa339e840": {
-   "statements": [
-    {
-     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"id\" from \"parents\" where exists (select 1 from student_parents managed_link\n    join students managed_student on managed_student.id = managed_link.student_id\n    where managed_link.parent_id = \"parents\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_student.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) and (\"parents\".\"name\" ilike $4 or \"parents\".\"cin\" ilike $5 or \"parents\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7)) limit $8",
-     "params": [
-      "user-1",
-      "2026-03-15",
-      "2026-03-15",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      20
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "c05cac23c11c7154": {
-   "statements": [
-    {
-     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"id\" from \"parents\" where \"parents\".\"user_id\" = $1) and (\"parents\".\"name\" ilike $2 or \"parents\".\"cin\" ilike $3 or \"parents\".\"phone\" ilike $4 or \"users\".\"email\" ilike $5)) limit $6",
-     "params": [
-      "user-1",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      20
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "be52238ea218e9d9": {
-   "statements": [
-    {
-     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"parents\".\"id\" from \"parents\" inner join \"student_parents\" \"_sc_student_parents_1\" on \"parents\".\"id\" = \"_sc_student_parents_1\".\"parent_id\" inner join \"students\" \"_sc_students_2\" on \"_sc_student_parents_1\".\"student_id\" = \"_sc_students_2\".\"id\" where \"_sc_students_2\".\"user_id\" = $1) and (\"parents\".\"name\" ilike $2 or \"parents\".\"cin\" ilike $3 or \"parents\".\"phone\" ilike $4 or \"users\".\"email\" ilike $5)) limit $6",
-     "params": [
-      "user-1",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      20
-     ],
-     "method": "all"
-    }
-   ]
-  },
   "e76a60d89eeb9d3e": {
    "statements": [
     {
@@ -13086,272 +12808,6 @@
       "%Adam%",
       "%Adam%",
       20
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "8ece9eb457b43f64": {
-   "statements": [
-    {
-     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"parents\".\"name\" ilike $1 or \"parents\".\"cin\" ilike $2 or \"parents\".\"phone\" ilike $3 or \"users\".\"email\" ilike $4)) limit $5",
-     "params": [
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      20
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "bda4d885828543ee": {
-   "statements": [
-    {
-     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"students\".\"id\" from \"students\" inner join \"student_enrollments\" \"_sc_student_enrollments_1\" on \"students\".\"id\" = \"_sc_student_enrollments_1\".\"student_id\" inner join \"student_enrollment_placements\" \"_sc_student_enrollment_placements_2\" on \"_sc_student_enrollments_1\".\"id\" = \"_sc_student_enrollment_placements_2\".\"enrollment_id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_3\" on \"_sc_student_enrollment_placements_2\".\"section_id\" = \"_sc_teacher_assignments_3\".\"section_id\" inner join \"teachers\" \"_sc_teachers_4\" on \"_sc_teacher_assignments_3\".\"teacher_id\" = \"_sc_teachers_4\".\"id\" inner join \"staff\" \"_sc_staff_5\" on \"_sc_teachers_4\".\"staff_id\" = \"_sc_staff_5\".\"id\" where \"_sc_staff_5\".\"user_id\" = $1) and (\"students\".\"name\" ilike $2 or (translate(\"students\".\"name\", $3, $4) ilike $5 or translate(\"students\".\"arabic_name\", $6, $7) ilike $8) or \"students\".\"student_code\" ilike $9 or \"students\".\"phone\" ilike $10 or \"users\".\"email\" ilike $11)) limit $12",
-     "params": [
-      "user-1",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (\"teachers\".\"id\" in (select \"teachers\".\"id\" from \"teachers\" inner join \"staff\" \"_sc_staff_1\" on \"teachers\".\"staff_id\" = \"_sc_staff_1\".\"id\" where \"_sc_staff_1\".\"user_id\" = $1) and (\"staff\".\"name\" ilike $2 or translate(\"staff\".\"name\", $3, $4) ilike $5 or \"staff\".\"cin\" ilike $6 or \"staff\".\"phone\" ilike $7 or \"users\".\"email\" ilike $8 or \"teachers\".\"specialization\" ilike $9)) limit $10",
-     "params": [
-      "user-1",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"parents\".\"id\" from \"parents\" inner join \"student_parents\" \"_sc_student_parents_1\" on \"parents\".\"id\" = \"_sc_student_parents_1\".\"parent_id\" inner join \"students\" \"_sc_students_2\" on \"_sc_student_parents_1\".\"student_id\" = \"_sc_students_2\".\"id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_3\" on \"_sc_students_2\".\"section_id\" = \"_sc_teacher_assignments_3\".\"section_id\" inner join \"teachers\" \"_sc_teachers_4\" on \"_sc_teacher_assignments_3\".\"teacher_id\" = \"_sc_teachers_4\".\"id\" inner join \"staff\" \"_sc_staff_5\" on \"_sc_teachers_4\".\"staff_id\" = \"_sc_staff_5\".\"id\" where \"_sc_staff_5\".\"user_id\" = $1) and (\"parents\".\"name\" ilike $2 or \"parents\".\"cin\" ilike $3 or \"parents\".\"phone\" ilike $4 or \"users\".\"email\" ilike $5)) limit $6",
-     "params": [
-      "user-1",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "7f750f522abccd72": {
-   "statements": [
-    {
-     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"id\" from \"students\" where exists (select 1 from student_enrollments managed_enrollment\n    join student_enrollment_placements managed_placement on managed_placement.enrollment_id = managed_enrollment.id\n    where managed_enrollment.student_id = \"students\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_placement.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) and (\"students\".\"name\" ilike $4 or (translate(\"students\".\"name\", $5, $6) ilike $7 or translate(\"students\".\"arabic_name\", $8, $9) ilike $10) or \"students\".\"student_code\" ilike $11 or \"students\".\"phone\" ilike $12 or \"users\".\"email\" ilike $13)) limit $14",
-     "params": [
-      "user-1",
-      "2026-03-15",
-      "2026-03-15",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (\"teachers\".\"id\" in (select \"id\" from \"teachers\" where exists (select 1 from teacher_assignments assignment\n    where assignment.teacher_id = \"teachers\".\"id\" and exists (select 1 from sections managed_section\n    where managed_section.id = assignment.section_id and exists (select 1 from classes managed_class\n    where managed_class.id = managed_section.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3)))))) and (\"staff\".\"name\" ilike $4 or translate(\"staff\".\"name\", $5, $6) ilike $7 or \"staff\".\"cin\" ilike $8 or \"staff\".\"phone\" ilike $9 or \"users\".\"email\" ilike $10 or \"teachers\".\"specialization\" ilike $11)) limit $12",
-     "params": [
-      "user-1",
-      "2026-03-15",
-      "2026-03-15",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"id\" from \"parents\" where exists (select 1 from student_parents managed_link\n    join students managed_student on managed_student.id = managed_link.student_id\n    where managed_link.parent_id = \"parents\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_student.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) and (\"parents\".\"name\" ilike $4 or \"parents\".\"cin\" ilike $5 or \"parents\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7)) limit $8",
-     "params": [
-      "user-1",
-      "2026-03-15",
-      "2026-03-15",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "b72b7c2d6a699720": {
-   "statements": [
-    {
-     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"students\".\"id\" from \"students\" inner join \"student_parents\" \"_sc_student_parents_1\" on \"students\".\"id\" = \"_sc_student_parents_1\".\"student_id\" inner join \"parents\" \"_sc_parents_2\" on \"_sc_student_parents_1\".\"parent_id\" = \"_sc_parents_2\".\"id\" where \"_sc_parents_2\".\"user_id\" = $1) and (\"students\".\"name\" ilike $2 or (translate(\"students\".\"name\", $3, $4) ilike $5 or translate(\"students\".\"arabic_name\", $6, $7) ilike $8) or \"students\".\"student_code\" ilike $9 or \"students\".\"phone\" ilike $10 or \"users\".\"email\" ilike $11)) limit $12",
-     "params": [
-      "user-1",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"staff\".\"name\" ilike $1 or translate(\"staff\".\"name\", $2, $3) ilike $4 or \"staff\".\"cin\" ilike $5 or \"staff\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7 or \"teachers\".\"specialization\" ilike $8)) limit $9",
-     "params": [
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"id\" from \"parents\" where \"parents\".\"user_id\" = $1) and (\"parents\".\"name\" ilike $2 or \"parents\".\"cin\" ilike $3 or \"parents\".\"phone\" ilike $4 or \"users\".\"email\" ilike $5)) limit $6",
-     "params": [
-      "user-1",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "a9b9eaf95e079d44": {
-   "statements": [
-    {
-     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"id\" from \"students\" where \"students\".\"user_id\" = $1) and (\"students\".\"name\" ilike $2 or (translate(\"students\".\"name\", $3, $4) ilike $5 or translate(\"students\".\"arabic_name\", $6, $7) ilike $8) or \"students\".\"student_code\" ilike $9 or \"students\".\"phone\" ilike $10 or \"users\".\"email\" ilike $11)) limit $12",
-     "params": [
-      "user-1",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"staff\".\"name\" ilike $1 or translate(\"staff\".\"name\", $2, $3) ilike $4 or \"staff\".\"cin\" ilike $5 or \"staff\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7 or \"teachers\".\"specialization\" ilike $8)) limit $9",
-     "params": [
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"parents\".\"id\" from \"parents\" inner join \"student_parents\" \"_sc_student_parents_1\" on \"parents\".\"id\" = \"_sc_student_parents_1\".\"parent_id\" inner join \"students\" \"_sc_students_2\" on \"_sc_student_parents_1\".\"student_id\" = \"_sc_students_2\".\"id\" where \"_sc_students_2\".\"user_id\" = $1) and (\"parents\".\"name\" ilike $2 or \"parents\".\"cin\" ilike $3 or \"parents\".\"phone\" ilike $4 or \"users\".\"email\" ilike $5)) limit $6",
-     "params": [
-      "user-1",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "ec9b22e75f92ba29": {
-   "statements": [
-    {
-     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"name\" ilike $1 or (translate(\"students\".\"name\", $2, $3) ilike $4 or translate(\"students\".\"arabic_name\", $5, $6) ilike $7) or \"students\".\"student_code\" ilike $8 or \"students\".\"phone\" ilike $9 or \"users\".\"email\" ilike $10) limit $11",
-     "params": [
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (\"staff\".\"name\" ilike $1 or translate(\"staff\".\"name\", $2, $3) ilike $4 or \"staff\".\"cin\" ilike $5 or \"staff\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7 or \"teachers\".\"specialization\" ilike $8) limit $9",
-     "params": [
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"name\" ilike $1 or \"parents\".\"cin\" ilike $2 or \"parents\".\"phone\" ilike $3 or \"users\".\"email\" ilike $4) limit $5",
-     "params": [
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
      ],
      "method": "all"
     }
@@ -13384,53 +12840,6 @@
     },
     {
      "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"name\" ilike $1 or \"parents\".\"cin\" ilike $2 or \"parents\".\"phone\" ilike $3 or \"users\".\"email\" ilike $4) limit $5",
-     "params": [
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "27962b37a0d5357e": {
-   "statements": [
-    {
-     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"students\".\"name\" ilike $1 or (translate(\"students\".\"name\", $2, $3) ilike $4 or translate(\"students\".\"arabic_name\", $5, $6) ilike $7) or \"students\".\"student_code\" ilike $8 or \"students\".\"phone\" ilike $9 or \"users\".\"email\" ilike $10)) limit $11",
-     "params": [
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"staff\".\"name\" ilike $1 or translate(\"staff\".\"name\", $2, $3) ilike $4 or \"staff\".\"cin\" ilike $5 or \"staff\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7 or \"teachers\".\"specialization\" ilike $8)) limit $9",
-     "params": [
-      "%Adam%",
-      "أإآةى",
-      "اااهي",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      "%Adam%",
-      10
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"parents\".\"name\" ilike $1 or \"parents\".\"cin\" ilike $2 or \"parents\".\"phone\" ilike $3 or \"users\".\"email\" ilike $4)) limit $5",
      "params": [
       "%Adam%",
       "%Adam%",
@@ -16763,6 +16172,958 @@
      "method": "subquery"
     }
    ]
+  },
+  "aceecfe8af026d4b": {
+   "statements": [
+    {
+     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"students\".\"id\" from \"students\" inner join \"student_enrollments\" \"_sc_student_enrollments_1\" on \"students\".\"id\" = \"_sc_student_enrollments_1\".\"student_id\" inner join \"student_enrollment_placements\" \"_sc_student_enrollment_placements_2\" on \"_sc_student_enrollments_1\".\"id\" = \"_sc_student_enrollment_placements_2\".\"enrollment_id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_3\" on \"_sc_student_enrollment_placements_2\".\"section_id\" = \"_sc_teacher_assignments_3\".\"section_id\" inner join \"teachers\" \"_sc_teachers_4\" on \"_sc_teacher_assignments_3\".\"teacher_id\" = \"_sc_teachers_4\".\"id\" inner join \"staff\" \"_sc_staff_5\" on \"_sc_teachers_4\".\"staff_id\" = \"_sc_staff_5\".\"id\" where \"_sc_staff_5\".\"user_id\" = $1) and (\"students\".\"name\" ilike $2 or (translate(\"students\".\"name\", $3, $4) ilike $5 or translate(\"students\".\"arabic_name\", $6, $7) ilike $8) or \"students\".\"student_code\" ilike $9 or \"students\".\"phone\" ilike $10 or \"users\".\"email\" ilike $11 or greatest(coalesce(word_similarity(lower(unaccent($12)), lower(unaccent(translate(\"students\".\"name\", $13, $14)))), 0), coalesce(word_similarity(lower(unaccent($15)), lower(unaccent(translate(\"students\".\"arabic_name\", $16, $17)))), 0)) >= $18)) order by greatest(coalesce(word_similarity(lower(unaccent($19)), lower(unaccent(translate(\"students\".\"name\", $20, $21)))), 0), coalesce(word_similarity(lower(unaccent($22)), lower(unaccent(translate(\"students\".\"arabic_name\", $23, $24)))), 0)) desc, \"students\".\"name\" limit $25",
+     "params": [
+      "user-1",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "d6e126f70d446d52": {
+   "statements": [
+    {
+     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"id\" from \"students\" where exists (select 1 from student_enrollments managed_enrollment\n    join student_enrollment_placements managed_placement on managed_placement.enrollment_id = managed_enrollment.id\n    where managed_enrollment.student_id = \"students\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_placement.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) and (\"students\".\"name\" ilike $4 or (translate(\"students\".\"name\", $5, $6) ilike $7 or translate(\"students\".\"arabic_name\", $8, $9) ilike $10) or \"students\".\"student_code\" ilike $11 or \"students\".\"phone\" ilike $12 or \"users\".\"email\" ilike $13 or greatest(coalesce(word_similarity(lower(unaccent($14)), lower(unaccent(translate(\"students\".\"name\", $15, $16)))), 0), coalesce(word_similarity(lower(unaccent($17)), lower(unaccent(translate(\"students\".\"arabic_name\", $18, $19)))), 0)) >= $20)) order by greatest(coalesce(word_similarity(lower(unaccent($21)), lower(unaccent(translate(\"students\".\"name\", $22, $23)))), 0), coalesce(word_similarity(lower(unaccent($24)), lower(unaccent(translate(\"students\".\"arabic_name\", $25, $26)))), 0)) desc, \"students\".\"name\" limit $27",
+     "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "f9ff8467cfce3640": {
+   "statements": [
+    {
+     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"students\".\"id\" from \"students\" inner join \"student_parents\" \"_sc_student_parents_1\" on \"students\".\"id\" = \"_sc_student_parents_1\".\"student_id\" inner join \"parents\" \"_sc_parents_2\" on \"_sc_student_parents_1\".\"parent_id\" = \"_sc_parents_2\".\"id\" where \"_sc_parents_2\".\"user_id\" = $1) and (\"students\".\"name\" ilike $2 or (translate(\"students\".\"name\", $3, $4) ilike $5 or translate(\"students\".\"arabic_name\", $6, $7) ilike $8) or \"students\".\"student_code\" ilike $9 or \"students\".\"phone\" ilike $10 or \"users\".\"email\" ilike $11 or greatest(coalesce(word_similarity(lower(unaccent($12)), lower(unaccent(translate(\"students\".\"name\", $13, $14)))), 0), coalesce(word_similarity(lower(unaccent($15)), lower(unaccent(translate(\"students\".\"arabic_name\", $16, $17)))), 0)) >= $18)) order by greatest(coalesce(word_similarity(lower(unaccent($19)), lower(unaccent(translate(\"students\".\"name\", $20, $21)))), 0), coalesce(word_similarity(lower(unaccent($22)), lower(unaccent(translate(\"students\".\"arabic_name\", $23, $24)))), 0)) desc, \"students\".\"name\" limit $25",
+     "params": [
+      "user-1",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "40e33b085afd0324": {
+   "statements": [
+    {
+     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"id\" from \"students\" where \"students\".\"user_id\" = $1) and (\"students\".\"name\" ilike $2 or (translate(\"students\".\"name\", $3, $4) ilike $5 or translate(\"students\".\"arabic_name\", $6, $7) ilike $8) or \"students\".\"student_code\" ilike $9 or \"students\".\"phone\" ilike $10 or \"users\".\"email\" ilike $11 or greatest(coalesce(word_similarity(lower(unaccent($12)), lower(unaccent(translate(\"students\".\"name\", $13, $14)))), 0), coalesce(word_similarity(lower(unaccent($15)), lower(unaccent(translate(\"students\".\"arabic_name\", $16, $17)))), 0)) >= $18)) order by greatest(coalesce(word_similarity(lower(unaccent($19)), lower(unaccent(translate(\"students\".\"name\", $20, $21)))), 0), coalesce(word_similarity(lower(unaccent($22)), lower(unaccent(translate(\"students\".\"arabic_name\", $23, $24)))), 0)) desc, \"students\".\"name\" limit $25",
+     "params": [
+      "user-1",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "d0ad81897b13d46d": {
+   "statements": [
+    {
+     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"name\" ilike $1 or (translate(\"students\".\"name\", $2, $3) ilike $4 or translate(\"students\".\"arabic_name\", $5, $6) ilike $7) or \"students\".\"student_code\" ilike $8 or \"students\".\"phone\" ilike $9 or \"users\".\"email\" ilike $10 or greatest(coalesce(word_similarity(lower(unaccent($11)), lower(unaccent(translate(\"students\".\"name\", $12, $13)))), 0), coalesce(word_similarity(lower(unaccent($14)), lower(unaccent(translate(\"students\".\"arabic_name\", $15, $16)))), 0)) >= $17) order by greatest(coalesce(word_similarity(lower(unaccent($18)), lower(unaccent(translate(\"students\".\"name\", $19, $20)))), 0), coalesce(word_similarity(lower(unaccent($21)), lower(unaccent(translate(\"students\".\"arabic_name\", $22, $23)))), 0)) desc, \"students\".\"name\" limit $24",
+     "params": [
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "4c032ce22ad6c084": {
+   "statements": [
+    {
+     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"students\".\"name\" ilike $1 or (translate(\"students\".\"name\", $2, $3) ilike $4 or translate(\"students\".\"arabic_name\", $5, $6) ilike $7) or \"students\".\"student_code\" ilike $8 or \"students\".\"phone\" ilike $9 or \"users\".\"email\" ilike $10 or greatest(coalesce(word_similarity(lower(unaccent($11)), lower(unaccent(translate(\"students\".\"name\", $12, $13)))), 0), coalesce(word_similarity(lower(unaccent($14)), lower(unaccent(translate(\"students\".\"arabic_name\", $15, $16)))), 0)) >= $17)) order by greatest(coalesce(word_similarity(lower(unaccent($18)), lower(unaccent(translate(\"students\".\"name\", $19, $20)))), 0), coalesce(word_similarity(lower(unaccent($21)), lower(unaccent(translate(\"students\".\"arabic_name\", $22, $23)))), 0)) desc, \"students\".\"name\" limit $24",
+     "params": [
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "c6be28ff20a33b0e": {
+   "statements": [
+    {
+     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (\"teachers\".\"id\" in (select \"teachers\".\"id\" from \"teachers\" inner join \"staff\" \"_sc_staff_1\" on \"teachers\".\"staff_id\" = \"_sc_staff_1\".\"id\" where \"_sc_staff_1\".\"user_id\" = $1) and (\"staff\".\"name\" ilike $2 or translate(\"staff\".\"name\", $3, $4) ilike $5 or \"staff\".\"cin\" ilike $6 or \"staff\".\"phone\" ilike $7 or \"users\".\"email\" ilike $8 or \"teachers\".\"specialization\" ilike $9 or greatest(coalesce(word_similarity(lower(unaccent($10)), lower(unaccent(translate(\"staff\".\"name\", $11, $12)))), 0)) >= $13)) order by greatest(coalesce(word_similarity(lower(unaccent($14)), lower(unaccent(translate(\"staff\".\"name\", $15, $16)))), 0)) desc, \"staff\".\"name\" limit $17",
+     "params": [
+      "user-1",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "e80ccfb337effbd9": {
+   "statements": [
+    {
+     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (\"teachers\".\"id\" in (select \"id\" from \"teachers\" where exists (select 1 from teacher_assignments assignment\n    where assignment.teacher_id = \"teachers\".\"id\" and exists (select 1 from sections managed_section\n    where managed_section.id = assignment.section_id and exists (select 1 from classes managed_class\n    where managed_class.id = managed_section.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3)))))) and (\"staff\".\"name\" ilike $4 or translate(\"staff\".\"name\", $5, $6) ilike $7 or \"staff\".\"cin\" ilike $8 or \"staff\".\"phone\" ilike $9 or \"users\".\"email\" ilike $10 or \"teachers\".\"specialization\" ilike $11 or greatest(coalesce(word_similarity(lower(unaccent($12)), lower(unaccent(translate(\"staff\".\"name\", $13, $14)))), 0)) >= $15)) order by greatest(coalesce(word_similarity(lower(unaccent($16)), lower(unaccent(translate(\"staff\".\"name\", $17, $18)))), 0)) desc, \"staff\".\"name\" limit $19",
+     "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "0bf117ddc4ed89c3": {
+   "statements": [
+    {
+     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"staff\".\"name\" ilike $1 or translate(\"staff\".\"name\", $2, $3) ilike $4 or \"staff\".\"cin\" ilike $5 or \"staff\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7 or \"teachers\".\"specialization\" ilike $8 or greatest(coalesce(word_similarity(lower(unaccent($9)), lower(unaccent(translate(\"staff\".\"name\", $10, $11)))), 0)) >= $12)) order by greatest(coalesce(word_similarity(lower(unaccent($13)), lower(unaccent(translate(\"staff\".\"name\", $14, $15)))), 0)) desc, \"staff\".\"name\" limit $16",
+     "params": [
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "e13389691ec321a2": {
+   "statements": [
+    {
+     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (\"staff\".\"name\" ilike $1 or translate(\"staff\".\"name\", $2, $3) ilike $4 or \"staff\".\"cin\" ilike $5 or \"staff\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7 or \"teachers\".\"specialization\" ilike $8 or greatest(coalesce(word_similarity(lower(unaccent($9)), lower(unaccent(translate(\"staff\".\"name\", $10, $11)))), 0)) >= $12) order by greatest(coalesce(word_similarity(lower(unaccent($13)), lower(unaccent(translate(\"staff\".\"name\", $14, $15)))), 0)) desc, \"staff\".\"name\" limit $16",
+     "params": [
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "e0d74e85377a9347": {
+   "statements": [
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"parents\".\"id\" from \"parents\" inner join \"student_parents\" \"_sc_student_parents_1\" on \"parents\".\"id\" = \"_sc_student_parents_1\".\"parent_id\" inner join \"students\" \"_sc_students_2\" on \"_sc_student_parents_1\".\"student_id\" = \"_sc_students_2\".\"id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_3\" on \"_sc_students_2\".\"section_id\" = \"_sc_teacher_assignments_3\".\"section_id\" inner join \"teachers\" \"_sc_teachers_4\" on \"_sc_teacher_assignments_3\".\"teacher_id\" = \"_sc_teachers_4\".\"id\" inner join \"staff\" \"_sc_staff_5\" on \"_sc_teachers_4\".\"staff_id\" = \"_sc_staff_5\".\"id\" where \"_sc_staff_5\".\"user_id\" = $1) and (\"parents\".\"name\" ilike $2 or translate(\"parents\".\"name\", $3, $4) ilike $5 or \"parents\".\"cin\" ilike $6 or \"parents\".\"phone\" ilike $7 or \"users\".\"email\" ilike $8 or greatest(coalesce(word_similarity(lower(unaccent($9)), lower(unaccent(translate(\"parents\".\"name\", $10, $11)))), 0)) >= $12)) order by greatest(coalesce(word_similarity(lower(unaccent($13)), lower(unaccent(translate(\"parents\".\"name\", $14, $15)))), 0)) desc, \"parents\".\"name\" limit $16",
+     "params": [
+      "user-1",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "c0a8e16b5674d9ec": {
+   "statements": [
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"id\" from \"parents\" where exists (select 1 from student_parents managed_link\n    join students managed_student on managed_student.id = managed_link.student_id\n    where managed_link.parent_id = \"parents\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_student.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) and (\"parents\".\"name\" ilike $4 or translate(\"parents\".\"name\", $5, $6) ilike $7 or \"parents\".\"cin\" ilike $8 or \"parents\".\"phone\" ilike $9 or \"users\".\"email\" ilike $10 or greatest(coalesce(word_similarity(lower(unaccent($11)), lower(unaccent(translate(\"parents\".\"name\", $12, $13)))), 0)) >= $14)) order by greatest(coalesce(word_similarity(lower(unaccent($15)), lower(unaccent(translate(\"parents\".\"name\", $16, $17)))), 0)) desc, \"parents\".\"name\" limit $18",
+     "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "546aa622bd71fdc4": {
+   "statements": [
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"id\" from \"parents\" where \"parents\".\"user_id\" = $1) and (\"parents\".\"name\" ilike $2 or translate(\"parents\".\"name\", $3, $4) ilike $5 or \"parents\".\"cin\" ilike $6 or \"parents\".\"phone\" ilike $7 or \"users\".\"email\" ilike $8 or greatest(coalesce(word_similarity(lower(unaccent($9)), lower(unaccent(translate(\"parents\".\"name\", $10, $11)))), 0)) >= $12)) order by greatest(coalesce(word_similarity(lower(unaccent($13)), lower(unaccent(translate(\"parents\".\"name\", $14, $15)))), 0)) desc, \"parents\".\"name\" limit $16",
+     "params": [
+      "user-1",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "87b905c0cc039883": {
+   "statements": [
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"parents\".\"id\" from \"parents\" inner join \"student_parents\" \"_sc_student_parents_1\" on \"parents\".\"id\" = \"_sc_student_parents_1\".\"parent_id\" inner join \"students\" \"_sc_students_2\" on \"_sc_student_parents_1\".\"student_id\" = \"_sc_students_2\".\"id\" where \"_sc_students_2\".\"user_id\" = $1) and (\"parents\".\"name\" ilike $2 or translate(\"parents\".\"name\", $3, $4) ilike $5 or \"parents\".\"cin\" ilike $6 or \"parents\".\"phone\" ilike $7 or \"users\".\"email\" ilike $8 or greatest(coalesce(word_similarity(lower(unaccent($9)), lower(unaccent(translate(\"parents\".\"name\", $10, $11)))), 0)) >= $12)) order by greatest(coalesce(word_similarity(lower(unaccent($13)), lower(unaccent(translate(\"parents\".\"name\", $14, $15)))), 0)) desc, \"parents\".\"name\" limit $16",
+     "params": [
+      "user-1",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "039f22d35ac5693c": {
+   "statements": [
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"name\" ilike $1 or translate(\"parents\".\"name\", $2, $3) ilike $4 or \"parents\".\"cin\" ilike $5 or \"parents\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7 or greatest(coalesce(word_similarity(lower(unaccent($8)), lower(unaccent(translate(\"parents\".\"name\", $9, $10)))), 0)) >= $11) order by greatest(coalesce(word_similarity(lower(unaccent($12)), lower(unaccent(translate(\"parents\".\"name\", $13, $14)))), 0)) desc, \"parents\".\"name\" limit $15",
+     "params": [
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "8947010f32f070ff": {
+   "statements": [
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"parents\".\"name\" ilike $1 or translate(\"parents\".\"name\", $2, $3) ilike $4 or \"parents\".\"cin\" ilike $5 or \"parents\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7 or greatest(coalesce(word_similarity(lower(unaccent($8)), lower(unaccent(translate(\"parents\".\"name\", $9, $10)))), 0)) >= $11)) order by greatest(coalesce(word_similarity(lower(unaccent($12)), lower(unaccent(translate(\"parents\".\"name\", $13, $14)))), 0)) desc, \"parents\".\"name\" limit $15",
+     "params": [
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      20
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "a6717ff3d768ee3c": {
+   "statements": [
+    {
+     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"students\".\"id\" from \"students\" inner join \"student_enrollments\" \"_sc_student_enrollments_1\" on \"students\".\"id\" = \"_sc_student_enrollments_1\".\"student_id\" inner join \"student_enrollment_placements\" \"_sc_student_enrollment_placements_2\" on \"_sc_student_enrollments_1\".\"id\" = \"_sc_student_enrollment_placements_2\".\"enrollment_id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_3\" on \"_sc_student_enrollment_placements_2\".\"section_id\" = \"_sc_teacher_assignments_3\".\"section_id\" inner join \"teachers\" \"_sc_teachers_4\" on \"_sc_teacher_assignments_3\".\"teacher_id\" = \"_sc_teachers_4\".\"id\" inner join \"staff\" \"_sc_staff_5\" on \"_sc_teachers_4\".\"staff_id\" = \"_sc_staff_5\".\"id\" where \"_sc_staff_5\".\"user_id\" = $1) and (\"students\".\"name\" ilike $2 or (translate(\"students\".\"name\", $3, $4) ilike $5 or translate(\"students\".\"arabic_name\", $6, $7) ilike $8) or \"students\".\"student_code\" ilike $9 or \"students\".\"phone\" ilike $10 or \"users\".\"email\" ilike $11 or greatest(coalesce(word_similarity(lower(unaccent($12)), lower(unaccent(translate(\"students\".\"name\", $13, $14)))), 0), coalesce(word_similarity(lower(unaccent($15)), lower(unaccent(translate(\"students\".\"arabic_name\", $16, $17)))), 0)) >= $18)) order by greatest(coalesce(word_similarity(lower(unaccent($19)), lower(unaccent(translate(\"students\".\"name\", $20, $21)))), 0), coalesce(word_similarity(lower(unaccent($22)), lower(unaccent(translate(\"students\".\"arabic_name\", $23, $24)))), 0)) desc, \"students\".\"name\" limit $25",
+     "params": [
+      "user-1",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (\"teachers\".\"id\" in (select \"teachers\".\"id\" from \"teachers\" inner join \"staff\" \"_sc_staff_1\" on \"teachers\".\"staff_id\" = \"_sc_staff_1\".\"id\" where \"_sc_staff_1\".\"user_id\" = $1) and (\"staff\".\"name\" ilike $2 or translate(\"staff\".\"name\", $3, $4) ilike $5 or \"staff\".\"cin\" ilike $6 or \"staff\".\"phone\" ilike $7 or \"users\".\"email\" ilike $8 or \"teachers\".\"specialization\" ilike $9 or greatest(coalesce(word_similarity(lower(unaccent($10)), lower(unaccent(translate(\"staff\".\"name\", $11, $12)))), 0)) >= $13)) order by greatest(coalesce(word_similarity(lower(unaccent($14)), lower(unaccent(translate(\"staff\".\"name\", $15, $16)))), 0)) desc, \"staff\".\"name\" limit $17",
+     "params": [
+      "user-1",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"parents\".\"id\" from \"parents\" inner join \"student_parents\" \"_sc_student_parents_1\" on \"parents\".\"id\" = \"_sc_student_parents_1\".\"parent_id\" inner join \"students\" \"_sc_students_2\" on \"_sc_student_parents_1\".\"student_id\" = \"_sc_students_2\".\"id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_3\" on \"_sc_students_2\".\"section_id\" = \"_sc_teacher_assignments_3\".\"section_id\" inner join \"teachers\" \"_sc_teachers_4\" on \"_sc_teacher_assignments_3\".\"teacher_id\" = \"_sc_teachers_4\".\"id\" inner join \"staff\" \"_sc_staff_5\" on \"_sc_teachers_4\".\"staff_id\" = \"_sc_staff_5\".\"id\" where \"_sc_staff_5\".\"user_id\" = $1) and (\"parents\".\"name\" ilike $2 or translate(\"parents\".\"name\", $3, $4) ilike $5 or \"parents\".\"cin\" ilike $6 or \"parents\".\"phone\" ilike $7 or \"users\".\"email\" ilike $8 or greatest(coalesce(word_similarity(lower(unaccent($9)), lower(unaccent(translate(\"parents\".\"name\", $10, $11)))), 0)) >= $12)) order by greatest(coalesce(word_similarity(lower(unaccent($13)), lower(unaccent(translate(\"parents\".\"name\", $14, $15)))), 0)) desc, \"parents\".\"name\" limit $16",
+     "params": [
+      "user-1",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "e6cc7da92fb52f6a": {
+   "statements": [
+    {
+     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"id\" from \"students\" where exists (select 1 from student_enrollments managed_enrollment\n    join student_enrollment_placements managed_placement on managed_placement.enrollment_id = managed_enrollment.id\n    where managed_enrollment.student_id = \"students\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_placement.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) and (\"students\".\"name\" ilike $4 or (translate(\"students\".\"name\", $5, $6) ilike $7 or translate(\"students\".\"arabic_name\", $8, $9) ilike $10) or \"students\".\"student_code\" ilike $11 or \"students\".\"phone\" ilike $12 or \"users\".\"email\" ilike $13 or greatest(coalesce(word_similarity(lower(unaccent($14)), lower(unaccent(translate(\"students\".\"name\", $15, $16)))), 0), coalesce(word_similarity(lower(unaccent($17)), lower(unaccent(translate(\"students\".\"arabic_name\", $18, $19)))), 0)) >= $20)) order by greatest(coalesce(word_similarity(lower(unaccent($21)), lower(unaccent(translate(\"students\".\"name\", $22, $23)))), 0), coalesce(word_similarity(lower(unaccent($24)), lower(unaccent(translate(\"students\".\"arabic_name\", $25, $26)))), 0)) desc, \"students\".\"name\" limit $27",
+     "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (\"teachers\".\"id\" in (select \"id\" from \"teachers\" where exists (select 1 from teacher_assignments assignment\n    where assignment.teacher_id = \"teachers\".\"id\" and exists (select 1 from sections managed_section\n    where managed_section.id = assignment.section_id and exists (select 1 from classes managed_class\n    where managed_class.id = managed_section.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3)))))) and (\"staff\".\"name\" ilike $4 or translate(\"staff\".\"name\", $5, $6) ilike $7 or \"staff\".\"cin\" ilike $8 or \"staff\".\"phone\" ilike $9 or \"users\".\"email\" ilike $10 or \"teachers\".\"specialization\" ilike $11 or greatest(coalesce(word_similarity(lower(unaccent($12)), lower(unaccent(translate(\"staff\".\"name\", $13, $14)))), 0)) >= $15)) order by greatest(coalesce(word_similarity(lower(unaccent($16)), lower(unaccent(translate(\"staff\".\"name\", $17, $18)))), 0)) desc, \"staff\".\"name\" limit $19",
+     "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"id\" from \"parents\" where exists (select 1 from student_parents managed_link\n    join students managed_student on managed_student.id = managed_link.student_id\n    where managed_link.parent_id = \"parents\".\"id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_student.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))) and (\"parents\".\"name\" ilike $4 or translate(\"parents\".\"name\", $5, $6) ilike $7 or \"parents\".\"cin\" ilike $8 or \"parents\".\"phone\" ilike $9 or \"users\".\"email\" ilike $10 or greatest(coalesce(word_similarity(lower(unaccent($11)), lower(unaccent(translate(\"parents\".\"name\", $12, $13)))), 0)) >= $14)) order by greatest(coalesce(word_similarity(lower(unaccent($15)), lower(unaccent(translate(\"parents\".\"name\", $16, $17)))), 0)) desc, \"parents\".\"name\" limit $18",
+     "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "cfba2a5569c6e8fd": {
+   "statements": [
+    {
+     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"students\".\"id\" from \"students\" inner join \"student_parents\" \"_sc_student_parents_1\" on \"students\".\"id\" = \"_sc_student_parents_1\".\"student_id\" inner join \"parents\" \"_sc_parents_2\" on \"_sc_student_parents_1\".\"parent_id\" = \"_sc_parents_2\".\"id\" where \"_sc_parents_2\".\"user_id\" = $1) and (\"students\".\"name\" ilike $2 or (translate(\"students\".\"name\", $3, $4) ilike $5 or translate(\"students\".\"arabic_name\", $6, $7) ilike $8) or \"students\".\"student_code\" ilike $9 or \"students\".\"phone\" ilike $10 or \"users\".\"email\" ilike $11 or greatest(coalesce(word_similarity(lower(unaccent($12)), lower(unaccent(translate(\"students\".\"name\", $13, $14)))), 0), coalesce(word_similarity(lower(unaccent($15)), lower(unaccent(translate(\"students\".\"arabic_name\", $16, $17)))), 0)) >= $18)) order by greatest(coalesce(word_similarity(lower(unaccent($19)), lower(unaccent(translate(\"students\".\"name\", $20, $21)))), 0), coalesce(word_similarity(lower(unaccent($22)), lower(unaccent(translate(\"students\".\"arabic_name\", $23, $24)))), 0)) desc, \"students\".\"name\" limit $25",
+     "params": [
+      "user-1",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"staff\".\"name\" ilike $1 or translate(\"staff\".\"name\", $2, $3) ilike $4 or \"staff\".\"cin\" ilike $5 or \"staff\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7 or \"teachers\".\"specialization\" ilike $8 or greatest(coalesce(word_similarity(lower(unaccent($9)), lower(unaccent(translate(\"staff\".\"name\", $10, $11)))), 0)) >= $12)) order by greatest(coalesce(word_similarity(lower(unaccent($13)), lower(unaccent(translate(\"staff\".\"name\", $14, $15)))), 0)) desc, \"staff\".\"name\" limit $16",
+     "params": [
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"id\" from \"parents\" where \"parents\".\"user_id\" = $1) and (\"parents\".\"name\" ilike $2 or translate(\"parents\".\"name\", $3, $4) ilike $5 or \"parents\".\"cin\" ilike $6 or \"parents\".\"phone\" ilike $7 or \"users\".\"email\" ilike $8 or greatest(coalesce(word_similarity(lower(unaccent($9)), lower(unaccent(translate(\"parents\".\"name\", $10, $11)))), 0)) >= $12)) order by greatest(coalesce(word_similarity(lower(unaccent($13)), lower(unaccent(translate(\"parents\".\"name\", $14, $15)))), 0)) desc, \"parents\".\"name\" limit $16",
+     "params": [
+      "user-1",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "2fdb4b77ade8d9ae": {
+   "statements": [
+    {
+     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"id\" in (select \"id\" from \"students\" where \"students\".\"user_id\" = $1) and (\"students\".\"name\" ilike $2 or (translate(\"students\".\"name\", $3, $4) ilike $5 or translate(\"students\".\"arabic_name\", $6, $7) ilike $8) or \"students\".\"student_code\" ilike $9 or \"students\".\"phone\" ilike $10 or \"users\".\"email\" ilike $11 or greatest(coalesce(word_similarity(lower(unaccent($12)), lower(unaccent(translate(\"students\".\"name\", $13, $14)))), 0), coalesce(word_similarity(lower(unaccent($15)), lower(unaccent(translate(\"students\".\"arabic_name\", $16, $17)))), 0)) >= $18)) order by greatest(coalesce(word_similarity(lower(unaccent($19)), lower(unaccent(translate(\"students\".\"name\", $20, $21)))), 0), coalesce(word_similarity(lower(unaccent($22)), lower(unaccent(translate(\"students\".\"arabic_name\", $23, $24)))), 0)) desc, \"students\".\"name\" limit $25",
+     "params": [
+      "user-1",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"staff\".\"name\" ilike $1 or translate(\"staff\".\"name\", $2, $3) ilike $4 or \"staff\".\"cin\" ilike $5 or \"staff\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7 or \"teachers\".\"specialization\" ilike $8 or greatest(coalesce(word_similarity(lower(unaccent($9)), lower(unaccent(translate(\"staff\".\"name\", $10, $11)))), 0)) >= $12)) order by greatest(coalesce(word_similarity(lower(unaccent($13)), lower(unaccent(translate(\"staff\".\"name\", $14, $15)))), 0)) desc, \"staff\".\"name\" limit $16",
+     "params": [
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"id\" in (select \"parents\".\"id\" from \"parents\" inner join \"student_parents\" \"_sc_student_parents_1\" on \"parents\".\"id\" = \"_sc_student_parents_1\".\"parent_id\" inner join \"students\" \"_sc_students_2\" on \"_sc_student_parents_1\".\"student_id\" = \"_sc_students_2\".\"id\" where \"_sc_students_2\".\"user_id\" = $1) and (\"parents\".\"name\" ilike $2 or translate(\"parents\".\"name\", $3, $4) ilike $5 or \"parents\".\"cin\" ilike $6 or \"parents\".\"phone\" ilike $7 or \"users\".\"email\" ilike $8 or greatest(coalesce(word_similarity(lower(unaccent($9)), lower(unaccent(translate(\"parents\".\"name\", $10, $11)))), 0)) >= $12)) order by greatest(coalesce(word_similarity(lower(unaccent($13)), lower(unaccent(translate(\"parents\".\"name\", $14, $15)))), 0)) desc, \"parents\".\"name\" limit $16",
+     "params": [
+      "user-1",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "da451debb2c650d5": {
+   "statements": [
+    {
+     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (\"students\".\"name\" ilike $1 or (translate(\"students\".\"name\", $2, $3) ilike $4 or translate(\"students\".\"arabic_name\", $5, $6) ilike $7) or \"students\".\"student_code\" ilike $8 or \"students\".\"phone\" ilike $9 or \"users\".\"email\" ilike $10 or greatest(coalesce(word_similarity(lower(unaccent($11)), lower(unaccent(translate(\"students\".\"name\", $12, $13)))), 0), coalesce(word_similarity(lower(unaccent($14)), lower(unaccent(translate(\"students\".\"arabic_name\", $15, $16)))), 0)) >= $17) order by greatest(coalesce(word_similarity(lower(unaccent($18)), lower(unaccent(translate(\"students\".\"name\", $19, $20)))), 0), coalesce(word_similarity(lower(unaccent($21)), lower(unaccent(translate(\"students\".\"arabic_name\", $22, $23)))), 0)) desc, \"students\".\"name\" limit $24",
+     "params": [
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (\"staff\".\"name\" ilike $1 or translate(\"staff\".\"name\", $2, $3) ilike $4 or \"staff\".\"cin\" ilike $5 or \"staff\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7 or \"teachers\".\"specialization\" ilike $8 or greatest(coalesce(word_similarity(lower(unaccent($9)), lower(unaccent(translate(\"staff\".\"name\", $10, $11)))), 0)) >= $12) order by greatest(coalesce(word_similarity(lower(unaccent($13)), lower(unaccent(translate(\"staff\".\"name\", $14, $15)))), 0)) desc, \"staff\".\"name\" limit $16",
+     "params": [
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (\"parents\".\"name\" ilike $1 or translate(\"parents\".\"name\", $2, $3) ilike $4 or \"parents\".\"cin\" ilike $5 or \"parents\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7 or greatest(coalesce(word_similarity(lower(unaccent($8)), lower(unaccent(translate(\"parents\".\"name\", $9, $10)))), 0)) >= $11) order by greatest(coalesce(word_similarity(lower(unaccent($12)), lower(unaccent(translate(\"parents\".\"name\", $13, $14)))), 0)) desc, \"parents\".\"name\" limit $15",
+     "params": [
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "87396c9ff2cd421a": {
+   "statements": [
+    {
+     "sql": "select \"students\".\"id\", \"students\".\"name\", \"students\".\"student_code\", \"students\".\"gender\", coalesce(\"users\".\"image\", \"students\".\"image\"), \"users\".\"email\", \"students\".\"phone\", \"students\".\"arabic_name\", 'student' as \"type\" from \"students\" left join \"users\" on \"students\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"students\".\"name\" ilike $1 or (translate(\"students\".\"name\", $2, $3) ilike $4 or translate(\"students\".\"arabic_name\", $5, $6) ilike $7) or \"students\".\"student_code\" ilike $8 or \"students\".\"phone\" ilike $9 or \"users\".\"email\" ilike $10 or greatest(coalesce(word_similarity(lower(unaccent($11)), lower(unaccent(translate(\"students\".\"name\", $12, $13)))), 0), coalesce(word_similarity(lower(unaccent($14)), lower(unaccent(translate(\"students\".\"arabic_name\", $15, $16)))), 0)) >= $17)) order by greatest(coalesce(word_similarity(lower(unaccent($18)), lower(unaccent(translate(\"students\".\"name\", $19, $20)))), 0), coalesce(word_similarity(lower(unaccent($21)), lower(unaccent(translate(\"students\".\"arabic_name\", $22, $23)))), 0)) desc, \"students\".\"name\" limit $24",
+     "params": [
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"teachers\".\"id\", \"staff\".\"name\", \"staff\".\"cin\", \"staff\".\"gender\", \"users\".\"image\", \"users\".\"email\", \"staff\".\"phone\", \"teachers\".\"specialization\", 'teacher' as \"type\" from \"teachers\" inner join \"staff\" on \"teachers\".\"staff_id\" = \"staff\".\"id\" left join \"users\" on \"staff\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"staff\".\"name\" ilike $1 or translate(\"staff\".\"name\", $2, $3) ilike $4 or \"staff\".\"cin\" ilike $5 or \"staff\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7 or \"teachers\".\"specialization\" ilike $8 or greatest(coalesce(word_similarity(lower(unaccent($9)), lower(unaccent(translate(\"staff\".\"name\", $10, $11)))), 0)) >= $12)) order by greatest(coalesce(word_similarity(lower(unaccent($13)), lower(unaccent(translate(\"staff\".\"name\", $14, $15)))), 0)) desc, \"staff\".\"name\" limit $16",
+     "params": [
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"parents\".\"id\", \"parents\".\"name\", \"parents\".\"cin\", \"parents\".\"gender\", coalesce(\"users\".\"image\", \"parents\".\"image\"), \"users\".\"email\", \"parents\".\"phone\", 'parent' as \"type\" from \"parents\" left join \"users\" on \"parents\".\"user_id\" = \"users\".\"id\" where (1 = 0 and (\"parents\".\"name\" ilike $1 or translate(\"parents\".\"name\", $2, $3) ilike $4 or \"parents\".\"cin\" ilike $5 or \"parents\".\"phone\" ilike $6 or \"users\".\"email\" ilike $7 or greatest(coalesce(word_similarity(lower(unaccent($8)), lower(unaccent(translate(\"parents\".\"name\", $9, $10)))), 0)) >= $11)) order by greatest(coalesce(word_similarity(lower(unaccent($12)), lower(unaccent(translate(\"parents\".\"name\", $13, $14)))), 0)) desc, \"parents\".\"name\" limit $15",
+     "params": [
+      "%Adam%",
+      "أإآةى",
+      "اااهي",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "%Adam%",
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      0.5,
+      "Adam",
+      "أإآةى",
+      "اااهي",
+      10
+     ],
+     "method": "all"
+    }
+   ]
   }
  },
  "cases": {
@@ -18488,62 +18849,62 @@
   "repository:parent children list placements|role:custom-role": "2d7dfa088db05b5f",
   "repository:parent children list placements|anonymous": "2d7dfa088db05b5f",
   "repository:parent children list placements|outside-request": "e99a982f133de20a",
-  "repository:search students|role:teacher": "ed5299ce619ff6b9",
-  "repository:search students|role:monitor": "a18a4e48dd34928f",
-  "repository:search students|role:parent": "2cc480bac030f3e2",
-  "repository:search students|role:student": "a5184c7dba04741a",
-  "repository:search students|role:admin": "8ecb28c510a64b28",
-  "repository:search students|role:principal": "8ecb28c510a64b28",
-  "repository:search students|role:accounting": "8ecb28c510a64b28",
-  "repository:search students|role:secretary": "8ecb28c510a64b28",
-  "repository:search students|role:driver": "8ecb28c510a64b28",
-  "repository:search students|role:assistant": "8ecb28c510a64b28",
+  "repository:search students|role:teacher": "aceecfe8af026d4b",
+  "repository:search students|role:monitor": "d6e126f70d446d52",
+  "repository:search students|role:parent": "f9ff8467cfce3640",
+  "repository:search students|role:student": "40e33b085afd0324",
+  "repository:search students|role:admin": "d0ad81897b13d46d",
+  "repository:search students|role:principal": "d0ad81897b13d46d",
+  "repository:search students|role:accounting": "d0ad81897b13d46d",
+  "repository:search students|role:secretary": "d0ad81897b13d46d",
+  "repository:search students|role:driver": "d0ad81897b13d46d",
+  "repository:search students|role:assistant": "d0ad81897b13d46d",
   "repository:search students|role:supervisor": "d63500841e6c5d22",
-  "repository:search students|role:custom-role": "bac7ac10edd70651",
-  "repository:search students|anonymous": "bac7ac10edd70651",
-  "repository:search students|outside-request": "8ecb28c510a64b28",
-  "repository:search teachers|role:teacher": "f5c2f25071eb0c9d",
-  "repository:search teachers|role:monitor": "60fd302785681dd2",
-  "repository:search teachers|role:parent": "adcd4818299e6055",
-  "repository:search teachers|role:student": "adcd4818299e6055",
-  "repository:search teachers|role:admin": "34d9f190b7bd23db",
-  "repository:search teachers|role:principal": "34d9f190b7bd23db",
-  "repository:search teachers|role:accounting": "34d9f190b7bd23db",
-  "repository:search teachers|role:secretary": "34d9f190b7bd23db",
-  "repository:search teachers|role:driver": "34d9f190b7bd23db",
-  "repository:search teachers|role:assistant": "34d9f190b7bd23db",
+  "repository:search students|role:custom-role": "4c032ce22ad6c084",
+  "repository:search students|anonymous": "4c032ce22ad6c084",
+  "repository:search students|outside-request": "d0ad81897b13d46d",
+  "repository:search teachers|role:teacher": "c6be28ff20a33b0e",
+  "repository:search teachers|role:monitor": "e80ccfb337effbd9",
+  "repository:search teachers|role:parent": "0bf117ddc4ed89c3",
+  "repository:search teachers|role:student": "0bf117ddc4ed89c3",
+  "repository:search teachers|role:admin": "e13389691ec321a2",
+  "repository:search teachers|role:principal": "e13389691ec321a2",
+  "repository:search teachers|role:accounting": "e13389691ec321a2",
+  "repository:search teachers|role:secretary": "e13389691ec321a2",
+  "repository:search teachers|role:driver": "e13389691ec321a2",
+  "repository:search teachers|role:assistant": "e13389691ec321a2",
   "repository:search teachers|role:supervisor": "13ae43d651128249",
-  "repository:search teachers|role:custom-role": "adcd4818299e6055",
-  "repository:search teachers|anonymous": "adcd4818299e6055",
-  "repository:search teachers|outside-request": "34d9f190b7bd23db",
-  "repository:search parents|role:teacher": "6b36b2351ee925cb",
-  "repository:search parents|role:monitor": "a865cc0aa339e840",
-  "repository:search parents|role:parent": "c05cac23c11c7154",
-  "repository:search parents|role:student": "be52238ea218e9d9",
-  "repository:search parents|role:admin": "e76a60d89eeb9d3e",
-  "repository:search parents|role:principal": "e76a60d89eeb9d3e",
-  "repository:search parents|role:accounting": "e76a60d89eeb9d3e",
-  "repository:search parents|role:secretary": "e76a60d89eeb9d3e",
-  "repository:search parents|role:driver": "e76a60d89eeb9d3e",
-  "repository:search parents|role:assistant": "e76a60d89eeb9d3e",
+  "repository:search teachers|role:custom-role": "0bf117ddc4ed89c3",
+  "repository:search teachers|anonymous": "0bf117ddc4ed89c3",
+  "repository:search teachers|outside-request": "e13389691ec321a2",
+  "repository:search parents|role:teacher": "e0d74e85377a9347",
+  "repository:search parents|role:monitor": "c0a8e16b5674d9ec",
+  "repository:search parents|role:parent": "546aa622bd71fdc4",
+  "repository:search parents|role:student": "87b905c0cc039883",
+  "repository:search parents|role:admin": "039f22d35ac5693c",
+  "repository:search parents|role:principal": "039f22d35ac5693c",
+  "repository:search parents|role:accounting": "039f22d35ac5693c",
+  "repository:search parents|role:secretary": "039f22d35ac5693c",
+  "repository:search parents|role:driver": "039f22d35ac5693c",
+  "repository:search parents|role:assistant": "039f22d35ac5693c",
   "repository:search parents|role:supervisor": "e76a60d89eeb9d3e",
-  "repository:search parents|role:custom-role": "8ece9eb457b43f64",
-  "repository:search parents|anonymous": "8ece9eb457b43f64",
-  "repository:search parents|outside-request": "e76a60d89eeb9d3e",
-  "repository:search global|role:teacher": "bda4d885828543ee",
-  "repository:search global|role:monitor": "7f750f522abccd72",
-  "repository:search global|role:parent": "b72b7c2d6a699720",
-  "repository:search global|role:student": "a9b9eaf95e079d44",
-  "repository:search global|role:admin": "ec9b22e75f92ba29",
-  "repository:search global|role:principal": "ec9b22e75f92ba29",
-  "repository:search global|role:accounting": "ec9b22e75f92ba29",
-  "repository:search global|role:secretary": "ec9b22e75f92ba29",
-  "repository:search global|role:driver": "ec9b22e75f92ba29",
-  "repository:search global|role:assistant": "ec9b22e75f92ba29",
+  "repository:search parents|role:custom-role": "8947010f32f070ff",
+  "repository:search parents|anonymous": "8947010f32f070ff",
+  "repository:search parents|outside-request": "039f22d35ac5693c",
+  "repository:search global|role:teacher": "a6717ff3d768ee3c",
+  "repository:search global|role:monitor": "e6cc7da92fb52f6a",
+  "repository:search global|role:parent": "cfba2a5569c6e8fd",
+  "repository:search global|role:student": "2fdb4b77ade8d9ae",
+  "repository:search global|role:admin": "da451debb2c650d5",
+  "repository:search global|role:principal": "da451debb2c650d5",
+  "repository:search global|role:accounting": "da451debb2c650d5",
+  "repository:search global|role:secretary": "da451debb2c650d5",
+  "repository:search global|role:driver": "da451debb2c650d5",
+  "repository:search global|role:assistant": "da451debb2c650d5",
   "repository:search global|role:supervisor": "ae3729a73475dc69",
-  "repository:search global|role:custom-role": "27962b37a0d5357e",
-  "repository:search global|anonymous": "27962b37a0d5357e",
-  "repository:search global|outside-request": "ec9b22e75f92ba29",
+  "repository:search global|role:custom-role": "87396c9ff2cd421a",
+  "repository:search global|anonymous": "87396c9ff2cd421a",
+  "repository:search global|outside-request": "da451debb2c650d5",
   "repository:sections getById|role:teacher": "4c349ea81767d22b",
   "repository:sections getById|role:monitor": "977b2a1707094d0e",
   "repository:sections getById|role:parent": "188e7121b5dbacfc",
