@@ -7981,7 +7981,7 @@
     "supportList": {
       "title": "Élèves ayant besoin de soutien",
       "byPupil": "Liste de soutien par élève",
-      "bySkill": "Groupes de soutien par compétence",
+      "bySkill": "Groupes de soutien",
       "no": "N°",
       "marks": "Notes du contrôle",
       "count": "Nb",
@@ -7991,7 +7991,10 @@
       "print": "Liste de soutien",
       "choose": "Nombre d’élèves les plus en difficulté",
       "limited": "Liste limitée aux {{count}} élèves les plus en difficulté",
-      "completed": "complétée par {{count}} élève(s) en cours d’acquisition (niveau 3)"
+      "completed": "complétée par {{count}} élève(s) en cours d’acquisition (niveau 3)",
+      "group": "Groupe {{number}}",
+      "groupPupils": "Élèves",
+      "groupSkills": "Compétences à travailler"
     },
     "remark": {
       "title": "Remarque pour les parents",

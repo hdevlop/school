@@ -44,6 +44,11 @@ const labels = {
   language: 'ar' as const, maxMark: 10,
   levelLabel: (rank: number) => `L${Math.round(rank)}`, appreciationLabel: (grade: string) => grade, monthLabel: (month: string) => month,
 };
+/** The support groups of a printed list: each one's pupils and competencies, in order. */
+const supportGroupsOf = (html: string) => html.split('<div class="group">').slice(1).map((chunk) => ({
+  pupils: [...chunk.matchAll(/class="who[^"]*"><bdi>([^<]*)/g)].map((match) => match[1]),
+  skills: [...chunk.matchAll(/class="what"><bdi>([^<]*)/g)].map((match) => match[1]),
+}));
 const options: ClassReportPrintOptions = {
   language: 'ar', dir: 'rtl', t: (key, params) => (params ? `${key}${JSON.stringify(params)}` : key), caption: (key) => `fr:${key}`,
   school: { name: 'École', logo: 'javascript:alert(1)' }, assetOrigin: 'http://localhost', subjectName: 'Mathématiques',
@@ -127,7 +132,7 @@ describe('the class report after a Massar Contrôle', () => {
     }
   });
 
-  it('lists the pupils needing support, those with the most competencies first, and groups them by competency', () => {
+  it('lists the pupils needing support, those with the most competencies first, and groups them', () => {
     expect(supportList(report).map((pupil) => [pupil.report.student.id, pupil.skills.map((skill) => [skill.id, skill.level])]))
       .toEqual([['d', [['c1', 'beginning'], ['c2', 'not_acquired']]]]);
     // Badr falls to Début on c3: one competency, after Driss's two.
@@ -143,7 +148,8 @@ describe('the class report after a Massar Contrôle', () => {
     expect(html).not.toContain('competencies.supportList.marks');
     expect(rows(html, 'levels')).toEqual(['Driss', 'Badr']);
     expect(levels(html)).toContain('<td class="mark total"><span class="down"><b><bdi dir="ltr">4</bdi></b></span></td>');
-    expect(html.match(/class="group"/g)).toHaveLength(3);
+    // Driss needs c1 and c2, Badr c3: two groups.
+    expect(supportGroupsOf(html)).toEqual([{ pupils: ['Driss'], skills: ['كفاية c1', 'كفاية c2'] }, { pupils: ['Badr'], skills: ['كفاية c3'] }]);
     // Only the competencies someone needs support in get a column.
     expect(html.match(/<th class="v"/g)).toHaveLength(3);
     // Several parts: their marks in a table of their own, the same pupils in the same order.
@@ -162,13 +168,16 @@ describe('the class report after a Massar Contrôle', () => {
     expect(html).toContain('competencies.supportList.summary{&quot;count&quot;:2,&quot;total&quot;:4}');
   });
 
-  it('lists each support group weakest first, without the level numbers', () => {
-    // On c2 Chama (Début) comes before Driss (Non acquis) in Massar's order.
+  it('names each pupil once per group: competencies needing the very same pupils share one', () => {
+    // c2 needs Driss and Chama, c1 Driss alone: two groups, the larger first, each pupil in the list's order, without level numbers.
     const both = classReport(followUps({ sheet, domains, evaluations: [...evaluations, level('c', 'c2', '2026-11', 'beginning')], remarks: [], months: MONTHS }), 10);
     const html = buildSupportListDocument(both, options);
-    const c2 = html.match(/<div class="group">\s*<h4><span>كفاية c2<\/span>[\s\S]*?<\/div>/)![0];
-    expect(c2.match(/(?<=<bdi>)[^<]*(?=<\/bdi><\/span>)/g)).toEqual(['Driss', 'Chama']);
-    expect(c2).not.toContain('class="lv"');
+    expect(supportGroupsOf(html)).toEqual([{ pupils: ['Driss', 'Chama'], skills: ['كفاية c2'] }, { pupils: ['Driss'], skills: ['كفاية c1'] }]);
+    expect(html.match(/<div class="groups">[\s\S]*$/)![0]).not.toContain('class="lv"');
+    expect(html).toContain('competencies.supportList.group{&quot;number&quot;:2}');
+    // Chama on c1 too: both competencies now need the same two pupils, one group.
+    const same = classReport(followUps({ sheet, domains, evaluations: [...evaluations, level('c', 'c2', '2026-11', 'beginning'), level('c', 'c1', '2026-11', 'beginning')], remarks: [], months: MONTHS }), 10);
+    expect(supportGroupsOf(buildSupportListDocument(same, options))).toEqual([{ pupils: ['Driss', 'Chama'], skills: ['كفاية c1', 'كفاية c2'] }]);
   });
 
   it('keeps only the pupils who need it most when the teacher chooses how many', () => {
@@ -178,7 +187,7 @@ describe('the class report after a Massar Contrôle', () => {
     expect(html.match(/(?<=<td class="pupil"><bdi>)[^<]*/g)).toEqual(['Driss']);
     // Badr's c3 leaves the table and the groups; the summary still counts both, and says the list is shorter.
     expect(html.match(/<th class="v"/g)).toHaveLength(2);
-    expect(html.match(/class="group"/g)).toHaveLength(2);
+    expect(supportGroupsOf(html)).toEqual([{ pupils: ['Driss'], skills: ['كفاية c1', 'كفاية c2'] }]);
     expect(html).not.toContain('Badr');
     expect(html).toContain('competencies.supportList.summary{&quot;count&quot;:2,&quot;total&quot;:4}');
     expect(html).toContain('competencies.supportList.limited{&quot;count&quot;:1}');
@@ -193,9 +202,9 @@ describe('the class report after a Massar Contrôle', () => {
     expect(html).toContain('<tr class="added">');
     expect(html).toContain('competencies.supportList.completed{&quot;count&quot;:1}');
     expect(html).not.toContain('competencies.supportList.limited');
-    // c1's group: Driss (Début) before Badr (En cours); its count of pupils at ≤ 2 stays 1.
-    const c1 = html.match(/<div class="group">\s*<h4><span>كفاية c1<\/span>[\s\S]*?<\/div>/)![0];
-    expect(c1.match(/(?<=<bdi>)[^<]*(?=<\/bdi><\/span>)/g)).toEqual(['Driss', 'Badr']);
+    // c1's group: Driss (Début) and Badr (En cours, drawn lighter); its count of pupils at ≤ 2 stays 1.
+    expect(supportGroupsOf(html)).toEqual([{ pupils: ['Driss', 'Badr'], skills: ['كفاية c1'] }, { pupils: ['Driss'], skills: ['كفاية c2'] }]);
+    expect(html).toContain('<span class="who added"><bdi>Badr</bdi></span>');
     expect(html.match(/<tfoot>[\s\S]*?<\/tfoot>/g)![0]).toContain('<td><b class="down"><bdi dir="ltr">1</bdi></b></td>');
   });
 

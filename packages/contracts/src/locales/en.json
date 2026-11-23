@@ -8587,7 +8587,7 @@
     "supportList": {
       "title": "Pupils needing support",
       "byPupil": "Support list by pupil",
-      "bySkill": "Support groups by competency",
+      "bySkill": "Support groups",
       "no": "No.",
       "marks": "Test marks",
       "count": "Count",
@@ -8597,7 +8597,10 @@
       "print": "Support list",
       "choose": "Number of pupils who need it most",
       "limited": "List limited to the {{count}} pupils who need it most",
-      "completed": "completed with {{count}} pupil(s) still in progress (level 3)"
+      "completed": "completed with {{count}} pupil(s) still in progress (level 3)",
+      "group": "Group {{number}}",
+      "groupPupils": "Pupils",
+      "groupSkills": "Competencies to work on"
     },
     "remark": {
       "title": "Remark for the parents",

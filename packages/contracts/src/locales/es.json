@@ -7880,7 +7880,7 @@
     "supportList": {
       "title": "Alumnos que necesitan refuerzo",
       "byPupil": "Lista de refuerzo por alumno",
-      "bySkill": "Grupos de refuerzo por competencia",
+      "bySkill": "Grupos de refuerzo",
       "no": "N.º",
       "marks": "Notas del control",
       "count": "N.º",
@@ -7890,7 +7890,10 @@
       "print": "Lista de refuerzo",
       "choose": "Número de alumnos con más dificultad",
       "limited": "Lista limitada a los {{count}} alumnos con más dificultad",
-      "completed": "completada con {{count}} alumno(s) en proceso (nivel 3)"
+      "completed": "completada con {{count}} alumno(s) en proceso (nivel 3)",
+      "group": "Grupo {{number}}",
+      "groupPupils": "Alumnos",
+      "groupSkills": "Competencias a trabajar"
     },
     "remark": {
       "title": "Observación para los padres",

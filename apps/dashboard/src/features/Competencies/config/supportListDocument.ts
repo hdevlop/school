@@ -2,7 +2,7 @@ import { COMPETENCY_LEVEL_VALUES, type CompetencyLevel } from '@sms/contracts';
 import { escapeHtml as e, massarFontFaces, safeUrl } from '@/features/Massar/config/massarDocument';
 import { LEVEL_RANK } from './competencyLevels';
 import { supportList, type ClassReport, type SupportPupil } from './classReport';
-import { captionOf, CLASS_LEVEL_COLOR, header, info, level, SHEET_STYLES, type ClassReportPrintOptions } from './classReportDocument';
+import { captionOf, header, info, level, SHEET_STYLES, type ClassReportPrintOptions } from './classReportDocument';
 import { num, titled } from './followUpDocument';
 import { formatNumber, SUPPORT_RANK } from './followUpReport';
 
@@ -16,9 +16,10 @@ const PORTRAIT_SKILLS = 13;
  * لائحة الدعم: the pupils at Début or less on at least one competency after
  * a Massar Contrôle, in three parts: their marks on the Contrôle; their level
  * on each competency some pupil needs support in (the weak ones coloured),
- * with room for the teacher's support actions; and the same pupils grouped by
- * competency so a session can be planned for each. Both tables list the
- * pupils in the same order. A group larger than the pupils needing support is
+ * with room for the teacher's support actions; and the support groups: the
+ * competencies that need the very same pupils make one group, its pupils
+ * named once, so a session can be planned for each. The tables and the
+ * groups list the pupils in the same order. A group larger than the pupils needing support is
  * made up with the next weakest, at En cours, their level-3 cells in grey. Read from the class report, so its figures agree
  * with the class table's.
  */
@@ -125,15 +126,23 @@ export function buildSupportListDocument(report: ClassReport, options: ClassRepo
       </tr></tfoot>
     </table>` : `<p class="none">${e(t('competencies.supportList.none'))}</p>`;
 
-  const groups = skills.length ? `<div class="groups">${[...skills].sort((a, b) => b.members.length - a.members.length || (a.current ?? 5) - (b.current ?? 5))
-    .map((skill) => `<div class="group">
-      <h4><span>${e(skill.name)}</span><b>${num(skill.members.length)}</b></h4>
-      <p>${skill.members
-      // Weakest first: Non acquis, then Début, then those added at En cours, each in the list's order.
-      .map((pupil) => ({ pupil, value: pupil.levels[skill.id] }))
-      .sort((a, b) => (a.value ? LEVEL_RANK[a.value] : 0) - (b.value ? LEVEL_RANK[b.value] : 0))
-      .map(({ pupil, value }) => `<span class="who"${value ? ` style="border-inline-start-color:${CLASS_LEVEL_COLOR[value].bg}"` : ''}><bdi>${e(pupil.report.student.name)}</bdi></span>`)
-      .join('')}</p>
+  // 3. The support groups: competencies needing the very same pupils are worked on together,
+  // so each pupil is named once per group. The groups with the most competencies come first.
+  const grouped = new Map<string, { members: SupportPupil[]; skills: typeof skills }>();
+  for (const skill of skills) {
+    const key = skill.members.map((pupil) => pupil.report.student.id).join('|');
+    const group = grouped.get(key) ?? { members: skill.members, skills: [] };
+    group.skills.push(skill);
+    grouped.set(key, group);
+  }
+  const supportGroups = [...grouped.values()].sort((a, b) => b.skills.length - a.skills.length || b.members.length - a.members.length);
+  const groups = supportGroups.length ? `<div class="groups">${supportGroups.map((group, index) => `<div class="group">
+      <h4><span>${e(t('competencies.supportList.group', { number: index + 1 }))}</span><b>${num(group.members.length)}</b></h4>
+      <div class="side"><small>${e(t('competencies.supportList.groupPupils'))}</small><p>${group.members
+      // In the tables' order; a pupil added at En cours looks lighter, as in the table.
+      .map((pupil) => `<span class="who${pupil.added ? ' added' : ''}"><bdi>${e(pupil.report.student.name)}</bdi></span>`).join('')}</p></div>
+      <div class="side"><small>${e(t('competencies.supportList.groupSkills'))}</small><p>${group.skills
+      .map((skill) => `<span class="what"><bdi>${e(skill.name)}</bdi></span>`).join('')}</p></div>
     </div>`).join('')}</div>` : '';
 
   const scale = [...COMPETENCY_LEVEL_VALUES].reverse().filter((value) => LEVEL_RANK[value] <= SUPPORT_RANK || (added > 0 && value === 'in_progress'))
@@ -168,11 +177,14 @@ export function buildSupportListDocument(report: ClassReport, options: ClassRepo
     .list tbody tr{break-inside:avoid}.list tbody tr:nth-child(even) td:not(.weak):not(.soft):not(.actions):not(.total){background:#fbfcfe}
     .list tfoot th.label{text-align:start;background:#f8fafc;font-size:7.4pt;font-weight:600}.list tfoot td{height:auto;font-size:7.6pt}
     .list tfoot tr:first-child>*{border-top:.9pt solid #94a3b8}
-    .groups{display:grid;grid-template-columns:repeat(${landscape ? 4 : 3},1fr);gap:1.8mm}
-    .group{border:.6pt solid #cfd8e3;border-radius:2mm;padding:1.2mm 1.8mm;break-inside:avoid}
-    .group h4{display:flex;justify-content:space-between;align-items:baseline;gap:2mm;margin:0 0 1mm;padding-bottom:.8mm;border-bottom:.4pt dotted #cbd5e1;font:700 8pt MassarLatin,MassarArabic,sans-serif}.group h4 b{color:#be123c}
+    .groups{display:grid;grid-template-columns:${landscape ? 'repeat(2,1fr)' : '1fr'};gap:1.8mm}
+    .group{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:1mm 3mm;border:.6pt solid #cfd8e3;border-radius:2mm;padding:1.2mm 1.8mm;break-inside:avoid}
+    .group h4{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;gap:2mm;margin:0;padding-bottom:.8mm;border-bottom:.4pt dotted #cbd5e1;font:700 8pt MassarLatin,MassarArabic,sans-serif}.group h4 b{color:#be123c}
+    .group .side{min-width:0}.group .side small{display:block;margin-bottom:.6mm;font:600 6.8pt MassarLatin,MassarArabic,sans-serif;color:#94a3b8}
     .group p{display:flex;flex-wrap:wrap;gap:.8mm 1.2mm;margin:0;font:7.6pt/1.3 MassarArabic,MassarLatin,serif}
-    .group .who{display:inline-flex;align-items:center;padding:.3mm 1.4mm;border:.4pt solid #e2e8f0;border-inline-start:1.2mm solid #cbd5e1;border-radius:1.2mm;background:#f8fafc;white-space:nowrap}
+    .group .who{display:inline-flex;align-items:center;padding:.3mm 1.4mm;border:.4pt solid #e2e8f0;border-radius:1.2mm;background:#f8fafc;font-weight:700;white-space:nowrap}
+    .group .who.added{border-style:dashed;color:#64748b;font-weight:400}
+    .group .what{display:inline-flex;align-items:center;padding:.3mm 1.4mm;border-radius:1.2mm;background:#fff1f2;color:#9f1239;white-space:nowrap}
     .none{margin:0;padding:3mm;border:.6pt dashed #cbd5e1;border-radius:2mm;text-align:center;color:#64748b}
     .foot{margin-top:auto;font-size:6.8pt;color:#94a3b8;text-align:end}
     /* The sheet keeps its own margins, on every page, whatever the dialog's Margins. */
