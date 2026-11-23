@@ -8,7 +8,6 @@ import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
 import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { TablePrintButton } from '@/components/TablePrintButton';
 import { Eye, Pencil, Trash2, Plus } from 'lucide-react';
 import React from 'react';
 import { useRouter } from 'next/navigation';
@@ -207,7 +206,7 @@ function TeachersTable() {
         dataActions
         toolbarActionDisplay="settings"
         headerSlot={<>
-          <TablePrintButton loading={isTeachersLoading} />
+          {/* Prints the list or the desk cards: one button for both. */}
           <DeskCardsButton
             teachers={deskCardTeachers}
             classes={classes ?? []}

@@ -5580,7 +5580,40 @@
         "M": "Profesor",
         "F": "Profesora",
         "other": "Docente"
-      }
+      },
+      "display": {
+        "title": "Visualización",
+        "names": {
+          "label": "Nombre",
+          "auto": "Auto",
+          "latin": "Latino",
+          "arabic": "Árabe",
+          "both": "Ambos"
+        },
+        "textSize": {
+          "label": "Tamaño del texto",
+          "small": "Pequeño",
+          "medium": "Mediano",
+          "large": "Grande"
+        },
+        "parts": {
+          "title": "Título",
+          "subjects": "Asignaturas",
+          "classes": "Clases",
+          "school": "Escuela",
+          "year": "Curso escolar"
+        },
+        "shown": "Visible en la tarjeta",
+        "font": {
+          "label": "Fuente",
+          "classic": "Clásica",
+          "modern": "Moderna",
+          "elegant": "Elegante",
+          "hand": "Manuscrita"
+        }
+      },
+      "preview": "Vista previa",
+      "printList": "Lista de docentes"
     }
   },
   "vehicleAssignments": {

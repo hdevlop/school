@@ -5681,7 +5681,40 @@
         "M": "Enseignant",
         "F": "Enseignante",
         "other": "Enseignant(e)"
-      }
+      },
+      "display": {
+        "title": "Affichage",
+        "names": {
+          "label": "Nom",
+          "auto": "Auto",
+          "latin": "Latin",
+          "arabic": "Arabe",
+          "both": "Les deux"
+        },
+        "textSize": {
+          "label": "Taille du texte",
+          "small": "Petite",
+          "medium": "Moyenne",
+          "large": "Grande"
+        },
+        "parts": {
+          "title": "Titre",
+          "subjects": "Matières",
+          "classes": "Classes",
+          "school": "École",
+          "year": "Année scolaire"
+        },
+        "shown": "Affiché sur la carte",
+        "font": {
+          "label": "Police",
+          "classic": "Classique",
+          "modern": "Moderne",
+          "elegant": "Élégante",
+          "hand": "Manuscrite"
+        }
+      },
+      "preview": "Aperçu",
+      "printList": "Liste des enseignants"
     }
   },
   "vehicleAssignments": {

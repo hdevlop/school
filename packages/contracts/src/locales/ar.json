@@ -5594,7 +5594,40 @@
         "M": "الأستاذ",
         "F": "الأستاذة",
         "other": "الأستاذ(ة)"
-      }
+      },
+      "display": {
+        "title": "العرض",
+        "names": {
+          "label": "الاسم",
+          "auto": "تلقائي",
+          "latin": "لاتيني",
+          "arabic": "عربي",
+          "both": "الاثنان"
+        },
+        "textSize": {
+          "label": "حجم النص",
+          "small": "صغير",
+          "medium": "متوسط",
+          "large": "كبير"
+        },
+        "parts": {
+          "title": "الصفة",
+          "subjects": "المواد",
+          "classes": "الأقسام",
+          "school": "المؤسسة",
+          "year": "السنة الدراسية"
+        },
+        "shown": "ما يظهر على البطاقة",
+        "font": {
+          "label": "الخط",
+          "classic": "كلاسيكي",
+          "modern": "عصري",
+          "elegant": "أنيق",
+          "hand": "يدوي"
+        }
+      },
+      "preview": "معاينة",
+      "printList": "لائحة الأساتذة"
     }
   },
   "vehicleAssignments": {

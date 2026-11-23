@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'bun:test';
-import { buildTeacherDeskCards, deskCard, deskCardLanguage, taughtClasses, type DeskCardOptions } from '@/features/Teachers/config/teacherDeskCards';
+import {
+  buildTeacherDeskCards, DEFAULT_DESK_CARD_DISPLAY, deskCard, deskCardDisplay, deskCardLanguage, deskCardNames, nameSize, taughtClasses, type DeskCardOptions,
+} from '@/features/Teachers/config/teacherDeskCards';
 import { deskCardBackgroundFileName } from '@/services/deskCardBackgroundApi';
 
 const subjects = [
@@ -24,9 +26,64 @@ describe('teacher desk cards', () => {
   it('reads in the language its subjects are taught in', () => {
     expect(deskCardLanguage([subjects[0], subjects[1]], 'fr')).toBe('ar');
     expect(deskCardLanguage([subjects[2], subjects[3]], 'ar')).toBe('fr');
-    // A tie follows the first subject; no subject, the interface.
-    expect(deskCardLanguage([subjects[2], subjects[0]], 'ar')).toBe('fr');
+    // Teaching one subject named in Arabic makes the whole card Arabic; no subject follows the interface.
+    expect(deskCardLanguage([subjects[2], subjects[0]], 'fr')).toBe('ar');
     expect(deskCardLanguage([], 'ar')).toBe('ar');
+  });
+
+  it('shows the names the display asks for', () => {
+    const named = { name: 'Ilham Achtouk', nameAr: 'إلهام أشتوك' };
+    expect(deskCardNames(named, 'ar', 'auto')).toEqual({ name: 'إلهام أشتوك', altName: null });
+    expect(deskCardNames(named, 'fr', 'auto')).toEqual({ name: 'Ilham Achtouk', altName: null });
+    expect(deskCardNames(named, 'ar', 'latin')).toEqual({ name: 'Ilham Achtouk', altName: null });
+    expect(deskCardNames(named, 'fr', 'arabic')).toEqual({ name: 'إلهام أشتوك', altName: null });
+    expect(deskCardNames(named, 'ar', 'both')).toEqual({ name: 'إلهام أشتوك', altName: 'Ilham Achtouk' });
+    expect(deskCardNames(named, 'fr', 'both')).toEqual({ name: 'Ilham Achtouk', altName: 'إلهام أشتوك' });
+    // No Arabic name: the Latin one, whatever was asked.
+    expect(deskCardNames({ name: 'Ilham Achtouk' }, 'ar', 'arabic')).toEqual({ name: 'Ilham Achtouk', altName: null });
+  });
+
+  it('leaves out the parts the display hides, and scales the text', () => {
+    const full = buildTeacherDeskCards([teacher('1', ['fr'])], options);
+    expect(full).toContain('<header>');
+    expect(full).toContain('<footer>');
+    expect(full).toContain('class="role"');
+    const bare = buildTeacherDeskCards([teacher('1', ['fr'])], {
+      ...options, display: { title: false, subjects: false, classes: false, school: false, year: false, textSize: 'large' },
+    });
+    expect(bare).not.toContain('<header>');
+    expect(bare).not.toContain('<footer>');
+    expect(bare).not.toContain('class="role"');
+    expect(bare).not.toContain('<h2');
+    expect(bare).toContain(`font-size:${Math.round(nameSize('Teacher 1') * 1.2 * 10) / 10}pt`);
+  });
+
+  it('prints in the chosen font, every family hosted by School', () => {
+    expect(buildTeacherDeskCards([teacher('1', ['fr'])], options)).toContain(':root{--latin:MassarLatin;--arabic:MassarArabic}');
+    const hand = buildTeacherDeskCards([teacher('1', ['ar'])], { ...options, display: { font: 'hand' } });
+    expect(hand).toContain(':root{--latin:MassarPenKalam;--arabic:MassarHand}');
+    const modern = buildTeacherDeskCards([teacher('1', ['ar'])], { ...options, display: { font: 'modern' } });
+    expect(modern).toContain("url('https://school.test/fonts/insurance/NotoNaskhArabic-700.woff2')");
+    // No family is named outside the variables, so the choice reaches every part of the card.
+    expect(modern.replace(/@font-face\{[^}]*\}/g, '')).not.toMatch(/font(-family)?:[^;}]*Massar/);
+  });
+
+  it('reads a stored display safely', () => {
+    expect(deskCardDisplay(null)).toEqual(DEFAULT_DESK_CARD_DISPLAY);
+    expect(deskCardDisplay({ names: 'nope', textSize: 'huge', classes: 'yes', school: false }))
+      .toEqual({ ...DEFAULT_DESK_CARD_DISPLAY, school: false });
+  });
+
+  it('writes every subject of the Arabic teacher in Arabic, even those named in French', () => {
+    const french = [
+      { id: 'ar', name: 'العربية', nameAr: 'اللغة العربية' },
+      { id: 'ei', name: 'Éducation islamique', nameAr: 'التربية الإسلامية' },
+      { id: 'art', name: 'Éducation artistique', nameAr: 'التربية الفنية' },
+      { id: 'hg', name: 'Histoire-géographie', nameAr: 'الاجتماعيات' },
+    ];
+    const card = deskCard(teacher('1', ['ar', 'ei', 'art', 'hg']), { ...options, subjects: french });
+    expect(card.language).toBe('ar');
+    expect(card.subjects).toEqual(['اللغة العربية', 'التربية الإسلامية', 'التربية الفنية', 'الاجتماعيات']);
   });
 
   it('names an Arabic subject by its Arabic name, and the teacher by gender', () => {

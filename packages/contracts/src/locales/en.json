@@ -3773,7 +3773,40 @@
         "M": "Teacher",
         "F": "Teacher",
         "other": "Teacher"
-      }
+      },
+      "display": {
+        "title": "Display",
+        "names": {
+          "label": "Name",
+          "auto": "Auto",
+          "latin": "Latin",
+          "arabic": "Arabic",
+          "both": "Both"
+        },
+        "textSize": {
+          "label": "Text size",
+          "small": "Small",
+          "medium": "Medium",
+          "large": "Large"
+        },
+        "parts": {
+          "title": "Title",
+          "subjects": "Subjects",
+          "classes": "Classes",
+          "school": "School",
+          "year": "School year"
+        },
+        "shown": "Shown on the card",
+        "font": {
+          "label": "Font",
+          "classic": "Classic",
+          "modern": "Modern",
+          "elegant": "Elegant",
+          "hand": "Handwritten"
+        }
+      },
+      "preview": "Preview",
+      "printList": "Teachers list"
     }
   },
   "drivers": {
