@@ -7640,7 +7640,7 @@
         "subjectRank": "Rang dans chaque matière",
         "subjectRankHelp": "Une colonne avec la place de l'élève dans la classe pour chaque matière, selon la moyenne de la matière.",
         "remarks": "Remarques",
-        "remarksHelp": "Une remarque selon la note de chaque matière, écrite à la main : ممتاز, حسن جدا, حسن, مستحسن, متوسط, ضعيف.",
+        "remarksHelp": "Une remarque selon la note de chaque matière, écrite à la main : ممتاز, حسن جدا, حسن, مستحسن, متوسط, يحتاج إلى دعم.",
         "coefficientColumn": "Colonne des coefficients",
         "coefficientColumnHelp": "Une colonne avec le coefficient de chaque matière (1 sauf réglage).",
         "subjectAverageHelp": "Une colonne avec la moyenne des composantes saisies de chaque matière. Absente quand chaque matière n'a qu'une composante, comme au collège : la note est la moyenne.",

@@ -8246,7 +8246,7 @@
         "subjectRank": "Rank in each subject",
         "subjectRankHelp": "A column with the student's place in the class in each subject, by the subject's average.",
         "remarks": "Remarks",
-        "remarksHelp": "A remark from each subject's mark, written by hand: ممتاز, حسن جدا, حسن, مستحسن, متوسط, ضعيف.",
+        "remarksHelp": "A remark from each subject's mark, written by hand: ممتاز, حسن جدا, حسن, مستحسن, متوسط, يحتاج إلى دعم.",
         "coefficientColumn": "Coefficient column",
         "coefficientColumnHelp": "A column with each subject's coefficient (1 unless set).",
         "subjectAverageHelp": "A column with the mean of each subject's entered parts. Left out where every subject has a single part, as in collège: the mark is the average.",

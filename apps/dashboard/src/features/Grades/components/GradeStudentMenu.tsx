@@ -7,7 +7,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { MASSAR_REMARK_MAX_LENGTH } from '@sms/contracts';
 import { REMARKS, remarkBand, remarkFor, type RemarkLanguage } from '@/features/Massar/config/statementRemarks';
 
-/** The few wordings offered as one tap, from the mark's band (ممتاز … ضعيف), as the statements write them. */
+/** The few wordings offered as one tap, from the mark's band (ممتاز … يحتاج إلى دعم), as the statements write them. */
 const SUGGESTIONS = 4;
 
 interface Props {

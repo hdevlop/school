@@ -7539,7 +7539,7 @@
         "subjectRank": "Puesto en cada asignatura",
         "subjectRankHelp": "Una columna con el puesto del alumno en la clase en cada asignatura, según la media de la asignatura.",
         "remarks": "Observaciones",
-        "remarksHelp": "Una observación según la nota de cada asignatura, escrita a mano: ممتاز, حسن جدا, حسن, مستحسن, متوسط, ضعيف.",
+        "remarksHelp": "Una observación según la nota de cada asignatura, escrita a mano: ممتاز, حسن جدا, حسن, مستحسن, متوسط, يحتاج إلى دعم.",
         "coefficientColumn": "Columna de coeficientes",
         "coefficientColumnHelp": "Una columna con el coeficiente de cada asignatura (1 salvo ajuste).",
         "subjectAverageHelp": "Una columna con la media de los componentes introducidos de cada asignatura. No aparece cuando cada asignatura tiene un solo componente, como en el colegio: la nota es la media.",
