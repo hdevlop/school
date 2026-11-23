@@ -14,6 +14,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { announceInvitation } from '@/shared/invitationNotice';
 import TeacherForm from './TeacherForm';
+import { DeskCardsButton } from './DeskCardsButton';
 import { TeacherRequestsButton } from './TeacherRequests';
 import { useTeachers } from '../hooks/useTeachers';
 import { useTranslation } from 'najm-i18n/react';
@@ -180,6 +181,11 @@ function TeachersTable() {
   };
 
   const total = teachers?.length ?? 0;
+  // The selected teachers' cards, or every teacher the filters show.
+  const selectedIds = Object.keys(rowSelection).filter((id) => rowSelection[id]);
+  const deskCardTeachers = selectedIds.length
+    ? filteredTeachers.filter((teacher) => selectedIds.includes(teacher.id))
+    : filteredTeachers;
 
   return (
     <div data-list-loading={isTeachersLoading || undefined} className='flex flex-col gap-2 w-full h-full'>
@@ -200,7 +206,15 @@ function TeachersTable() {
         permissionResource="teachers"
         dataActions
         toolbarActionDisplay="settings"
-        headerSlot={<TablePrintButton loading={isTeachersLoading} />}
+        headerSlot={<>
+          <TablePrintButton loading={isTeachersLoading} />
+          <DeskCardsButton
+            teachers={deskCardTeachers}
+            classes={classes ?? []}
+            subjects={subjects ?? []}
+            disabled={isTeachersLoading || hasFailedToLoad(error, teachers)}
+          />
+        </>}
         data={filteredTeachers}
         isFilteredEmpty={filteredTeachers.length === 0 && !!teachers?.length}
         getRowId={(teacher) => teacher.id}

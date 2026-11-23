@@ -3747,6 +3747,19 @@
     "invitation": {
       "sent": "Invitation email sent to {{email}}. The teacher activates the account from the link.",
       "notSent": "The teacher was created, but the invitation email could not be sent. Check the email address and use \"Reset access\" to retry. If it still fails, ask an administrator to check email delivery."
+    },
+    "deskCards": {
+      "button": "Desk cards",
+      "hint": "Print a desk card for each teacher shown, or for the selected ones",
+      "document": "Teacher desk cards",
+      "year": "School year",
+      "classes": "Classes",
+      "none": "No teacher to print",
+      "title": {
+        "M": "Teacher",
+        "F": "Teacher",
+        "other": "Teacher"
+      }
     }
   },
   "drivers": {

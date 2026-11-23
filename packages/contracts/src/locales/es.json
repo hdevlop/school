@@ -5554,6 +5554,19 @@
     "invitation": {
       "sent": "Correo de invitación enviado a {{email}}. El profesor activa la cuenta desde el enlace.",
       "notSent": "El profesor se ha creado, pero no se pudo enviar la invitación. Comprueba el correo y usa «Restablecer acceso» para reintentar. Si sigue fallando, pide a un administrador que revise el envío de correo."
+    },
+    "deskCards": {
+      "button": "Tarjetas de mesa",
+      "hint": "Imprimir una tarjeta de mesa por cada docente mostrado, o por los seleccionados",
+      "document": "Tarjetas de mesa de los docentes",
+      "year": "Curso escolar",
+      "classes": "Clases",
+      "none": "Ningún docente para imprimir",
+      "title": {
+        "M": "Profesor",
+        "F": "Profesora",
+        "other": "Docente"
+      }
     }
   },
   "vehicleAssignments": {

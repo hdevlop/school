@@ -5655,6 +5655,19 @@
     "invitation": {
       "sent": "E-mail d'invitation envoyé à {{email}}. L'enseignant active son compte depuis le lien.",
       "notSent": "L’enseignant a été créé, mais l’invitation n’a pas pu être envoyée. Vérifiez l’adresse e-mail et utilisez « Réinitialiser l’accès » pour réessayer. Si le problème persiste, demandez à un administrateur de vérifier l’envoi des e-mails."
+    },
+    "deskCards": {
+      "button": "Cartes de bureau",
+      "hint": "Imprimer une carte de bureau pour chaque enseignant affiché, ou pour ceux sélectionnés",
+      "document": "Cartes de bureau des enseignants",
+      "year": "Année scolaire",
+      "classes": "Classes",
+      "none": "Aucun enseignant à imprimer",
+      "title": {
+        "M": "Enseignant",
+        "F": "Enseignante",
+        "other": "Enseignant(e)"
+      }
     }
   },
   "vehicleAssignments": {
