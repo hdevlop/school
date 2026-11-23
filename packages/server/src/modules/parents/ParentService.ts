@@ -1,3 +1,4 @@
+import { capitalizeOptionalPersonName } from '@sms/contracts';
 import { Service, Events, EventService, Transaction } from '../../najm';
 import { ParentRepository } from './ParentRepository';
 import { ParentChildrenRepository } from './ParentChildrenRepository';
@@ -93,6 +94,8 @@ export class ParentService {
 
   @Transaction()
   async create(data: CreateParentDto) {
+    // One way to write every name, from any caller (forms, imports, seeding).
+    data = { ...data, name: capitalizeOptionalPersonName(data.name) };
     const contacts = createParentDto.pick({ phone: true, cin: true }).parse(data);
     return this.createParent({ ...data, ...contacts });
   }
@@ -167,6 +170,8 @@ export class ParentService {
 
   @Transaction()
   async update(id: string, data: UpdateParentDto) {
+    // One way to write every name, from any caller (forms, imports, seeding).
+    data = { ...data, name: capitalizeOptionalPersonName(data.name) };
     // No 'password' here. A routine profile edit must not double as a
     // credential reset: that path has no audit, forces no replacement and
     // revokes no session. Recovery goes through the Reset access command.

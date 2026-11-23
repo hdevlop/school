@@ -1,3 +1,4 @@
+import { capitalizeOptionalPersonName } from '@sms/contracts';
 import { Service, Transaction, Events, EventService } from '../../najm';
 import { TeacherRepository } from './TeacherRepository';
 import { TeacherValidator } from './TeacherValidator';
@@ -182,6 +183,8 @@ export class TeacherService {
 
   @Transaction()
   async create(data: CreateTeacherDto) {
+    // One way to write every name, from any caller (forms, imports, seeding).
+    data = { ...data, name: capitalizeOptionalPersonName(data.name) };
     this.teacherValidator.ensureInvitationEmail(data.email, data.password);
     if (data.userId) await this.teacherValidator.ensureUserIdUnique(data.userId);
     if (data.id) await this.teacherValidator.ensureIdUnique(data.id);
@@ -255,6 +258,8 @@ export class TeacherService {
 
   @Transaction()
   async update(id: string, data: UpdateTeacherDto, actorRole?: string) {
+    // One way to write every name, from any caller (forms, imports, seeding).
+    data = { ...data, name: capitalizeOptionalPersonName(data.name) };
     // No 'password' here. A routine profile edit must not double as a
     // credential reset: that path has no audit, forces no replacement and
     // revokes no session. Recovery goes through the Reset access command.

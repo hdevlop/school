@@ -1,10 +1,12 @@
 import { z } from 'zod';
+import { capitalizePersonName } from '@sms/contracts';
 
 export const requiredId = z.preprocess((val) => val ?? '', z.string().min(1, 'ID is required'));
 export const optionalId = z.string().min(1, 'ID cannot be empty').nullish().optional();
 export const emailField = z.string().email('Invalid email format').or(z.literal(''));
 export const phoneField = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number');
-export const nameField = z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name too long');
+/** A person's name, saved capitalized ("Ilham Achtouk") whatever way it was typed. */
+export const nameField = z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name too long').overwrite(capitalizePersonName);
 /** A person's name in Arabic, beside `name`: optional, and empty clears it. */
 export const nameArField = z.string().trim().max(100, 'Name too long').nullish().or(z.literal(''));
 export const dateField = z

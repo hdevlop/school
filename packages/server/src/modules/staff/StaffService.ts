@@ -1,3 +1,4 @@
+import { capitalizeOptionalPersonName } from '@sms/contracts';
 import { Events, EventService, Service, Transaction } from '../../najm';
 import { customAlphabet, nanoid } from 'nanoid';
 
@@ -222,6 +223,8 @@ export class StaffService {
 
   @Transaction()
   async create(data: CreateStaffDto, actor?: StaffActor) {
+    // One way to write every name, from any caller (forms, imports, seeding).
+    data = { ...data, name: capitalizeOptionalPersonName(data.name) };
     await this.staffValidator.ensureCinUnique(data.cin);
     await this.staffValidator.ensureEmployeeCodeUnique(data.employeeCode);
     await this.staffValidator.ensureEmailUnique(data.email);
@@ -294,6 +297,8 @@ export class StaffService {
 
   @Transaction()
   async update(id: string, data: UpdateStaffDto, actor?: StaffActor) {
+    // One way to write every name, from any caller (forms, imports, seeding).
+    data = { ...data, name: capitalizeOptionalPersonName(data.name) };
     const existing = await this.staffValidator.ensureExists(id);
     if (data.employeeCode) {
       await this.staffValidator.ensureEmployeeCodeUnique(data.employeeCode, id);

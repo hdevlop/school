@@ -995,6 +995,13 @@
       "when": 1795429360443,
       "tag": "0141_staff_name_ar",
       "breakpoints": true
+    },
+    {
+      "idx": 142,
+      "version": "7",
+      "when": 1795429420443,
+      "tag": "0142_capitalize_person_names",
+      "breakpoints": true
     }
   ]
 }

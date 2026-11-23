@@ -26,3 +26,4 @@ export * from './massar';
 export * from './homework';
 export * from './competencies';
 export * from './subjectNames';
+export * from './personNames';
