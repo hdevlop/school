@@ -49,6 +49,34 @@ export const REMARKS: Record<RemarkLanguage, readonly (readonly string[])[]> = {
   ],
 };
 
+/**
+ * A girl's form of each wording that speaks of the student (Excellente, Bonne élève, ممتازة، واصلي).
+ * A wording about the work or the result (Excellent travail, نتيجة حسنة, Très bien) is the same for everyone.
+ */
+export const FEMININE_REMARKS: Record<RemarkLanguage, Readonly<Record<string, string>>> = {
+  ar: {
+    'ممتاز': 'ممتازة', 'ممتاز، واصل': 'ممتازة، واصلي', 'أحسنت، ممتاز': 'أحسنتِ، ممتازة', 'ممتاز، تلميذ مجتهد': 'ممتازة، تلميذة مجتهدة',
+    'نتائج مشرفة، واصل': 'نتائج مشرفة، واصلي', 'ممتاز، أهنئك': 'ممتازة، أهنئكِ',
+    'حسن جدا، واصل': 'حسن جدا، واصلي', 'حسن جدا، تلميذ نشيط': 'حسن جدا، تلميذة نشيطة', 'حسن جدا، استمر': 'حسن جدا، استمري',
+    'جيد، واصل': 'جيد، واصلي', 'حسن، استمر': 'حسن، استمري',
+    'مستحسن، واصل المجهود': 'مستحسن، واصلي المجهود', 'لا بأس، واصل': 'لا بأس، واصلي', 'مستحسن، ضاعف المجهود': 'مستحسن، ضاعفي المجهود',
+    'متوسط، ابذل مجهودا': 'متوسطة، ابذلي مجهودا', 'متوسط، ضاعف المجهود': 'متوسطة، ضاعفي المجهود', 'متوسط': 'متوسطة', 'متوسط، يمكنك الأفضل': 'متوسطة، يمكنكِ الأفضل',
+    'ضعيف': 'ضعيفة', 'ضعيف، يجب الاجتهاد': 'ضعيفة، يجب الاجتهاد', 'ضعيف، عليك بالمراجعة': 'ضعيفة، عليكِ بالمراجعة', 'ضعيف، ينبغي المثابرة': 'ضعيفة، ينبغي المثابرة',
+  },
+  fr: {
+    'Excellent': 'Excellente', 'Excellent, continue': 'Excellente, continue', 'Excellent élève': 'Excellente élève',
+    'T. Bien – élève actif': 'T. Bien – élève active', 'Très bon élève': 'Très bonne élève',
+    'Bon élève': 'Bonne élève', 'Bien – élève sérieux': 'Bien – élève sérieuse',
+    'Moyen': 'Moyenne', 'Moyen, peut mieux faire': 'Moyenne, peut mieux faire',
+    'Insuffisant': 'Insuffisante',
+  },
+  en: {},
+};
+
+/** The wording in the student's gender: a girl's own form where it has one. */
+export const remarkFor = (language: RemarkLanguage, remark: string, gender?: string | null) =>
+  gender === 'F' ? FEMININE_REMARKS[language][remark] ?? remark : remark;
+
 /** A small stable hash (FNV-1a): the same student and subject get the same remark on every print. */
 function hashOf(text: string) {
   let hash = 2166136261;
@@ -78,10 +106,11 @@ export function remarkLanguage(subject: string, className = ''): RemarkLanguage 
  * class's statements do not all repeat the same word, yet a reprint writes the same thing.
  * `used` collects the wordings already on the page: one taken by another subject gives way to the next, while any is left.
  */
-export function studentRemark(mark: number | null, maxMark: number, subject: string, studentId: string, used?: Set<string>, className = '') {
+export function studentRemark(mark: number | null, maxMark: number, subject: string, studentId: string, used?: Set<string>, className = '', gender?: string | null) {
   const band = remarkBand(mark, maxMark);
   if (band === null) return '';
-  const choices = REMARKS[remarkLanguage(subject, className)][band];
+  const language = remarkLanguage(subject, className);
+  const choices = REMARKS[language][band].map(remark => remarkFor(language, remark, gender));
   const start = hashOf(`${studentId}|${subject}`);
   const pick = (step: number) => choices[(start + step) % choices.length];
   const offset = choices.findIndex((_, step) => !used?.has(pick(step)));

@@ -978,6 +978,7 @@ export class MassarService {
       this.requireSheet(id), this.repository.marks(id), this.repository.remarks(id), this.repository.yearConfig(), this.repository.planningMonths(),
     ]);
     const marks = numericMarks(stored);
+    const genders = await this.repository.genders(row.sheet.roster.map(student => student.id));
     const manager = mayManageMassar(actor);
     const { status, teacherUnlocked } = row.sheet;
     const roundOpen = yearOpen && row.round.status !== 'closed';
@@ -989,6 +990,7 @@ export class MassarService {
       components: row.sheet.components,
       maxMark: row.level.maxMark,
       students: row.sheet.roster,
+      genders,
       marks,
       remarks,
       schoolName: config?.schoolName ?? '',

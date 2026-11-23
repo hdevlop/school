@@ -5,7 +5,7 @@ import { Eraser, MessageSquare, MessageSquarePlus, UserCheck, UserX } from 'luci
 import { NButton, NSheet, Textarea, cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { MASSAR_REMARK_MAX_LENGTH } from '@sms/contracts';
-import { REMARKS, remarkBand, type RemarkLanguage } from '@/features/Massar/config/statementRemarks';
+import { REMARKS, remarkBand, remarkFor, type RemarkLanguage } from '@/features/Massar/config/statementRemarks';
 
 /** The few wordings offered as one tap, from the mark's band (ممتاز … ضعيف), as the statements write them. */
 const SUGGESTIONS = 4;
@@ -42,7 +42,7 @@ export default function GradeStudentMenu({ row, onClose, remark, canRemark, savi
   const editable = !!row?.editable;
   const remarkLanguage: RemarkLanguage = language === 'ar' || language === 'en' ? language : 'fr';
   const band = hasMark ? remarkBand(Number(row.marksObtained), Number(row.totalMarks)) : null;
-  const suggestions = band === null ? [] : REMARKS[remarkLanguage][band].slice(0, SUGGESTIONS);
+  const suggestions = band === null ? [] : REMARKS[remarkLanguage][band].slice(0, SUGGESTIONS).map(item => remarkFor(remarkLanguage, item, row?.gender));
   const trimmed = text.trim();
 
   const run = (action: (row: any) => void) => { action(row); onClose(); };

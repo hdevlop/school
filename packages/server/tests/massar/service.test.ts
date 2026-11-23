@@ -31,6 +31,7 @@ function fixture(status = 'not_started') {
       else analyses.set(studentId, analysis);
     },
     hiddenIds: async () => [], previousYearSubjects: async () => [], addModelSubject: async () => {},
+    genders: async () => ({}) as Record<string, 'M' | 'F'>,
     // Planning gives the ready class exams in October and the college class in October to December: Contrôles 1 to 3 of semester 1.
     planningMonths: async () => [{ classId: 'school-ready', months: { '2026-10': [{ date: '2026-10-20' }] } }, { classId: 'school-college', months: { '2026-10': [{ date: '2026-10-21' }], '2026-11': [{ date: '2026-11-18' }], '2026-12': [{ date: '2026-12-16' }] } }] as Array<{ classId: string; months: Record<string, Array<{ date?: string }>> }>,
     tryLock: async () => true, relinkTeachers: async () => {}, sheetRosters: async () => [], activeRosters: async () => new Map(), levelSubjectCodes: async () => [], updateSheet: async (_id: string, data: any) => { Object.assign(row.sheet, data); row.sheet.revision++; return row.sheet; },

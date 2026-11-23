@@ -1,4 +1,5 @@
 import { examPlanningSemester } from './examPlanning';
+import type { Gender } from './enums';
 /** Massar exchange values are independent of School's grades and report cards. */
 export const MASSAR_ABSENCE_VALUES = ['none', 'justified'] as const;
 export const MASSAR_SHEET_STATUS_VALUES = ['not_started', 'in_progress', 'submitted', 'exported', 'changed_after_export'] as const;
@@ -42,6 +43,8 @@ export interface MassarSheetDetail {
   sheet: MassarSheetRow; round: MassarRound; components: MassarComponent[]; maxMark: number;
   students: MassarStudent[]; marks: MassarMark[]; remarks: MassarRemark[]; canEdit: boolean; canReopen: boolean;
   schoolName: string; levelLabel: string; yearLabel: string;
+  /** Each listed student's gender, when School knows it: a statement's remarks agree with it (Excellente, مجتهدة). */
+  genders?: Record<string, Gender>;
   /** The first day Planning holds this Contrôle's exams, when it is planned: the month the Contrôle belongs to. */
   examFrom?: string | null;
 }

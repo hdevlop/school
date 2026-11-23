@@ -1,4 +1,4 @@
-import { MASSAR_DEFAULT_STATEMENT, withStatementDefaults, type MassarSetup, type MassarSheetDetail, type MassarStatementSettings, type MassarStudent } from '@sms/contracts';
+import { MASSAR_DEFAULT_STATEMENT, withStatementDefaults, type MassarSetup, type MassarSheetDetail, type MassarStatementSettings, type MassarStudent, type Gender } from '@sms/contracts';
 import { classCycle, classOrder, massarClassColors } from './massarModel';
 import { escapeHtml as e, massarFontFaces, massarMarkText, safeUrl } from './massarDocument';
 import { remarkLanguage, remarkPen, studentRemark } from './statementRemarks';
@@ -12,7 +12,10 @@ type StatementPart = { name: string; mark: string; value: number | null };
 /** A subject on a statement; `rank` is by the subject's average within the class, among the `ranked` students who have one. */
 type StatementUnit = { subject: string; parts: StatementPart[]; average: number | null; coefficient: number; rank: number | null; ranked: number };
 export type StudentStatement = {
-  student: MassarStudent; className: string; levelLabel: string; schoolName: string; yearLabel: string;
+  student: MassarStudent;
+  /** The student's gender when School knows it: the remarks agree with it (Excellente, مجتهدة). */
+  gender: Gender | null;
+  className: string; levelLabel: string; schoolName: string; yearLabel: string;
   termLabel: string; examLabel: string; maxMark: number;
   /** One unit per subject sheet of the class the student is on, in the school's order (else the Massar tabs'). */
   units: StatementUnit[];
@@ -117,6 +120,7 @@ function classStatements(className: string, list: MassarSheetDetail[], settings:
     const units = orderSubjects(listed.map(sheet => unitOf(sheet, student.id)), settings.order);
     return {
       student, className,
+      gender: list.map(sheet => sheet.genders?.[student.id]).find(Boolean) ?? null,
       levelLabel: first.levelLabel, schoolName: first.schoolName, yearLabel: first.yearLabel,
       termLabel: first.round.termLabel, examLabel: first.round.examLabel, maxMark: first.maxMark,
       units, average: generalAverage(units), rank: null, ranked: 0,
@@ -219,7 +223,7 @@ function renderUnit(unit: StatementUnit, index: number, statement: StudentStatem
 
   // Written by hand from the subject's average (its mark when it has one part): in the subject's language,
   // with that subject's teacher's pen, each line at its own slight slant.
-  const remark = settings.remarks ? studentRemark(unit.average, statement.maxMark, unit.subject, statement.student.id, written, statement.className) : '';
+  const remark = settings.remarks ? studentRemark(unit.average, statement.maxMark, unit.subject, statement.student.id, written, statement.className, statement.gender) : '';
   const pen = remarkPen(unit.subject, statement.className);
   const latin = remarkLanguage(unit.subject, statement.className) !== 'ar';
   const style = `--tilt:${TILTS[index % TILTS.length]}deg;--ink:${pen.ink}${latin ? `;font-family:${pen.latin},cursive;font-size:${pen.size}pt` : ''}`;

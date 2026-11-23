@@ -276,6 +276,12 @@ export class MassarRepository {
     }
     return rosters;
   }
+  /** The gender School holds for each of these students; one without it is left out. */
+  async genders(ids: readonly string[]) {
+    if (!ids.length) return {};
+    const rows = await this.db.select({ id: students.id, gender: students.gender }).from(students).where(inArray(students.id, [...ids]));
+    return Object.fromEntries(rows.filter(row => row.gender === 'M' || row.gender === 'F').map(row => [row.id, row.gender as 'M' | 'F']));
+  }
   /** Every grid of the year (or of one class) with the student list it was given. */
   async sheetRosters(classId?: string) {
     return this.db.select({ id: massarSheets.id, massarClassId: massarSheets.massarClassId, roster: massarSheets.roster, status: massarSheets.status }).from(massarSheets)

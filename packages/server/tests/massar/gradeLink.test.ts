@@ -37,6 +37,7 @@ function link(over: { sheet?: Record<string, unknown>; exam?: Record<string, unk
   const state = { marks: [...(over.marks ?? [])], grades: [...(over.grades ?? [])], sheet: sheet(over.sheet), touched: [] as string[] };
   const theExam = exam(over.exam);
   const repository = {
+    genders: async () => ({}) as Record<string, 'M' | 'F'>,
     planningMonths: async () => planning,
     sheets: async () => [state.sheet],
     plannedExams: async () => [theExam],
