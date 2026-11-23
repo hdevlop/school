@@ -72,6 +72,27 @@ export const CompetencyEvaluationOwner = own(competencyEvaluations)
   .for('monitor', when((userId: string) => managesSection(evaluationSection, userId)))
   .for('supervisor', when((userId: string) => supervisesSection(evaluationSection, userId)));
 
+/**
+ * A level set in another section of the class, for a pupil who also sat in a
+ * section where the teacher teaches that subject this year: a pupil who
+ * changes section brings their levels with them. Named in full: a read from
+ * one table writes its columns bare.
+ */
+export const CompetencyEvaluationOfMovedPupil = own(competencyEvaluations)
+  .for('teacher', when((userId: string) => sql`exists (select 1 from competencies given_competency
+    join competency_domains given_domain on given_domain.id = given_competency.domain_id
+    join teacher_assignments given_assignment on given_assignment.id = given_domain.teacher_assignment_id
+    join teacher_assignments taught on taught.class_id = given_assignment.class_id
+      and taught.subject_id = given_assignment.subject_id
+    join teachers taught_teacher on taught_teacher.id = taught.teacher_id
+    join staff taught_staff on taught_staff.id = taught_teacher.staff_id
+    join student_enrollments moved_enrollment on moved_enrollment.student_id = "competency_evaluations"."student_id"
+      and moved_enrollment.academic_year_id = "competency_evaluations"."academic_year_id"
+    join student_enrollment_placements moved_placement on moved_placement.enrollment_id = moved_enrollment.id
+      and moved_placement.section_id = taught.section_id
+    where given_competency.id = "competency_evaluations"."competency_id"
+      and taught_staff.user_id = ${userId})`));
+
 /** The section a remark's assignment teaches. Named in full: a read from one table writes its columns bare. */
 const remarkSection = sql`(select assignment.section_id from teacher_assignments assignment
   where assignment.id = "competency_remarks"."teacher_assignment_id")`;

@@ -5,9 +5,11 @@ import { drizzle } from 'drizzle-orm/pg-proxy';
 import { ownershipCondition, ScopeContext } from '../../src/auth';
 import { competencyDomains, competencyEvaluations, competencyRemarks } from '../../src/database/schema';
 import { registerYearPropertyInjector, runWithResolvedYear } from '../../src/modules/academicYears/requestYear';
-import { CompetencyDomainOwner, CompetencyEvaluationOwner, CompetencyRemarkOwner } from '../../src/modules/competencies/CompetencyGuards';
+import {
+  CompetencyDomainOwner, CompetencyEvaluationOfMovedPupil, CompetencyEvaluationOwner, CompetencyRemarkOwner,
+} from '../../src/modules/competencies/CompetencyGuards';
 import { CompetencyCatalogRepository } from '../../src/modules/competencies/CompetencyCatalogRepository';
-import { CompetencyEvaluationRepository } from '../../src/modules/competencies/CompetencyEvaluationRepository';
+import { CompetencyEvaluationRepository, pickCarried } from '../../src/modules/competencies/CompetencyEvaluationRepository';
 import { CompetencyRemarkRepository } from '../../src/modules/competencies/CompetencyRemarkRepository';
 
 /** Pinned here, not read from the code under test. */
@@ -80,6 +82,37 @@ describe('who a level belongs to', () => {
   });
 });
 
+const movedPupilCondition = (role: string) =>
+  db.select({ id: competencyEvaluations.id }).from(competencyEvaluations)
+    .where(ownershipCondition(db, [CompetencyEvaluationOfMovedPupil], signedIn(role))).toSQL();
+
+describe('a pupil who changes section', () => {
+  it('brings their levels to the teacher of the same class and subject in a section they sat in', () => {
+    const { sql, params } = movedPupilCondition('teacher');
+    expect(sql).toContain('taught.class_id = given_assignment.class_id');
+    expect(sql).toContain('taught.subject_id = given_assignment.subject_id');
+    expect(sql).toContain('moved_placement.section_id = taught.section_id');
+    // Named in full, so a read from the one table cannot bind them to the subquery's own columns.
+    expect(sql).toContain('moved_enrollment.student_id = "competency_evaluations"."student_id"');
+    expect(sql).toContain('moved_enrollment.academic_year_id = "competency_evaluations"."academic_year_id"');
+    expect(sql).toContain('given_competency.id = "competency_evaluations"."competency_id"');
+    expect(params).toContain('user-1');
+  });
+
+  it('grants no other role anything', () => {
+    for (const role of ['parent', 'student', 'monitor', 'supervisor', 'nurse']) expect(movedPupilCondition(role).sql, role).toContain('1 = 0');
+  });
+
+  it("lands each carried level on one competency: the sub-domain of the same name first, never a guess", () => {
+    const row = { studentId: 'p', month: '2026-10', level: 'advanced' as const, sourceId: 's' };
+    expect(pickCarried([{ ...row, competencyId: 'a', sameDomain: false }]).map((item) => item.competencyId)).toEqual(['a']);
+    expect(pickCarried([{ ...row, competencyId: 'a', sameDomain: false }, { ...row, competencyId: 'b', sameDomain: true }])
+      .map((item) => item.competencyId)).toEqual(['b']);
+    expect(pickCarried([{ ...row, competencyId: 'a', sameDomain: false }, { ...row, competencyId: 'b', sameDomain: false }])).toEqual([]);
+    expect(pickCarried([{ ...row, competencyId: 'a', sameDomain: false }])[0]).toEqual({ competencyId: 'a', studentId: 'p', month: '2026-10', level: 'advanced' });
+  });
+});
+
 const remarkCondition = (role: string) =>
   db.select({ id: competencyRemarks.id }).from(competencyRemarks)
     .where(ownershipCondition(db, [CompetencyRemarkOwner], signedIn(role))).toSQL();
@@ -139,6 +172,14 @@ describe('competency reads', () => {
     expect(levels.sql).toContain('"competency_evaluations"."academic_year_id" = $');
     expect(levels.sql).toContain('"student_parents"');
     expect(levels.params).toEqual(expect.arrayContaining(['user-1', 'year-1', 'assignment-1', '2026-12', '2026-09']));
+
+    const [, carried] = await capture(CompetencyEvaluationRepository, 'teacher', (repo) => repo.forAssignment('assignment-1', ['2026-12'], 'pupil-1'));
+    expect(carried.sql).toContain('"source_competency"');
+    expect(carried.sql).toContain('"competency_evaluations"."academic_year_id" = $');
+    expect(carried.sql).toContain('moved_placement.section_id = "target_assignment"."section_id"');
+    expect(carried.sql).toContain('taught.section_id');
+    expect(carried.sql.match(/ where /g)?.length).toBeGreaterThan(0);
+    expect(carried.params).toEqual(expect.arrayContaining(['user-1', 'year-1', 'assignment-1', '2026-12', 'pupil-1']));
 
     const [remarks] = await capture(CompetencyRemarkRepository, 'parent', (repo) => repo.forAssignment('assignment-1', '2026-12', 'pupil-1'));
     expect(remarks.sql).toContain('"competency_remarks"."academic_year_id" = $');
