@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { buildTeacherDeskCards, deskCard, deskCardLanguage, taughtClasses, type DeskCardOptions } from '@/features/Teachers/config/teacherDeskCards';
+import { deskCardBackgroundFileName } from '@/services/deskCardBackgroundApi';
 
 const subjects = [
   { id: 'ar', name: 'العربية', nameAr: 'اللغة العربية' },
@@ -34,10 +35,30 @@ describe('teacher desk cards', () => {
     expect(deskCard(teacher('2', ['fr'], { gender: 'M' }), options).title).toBe('Enseignant');
   });
 
+  it('writes the Arabic name on an Arabic card only, else the usual name', () => {
+    expect(deskCard(teacher('1', ['ar'], { nameAr: ' فاطمة العلوي ' }), options).name).toBe('فاطمة العلوي');
+    expect(deskCard(teacher('2', ['fr'], { nameAr: 'فاطمة العلوي' }), options).name).toBe('Teacher 2');
+    expect(deskCard(teacher('3', ['ar'], { nameAr: '' }), options).name).toBe('Teacher 3');
+  });
+
   it('names each class once, by its level alone, never its sections', () => {
     expect(taughtClasses({ id: 't', name: 'T', assignments: [
       { classId: 'ce1', sectionIds: ['b'] }, { classId: 'cp', sectionIds: ['c'] }, { classId: 'ce1', sectionIds: ['a'] },
     ] }, classes)).toEqual(['CE1', 'CP']);
+  });
+
+  it('puts an imported image behind each card, and nothing for plain or an unsafe URL', () => {
+    const html = buildTeacherDeskCards([teacher('1', ['fr'])], { ...options, backgroundImage: '/api/desk-card-backgrounds/files/serve/1-a.png' });
+    expect(html).toContain('<img class="backdrop" src="https://school.test/api/desk-card-backgrounds/files/serve/1-a.png" alt="">');
+    expect(html).toContain('<span class="veil"></span>');
+    expect(buildTeacherDeskCards([teacher('1', ['fr'])], options)).not.toContain('class="backdrop"');
+    expect(buildTeacherDeskCards([teacher('1', ['fr'])], { ...options, backgroundImage: 'javascript:alert(1)' })).not.toContain('class="backdrop"');
+  });
+
+  it('names an imported background safely for storage', () => {
+    expect(deskCardBackgroundFileName('Fond École (2).JPG', 'image/jpeg', 42)).toBe('42-fond-cole-2.jpg');
+    expect(deskCardBackgroundFileName('../../x.exe', 'image/webp', 7)).toBe('7-x.webp');
+    expect(deskCardBackgroundFileName('صورة.png', 'image/png', 7)).toBe('7-background.png');
   });
 
   it('puts two cards on each A4 page, escaped', () => {

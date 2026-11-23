@@ -4,6 +4,7 @@ import {
   cinField,
   dateField,
   emailField,
+  nameArField,
   nameField,
   num,
   optionalId,
@@ -15,6 +16,7 @@ import { isDateOnly } from '@sms/contracts/academic-years';
 const teacherPersonalSchema = z.object({
   id: optionalId,
   name: nameField,
+  nameAr: nameArField,
   cin: cinField,
   email: emailField,
   phone: phoneField,

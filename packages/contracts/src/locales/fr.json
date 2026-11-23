@@ -5574,7 +5574,9 @@
       "noAssignments": "Aucune affectation",
       "addAssignment": "Ajouter une affectation",
       "noAssignmentsAdded": "Aucune affectation ajoutée pour le moment.",
-      "emailHelp": "Utilisez l’adresse e-mail personnelle de l’enseignant. Il recevra un lien d’activation pour choisir son mot de passe."
+      "emailHelp": "Utilisez l’adresse e-mail personnelle de l’enseignant. Il recevra un lien d’activation pour choisir son mot de passe.",
+      "nameAr": "Nom en arabe",
+      "nameArPlaceholder": "الاسم الكامل"
     },
     "profile": {
       "table": {
@@ -5663,6 +5665,18 @@
       "year": "Année scolaire",
       "classes": "Classes",
       "none": "Aucun enseignant à imprimer",
+      "print": "Imprimer",
+      "background": "Fond",
+      "count": "Cartes à imprimer : {{count}}",
+      "plain": "Uni",
+      "import": "Importer une image",
+      "importHint": "Choisissez une image enregistrée depuis Internet (PNG, JPG ou WebP). Elle est conservée pour la prochaine fois.",
+      "imported": "Fond enregistré",
+      "importFailed": "Impossible d'enregistrer le fond",
+      "notImage": "Choisissez un fichier image",
+      "remove": "Supprimer ce fond",
+      "removeFailed": "Impossible de supprimer le fond",
+      "loadFailed": "Impossible de charger les fonds enregistrés",
       "title": {
         "M": "Enseignant",
         "F": "Enseignante",

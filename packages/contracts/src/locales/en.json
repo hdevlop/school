@@ -3599,7 +3599,9 @@
       "teacher": "Teacher",
       "teacherPlaceholder": "Select teacher",
       "noAssignmentsAdded": "No assignments added yet.",
-      "emailHelp": "Use the teacher’s own email address. They will receive an activation link to choose their password."
+      "emailHelp": "Use the teacher’s own email address. They will receive an activation link to choose their password.",
+      "nameAr": "Name in Arabic",
+      "nameArPlaceholder": "الاسم الكامل"
     },
     "status": {
       "active": "Active",
@@ -3755,6 +3757,18 @@
       "year": "School year",
       "classes": "Classes",
       "none": "No teacher to print",
+      "print": "Print",
+      "background": "Background",
+      "count": "Cards to print: {{count}}",
+      "plain": "Plain",
+      "import": "Import image",
+      "importHint": "Choose a picture you saved from the internet (PNG, JPG or WebP). It is kept for next time.",
+      "imported": "Background saved",
+      "importFailed": "Could not save the background",
+      "notImage": "Choose an image file",
+      "remove": "Delete this background",
+      "removeFailed": "Could not delete the background",
+      "loadFailed": "Could not load the saved backgrounds",
       "title": {
         "M": "Teacher",
         "F": "Teacher",

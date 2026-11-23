@@ -9,6 +9,8 @@ export type DeskCardClass = { id: string; name: string; sections?: readonly { id
 export type DeskCardTeacher = {
   id: string;
   name: string;
+  /** The name in Arabic: an Arabic card shows it in place of `name`. */
+  nameAr?: string | null;
   gender?: string | null;
   specialization?: string | null;
   assignments?: readonly { classId: string; sectionIds?: readonly string[] | null; subjectIds?: readonly string[] | null }[] | null;
@@ -25,6 +27,8 @@ export interface DeskCardOptions {
   fallback: DeskCardLanguage;
   assetOrigin: string;
   accent: { color: string; foreground: string };
+  /** An imported image that fills each card behind a white veil; none prints plain paper. */
+  backgroundImage?: string | null;
 }
 
 export interface DeskCard {
@@ -75,7 +79,7 @@ export function deskCard(teacher: DeskCardTeacher, options: Pick<DeskCardOptions
   return {
     id: teacher.id,
     language,
-    name: teacher.name.trim(),
+    name: (language === 'ar' && teacher.nameAr?.trim()) || teacher.name.trim(),
     title: translate(language, `teachers.deskCards.title.${gender}`),
     subjects: names.length ? names : teacher.specialization ? [teacher.specialization] : [],
     classes: taughtClasses(teacher, options.classes),
@@ -83,16 +87,17 @@ export function deskCard(teacher: DeskCardTeacher, options: Pick<DeskCardOptions
 }
 
 /** A long name takes a smaller size, so every name holds on one or two lines. */
-export const nameSize = (name: string) => (name.length <= 16 ? 32 : name.length <= 24 ? 28 : name.length <= 34 ? 24 : 21);
+export const nameSize = (name: string) => (name.length <= 16 ? 24 : name.length <= 24 ? 22 : name.length <= 34 ? 19 : 17);
 const subjectSize = (subjects: readonly string[]) => {
   const length = subjects.join(' · ').length;
-  return length <= 18 ? 20 : length <= 32 ? 17 : length <= 50 ? 15 : 13;
+  return length <= 18 ? 14 : length <= 32 ? 13 : length <= 50 ? 12 : 11;
 };
 
-function cardHtml(card: DeskCard, options: DeskCardOptions, logo: string) {
+function cardHtml(card: DeskCard, options: DeskCardOptions, logo: string, background: string) {
   const school = card.language === 'ar' ? options.school.nameAr?.trim() || options.school.name : options.school.name;
   const dir = schoolI18n.direction(card.language);
   return `<article class="card ${card.language}" lang="${card.language}" dir="${dir}">
+    ${background ? `<img class="backdrop" src="${e(background)}" alt=""><span class="veil"></span>` : ''}
     <header>${logo ? `<img src="${e(logo)}" alt="">` : ''}<span class="school"><bdi>${e(school)}</bdi></span>
       <span class="year"><small>${e(translate(card.language, 'teachers.deskCards.year'))}</small><bdi dir="ltr">${e(options.year)}</bdi></span></header>
     <main>
@@ -114,6 +119,7 @@ export function buildTeacherDeskCards(teachers: readonly DeskCardTeacher[], opti
   const origin = options.assetOrigin;
   const logo = safeUrl(options.school.logo, origin);
   const cards = teachers.map((teacher) => deskCard(teacher, options));
+  const background = safeUrl(options.backgroundImage, origin);
   const pages: DeskCard[][] = [];
   for (let at = 0; at < cards.length; at += 2) pages.push(cards.slice(at, at + 2));
   const title = translate(options.fallback, 'teachers.deskCards.document');
@@ -135,13 +141,17 @@ export function buildTeacherDeskCards(teachers: readonly DeskCardTeacher[], opti
     main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3mm;text-align:center;padding:0 4mm}
     .role{margin:0;font-size:14pt;color:#64748b;letter-spacing:.02em}
     h1{margin:0;line-height:1.1;font-weight:700;color:#0f172a;overflow-wrap:anywhere}
-    h2{margin:1mm 0 0;padding:1.5mm 7mm;border-radius:999px;background:var(--accent);color:var(--accent-foreground);line-height:1.25;font-weight:700}
+    h2{margin:1mm 0 0;padding:1mm 5mm;border-radius:999px;background:var(--accent);color:var(--accent-foreground);line-height:1.25;font-weight:700}
     h2 i{font-style:normal;margin:0 2.5mm;opacity:.7}
     footer{display:flex;align-items:center;gap:3mm;padding:2.5mm 2mm 0;border-top:.8pt solid #e2e8f0}
     footer small{flex:none;font-size:10pt;color:#64748b}
     footer p{display:flex;flex-wrap:wrap;gap:1.5mm;margin:0}
     footer span{padding:.6mm 3mm;border:.6pt solid #cbd5e1;border-radius:1.5mm;font:700 11pt MassarLatin,MassarArabic,sans-serif;color:#334155;white-space:nowrap}
     @page{size:A4 portrait;margin:0}
+    .card{isolation:isolate}
+    .backdrop,.veil{position:absolute;inset:5mm;border-radius:4mm;z-index:-1;pointer-events:none}
+    .backdrop{width:calc(100% - 10mm);height:calc(100% - 10mm);object-fit:cover}
+    .veil{background:radial-gradient(ellipse 62% 58% at center,rgba(255,255,255,.88),rgba(255,255,255,.55) 70%,rgba(255,255,255,.3))}
     @media print{body{background:#fff}.page{margin:0}}
-  </style></head><body>${pages.map((page) => `<section class="page">${page.map((card) => cardHtml(card, options, logo)).join('')}</section>`).join('')}</body></html>`;
+  </style></head><body>${pages.map((page) => `<section class="page">${page.map((card) => cardHtml(card, options, logo, background)).join('')}</section>`).join('')}</body></html>`;
 }

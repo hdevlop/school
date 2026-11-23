@@ -7,7 +7,7 @@ import { useDialog } from '@/shared/useDialog'
 import type { StepConfig } from 'najm-kit'
 import { AvatarFormInput, FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormHeader } from 'najm-kit';
-import { Briefcase, IdCard, User, UserRound, Mail, Activity, UserPlus, BookOpen, Award, Calendar, Wallet, Landmark, Clock, GraduationCap, Phone, MapPin, Loader2 } from 'lucide-react'
+import { Briefcase, IdCard, Languages, User,UserRound, Mail, Activity, UserPlus, BookOpen, Award, Calendar, Wallet, Landmark, Clock, GraduationCap, Phone, MapPin, Loader2 } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
 import { createTeacherSchemas } from '../config/teacherSchemas'
 import { expandTeacherAssignments, groupTeacherAssignments } from '../config/teacherAssignments'
@@ -33,6 +33,7 @@ const teacherFieldGrid = 'grid grid-cols-1 items-start gap-4 md:grid-cols-2'
 export const getTeacherPersonalDefaultValues = (teacher = null) => ({
    ...(teacher?.id && { id: teacher.id }),
    name: teacher?.name ?? '',
+   nameAr: teacher?.nameAr ?? '',
    cin: teacher?.cin ?? '',
    email: teacher?.email ?? '',
    phone: teacher?.phone ?? '',
@@ -193,6 +194,16 @@ export const PersonalInfoContent = ({ requireEmail = true }) => {
                   placeholder={t('teachers.form.fullNamePlaceholder')}
                   icon={User}
                   required={true}
+               />
+
+               <FormInput
+                  name='nameAr'
+                  type='text'
+                  dir='rtl'
+                  lang='ar'
+                  formLabel={t('teachers.form.nameAr')}
+                  placeholder={t('teachers.form.nameArPlaceholder')}
+                  icon={Languages}
                />
 
                <FormInput

@@ -218,6 +218,7 @@ export class TeacherService {
     const staffMember = await this.staffService.create({
       userId: user.id,
       name: data.name,
+      nameAr: data.nameAr,
       email: data.email,
       cin: data.cin,
       gender: data.gender,
@@ -262,7 +263,7 @@ export class TeacherService {
     ];
 
     const STAFF_UPDATE_KEYS = [
-      'name', 'cin', 'phone', 'address', 'gender', 'salary', 'compensationMode',
+      'name', 'nameAr', 'cin', 'phone', 'address', 'gender', 'salary', 'compensationMode',
       'hourlyRate', 'hireDate', 'bankAccount', 'emergencyContact', 'emergencyPhone',
       'employmentType', 'workloadHours', 'status'
     ];

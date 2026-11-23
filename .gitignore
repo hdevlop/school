@@ -83,3 +83,4 @@ apps/dashboard/playwright/.auth/
 
 # Local analysis output (scratch notes, not part of the app)
 /outputs/
+/scratch/

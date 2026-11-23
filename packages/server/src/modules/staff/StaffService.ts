@@ -255,6 +255,7 @@ export class StaffService {
       userId,
       employeeCode,
       name: data.name,
+      nameAr: data.nameAr || null,
       email: data.email || null,
       cin: data.cin || null,
       gender: data.gender,
@@ -315,6 +316,7 @@ export class StaffService {
     const update: Record<string, any> = {};
     if (data.userId !== undefined) update.userId = data.userId || null;
     if (data.name !== undefined) update.name = data.name;
+    if (data.nameAr !== undefined) update.nameAr = data.nameAr || null;
     if (data.email !== undefined) update.email = data.email || null;
     if (data.cin !== undefined) update.cin = data.cin || null;
     if (data.gender !== undefined) update.gender = data.gender;

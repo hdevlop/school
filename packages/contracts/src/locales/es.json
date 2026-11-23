@@ -5473,7 +5473,9 @@
       "noAssignments": "Sin asignaciones",
       "addAssignment": "Añadir asignación",
       "noAssignmentsAdded": "Aún no se han añadido asignaciones.",
-      "emailHelp": "Usa el correo personal del profesor. Recibirá un enlace de activación para elegir su contraseña."
+      "emailHelp": "Usa el correo personal del profesor. Recibirá un enlace de activación para elegir su contraseña.",
+      "nameAr": "Nombre en árabe",
+      "nameArPlaceholder": "الاسم الكامل"
     },
     "profile": {
       "table": {
@@ -5562,6 +5564,18 @@
       "year": "Curso escolar",
       "classes": "Clases",
       "none": "Ningún docente para imprimir",
+      "print": "Imprimir",
+      "background": "Fondo",
+      "count": "Tarjetas para imprimir: {{count}}",
+      "plain": "Liso",
+      "import": "Importar imagen",
+      "importHint": "Elige una imagen guardada de Internet (PNG, JPG o WebP). Se conserva para la próxima vez.",
+      "imported": "Fondo guardado",
+      "importFailed": "No se pudo guardar el fondo",
+      "notImage": "Elige un archivo de imagen",
+      "remove": "Eliminar este fondo",
+      "removeFailed": "No se pudo eliminar el fondo",
+      "loadFailed": "No se pudieron cargar los fondos guardados",
       "title": {
         "M": "Profesor",
         "F": "Profesora",

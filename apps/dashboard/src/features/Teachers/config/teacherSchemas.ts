@@ -59,6 +59,8 @@ export const createTeacherSchemas = (t: T, { requireEmail = true } = {}) => {
   const personal = z.object({
     id: optionalId,
     name: nameField,
+    /** The name in Arabic, for what School prints in Arabic (the desk card). */
+    nameAr: z.string().trim().max(100, t('validationMessages.nameTooLong')).optional(),
     cin: cinField,
     email: emailField,
     phone: phoneField,

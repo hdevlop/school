@@ -16,6 +16,7 @@ export const teacherSelect = {
   loginStatus: users.status,
   cin: staff.cin,
   name: staff.name,
+  nameAr: staff.nameAr,
   email: users.email,
   phone: staff.phone,
   address: staff.address,

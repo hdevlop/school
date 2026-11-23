@@ -14,6 +14,8 @@ export const staff = pgTable('staff', {
   userId: userRef('set null').unique(),
   employeeCode: text('employee_code').notNull().unique(),
   name: text('name').notNull(),
+  /** The name written in Arabic (محمد العلوي), for what School prints in Arabic. */
+  nameAr: text('name_ar'),
   email: text('email').unique(),
   cin: text('cin').unique(),
   gender: genderEnum('gender'),
