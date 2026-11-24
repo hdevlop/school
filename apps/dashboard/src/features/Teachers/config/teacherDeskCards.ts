@@ -1,3 +1,4 @@
+import { compareClassNames } from '@sms/contracts';
 import { schoolI18n, type SchoolTranslationKey } from '@sms/contracts/locales';
 import { escapeHtml as e, massarFontFaces, safeUrl } from '@/features/Massar/config/massarDocument';
 import { isArabicText } from '@/features/Competencies/config/competencyLanguage';
@@ -113,12 +114,12 @@ export function deskCardLanguage(subjects: readonly DeskCardSubject[], fallback:
   return subjects.some((subject) => isArabicText(subject.name)) ? 'ar' : 'fr';
 }
 
-/** Each class taught, once, by its level alone (CP, CE1): sections are not named. */
+/** Each class taught, once, by its level alone (CP, CE1): sections are not named. In the school's order: CP, CE1, CE2… */
 export function taughtClasses(teacher: DeskCardTeacher, classes: readonly DeskCardClass[]): string[] {
   return unique((teacher.assignments ?? []).flatMap((assignment) => {
     const cls = classes.find((item) => item.id === assignment.classId);
     return cls ? [cls.name] : [];
-  }));
+  })).sort(compareClassNames);
 }
 
 const translate = (language: DeskCardLanguage, key: string) => schoolI18n.translate(language, key as SchoolTranslationKey);

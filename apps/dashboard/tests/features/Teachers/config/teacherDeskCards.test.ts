@@ -101,7 +101,13 @@ describe('teacher desk cards', () => {
   it('names each class once, by its level alone, never its sections', () => {
     expect(taughtClasses({ id: 't', name: 'T', assignments: [
       { classId: 'ce1', sectionIds: ['b'] }, { classId: 'cp', sectionIds: ['c'] }, { classId: 'ce1', sectionIds: ['a'] },
-    ] }, classes)).toEqual(['CE1', 'CP']);
+    ] }, classes)).toEqual(['CP', 'CE1']);
+  });
+
+  it("lists the classes in the school's order, whatever order they were assigned in", () => {
+    const levels = ['CE6', 'CM1', 'CE2', 'CE1', 'CM2', 'CP'].map((name) => ({ id: name, name }));
+    const assigned = { id: 't', name: 'T', assignments: levels.map((cls) => ({ classId: cls.id })) };
+    expect(taughtClasses(assigned, levels)).toEqual(['CP', 'CE1', 'CE2', 'CM1', 'CM2', 'CE6']);
   });
 
   it('puts an imported image behind each card, and nothing for plain or an unsafe URL', () => {
