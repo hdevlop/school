@@ -7987,7 +7987,11 @@
       "noLevels": "No hay niveles de competencia registrados hasta el mes del control.",
       "parts": "Resultados por pregunta",
       "partsHint": "Introduce cuántos alumnos respondieron bien cada pregunta. Se guarda automáticamente.",
-      "partsSaveFailed": "No se guardó el número."
+      "partsSaveFailed": "No se guardó el número.",
+      "printAll": "Todas las clases ({{count}})",
+      "preparingAll": "Preparando {{count}} informes de clase…",
+      "printAllSkipped": "{{count}} clase(s) no incluida(s), sin notas o ilegibles: {{names}}",
+      "printAllFailed": "No se pudieron preparar los informes de clase. Inténtelo de nuevo."
     },
     "supportList": {
       "title": "Alumnos que necesitan refuerzo",

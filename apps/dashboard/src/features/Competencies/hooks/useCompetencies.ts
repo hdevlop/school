@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useTranslation } from 'najm-i18n/react';
 import type { CompetencyAssignment, CompetencyDomain, CompetencyEvaluations, CompetencyLevel, CompetencyYearLevels } from '@sms/contracts';
-import { useAcademicYearScope, useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useAcademicYearScope, useYearScopedDetail, useYearScopedList, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { withAcademicYear, yearScopedKey } from '@/features/AcademicYears/utils/yearScope';
 import * as competencyApi from '@/services/competencyApi';
 
@@ -17,13 +17,22 @@ export function useCompetencyAssignments(enabled = true) {
   return { ...list, data: list.data as CompetencyAssignment[] };
 }
 
+/** A class and subject's list of competencies; the page and the all-classes print share its cache. */
+export const competencyCatalogRead = (teacherAssignmentId: string | undefined) => ({
+  resource: RESOURCE,
+  parts: ['catalog', teacherAssignmentId],
+  fetch: () => competencyApi.getCompetencyCatalogApi(teacherAssignmentId!),
+}) satisfies YearScopedRead;
+
+/** One class and subject's levels in every month of the year; shared the same way. */
+export const competencyYearRead = (teacherAssignmentId: string | undefined) => ({
+  resource: RESOURCE,
+  parts: ['year', teacherAssignmentId],
+  fetch: () => competencyApi.getCompetencyYearLevelsApi(teacherAssignmentId!),
+}) satisfies YearScopedRead;
+
 export function useCompetencyCatalog(teacherAssignmentId: string | undefined) {
-  const list = useYearScopedList({
-    resource: RESOURCE,
-    parts: ['catalog', teacherAssignmentId],
-    fetch: () => competencyApi.getCompetencyCatalogApi(teacherAssignmentId!),
-    enabled: !!teacherAssignmentId,
-  });
+  const list = useYearScopedList({ ...competencyCatalogRead(teacherAssignmentId), enabled: !!teacherAssignmentId });
   return { ...list, data: list.data as CompetencyDomain[] };
 }
 
@@ -51,12 +60,7 @@ export function useStudentCompetencySheet(studentId: string | undefined, month: 
 
 /** One class and subject's levels in every month of the year, for the follow-up report. */
 export function useCompetencyYearLevels(teacherAssignmentId: string | undefined) {
-  const detail = useYearScopedDetail({
-    resource: RESOURCE,
-    parts: ['year', teacherAssignmentId],
-    fetch: () => competencyApi.getCompetencyYearLevelsApi(teacherAssignmentId!),
-    enabled: !!teacherAssignmentId,
-  });
+  const detail = useYearScopedDetail({ ...competencyYearRead(teacherAssignmentId), enabled: !!teacherAssignmentId });
   return { ...detail, data: detail.data as CompetencyYearLevels | null };
 }
 

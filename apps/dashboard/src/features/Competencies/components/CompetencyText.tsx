@@ -6,7 +6,7 @@ import { schoolI18n, type SchoolTranslationKey } from '@sms/contracts/locales';
 import { useTranslation } from 'najm-i18n/react';
 import { catalogLanguage } from '../config/competencyLanguage';
 
-type CompetencyText = {
+export type CompetencyText = {
   t: (key: string, params?: Record<string, string | number>) => string;
   language: string;
   dir: 'ltr' | 'rtl';
@@ -43,10 +43,18 @@ export function useListText(domains: readonly CompetencyDomain[]): CompetencyTex
   return useTextIn(useMemo(() => catalogLanguage(domains), [domains]));
 }
 
+/** A list's text outside React: in its own language when it has one, else the page's. */
+export function textForList(domains: readonly CompetencyDomain[], page: { t: (key: string, params?: any) => string; language: string }): CompetencyText {
+  return textIn(catalogLanguage(domains), page);
+}
+
+function textIn(list: 'ar' | null, page: { t: (key: string, params?: any) => string; language: string }): CompetencyText {
+  return list
+    ? { t: (key, params) => schoolI18n.translate(list, key as SchoolTranslationKey, params), language: list, dir: schoolI18n.direction(list) }
+    : { t: page.t as CompetencyText['t'], language: page.language, dir: schoolI18n.direction(schoolI18n.normalizeLanguage(page.language)) };
+}
+
 function useTextIn(list: 'ar' | null): CompetencyText {
   const page = useTranslation();
-  return useMemo(() => list
-    ? { t: (key, params) => schoolI18n.translate(list, key as SchoolTranslationKey, params), language: list, dir: schoolI18n.direction(list) }
-    : { t: page.t as CompetencyText['t'], language: page.language, dir: schoolI18n.direction(schoolI18n.normalizeLanguage(page.language)) },
-  [list, page.t, page.language]);
+  return useMemo(() => textIn(list, page), [list, page]);
 }

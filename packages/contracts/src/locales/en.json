@@ -8694,7 +8694,11 @@
       "noLevels": "No competency level recorded up to this test’s month.",
       "parts": "Results by question",
       "partsHint": "Enter how many pupils answered each question correctly. Saved automatically.",
-      "partsSaveFailed": "The count was not saved."
+      "partsSaveFailed": "The count was not saved.",
+      "printAll": "All classes ({{count}})",
+      "preparingAll": "Preparing {{count}} class reports…",
+      "printAllSkipped": "{{count}} class(es) left out, no marks or not readable: {{names}}",
+      "printAllFailed": "The class reports could not be prepared. Try again."
     },
     "supportList": {
       "title": "Pupils needing support",

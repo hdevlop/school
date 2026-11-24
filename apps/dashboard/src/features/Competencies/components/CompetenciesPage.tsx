@@ -234,6 +234,7 @@ function StaffCompetencies() {
     : undefined;
   const { preview, classPreview, printMenu, roundPicker } = useFollowUpReport({
     assignment: catalog.isLoading || catalog.error ? undefined : assignment,
+    assignments: assignments.data,
     // A report covers the months up to its Contrôle: it picks their competencies from the year's list.
     domains: yearDomains, students, studentId: selected?.id, highlightId: selected?.id ?? studentId,
   });

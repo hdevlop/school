@@ -2,8 +2,11 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode, type SyntheticEvent } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronDown, FileChartColumn, LifeBuoy, Printer, School, UserRound, Users } from 'lucide-react';
-import type { CompetencyAssignment, CompetencyDomain, MassarGradeSource, MassarSheetDetail } from '@sms/contracts';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { ChevronDown, FileChartColumn, LifeBuoy, Printer, School, Building2, UserRound, Users } from 'lucide-react';
+import { compareClassNames } from '@sms/contracts';
+import type { CompetencyAssignment, CompetencyDomain, CompetencyYearLevels, MassarGradeSource, MassarSheetDetail } from '@sms/contracts';
 import { MASSAR_ANALYSIS_MAX_LENGTH } from '@sms/contracts';
 import { schoolI18n, type SchoolTranslationKey } from '@sms/contracts/locales';
 import { cn, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, NButton, NEmptyState, NErrorState, NSkeleton, SelectInput } from 'najm-kit';
@@ -13,9 +16,10 @@ import printStyles from '@/components/PrintMenu.module.css';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useSchoolPrintOptions } from '@/hooks/useSchoolPrintOptions';
 import { printSchoolDocument } from '@/shared/schoolPrintDocument';
-import { useMassarRead } from '@/features/Massar/hooks/useMassar';
+import { massarRead, useMassarRead } from '@/features/Massar/hooks/useMassar';
+import { useAcademicYearScope, yearScopedQueryOptions, type YearScopedRead } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { NOTES_MASSAR_API } from '@/features/Grades/hooks/useMassarGrades';
-import { useCompetencyYearLevels } from '../hooks/useCompetencies';
+import { competencyCatalogRead, competencyYearRead, useCompetencyYearLevels } from '../hooks/useCompetencies';
 import { useFollowUpAnalyses } from '../hooks/useFollowUpAnalyses';
 import { followUps, isRoomy, type FollowUp } from '../config/followUpReport';
 import { skillNeed } from '../config/competencyRemarks';
@@ -25,14 +29,16 @@ import { analyzeClass, classNote, classReport, supportCapacity, type ClassReport
 import { classParts, type ClassPart } from '../config/partCounts';
 import { useSheetParts } from '../hooks/useSheetParts';
 import { PartCounts } from './PartCounts';
-import { buildClassReportDocument, type ClassReportPrintOptions } from '../config/classReportDocument';
+import { buildClassReportDocument, buildClassReportsDocument, type ClassReportEntry, type ClassReportPrintOptions } from '../config/classReportDocument';
 import { buildSupportListDocument, SUPPORT_LIST_SIZE } from '../config/supportListDocument';
 import { monthLabel } from '../config/competencyLevels';
-import { useListText } from './CompetencyText';
+import { textForList, useListText, type CompetencyText } from './CompetencyText';
 import type { SheetStudent } from './StudentCompetencySheet';
 
 type ReportOptions = {
   assignment?: CompetencyAssignment;
+  /** Every class and subject the page offers: the all-classes print takes those of the same subject. */
+  assignments?: readonly CompetencyAssignment[];
   domains: CompetencyDomain[];
   /** The class roster, for each pupil's gender: the analysis agrees with it. */
   students: SheetStudent[];
@@ -41,6 +47,44 @@ type ReportOptions = {
   highlightId?: string | null;
 };
 
+type SchoolPrint = ReturnType<typeof useSchoolPrintOptions>;
+type Gender = 'M' | 'F' | null;
+
+/** The pupil report's page options for one class's Massar grid, in its list's language. */
+function followUpOptions({ detail, assignment, text, printOptions, genderOf }: {
+  detail: MassarSheetDetail; assignment: CompetencyAssignment; text: CompetencyText; printOptions: SchoolPrint;
+  genderOf: ReadonlyMap<string, Gender>;
+}): Omit<FollowUpPrintOptions, 'analysisOf'> {
+  const { t, language, dir } = text;
+  const remarkLanguage = language === 'ar' ? 'ar' : 'fr';
+  const { school, assetOrigin } = printOptions({ title: t('competencies.report.title'), date: '', details: [], columns: [] });
+  // Small captions in the other language of the school: French under Arabic, Arabic under French.
+  const second = language === 'ar' ? 'fr' : language === 'fr' ? 'ar' : null;
+  return {
+    language, dir, t,
+    caption: second ? (key, params) => schoolI18n.translate(second, key as SchoolTranslationKey, params) : null,
+    school: { name: detail.schoolName || school.name, logo: school.logo }, assetOrigin,
+    subjectName: assignment.subjectName, className: detail.sheet.className, levelLabel: detail.levelLabel,
+    ...followUpRoundLabels(detail.round, language, t), yearLabel: detail.yearLabel,
+    teacherName: detail.sheet.teacherName ?? assignment.teacherName ?? null, maxMark: detail.maxMark,
+    needOf: (item, name, level) => skillNeed(remarkLanguage, name, genderOf.get(item.student.id) ?? null, level),
+  };
+}
+
+/** The class report's options: the pupil report's, dated today, with the class's analysis and remark. */
+function classPrintOptions(documentOptions: Omit<FollowUpPrintOptions, 'analysisOf'>, klass: ClassReport, text: CompetencyText, printOptions: SchoolPrint): ClassReportPrintOptions {
+  const { t, language } = text;
+  const labels = {
+    language: language === 'ar' ? 'ar' : 'fr', maxMark: documentOptions.maxMark, levelLabel: rankLabel(t),
+    appreciationLabel: (grade: string) => t(`competencies.report.appreciations.${grade}`),
+    monthLabel: (month: string) => monthLabel(month, language),
+  } as const;
+  const { date } = printOptions({ title: '', date: localDateInput(new Date()), details: [], columns: [] });
+  return { ...documentOptions, dateLabel: date, analysis: analyzeClass(klass, labels), note: classNote(klass, labels) };
+}
+
+const NO_GENDERS: ReadonlyMap<string, Gender> = new Map();
+
 /**
  * تقارير التتبع of one class and subject after a Massar Contrôle, one A4 page
  * per pupil. The teacher picks the Contrôle for the selected pupil, reviews the report,
@@ -48,7 +92,7 @@ type ReportOptions = {
  * read through Notes' own permission, so a teacher reaches their own grids
  * only; an Arabic list's report reads in Arabic, with French captions.
  */
-export function useFollowUpReport({ assignment, domains, students, studentId, highlightId = studentId }: ReportOptions) {
+export function useFollowUpReport({ assignment, assignments = [], domains, students, studentId, highlightId = studentId }: ReportOptions) {
   const page = useTranslation();
   const { t, language, dir } = useListText(domains);
   const printOptions = useSchoolPrintOptions();
@@ -85,40 +129,84 @@ export function useFollowUpReport({ assignment, domains, students, studentId, hi
   const analysisOf = (item: FollowUp) => analyses.entry(item.student.id).value ?? generated.get(item.student.id) ?? '';
   const report = reports.find((item) => item.student.id === studentId);
 
-  const documentOptions = useMemo<Omit<FollowUpPrintOptions, 'analysisOf'> | null>(() => {
-    const detail = sheet.data;
-    if (!detail || !assignment) return null;
-    const { school, assetOrigin } = printOptions({ title: t('competencies.report.title'), date: '', details: [], columns: [] });
-    // Small captions in the other language of the school: French under Arabic, Arabic under French.
-    const second = language === 'ar' ? 'fr' : language === 'fr' ? 'ar' : null;
-    return {
-      language, dir, t,
-      caption: second ? (key, params) => schoolI18n.translate(second, key as SchoolTranslationKey, params) : null,
-      school: { name: detail.schoolName || school.name, logo: school.logo }, assetOrigin,
-      subjectName: assignment.subjectName, className: detail.sheet.className, levelLabel: detail.levelLabel,
-      ...followUpRoundLabels(detail.round, language, t), yearLabel: detail.yearLabel,
-      teacherName: detail.sheet.teacherName ?? assignment.teacherName ?? null, maxMark: detail.maxMark,
-      needOf: (item, name, level) => skillNeed(remarkLanguage, name, genderOf.get(item.student.id) ?? null, level),
-    };
-  }, [sheet.data, printOptions, t, language, dir, assignment, remarkLanguage, genderOf]);
+  const documentOptions = useMemo<Omit<FollowUpPrintOptions, 'analysisOf'> | null>(() => (sheet.data && assignment
+    ? followUpOptions({ detail: sheet.data, assignment, text: { t, language, dir }, printOptions, genderOf })
+    : null), [sheet.data, printOptions, t, language, dir, assignment, genderOf]);
   const print = (chosen: readonly FollowUp[]) => {
     if (documentOptions) return printSchoolDocument(buildFollowUpDocument(chosen, { ...documentOptions, analysisOf }));
   };
 
   // تقرير القسم: the same pupils' reports, read as one class.
   const klass = useMemo(() => classReport(reports, sheet.data?.maxMark ?? 10), [reports, sheet.data]);
-  const classOptions = useMemo<ClassReportPrintOptions | null>(() => {
-    if (!documentOptions) return null;
-    const labels = {
-      language: remarkLanguage, maxMark: documentOptions.maxMark, levelLabel: rankLabel(t),
-      appreciationLabel: (grade: string) => t(`competencies.report.appreciations.${grade}`),
-      monthLabel: (month: string) => monthLabel(month, language),
-    } as const;
-    const { date } = printOptions({ title: '', date: localDateInput(new Date()), details: [], columns: [] });
-    return { ...documentOptions, dateLabel: date, analysis: analyzeClass(klass, labels), note: classNote(klass, labels) };
-  }, [documentOptions, klass, remarkLanguage, t, language, printOptions]);
+  const classOptions = useMemo<ClassReportPrintOptions | null>(() => (documentOptions
+    ? classPrintOptions(documentOptions, klass, { t, language, dir }, printOptions)
+    : null), [documentOptions, klass, t, language, dir, printOptions]);
   const printClass = () => {
     if (classOptions) return printSchoolDocument(buildClassReportDocument(klass, classOptions));
+  };
+
+  // Every class of this subject at the same Contrôle (term and exam), in the school's class order:
+  // one print, a class a sheet. A class without that Contrôle's grid is left out before anything is read.
+  const queryClient = useQueryClient();
+  const scope = useAcademicYearScope();
+  const allClasses = useMemo(() => {
+    if (!assignment || !round) return [];
+    return assignments
+      .filter((item) => item.subjectId === assignment.subjectId)
+      .map((item) => ({
+        assignment: item,
+        source: (sources.data ?? []).find((source) => source.sectionId === item.sectionId && source.subjectId === item.subjectId
+          && source.term === round.term && source.exam === round.exam),
+      }))
+      .filter((item): item is { assignment: CompetencyAssignment; source: MassarGradeSource } => !!item.source)
+      .sort((a, b) => compareClassNames(a.assignment.className, b.assignment.className)
+        || a.assignment.sectionName.localeCompare(b.assignment.sectionName));
+  }, [assignments, assignment, round, sources.data]);
+  const [printingAll, setPrintingAll] = useState(false);
+  const printAllClasses = async () => {
+    if (!allClasses.length || printingAll) return;
+    setPrintingAll(true);
+    const progress = toast.loading(page.t('competencies.classReport.preparingAll', { count: allClasses.length }));
+    const read = async <T,>(request: YearScopedRead) =>
+      ((await queryClient.fetchQuery(yearScopedQueryOptions(request, scope))) as { data?: T } | null)?.data ?? null;
+    try {
+      const built = await Promise.allSettled(allClasses.map(async ({ assignment: target, source }) => {
+        const [detail, catalog, levels] = await Promise.all([
+          read<MassarSheetDetail>(massarRead(`/sheets/${encodeURIComponent(source.sheetId)}`, NOTES_MASSAR_API)),
+          read<CompetencyDomain[]>(competencyCatalogRead(target.teacherAssignmentId)),
+          read<CompetencyYearLevels>(competencyYearRead(target.teacherAssignmentId)),
+        ]);
+        if (!detail || !levels) return null;
+        const targetDomains = catalog ?? [];
+        const pupils = followUps({ sheet: detail, domains: targetDomains, evaluations: levels.evaluations, remarks: levels.remarks, months: levels.months });
+        if (!pupils.length) return null;
+        const text = textForList(targetDomains, page);
+        const report = classReport(pupils, detail.maxMark ?? 10);
+        const base = followUpOptions({ detail, assignment: target, text, printOptions, genderOf: NO_GENDERS });
+        return { report, options: classPrintOptions(base, report, text, printOptions) } satisfies ClassReportEntry;
+      }));
+      const entries = built.flatMap((result) => (result.status === 'fulfilled' && result.value ? [result.value] : []));
+      const left = allClasses.filter((_, index) => {
+        const result = built[index];
+        return !(result.status === 'fulfilled' && result.value);
+      });
+      toast.dismiss(progress);
+      if (!entries.length) {
+        toast.error(page.t('competencies.classReport.printAllFailed'));
+        return;
+      }
+      if (left.length) {
+        toast.warning(page.t('competencies.classReport.printAllSkipped', {
+          count: left.length, names: left.map(({ assignment: item }) => `${item.className} ${item.sectionName}`).join(', '),
+        }));
+      }
+      await printSchoolDocument(buildClassReportsDocument(entries));
+    } catch {
+      toast.dismiss(progress);
+      toast.error(page.t('competencies.classReport.printAllFailed'));
+    } finally {
+      setPrintingAll(false);
+    }
   };
   // لائحة الدعم: the pupils at Début or less on a competency, for the support sessions;
   // the teacher may keep only the ones who need it most.
@@ -214,6 +302,12 @@ export function useFollowUpReport({ assignment, domains, students, studentId, hi
               <School aria-hidden="true" />
               <span><strong>{page.t('competencies.classReport.title')}</strong></span>
             </DropdownMenuItem>
+            {allClasses.length > 1 && (
+              <DropdownMenuItem className={printStyles.printItem} disabled={printingAll} onSelect={() => void printAllClasses()}>
+                <Building2 aria-hidden="true" />
+                <span><strong>{page.t('competencies.classReport.printAll', { count: allClasses.length })}</strong></span>
+              </DropdownMenuItem>
+            )}
             <div className="flex items-center gap-1">
               <DropdownMenuItem className={cn(printStyles.printItem, 'min-w-0 flex-1')} onSelect={() => void printSupport()}>
                 <LifeBuoy aria-hidden="true" />

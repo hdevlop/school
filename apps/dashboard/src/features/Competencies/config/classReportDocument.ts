@@ -235,7 +235,7 @@ function page(report: ClassReport, options: ClassReportPrintOptions, images: { l
   const note = sentences(options.note);
   // The screen reflows: the tiers only fit the printed A4 page.
   const fit = preview ? 'roomy' : pageFit(report.pupils);
-  return `<section class="sheet ${fit}">
+  return `<section class="sheet ${fit}" lang="${e(options.language)}" dir="${options.dir}">
     ${header(options, images)}
     ${info(report, options)}
     ${tiles(report, options)}
@@ -302,10 +302,25 @@ const PREVIEW_STYLES = `
  * remarks. A large class carries the table onto a second page.
  */
 export function buildClassReportDocument(report: ClassReport, options: ClassReportPrintOptions, mode: 'print' | 'preview' = 'print'): string {
+  return buildClassReportsDocument([{ report, options }], mode);
+}
+
+export type ClassReportEntry = { report: ClassReport; options: ClassReportPrintOptions };
+
+/**
+ * Several classes' reports in one print, each from a new sheet in its own
+ * list's language and direction: the all-classes button. The page's fonts,
+ * styles and title follow the first class.
+ */
+export function buildClassReportsDocument(entries: readonly ClassReportEntry[], mode: 'print' | 'preview' = 'print'): string {
   const preview = mode === 'preview';
-  const origin = options.assetOrigin;
-  const images = { logo: safeUrl(options.school.logo, origin), ministry: safeUrl('/images/massar/ministry.png', origin) };
-  return `<!doctype html><html lang="${e(options.language)}" dir="${options.dir}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${e(options.t('competencies.classReport.title'))}</title><style>
+  const first = entries[0]?.options;
+  if (!first) return '';
+  const origin = first.assetOrigin;
+  const pages = entries.map(({ report, options }) => page(report, options, {
+    logo: safeUrl(options.school.logo, origin), ministry: safeUrl('/images/massar/ministry.png', origin),
+  }, preview)).join('');
+  return `<!doctype html><html lang="${e(first.language)}" dir="${first.dir}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${e(first.t('competencies.classReport.title'))}</title><style>
     ${massarFontFaces(origin)}
     ${SHEET_STYLES}
     .tiles{display:grid;grid-template-columns:repeat(8,1fr);gap:1.5mm}
@@ -376,7 +391,9 @@ export function buildClassReportDocument(report: ClassReport, options: ClassRepo
       .grid thead{display:table-header-group}.grid tr{break-inside:avoid}
       /* Too many pupils for one page: the table on the first, the profile, analysis and remarks together on the next. */
       .split .cards{break-before:page}
+      /* Each class from a new sheet. */
+      .sheet+.sheet{break-before:page}
     }
     ${preview ? PREVIEW_STYLES : ''}
-  </style></head><body>${page(report, options, images, preview)}</body></html>`;
+  </style></head><body>${pages}</body></html>`;
 }

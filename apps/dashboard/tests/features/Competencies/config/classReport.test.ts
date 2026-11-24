@@ -2,7 +2,7 @@ import { describe, expect, it } from 'bun:test';
 import type { CompetencyDomain, CompetencyEvaluation, MassarSheetDetail } from '@sms/contracts';
 import { followUps } from '@/features/Competencies/config/followUpReport';
 import { analyzeClass, classNote, classReport, deviation, median, supportCapacity, supportGroups, supportList } from '@/features/Competencies/config/classReport';
-import { buildClassReportDocument, ONE_PAGE_PUPILS, pageFit, type ClassReportPrintOptions } from '@/features/Competencies/config/classReportDocument';
+import { buildClassReportDocument, buildClassReportsDocument, ONE_PAGE_PUPILS, pageFit, type ClassReportPrintOptions } from '@/features/Competencies/config/classReportDocument';
 import { buildSupportListDocument, SUPPORT_LIST_SIZE } from '@/features/Competencies/config/supportListDocument';
 
 const MONTHS = ['2026-09', '2026-10', '2026-11', '2026-12'];
@@ -119,6 +119,17 @@ describe('the class report after a Massar Contrôle', () => {
     expect(ONE_PAGE_PUPILS).toBe(26);
     // The screen reflows instead.
     expect(buildClassReportDocument(report, options, 'preview')).toContain('class="sheet roomy"');
+  });
+
+  it('prints every class in one document, each from a new sheet in its own language', () => {
+    const french = { ...options, language: 'fr', dir: 'ltr' as const, className: '6APG-2' };
+    const html = buildClassReportsDocument([{ report, options }, { report, options: french }]);
+    expect(html.match(/<section class="sheet /g)).toHaveLength(2);
+    expect(html).toContain('lang="ar" dir="rtl"');
+    expect(html).toContain('lang="fr" dir="ltr"');
+    expect(html.indexOf('6APG-1')).toBeLessThan(html.indexOf('6APG-2'));
+    expect(html).toContain('.sheet+.sheet{break-before:page}');
+    expect(buildClassReportsDocument([])).toBe('');
   });
 
   it('prints one escaped A4 page with every pupil and the class rows', () => {

@@ -8088,7 +8088,11 @@
       "noLevels": "Aucun niveau de compétence enregistré jusqu’au mois du contrôle.",
       "parts": "Résultats par question",
       "partsHint": "Saisissez le nombre d’élèves ayant bien répondu à chaque question. Enregistré automatiquement.",
-      "partsSaveFailed": "Le nombre n’a pas été enregistré."
+      "partsSaveFailed": "Le nombre n’a pas été enregistré.",
+      "printAll": "Toutes les classes ({{count}})",
+      "preparingAll": "Préparation de {{count}} rapports de classe…",
+      "printAllSkipped": "{{count}} classe(s) non incluse(s), sans notes ou illisibles : {{names}}",
+      "printAllFailed": "Impossible de préparer les rapports des classes. Réessayez."
     },
     "supportList": {
       "title": "Élèves ayant besoin de soutien",
