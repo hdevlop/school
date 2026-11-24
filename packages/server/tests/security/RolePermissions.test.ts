@@ -323,6 +323,8 @@ describe('the monitor role migration', () => {
     migrated.push('read:homework');
     // Competencies (0125) likewise.
     migrated.push('read:competencies');
+    // 0143 lets every role that records rewards read the reward bank.
+    migrated.push('read:reward-templates');
     expect(migrated.sort()).toEqual([...grants].sort());
   });
 

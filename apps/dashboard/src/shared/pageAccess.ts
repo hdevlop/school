@@ -43,6 +43,8 @@ export const PAGE_ACCESS = {
   announcements: can('read:announcements'),
   discipline: can('read:discipline'),
   behaviorRewards: can('read:behavior-rewards'),
+  // The reward bank, under the rewards page: nested inside its layout, so both rules apply.
+  rewardTemplates: can('read:reward-templates'),
   homework: can('read:homework'),
   // Missed homework is read through each follow-up's ownership, as homework is.
   homeworkFollowUp: can('read:homework'),

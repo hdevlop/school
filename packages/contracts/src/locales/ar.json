@@ -1686,6 +1686,7 @@
     "violations": "المخالفات",
     "behaviorRewards": "السلوك الإيجابي والمكافآت",
     "behaviorRewardsShort": "المكافآت",
+    "rewardTemplates": "بنك المكافآت",
     "myChildren": "أبنائي",
     "myProfile": "ملفي",
     "pendingChecks": "الشيكات",
@@ -2621,6 +2622,51 @@
       "deleteAdminOnly": "يمكن للمسؤولين فقط حذف سجلات التقدير",
       "invalidBehaviorDate": "تاريخ السلوك غير صالح",
       "futureBehaviorDate": "لا يمكن أن يكون تاريخ السلوك في المستقبل"
+    }
+  },
+  "rewardTemplates": {
+    "openBank": "بنك المكافآت",
+    "backToRewards": "العودة إلى المكافآت",
+    "table": {
+      "title": "المكافأة",
+      "status": "الحالة",
+      "count": "{{count}} مكافآت في البنك"
+    },
+    "filters": {
+      "search": "ابحث في البنك...",
+      "status": "الحالة"
+    },
+    "form": {
+      "section": "مكافأة جاهزة",
+      "title": "الاسم",
+      "titlePlaceholder": "مثال: عمل جماعي متميز",
+      "descriptionPlaceholder": "النص الذي يُنسخ إلى التقدير عند اختيارها",
+      "active": "مقترحة في نموذج التقدير"
+    },
+    "dialogs": {
+      "createTitle": "إضافة إلى بنك المكافآت",
+      "createButton": "إضافة مكافأة",
+      "editTitle": "تعديل مكافأة البنك",
+      "updateButton": "تحديث",
+      "viewTitle": "مكافأة البنك",
+      "deleteWarning": "إزالة هذه المكافأة من البنك؟ تحتفظ التقديرات الممنوحة سابقًا بقيمها."
+    },
+    "picker": {
+      "generate": "توليد",
+      "regenerate": "إعادة التوليد",
+      "generateHint": "ملء النقاط والوصف من بنك المكافآت",
+      "filledFrom": "من البنك: {{title}}. انقر مرة أخرى لاختيار أخرى.",
+      "noMatch": "لا يحتوي بنك المكافآت على شيء لهذه الفئة وهذا النوع."
+    },
+    "errors": {
+      "notFound": "مكافأة البنك غير موجودة",
+      "titleExists": "يحتوي البنك بالفعل على مكافأة بهذا الاسم لهذه الفئة وهذا النوع"
+    },
+    "success": {
+      "retrieved": "تم جلب بنك المكافآت بنجاح",
+      "created": "تمت إضافة المكافأة إلى البنك",
+      "updated": "تم تحديث مكافأة البنك",
+      "deleted": "تمت إزالة المكافأة من البنك"
     }
   },
   "confirm": {
@@ -6270,6 +6316,10 @@
       "title": "لا توجد سجلات سلوك بعد",
       "description": "أضف أول سجل سلوك أو مكافأة للبدء."
     },
+    "rewardTemplates": {
+      "title": "بنك المكافآت فارغ",
+      "description": "أضف مكافآت جاهزة حسب الفئة والنوع لملء نموذج التقدير بنقرة واحدة."
+    },
     "studentAttendance": {
       "title": "لا يوجد تلاميذ للتسجيل",
       "description": "سيظهر التلاميذ هنا بعد اختيار القسم والفوج."
@@ -7056,7 +7106,9 @@
     "familyTooManyChildren": "عدد كبير جدًا من الأطفال في وصل واحد",
     "familyDuplicateChild": "لا يمكن أن يظهر الطفل إلا مرة واحدة في الوصل",
     "duplicateTestPart": "سؤالان يحملان المعرّف نفسه.",
-    "partLabelRequired": "أدخل نص السؤال."
+    "partLabelRequired": "أدخل نص السؤال.",
+    "rewardTemplateTitleRequired": "الاسم مطلوب",
+    "rewardTemplateTitleTooLong": "الاسم طويل جدًا (120 حرفًا كحد أقصى)"
   },
   "academic": {
     "accountantAssignmentOptional": "اختر سلكًا دراسيًا أو أكثر، أو اتركه فارغًا للمدرسة كاملة.",

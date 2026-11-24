@@ -103,6 +103,7 @@
     "seed:visit-request-permissions": "bun --env-file=apps/dashboard/.env.local packages/seed/src/scripts/admin/seed-visit-request-permissions.ts",
     "seed:roles": "bun run --cwd packages/seed seed:roles",
     "seed:role-permissions": "bun run --cwd packages/seed seed:role-permissions",
+    "seed:reward-templates": "bun run --cwd packages/seed seed:reward-templates",
     "seed:staff": "bun run --cwd packages/seed seed:staff",
     "seed:school": "bun run --cwd packages/seed seed:school",
     "seed:academic": "bun run --cwd packages/seed seed:academic",

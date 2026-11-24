@@ -5683,6 +5683,7 @@
     "violations": "Violations",
     "behaviorRewards": "Positive Behavior & Rewards",
     "behaviorRewardsShort": "Rewards",
+    "rewardTemplates": "Reward bank",
     "alerts": "Alerts",
     "myChildren": "My children",
     "myProfile": "My profile",
@@ -6338,6 +6339,51 @@
       "futureBehaviorDate": "Behavior date cannot be in the future"
     }
   },
+  "rewardTemplates": {
+    "openBank": "Reward bank",
+    "backToRewards": "Back to rewards",
+    "table": {
+      "title": "Reward",
+      "status": "Status",
+      "count": "{{count}} rewards in the bank"
+    },
+    "filters": {
+      "search": "Search the bank...",
+      "status": "Status"
+    },
+    "form": {
+      "section": "Ready-made reward",
+      "title": "Name",
+      "titlePlaceholder": "e.g. Outstanding teamwork",
+      "descriptionPlaceholder": "The wording copied into the reward when it is picked",
+      "active": "Offered in the reward form"
+    },
+    "dialogs": {
+      "createTitle": "Add to the reward bank",
+      "createButton": "Add a reward",
+      "editTitle": "Edit the bank reward",
+      "updateButton": "Update",
+      "viewTitle": "Bank reward",
+      "deleteWarning": "Remove this reward from the bank? Rewards already given keep their values."
+    },
+    "picker": {
+      "generate": "Generate",
+      "regenerate": "Regenerate",
+      "generateHint": "Fill the points and description from the reward bank",
+      "filledFrom": "From the reward bank: {{title}}. Click again for another.",
+      "noMatch": "The reward bank has nothing for this category and reward type."
+    },
+    "errors": {
+      "notFound": "Bank reward not found",
+      "titleExists": "The bank already has a reward with this name for this category and reward type"
+    },
+    "success": {
+      "retrieved": "Reward bank retrieved successfully",
+      "created": "Reward added to the bank",
+      "updated": "Bank reward updated",
+      "deleted": "Reward removed from the bank"
+    }
+  },
   "confirm": {
     "discipline": {
       "create": "Create this violation record?",
@@ -6962,6 +7008,10 @@
     "behaviorRewards": {
       "title": "No behavior records yet",
       "description": "Add your first behavior record or reward to get started."
+    },
+    "rewardTemplates": {
+      "title": "The reward bank is empty",
+      "description": "Add ready-made rewards by category and reward type to fill the reward form in one click."
     },
     "studentAttendance": {
       "title": "No students to mark",
@@ -7749,7 +7799,9 @@
     "familyTooManyChildren": "Too many children on one receipt",
     "familyDuplicateChild": "Each child can appear only once on a receipt",
     "duplicateTestPart": "Two questions have the same id.",
-    "partLabelRequired": "Name the question."
+    "partLabelRequired": "Name the question.",
+    "rewardTemplateTitleRequired": "Name is required",
+    "rewardTemplateTitleTooLong": "Name is too long (120 characters max)"
   },
   "academic": {
     "accountantAssignmentOptional": "Choose one or more cycles, or leave it empty for the whole school.",

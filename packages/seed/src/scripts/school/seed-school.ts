@@ -10,6 +10,8 @@ import {
   TeacherService,
   StudentService,
   AttendanceService,
+  RewardTemplateService,
+  rewardTemplatesData,
   AcademicYearValidator,
   runWithResolvedYear,
 } from '@sms/server/modules/seed';
@@ -31,6 +33,7 @@ runSeedTask('school seed', async (server) => {
   const teacherService = await server.container.resolve(TeacherService);
   const studentService = await server.container.resolve(StudentService);
   const attendanceService = await server.container.resolve(AttendanceService);
+  const rewardTemplateService = await server.container.resolve(RewardTemplateService);
 
   console.log('🌱 Seeding school structure...');
 
@@ -48,6 +51,9 @@ runSeedTask('school seed', async (server) => {
 
   await feeTypeService.seedDemoFeeTypes(schoolSeedData.feeTypesData);
   console.log('✅ Fee types seeded');
+
+  const rewardTemplates = await rewardTemplateService.seedDefaults(rewardTemplatesData);
+  console.log(`✅ Reward bank: ${rewardTemplates.length} added`);
 
   await parentService.createBulk(parentsData);
   console.log('✅ Parents seeded');

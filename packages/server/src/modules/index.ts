@@ -33,6 +33,7 @@ export * from './dashboard';
 export * from './health';
 export * from './chat';
 export * from './behaviorRewards';
+export * from './rewardTemplates';
 
 export * from './transport/drivers';
 export * from './transport/vehicles';

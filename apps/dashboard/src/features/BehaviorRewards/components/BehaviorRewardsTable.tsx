@@ -6,10 +6,11 @@ import { useMemo, useState } from 'react';
 import { HeaderActionsMenu } from '@/components/HeaderActionsMenu';
 import { HeaderSearchButton, normalizeSearch } from '@/components/HeaderSearchButton';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
-import { Plus } from 'lucide-react';
+import Link from 'next/link';
+import { Library, Plus } from 'lucide-react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
-import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NSheet, useMediaQuery } from 'najm-kit';
+import { NButton, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NSheet, useMediaQuery } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
@@ -110,6 +111,15 @@ const BehaviorRewardsTable = () => {
   });
 
   const total = tableData.length;
+  // Whoever curates the reward bank reaches it from here; the others meet it in the reward form.
+  const bankLink = !isFamily && (can('create:reward-templates') || can('update:reward-templates')) ? (
+    <NButton asChild variant="outline" size="sm" autoLoading={false}>
+      <Link href="/behavior-rewards/bank">
+        <Library className="size-4" aria-hidden />
+        {t('rewardTemplates.openBank')}
+      </Link>
+    </NButton>
+  ) : null;
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col gap-2">
@@ -122,11 +132,12 @@ const BehaviorRewardsTable = () => {
           <div className="flex shrink-0 items-center">
             <HeaderSearchButton search={search} onSearch={setSearch}
               label={t('behaviorRewards.filters.searchLabel')} placeholder={t('behaviorRewards.filters.search')} />
-            <HeaderActionsMenu contentClassName="md:hidden" hasOwnActions={false}><PageHeaderGlobalActions /></HeaderActionsMenu>
+            <HeaderActionsMenu contentClassName="md:hidden" hasOwnActions={Boolean(bankLink)}>{bankLink}<PageHeaderGlobalActions /></HeaderActionsMenu>
           </div>
         ) : undefined}
       >
         <NPageHeaderActions>
+          {bankLink}
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
       </NPageHeader>

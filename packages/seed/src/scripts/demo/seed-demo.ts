@@ -37,6 +37,8 @@ import {
   DisciplineService,
   BehaviorRewardService,
   ClassRoutineService,
+  RewardTemplateService,
+  rewardTemplatesData,
 } from '@sms/server/modules/seed';
 import { rolesData } from '@sms/server/seed-data/admin';
 import { runSeedTask } from '../shared/run-seed';
@@ -172,6 +174,7 @@ runSeedTask(`demo seed for ${seedAcademicYear}`, async (server) => {
   const disciplineService = await server.container.resolve(DisciplineService);
   const behaviorRewardService = await server.container.resolve(BehaviorRewardService);
   const classRoutineService = await server.container.resolve(ClassRoutineService);
+  const rewardTemplateService = await server.container.resolve(RewardTemplateService);
 
   console.log('🌱 Starting school demo data seeding...');
 
@@ -266,6 +269,8 @@ runSeedTask(`demo seed for ${seedAcademicYear}`, async (server) => {
 
       await seedPhase('Fee types', () => feeTypeService.seedDemoFeeTypes(schoolSeedData.feeTypesData));
       console.log('✅ Fee types seeded');
+      const rewardTemplates = await rewardTemplateService.seedDefaults(rewardTemplatesData);
+      console.log(`✅ Reward bank: ${rewardTemplates.length} added`);
       const feeTypeIds = await feeTypeService.resolveSeedFeeTypeIds(schoolSeedData.feeTypesData);
       for (const fee of uniqueFeesData) fee.feeTypeId = feeTypeIds.get(fee.feeTypeId) ?? fee.feeTypeId;
 

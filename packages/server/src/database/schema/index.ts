@@ -154,6 +154,7 @@ export {
   behaviorRewardCategoryDbEnum,
   behaviorRewardTypeDbEnum,
 } from '../../modules/behaviorRewards/behaviorRewardSchema';
+export { behaviorRewardTemplates } from '../../modules/rewardTemplates/rewardTemplateSchema';
 export {
   disciplineIncidents,
   disciplineCategoryEnum,

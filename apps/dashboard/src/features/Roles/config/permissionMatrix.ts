@@ -19,7 +19,7 @@ const PERMISSION_GROUPS: Record<typeof PERMISSION_CATEGORIES[number], readonly s
   people: ['students', 'insurance', 'parents', 'teachers', 'staff'],
   academic: ['classes', 'sections', 'cycles', 'subjects', 'sub-subjects', 'homework', 'assessments', 'exams', 'exam-planning', 'grades', 'competencies', 'massar', 'massar-marks', 'class-routines', 'reports', 'participants'],
   attendance: ['attendance', 'staff-attendance'],
-  conduct: ['discipline', 'behavior-rewards'],
+  conduct: ['discipline', 'behavior-rewards', 'reward-templates'],
   financial: ['feeTypes', 'fees', 'installments', 'payments', 'allocations', 'expenses', 'payroll', 'financial-operations', 'reminders'],
   transport: ['vehicles', 'drivers', 'student-routes', 'vehicle-assignments', 'refuel', 'refuels', 'maintenance'],
   access: ['users', 'roles', 'permissions', '*', 'system'],

@@ -23,6 +23,7 @@ import {
   KeyRound,
   LayoutDashboard,
   LayoutGrid,
+  Library,
   ReceiptText,
   Megaphone,
   NotebookPen,
@@ -83,6 +84,7 @@ export const FEATURE_ICONS = {
   studentConduct: ShieldCheck,
   discipline: ShieldAlert,
   behaviorRewards: Award,
+  rewardTemplates: Library,
 
   homework: NotebookPen,
   homeworkFollowUp: ClipboardX,

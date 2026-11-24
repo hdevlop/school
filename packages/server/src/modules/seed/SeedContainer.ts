@@ -161,6 +161,12 @@ export { BehaviorRewardService } from '../behaviorRewards/BehaviorRewardService'
 export { BehaviorRewardRepository } from '../behaviorRewards/BehaviorRewardRepository';
 export { BehaviorRewardValidator } from '../behaviorRewards/BehaviorRewardValidator';
 
+export { RewardTemplateService } from '../rewardTemplates/RewardTemplateService';
+export { RewardTemplateRepository } from '../rewardTemplates/RewardTemplateRepository';
+export { RewardTemplateValidator } from '../rewardTemplates/RewardTemplateValidator';
+/** The starter reward bank that `seed:reward-templates`, the school seed and the demo seed add. */
+export { default as rewardTemplatesData } from '../seed-data/school/rewardTemplates.json';
+
 export { HealthService } from '../health/HealthService';
 
 import { AuthService, UserService, UserValidator } from '../../auth';
@@ -331,6 +337,10 @@ import { DisciplineValidator } from '../discipline/DisciplineValidator';
 import { BehaviorRewardService } from '../behaviorRewards/BehaviorRewardService';
 import { BehaviorRewardRepository } from '../behaviorRewards/BehaviorRewardRepository';
 import { BehaviorRewardValidator } from '../behaviorRewards/BehaviorRewardValidator';
+
+import { RewardTemplateService } from '../rewardTemplates/RewardTemplateService';
+import { RewardTemplateRepository } from '../rewardTemplates/RewardTemplateRepository';
+import { RewardTemplateValidator } from '../rewardTemplates/RewardTemplateValidator';
 
 function registerSeedDeps(seedContainer: Container, token: Constructor, deps: Constructor[]) {
   seedContainer.set(token, { deps });
@@ -542,6 +552,8 @@ export function configureSeedContainer(seedContainer: Container) {
 
   registerSeedDeps(seedContainer, BehaviorRewardValidator, [BehaviorRewardRepository, MonitorScopeRepository, SupervisorScopeRepository]);
   registerSeedDeps(seedContainer, BehaviorRewardService, [BehaviorRewardRepository, BehaviorRewardValidator]);
+  registerSeedDeps(seedContainer, RewardTemplateValidator, [RewardTemplateRepository]);
+  registerSeedDeps(seedContainer, RewardTemplateService, [RewardTemplateRepository, RewardTemplateValidator]);
 
   registerSeedDeps(seedContainer, StudentRouteValidator, [StudentRouteRepository, StudentRepository, StudentEnrollmentRepository]);
   registerSeedDeps(seedContainer, StudentRouteService, [

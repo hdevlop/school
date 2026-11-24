@@ -1,0 +1,65 @@
+[
+  { "title": "Félicitations pour l'effort", "category": "academic_effort", "rewardType": "verbal_praise", "points": 2, "description": "Félicité(e) devant la classe pour son application et sa persévérance pendant la séance." },
+  { "title": "Mot d'encouragement au cahier de liaison", "category": "academic_effort", "rewardType": "written_praise", "points": 4, "description": "A fourni un travail soigné et appliqué ; un mot d'encouragement est adressé aux parents dans le cahier de liaison." },
+  { "title": "Bon point – travail appliqué", "category": "academic_effort", "rewardType": "merit", "points": 5, "description": "A terminé son travail avec soin, sans relâcher ses efforts jusqu'à la fin de la séance." },
+  { "title": "Badge Persévérance", "category": "academic_effort", "rewardType": "badge", "points": 10, "description": "N'a pas abandonné face à une difficulté et a cherché des solutions par lui-même / elle-même." },
+  { "title": "Encouragements du conseil de classe", "category": "academic_effort", "rewardType": "certificate", "points": 15, "description": "Efforts réguliers et sérieux soulignés par le conseil de classe pour cette période." },
+  { "title": "Tableau d'honneur", "category": "academic_effort", "rewardType": "certificate", "points": 20, "description": "Résultats et investissement remarquables sur la période ; inscrit(e) au tableau d'honneur." },
+  { "title": "Prix d'excellence", "category": "academic_effort", "rewardType": "prize", "points": 30, "description": "Meilleurs résultats de la classe sur l'ensemble de la période, avec un travail constant." },
+
+  { "title": "Bravo pour la participation", "category": "classwork", "rewardType": "verbal_praise", "points": 1, "description": "A participé activement et avec pertinence aux échanges de la séance." },
+  { "title": "« Très bien » au cahier", "category": "classwork", "rewardType": "written_praise", "points": 3, "description": "Travail complet et cahier tenu avec soin ; l'appréciation « Très bien » est portée au cahier." },
+  { "title": "Bon point – exercice réussi", "category": "classwork", "rewardType": "merit", "points": 3, "description": "A réussi sans erreur l'exercice proposé au tableau ou sur l'ardoise." },
+  { "title": "Badge Cahier modèle", "category": "classwork", "rewardType": "badge", "points": 8, "description": "Cahier exemplaire : propre, complet et bien présenté, montré en modèle à la classe." },
+  { "title": "Distribution du matériel", "category": "classwork", "rewardType": "privilege", "points": 5, "description": "Chargé(e) de distribuer le matériel de la séance en récompense de son travail en classe." },
+
+  { "title": "Bravo pour tes progrès", "category": "improvement", "rewardType": "verbal_praise", "points": 2, "description": "Félicité(e) pour les progrès constatés depuis les dernières séances." },
+  { "title": "Message de progrès aux parents", "category": "improvement", "rewardType": "written_praise", "points": 5, "description": "Progrès nets constatés ; les parents en sont informés par un mot dans le cahier de liaison." },
+  { "title": "Bon point – en progrès", "category": "improvement", "rewardType": "merit", "points": 4, "description": "Résultat en nette amélioration par rapport à la dernière évaluation." },
+  { "title": "Badge Progrès", "category": "improvement", "rewardType": "badge", "points": 10, "description": "Amélioration visible et durable des résultats par rapport à la période précédente." },
+  { "title": "Certificat de progrès", "category": "improvement", "rewardType": "certificate", "points": 15, "description": "Progrès remarquables sur l'ensemble de la période, salués par l'équipe pédagogique." },
+
+  { "title": "Merci pour ta politesse", "category": "respect", "rewardType": "verbal_praise", "points": 1, "description": "S'est montré(e) poli(e) et courtois(e) envers ses camarades et les adultes de l'école." },
+  { "title": "Bon point – règles de vie respectées", "category": "respect", "rewardType": "merit", "points": 3, "description": "A respecté les règles de vie de la classe tout au long de la journée." },
+  { "title": "Félicitations pour le comportement", "category": "respect", "rewardType": "written_praise", "points": 4, "description": "Comportement exemplaire envers tous ; un mot de félicitations est adressé aux parents." },
+  { "title": "Badge Bienveillance", "category": "respect", "rewardType": "badge", "points": 8, "description": "A défendu un camarade ou apaisé un conflit avec calme et respect." },
+
+  { "title": "Merci pour ton aide", "category": "helpfulness", "rewardType": "verbal_praise", "points": 1, "description": "A aidé spontanément un camarade en difficulté." },
+  { "title": "Bon point – entraide", "category": "helpfulness", "rewardType": "merit", "points": 3, "description": "A partagé son matériel ou ses explications avec un camarade sans qu'on le lui demande." },
+  { "title": "Responsable de l'accueil", "category": "helpfulness", "rewardType": "privilege", "points": 5, "description": "Chargé(e) d'accueillir et d'accompagner un nouvel élève pendant ses premiers jours." },
+  { "title": "Badge Tuteur", "category": "helpfulness", "rewardType": "badge", "points": 10, "description": "A expliqué patiemment une notion à un camarade et l'a aidé à réussir." },
+
+  { "title": "Bravo pour l'initiative", "category": "leadership", "rewardType": "verbal_praise", "points": 2, "description": "A pris une initiative utile pour la classe ou pour son groupe." },
+  { "title": "Chef de rang de la semaine", "category": "leadership", "rewardType": "privilege", "points": 5, "description": "Désigné(e) chef de rang pour la semaine en raison de son sérieux et de son exemple." },
+  { "title": "Délégué(e) d'un jour", "category": "leadership", "rewardType": "privilege", "points": 8, "description": "Représente la classe pour la journée : messages, appel, lien avec l'enseignant." },
+  { "title": "Badge Leader", "category": "leadership", "rewardType": "badge", "points": 10, "description": "A guidé son groupe avec calme, en donnant la parole à chacun." },
+  { "title": "Certificat d'engagement", "category": "leadership", "rewardType": "certificate", "points": 15, "description": "Rôle moteur dans un projet de classe ou d'école (spectacle, exposition, journal)." },
+
+  { "title": "Bravo à l'équipe", "category": "teamwork", "rewardType": "verbal_praise", "points": 1, "description": "Félicité(e) avec son groupe pour une coopération réussie." },
+  { "title": "Bon point – travail de groupe", "category": "teamwork", "rewardType": "merit", "points": 3, "description": "A coopéré efficacement avec son groupe et pris sa part des tâches." },
+  { "title": "Badge Esprit d'équipe", "category": "teamwork", "rewardType": "badge", "points": 8, "description": "A encouragé ses coéquipiers et contribué à la réussite collective." },
+  { "title": "Récompense d'équipe", "category": "teamwork", "rewardType": "prize", "points": 20, "description": "Membre de l'équipe gagnante d'un défi ou d'un concours de classe." },
+
+  { "title": "Merci d'avoir tenu ton rôle", "category": "responsibility", "rewardType": "verbal_praise", "points": 1, "description": "A assuré la responsabilité qui lui était confiée sans qu'on ait à le lui rappeler." },
+  { "title": "Bon point – devoirs faits", "category": "responsibility", "rewardType": "merit", "points": 3, "description": "Devoirs faits, matériel complet et cahier de liaison signé toute la semaine." },
+  { "title": "Gardien(ne) du tableau", "category": "responsibility", "rewardType": "privilege", "points": 4, "description": "Chargé(e) de l'entretien du tableau pour la semaine." },
+  { "title": "Responsable de la bibliothèque de classe", "category": "responsibility", "rewardType": "privilege", "points": 5, "description": "Chargé(e) du prêt et du rangement des livres de la bibliothèque de classe." },
+  { "title": "Badge Responsable", "category": "responsibility", "rewardType": "badge", "points": 8, "description": "A tenu sa responsabilité de classe avec sérieux pendant toute la période." },
+
+  { "title": "Merci pour ton geste", "category": "community_service", "rewardType": "verbal_praise", "points": 1, "description": "A rangé ou nettoyé un espace commun sans qu'on le lui demande." },
+  { "title": "Bon point – école propre", "category": "community_service", "rewardType": "merit", "points": 3, "description": "A participé à garder la classe et la cour propres." },
+  { "title": "Badge Éco-citoyen", "category": "community_service", "rewardType": "badge", "points": 10, "description": "A participé à une action pour l'environnement : tri, jardin de l'école, propreté de la cour." },
+  { "title": "Certificat de citoyenneté", "category": "community_service", "rewardType": "certificate", "points": 15, "description": "Engagement dans une action solidaire ou citoyenne de l'école (collecte, campagne, visite)." },
+
+  { "title": "Bravo pour ta ponctualité", "category": "excellent_attendance", "rewardType": "verbal_praise", "points": 1, "description": "Arrivé(e) à l'heure et prêt(e) à travailler dès le début de la séance." },
+  { "title": "Bon point – ponctualité", "category": "excellent_attendance", "rewardType": "merit", "points": 3, "description": "Arrivé(e) à l'heure tous les jours de la semaine." },
+  { "title": "Badge Assiduité", "category": "excellent_attendance", "rewardType": "badge", "points": 10, "description": "Présence et ponctualité exemplaires sur le mois." },
+  { "title": "Certificat d'assiduité", "category": "excellent_attendance", "rewardType": "certificate", "points": 15, "description": "Aucune absence ni aucun retard sur la période." },
+  { "title": "Prix d'assiduité", "category": "excellent_attendance", "rewardType": "prize", "points": 25, "description": "Aucune absence ni aucun retard sur toute l'année scolaire." },
+
+  { "title": "Félicitations", "category": "other", "rewardType": "verbal_praise", "points": 1, "description": "" },
+  { "title": "Mot de félicitations", "category": "other", "rewardType": "written_praise", "points": 3, "description": "Un mot de félicitations est adressé aux parents dans le cahier de liaison." },
+  { "title": "Choix de l'activité", "category": "other", "rewardType": "privilege", "points": 5, "description": "Choisit l'activité ou le jeu de fin de séance pour la classe." },
+  { "title": "Félicitations de la direction", "category": "other", "rewardType": "other", "points": 10, "description": "Félicité(e) par la direction de l'établissement." },
+  { "title": "Prix spécial", "category": "other", "rewardType": "prize", "points": 20, "description": "Récompense exceptionnelle pour une action remarquable." }
+]

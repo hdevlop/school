@@ -666,6 +666,30 @@
     "action": "delete"
   },
   {
+    "name": "create:reward-templates",
+    "description": "Permission to add rewards to the reward bank",
+    "resource": "reward-templates",
+    "action": "create"
+  },
+  {
+    "name": "read:reward-templates",
+    "description": "Permission to view the reward bank and fill a reward from it",
+    "resource": "reward-templates",
+    "action": "read"
+  },
+  {
+    "name": "update:reward-templates",
+    "description": "Permission to edit and archive rewards in the reward bank",
+    "resource": "reward-templates",
+    "action": "update"
+  },
+  {
+    "name": "delete:reward-templates",
+    "description": "Permission to remove rewards from the reward bank",
+    "resource": "reward-templates",
+    "action": "delete"
+  },
+  {
     "name": "create:discipline",
     "description": "Permission to create discipline incidents",
     "resource": "discipline",

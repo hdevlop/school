@@ -12,6 +12,7 @@ import { toLocalDateTimeInput } from '../behaviorRewardConstants';
 import { useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYear';
 import { buildBehaviorRewardCategoryOptions, buildBehaviorRewardTypeOptions } from '../config/behaviorRewardOptions';
+import { RewardTemplateGenerateButton } from '@/features/RewardTemplates/components/RewardTemplateGenerateButton';
 
 const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any }) => {
   const { t } = useTranslation();
@@ -111,13 +112,17 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
           />
         </div>
 
-        <FormInput
-          name="description"
-          type="textarea"
-          icon={FileText}
-          formLabel={t('behaviorRewards.form.description')}
-          placeholder={t('behaviorRewards.form.descriptionPlaceholder')}
-        />
+        {/* FormInput's label takes text only, so the bank's button sits over the end of its row. */}
+        <div className="relative">
+          <FormInput
+            name="description"
+            type="textarea"
+            icon={FileText}
+            formLabel={t('behaviorRewards.form.description')}
+            placeholder={t('behaviorRewards.form.descriptionPlaceholder')}
+          />
+          <RewardTemplateGenerateButton className="absolute end-0 top-0" />
+        </div>
       </div>
     </NForm>
   );

@@ -1672,6 +1672,7 @@
     "violations": "Infracciones",
     "behaviorRewards": "Conducta positiva y recompensas",
     "behaviorRewardsShort": "Recompensas",
+    "rewardTemplates": "Banco de recompensas",
     "myChildren": "Mis hijos",
     "myProfile": "Mi perfil",
     "pendingChecks": "Cheques",
@@ -2607,6 +2608,51 @@
       "deleteAdminOnly": "Solo los administradores pueden eliminar reconocimientos",
       "invalidBehaviorDate": "La fecha de la conducta no es válida",
       "futureBehaviorDate": "La fecha de la conducta no puede estar en el futuro"
+    }
+  },
+  "rewardTemplates": {
+    "openBank": "Banco de recompensas",
+    "backToRewards": "Volver a las recompensas",
+    "table": {
+      "title": "Recompensa",
+      "status": "Estado",
+      "count": "{{count}} recompensas en el banco"
+    },
+    "filters": {
+      "search": "Buscar en el banco...",
+      "status": "Estado"
+    },
+    "form": {
+      "section": "Recompensa predefinida",
+      "title": "Nombre",
+      "titlePlaceholder": "p. ej. Excelente trabajo en equipo",
+      "descriptionPlaceholder": "El texto que se copia en el reconocimiento al elegirla",
+      "active": "Ofrecida en el formulario de reconocimiento"
+    },
+    "dialogs": {
+      "createTitle": "Añadir al banco de recompensas",
+      "createButton": "Añadir una recompensa",
+      "editTitle": "Editar la recompensa del banco",
+      "updateButton": "Actualizar",
+      "viewTitle": "Recompensa del banco",
+      "deleteWarning": "¿Quitar esta recompensa del banco? Los reconocimientos ya otorgados conservan sus valores."
+    },
+    "picker": {
+      "generate": "Generar",
+      "regenerate": "Regenerar",
+      "generateHint": "Rellenar los puntos y la descripción desde el banco de recompensas",
+      "filledFrom": "Del banco: {{title}}. Vuelva a hacer clic para otra.",
+      "noMatch": "El banco de recompensas no tiene nada para esta categoría y este tipo."
+    },
+    "errors": {
+      "notFound": "Recompensa del banco no encontrada",
+      "titleExists": "El banco ya tiene una recompensa con este nombre para esta categoría y este tipo"
+    },
+    "success": {
+      "retrieved": "Banco de recompensas obtenido correctamente",
+      "created": "Recompensa añadida al banco",
+      "updated": "Recompensa del banco actualizada",
+      "deleted": "Recompensa quitada del banco"
     }
   },
   "confirm": {
@@ -6256,6 +6302,10 @@
       "title": "Aún no hay registros de conducta",
       "description": "Agrega tu primer registro de conducta o recompensa para empezar."
     },
+    "rewardTemplates": {
+      "title": "El banco de recompensas está vacío",
+      "description": "Añada recompensas predefinidas por categoría y tipo para rellenar el formulario con un clic."
+    },
     "studentAttendance": {
       "title": "No hay estudiantes que registrar",
       "description": "Los estudiantes aparecerán aquí al seleccionar una clase y una sección."
@@ -7042,7 +7092,9 @@
     "familyTooManyChildren": "Demasiados hijos en un mismo recibo",
     "familyDuplicateChild": "Cada hijo solo puede aparecer una vez en un recibo",
     "duplicateTestPart": "Dos preguntas tienen el mismo identificador.",
-    "partLabelRequired": "Escribe la pregunta."
+    "partLabelRequired": "Escribe la pregunta.",
+    "rewardTemplateTitleRequired": "El nombre es obligatorio",
+    "rewardTemplateTitleTooLong": "El nombre es demasiado largo (máx. 120 caracteres)"
   },
   "academic": {
     "accountantAssignmentOptional": "Elija uno o varios ciclos, o déjelo vacío para toda la escuela.",
