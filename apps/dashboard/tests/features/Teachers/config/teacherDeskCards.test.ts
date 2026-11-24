@@ -2,7 +2,7 @@ import { describe, expect, it } from 'bun:test';
 import {
   buildTeacherDeskCards, DEFAULT_DESK_CARD_DISPLAY, deskCard, deskCardDisplay, deskCardLanguage, deskCardNames, nameSize, taughtClasses, type DeskCardOptions,
 } from '@/features/Teachers/config/teacherDeskCards';
-import { deskCardBackgroundFileName } from '@/services/deskCardBackgroundApi';
+import { deskCardBackgroundFileName, deskCardBackgroundImportedAt } from '@/services/deskCardBackgroundApi';
 
 const subjects = [
   { id: 'ar', name: 'العربية', nameAr: 'اللغة العربية' },
@@ -122,6 +122,16 @@ describe('teacher desk cards', () => {
     expect(deskCardBackgroundFileName('Fond École (2).JPG', 'image/jpeg', 42)).toBe('42-fond-cole-2.jpg');
     expect(deskCardBackgroundFileName('../../x.exe', 'image/webp', 7)).toBe('7-x.webp');
     expect(deskCardBackgroundFileName('صورة.png', 'image/png', 7)).toBe('7-background.png');
+  });
+
+  // A container's storage may report the same birth time for every file, so the order comes from the name.
+  it('orders imported backgrounds by the time in their name, not the storage date', () => {
+    const tied = '1970-01-01T00:00:00.000Z';
+    const older = { filePath: '1795400000000-fond.png', createdAt: tied };
+    const newer = { filePath: '1795500000000-fond.png', createdAt: tied };
+    expect([older, newer].sort((a, b) => deskCardBackgroundImportedAt(b) - deskCardBackgroundImportedAt(a))[0]).toBe(newer);
+    expect(deskCardBackgroundImportedAt({ filePath: 'legacy.png', createdAt: '2026-01-02T00:00:00.000Z' })).toBe(Date.parse('2026-01-02T00:00:00.000Z'));
+    expect(deskCardBackgroundImportedAt({ filePath: 'legacy.png' })).toBe(0);
   });
 
   it('puts two cards on each A4 page, escaped', () => {

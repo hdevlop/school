@@ -14,6 +14,19 @@ type StoredFile = { filePath: string; mimeType?: string; createdAt?: string };
 export const deskCardBackgroundUrl = (filePath: string) =>
   `/api/${NAMESPACE}/files/serve/${filePath.split('/').map(encodeURIComponent).join('/')}`;
 
+/**
+ * When a background was imported: the timestamp its file name starts with
+ * (`deskCardBackgroundFileName`), else the storage's own date. The storage date
+ * is the file's birth time, which a Linux container often does not record, so
+ * on its own it left every import tied and the order arbitrary.
+ */
+export function deskCardBackgroundImportedAt(file: { filePath: string; createdAt?: string }) {
+  const stamp = /^(\d{13})-/.exec(file.filePath.split('/').pop() ?? '')?.[1];
+  if (stamp) return Number(stamp);
+  const stored = Date.parse(file.createdAt ?? '');
+  return Number.isFinite(stored) ? stored : 0;
+}
+
 /** The imported backgrounds, newest first. */
 export async function getDeskCardBackgroundsApi(): Promise<DeskCardBackgroundFile[]> {
   const res = await api.get(`/${NAMESPACE}/files`);
@@ -21,8 +34,8 @@ export async function getDeskCardBackgroundsApi(): Promise<DeskCardBackgroundFil
   const files: StoredFile[] = Array.isArray(body) ? body : Array.isArray(body?.data) ? body.data : [];
   return files
     .filter((file) => !file.mimeType || file.mimeType.startsWith('image/'))
-    .map((file) => ({ filePath: file.filePath, url: deskCardBackgroundUrl(file.filePath), createdAt: file.createdAt ?? '' }))
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    .sort((a, b) => deskCardBackgroundImportedAt(b) - deskCardBackgroundImportedAt(a))
+    .map((file) => ({ filePath: file.filePath, url: deskCardBackgroundUrl(file.filePath), createdAt: file.createdAt ?? '' }));
 }
 
 const EXTENSIONS: Record<string, string> = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif' };
@@ -36,8 +49,11 @@ export function deskCardBackgroundFileName(name: string, mimeType: string, now =
   return `${now}-${stem || 'background'}.${EXTENSIONS[mimeType] ?? 'png'}`;
 }
 
+/** Imports the image and resolves to the path it was stored at, so the caller can select exactly it. */
 export async function importDeskCardBackgroundApi(file: File) {
-  await fileRequest('POST', `/${NAMESPACE}/files/${deskCardBackgroundFileName(file.name, file.type)}`, file);
+  const filePath = deskCardBackgroundFileName(file.name, file.type);
+  await fileRequest('POST', `/${NAMESPACE}/files/${filePath}`, file);
+  return filePath;
 }
 
 export async function deleteDeskCardBackgroundApi(filePath: string) {

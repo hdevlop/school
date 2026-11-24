@@ -100,10 +100,11 @@ export function DeskCardsButton({ teachers, classes, subjects, disabled }: {
 
   const importBackground = useMutation({
     mutationFn: importDeskCardBackgroundApi,
-    onSuccess: async () => {
+    // Select the file just stored, by its own path: never "the newest in the list", which the storage cannot always order.
+    onSuccess: async (filePath) => {
       toast.success(t('teachers.deskCards.imported'));
-      const list = await queryClient.fetchQuery({ queryKey: BACKGROUNDS_KEY, queryFn: getDeskCardBackgroundsApi });
-      if (list[0]) setChoice(list[0].filePath);
+      await queryClient.fetchQuery({ queryKey: BACKGROUNDS_KEY, queryFn: getDeskCardBackgroundsApi });
+      setChoice(filePath);
     },
     onError: () => toast.error(t('teachers.deskCards.importFailed')),
   });
@@ -184,7 +185,7 @@ export function DeskCardsButton({ teachers, classes, subjects, disabled }: {
 
   const busy = importBackground.isPending || removeBackground.isPending;
   const tile = (active: boolean) => cn(
-    'group relative aspect-[1.414] overflow-hidden rounded-md border-2 bg-white transition-colors',
+    'group relative aspect-[1.414] w-28 shrink-0 overflow-hidden rounded-md border-2 bg-white transition-colors sm:w-32',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
     active ? 'border-primary' : 'border-border hover:border-muted-foreground/50',
   );
@@ -221,7 +222,8 @@ export function DeskCardsButton({ teachers, classes, subjects, disabled }: {
         </DropdownMenuContent>
       </DropdownMenu>
       <NDialog open={open} onOpenChange={setOpen} title={label} width="6xl" showButtons={false}>
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_210px]">
+        {/* On a short screen the content scrolls and the Print bar below stays in view. */}
+        <div className="grid max-h-[calc(100dvh-13rem)] gap-5 overflow-y-auto pe-1 lg:grid-cols-[minmax(0,1fr)_210px]">
           {/* The preview: one card at the column's width, any teacher's. */}
           <section className="flex min-w-0 flex-col gap-3" aria-label={t('teachers.deskCards.preview')}>
             <div
@@ -263,7 +265,8 @@ export function DeskCardsButton({ teachers, classes, subjects, disabled }: {
             <fieldset className="mt-1 space-y-2.5">
               <legend className={sectionTitle}><ImageIcon aria-hidden="true" className="size-4" />{t('teachers.deskCards.background')}</legend>
               {backgrounds.isError && <p className="text-sm text-destructive">{t('teachers.deskCards.loadFailed')}</p>}
-              <div className="grid grid-cols-3 gap-2 p-0.5 sm:grid-cols-4 xl:grid-cols-6">
+              {/* One row that scrolls sideways: more imports never make the dialog taller and push Print off screen. */}
+              <div className="flex gap-2 overflow-x-auto p-0.5 pb-2 [scrollbar-width:thin]">
                 <button type="button" aria-pressed={!selected} onClick={() => setChoice('')} className={tile(!selected)}>
                   <span className="absolute inset-0 grid place-items-center text-xs text-muted-foreground">{t('teachers.deskCards.plain')}</span>
                   {!selected && tick}
@@ -281,8 +284,8 @@ export function DeskCardsButton({ teachers, classes, subjects, disabled }: {
               {saved.map((item) => {
                 const active = item.filePath === selected?.filePath;
                 return (
-                  <div key={item.filePath} className="relative">
-                    <button type="button" aria-pressed={active} onClick={() => setChoice(item.filePath)} className={cn(tile(active), 'w-full')}>
+                  <div key={item.filePath} className="relative shrink-0">
+                    <button type="button" aria-pressed={active} onClick={() => setChoice(item.filePath)} className={tile(active)}>
                       {/* eslint-disable-next-line @next/next/no-img-element -- a stored upload, served by the API */}
                       <img src={item.url} alt="" loading="lazy" className="size-full object-cover" />
                       {active && tick}
@@ -314,7 +317,7 @@ export function DeskCardsButton({ teachers, classes, subjects, disabled }: {
                     title={t('teachers.deskCards.importHint')}
                     disabled={busy}
                     onClick={() => fileInput.current?.click()}
-                    className="flex aspect-[1.414] flex-col items-center justify-center gap-1 rounded-md border-2 border-dashed text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+                    className="flex aspect-[1.414] w-28 shrink-0 flex-col items-center justify-center gap-1 rounded-md border-2 border-dashed text-center text-xs sm:w-32 text-muted-foreground transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
                   >
                     {importBackground.isPending ? <Loader2 aria-hidden="true" className="size-4 animate-spin" /> : <ImagePlus aria-hidden="true" className="size-4" />}
                     {t('teachers.deskCards.import')}
