@@ -38,19 +38,14 @@ export class ExamPlanningValidator {
   }
 
   /**
-   * A teacher's save may add, edit or remove only entries of a subject they
-   * teach in the class: an entry moved to or from another subject is both.
-   * Another teacher's or the school's entries must come back as they were.
-   *
-   * The school sets when exams take place: a teacher keeps each entry's day,
-   * time and `toPlace`, and a new entry takes the first day of a Contrôle the
-   * class sits in its subject (`firstDays`) with no time, marked `toPlace`
-   * until the school gives it its day. A class with no Contrôle in the subject
-   * is not open to a teacher.
-   * A supervisor plans the classes they supervise as the school does.
+   * The school plans each exam: its subject, day and time, added and removed
+   * by the school-wide roles and by a supervisor in the classes they
+   * supervise. A teacher writes the lessons of their own subjects' exams and
+   * nothing else: an exam added, removed, moved to another subject or day, or
+   * placed, is refused (`lessonsOnly`). Another subject's exams must come back
+   * as they were (`notYourSubject`).
    */
-  async ensureMayChange(actor: PlanningActor, classId: string, before: readonly ExamPlanningEntry[], after: readonly ExamPlanningEntry[],
-    firstDays: (subjectId: string | null) => ReadonlySet<string> = () => new Set()) {
+  async ensureMayChange(actor: PlanningActor, classId: string, before: readonly ExamPlanningEntry[], after: readonly ExamPlanningEntry[]) {
     if (SCHOOL_WIDE_ROLES.includes(actor.role ?? '')) return;
     if (actor.role === 'supervisor') {
       if (!(await this.repository.supervisedClassIds(actor.id, [classId])).length) Err(403, this.et('notYourClass'));
@@ -69,16 +64,12 @@ export class ExamPlanningValidator {
       Err(403, this.et('notYourSubject'));
     }
     const previous = new Map(before.map(entry => [entry.id, entry]));
-    for (const entry of after) {
-      const was = previous.get(entry.id);
-      if (was) {
-        if (was.date !== entry.date || (was.startTime ?? null) !== (entry.startTime ?? null) || (was.endTime ?? null) !== (entry.endTime ?? null)
-          || !!was.toPlace !== !!entry.toPlace) Err(403, this.et('scheduleBySchool'));
-      } else {
-        const days = firstDays(subjectOf(entry));
-        if (!days.size) Err(403, this.et('controlNotOpen'));
-        if (!days.has(entry.date) || entry.startTime || entry.endTime || !entry.toPlace) Err(403, this.et('scheduleBySchool'));
-      }
+    const kept = new Set(after.map(entry => entry.id));
+    // The same exam, its lessons aside: subject, day, time and whether it is placed.
+    const sameExam = (was: ExamPlanningEntry, entry: ExamPlanningEntry) => was.subject.trim() === entry.subject.trim() && was.date === entry.date
+      && (was.startTime ?? null) === (entry.startTime ?? null) && (was.endTime ?? null) === (entry.endTime ?? null) && !!was.toPlace === !!entry.toPlace;
+    if (before.some(entry => !kept.has(entry.id)) || after.some(entry => { const was = previous.get(entry.id); return !was || !sameExam(was, entry); })) {
+      Err(403, this.et('lessonsOnly'));
     }
   }
 

@@ -10,12 +10,15 @@ import { planningMonthRange, planningTextLanguage } from './examPlanningModel';
 import { planningSubjectPicker } from './PlanningSubjects';
 import styles from './ExamPlanning.module.css';
 
-export function PlanningEntryEditor({ entry, subjects, className, month, dateRange: allowedDates, disabled, locked = false, scheduleLocked = false, bare = false, dirty, valid, onChange, onCancel, onSave }: {
+export function PlanningEntryEditor({ entry, subjects, taken, className, month, dateRange: allowedDates, disabled, locked = false, scheduleLocked = false, bare = false, dirty, valid, onChange, onCancel, onSave }: {
   /** Inside a sheet (phones): no frame, heading or buttons, which the sheet has its own of. */
   bare?: boolean;
-  /** The school sets the day and time; a teacher fills in the subject and lessons (ExamPlanningValidator). */
+  /** The school plans the exam (subject, day, time); a teacher writes its lessons only (ExamPlanningValidator). */
   scheduleLocked?: boolean;
-  entry: ExamPlanningEntry; subjects: Parameters<typeof planningSubjectPicker>[0]; className: string; month: string; disabled: boolean; dirty: boolean; valid: boolean;
+  entry: ExamPlanningEntry; subjects: Parameters<typeof planningSubjectPicker>[0];
+  /** The names the class already has an exam of in the Contrôle, not offered again. */
+  taken?: ReadonlySet<string>;
+  className: string; month: string; disabled: boolean; dirty: boolean; valid: boolean;
   /** The days the date may take: the Contrôle's, for the school and teachers alike; the entry's month without one. */
   dateRange?: { from: string; to: string };
   /** Another subject's entry, shown to a teacher who cannot change it. */
@@ -28,8 +31,9 @@ export function PlanningEntryEditor({ entry, subjects, className, month, dateRan
   const headerDate = `${displayDate(entry.date, { weekday: 'long', day: 'numeric', month: 'long' })} · ${className}`;
   const lessonsLanguage = planningTextLanguage(entry.lessons);
   const fieldsOff = disabled || locked;
+  const subjectOff = fieldsOff || scheduleLocked;
   // Picked from Subjects: a subject, then one of its sub-subjects (off when it has none).
-  const picker = planningSubjectPicker(subjects, entry.subject, { notInSubjects: t('examPlanning.notInSubjects'), wholeSubject: t('examPlanning.wholeSubject') });
+  const picker = planningSubjectPicker(subjects, entry.subject, { notInSubjects: t('examPlanning.notInSubjects'), wholeSubject: t('examPlanning.wholeSubject') }, taken);
   return <aside className={bare ? styles.sheetEditor : styles.editPanel} aria-label={t('examPlanning.editLessons')}>
     {!bare && <div className={styles.editHeading}>
       <p className={styles.editDate} title={headerDate}><CalendarDays aria-hidden="true" /><span>{headerDate}</span></p>
@@ -46,8 +50,8 @@ export function PlanningEntryEditor({ entry, subjects, className, month, dateRan
     {/* What and when first, then the lessons. */}
     <div className={styles.details}>
       <div className={styles.detailFields}>
-        <div><span className={styles.fieldLabel}>{t('assessments.form.subject')}</span><ComboboxInput ariaLabel={t('assessments.form.subject')} placeholder={t('examPlanning.chooseSubject')} disabled={fieldsOff} items={picker.subjectItems} value={picker.subjectValue} onChange={value => { const name = picker.subjectName(value); if (name) onChange({ subject: name }); }} showIcon={false} className="w-full" /></div>
-        <div><span className={styles.fieldLabel}>{t('examPlanning.subSubject')}</span><ComboboxInput ariaLabel={t('examPlanning.subSubject')} placeholder={t(picker.subjectValue && !picker.partItems.length ? 'examPlanning.noSubSubjects' : 'examPlanning.chooseSubSubject')} disabled={fieldsOff || !picker.partItems.length} items={picker.partItems} value={picker.partValue} onChange={value => { const name = picker.partName(value); if (name) onChange({ subject: name }); }} showIcon={false} className="w-full" /></div>
+        <div><span className={styles.fieldLabel}>{t('assessments.form.subject')}</span><ComboboxInput ariaLabel={t('assessments.form.subject')} placeholder={t('examPlanning.chooseSubject')} disabled={subjectOff} items={picker.subjectItems} value={picker.subjectValue} onChange={value => { const name = picker.subjectName(value); if (name) onChange({ subject: name }); }} showIcon={false} className="w-full" /></div>
+        <div><span className={styles.fieldLabel}>{t('examPlanning.subSubject')}</span><ComboboxInput ariaLabel={t('examPlanning.subSubject')} placeholder={t(picker.subjectValue && !picker.partItems.length ? 'examPlanning.noSubSubjects' : 'examPlanning.chooseSubSubject')} disabled={subjectOff || !picker.partItems.length} items={picker.partItems} value={picker.partValue} onChange={value => { const name = picker.partName(value); if (name) onChange({ subject: name }); }} showIcon={false} className="w-full" /></div>
         {/* The school sets the day and time: a teacher does not see the fields at all. */}
         {!scheduleLocked && <div><span className={styles.fieldLabel}>{t('assessments.form.date')}</span><fieldset className="m-0 min-w-0 border-0 p-0" disabled={fieldsOff}><DateInput ariaLabel={t('assessments.form.date')} value={entry.date ? parseISO(entry.date) : undefined} min={dateRange.from} max={dateRange.to} onChange={value => { if (value) onChange({ date: value, toPlace: undefined }); }} /></fieldset></div>}
         {/* One field, from and to: a new start keeps a later end or ends an hour after. */}

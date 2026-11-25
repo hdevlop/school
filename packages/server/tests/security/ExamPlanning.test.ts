@@ -127,9 +127,6 @@ describe('a teacher plans the subjects they teach in their own classes', () => {
       } });
     return { instance, asked };
   }
-  // The first days of the Contrôles the class sits, the same in every subject.
-  const days = (...dates: string[]) => () => new Set(dates);
-
   it('lets the school-wide roles plan every subject without looking up assignments', async () => {
     const { instance, asked } = validator([]);
     await instance.ensureMayChange({ id: 'u', role: 'principal' }, 'cp', [french], [arabic]);
@@ -137,11 +134,13 @@ describe('a teacher plans the subjects they teach in their own classes', () => {
     expect(asked).toHaveLength(0);
   });
 
-  it('accepts adding, editing and removing an entry of a subject the teacher teaches there, through its sub-subject', async () => {
+  it('lets a teacher write the lessons of their own subjects\' exams', async () => {
     const { instance, asked } = validator([{ classId: 'cp', subjectId: 'fr' }]);
-    await instance.ensureMayChange(teacher, 'cp', [arabic], [arabic, { ...french, toPlace: true }], days(french.date));
-    await instance.ensureMayChange(teacher, 'cp', [arabic, french], [arabic, { ...french, subject: 'Dictée', lessons: ['Les accents'] }]);
-    await instance.ensureMayChange(teacher, 'cp', [arabic, french], [arabic]);
+    await instance.ensureMayChange(teacher, 'cp', [arabic, french], [arabic, { ...french, lessons: ['Les accents'] }]);
+    // An exam the school has timed, or not placed yet: its lessons all the same.
+    const timed = { ...french, startTime: '08:30', endTime: '09:30' };
+    await instance.ensureMayChange(teacher, 'cp', [timed], [{ ...timed, lessons: ['Le verbe'] }]);
+    await instance.ensureMayChange(teacher, 'cp', [{ ...french, toPlace: true }], [{ ...french, toPlace: true, lessons: ['Le verbe'] }]);
     expect(asked[0]).toEqual([teacher.id, ['cp']]);
   });
 
@@ -163,44 +162,26 @@ describe('a teacher plans the subjects they teach in their own classes', () => {
     }
   });
 
-  it('leaves the day and time to the school: a teacher keeps them, and a new exam takes the Contrôle’s first day with no time, to be placed', async () => {
+  it('leaves every exam itself to the school: a teacher adds, removes, renames, moves or places none', async () => {
     const { instance } = validator([{ classId: 'cp', subjectId: 'fr' }]);
     const timed = { ...french, startTime: '08:30', endTime: '09:30' };
-    for (const [before, after, firstDay] of [
-      [[french], [{ ...french, date: '2026-11-12' }], '2026-11-09'],
-      [[french], [timed], '2026-11-09'],
-      [[timed], [{ ...timed, startTime: '10:00', endTime: '11:00' }], '2026-11-09'],
-      [[], [{ ...french, id: 'new' }], '2026-11-09'],
-      [[], [{ ...timed, id: 'new', date: '2026-11-09', toPlace: true }], '2026-11-09'],
-      // A new exam waits for the school, and only the school says it is placed.
-      [[], [{ ...french, id: 'new', date: '2026-11-09' }], '2026-11-09'],
-      [[{ ...french, toPlace: true }], [french], '2026-11-09'],
-      [[french], [{ ...french, toPlace: true }], '2026-11-09'],
+    for (const [before, after] of [
+      [[arabic], [arabic, { ...french, toPlace: true }]],
+      [[arabic, french], [arabic]],
+      [[french], [{ ...french, subject: 'Dictée' }]],
+      [[french], [{ ...french, date: '2026-11-12' }]],
+      [[french], [timed]],
+      [[timed], [{ ...timed, startTime: '10:00', endTime: '11:00' }]],
+      [[{ ...french, toPlace: true }], [french]],
+      [[french], [{ ...french, toPlace: true }]],
     ] as const) {
-      await expect(instance.ensureMayChange(teacher, 'cp', before, after, days(firstDay))).rejects.toThrow('scheduleBySchool');
+      await expect(instance.ensureMayChange(teacher, 'cp', before, after), JSON.stringify(after)).rejects.toThrow('lessonsOnly');
     }
-    // The lessons are the teacher's: changing them keeps the school's day and time.
-    await instance.ensureMayChange(teacher, 'cp', [timed], [{ ...timed, lessons: ['Le verbe'] }], days('2026-11-09'));
-    await instance.ensureMayChange(teacher, 'cp', [], [{ ...french, id: 'new', date: '2026-11-09', toPlace: true }], days('2026-11-09'));
-    await instance.ensureMayChange(teacher, 'cp', [{ ...french, toPlace: true }], [{ ...french, toPlace: true, lessons: ['Le verbe'] }], days('2026-11-09'));
-    // Any Contrôle the class sits: its first day.
-    await instance.ensureMayChange(teacher, 'cp', [], [{ ...french, id: 'new', date: '2026-11-23', toPlace: true }], days('2026-11-09', '2026-11-23'));
-  });
-
-  it('refuses a new exam in a month the school has not opened as a Contrôle', async () => {
-    const { instance } = validator([{ classId: 'cp', subjectId: 'fr' }]);
-    await expect(instance.ensureMayChange(teacher, 'cp', [], [{ ...french, id: 'new' }], days())).rejects.toThrow('controlNotOpen');
-  });
-
-  it('refuses a new exam in a subject the class\'s Contrôles do not test', async () => {
-    const { instance } = validator([{ classId: 'cp', subjectId: 'fr' }]);
-    const arabicOnly = (subjectId: string | null) => new Set(subjectId === 'ar' ? ['2026-11-09'] : []);
-    await expect(instance.ensureMayChange(teacher, 'cp', [], [{ ...french, id: 'new', date: '2026-11-09' }], arabicOnly)).rejects.toThrow('controlNotOpen');
   });
 
   it('lets the school-wide roles set any day and time', async () => {
     const { instance } = validator([]);
-    await instance.ensureMayChange({ id: 'u', role: 'principal' }, 'cp', [{ ...french, toPlace: true }], [{ ...french, date: '2026-11-20', startTime: '10:00', endTime: '11:00' }], days());
+    await instance.ensureMayChange({ id: 'u', role: 'principal' }, 'cp', [{ ...french, toPlace: true }], [{ ...french, date: '2026-11-20', startTime: '10:00', endTime: '11:00' }]);
   });
 
   it('refuses a subject the teacher teaches only in another class', async () => {
@@ -221,8 +202,8 @@ describe('a teacher plans the subjects they teach in their own classes', () => {
     const supervisor = { id: 'supervisor-user', role: 'supervisor' };
     const { instance, asked } = validator([], ['cp']);
     expect(await instance.plannableSubjects(supervisor, ['cp', 'ce1'])).toEqual({ cp: ['fr', 'ar', 'math'], ce1: [] });
-    await instance.ensureMayChange(supervisor, 'cp', [french], [{ ...french, date: '2026-11-20', startTime: '10:00', endTime: '11:00' }, { ...arabic, id: 'new' }], days());
-    await expect(instance.ensureMayChange(supervisor, 'ce1', [], [french], days())).rejects.toThrow('notYourClass');
+    await instance.ensureMayChange(supervisor, 'cp', [french], [{ ...french, date: '2026-11-20', startTime: '10:00', endTime: '11:00' }, { ...arabic, id: 'new' }]);
+    await expect(instance.ensureMayChange(supervisor, 'ce1', [], [french])).rejects.toThrow('notYourClass');
     expect(asked).toHaveLength(0);
   });
 
@@ -262,8 +243,7 @@ describe('a teacher plans the subjects they teach in their own classes', () => {
         // No Contrôle saved: November of Planning is one, its first day the Contrôle's.
         storedControls: async () => [], yearPlans: async () => [{ classId: 'cp', months: { '2026-11': [arabic] } }] } });
     await expect(instance.saveMonth('cp', { month: '2026-11', entries: [] }, teacher)).rejects.toThrow('notYourSubject');
-    expect(checked.map(args => (args as unknown[]).slice(0, 4))).toEqual([[teacher, 'cp', [arabic], []]]);
-    expect([...((checked[0] as unknown[])[4] as (subjectId: string | null) => Set<string>)('ar')]).toEqual([arabic.date]);
+    expect(checked).toEqual([[teacher, 'cp', [arabic], []]]);
     expect(writes).toHaveLength(0);
   });
 });

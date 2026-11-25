@@ -148,6 +148,8 @@
   .toolLabel { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   /* The tab in use names itself; the other stays an icon. */
   .viewSwitch button[aria-pressed='true'] .toolLabel { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
+  /* No "+" beside the class (a teacher): room for both names. */
+  .viewSwitch[data-roomy] .toolLabel { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
   .toolbarActions { margin-inline-start: auto; }
   .dateFilters { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; gap: 8px; }
   .dateField { gap: 6px; }

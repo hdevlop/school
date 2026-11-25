@@ -3,6 +3,8 @@ import { describe, expect, it } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { getGuardMetadata } from 'najm-guard';
 import { ExamPlanningController } from '../../src/modules/examPlanning/ExamPlanningController';
+import { ExamPlanningService } from '../../src/modules/examPlanning/ExamPlanningService';
+import type { ExamControl } from '@sms/contracts';
 import { examControlDto } from '../../src/modules/examPlanning/ExamPlanningDto';
 import rolePermissions from '../../src/modules/seed-data/admin/rolePermissions.json';
 
@@ -42,5 +44,50 @@ describe('Contrôles', () => {
     for (const wrong of [{ massarExam: 2 }, { classIds: [] }, { subjectIds: undefined }, { dateFrom: '07/12/2026' }, { extra: true }]) {
       expect(examControlDto.safeParse({ ...valid, ...wrong }).success, JSON.stringify(wrong)).toBe(false);
     }
+  });
+});
+
+describe("a Contrôle read from Planning's months", () => {
+  // A year with no saved Contrôle: November's exams stand for Contrôle 1, December's for Contrôle 2.
+  function service() {
+    const saved: ExamControl[] = [];
+    const instance = Object.create(ExamPlanningService.prototype) as ExamPlanningService;
+    Object.defineProperty(instance, 'year', { value: { id: 'year', label: '2026-2027' } });
+    Object.assign(instance, { t: (key: string) => key,
+      validator: { ensureMayManageControl: async () => {}, ensureControlValid: () => {} },
+      subjectRepository: { getAll: async () => [] },
+      repository: {
+        storedControls: async () => saved.map(control => ({ ...control })),
+        yearPlans: async () => [{ classId: 'cp', months: { '2026-11': [{ date: '2026-11-09' }, { date: '2026-11-13' }], '2026-12': [{ date: '2026-12-14' }] } }],
+        yearClassIds: async () => ['cp'],
+        insertControls: async (rows: Array<Omit<ExamControl, 'id'>>) => { for (const row of rows) saved.push({ ...row, id: `saved-${saved.length + 1}` }); },
+        updateControl: async (id: string, row: Partial<ExamControl>) => { Object.assign(saved.find(control => control.id === id)!, row); },
+        deleteControl: async (id: string) => { saved.splice(saved.findIndex(control => control.id === id), 1); },
+      } });
+    return { instance, saved };
+  }
+  const actor = { id: 'u', role: 'principal' };
+  const input = { dateFrom: '2026-11-02', dateTo: '2026-11-06', classIds: ['cp'], subjectIds: [] };
+
+  it("is changed like a saved one: the year's Contrôles are saved first, and that one takes the new days", async () => {
+    const { instance, saved } = service();
+    const [november] = await instance.controls();
+    expect(november).toMatchObject({ id: 'derived-1-1', derived: true });
+    const after = await instance.updateControl(november.id, input, actor);
+    expect(saved.map(control => [control.dateFrom, control.dateTo])).toEqual([['2026-11-02', '2026-11-06'], ['2026-12-14', '2026-12-31']]);
+    expect(after.every(control => !control.derived)).toBe(true);
+  });
+
+  it('is removed like a saved one, the others staying saved', async () => {
+    const { instance, saved } = service();
+    await instance.deleteControl('derived-1-1', actor);
+    expect(saved.map(control => control.dateFrom)).toEqual(['2026-12-14']);
+  });
+
+  it('is not found once the year has saved ones, or under an id it never had', async () => {
+    const { instance } = service();
+    await expect(instance.updateControl('derived-1-9', input, actor)).rejects.toThrow('examPlanning.errors.controls.notFound');
+    await instance.updateControl('derived-1-1', input, actor);
+    await expect(instance.deleteControl('derived-1-2', actor)).rejects.toThrow('examPlanning.errors.controls.notFound');
   });
 });

@@ -8,8 +8,9 @@ import type { ExamControl } from '@sms/contracts';
 
 /**
  * The Contrôle Planning shows, picked from a menu where the school also
- * changes (✎) or removes (🗑) each one. A Contrôle read from Planning's months
- * is picked only: it is changed once saved.
+ * changes (✎) or removes (🗑) each one. One read from Planning's months (a
+ * year with none saved yet) is changed the same way: the server saves the
+ * year's Contrôles first (ExamPlanningService.storedControlFor).
  */
 export function ControlPicker({ controls, active, label, disabled, canEdit, canDelete, onPick, onEdit, onDelete, className }: {
   controls: readonly ExamControl[];
@@ -30,7 +31,8 @@ export function ControlPicker({ controls, active, label, disabled, canEdit, canD
   const act = (event: { preventDefault: () => void; stopPropagation: () => void }, run: () => void) => {
     event.preventDefault(); event.stopPropagation(); setOpen(false); setTimeout(run, 0);
   };
-  const activeEditable = !!active && !active.derived;
+  // One read from Planning's months is changed too: the server saves the year's Contrôles first.
+  const activeEditable = !!active;
   // A list of one has nothing to pick: the box shows it, with no menu to open.
   const many = controls.length > 1;
   const text = <span className="min-w-0 flex-1 truncate">{active ? label(active) : t('examPlanning.noControlTitle')}</span>;
@@ -53,14 +55,13 @@ export function ControlPicker({ controls, active, label, disabled, canEdit, canD
     </div>
     <DropdownMenuContent align="start" className="min-w-[var(--radix-dropdown-menu-trigger-width)]">
       {controls.map(control => {
-        const editable = !control.derived;
         return <DropdownMenuItem key={control.id} onSelect={() => onPick(control)} className="gap-2 py-1 pe-1">
           <Check className={cn('size-4 shrink-0', active?.id === control.id ? 'opacity-100' : 'opacity-0')} aria-hidden />
           <span className="min-w-0 flex-1 truncate">{label(control)}</span>
-          {editable && canEdit && <button type="button" className="inline-flex size-8 shrink-0 items-center justify-center rounded-md hover:bg-muted"
+          {canEdit && <button type="button" className="inline-flex size-8 shrink-0 items-center justify-center rounded-md hover:bg-muted"
             aria-label={`${t('examPlanning.controls.edit')} · ${label(control)}`} title={t('examPlanning.controls.edit')}
             onPointerDown={event => event.stopPropagation()} onClick={event => act(event, () => onEdit(control))}><Pencil className="size-4" aria-hidden /></button>}
-          {editable && canDelete && <button type="button" className="inline-flex size-8 shrink-0 items-center justify-center rounded-md hover:bg-destructive/10"
+          {canDelete && <button type="button" className="inline-flex size-8 shrink-0 items-center justify-center rounded-md hover:bg-destructive/10"
             aria-label={`${t('common.delete')} · ${label(control)}`} title={t('common.delete')}
             onPointerDown={event => event.stopPropagation()} onClick={event => act(event, () => onDelete(control))}><Trash2 className="size-4 text-destructive" aria-hidden /></button>}
         </DropdownMenuItem>;

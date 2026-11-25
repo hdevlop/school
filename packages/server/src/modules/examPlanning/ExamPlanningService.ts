@@ -1,4 +1,4 @@
-import { controlFirstDays, derivedExamControls, examControlTerm, monthEndOf, examPlanningMonths, planningDuration, resolveExamPlanningClasses, yearExamControls, type ExamControl, type ExamControlInput, type ExamPlanningEntry, type ExamPlanningJson } from '@sms/contracts';
+import { derivedExamControls, examControlTerm, monthEndOf, examPlanningMonths, planningDuration, resolveExamPlanningClasses, yearExamControls, type ExamControl, type ExamControlInput, type ExamPlanningEntry, type ExamPlanningJson } from '@sms/contracts';
 import { Err, I18n, Service, Transaction } from '../../najm';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
@@ -28,10 +28,8 @@ export class ExamPlanningService {
     const target = classes.find(row => row.id === classId);
     if (!target) Err(404, this.t('classes.errors.notFound'));
     if (!examPlanningMonths(this.year.label).includes(data.month)) Err(400, this.t('validation.theDateMustFallInsideThisSchoolYear'));
-    // A teacher's new exam takes the first day of a Contrôle this class sits in its subject.
-    const controls = await this.controls();
-    const firstDays = (subjectId: string | null) => controlFirstDays(controls, classId, subjectId);
-    await this.validator.ensureMayChange(actor, classId, target.months[data.month] ?? [], data.entries, firstDays);
+    // A teacher writes only the lessons of their subjects' exams; the school plans the exams themselves.
+    await this.validator.ensureMayChange(actor, classId, target.months[data.month] ?? [], data.entries);
     await this.repository.saveMonth(classId, data);
     await this.syncExams([classId]);
     return this.getAll();
@@ -132,14 +130,29 @@ export class ExamPlanningService {
     return this.controls();
   }
 
+  /**
+   * A saved Contrôle by id, with the year's saved ones. One read from
+   * Planning's months (`derived-…`, while none is saved) is saved first with
+   * the others, as opening a Contrôle does, so it is changed or removed like
+   * any other: the saved one with its semester, first day and classes.
+   */
+  private async storedControlFor(id: string) {
+    const derived = id.startsWith('derived-') ? (await this.controls()).find(control => control.derived && control.id === id) : undefined;
+    const stored = derived ? await this.savedControls() : await this.repository.storedControls();
+    const sameClasses = (a: readonly string[], b: readonly string[]) => a.length === b.length && a.every(classId => b.includes(classId));
+    const existing = derived
+      ? stored.find(control => control.term === derived.term && control.dateFrom === derived.dateFrom && sameClasses(control.classIds, derived.classIds))
+      : stored.find(control => control.id === id);
+    if (!existing) Err(404, this.t('examPlanning.errors.controls.notFound'));
+    return { stored, existing: existing! };
+  }
+
   @Transaction()
   async updateControl(id: string, input: ExamControlInput, actor: PlanningActor) {
-    const stored = await this.repository.storedControls();
-    const existing = stored.find(control => control.id === id);
-    if (!existing) Err(404, this.t('examPlanning.errors.controls.notFound'));
-    await this.validator.ensureMayManageControl(actor, existing!.classIds, input.classIds);
-    this.validator.ensureControlValid(input, stored.filter(control => control.id !== id), this.year.label, await this.repository.yearClassIds(), await this.subjectIds());
-    await this.repository.updateControl(id, { ...input, term: examControlTerm(input.dateFrom) });
+    const { stored, existing } = await this.storedControlFor(id);
+    await this.validator.ensureMayManageControl(actor, existing.classIds, input.classIds);
+    this.validator.ensureControlValid(input, stored.filter(control => control.id !== existing.id), this.year.label, await this.repository.yearClassIds(), await this.subjectIds());
+    await this.repository.updateControl(existing.id, { ...input, term: examControlTerm(input.dateFrom) });
     return this.controls();
   }
 
@@ -150,10 +163,9 @@ export class ExamPlanningService {
   /** The Contrôle goes; its classes' Planning and exams stay. */
   @Transaction()
   async deleteControl(id: string, actor: PlanningActor) {
-    const existing = (await this.repository.storedControls()).find(control => control.id === id);
-    if (!existing) Err(404, this.t('examPlanning.errors.controls.notFound'));
-    await this.validator.ensureMayManageControl(actor, existing!.classIds);
-    await this.repository.deleteControl(id);
+    const { existing } = await this.storedControlFor(id);
+    await this.validator.ensureMayManageControl(actor, existing.classIds);
+    await this.repository.deleteControl(existing.id);
     return this.controls();
   }
 

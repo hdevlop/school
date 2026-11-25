@@ -42,10 +42,15 @@ const STORED = '__stored__', WHOLE = '__whole__';
  * A Planning entry's subject in two short lists: the subject, then one of its
  * sub-subjects (or the whole subject). The entry stores the chosen name. A
  * stored name Subjects does not have stays shown, marked, so opening an entry
- * never changes it silently.
+ * never changes it silently. `taken` are the names the class already has an
+ * exam of in the Contrôle: they are not offered again (the entry's own stays).
  */
-export function planningSubjectPicker(subjects: Subject[] | undefined, current: string, labels: { notInSubjects: string; wholeSubject: string }) {
-  const list = subjects ?? [], folded = foldSubjectName(current);
+export function planningSubjectPicker(subjects: Subject[] | undefined, current: string, labels: { notInSubjects: string; wholeSubject: string }, taken?: ReadonlySet<string>) {
+  const folded = foldSubjectName(current);
+  const free = (name: string) => !taken?.has(foldSubjectName(name)) || foldSubjectName(name) === folded;
+  const wholeFree = (subject: Subject) => free(subject.name) && (!subject.nameAr || free(subject.nameAr));
+  // A subject stays offered while its whole or one of its sub-subjects is free.
+  const list = (subjects ?? []).filter(subject => wholeFree(subject) || subject.subSubjects.some(part => free(part.name)));
   const own = list.find(subject => foldSubjectName(subject.name) === folded || (!!subject.nameAr && foldSubjectName(subject.nameAr) === folded));
   const parent = own ?? list.find(subject => subject.subSubjects.some(part => foldSubjectName(part.name) === folded));
   const part = own ? undefined : parent?.subSubjects.find(item => foldSubjectName(item.name) === folded);
@@ -53,10 +58,14 @@ export function planningSubjectPicker(subjects: Subject[] | undefined, current: 
   return {
     subjectItems: [...stored, ...list.map(subject => ({ value: subject.id, label: subject.name }))],
     subjectValue: parent?.id ?? (stored.length ? STORED : ''),
-    partItems: parent?.subSubjects.length ? [{ value: WHOLE, label: labels.wholeSubject }, ...parent.subSubjects.map(item => ({ value: item.name, label: item.name }))] : [],
+    partItems: parent?.subSubjects.length ? [...(wholeFree(parent) ? [{ value: WHOLE, label: labels.wholeSubject }] : []),
+      ...parent.subSubjects.filter(item => free(item.name)).map(item => ({ value: item.name, label: item.name }))] : [],
     partValue: parent ? part?.name ?? WHOLE : '',
-    /** The name to store for a subject picked in the first list: the subject itself. */
-    subjectName: (id: string) => list.find(subject => subject.id === id)?.name ?? null,
+    /** The name to store for a subject picked in the first list: the subject itself, or its first free sub-subject once the whole is taken. */
+    subjectName: (id: string) => {
+      const subject = list.find(item => item.id === id);
+      return !subject ? null : wholeFree(subject) ? subject.name : subject.subSubjects.find(part => free(part.name))?.name ?? null;
+    },
     /** The name to store for a pick in the second list. */
     partName: (value: string) => value === WHOLE ? parent?.name ?? null : value,
   };
