@@ -2,7 +2,7 @@ import { describe, expect, it } from 'bun:test';
 import type { CompetencyDomain, CompetencyEvaluation, MassarSheetDetail } from '@sms/contracts';
 import { followUps } from '@/features/Competencies/config/followUpReport';
 import { analyzeClass, classNote, classReport, deviation, median, supportCapacity, supportGroups, supportList } from '@/features/Competencies/config/classReport';
-import { buildClassReportDocument, buildClassReportsDocument, ONE_PAGE_PUPILS, pageFit, type ClassReportPrintOptions } from '@/features/Competencies/config/classReportDocument';
+import { buildClassReportDocument, buildClassReportsDocument, LARGE_PRINT_PUPILS, pageFit, type ClassReportPrintOptions } from '@/features/Competencies/config/classReportDocument';
 import { buildSupportListDocument, SUPPORT_LIST_SIZE } from '@/features/Competencies/config/supportListDocument';
 
 const MONTHS = ['2026-09', '2026-10', '2026-11', '2026-12'];
@@ -113,12 +113,16 @@ describe('the class report after a Massar Contrôle', () => {
     expect(classNote(report, { ...labels, language: 'fr' })).toContain('moyens');
   });
 
-  // Measured in Chrome: up to 26 pupils keep the report on one A4 page; a larger class prints on both sides, rows at full size.
-  it('keeps up to 26 pupils on one page, and prints a larger class on two sides', () => {
-    expect([20, 21, 26, 27, 32, 45].map(pageFit)).toEqual(['roomy', 'dense', 'dense', 'split', 'split', 'split']);
-    expect(ONE_PAGE_PUPILS).toBe(26);
+  // Measured in Chrome (6 to 12 competencies): up to 28 pupils the table's large rows fill the front, up to 45 the
+  // regular ones do; the back holds the profile, appraisals, eight support groups, the analysis and both remarks.
+  it('prints every class on the two sides of one sheet, the rows large up to 28 pupils', () => {
+    expect([12, 28, 29, 45].map(pageFit)).toEqual(['large', 'large', 'regular', 'regular']);
+    expect(LARGE_PRINT_PUPILS).toBe(28);
+    const html = buildClassReportDocument(report, options);
+    expect(html).toContain('class="sheet duplex large"');
+    expect(html).toContain('.duplex .cards{break-before:page}');
     // The screen reflows instead.
-    expect(buildClassReportDocument(report, options, 'preview')).toContain('class="sheet roomy"');
+    expect(buildClassReportDocument(report, options, 'preview')).toContain('class="sheet screen"');
   });
 
   it('prints every class in one document, each from a new sheet in its own language', () => {

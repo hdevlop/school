@@ -217,14 +217,16 @@ function groups(report: ClassReport, options: ClassReportPrintOptions, most: num
 }
 
 /**
- * How the page holds the class. Up to {@link ONE_PAGE_PUPILS} pupils the
- * whole report is one A4 page, its rows a little tighter past 20. A larger
- * class prints on both sides of the sheet at a readable size: the table on
- * the front, the profile, analysis and remarks on the back.
+ * How the printed sheet holds the class. Every class prints on both sides of
+ * one A4 sheet so nothing is shrunk to fit: the figures and the pupils' table
+ * on the front, the profile, appraisals, support groups, analysis and remarks
+ * on the back, each at a size read without effort. Up to
+ * {@link LARGE_PRINT_PUPILS} pupils the table's rows print large; a larger
+ * class keeps them at the regular size so the table still fills the front.
  */
-export const ONE_PAGE_PUPILS = 26;
-export function pageFit(pupils: number): 'roomy' | 'dense' | 'split' {
-  return pupils <= 20 ? 'roomy' : pupils <= ONE_PAGE_PUPILS ? 'dense' : 'split';
+export const LARGE_PRINT_PUPILS = 28;
+export function pageFit(pupils: number): 'large' | 'regular' {
+  return pupils <= LARGE_PRINT_PUPILS ? 'large' : 'regular';
 }
 
 const sentences = (text: string) => text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
@@ -233,22 +235,22 @@ function page(report: ClassReport, options: ClassReportPrintOptions, images: { l
   const { t } = options;
   const analysis = sentences(options.analysis);
   const note = sentences(options.note);
-  // The screen reflows: the tiers only fit the printed A4 page.
-  const fit = preview ? 'roomy' : pageFit(report.pupils);
+  // The screen reflows: the two sides are the printed sheet's.
+  const fit = preview ? 'screen' : `duplex ${pageFit(report.pupils)}`;
   return `<section class="sheet ${fit}" lang="${e(options.language)}" dir="${options.dir}">
     ${header(options, images)}
     ${info(report, options)}
     ${tiles(report, options)}
     <div class="panel">${titled(1, t('competencies.classReport.results'), [captionOf(options, 'competencies.classReport.results'), captionOf(options, 'competencies.report.competenciesCaption') || t('competencies.report.competenciesCaption')].filter(Boolean).join(' · '))}
       ${grid(report, options, preview)}${legend(report, options)}</div>
-    <div class="cards">${profile(report, options, preview)}${distribution(report, options)}${groups(report, options, fit === 'split' ? 10 : fit === 'dense' ? 5 : 6)}</div>
+    <div class="cards">${profile(report, options, preview)}${distribution(report, options)}${groups(report, options, preview ? 6 : 8)}</div>
     <div class="closing">
       <div class="panel">${titled(5, t('competencies.report.analysis'), captionOf(options, 'competencies.report.analysis'))}
         ${analysis.length ? `<ul class="analysis">${analysis.map((line) => `<li dir="auto">${e(line)}</li>`).join('')}</ul>` : '<i class="line"></i><i class="line"></i>'}</div>
       <div class="stack">
         <div class="panel">${titled(6, t('competencies.report.remark'), captionOf(options, 'competencies.report.remark'))}
           ${note.length ? note.map((line) => `<p class="remark" dir="auto">${e(line)}</p>`).join('') : '<i class="line"></i><i class="line"></i>'}</div>
-        <div class="panel">${titled(7, t('competencies.report.inspector'), captionOf(options, 'competencies.report.inspector'))}${'<i class="line"></i>'.repeat(fit === 'split' ? 5 : 2)}</div>
+        <div class="panel">${titled(7, t('competencies.report.inspector'), captionOf(options, 'competencies.report.inspector'))}${'<i class="line"></i>'.repeat(preview ? 2 : 5)}</div>
       </div>
     </div>
     <footer class="foot">${e(t('competencies.classReport.generated'))}</footer>
@@ -299,7 +301,7 @@ const PREVIEW_STYLES = `
  * title, the class's figures, every pupil's mark and current levels with the
  * class's means under them, the class profile, the appraisals, the support
  * groups, the analysis and room for the teacher's and the inspector's
- * remarks. A large class carries the table onto a second page.
+ * remarks, on both sides of the sheet.
  */
 export function buildClassReportDocument(report: ClassReport, options: ClassReportPrintOptions, mode: 'print' | 'preview' = 'print'): string {
   return buildClassReportsDocument([{ report, options }], mode);
@@ -368,29 +370,46 @@ export function buildClassReportsDocument(entries: readonly ClassReportEntry[], 
     .remark{margin:0;font-size:8pt;line-height:1.35}
     .line{display:block;height:4mm;border-bottom:.5pt dotted #94a3b8}
     .foot{margin-top:auto;font-size:6.8pt;color:#94a3b8;text-align:end}
-    /* 21 to 26 pupils, still one page: slightly tighter rows; under them the analysis and both remarks side by side,
-       each appraisal on one line, a smaller radar. */
-    .dense .grid tbody td{padding:.1mm .5mm;font-size:7.2pt;line-height:1.1}
-    .dense .grid td.cell{padding:.1mm .3mm}
-    .dense .lv{font-size:6.8pt;line-height:1.2}
-    .dense .closing{grid-template-columns:1.6fr 1fr 1fr}
-    .dense .closing .stack{display:contents}
-    .dense .bands li{grid-template-columns:24mm 1fr 13mm}
-    .dense .bands .band{flex-direction:row;align-items:baseline;gap:1mm}
-    .dense .radar{max-height:34mm}
-    /* Two sides: the rows keep their size; the back page has room for a larger profile, text and remarks. */
-    .split .cards{grid-template-columns:1.1fr .9fr 1.1fr}
-    .split .radar{max-height:62mm}.split .radar text{font-size:11px}
-    .split .bands{gap:2.4mm}.split .groups{font-size:8.2pt;gap:1mm}
-    .split .analysis,.split .remark{font-size:9pt;line-height:1.5}
-    .split .line{height:7mm}
+    /* The front: the class's figures and the table, larger than a one-page sheet allows. */
+    .duplex .title h1{font-size:14pt}.duplex .title p{font-size:9pt}
+    .duplex .info dt{font-size:8.6pt}.duplex .info dd{font-size:10.4pt}
+    .duplex .tiles{gap:2mm}.duplex .tile{min-height:14mm;padding:1.2mm}
+    .duplex .tile b{font-size:15pt}.duplex .tile b small{font-size:8.6pt}.duplex .tile>span{font-size:7.8pt}
+    .duplex .section-title h3{font-size:11.5pt}.duplex .section-title small{font-size:8pt}
+    .duplex .legend-row{font-size:8.2pt}.duplex .legend-row small{font-size:7.8pt}.duplex .legend-row .lv{width:4.4mm;height:4.4mm}
+    .large .grid thead th{font-size:8.8pt}.large .grid th.domain{font-size:8.6pt}
+    .large .grid th.skill,.large .grid td.cell{width:8.8mm}
+    .large .grid th.skill div{height:25mm;font-size:8.4pt}
+    .large .grid tbody td{padding:.6mm .9mm;font-size:9.8pt;line-height:1.2}
+    .large .grid td.grade,.large .grid td.trend{font-size:9.2pt}
+    .large .grid td.cell{padding:.4mm .5mm}.large .grid .lv{font-size:9pt;line-height:1.45}
+    .large .grid tfoot th.label{font-size:9pt}.large .grid tfoot td,.large .grid tfoot th{padding:.6mm .8mm;font-size:9pt}
+    /* The back: the profile, appraisals and groups, then the analysis and both remarks, with room to read and write. */
+    .duplex .card,.duplex .panel{gap:2mm;padding:3mm 3.6mm}
+    .duplex .cards{grid-template-columns:1fr 1fr;gap:3mm}
+    .duplex .cards .card:last-child{grid-column:1/-1}
+    .duplex .cards .section-title h3{font-size:11.5pt}
+    .duplex .radar{max-height:66mm}.duplex .radar text{font-size:12.5px}
+    .duplex .legend{font-size:9pt}.duplex .bar-row{font-size:9.4pt}.duplex .bar{height:3.6mm}
+    .duplex .bands{gap:3.6mm;justify-content:center;flex:1}
+    .duplex .bands li{grid-template-columns:30mm 1fr 20mm;font-size:10.4pt}
+    .duplex .bands .band{flex-direction:row;align-items:baseline;gap:1.5mm}.duplex .bands .band small{font-size:8.6pt}
+    .duplex .bands .count{font-size:10.4pt}
+    .duplex .groups{display:block;columns:2;column-gap:5mm;font-size:10pt;line-height:1.45}.duplex .groups li{break-inside:avoid;margin-bottom:1.2mm;padding-bottom:1.2mm}
+    .duplex .key{font-size:8.4pt}
+    .duplex .closing{grid-template-columns:1fr;gap:3mm}
+    .duplex .closing .stack{display:grid;grid-template-columns:1fr 1fr;gap:3mm}
+    .duplex .analysis{font-size:10.6pt;line-height:1.55;gap:1mm;padding-inline-start:5mm}
+    .duplex .remark{font-size:10.6pt;line-height:1.55}
+    .duplex .line{height:7mm}
+    .duplex .foot{font-size:8pt}
     /* Page margins rather than the sheet's padding, so a second page has its own. */
     @page{size:A4 portrait;margin:6mm 7mm}
     @media print{
       body{background:#fff}.sheet{width:auto;min-height:0;margin:0;padding:0;box-shadow:none}
       .grid thead{display:table-header-group}.grid tr{break-inside:avoid}
-      /* Too many pupils for one page: the table on the first, the profile, analysis and remarks together on the next. */
-      .split .cards{break-before:page}
+      /* The back of the sheet: the profile, analysis and remarks. */
+      .duplex .cards{break-before:page}
       /* Each class from a new sheet. */
       .sheet+.sheet{break-before:page}
     }
