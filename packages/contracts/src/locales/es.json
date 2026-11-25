@@ -8092,7 +8092,12 @@
       "renameAll": "Corregir el nombre en todos los meses",
       "renameAllHint": "Una corrección ortográfica: los meses anteriores también muestran el nuevo nombre.",
       "deleteCompetencyFrom": "¿Quitar {{name}} desde {{month}}? Se perderán {{count}} nivel(es) puestos desde {{month}}; los meses anteriores la conservan.",
-      "deleteDomainFrom": "¿Quitar el subdominio {{name}} y sus competencias desde {{month}}? Se perderán {{count}} nivel(es) puestos desde {{month}}; los meses anteriores los conservan."
+      "deleteDomainFrom": "¿Quitar el subdominio {{name}} y sus competencias desde {{month}}? Se perderán {{count}} nivel(es) puestos desde {{month}}; los meses anteriores los conservan.",
+      "moveMonth": "Mover a otro mes",
+      "moveTitle": "Mover los niveles de este mes",
+      "moveDescription": "Todos los niveles y observaciones introducidos en {{month}} para {{class}} pasan al mes que elijas, y {{month}} queda vacío. Úsalo cuando los niveles se introdujeron en el mes equivocado.",
+      "moveTarget": "Mover a",
+      "moveAction": "Mover"
     },
     "success": {
       "defaultApplied": "Lista propuesta añadida",
@@ -8102,7 +8107,8 @@
       "updated": "Guardado",
       "deleted": "Eliminado",
       "copied": "Lista copiada",
-      "evaluated": "Nivel guardado"
+      "evaluated": "Nivel guardado",
+      "moved": "Niveles movidos"
     },
     "errors": {
       "noDefaultList": "No hay ninguna lista propuesta para esta clase y asignatura",
@@ -8126,7 +8132,11 @@
       "emptySource": "Esta lista no tiene dominios que copiar",
       "targetNotEmpty": "Esa clase ya tiene una lista",
       "studentNotInSection": "Este alumno no estaba en esta clase ese mes",
-      "notInMonth": "Esto no se sigue en este mes"
+      "notInMonth": "Esto no se sigue en este mes",
+      "sameMonth": "Elige otro mes al que mover los niveles",
+      "nothingToMove": "Este mes no tiene niveles ni observaciones que mover",
+      "targetMonthNotEmpty": "{{month}} ya tiene niveles u observaciones en esta clase y asignatura. Bórralos primero",
+      "pupilsNotInSection": "{{count}} alumno(s) con niveles no estaban en esta clase en {{month}}"
     }
   },
   "homeworkFollowUp": {

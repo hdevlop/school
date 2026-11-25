@@ -1,4 +1,4 @@
-import { catalogInMonths, previousMonth, type CompetencyYearLevels, type StudentCompetencySheet } from '@sms/contracts';
+import { catalogInMonths, inMonth, previousMonth, type CompetencyYearLevels, type StudentCompetencySheet } from '@sms/contracts';
 import { Service, Transaction } from '../../najm';
 import { StudentValidator } from '../students/StudentValidator';
 import { CompetencyCatalogRepository } from './CompetencyCatalogRepository';
@@ -7,8 +7,8 @@ import { CompetencyRemarkRepository } from './CompetencyRemarkRepository';
 import { CompetencyValidator, monthBounds, type CompetencyActor } from './CompetencyValidator';
 import { defaultCompetencyList } from './defaultCatalogs';
 import type {
-  ApplyDefaultDto, CopyCatalogDto, CreateCompetencyDto, CreateDomainDto, EvaluationsQuery, SetEvaluationDto, SetRemarkDto, StudentSheetQuery,
-  UpdateCompetencyDto, UpdateDomainDto,
+  ApplyDefaultDto, CopyCatalogDto, CreateCompetencyDto, CreateDomainDto, EvaluationsQuery, MoveMonthDto, SetEvaluationDto, SetRemarkDto,
+  StudentSheetQuery, UpdateCompetencyDto, UpdateDomainDto,
 } from './CompetencyDto';
 
 const defined = <T extends Record<string, unknown>>(value: T) =>
@@ -253,6 +253,66 @@ export class CompetencyService {
       return { studentId: data.studentId, month: data.month, body: '', updatedAt: null };
     }
     return this.remarks.set({ ...data, teacherAssignmentId: assignment.id, writtenBy: actor.id });
+  }
+
+  /**
+   * Levels and remarks entered under the wrong month move to the right one,
+   * for one class and subject: the month picked by mistake is left empty. The
+   * month they move to holds none of the list's levels or remarks yet, so
+   * nothing is overwritten. A sub-domain or competency added in the wrong
+   * month, when the levels move earlier, is followed from the right month on.
+   */
+  @Transaction()
+  async moveMonth({ teacherAssignmentId, fromMonth, toMonth }: MoveMonthDto, actor: CompetencyActor) {
+    this.validator.ensureMonthInYear(fromMonth);
+    this.validator.ensureMonthInYear(toMonth);
+    const assignment = await this.validator.ensureWritableAssignment(teacherAssignmentId, actor);
+    const [levels, notes, levelsThere, notesThere] = await Promise.all([
+      this.evaluations.ofListInMonth(assignment.id, fromMonth),
+      this.remarks.forAssignment(assignment.id, [fromMonth]),
+      this.evaluations.ofListInMonth(assignment.id, toMonth),
+      this.remarks.forAssignment(assignment.id, [toMonth]),
+    ]);
+    this.validator.ensureMovable(fromMonth, toMonth, levels.length + notes.length, levelsThere.length + notesThere.length);
+    await this.validator.ensureAllPlaced([...new Set([...levels, ...notes].map((row) => row.studentId))], assignment.sectionId, toMonth);
+    const rated = new Set(levels.map((row) => row.competencyId));
+    for (const domain of await this.catalog.catalog(assignment.id)) {
+      const items = domain.competencies.filter((item) => rated.has(item.id));
+      if (!items.length) continue;
+      const domainFrom = await this.followIn(domain, toMonth, (span) =>
+        this.validator.ensureDomainNameFree(assignment.id, domain.name, span, domain.id));
+      if (domainFrom !== undefined) await this.catalog.updateDomain(domain.id, { fromMonth: domainFrom });
+      for (const item of items) {
+        const span = { fromMonth: item.fromMonth ?? null, untilMonth: item.untilMonth ?? null };
+        const itemFrom = await this.followIn(span, toMonth, (next) =>
+          this.validator.ensureCompetencyNameFree(domain.id, item.name, next, item.id));
+        if (itemFrom !== undefined) await this.catalog.updateCompetency(item.id, { fromMonth: itemFrom });
+      }
+    }
+    await this.evaluations.moveListMonth(assignment.id, fromMonth, toMonth);
+    await this.remarks.moveMonth(assignment.id, fromMonth, toMonth);
+    return { teacherAssignmentId: assignment.id, fromMonth, toMonth, levels: levels.length, remarks: notes.length };
+  }
+
+  /**
+   * A span already followed in the month needs nothing; one that starts after
+   * it starts from it instead, its name still free there. The new start, or
+   * undefined when it stays.
+   */
+  private async followIn(
+    span: { fromMonth: string | null; untilMonth: string | null },
+    month: string,
+    ensureNameFree: (span: { fromMonth: string | null; untilMonth: string | null }) => Promise<void>,
+  ): Promise<string | null | undefined> {
+    if (inMonth(span, month)) return undefined;
+    // After its start and not followed: it ended before the month, which is refused.
+    if (month > this.validator.startOf(span)) {
+      this.validator.ensureInMonth(span, month);
+      return undefined;
+    }
+    const fromMonth = this.validator.storedFromMonth(month);
+    await ensureNameFree({ fromMonth, untilMonth: span.untilMonth });
+    return fromMonth;
   }
 
   /**

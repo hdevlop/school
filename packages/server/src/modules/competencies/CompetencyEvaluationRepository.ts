@@ -123,6 +123,35 @@ export class CompetencyEvaluationRepository {
     ));
   }
 
+  /** The levels set in one month on this list's own competencies, without those carried from a sibling section. */
+  async ofListInMonth(teacherAssignmentId: string, month: string) {
+    return this.db.select(evaluationSelect)
+      .from(competencyEvaluations)
+      .innerJoin(competencies, eq(competencyEvaluations.competencyId, competencies.id))
+      .innerJoin(competencyDomains, eq(competencies.domainId, competencyDomains.id))
+      .where(and(
+        this.ownedWhere(),
+        this.inYear(),
+        eq(competencyDomains.teacherAssignmentId, teacherAssignmentId),
+        eq(competencyEvaluations.month, month),
+      ));
+  }
+
+  /** Every level of the list set in one month moves to another, on the same competencies. */
+  async moveListMonth(teacherAssignmentId: string, fromMonth: string, toMonth: string) {
+    const listed = this.db.select({ id: competencies.id })
+      .from(competencies)
+      .innerJoin(competencyDomains, eq(competencies.domainId, competencyDomains.id))
+      .where(eq(competencyDomains.teacherAssignmentId, teacherAssignmentId));
+    await this.db.update(competencyEvaluations)
+      .set({ month: toMonth, updatedAt: sql`CURRENT_TIMESTAMP` })
+      .where(and(
+        this.inYear(),
+        eq(competencyEvaluations.month, fromMonth),
+        inArray(competencyEvaluations.competencyId, listed),
+      ));
+  }
+
   /** A competency removed from a month on loses its levels of that month and after; the earlier ones stay. */
   async removeFrom(competencyId: string, month: string) {
     await this.db.delete(competencyEvaluations).where(and(

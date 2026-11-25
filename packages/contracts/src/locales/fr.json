@@ -8193,7 +8193,12 @@
       "renameAll": "Corriger le nom dans tous les mois",
       "renameAllHint": "Une correction d’orthographe : les mois précédents affichent aussi le nouveau nom.",
       "deleteCompetencyFrom": "Retirer {{name}} à partir de {{month}} ? {{count}} niveau(x) saisi(s) depuis {{month}} seront perdus ; les mois précédents la gardent.",
-      "deleteDomainFrom": "Retirer le sous-domaine {{name}} et ses compétences à partir de {{month}} ? {{count}} niveau(x) saisi(s) depuis {{month}} seront perdus ; les mois précédents les gardent."
+      "deleteDomainFrom": "Retirer le sous-domaine {{name}} et ses compétences à partir de {{month}} ? {{count}} niveau(x) saisi(s) depuis {{month}} seront perdus ; les mois précédents les gardent.",
+      "moveMonth": "Déplacer vers un autre mois",
+      "moveTitle": "Déplacer les niveaux de ce mois",
+      "moveDescription": "Tous les niveaux et remarques saisis en {{month}} pour {{class}} passent au mois choisi, et {{month}} reste vide. À utiliser quand les niveaux ont été saisis sous le mauvais mois.",
+      "moveTarget": "Déplacer vers",
+      "moveAction": "Déplacer"
     },
     "success": {
       "defaultApplied": "Liste proposée ajoutée",
@@ -8203,7 +8208,8 @@
       "updated": "Enregistré",
       "deleted": "Supprimé",
       "copied": "Liste copiée",
-      "evaluated": "Niveau enregistré"
+      "evaluated": "Niveau enregistré",
+      "moved": "Niveaux déplacés"
     },
     "errors": {
       "noDefaultList": "Aucune liste n'est proposée pour cette classe et cette matière",
@@ -8227,7 +8233,11 @@
       "emptySource": "Cette liste n'a aucun domaine à copier",
       "targetNotEmpty": "Cette classe a déjà une liste",
       "studentNotInSection": "Cet élève n'était pas dans cette classe ce mois-là",
-      "notInMonth": "Ceci n’est pas suivi ce mois-ci"
+      "notInMonth": "Ceci n’est pas suivi ce mois-ci",
+      "sameMonth": "Choisissez un autre mois vers lequel déplacer les niveaux",
+      "nothingToMove": "Ce mois n'a aucun niveau ni remarque à déplacer",
+      "targetMonthNotEmpty": "{{month}} contient déjà des niveaux ou des remarques pour cette classe et cette matière. Effacez-les d’abord",
+      "pupilsNotInSection": "{{count}} élève(s) ayant des niveaux n'étai(en)t pas dans cette classe en {{month}}"
     }
   },
   "homeworkFollowUp": {

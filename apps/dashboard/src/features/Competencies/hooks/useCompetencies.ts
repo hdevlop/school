@@ -153,6 +153,8 @@ export function useCompetencyCatalogActions() {
     deleteCompetency: (id: string, month: string) => run(() => competencyApi.deleteCompetencyApi(id, month), 'competencies.success.deleted'),
     applyDefault: (teacherAssignmentId: string) =>
       run(() => competencyApi.applyDefaultCompetencyListApi(teacherAssignmentId), 'competencies.success.defaultApplied'),
+    moveMonth: (data: competencyApi.MoveCompetencyMonth) =>
+      run(() => competencyApi.moveCompetencyMonthApi(data), 'competencies.success.moved'),
     copyCatalog: (fromAssignmentId: string, toAssignmentId: string) =>
       run(() => competencyApi.copyCompetencyCatalogApi(fromAssignmentId, toAssignmentId), 'competencies.success.copied'),
   };

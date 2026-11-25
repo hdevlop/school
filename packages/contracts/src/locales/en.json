@@ -8799,7 +8799,12 @@
       "renameAll": "Correct the name in every month",
       "renameAllHint": "A spelling fix: the earlier months show the new name too.",
       "deleteCompetencyFrom": "Remove {{name}} from {{month}} on? {{count}} level(s) set from {{month}} will be lost; the earlier months keep it.",
-      "deleteDomainFrom": "Remove the sub-domain {{name}} and its competencies from {{month}} on? {{count}} level(s) set from {{month}} will be lost; the earlier months keep them."
+      "deleteDomainFrom": "Remove the sub-domain {{name}} and its competencies from {{month}} on? {{count}} level(s) set from {{month}} will be lost; the earlier months keep them.",
+      "moveMonth": "Move to another month",
+      "moveTitle": "Move this month's levels",
+      "moveDescription": "Every level and remark entered in {{month}} for {{class}} moves to the month you choose, and {{month}} is left empty. Use it when the levels were entered under the wrong month.",
+      "moveTarget": "Move to",
+      "moveAction": "Move"
     },
     "success": {
       "defaultApplied": "Proposed list added",
@@ -8809,7 +8814,8 @@
       "updated": "Saved",
       "deleted": "Deleted",
       "copied": "List copied",
-      "evaluated": "Level saved"
+      "evaluated": "Level saved",
+      "moved": "Levels moved"
     },
     "errors": {
       "noDefaultList": "No list is proposed for this class and subject",
@@ -8833,7 +8839,11 @@
       "emptySource": "This list has no domains to copy",
       "targetNotEmpty": "That class already has a list",
       "studentNotInSection": "This pupil was not in this class that month",
-      "notInMonth": "This is not followed in this month"
+      "notInMonth": "This is not followed in this month",
+      "sameMonth": "Choose another month to move the levels to",
+      "nothingToMove": "This month has no levels or remarks to move",
+      "targetMonthNotEmpty": "{{month}} already has levels or remarks in this class and subject. Clear them first",
+      "pupilsNotInSection": "{{count}} pupil(s) with levels were not in this class in {{month}}"
     }
   },
   "homeworkFollowUp": {

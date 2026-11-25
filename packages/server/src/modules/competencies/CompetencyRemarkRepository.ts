@@ -50,6 +50,17 @@ export class CompetencyRemarkRepository {
     return row;
   }
 
+  /** Every remark of the class and subject written for one month moves to another. */
+  async moveMonth(teacherAssignmentId: string, fromMonth: string, toMonth: string) {
+    await this.db.update(competencyRemarks)
+      .set({ month: toMonth, updatedAt: sql`CURRENT_TIMESTAMP` })
+      .where(and(
+        this.inYear(),
+        eq(competencyRemarks.teacherAssignmentId, teacherAssignmentId),
+        eq(competencyRemarks.month, fromMonth),
+      ));
+  }
+
   /** An emptied remark: its row goes. */
   async clear(teacherAssignmentId: string, studentId: string, month: string) {
     await this.db.delete(competencyRemarks).where(and(

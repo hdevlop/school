@@ -58,6 +58,9 @@ export const setRemarkDto = z.object({
   body: z.string().trim().max(limits.remark, 'competencies.errors.remarkTooLong'),
 });
 
+// Levels and remarks set under the wrong month move to the right one, for one class and subject.
+export const moveMonthDto = z.object({ teacherAssignmentId: requiredId, fromMonth: month, toMonth: month });
+
 export const studentSheetQuery = z.object({ month, subjectId: z.string().min(1).optional() });
 
 export type CreateDomainDto = z.infer<typeof createDomainDto>;
@@ -71,3 +74,4 @@ export type SetEvaluationDto = z.infer<typeof setEvaluationDto>;
 export type SetRemarkDto = z.infer<typeof setRemarkDto>;
 export type StudentSheetQuery = z.infer<typeof studentSheetQuery>;
 export type MonthQuery = z.infer<typeof monthQuery>;
+export type MoveMonthDto = z.infer<typeof moveMonthDto>;

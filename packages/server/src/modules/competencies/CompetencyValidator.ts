@@ -137,6 +137,27 @@ export class CompetencyValidator {
     if (await this.catalog.countDomains(teacherAssignmentId)) Err(409, this.ct('targetNotEmpty'));
   }
 
+  /**
+   * A month's levels move only to another month that has none of the list's
+   * levels or remarks yet, so nothing is overwritten, and only when there is
+   * something to move.
+   */
+  ensureMovable(fromMonth: string, toMonth: string, moving: number, alreadyThere: number) {
+    if (fromMonth === toMonth) Err(400, this.ct('sameMonth'));
+    if (!moving) Err(409, this.ct('nothingToMove'));
+    if (alreadyThere) Err(409, this.ct('targetMonthNotEmpty', { month: toMonth }));
+  }
+
+  /** Every pupil whose levels move sat in the list's section in the month they move to. */
+  async ensureAllPlaced(studentIds: readonly string[], sectionId: string, month: string) {
+    const { start, end } = monthBounds(month);
+    let missing = 0;
+    for (const studentId of studentIds) {
+      if (!await this.evaluations.placedDuring(studentId, sectionId, start, end)) missing += 1;
+    }
+    if (missing) Err(409, this.ct('pupilsNotInSection', { count: missing, month }));
+  }
+
   /** A level is set only for a pupil who sat in the list's section that month. */
   async ensurePlaced(studentId: string, sectionId: string, month: string) {
     const { start, end } = monthBounds(month);

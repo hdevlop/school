@@ -46,6 +46,7 @@ describe('competency routes', () => {
       listAssignments: 'read:competencies', getCatalog: 'read:competencies', getEvaluations: 'read:competencies', getStudentSheet: 'read:competencies', getYearLevels: 'read:competencies',
       createDomain: 'create:competencies', createCompetency: 'create:competencies', copyCatalog: 'create:competencies', applyDefault: 'create:competencies',
       updateDomain: 'update:competencies', updateCompetency: 'update:competencies', setEvaluation: 'update:competencies', setRemark: 'update:competencies',
+      moveMonth: 'update:competencies',
       deleteDomain: 'delete:competencies', deleteCompetency: 'delete:competencies',
     };
     const routes = getRoutes(CompetencyController).map((route) => route.methodName).sort();

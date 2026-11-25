@@ -13,6 +13,7 @@ type Span = { fromMonth: string | null; untilMonth: string | null };
 type Domain = Span & { id: string; teacherAssignmentId: string; name: string; altName: string | null; position: number };
 type Item = Span & { id: string; domainId: string; name: string; altName: string | null; position: number };
 type Level = { competencyId: string; studentId: string; month: string; level: string };
+type Remark = { studentId: string; month: string; body: string };
 
 const overlaps = (row: Span, span: Span) =>
   (!span.fromMonth || !row.untilMonth || row.untilMonth >= span.fromMonth)
@@ -25,6 +26,9 @@ function school() {
   const domains: Domain[] = [];
   const items: Item[] = [];
   const levels: Level[] = [];
+  const notes: Remark[] = [];
+  // Pupils who sat in the section in each month; absent, every pupil did.
+  const placed = new Map<string, string[]>();
   const catalog = {
     findAssignment: async () => ({ id: 'a1', sectionId: 's1', subjectId: 'math', teacherUserId: TEACHER.id }),
     findDomain: async (id: string) => domains.find((domain) => domain.id === id),
@@ -71,8 +75,13 @@ function school() {
       ...domain, competencies: items.filter((item) => item.domainId === domain.id).toSorted((a, b) => a.position - b.position),
     })),
   };
+  const listed = (competencyId: string) => items.some((item) => item.id === competencyId);
   const evaluations = {
-    placedDuring: async () => true,
+    placedDuring: async (studentId: string, _section: string, start: string) => placed.get(start.slice(0, 7))?.includes(studentId) ?? true,
+    ofListInMonth: async (_assignment: string, month: string) => levels.filter((level) => level.month === month && listed(level.competencyId)),
+    moveListMonth: async (_assignment: string, from: string, to: string) => {
+      for (const level of levels) if (level.month === from && listed(level.competencyId)) level.month = to;
+    },
     set: async (data: Level) => { levels.push(data); return data; },
     removeFrom: async (competencyId: string, month: string) => {
       for (let index = levels.length - 1; index >= 0; index--) {
@@ -85,12 +94,16 @@ function school() {
   };
   const validator = withEnglishMessages(new CompetencyValidator(catalog as any, evaluations as any));
   Object.defineProperty(validator, 'year', { value: YEAR });
-  const service = new CompetencyService(catalog as any, evaluations as any, {} as any, validator, {} as any);
+  const remarks = {
+    forAssignment: async (_assignment: string, months: string[]) => notes.filter((note) => months.includes(note.month)),
+    moveMonth: async (_assignment: string, from: string, to: string) => { for (const note of notes) if (note.month === from) note.month = to; },
+  };
+  const service = new CompetencyService(catalog as any, evaluations as any, remarks as any, validator, {} as any);
   const rate = (competencyId: string, month: string, studentId = 'p1') =>
     service.setEvaluation({ competencyId, studentId, month, level: 'advanced' }, TEACHER);
   const listIn = async (month: string) => catalogInMonths(await catalog.catalog(), [month])
     .map((domain) => [domain.name, domain.competencies.map((item) => item.name)]);
-  return { service, domains, items, levels, rate, listIn };
+  return { service, domains, items, levels, notes, placed, rate, listIn };
 }
 
 const refusal = async (run: () => unknown) => {
@@ -195,5 +208,64 @@ describe('a competency list month by month', () => {
     expect(updateCompetencyDto.safeParse({ name: 'x', scope: 'fromMonth' }).success).toBe(false);
     expect(updateCompetencyDto.safeParse({ name: 'x', scope: 'fromMonth', month: '2026-11' }).success).toBe(true);
     expect(updateCompetencyDto.safeParse({ position: 2 }).success).toBe(true);
+  });
+});
+
+describe('moving a month entered by mistake', () => {
+  const move = (service: CompetencyService, fromMonth: string, toMonth: string) =>
+    service.moveMonth({ teacherAssignmentId: 'a1', fromMonth, toMonth }, TEACHER);
+
+  it('moves every level and remark of the month to the right one, leaving the wrong one empty', async () => {
+    const { service, lire, longueurs, levels, notes, rate } = await september();
+    await rate(lire.id, '2026-11');
+    await rate(longueurs.id, '2026-11', 'p2');
+    notes.push({ studentId: 'p1', month: '2026-11', body: 'Bon travail' });
+    expect(await move(service, '2026-11', '2026-09')).toMatchObject({ levels: 2, remarks: 1 });
+    expect(levels.map((level) => level.month)).toEqual(['2026-09', '2026-09']);
+    expect(notes.map((note) => note.month)).toEqual(['2026-09']);
+  });
+
+  it('follows from the right month a list the teacher built in the wrong one', async () => {
+    const { service, domains, items, rate, listIn } = school();
+    const domain = await service.createDomain({ teacherAssignmentId: 'a1', name: 'Lecture', altName: null, month: '2026-11' }, TEACHER);
+    const item = await service.createCompetency({ domainId: domain.id, name: 'Lire', altName: null, month: '2026-11' }, TEACHER);
+    await service.createCompetency({ domainId: domain.id, name: 'Écrire', altName: null, month: '2026-11' }, TEACHER);
+    await rate(item.id, '2026-11');
+    expect(await listIn('2026-09')).toEqual([]);
+    await move(service, '2026-11', '2026-09');
+    // The year's first month is stored as no start; the competency without a level keeps its own.
+    expect(domains[0].fromMonth).toBeNull();
+    expect(items.map((row) => [row.name, row.fromMonth])).toEqual([['Lire', null], ['Écrire', '2026-11']]);
+    expect(await listIn('2026-09')).toEqual([['Lecture', ['Lire']]]);
+  });
+
+  it('refuses the same month, an empty month, and a month that already has levels or remarks', async () => {
+    const { service, lire, longueurs, notes, rate } = await september();
+    expect((await refusal(() => move(service, '2026-11', '2026-11')))?.status).toBe(400);
+    expect((await refusal(() => move(service, '2026-11', '2026-09')))?.message).toBe('This month has no levels or remarks to move');
+    await rate(lire.id, '2026-11');
+    await rate(longueurs.id, '2026-09');
+    expect((await refusal(() => move(service, '2026-11', '2026-09')))?.status).toBe(409);
+    const { service: other, lire: first, notes: written, rate: rateOther } = await september();
+    await rateOther(first.id, '2026-11');
+    written.push({ studentId: 'p1', month: '2026-09', body: 'Déjà écrit' });
+    expect((await refusal(() => move(other, '2026-11', '2026-09')))?.status).toBe(409);
+    expect(notes).toEqual([]);
+  });
+
+  it("refuses to move a pupil's levels to a month the pupil was not in the class", async () => {
+    const { service, lire, levels, placed, rate } = await september();
+    await rate(lire.id, '2026-11', 'p1');
+    await rate(lire.id, '2026-11', 'p2');
+    placed.set('2026-09', ['p1']);
+    expect((await refusal(() => move(service, '2026-11', '2026-09')))?.message).toBe('1 pupil(s) with levels were not in this class in 2026-09');
+    expect(levels.map((level) => level.month)).toEqual(['2026-11', '2026-11']);
+  });
+
+  it('refuses a month after a competency ended', async () => {
+    const { service, longueurs, rate } = await september();
+    await rate(longueurs.id, '2026-10');
+    await service.deleteCompetency(longueurs.id, '2026-11', TEACHER);
+    expect((await refusal(() => move(service, '2026-10', '2026-12')))?.message).toBe('This is not followed in this month');
   });
 });

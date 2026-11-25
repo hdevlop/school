@@ -5,9 +5,9 @@ import { CompetencyService } from './CompetencyService';
 import type { CompetencyActor } from './CompetencyValidator';
 import {
   applyDefaultDto, catalogQuery, competencyIdParam, competencyStudentParam, copyCatalogDto, createCompetencyDto, createDomainDto, evaluationsQuery,
-  monthQuery, setEvaluationDto, setRemarkDto, studentSheetQuery, updateCompetencyDto, updateDomainDto,
+  monthQuery, moveMonthDto, setEvaluationDto, setRemarkDto, studentSheetQuery, updateCompetencyDto, updateDomainDto,
   type ApplyDefaultDto, type CopyCatalogDto, type CreateCompetencyDto, type CreateDomainDto, type EvaluationsQuery, type SetEvaluationDto, type SetRemarkDto,
-  type MonthQuery, type StudentSheetQuery, type UpdateCompetencyDto, type UpdateDomainDto,
+  type MonthQuery, type MoveMonthDto, type StudentSheetQuery, type UpdateCompetencyDto, type UpdateDomainDto,
 } from './CompetencyDto';
 
 /**
@@ -111,6 +111,14 @@ export class CompetencyController {
   @ResMsg('competencies.success.evaluated')
   setEvaluation(@Body() body: SetEvaluationDto, @User() actor: CompetencyActor) {
     return this.service.setEvaluation(body, actor);
+  }
+
+  @Post('/move-month')
+  @Can('update:competencies')
+  @Validate(moveMonthDto)
+  @ResMsg('competencies.success.moved')
+  moveMonth(@Body() body: MoveMonthDto, @User() actor: CompetencyActor) {
+    return this.service.moveMonth(body, actor);
   }
 
   @Put('/remarks')

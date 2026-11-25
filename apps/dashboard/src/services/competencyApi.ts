@@ -71,6 +71,14 @@ export const copyCompetencyCatalogApi = async (fromAssignmentId: string, toAssig
   return res.data;
 };
 
+export type MoveCompetencyMonth = { teacherAssignmentId: string; fromMonth: string; toMonth: string };
+
+/** Levels and remarks entered under the wrong month move to the right one; the server refuses a month that already has some. */
+export const moveCompetencyMonthApi = async (data: MoveCompetencyMonth): Promise<{ data: MoveCompetencyMonth & { levels: number; remarks: number } }> => {
+  const res = await api.post('/competencies/move-month', data);
+  return res.data;
+};
+
 export type SetCompetencyLevel = Omit<CompetencyEvaluation, 'level'> & { level: CompetencyLevel | null };
 
 export const setCompetencyLevelApi = async (data: SetCompetencyLevel) => {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState, type ReactNode } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, Copy, FileChartColumn, ListTree, School, Search, TriangleAlert, Users } from 'lucide-react';
+import { ArrowLeft, CalendarClock, ChevronLeft, ChevronRight, Copy, FileChartColumn, ListTree, School, Search, TriangleAlert, Users } from 'lucide-react';
 import { catalogInMonths, compareClassNames, type CompetencyAssignment, type CompetencyDomain, type CompetencyLevel } from '@sms/contracts';
 import {
   cn, NajmScroll, NButton, NEmptyState, NErrorState, NPageHeaderActions, NSkeleton, SelectInput, TextInput, useMediaQuery,
@@ -26,6 +26,7 @@ import { CatalogEditor } from './CatalogEditor';
 import { CompetencyOverview, CompetencyStudentList } from './CompetencyLists';
 import { CompetencyRosterSheet } from './CompetencyRosterSheet';
 import { CopyCatalogSheet } from './CopyCatalogSheet';
+import { MoveMonthSheet } from './MoveMonthSheet';
 import { StudentCompetencySheet, type SheetStudent, type SheetView } from './StudentCompetencySheet';
 import { CompetencyTextScope } from './CompetencyText';
 import { useFollowUpReport } from './FollowUpReports';
@@ -161,6 +162,7 @@ function StaffCompetencies() {
   const [rosterCompetencyId, setRosterCompetencyId] = useState<string | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
   const [copyOpen, setCopyOpen] = useState(false);
+  const [moveOpen, setMoveOpen] = useState(false);
   const [sheetView, setSheetView] = useState<SheetView>('competencies');
 
   const assignments = useCompetencyAssignments();
@@ -301,6 +303,11 @@ function StaffCompetencies() {
           {t('competencies.catalog.copy')}
         </NButton>
       ) : null}
+      {editable && domains.length ? (
+        <NButton type="button" variant="ghost" onClick={() => setMoveOpen(true)} leftIcon={<CalendarClock className="size-4" />}>
+          {t('competencies.catalog.moveMonth')}
+        </NButton>
+      ) : null}
     </>
   ) : null;
 
@@ -395,7 +402,7 @@ function StaffCompetencies() {
           <div className="flex shrink-0 items-center gap-1">
             {viewSwitch}
             {printMenu}
-            <HeaderActionsMenu contentClassName="md:hidden" hasOwnActions={canCreate}>{menu}</HeaderActionsMenu>
+            <HeaderActionsMenu contentClassName="md:hidden" hasOwnActions={canCreate || editable}>{menu}</HeaderActionsMenu>
           </div>
         ) : undefined}
       >
@@ -487,6 +494,10 @@ function StaffCompetencies() {
             const copied = assignments.data.find((item) => item.teacherAssignmentId === target);
             if (copied) { setClassId(copied.classId); setSectionId(copied.sectionId); setSubjectId(copied.subjectId); }
           }} />
+      ) : null}
+      {assignment && moveOpen ? (
+        <MoveMonthSheet open={moveOpen} onClose={() => setMoveOpen(false)} assignment={assignment} month={month} months={months.items}
+          onMoved={setMonth} />
       ) : null}
     </div>
   );
