@@ -1,4 +1,4 @@
-import { and, desc, eq, inArray, isNull, lt, lte, ne, notInArray, sql } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNotNull, isNull, lt, lte, ne, notInArray, sql } from 'drizzle-orm';
 import { Repository } from '../../najm';
 import { Owned, type OwnedWhere } from '../../auth';
 import { DB } from '../../database/db';
@@ -12,10 +12,11 @@ import { students } from '../students/studentSchema';
 import { studentEnrollments, studentEnrollmentPlacements } from '../studentEnrollments/StudentEnrollmentSchema';
 import { staff } from '../staff/staffSchema';
 import { teachers, teacherAssignments } from '../teachers/teacherSchema';
-import { examPlanning } from '../examPlanning/ExamPlanningSchema';
+import { examControls, examPlanning } from '../examPlanning/ExamPlanningSchema';
+import { exams } from '../exams/examSchema';
 import { massarClasses, massarEnrollments, massarFollowUpAnalyses, massarImports, massarPartResults, massarLevels, massarMarks, massarRemarks, massarRounds, massarSheets, massarSubjects, massarYears } from './massarSchema';
 import { MassarSheet } from './MassarGuards';
-import type { MassarComponent, MassarMark, MassarSheetStatus, MassarStudent } from '@sms/contracts';
+import type { ExamControl, MassarComponent, MassarMark, MassarSheetStatus, MassarStudent } from '@sms/contracts';
 
 @Repository()
 export class MassarRepository {
@@ -54,7 +55,19 @@ export class MassarRepository {
   async savePlan(plan: NonNullable<typeof massarYears.$inferInsert['plan']>) { await this.db.update(massarYears).set({ plan }).where(eq(massarYears.academicYearId, this.year.id)); }
   async saveStatement(statement: NonNullable<typeof massarYears.$inferInsert['statement']>) { await this.db.update(massarYears).set({ statement }).where(eq(massarYears.academicYearId, this.year.id)); }
   /** The year's Planning, every class: when each Contrôle's exams take place. */
+  /** The year's saved Contrôles; none until a Contrôle is opened, when Planning's months stand for them. */
+  async storedControls(): Promise<ExamControl[]> {
+    const rows = await this.db.select({ id: examControls.id, term: examControls.term, dateFrom: examControls.dateFrom, dateTo: examControls.dateTo, classIds: examControls.classIds, subjectIds: examControls.subjectIds })
+      .from(examControls).where(eq(examControls.academicYearId, this.year.id));
+    return rows.map(row => ({ ...row, term: row.term === 2 ? 2 : 1, classIds: row.classIds ?? [], subjectIds: row.subjectIds ?? [] }));
+  }
   async planningMonths() { return this.db.select({ classId: examPlanning.classId, months: examPlanning.months }).from(examPlanning).where(eq(examPlanning.academicYearId, this.year.id)); }
+  /** When each class sits each subject: the year's exams Planning wrote to the Exams page, which number each subject's fards. */
+  async plannedExamDays() {
+    return this.db.select({ classId: teacherAssignments.classId, subjectId: teacherAssignments.subjectId, date: exams.date })
+      .from(exams).innerJoin(teacherAssignments, eq(teacherAssignments.id, exams.teacherAssignmentId))
+      .where(and(eq(exams.academicYearId, this.year.id), isNotNull(exams.planningEntryId), ne(exams.status, 'cancelled')));
+  }
   async yearConfig() { return (await this.db.select().from(massarYears).where(eq(massarYears.academicYearId, this.year.id)))[0]; }
   async subjectForImport(levelId: string, code: string) { return (await this.db.select().from(massarSubjects).where(and(eq(massarSubjects.academicYearId, this.year.id), eq(massarSubjects.levelId, levelId), eq(massarSubjects.code, code))))[0]; }
   async saveYear(data: Omit<typeof massarYears.$inferInsert, 'academicYearId'>) {

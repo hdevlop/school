@@ -2,8 +2,9 @@ import { api, fileRequest } from './http';
 
 /**
  * Imported desk-card backgrounds are images in the school's file storage under
- * this namespace. Listing, importing and deleting are storage management, which
- * the server allows admins only; serving them to a signed-in user is open.
+ * this namespace. Listing, importing and deleting ask for
+ * update:desk-card-backgrounds (the server's StorageManageGuard); serving them
+ * to a signed-in user is open.
  */
 const NAMESPACE = 'desk-card-backgrounds';
 

@@ -16,8 +16,8 @@ export type PermissionRow = {
 
 export const PERMISSION_CATEGORIES = ['people', 'academic', 'attendance', 'conduct', 'financial', 'transport', 'access', 'general'] as const;
 const PERMISSION_GROUPS: Record<typeof PERMISSION_CATEGORIES[number], readonly string[]> = {
-  people: ['students', 'insurance', 'parents', 'teachers', 'staff'],
-  academic: ['classes', 'sections', 'cycles', 'subjects', 'sub-subjects', 'homework', 'assessments', 'exams', 'exam-planning', 'grades', 'competencies', 'massar', 'massar-marks', 'class-routines', 'reports', 'participants'],
+  people: ['students', 'insurance', 'parents', 'teachers', 'desk-card-backgrounds', 'staff'],
+  academic: ['classes', 'sections', 'cycles', 'subjects', 'sub-subjects', 'homework', 'assessments', 'exams', 'exam-planning', 'exam-controls', 'grades', 'competencies', 'massar', 'massar-marks', 'class-routines', 'reports', 'participants'],
   attendance: ['attendance', 'staff-attendance'],
   conduct: ['discipline', 'behavior-rewards', 'reward-templates'],
   financial: ['feeTypes', 'fees', 'installments', 'payments', 'allocations', 'expenses', 'payroll', 'financial-operations', 'reminders'],

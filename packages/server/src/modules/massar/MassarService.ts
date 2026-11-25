@@ -3,7 +3,7 @@ import { strToU8, zipSync } from 'fflate';
 import { StorageService } from 'najm-storage';
 import { matchPermission } from 'najm-auth/client';
 import {
-  massarPlanningControls, withStatementDefaults,
+  examDaysOf, massarControlFor, massarControlsOfYear, mergedMassarControls, withStatementDefaults,
   type MassarComponent, type MassarGradeSource, type MassarMark, type MassarSheetDetail, type MassarSheetParts, type MassarSheetRow, type MassarStudent,
 } from '@sms/contracts';
 import { Inject, LoggerService, Service, Transaction, TransactionService } from '../../najm';
@@ -251,14 +251,20 @@ export class MassarService {
     };
   }
 
+  /** The year's Massar Contrôles: the saved Contrôles, or Planning's months until one is saved; each subject's fards follow its exams. */
+  private async massarControls() {
+    const [stored, planning, exams] = [await this.repository.storedControls(), await this.repository.planningMonths(), await this.repository.plannedExamDays()];
+    return massarControlsOfYear(stored, planning, examDaysOf(exams));
+  }
+
   async availability() {
-    const [config, rounds, planning] = await Promise.all([
-      this.repository.yearConfig(), this.repository.allRoundsForManagement(), this.repository.planningMonths(),
+    const [config, rounds, controls] = await Promise.all([
+      this.repository.yearConfig(), this.repository.allRoundsForManagement(), this.massarControls(),
     ]);
     // Every reader sees the year's planned Contrôles and their dates, opened or not, with when Planning holds their exams.
     // Planning decides which Contrôles exist; Massar setup only adds a due date.
     const planned = config
-      ? massarPlanningControls(planning).map(({ term, exam, examFrom, examTo }) => ({
+      ? mergedMassarControls(controls).map(({ term, exam, examFrom, examTo }) => ({
         term, exam, examFrom, examTo,
         dueDate: config.plan?.dates.find(date => sameRound(date, { term, exam }))?.dueDate ?? null,
       }))
@@ -784,18 +790,16 @@ export class MassarService {
   private async addMissingSheets() {
     await this.applyModel();
     const setup = await this.repository.setup();
-    const controls = massarPlanningControls(await this.repository.planningMonths());
+    const controls = await this.massarControls();
 
     for (const round of await this.repository.allRoundsForManagement()) {
       if (round.status === 'closed') continue;
       for (const cls of setup.classes) {
         if (cls.unmatchedCodes.length) continue;
         const level = setup.levels.find(item => item.id === cls.levelId)!;
-        // A class has a Contrôle's sheet when Planning gives it exams in that Contrôle.
-        const plannedForClass = controls.find(control => sameRound(control, round))?.classIds.includes(cls.classId ?? '');
-        if (round.exam < 4 && !plannedForClass) continue;
-
         for (const subject of setup.subjects.filter(item => item.levelId === level.id)) {
+          // A class has a Contrôle's sheet in a subject when it sits that Contrôle in that subject.
+          if (round.exam < 4 && !massarControlFor(controls, { term: round.term, exam: round.exam, classId: cls.classId ?? null, subjectId: subject.subjectId ?? null })) continue;
           // Later collège tests and the integrated activities exist only where a file showed them.
           const needsObservedRound = (level.kind === 'exam' && round.exam > 1) || round.exam === 4;
           if (needsObservedRound && !subject.observedRounds.some(observed => sameRound(observed, round))) continue;
@@ -865,7 +869,7 @@ export class MassarService {
 
     // An ordinary Contrôle exists once Planning has its exams.
     if (data.exam < 4) {
-      const controls = massarPlanningControls(await this.repository.planningMonths());
+      const controls = await this.massarControls();
       if (!controls.some(control => sameRound(control, data))) this.validator.refuse('notPlanned', 422);
     }
 
@@ -890,7 +894,7 @@ export class MassarService {
     if (!await this.repository.yearConfig()) this.validator.refuse('setupRequired');
 
     // The Contrôles come from Planning; the plan keeps only their due dates.
-    const controls = massarPlanningControls(await this.repository.planningMonths());
+    const controls = await this.massarControls();
     const keys = data.dates.map(date => `${date.term}:${date.exam}`);
     const unplanned = data.dates.some(date => !controls.some(control => sameRound(control, date)));
     if (new Set(keys).size !== keys.length || unplanned) this.validator.refuse('invalidPlan', 422);
@@ -974,8 +978,8 @@ export class MassarService {
       await this.refreshGrids({ sheetId: id, massarClassId: before.sheet.massarClassId });
     }
 
-    const [row, stored, remarks, config, planning] = await Promise.all([
-      this.requireSheet(id), this.repository.marks(id), this.repository.remarks(id), this.repository.yearConfig(), this.repository.planningMonths(),
+    const [row, stored, remarks, config, controls] = await Promise.all([
+      this.requireSheet(id), this.repository.marks(id), this.repository.remarks(id), this.repository.yearConfig(), this.massarControls(),
     ]);
     const marks = numericMarks(stored);
     const genders = await this.repository.genders(row.sheet.roster.map(student => student.id));
@@ -996,7 +1000,9 @@ export class MassarService {
       schoolName: config?.schoolName ?? '',
       levelLabel: row.level.label,
       yearLabel: this.year.label,
-      examFrom: massarPlanningControls(planning).find(control => control.term === row.round.term && control.exam === row.round.exam)?.examFrom ?? null,
+      // The days of the Contrôle this grid's class sits, else the earliest class's.
+      examFrom: (massarControlFor(controls, { term: row.round.term, exam: row.round.exam, classId: row.cls?.classId ?? null, subjectId: row.subject?.subjectId ?? null })
+        ?? mergedMassarControls(controls).find(control => sameRound(control, row.round)))?.examFrom ?? null,
       // Notes asks its own permission: a teacher grades there without any of Massar's.
       canEdit: roundOpen && unlocked && (entry === 'notes' ? matchPermission(actor.permissions ?? [], 'update:grades') : manager || actor.role === 'teacher'),
       canReopen: roundOpen && manager && status === 'exported',

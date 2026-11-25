@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
-import { massarPlanningControls } from '@sms/contracts';
+import { massarControlsOfYear } from '@sms/contracts';
 import { MassarGradeLink, linkCells, partTests } from '../../src/modules/massar/MassarGradeLink';
 import { MassarValidator } from '../../src/modules/massar/MassarValidator';
 import { massarTestI18n } from './fixtures';
@@ -11,7 +11,7 @@ afterAll(async () => { await i18n?.stop(); });
 
 // Planning puts 1AC's exams in November: Contrôle 1 of semester 1.
 const planning = [{ classId: 'class-1ac', months: { '2026-11': [{ date: '2026-11-04' }] } }];
-const controls = massarPlanningControls(planning);
+const controls = massarControlsOfYear([], planning);
 const roster = [{ id: 'student-1', studentCode: 'S1', name: 'One', dateOfBirth: '', massarStudentId: null, position: 0 }, { id: 'student-2', studentCode: 'S2', name: 'Two', dateOfBirth: '', massarStudentId: null, position: 1 }];
 const place = { classId: 'class-1ac', sectionId: 'section-a', subjectId: 'subject-ar' };
 const sheet = (over: Record<string, unknown> = {}) => ({ id: 'sheet', status: 'not_started', exportedAt: null as string | null, roster, components: [{ code: '1', name: 'الفرض الأول' }],
@@ -31,6 +31,17 @@ describe('Which Planning exam a Massar grid column is', () => {
     const cells = linkCells([parts] as never, [exam({ id: 'exam-dictation', title: 'الاملاء', totalMarks: '10' }), exam({ id: 'exam-arabic', title: 'اللغة العربية', totalMarks: '10' })] as never, controls);
     expect(cells.map(cell => [cell.componentCode, cell.exam.id])).toEqual([['1001', 'exam-dictation']]);
   });
+  it('links a saved Contrôle by its own days and classes, whatever its month', () => {
+    const saved = massarControlsOfYear([{ id: 'c1', term: 1, dateFrom: '2026-11-30', dateTo: '2026-12-04', classIds: ['class-1ac'], subjectIds: [] }], []);
+    expect(linkCells([sheet()] as never, [exam({ date: '2026-12-02' })] as never, saved).map(cell => cell.exam.id)).toEqual(['exam-ar']);
+    // Outside its days, or a class that does not sit it: not linked.
+    expect(linkCells([sheet()] as never, [exam({ date: '2026-11-06' })] as never, saved)).toEqual([]);
+    const otherClass = massarControlsOfYear([{ id: 'c1', term: 1, dateFrom: '2026-11-30', dateTo: '2026-12-04', classIds: ['class-2ac'], subjectIds: [] }], []);
+    expect(linkCells([sheet()] as never, [exam({ date: '2026-12-02' })] as never, otherClass)).toEqual([]);
+    // A class's fourth Contrôle of a semester feeds no Massar grid: Massar holds three.
+    const four = ['10-05', '11-02', '11-30', '12-14'].map((day, index) => ({ id: `c${index}`, term: 1 as const, dateFrom: `2026-${day}`, dateTo: `2026-${day}`, classIds: ['class-1ac'], subjectIds: [] as string[] }));
+    expect(massarControlsOfYear(four, []).map(control => control.exam)).toEqual([1, 2, 3]);
+  });
 });
 
 function link(over: { sheet?: Record<string, unknown>; exam?: Record<string, unknown>; marks?: any[]; grades?: any[] } = {}) {
@@ -38,6 +49,7 @@ function link(over: { sheet?: Record<string, unknown>; exam?: Record<string, unk
   const theExam = exam(over.exam);
   const repository = {
     genders: async () => ({}) as Record<string, 'M' | 'F'>,
+    storedControls: async () => [],
     planningMonths: async () => planning,
     sheets: async () => [state.sheet],
     plannedExams: async () => [theExam],

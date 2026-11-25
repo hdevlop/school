@@ -71,6 +71,9 @@
 .dayTools { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .dayTitle[aria-expanded='true'] .dayChevron { transform: rotate(180deg); }
 .dayTitle .secondary { color: inherit; }
+/* A teacher's exams waiting for the school to give them a day. */
+.day[data-to-place] { border-style: dashed; border-color: var(--warning, #d97706); }
+.day[data-to-place] .dayTitle { background: color-mix(in oklab, var(--warning, #d97706) 14%, var(--planning-panel)); color: var(--planning-text); }
 .entryRow { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; border-bottom: var(--border-width, 1px) solid var(--planning-line); }
 .entryRow:last-child { border-bottom: 0; }
 .entryRow:hover { background: var(--planning-selected); }
@@ -136,17 +139,27 @@
   .toolbar > .classRow { flex: 1 1 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
   .toolbar > .classRow::-webkit-scrollbar { display: none; }
   .toolbar > .classRow > * { flex-shrink: 0; }
-  .toolbarControls { width: 100%; }
+  .toolbar { gap: 8px; margin-bottom: 10px; }
+  .toolbarControls { width: 100%; gap: 8px; }
+  /* Icons only: the calendar and A4 switch shares the classes' row. */
+  .viewSwitch button { padding: 0 9px; }
+  /* The class dropdown takes the rest of the view switch's row. */
+  .toolbar > .classSelect { flex: 1 1 0; min-width: 0; }
+  .toolLabel { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  /* The tab in use names itself; the other stays an icon. */
+  .viewSwitch button[aria-pressed='true'] .toolLabel { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
   .toolbarActions { margin-inline-start: auto; }
-  .dateFilters { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; gap: 12px; }
+  .dateFilters { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; gap: 8px; }
   .dateField { gap: 6px; }
   .toolbarControls[data-preview-only='true'] { flex-wrap: nowrap; gap: 8px; }
   .toolbarControls[data-preview-only='true'] .dateFilters { flex: 1; width: auto; }
   .toolbarControls[data-preview-only='true'] .toolbarActions { flex-shrink: 0; }
   .classButton { padding: 0 9px; }
-  /* The programme's tools share a full row under its title. */
-  .sectionTools { width: 100%; margin-inline-start: 0; flex-wrap: nowrap; }
-  .sectionTools > * { flex: 1; min-width: 0; }
+  /* The programme's title and tools stay on one line; collapsing the days is an icon. */
+  .sectionTitle { flex-wrap: nowrap; margin-bottom: 8px; }
+  .sectionInfo { min-width: 0; gap: 6px; }
+  .sectionTools { flex-wrap: nowrap; gap: 6px; }
+  .empty { padding: 12px; }
   .paperStage { padding: 5px; }
 }
 @media (pointer: coarse) {
@@ -158,3 +171,4 @@
 @media (max-width: 480px) {
   .detailFields { grid-template-columns: minmax(0, 1fr); }
 }
+.toPlace { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 14px; padding: 6px 10px; border: var(--border-width, 1px) dashed var(--warning, #d97706); border-radius: var(--radius); font: 600 12px/1.4 var(--font-sans); }

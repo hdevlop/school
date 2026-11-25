@@ -7,9 +7,9 @@ import { exams } from '../exams/examSchema';
 import { assessments } from '../assessments/assessmentSchema';
 import { grades } from '../grades/gradeSchema';
 import { teacherAssignments } from '../teachers/teacherSchema';
-import { examPlanning } from '../examPlanning/ExamPlanningSchema';
+import { examControls, examPlanning } from '../examPlanning/ExamPlanningSchema';
 import { massarClasses, massarLevels, massarMarks, massarRounds, massarSheets, massarSubjects } from './massarSchema';
-import type { MassarMark } from '@sms/contracts';
+import type { ExamControl, MassarMark } from '@sms/contracts';
 
 /**
  * Reads and writes that keep a Massar grid and School's exam grades the same.
@@ -21,6 +21,12 @@ export class MassarGradeRepository {
   declare db: DB;
   @Year() private readonly year!: ResolvedAcademicYear;
 
+  /** The year's saved Contrôles; none until a Contrôle is opened, when Planning's months stand for them. */
+  async storedControls(): Promise<ExamControl[]> {
+    const rows = await this.db.select({ id: examControls.id, term: examControls.term, dateFrom: examControls.dateFrom, dateTo: examControls.dateTo, classIds: examControls.classIds, subjectIds: examControls.subjectIds })
+      .from(examControls).where(eq(examControls.academicYearId, this.year.id));
+    return rows.map(row => ({ ...row, term: row.term === 2 ? 2 : 1, classIds: row.classIds ?? [], subjectIds: row.subjectIds ?? [] }));
+  }
   async planningMonths() {
     return this.db.select({ classId: examPlanning.classId, months: examPlanning.months }).from(examPlanning).where(eq(examPlanning.academicYearId, this.year.id));
   }
@@ -54,12 +60,12 @@ export class MassarGradeRepository {
    * have parts: the tests a class report can count. Read after the grid itself,
    * which the caller was already allowed to read.
    */
-  async partAssessments(filter: { sectionId: string; subjectId: string; month: string }) {
+  async partAssessments(filter: { sectionId: string; subjectId: string; from: string; to: string }) {
     return this.db.select({ id: assessments.id, title: assessments.title, parts: assessments.parts })
       .from(assessments).innerJoin(teacherAssignments, eq(teacherAssignments.id, assessments.teacherAssignmentId))
       .where(and(eq(assessments.academicYearId, this.year.id), ne(assessments.status, 'cancelled'), eq(teacherAssignments.subjectId, filter.subjectId),
         or(eq(teacherAssignments.sectionId, filter.sectionId), sql`${assessments.sectionIds} @> ${JSON.stringify([filter.sectionId])}::jsonb`),
-        sql`to_char(${assessments.date}, 'YYYY-MM') = ${filter.month}`,
+        sql`${assessments.date}::date between ${filter.from}::date and ${filter.to}::date`,
         sql`jsonb_array_length(coalesce(${assessments.parts}, '[]'::jsonb)) > 0`));
   }
   async marks(sheetIds: string[]) {

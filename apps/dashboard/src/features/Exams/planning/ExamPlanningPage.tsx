@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { CalendarDays, Check, ChevronLeft, ChevronRight, FileText, List, Printer, Settings } from 'lucide-react';
+import { BookOpenCheck, CalendarDays, Check, Download, FileText, List, Plus, Printer, Settings, Upload, Users } from 'lucide-react';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
-import { DateRangeInput, NajmScroll, NButton, NEmptyState, NErrorState, NForbiddenState, NLoadingState, NPageHeaderActions, NSheet, SelectInput, Tabs, TabsContent, useMediaQuery } from 'najm-kit';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, NajmScroll, NButton, NEmptyState, NErrorState, NForbiddenState, NLoadingState, NPageHeaderActions, NSheet, SelectInput, Tabs, TabsContent, useMediaQuery } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useNThemeBrandingSlot } from 'najm-theme/react';
 import { toast } from 'sonner';
-import { compareClassNames, examPlanningMonths, massarPlanningControls, toOfficialClassName, type ExamPlanningClass, type ExamPlanningEntry } from '@sms/contracts';
+import { compareClassNames, controlNumbers, toOfficialClassName, type ExamControl, type ExamPlanningClass, type ExamPlanningEntry } from '@sms/contracts';
 import { isDateOnly } from '@sms/contracts/academic-years';
 import { schoolApp } from '@/najm.config';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
@@ -22,17 +22,22 @@ import { classDocumentColors } from '@/features/Assessments/planning/planningMod
 import { buildPlanningDocument, printPlanningDocument, type PlanningDocumentOptions } from '@/features/Assessments/planning/planningDocument';
 import { PlanningPreview } from '@/features/Assessments/planning/PlanningPreview';
 import { useExamPlanning } from './useExamPlanning';
-import { examPlanningControlNumbers, examPlanningEntries, examPlanningRecords, initialPlanningMonth, mayPlanEntry, plannableInClass, planningMonthRange, planningTextLanguage, updatePlanningMonthDraft, type ExamPlanningDrafts, type PlanningDateRange, type PlanningEntrySelection } from './examPlanningModel';
+import { useExamControls } from './useExamControls';
+import { ExamControlDialog } from './ExamControlDialog';
+import { ControlPicker } from './ControlPicker';
+import { useDialog } from '@/shared/useDialog';
+import { TeacherLessons } from './TeacherLessons';
+import { currentControl, periodControls, examPlanningControlNumbers, teacherControls, examPlanningEntries, examPlanningRecords, mayPlanEntry, plannableInClass, planningTextLanguage, updatePlanningMonthDraft, type ExamPlanningDrafts, type PlanningEntrySelection } from './examPlanningModel';
 import { PlanningEntryEditor } from './PlanningEntryEditor';
 import { PlanningClassSettings } from './PlanningClassSettings';
 import { PlanningMissingSubjects, usePlanningSubjects } from './PlanningSubjects';
 import { PlanningSchedule } from './PlanningSchedule';
-import { PlanningJsonActions } from './PlanningJsonActions';
+import { usePlanningJson } from './PlanningJsonActions';
 import { PlanningClearAction } from './PlanningClearAction';
 import styles from './ExamPlanning.module.css';
 
-/** One Contrôle of the year: its number restarts each semester. */
-const controlKey = (control: { term: number; exam: number }) => `${control.term}-${control.exam}`;
+/** The calendar (a teacher's lessons) where exams are added subject by subject, then the A4. */
+type View = 'planning' | 'preview';
 
 function PlanningContent() {
   const { t, language } = useTranslation();
@@ -41,15 +46,18 @@ function PlanningContent() {
   const { displayDate } = useSchoolFormat();
   // Phones and narrow tablets: the programme fills the page and an exam opens in a sheet.
   const narrow = useMediaQuery('(max-width: 850px)');
+  // Phones pick the class from a dropdown; wider screens keep a button per class.
+  const phone = useMediaQuery('(max-width: 620px)');
   const [sheetOpen, setSheetOpen] = useState(false);
   const viewer = useViewerRole();
+  const { confirmDelete } = useDialog();
   const { classes: catalog, isLoading, error, save, isSaving } = useExamPlanning();
   const { publicSettings, isSettingsLoading, error: settingsError } = usePublicSettings();
   const settings = Array.isArray(publicSettings) ? publicSettings[0] : publicSettings;
   const logo = useNThemeBrandingSlot('authLogo');
-  const [pickedView, setView] = useState<'planning' | 'preview'>('planning');
-  const [pickedRange, setRange] = useState<PlanningDateRange | null>(null);
+  const [pickedView, setView] = useState<View | null>(null);
   const [pickedControl, setControl] = useState<string | null>(null);
+  const [controlDialog, setControlDialog] = useState<{ control: ExamControl | null } | null>(null);
   const [pickedClass, setClass] = useState<string | null>(null);
   const [selected, setSelected] = useState<PlanningEntrySelection | null>(null);
   const [drafts, setDrafts] = useState<ExamPlanningDrafts>({});
@@ -59,42 +67,57 @@ function PlanningContent() {
   const saving = isSaving || savingDrafts;
   const classes = [...catalog].sort((a, b) => compareClassNames(a.name, b.name));
   const visibleClasses = classes.filter(cls => cls.visible);
-  const initialMonth = initialPlanningMonth(visibleClasses, today, viewingYear ?? '');
   // The page's tools (which classes show, import, clear, missing subjects) stay school-wide.
   const canManage = viewer.isSchoolWide && viewer.can('update:exams');
-  // Planning a class's exams: the school-wide roles every subject, a teacher the subjects they teach there.
-  const canEdit = viewer.can('update:exam-planning') && (viewer.isSchoolWide || viewer.role === 'teacher');
-  // A teacher plans by Contrôle: the school sets each one's days, the teacher picks one (the latest
-  // by default) and fills in their subjects within those days. Read from saved Planning, so edits never move it.
-  const teacherPlanner = canEdit && !viewer.isSchoolWide;
-  const controls = teacherPlanner ? massarPlanningControls(classes.map(cls => ({ classId: cls.id, months: cls.months }))) : [];
-  const activeControl = controls.find(item => controlKey(item) === pickedControl) ?? controls.at(-1);
-  const noControl = teacherPlanner && !activeControl;
-  const range = activeControl ? { from: activeControl.examFrom, to: activeControl.examTo } : pickedRange ?? planningMonthRange(initialMonth);
-  const yearMonths = examPlanningMonths(viewingYear ?? '');
-  const yearFrom = `${yearMonths[0] ?? initialMonth}-01`;
-  const yearTo = planningMonthRange(yearMonths.at(-1) ?? initialMonth).to;
-  const invalidRange = !isDateOnly(range.from) || !isDateOnly(range.to) || range.from > range.to || range.from < yearFrom || range.to > yearTo;
-  // The arrows step a whole month before the period's first month or after its last, within the year.
-  const previousMonth = invalidRange ? undefined : yearMonths[yearMonths.indexOf(range.from.slice(0, 7)) - 1];
-  const nextMonthIndex = invalidRange ? -1 : yearMonths.indexOf(range.to.slice(0, 7));
-  const nextMonth = nextMonthIndex < 0 ? undefined : yearMonths[nextMonthIndex + 1];
-  const entriesFor = (cls: ExamPlanningClass) => examPlanningEntries(cls, range, drafts);
-  const monthEntriesFor = (cls: ExamPlanningClass, month: string) => drafts[cls.id]?.[month] ?? cls.months[month] ?? [];
-  // A teacher works one class at a time; "all classes" is for the school-wide roles.
-  const classId = pickedClass !== null && ((!pickedClass && !teacherPlanner) || visibleClasses.some(cls => cls.id === pickedClass))
-    ? pickedClass : visibleClasses.find(cls => entriesFor(cls).length)?.id ?? visibleClasses[0]?.id ?? '';
-  const shownClasses = visibleClasses.filter(cls => !classId || cls.id === classId);
+  // Planning a class's exams: the school-wide roles every subject, a supervisor every subject of the classes
+  // they supervise, a teacher the subjects they teach there.
+  const isSupervisor = viewer.role === 'supervisor';
+  const canEdit = viewer.can('update:exam-planning') && (viewer.isSchoolWide || viewer.role === 'teacher' || isSupervisor);
+  // Opening Contrôles: the school-wide roles for any class, a supervisor for their own.
+  const canManageControls = (viewer.isSchoolWide || isSupervisor)
+    && ['create', 'update', 'delete'].some(action => viewer.can(`${action}:exam-controls`));
   // Each Planning subject becomes an exam of its linked School subject on the Exams page.
   // Planning picks from Subjects; names Subjects lacks are added there (the Subjects permission decides).
   const planningSubjects = usePlanningSubjects(canEdit), [missingOpen, setMissingOpen] = useState(false), canAddSubjects = viewer.can('update:subjects');
+  const examControls = useExamControls();
+  // A teacher plans by Contrôle: the school sets each one's days, the teacher picks one (the latest
+  // by default) and fills in their subjects within those days.
+  const teacherPlanner = canEdit && viewer.role === 'teacher';
+  // A teacher works one class at a time; "all classes" is for the school-wide roles, and on a phone
+  // only for the A4 (printing every class at once): its calendar is one class's. Until one is picked, the first.
+  const allClassesOffered = !teacherPlanner && (!phone || (canEdit ? pickedView ?? 'planning' : 'preview') === 'preview');
+  const classId = pickedClass !== null && ((!pickedClass && allClassesOffered) || visibleClasses.some(cls => cls.id === pickedClass))
+    ? pickedClass : visibleClasses[0]?.id ?? '';
+  // The period is always a Contrôle the class on screen sits (any class's for "all classes"); the school opens them with +.
+  const controls = teacherPlanner
+    ? teacherControls(examControls.controls, classes.map(cls => cls.id), planningSubjects.plannable).filter(item => item.derived || !classId || item.classIds.includes(classId))
+    : periodControls(examControls.controls ?? [], classId || null);
+  const activeControl = controls.find(item => item.id === pickedControl) ?? (teacherPlanner ? controls.at(-1) : currentControl(controls, today));
+  // "Contrôle 2 · 02/11/2026 – 06/11/2026", numbered for the teacher's classes or the picked class.
+  const controlOption = (item: ExamControl) => {
+    const numbers = controlNumbers(examControls.controls ?? [], item, classId ? [classId] : teacherPlanner ? classes.map(cls => cls.id) : undefined);
+    const day = (value: string) => narrow ? displayDate(value, { day: '2-digit', month: '2-digit' }) : displayDate(value);
+    const days = item.dateFrom === item.dateTo ? day(item.dateFrom) : `${day(item.dateFrom)} – ${day(item.dateTo)}`;
+    return `${t('massar.flow.controlNumber', { exam: numbers.join(' / ') })} · ${days}`;
+  };
+  const noControl = !examControls.isLoading && !activeControl;
+  // No Contrôle: nothing is shown (an empty span), and the page asks for one.
+  const range = activeControl ? { from: activeControl.dateFrom, to: activeControl.dateTo } : { from: '', to: '' };
+  const entriesFor = (cls: ExamPlanningClass) => examPlanningEntries(cls, range, drafts);
+  const monthEntriesFor = (cls: ExamPlanningClass, month: string) => drafts[cls.id]?.[month] ?? cls.months[month] ?? [];
+  const shownClasses = visibleClasses.filter(cls => !classId || cls.id === classId);
   const allowedIn = (cls: ExamPlanningClass) => plannableInClass(planningSubjects.plannable, cls.id);
   const canChange = (cls: ExamPlanningClass, entry: ExamPlanningEntry) => mayPlanEntry(allowedIn(cls), planningSubjects.resolvable, entry.subject);
   const canAdd = (cls: ExamPlanningClass) => { const allowed = allowedIn(cls); return !allowed || allowed.size > 0; };
   // A teacher's Planning lists only their own subjects' exams; the A4 preview shows the whole class.
   const listedEntriesFor = (cls: ExamPlanningClass) => teacherPlanner ? entriesFor(cls).filter(entry => canChange(cls, entry)) : entriesFor(cls);
-  // The planning tab is the editor; whoever cannot edit reads the printed calendar.
-  const view = canEdit ? pickedView : 'preview';
+  // A teacher's checklist: the subjects they plan in their class, as its level teaches them, among those the Contrôle tests.
+  const teacherClass = teacherPlanner ? shownClasses[0] : undefined;
+  const teacherAllowed = teacherClass ? allowedIn(teacherClass) : null;
+  const teacherSubjects = (teacherClass ? planningSubjects.forClass(teacherClass.name) ?? [] : [])
+    .filter(subject => (!teacherAllowed || teacherAllowed.has(subject.id)) && (!activeControl?.subjectIds.length || activeControl.subjectIds.includes(subject.id)));
+  // The calendar is the editor (a teacher's lessons); whoever cannot edit reads the printed calendar.
+  const view: View = canEdit ? pickedView ?? 'planning' : 'preview';
   const defaultClass = shownClasses.find(cls => listedEntriesFor(cls).length);
   const pickedEntryClass = selected ? shownClasses.find(cls => cls.id === selected.classId && monthEntriesFor(cls, selected.month).some(entry => entry.id === selected.entryId)) : undefined;
   const selectedClass = pickedEntryClass ?? defaultClass;
@@ -108,12 +131,15 @@ function PlanningContent() {
   const classSubjects = selectedClass ? planningSubjects.forClass(selectedClass.name) : planningSubjects.data?.subjects;
   const editorSubjects = selectedLocked || !selectedAllowed ? classSubjects : classSubjects?.filter(subject => selectedAllowed.has(subject.id));
   const dirty = Object.keys(drafts).length > 0;
+  // Export and import sit in the settings menu; the import dialog renders once below.
+  const planningJson = usePlanningJson({ classes, schoolYear: viewingYear ?? '', disabled: dirty || saving || isLoading || !!error, saving,
+    onImport: async document => { await save({ document }); setSelected(null); } });
   const invalidDraft = Object.values(drafts).some(months => Object.entries(months).some(([month, entries]) => entries.some(entry => !entry.subject.trim() || !isDateOnly(entry.date) || !entry.date.startsWith(`${month}-`) || entry.lessons.filter(line => line.trim()).length > 40 || entry.lessons.some(line => line.trim().length > 500))));
-  const records = invalidRange ? [] : examPlanningRecords(shownClasses, range, drafts);
+  const records = activeControl ? examPlanningRecords(shownClasses, range, drafts) : [];
   const outputDisabled = !records.length || dirty || !!error || isLoading || isSettingsLoading || !!settingsError || isPrinting || saving;
   const semesters = [...new Set(records.map(record => record.planning?.semester))];
   // The Contrôle these exams are, numbered the way Massar opens them.
-  const control = examPlanningControlNumbers(classes, records.map(record => record.date), drafts)
+  const control = examPlanningControlNumbers(examControls.controls, records)
     .map(exam => t('massar.flow.controlNumber', { exam })).join(' / ');
   const documentOptions: PlanningDocumentOptions = {
     title: t('examPlanning.documentTitle'), schoolName: settings?.schoolName || schoolApp.appName,
@@ -122,7 +148,7 @@ function PlanningContent() {
     labels: { semester: t('assessmentPlanning.semester'), academicYear: t('assessmentPlanning.academicYear'), class: t('assessments.form.class'), lessons: t('assessmentPlanning.lessons'), subject: t('assessments.form.subject'), date: t('assessments.form.date'), sections: t('assessmentPlanning.sections') },
   };
   const updateEntries = (cls: ExamPlanningClass, month: string, entries: ExamPlanningEntry[]) => {
-    setRange(range); setClass(classId); if (activeControl) setControl(controlKey(activeControl));
+    setClass(classId); if (activeControl) setControl(activeControl.id);
     setDrafts(current => updatePlanningMonthDraft(current, cls, month, entries));
   };
   // Removed from the month's draft, like an edit; saving the month makes it final.
@@ -131,30 +157,48 @@ function PlanningContent() {
     updateEntries(cls, month, monthEntriesFor(cls, month).filter(item => item.id !== entry.id));
     if (effectiveSelection?.entryId === entry.id) setSelected(null);
   };
-  const addEntry = (cls: ExamPlanningClass) => {
-    // A teacher's new exam takes the Contrôle's first day; the school sets the real day and time.
+  const addEntry = (cls: ExamPlanningClass, subject = '') => {
+    // A teacher's new exam takes the Contrôle's first day until the school gives it its own (`toPlace`).
     const date = teacherPlanner ? range.from : today >= range.from && today <= range.to ? today : range.from;
     const month = date.slice(0, 7);
     // No subject yet: the editor asks for one before the month can be saved.
-    const entry: ExamPlanningEntry = { id: crypto.randomUUID(), date, subject: '', lessons: [] };
+    const entry: ExamPlanningEntry = { id: crypto.randomUUID(), date, subject, lessons: [], ...(teacherPlanner ? { toPlace: true as const } : {}) };
     updateEntries(cls, month, [...monthEntriesFor(cls, month), entry]); setSelected({ classId: cls.id, month, entryId: entry.id });
   };
   const updateEntry = (patch: Partial<ExamPlanningEntry>) => {
-    if (selectedClass && selectedEntry && selectedMonth) updateEntries(selectedClass, selectedMonth, monthEntriesFor(selectedClass, selectedMonth).map(entry => entry.id === selectedEntry.id ? { ...entry, ...patch } : entry));
+    if (!selectedClass || !selectedEntry || !selectedMonth) return;
+    const next = { ...selectedEntry, ...patch };
+    const month = next.date.slice(0, 7);
+    if (month === selectedMonth) {
+      updateEntries(selectedClass, selectedMonth, monthEntriesFor(selectedClass, selectedMonth).map(entry => entry.id === selectedEntry.id ? next : entry));
+      return;
+    }
+    // A Contrôle across two months: the exam leaves its month for the other, and stays the one open.
+    const cls = selectedClass, from = selectedMonth;
+    const left = monthEntriesFor(cls, from).filter(entry => entry.id !== selectedEntry.id), joined = [...monthEntriesFor(cls, month), next];
+    setClass(classId); if (activeControl) setControl(activeControl.id);
+    setDrafts(current => updatePlanningMonthDraft(updatePlanningMonthDraft(current, cls, from, left), cls, month, joined));
+    setSelected({ classId: cls.id, month, entryId: next.id });
   };
   const saveDrafts = async () => {
     setSavingDrafts(true);
     try {
-      for (const [id, months] of Object.entries(drafts)) {
-        for (const [month, entries] of Object.entries(months)) {
-          await save({ classId: id, month, entries: entries.map(entry => ({ ...entry, lessons: entry.lessons.map(line => line.trim()).filter(Boolean) })) });
-          setDrafts(current => {
-            const remaining = { ...current[id] }; delete remaining[month];
-            const next = { ...current, [id]: remaining };
-            if (!Object.keys(remaining).length) delete next[id];
-            return next;
-          });
-        }
+      // A month that gains an exam saves before one that loses it: an exam moved across a Contrôle's two
+      // months is never saved out of both, even if the second save fails.
+      const gains = (id: string, month: string, entries: ExamPlanningEntry[]) => {
+        const saved = classes.find(cls => cls.id === id)?.months[month] ?? [];
+        return entries.some(entry => !saved.some(other => other.id === entry.id));
+      };
+      const pending = Object.entries(drafts).flatMap(([id, months]) => Object.entries(months).map(([month, entries]) => ({ id, month, entries })))
+        .sort((a, b) => Number(gains(b.id, b.month, b.entries)) - Number(gains(a.id, a.month, a.entries)));
+      for (const { id, month, entries } of pending) {
+        await save({ classId: id, month, entries: entries.map(entry => ({ ...entry, lessons: entry.lessons.map(line => line.trim()).filter(Boolean) })) });
+        setDrafts(current => {
+          const remaining = { ...current[id] }; delete remaining[month];
+          const next = { ...current, [id]: remaining };
+          if (!Object.keys(remaining).length) delete next[id];
+          return next;
+        });
       }
       toast.success(t('examPlanning.saved'));
       return true;
@@ -177,12 +221,29 @@ function PlanningContent() {
     finally { setPrinting(false); }
   };
   const discard = () => { setDrafts({}); setSelected(null); };
-  const classPicker = !error && !isLoading && (
+  // The school opens a Contrôle (its week and classes); on a phone beside the class, beside the Contrôle otherwise.
+  const addControlButton = canManageControls && viewer.can('create:exam-controls') && <NButton type="button" size="icon"
+    aria-label={t('examPlanning.controls.add')} title={t('examPlanning.controls.add')} disabled={examControls.isLoading || dirty || saving}
+    onClick={() => setControlDialog({ control: null })}><Plus className="size-4" aria-hidden="true" /></NButton>;
+  const removeControl = (control: ExamControl) => confirmDelete({
+    title: t('common.delete'), warningText: t('examPlanning.controls.deleteWarning'), cancelText: t('common.cancel'),
+    itemName: controlOption(control), confirmText: t('common.delete'),
+    onConfirm: async () => {
+      try { await examControls.change({ id: control.id, remove: true }); toast.success(t('examPlanning.controls.deleted')); setControl(null); setSelected(null); }
+      catch (failure) { toast.error(failure instanceof Error && failure.message ? failure.message : t('examPlanning.controls.saveFailed')); }
+    },
+  });
+  const ALL_CLASSES = '__all__';
+  const classPicker = !error && !isLoading && (phone ? (
+    <div className={styles.classSelect}><SelectInput ariaLabel={t('assessments.form.class')} className="w-full" showIcon={false} disabled={dirty || saving}
+      items={[...(allClassesOffered ? [{ value: ALL_CLASSES, label: t('assessmentPlanning.allClasses') }] : []), ...visibleClasses.map(cls => ({ value: cls.id, label: toOfficialClassName(cls.name) }))]}
+      value={classId || ALL_CLASSES} onChange={value => { setClass(String(value) === ALL_CLASSES ? '' : String(value)); setSelected(null); }} /></div>
+  ) : (
     <div className={styles.classRow} role="group" aria-label={t('assessments.form.class')}>
       {!teacherPlanner && <button className={styles.classButton} type="button" aria-pressed={!classId} disabled={dirty || saving} onClick={() => { setClass(''); setSelected(null); }}>{t('assessmentPlanning.allClasses')}</button>}
       {visibleClasses.map(cls => <button className={styles.classButton} key={cls.id} type="button" title={cls.name} aria-pressed={classId === cls.id} disabled={dirty || saving} onClick={() => { setClass(cls.id); setSelected(null); }}><span className={styles.dot} style={{ background: classDocumentColors(cls.name)[0] }} aria-hidden="true" />{toOfficialClassName(cls.name)}</button>)}
     </div>
-  );
+  ));
 
   return <div className={styles.page} data-exam-planning>
     <NPageHeader icon={FEATURE_ICONS.assessmentPlanning} title={t('examPlanning.title')} subtitle={canManage ? t('examPlanning.subtitle') : canEdit ? t('examPlanning.teacherSubtitle') : undefined}>
@@ -192,39 +253,54 @@ function PlanningContent() {
     </NPageHeader>
     <NajmScroll axis="y" autoHide="scroll" className={styles.scrollArea}>
       <main className={styles.main}>
-        <Tabs value={view} onValueChange={value => { if (canEdit) setView(value as 'planning' | 'preview'); }} className="gap-0">
+        <Tabs value={view} onValueChange={value => setView(value as View)} className="gap-0">
         <div className={styles.toolbar}>
           {/* One line: the view switch, classes, then the period and tools. */}
           {canEdit && <div className={styles.viewSwitch} role="group" aria-label={t('examPlanning.viewLabel')}>
-            <button type="button" aria-pressed={view === 'planning'} onClick={() => setView('planning')}><List aria-hidden="true" />{t('assessmentPlanning.planningTab')}</button>
-            <button type="button" aria-pressed={view === 'preview'} onClick={() => setView('preview')}><FileText aria-hidden="true" />{t('assessmentPlanning.previewTab')}</button>
-          </div>}          {classPicker}
+            <button type="button" aria-pressed={view === 'planning'} onClick={() => setView('planning')}>
+              {teacherPlanner ? <><BookOpenCheck aria-hidden="true" /><span className={styles.toolLabel}>{t('examPlanning.myLessons')}</span></> : <><List aria-hidden="true" /><span className={styles.toolLabel}>{t('examPlanning.calendar')}</span></>}
+            </button>
+            <button type="button" aria-pressed={view === 'preview'} onClick={() => setView('preview')}><FileText aria-hidden="true" /><span className={styles.toolLabel}>{t('assessmentPlanning.previewTab')}</span></button>
+          </div>}
+          {classPicker}
+          {phone && addControlButton}
           <div className={styles.toolbarControls} data-preview-only={!canEdit}>
           <fieldset className={styles.dateFilters} disabled={dirty || saving || isLoading}>
-            {teacherPlanner ? <div className={styles.dateField}>
-              <SelectInput ariaLabel={t('examPlanning.control')} placeholder={t('examPlanning.noControlTitle')} className="w-56 max-sm:w-full" showIcon={false} disabled={dirty || saving || isLoading || !controls.length}
-                items={controls.map(item => ({ value: controlKey(item), label: `${t('massar.flow.controlNumber', { exam: item.exam })} · ${t('massar.flow.semester', { term: item.term })}` }))}
-                value={activeControl ? controlKey(activeControl) : ''} onChange={value => { setControl(String(value)); setSelected(null); }} />
-            </div> : <div className={styles.dateField}>
-              <NButton type="button" variant="outline" size="icon" aria-label={t('examPlanning.previousMonth')} title={t('examPlanning.previousMonth')} disabled={!previousMonth} onClick={() => { if (previousMonth) { setRange(planningMonthRange(previousMonth)); setClass(classId); setSelected(null); } }}><ChevronLeft className="size-4 rtl:rotate-180" aria-hidden="true" /></NButton>
-              <DateRangeInput ariaLabel={t('assessmentPlanning.period')} className="w-64 max-sm:w-auto max-sm:min-w-0 max-sm:flex-1" value={range} min={yearFrom} max={yearTo} onChange={({ from, to }) => { if (from && to) { setRange({ from, to }); setClass(classId); setSelected(null); } }} />
-              <NButton type="button" variant="outline" size="icon" aria-label={t('examPlanning.nextMonth')} title={t('examPlanning.nextMonth')} disabled={!nextMonth} onClick={() => { if (nextMonth) { setRange(planningMonthRange(nextMonth)); setClass(classId); setSelected(null); } }}><ChevronRight className="size-4 rtl:rotate-180" aria-hidden="true" /></NButton>
+            {(teacherPlanner || controls.length > 0 || canManageControls) && <div className={styles.dateField}>
+              {/* The Contrôle shown; the school changes or removes each one from the same menu. */}
+              <ControlPicker controls={controls} active={activeControl} label={controlOption} disabled={dirty || saving || isLoading}
+                className="w-80 max-sm:w-auto max-sm:min-w-0 max-sm:flex-1"
+                canEdit={canManageControls && viewer.can('update:exam-controls')} canDelete={canManageControls && viewer.can('delete:exam-controls')}
+                onPick={item => { setControl(item.id); setSelected(null); }} onEdit={item => setControlDialog({ control: item })} onDelete={removeControl} />
+              {!phone && addControlButton}
             </div>}
           </fieldset>
           <MobileFeatureActions><div className={styles.toolbarActions}>
             {canManage && <PlanningClearAction schoolYear={viewingYear ?? ''} disabled={isLoading || !!error || (!dirty && !classes.some(cls => Object.values(cls.months).some(entries => entries.length)))} saving={saving} onClear={async () => { await save({ clear: true }); discard(); setView('planning'); }} />}
-            {canManage && <PlanningJsonActions classes={classes} schoolYear={viewingYear ?? ''} disabled={dirty || saving || isLoading || !!error} saving={saving} onImport={async document => { await save({ document }); setSelected(null); }} />}
-            {canManage && <NButton variant="outline" size="icon" aria-label={t('examPlanning.classSettings')} title={t('examPlanning.classSettings')} disabled={isLoading || !!error || dirty || saving} onClick={() => setClassSettings(visibleClasses.map(cls => cls.id))}><Settings className="size-4" aria-hidden="true" /></NButton>}
+            {canManage && <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <NButton variant="outline" size="icon" aria-label={t('examPlanning.classSettings')} title={t('examPlanning.classSettings')}><Settings className="size-4" aria-hidden="true" /></NButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem disabled={isLoading || !!error || dirty || saving} onSelect={() => setClassSettings(visibleClasses.map(cls => cls.id))}>
+                  <Users className="size-4" aria-hidden="true" />{t('examPlanning.classSettings')}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem disabled={planningJson.unavailable} onSelect={planningJson.exportJson}><Download className="size-4" aria-hidden="true" />{t('examPlanning.json.export')}</DropdownMenuItem>
+                <DropdownMenuItem disabled={planningJson.unavailable} onSelect={planningJson.openImport}><Upload className="size-4" aria-hidden="true" />{t('examPlanning.json.import')}</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>}
             <NButton variant="outline" size="icon" aria-label={t('assessmentPlanning.print')} title={t('assessmentPlanning.print')} disabled={outputDisabled} onClick={print} leftIcon={<Printer className="size-4" />} />
           </div></MobileFeatureActions>
           </div>
         </div>
         {error ? isAuthorizationError(error) ? <NForbiddenState surface="panel" /> : <NErrorState surface="panel" />
-          : isLoading ? <NLoadingState surface="panel" label={t('common.loading')} />
+          : isLoading || (teacherPlanner && examControls.isLoading) ? <NLoadingState surface="panel" label={t('common.loading')} />
             : <>
               {canManage && planningSubjects.missing.length > 0 && <p className={styles.alert} role="status">{t('examPlanning.subjects.missing', { count: planningSubjects.missing.length })} {canAddSubjects && <button type="button" className="font-medium text-primary underline underline-offset-2" disabled={dirty || saving} onClick={() => setMissingOpen(true)}>{t('examPlanning.subjects.addThem')}</button>}</p>}
-              {noControl ? <NEmptyState icon={FEATURE_ICONS.assessmentPlanning} surface="panel" title={t('examPlanning.noControlTitle')} description={t('examPlanning.noControlDescription')} />
-                : invalidRange ? <p className={styles.alert} role="alert">{t('assessmentPlanning.invalidRange')}</p>
+              {noControl ? <NEmptyState icon={FEATURE_ICONS.assessmentPlanning} surface="panel" title={t('examPlanning.noControlTitle')}
+                description={canManageControls ? undefined : t('examPlanning.noControlDescription')}
+                action={canManageControls && viewer.can('create:exam-controls') ? <NButton type="button" leftIcon={<Plus className="size-4" />} onClick={() => setControlDialog({ control: null })}>{t('examPlanning.controls.add')}</NButton> : undefined} />
                 : !shownClasses.length ? <NEmptyState icon={FEATURE_ICONS.assessmentPlanning} surface="panel" title={t('examPlanning.noClasses')} description={canManage ? t('examPlanning.chooseClasses') : undefined} />
                 : <TabsContent value={view} className="mt-0 min-w-0">
                   {view === 'preview' ? invalidDraft ? <p role="alert" className={styles.alert}>{t('examPlanning.invalidDraft')}</p>
@@ -235,8 +311,12 @@ function PlanningContent() {
                       <p className={styles.previewTip}>{t('examPlanning.previewTip')}</p>
                     </>
                     : <div className={styles.editorLayout}>
-                      <PlanningSchedule classes={shownClasses} entriesFor={listedEntriesFor} emptyText={cls => teacherPlanner && entriesFor(cls).length ? t('examPlanning.noOwnExams') : undefined} selected={narrow && !sheetOpen ? null : effectiveSelection} saving={saving} canAdd={canAdd} canChange={canChange}
-                        onSelect={value => { setSelected(value); if (narrow) setSheetOpen(true); }} onAdd={cls => { addEntry(cls); if (narrow) setSheetOpen(true); }} onDelete={deleteEntry} />
+                      {teacherPlanner && teacherClass ? <TeacherLessons subjects={teacherSubjects} entries={listedEntriesFor(teacherClass)} saving={saving}
+                        selectedId={narrow && !sheetOpen ? null : effectiveSelection?.entryId}
+                        onSelect={entry => { setSelected({ classId: teacherClass.id, month: entry.date.slice(0, 7), entryId: entry.id }); if (narrow) setSheetOpen(true); }}
+                        onAdd={subject => { addEntry(teacherClass, subject.name); if (narrow) setSheetOpen(true); }} onDelete={entry => deleteEntry(teacherClass, entry)} />
+                      : <PlanningSchedule classes={shownClasses} entriesFor={listedEntriesFor} emptyText={cls => teacherPlanner && entriesFor(cls).length ? t('examPlanning.noOwnExams') : undefined} selected={narrow && !sheetOpen ? null : effectiveSelection} saving={saving} canAdd={canAdd} canChange={canChange}
+                        onSelect={value => { setSelected(value); if (narrow) setSheetOpen(true); }} onAdd={cls => { addEntry(cls); if (narrow) setSheetOpen(true); }} onDelete={deleteEntry} />}
                       {narrow ? null : selectedEntry && selectedClass && selectedMonth ? <PlanningEntryEditor key={selectedClass.id + ':' + selectedMonth + ':' + selectedEntry.id} entry={selectedEntry} subjects={editorSubjects} dateRange={activeControl ? range : undefined} scheduleLocked={teacherPlanner} locked={selectedLocked} className={toOfficialClassName(selectedClass.name)} month={selectedMonth} disabled={saving} dirty={dirty} valid={!invalidDraft} onChange={updateEntry} onCancel={discard} onSave={() => { void saveDrafts(); }} />
                         : <aside className={styles.editPanel} aria-label={t('examPlanning.editLessons')}>
                           <p className={styles.secondary}>{t(dirty ? 'examPlanning.unsaved' : 'examPlanning.selectSubject')}</p>
@@ -268,6 +348,14 @@ function PlanningContent() {
       {selectedEntry && selectedClass && selectedMonth && <PlanningEntryEditor bare key={selectedClass.id + ':' + selectedMonth + ':' + selectedEntry.id} entry={selectedEntry} subjects={editorSubjects} dateRange={activeControl ? range : undefined} scheduleLocked={teacherPlanner} locked={selectedLocked} className={toOfficialClassName(selectedClass.name)} month={selectedMonth} disabled={saving} dirty={dirty} valid={!invalidDraft} onChange={updateEntry} onCancel={discard} onSave={() => { void saveDrafts(); }} />}
     </NSheet>}
     {canManage && canAddSubjects && <PlanningMissingSubjects open={missingOpen} onOpenChange={setMissingOpen} state={planningSubjects} />}
+    {canManageControls && <ExamControlDialog open={!!controlDialog} control={controlDialog?.control ?? null} classes={classes} saving={examControls.isChanging}
+      canDelete={viewer.can('delete:exam-controls')} onChange={examControls.change} onClose={() => setControlDialog(null)}
+      onSaved={(input, saved) => {
+        // The Contrôle just saved is the one picked; a removed one gives way to the default.
+        const found = input && Array.isArray(saved) ? (saved as ExamControl[]).find(item => item.dateFrom === input.dateFrom && item.dateTo === input.dateTo && input.classIds.every(id => item.classIds.includes(id))) : undefined;
+        setControl(found?.id ?? null); setSelected(null);
+      }} />}
+    {canManage && planningJson.dialog}
     {canManage && <PlanningClassSettings classes={classes} selection={classSettings} saving={saving} onChange={setClassSettings} onClose={() => setClassSettings(null)} onSave={saveClasses} />}
   </div>;
 }

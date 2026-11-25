@@ -8,6 +8,8 @@ export type ExamPlanningEntry = {
   /** From "08:30" to "09:30"; none until the school sets them. */
   startTime?: string;
   endTime?: string;
+  /** A teacher's exam the school has yet to give its day: it sits on its Contrôle's first day until then. */
+  toPlace?: true;
 };
 
 /** How long an exam lasts while Planning gives it no time. */
@@ -31,6 +33,8 @@ export type ExamPlanningClass = {
   name: string;
   visible: boolean;
   months: Record<string, ExamPlanningEntry[]>;
+  /** The class's cycle (primary, collège...), read for grouping; never exported or imported. */
+  cycle?: { id: string; name: string; labels: Record<string, string> | null; order: number } | null;
 };
 
 /** The school year starts in September: September–January is semester one. */
@@ -76,7 +80,7 @@ export function subjectsForLevel<S extends { id: string; subSubjects: ReadonlyAr
 }
 
 const sameEntry = (a: ExamPlanningEntry, b: ExamPlanningEntry) => a.date === b.date && a.subject.trim() === b.subject.trim()
-  && (a.startTime ?? null) === (b.startTime ?? null) && (a.endTime ?? null) === (b.endTime ?? null)
+  && (a.startTime ?? null) === (b.startTime ?? null) && (a.endTime ?? null) === (b.endTime ?? null) && !!a.toPlace === !!b.toPlace
   && a.lessons.length === b.lessons.length && a.lessons.every((line, index) => line.trim() === b.lessons[index]?.trim());
 
 /**

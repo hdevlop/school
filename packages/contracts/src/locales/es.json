@@ -144,6 +144,7 @@
       "massar": "Massar",
       "massar-marks": "Notas de Massar",
       "exam-planning": "Planificación de exámenes",
+      "desk-card-backgrounds": "Fondos de tarjetas de mesa",
       "sub-subjects": "Subasignaturas por nivel"
     },
     "errors": {
@@ -7144,17 +7145,12 @@
     "editPlanning": "Editar planificación",
     "savedStatus": "Guardado",
     "viewLabel": "Vista del calendario",
-    "previousMonth": "Mes anterior",
-    "nextMonth": "Mes siguiente",
     "noOwnExams": "Ninguna de sus asignaturas tiene examen en este periodo. Añada uno; la vista A4 muestra todo el programa de la clase.",
     "control": "Control",
     "noControlTitle": "Ningún control planificado",
     "noControlDescription": "La dirección fija los días de cada control en el calendario. Después, elija el control aquí y añada sus asignaturas.",
     "noTeachingClasses": "No imparte ninguna asignatura en las clases del calendario.",
     "subSubjects": "Subasignaturas de este examen",
-    "alreadyPlanned": "Ya planificadas en este control",
-    "pickSubSubjects": "Elija una asignatura y al menos una subasignatura aún no planificada, y un día del control. Máximo: 40 lecciones por subasignatura y 500 caracteres por lección.",
-    "scheduleNote": "La dirección fija el día y el horario de cada examen. Mientras tanto, un examen nuevo se coloca en el primer día del control.",
     "loadFailed": "No se pudo cargar el calendario de exámenes. Inténtelo de nuevo.",
     "paperFormat": "A4 vertical · Estilo del documento original",
     "previewTip": "Revisa las lecciones y después imprime o guarda el calendario de la clase en PDF.",
@@ -7200,13 +7196,46 @@
     "chooseSubSubject": "Elegir una subasignatura",
     "noSubSubjects": "Sin subasignaturas",
     "time": "Horario",
+    "myLessons": "Mis lecciones",
+    "calendar": "Calendario",
+    "readyCount": "{{count}}/{{total}} materias listas",
+    "ready": "Lista",
+    "addExamOf": "Añadir un examen de {{subject}}",
+    "noLessons": "Sin lecciones",
+    "toPlace": "Por programar",
+    "toPlaceBySchool": "El centro fijará el día y la hora.",
+    "keepDay": "Mantener este día",
     "teacherSubtitle": "Planifica los exámenes de las asignaturas que impartes en tus clases.",
     "otherSubject": "Planificado para otra asignatura: aquí solo se pueden cambiar las asignaturas que impartes en esta clase.",
     "errors": {
       "notAllowed": "Tu rol no permite planificar exámenes.",
       "notYourSubject": "Solo puedes planificar las asignaturas que impartes en esta clase. Recarga la planificación: puede que otra asignatura haya cambiado mientras tanto.",
       "scheduleBySchool": "Solo la dirección fija el día y el horario de un examen. Recargue el calendario y guarde de nuevo sus asignaturas y lecciones.",
-      "controlNotOpen": "Este control aún no está abierto: la dirección debe planificar primero sus días de examen."
+      "controlNotOpen": "Este control aún no está abierto: la dirección debe planificar primero sus días de examen.",
+      "notYourClass": "Solo puede planificar las clases que supervisa.",
+      "controls": {
+        "notFound": "Control no encontrado. Recargue la página.",
+        "notYourClasses": "Solo puede abrir o cambiar un control para las clases que supervisa.",
+        "unknownSubject": "Una de estas materias no está en Materias.",
+        "unknownClass": "Una de las clases elegidas no es de este año escolar.",
+        "invalidDates": "Elija un primer y un último día, el primero no después del último.",
+        "outsideYear": "Los días del control deben estar dentro de este año escolar.",
+        "twoSemesters": "Los días de un control deben quedar en un solo semestre (septiembre–enero o febrero–agosto).",
+        "noClasses": "Elija al menos una clase.",
+        "overlap": "Una de estas clases ya tiene otro control en algunos de estos días."
+      }
+    },
+    "controls": {
+      "add": "Abrir un control",
+      "edit": "Editar el control",
+      "week": "Semana",
+      "noCycle": "Sin ciclo",
+      "tickAll": "Marcar todas",
+      "untickAll": "Desmarcar todas",
+      "saved": "Control guardado",
+      "deleted": "Control eliminado",
+      "saveFailed": "No se pudo guardar el control. Inténtelo de nuevo.",
+      "deleteWarning": "¿Eliminar este control? Sus exámenes y notas siguen en la Planificación y en Exámenes."
     }
   },
   "insurance": {

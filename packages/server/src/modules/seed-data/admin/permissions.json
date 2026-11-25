@@ -444,6 +444,24 @@
     "action": "update"
   },
   {
+    "name": "create:exam-controls",
+    "description": "Permission to open a Contrôle: its days, classes and Massar Contrôle",
+    "resource": "exam-controls",
+    "action": "create"
+  },
+  {
+    "name": "update:exam-controls",
+    "description": "Permission to change a Contrôle's days, classes or Massar Contrôle",
+    "resource": "exam-controls",
+    "action": "update"
+  },
+  {
+    "name": "delete:exam-controls",
+    "description": "Permission to remove a Contrôle",
+    "resource": "exam-controls",
+    "action": "delete"
+  },
+  {
     "name": "delete:exams",
     "description": "Permission to delete exams",
     "resource": "exams",
@@ -946,6 +964,12 @@
     "resource": "massar",
     "action": "manage",
     "description": "Manage Massar imports, mappings, rounds and exports"
+  },
+  {
+    "name": "update:desk-card-backgrounds",
+    "resource": "desk-card-backgrounds",
+    "action": "update",
+    "description": "Import and delete the backgrounds printed behind teachers' desk cards"
   },
   {
     "name": "update:massar-marks",

@@ -1,6 +1,6 @@
 'use client';
 
-import { CalendarDays, Check } from 'lucide-react';
+import { CalendarCheck, CalendarDays, Check } from 'lucide-react';
 import { ComboboxInput, DateInput, NButton, Textarea, TimeRangeInput } from 'najm-kit';
 import { parseISO } from 'date-fns';
 import { useTranslation } from 'najm-i18n/react';
@@ -16,7 +16,7 @@ export function PlanningEntryEditor({ entry, subjects, className, month, dateRan
   /** The school sets the day and time; a teacher fills in the subject and lessons (ExamPlanningValidator). */
   scheduleLocked?: boolean;
   entry: ExamPlanningEntry; subjects: Parameters<typeof planningSubjectPicker>[0]; className: string; month: string; disabled: boolean; dirty: boolean; valid: boolean;
-  /** The days the date may take: a teacher's Contrôle, the entry's month otherwise. */
+  /** The days the date may take: the Contrôle's, for the school and teachers alike; the entry's month without one. */
   dateRange?: { from: string; to: string };
   /** Another subject's entry, shown to a teacher who cannot change it. */
   locked?: boolean;
@@ -36,17 +36,23 @@ export function PlanningEntryEditor({ entry, subjects, className, month, dateRan
       <h3 className={styles.editSubject} lang={planningTextLanguage(entry.subject)} dir="auto" title={entry.subject}>{entry.subject || t('examPlanning.newEntry')}</h3>
     </div>}
     {locked && <p className={`${styles.secondary} ${styles.note}`} role="note">{t('examPlanning.otherSubject')}</p>}
-    {!locked && scheduleLocked && <p className={`${styles.secondary} ${styles.note}`} role="note">{t('examPlanning.scheduleNote')}</p>}
+    {/* When it takes place: the school's to set. A teacher reads it; the school places a teacher's new exam. */}
+    {scheduleLocked && <p className={`${styles.secondary} ${styles.note}`} role="status">{entry.toPlace ? t('examPlanning.toPlaceBySchool')
+      : [displayDate(entry.date, { weekday: 'long', day: 'numeric', month: 'long' }), entry.startTime && entry.endTime ? `${entry.startTime} – ${entry.endTime}` : null].filter(Boolean).join(' · ')}</p>}
+    {!scheduleLocked && entry.toPlace && <div className={styles.toPlace} role="status">
+      <span>{t('examPlanning.toPlace')}</span>
+      <NButton type="button" size="sm" variant="outline" disabled={fieldsOff} leftIcon={<CalendarCheck className="size-4" />} onClick={() => onChange({ toPlace: undefined })}>{t('examPlanning.keepDay')}</NButton>
+    </div>}
     {/* What and when first, then the lessons. */}
     <div className={styles.details}>
       <div className={styles.detailFields}>
         <div><span className={styles.fieldLabel}>{t('assessments.form.subject')}</span><ComboboxInput ariaLabel={t('assessments.form.subject')} placeholder={t('examPlanning.chooseSubject')} disabled={fieldsOff} items={picker.subjectItems} value={picker.subjectValue} onChange={value => { const name = picker.subjectName(value); if (name) onChange({ subject: name }); }} showIcon={false} className="w-full" /></div>
         <div><span className={styles.fieldLabel}>{t('examPlanning.subSubject')}</span><ComboboxInput ariaLabel={t('examPlanning.subSubject')} placeholder={t(picker.subjectValue && !picker.partItems.length ? 'examPlanning.noSubSubjects' : 'examPlanning.chooseSubSubject')} disabled={fieldsOff || !picker.partItems.length} items={picker.partItems} value={picker.partValue} onChange={value => { const name = picker.partName(value); if (name) onChange({ subject: name }); }} showIcon={false} className="w-full" /></div>
         {/* The school sets the day and time: a teacher does not see the fields at all. */}
-        {!scheduleLocked && <div><span className={styles.fieldLabel}>{t('assessments.form.date')}</span><fieldset className="m-0 min-w-0 border-0 p-0" disabled={fieldsOff}><DateInput ariaLabel={t('assessments.form.date')} value={entry.date ? parseISO(entry.date) : undefined} min={dateRange.from} max={dateRange.to} onChange={value => { if (value) onChange({ date: value }); }} /></fieldset></div>}
+        {!scheduleLocked && <div><span className={styles.fieldLabel}>{t('assessments.form.date')}</span><fieldset className="m-0 min-w-0 border-0 p-0" disabled={fieldsOff}><DateInput ariaLabel={t('assessments.form.date')} value={entry.date ? parseISO(entry.date) : undefined} min={dateRange.from} max={dateRange.to} onChange={value => { if (value) onChange({ date: value, toPlace: undefined }); }} /></fieldset></div>}
         {/* One field, from and to: a new start keeps a later end or ends an hour after. */}
         {!scheduleLocked && <div><span className={styles.fieldLabel}>{t('examPlanning.time')}</span><TimeRangeInput ariaLabel={t('examPlanning.time')} disabled={fieldsOff} defaultDuration={PLANNING_DEFAULT_DURATION} value={{ from: entry.startTime, to: entry.endTime }}
-          onChange={range => onChange({ startTime: range.from, endTime: range.to })} /></div>}
+          onChange={range => onChange({ startTime: range.from, endTime: range.to, ...(range.from ? { toPlace: undefined } : {}) })} /></div>}
       </div>
     </div>
     <label className={styles.fieldLabel} htmlFor="planning-lessons">{t('assessmentPlanning.lessons')}{lessonsLanguage !== 'ar' && <span lang="ar" dir="rtl">· الدروس المستهدفة</span>}<span className={styles.labelNote}>· {t('examPlanning.oneLessonPerLine')}</span></label>

@@ -20,7 +20,7 @@ const classNameKey = (name: string) => name.trim().normalize('NFC').toLowerCase(
 
 export function isExamPlanningEntry(value: unknown): value is ExamPlanningEntry {
   // `language` is no longer stored: saved plans and older exports may still carry it, and it is dropped.
-  if (!record(value) || !onlyKeys(value, ['id', 'date', 'subject', 'language', 'lessons', 'startTime', 'endTime'])) return false;
+  if (!record(value) || !onlyKeys(value, ['id', 'date', 'subject', 'language', 'lessons', 'startTime', 'endTime', 'toPlace'])) return false;
   return text(value.id, 100) && typeof value.date === 'string' && isDateOnly(value.date)
     && typeof value.subject === 'string' && text(value.subject.trim(), 120)
     && (!('language' in value) || REVISION_LANGUAGES.some(language => language === value.language))
@@ -28,12 +28,13 @@ export function isExamPlanningEntry(value: unknown): value is ExamPlanningEntry 
     && Array.from(value.lessons).every(lesson => typeof lesson === 'string' && text(lesson.trim(), 500))
     // Both times or neither, and the end after the start.
     && (value.startTime === undefined) === (value.endTime === undefined)
-    && (value.startTime === undefined || (clock(value.startTime) && clock(value.endTime) && value.endTime > value.startTime));
+    && (value.startTime === undefined || (clock(value.startTime) && clock(value.endTime) && value.endTime > value.startTime))
+    && (value.toPlace === undefined || value.toPlace === true);
 }
 
 export function normalizeExamPlanningEntry(entry: ExamPlanningEntry): ExamPlanningEntry {
   return { id: entry.id, date: entry.date, subject: entry.subject.trim(), lessons: entry.lessons.map(lesson => lesson.trim()),
-    ...(entry.startTime && entry.endTime ? { startTime: entry.startTime, endTime: entry.endTime } : {}) };
+    ...(entry.startTime && entry.endTime ? { startTime: entry.startTime, endTime: entry.endTime } : {}), ...(entry.toPlace ? { toPlace: true as const } : {}) };
 }
 
 export function isExamPlanningMonth(month: string, entries: unknown): entries is ExamPlanningEntry[] {

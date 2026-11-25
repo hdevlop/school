@@ -7,7 +7,8 @@ import { classes } from '../classes/classSchema';
 import { Year } from '../academicYears/requestYear';
 import { academicYears } from '../academicYears/AcademicYearSchema';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
-import { examPlanning } from './ExamPlanningSchema';
+import { examControls, examPlanning } from './ExamPlanningSchema';
+import { supervisesClass } from '../staff/supervisorScope';
 import { cycles } from '../cycles/cycleSchema';
 import { sections } from '../sections/sectionSchema';
 import { subjects, subSubjects } from '../subjects/subjectSchema';
@@ -16,7 +17,7 @@ import { teacherAssignments, teachers } from '../teachers/teacherSchema';
 import { staff } from '../staff/staffSchema';
 import { exams } from '../exams/examSchema';
 import type { SaveExamPlanningDto } from './ExamPlanningDto';
-import type { ExamPlanningClass } from '@sms/contracts';
+import type { ExamControl, ExamPlanningClass } from '@sms/contracts';
 
 @Repository()
 export class ExamPlanningRepository {
@@ -25,11 +26,18 @@ export class ExamPlanningRepository {
   @Owned(Class) private ownedWhere!: OwnedWhere;
 
   async getAll() {
-    return this.db.select({ id: classes.id, name: classes.name, visible: examPlanning.visible, months: examPlanning.months })
+    const rows = await this.db.select({
+      id: classes.id, name: classes.name, visible: examPlanning.visible, months: examPlanning.months,
+      cycleId: cycles.id, cycleName: cycles.name, cycleLabels: cycles.labels, cycleOrder: cycles.sortOrder,
+    })
       .from(classes)
       .leftJoin(examPlanning, and(eq(examPlanning.classId, classes.id), eq(examPlanning.academicYearId, this.year.id)))
+      .leftJoin(cycles, eq(cycles.id, classes.cycleId))
       .where(and(this.ownedWhere(), eq(classes.academicYear, this.year.label)))
       .orderBy(classes.createdAt, classes.name);
+    return rows.map(({ cycleId, cycleName, cycleLabels, cycleOrder, ...row }) => ({
+      ...row, cycle: cycleId && cycleName ? { id: cycleId, name: cycleName, labels: cycleLabels ?? null, order: cycleOrder ?? 0 } : null,
+    }));
   }
 
   async saveMonth(classId: string, data: SaveExamPlanningDto) {
@@ -132,6 +140,47 @@ export class ExamPlanningRepository {
 
   // Seed resets remove plans in every year before deleting the year registry.
   async clearForSeedReset() {
+    await this.db.delete(examControls);
     await this.db.delete(examPlanning);
+  }
+
+  // Contrôles are the school's: numbered across every class, so these reads are not narrowed to the reader's classes.
+
+  /** The year's saved Contrôles. */
+  async storedControls(): Promise<ExamControl[]> {
+    const rows = await this.db.select({ id: examControls.id, term: examControls.term, dateFrom: examControls.dateFrom, dateTo: examControls.dateTo, classIds: examControls.classIds, subjectIds: examControls.subjectIds })
+      .from(examControls).where(eq(examControls.academicYearId, this.year.id));
+    return rows.map(row => ({ ...row, term: row.term === 2 ? 2 : 1, classIds: row.classIds ?? [], subjectIds: row.subjectIds ?? [] }));
+  }
+
+  /** Every class's Planning this year, the months Contrôles are read from until one is saved. */
+  async yearPlans() {
+    return this.db.select({ classId: examPlanning.classId, months: examPlanning.months }).from(examPlanning).where(eq(examPlanning.academicYearId, this.year.id));
+  }
+
+  /** Every class of the year. */
+  async yearClassIds() {
+    return (await this.db.select({ id: classes.id }).from(classes).where(eq(classes.academicYear, this.year.label))).map(row => row.id);
+  }
+
+  async insertControls(rows: Array<Omit<ExamControl, 'id' | 'derived'> & { createdBy: string | null }>) {
+    if (!rows.length) return [];
+    return this.db.insert(examControls).values(rows.map(row => ({ ...row, academicYearId: this.year.id }))).returning({ id: examControls.id });
+  }
+
+  async updateControl(id: string, values: Omit<ExamControl, 'id' | 'derived'>) {
+    await this.db.update(examControls).set({ ...values, updatedAt: sql`CURRENT_TIMESTAMP` })
+      .where(and(eq(examControls.id, id), eq(examControls.academicYearId, this.year.id)));
+  }
+
+  async deleteControl(id: string) {
+    await this.db.delete(examControls).where(and(eq(examControls.id, id), eq(examControls.academicYearId, this.year.id)));
+  }
+
+  /** Which of these classes the account supervises today. */
+  async supervisedClassIds(userId: string, classIds: readonly string[]) {
+    if (!classIds.length) return [];
+    return (await this.db.select({ id: classes.id }).from(classes)
+      .where(and(inArray(classes.id, [...classIds]), supervisesClass(classes.id, userId)))).map(row => row.id);
   }
 }

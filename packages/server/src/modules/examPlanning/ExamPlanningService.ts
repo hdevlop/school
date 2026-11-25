@@ -1,4 +1,4 @@
-import { examPlanningMonths, planningDuration, resolveExamPlanningClasses, type ExamPlanningEntry, type ExamPlanningJson } from '@sms/contracts';
+import { controlFirstDays, derivedExamControls, examControlTerm, monthEndOf, examPlanningMonths, planningDuration, resolveExamPlanningClasses, yearExamControls, type ExamControl, type ExamControlInput, type ExamPlanningEntry, type ExamPlanningJson } from '@sms/contracts';
 import { Err, I18n, Service, Transaction } from '../../najm';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
@@ -28,10 +28,10 @@ export class ExamPlanningService {
     const target = classes.find(row => row.id === classId);
     if (!target) Err(404, this.t('classes.errors.notFound'));
     if (!examPlanningMonths(this.year.label).includes(data.month)) Err(400, this.t('validation.theDateMustFallInsideThisSchoolYear'));
-    // The Contrôle's first day: the earliest exam the school planned that month, in any class.
-    const firstDay = classes.flatMap(row => row.months[data.month] ?? []).map(entry => entry.date)
-      .filter(date => typeof date === 'string' && date.startsWith(`${data.month}-`)).sort()[0] ?? null;
-    await this.validator.ensureMayChange(actor, classId, target.months[data.month] ?? [], data.entries, firstDay);
+    // A teacher's new exam takes the first day of a Contrôle this class sits in its subject.
+    const controls = await this.controls();
+    const firstDays = (subjectId: string | null) => controlFirstDays(controls, classId, subjectId);
+    await this.validator.ensureMayChange(actor, classId, target.months[data.month] ?? [], data.entries, firstDays);
     await this.repository.saveMonth(classId, data);
     await this.syncExams([classId]);
     return this.getAll();
@@ -86,6 +86,75 @@ export class ExamPlanningService {
     // Each subject's school list, and each level's own list (a class name: CE2, 3APG).
     const levels = await this.subjectRepository.levelLists();
     return { subjects: subjects.map(({ id, name, nameAr, subSubjects }) => ({ id, name, nameAr, subSubjects })), levels, missing, plannable };
+  }
+
+  /** The year's Contrôles: the saved ones, or Planning's months until one is saved. */
+  async controls(): Promise<ExamControl[]> {
+    const stored = await this.repository.storedControls();
+    if (stored.length) return yearExamControls(stored, []);
+    return yearExamControls([], (await this.repository.yearPlans()).map(plan => ({ classId: plan.classId, months: plan.months ?? {} })));
+  }
+
+  /**
+   * The saved Contrôles, saving Planning's months as Contrôles first when the
+   * year has none, so the first Contrôle opened keeps the ones before it.
+   */
+  private async savedControls() {
+    const stored = await this.repository.storedControls();
+    if (stored.length) return stored;
+    const derived = derivedExamControls((await this.repository.yearPlans()).map(plan => ({ classId: plan.classId, months: plan.months ?? {} })));
+    // Saved, a month's Contrôle keeps its first day and runs to the month's end: an exam moved later that month stays linked.
+    await this.repository.insertControls(derived.map(({ term, dateFrom, dateTo, classIds }) => ({ term, dateFrom, dateTo: monthEndOf(dateTo), classIds, subjectIds: [], createdBy: null })));
+    return this.repository.storedControls();
+  }
+
+  @Transaction()
+  async createControl(input: ExamControlInput, actor: PlanningActor) {
+    await this.validator.ensureMayManageControl(actor, input.classIds);
+    const others = await this.savedControls();
+    this.validator.ensureControlValid(input, others, this.year.label, await this.repository.yearClassIds(), await this.subjectIds());
+    await this.repository.insertControls([{ ...input, term: examControlTerm(input.dateFrom), createdBy: actor.id }]);
+    return this.controls();
+  }
+
+  /** Several Contrôles at once, all or none: each is checked against the year's and the ones before it. */
+  @Transaction()
+  async createControls(inputs: ExamControlInput[], actor: PlanningActor) {
+    await this.validator.ensureMayManageControl(actor, inputs.flatMap(input => input.classIds));
+    const others = await this.savedControls();
+    const [classIds, subjectIds] = [await this.repository.yearClassIds(), await this.subjectIds()];
+    const opened: ExamControl[] = [];
+    for (const [index, input] of inputs.entries()) {
+      this.validator.ensureControlValid(input, [...others, ...opened], this.year.label, classIds, subjectIds);
+      opened.push({ ...input, id: `new-${index}`, term: examControlTerm(input.dateFrom) });
+    }
+    await this.repository.insertControls(inputs.map(input => ({ ...input, term: examControlTerm(input.dateFrom), createdBy: actor.id })));
+    return this.controls();
+  }
+
+  @Transaction()
+  async updateControl(id: string, input: ExamControlInput, actor: PlanningActor) {
+    const stored = await this.repository.storedControls();
+    const existing = stored.find(control => control.id === id);
+    if (!existing) Err(404, this.t('examPlanning.errors.controls.notFound'));
+    await this.validator.ensureMayManageControl(actor, existing!.classIds, input.classIds);
+    this.validator.ensureControlValid(input, stored.filter(control => control.id !== id), this.year.label, await this.repository.yearClassIds(), await this.subjectIds());
+    await this.repository.updateControl(id, { ...input, term: examControlTerm(input.dateFrom) });
+    return this.controls();
+  }
+
+  private async subjectIds() {
+    return (await this.subjectRepository.getAll()).map(subject => subject.id);
+  }
+
+  /** The Contrôle goes; its classes' Planning and exams stay. */
+  @Transaction()
+  async deleteControl(id: string, actor: PlanningActor) {
+    const existing = (await this.repository.storedControls()).find(control => control.id === id);
+    if (!existing) Err(404, this.t('examPlanning.errors.controls.notFound'));
+    await this.validator.ensureMayManageControl(actor, existing!.classIds);
+    await this.repository.deleteControl(id);
+    return this.controls();
   }
 
   /** Adds Planning's missing names to Subjects as sub-subjects; their exams follow. */

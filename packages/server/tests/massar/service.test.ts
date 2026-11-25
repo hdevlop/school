@@ -33,7 +33,7 @@ function fixture(status = 'not_started') {
     hiddenIds: async () => [], previousYearSubjects: async () => [], addModelSubject: async () => {},
     genders: async () => ({}) as Record<string, 'M' | 'F'>,
     // Planning gives the ready class exams in October and the college class in October to December: Contrôles 1 to 3 of semester 1.
-    planningMonths: async () => [{ classId: 'school-ready', months: { '2026-10': [{ date: '2026-10-20' }] } }, { classId: 'school-college', months: { '2026-10': [{ date: '2026-10-21' }], '2026-11': [{ date: '2026-11-18' }], '2026-12': [{ date: '2026-12-16' }] } }] as Array<{ classId: string; months: Record<string, Array<{ date?: string }>> }>,
+    storedControls: async () => [], plannedExamDays: async () => [], planningMonths: async () => [{ classId: 'school-ready', months: { '2026-10': [{ date: '2026-10-20' }] } }, { classId: 'school-college', months: { '2026-10': [{ date: '2026-10-21' }], '2026-11': [{ date: '2026-11-18' }], '2026-12': [{ date: '2026-12-16' }] } }] as Array<{ classId: string; months: Record<string, Array<{ date?: string }>> }>,
     tryLock: async () => true, relinkTeachers: async () => {}, sheetRosters: async () => [], activeRosters: async () => new Map(), levelSubjectCodes: async () => [], updateSheet: async (_id: string, data: any) => { Object.assign(row.sheet, data); row.sheet.revision++; return row.sheet; },
     yearConfig: async () => ({ schoolCode: 'SYNTHETIC-SCHOOL', massarYearId: 19, schoolName: 'Synthetic school', academy: 'Synthetic academy', direction: 'Synthetic direction', templateFileId: 'template.xlsx' }),
     sheets: async () => [row], completedMarkCounts: async () => [{ sheetId: row.sheet.id, completed: marks.filter(mark => mark.mark !== null || mark.absence === 'justified').length }], updateRound: async (_id: string, status: string) => { row.round.status = status; },
@@ -56,7 +56,7 @@ describe('Massar waiting class', () => {
       pendingStudents: [{ studentCode: 'F200000009', name: 'تلميذ منتظر', dateOfBirth: '14-01-2019', massarStudentId: null, position: 0 }] }] } as any;
     setup.appStudents.push({ ...setup.appStudents[0], id: 'school-pupil', studentCode: '8800009/26', name: 'WAITING PUPIL', dateOfBirth: '2019-01-14', sectionId: 'section-b' });
     const calls: string[] = [];
-    const repository = { lock: async () => {}, setup: async () => setup, sheets: async () => [], tryLock: async () => true, relinkTeachers: async () => {}, sheetRosters: async () => [], activeRosters: async () => new Map(), allRoundsForManagement: async () => [], planningMonths: async () => [] };
+    const repository = { lock: async () => {}, setup: async () => setup, sheets: async () => [], tryLock: async () => true, relinkTeachers: async () => {}, sheetRosters: async () => [], activeRosters: async () => new Map(), allRoundsForManagement: async () => [], storedControls: async () => [], planningMonths: async () => [], plannedExamDays: async () => [] };
     const students = { update: async (id: string, data: object) => { calls.push(`update ${id} ${JSON.stringify(data)}`); }, create: async (data: { studentCode: string; gender: string }) => { calls.push(`create ${data.studentCode} ${data.gender}`); } };
     const enrollments = { placeFromSource: async (id: string, place: { sectionId: string }) => { calls.push(`place ${id} ${place.sectionId}`); } };
     const service = new MassarService(repository as any, new MassarValidator(), {} as any, students as any, enrollments as any);
@@ -191,7 +191,7 @@ describe('Massar sheet workflow', () => {
     const saved: unknown[] = [];
     const planService = (rounds: Array<{ term: number; exam: number }>, status = 'open') => {
       const planningMonths = async () => [{ classId: 'school-ready', months: { '2026-10': [{ date: '2026-10-20' }], '2026-11': [{ date: '2026-11-18' }] } }];
-      const repository = { lock: async () => {}, yearConfig: async () => ({ plan: null }), allRoundsForManagement: async () => rounds, planningMonths, savePlan: async (plan: unknown) => { saved.push(plan); } };
+      const repository = { lock: async () => {}, yearConfig: async () => ({ plan: null }), allRoundsForManagement: async () => rounds, storedControls: async () => [], planningMonths, plannedExamDays: async () => [], savePlan: async (plan: unknown) => { saved.push(plan); } };
       const service = new MassarService(repository as any, new MassarValidator(), {} as any, {} as any, {} as any);
       Object.defineProperty(service, 'year', { value: { id: 'year-1', label: '2026-2027', status, reportingStartsOn: '2026-09-01', reportingEndsOn: '2027-06-30' } });
       return service;

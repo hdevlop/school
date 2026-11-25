@@ -62,7 +62,8 @@ const PAGE_HEIGHT = 1123;
  * Prints a half-A4 desk card for each teacher given: the selected ones, else
  * those the table shows. A dialog first previews the first card and lets the
  * user pick a background: plain paper or an image imported into the school's
- * file storage, which admins alone may import, list and delete.
+ * file storage, which a role with update:desk-card-backgrounds may import,
+ * list and delete.
  */
 export function DeskCardsButton({ teachers, classes, subjects, disabled }: {
   teachers: readonly DeskCardTeacher[];
@@ -75,7 +76,8 @@ export function DeskCardsButton({ teachers, classes, subjects, disabled }: {
   const printOptions = useSchoolPrintOptions();
   const { viewingYear } = useViewingAcademicYear();
   const viewer = useViewerRole();
-  const canManage = viewer.role === 'admin';
+  // The permission the server's storage guard asks for (StorageManageGuard).
+  const canManage = viewer.can('update:desk-card-backgrounds');
   const queryClient = useQueryClient();
   const fileInput = useRef<HTMLInputElement>(null);
   const settings = Array.isArray(publicSettings) ? publicSettings[0] : publicSettings;

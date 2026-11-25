@@ -4,10 +4,10 @@ import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
 import { NButton, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
-import { TeacherExamForm } from '../planning/TeacherExamForm';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Plus } from 'lucide-react';
+import Link from 'next/link';
+import { BookOpenCheck, Plus } from 'lucide-react';
 import React, { useMemo } from 'react';
 import ExamForm from './ExamForm';
 import ExamCard from './ExamCard';
@@ -29,12 +29,11 @@ function ExamsTable() {
   const viewer = useViewerRole();
   const { isFamily } = viewer;
   const { openDialog, confirmDelete } = useDialog();
-  // A teacher adds an exam of their subjects for a Contrôle the school opened; it is
-  // saved in Planning, which writes it to this list (TeacherExamForm).
+  // A teacher fills in their subjects' lessons in Planning, the one place they plan, which writes
+  // each exam to this list once saved.
   const plansInPlanning = !isFamily && !viewer.can('create:exams') && viewer.can('update:exam-planning');
-  const openTeacherExamForm = () => openDialog({ title: t('examPlanning.addEntry'), children: <TeacherExamForm />, showButtons: false });
   const planExamButton = plansInPlanning ? (
-    <NButton size="sm" onClick={openTeacherExamForm} leftIcon={<Plus className="size-4" />}>{t('examPlanning.addEntry')}</NButton>
+    <NButton size="sm" asChild autoLoading={false}><Link href="/exam-planning"><BookOpenCheck className="size-4" aria-hidden />{t('examPlanning.myLessons')}</Link></NButton>
   ) : null;
   const columns = useExamsTableColumns();
   const scope = useClassSectionTableScope();

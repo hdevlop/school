@@ -20,6 +20,7 @@ export * from './assessmentPlanning';
 export * from './testParts';
 export * from './examPlanning';
 export * from './examPlanningJson';
+export * from './examControls';
 export * from './routineJson';
 export type { StudentFinancialImport, FinancialImportDateCorrection, FinancialImportDatePreview } from './financialImport';
 export * from './massar';

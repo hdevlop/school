@@ -144,6 +144,7 @@
       "massar": "Massar",
       "massar-marks": "Massar marks",
       "exam-planning": "Exam planning",
+      "desk-card-backgrounds": "Desk card backgrounds",
       "sub-subjects": "Sub-subjects by level"
     },
     "errors": {
@@ -7851,17 +7852,12 @@
     "editPlanning": "Edit planning",
     "savedStatus": "Saved",
     "viewLabel": "Planning view",
-    "previousMonth": "Previous month",
-    "nextMonth": "Next month",
     "noOwnExams": "None of your subjects has an exam in this period. Add one; the A4 preview shows the whole class programme.",
     "control": "Contrôle",
     "noControlTitle": "No Contrôle planned yet",
     "noControlDescription": "The school sets each Contrôle’s exam days in Planning. Once it does, choose the Contrôle here and add your subjects.",
     "noTeachingClasses": "You do not teach a subject in any class shown in Planning.",
     "subSubjects": "Sub-subjects in this exam",
-    "alreadyPlanned": "Already planned in this Contrôle",
-    "pickSubSubjects": "Choose a subject and at least one sub-subject not already planned, and a day within the Contrôle. Maximum: 40 lessons per sub-subject and 500 characters per lesson.",
-    "scheduleNote": "The school sets each exam’s day and time. A new exam is placed on the Contrôle’s first day until then.",
     "loadFailed": "Could not load the exam planning. Please try again.",
     "paperFormat": "A4 portrait · Original document style",
     "previewTip": "Check the revision lessons, then print or save your class schedule as PDF.",
@@ -7907,13 +7903,46 @@
     "chooseSubSubject": "Choose a sub-subject",
     "noSubSubjects": "No sub-subjects",
     "time": "Time",
+    "myLessons": "My lessons",
+    "calendar": "Calendar",
+    "readyCount": "{{count}}/{{total}} subjects ready",
+    "ready": "Ready",
+    "addExamOf": "Add an exam of {{subject}}",
+    "noLessons": "No lessons yet",
+    "toPlace": "To schedule",
+    "toPlaceBySchool": "The school will set the day and time.",
+    "keepDay": "Keep this day",
     "teacherSubtitle": "Plan the exams of the subjects you teach in your classes.",
     "otherSubject": "Planned for another subject: only the subjects you teach in this class can be changed here.",
     "errors": {
       "notAllowed": "Your role cannot plan exams.",
       "notYourSubject": "You can plan only the subjects you teach in this class. Reload the planning: another subject may have changed meanwhile.",
       "scheduleBySchool": "Only the school sets an exam’s day and time. Reload the planning and save your subjects and lessons again.",
-      "controlNotOpen": "This Contrôle is not open yet: the school must first plan its exam days."
+      "controlNotOpen": "This Contrôle is not open yet: the school must first plan its exam days.",
+      "notYourClass": "You can only plan the classes you supervise.",
+      "controls": {
+        "notFound": "Contrôle not found. Reload the page.",
+        "notYourClasses": "You can only open or change a Contrôle for the classes you supervise.",
+        "unknownSubject": "One of these subjects is not in Subjects.",
+        "unknownClass": "One of the chosen classes is not a class of this school year.",
+        "invalidDates": "Choose a first and a last day, the first not after the last.",
+        "outsideYear": "The Contrôle's days must fall inside this school year.",
+        "twoSemesters": "A Contrôle's days must stay in one semester (September–January or February–August).",
+        "noClasses": "Choose at least one class.",
+        "overlap": "One of these classes already sits another Contrôle on some of these days."
+      }
+    },
+    "controls": {
+      "add": "Open a Contrôle",
+      "edit": "Edit Contrôle",
+      "week": "Week",
+      "noCycle": "No cycle",
+      "tickAll": "Tick all",
+      "untickAll": "Untick all",
+      "saved": "Contrôle saved",
+      "deleted": "Contrôle removed",
+      "saveFailed": "The Contrôle could not be saved. Try again.",
+      "deleteWarning": "Remove this Contrôle? Its exams and their marks stay in Planning and Exams."
     }
   },
   "insurance": {

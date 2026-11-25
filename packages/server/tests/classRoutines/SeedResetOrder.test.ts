@@ -36,7 +36,7 @@ import { ExamPlanningRepository } from '../../src/modules/examPlanning/ExamPlann
 import { drizzle } from 'drizzle-orm/pg-proxy';
 
 describe('seed reset foreign-key order', () => {
-  it('deletes exam planning across all years without resolving a year or ownership', async () => {
+  it('deletes exam planning and its Contrôles across all years without resolving a year or ownership', async () => {
     const queries: string[] = [];
     const repository = new ExamPlanningRepository();
     repository.db = drizzle(async (sql) => {
@@ -51,7 +51,7 @@ describe('seed reset foreign-key order', () => {
 
     await repository.clearForSeedReset();
 
-    expect(queries).toEqual(['delete from "exam_planning"']);
+    expect(queries).toEqual(['delete from "exam_controls"', 'delete from "exam_planning"']);
   });
 
   it('clears all cycles without needing a selected year after their dependents are gone', async () => {

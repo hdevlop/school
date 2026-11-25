@@ -20,6 +20,8 @@ function syncing(options: { visible?: boolean; entries?: typeof entry[]; planned
     renameEverywhere: async (renames: unknown[]) => { calls.push(`rename ${JSON.stringify(renames)}`); },
     saveMonth: async () => {},
     saveVisibility: async () => {},
+    storedControls: async () => [],
+    yearPlans: async () => [],
     syncContext: async () => ({
       classes: [{ id: 'cp', level: options.cycle ?? 'Primaire', cycle: options.cycle ?? 'Primaire' }],
       sections: [{ id: 'cp-a', classId: 'cp' }, { id: 'cp-b', classId: 'cp' }],

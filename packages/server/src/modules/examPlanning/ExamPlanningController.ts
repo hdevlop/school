@@ -1,11 +1,11 @@
 import { ToolGroup } from 'najm-mcp';
-import { Body, Controller, Delete, Get, Params, Put, ResMsg, User, Validate } from '../../najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '../../najm';
 import { Can, CanSchoolWide } from '../../auth';
 import { canUpdateSubject } from '../subjects/SubjectGuards';
 import type { ExamPlanningJson } from '@sms/contracts';
 import { ExamPlanningService } from './ExamPlanningService';
 import type { PlanningActor } from './ExamPlanningValidator';
-import { importExamPlanningDto, planningClassParam, addSubSubjectsDto, planningVisibilityDto, saveExamPlanningDto, type SaveExamPlanningDto } from './ExamPlanningDto';
+import { importExamPlanningDto, planningClassParam, addSubSubjectsDto, planningVisibilityDto, saveExamPlanningDto, examControlDto, examControlParam, examControlsDto, type ExamControlDto, type SaveExamPlanningDto } from './ExamPlanningDto';
 
 @ToolGroup('exam-planning')
 @Controller('/exam-planning')
@@ -46,6 +46,37 @@ export class ExamPlanningController {
   @Validate({ body: importExamPlanningDto })
   @ResMsg('exams.success.updated')
   importDocument(@Body() body: { document: ExamPlanningJson }) { return this.service.importDocument(body.document); }
+
+  // The year's Contrôles: whoever reads exams sees when they are and what Massar takes.
+  @Get('/controls')
+  @Can('read:exams')
+  @ResMsg('exams.success.retrieved')
+  getControls() { return this.service.controls(); }
+
+  // Opening and changing a Contrôle: a supervisor only for the classes they supervise (ExamPlanningValidator).
+  @Post('/controls')
+  @Can('create:exam-controls')
+  @Validate({ body: examControlDto })
+  @ResMsg('exams.success.updated')
+  createControl(@Body() body: ExamControlDto, @User() actor: PlanningActor) { return this.service.createControl(body, actor); }
+
+  @Post('/controls/many')
+  @Can('create:exam-controls')
+  @Validate({ body: examControlsDto })
+  @ResMsg('exams.success.updated')
+  createControls(@Body() body: { controls: ExamControlDto[] }, @User() actor: PlanningActor) { return this.service.createControls(body.controls, actor); }
+
+  @Put('/controls/:id')
+  @Can('update:exam-controls')
+  @Validate({ params: examControlParam, body: examControlDto })
+  @ResMsg('exams.success.updated')
+  updateControl(@Params('id') id: string, @Body() body: ExamControlDto, @User() actor: PlanningActor) { return this.service.updateControl(id, body, actor); }
+
+  @Delete('/controls/:id')
+  @Can('delete:exam-controls')
+  @Validate({ params: examControlParam })
+  @ResMsg('exams.success.updated')
+  deleteControl(@Params('id') id: string, @User() actor: PlanningActor) { return this.service.deleteControl(id, actor); }
 
   // A class's month: the school-wide roles plan every subject, a teacher those
   // they teach there (ExamPlanningValidator.ensureMayChange). The rest of the

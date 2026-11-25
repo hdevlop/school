@@ -24,9 +24,12 @@ export function PlanningSchedule({ classes, entriesFor, emptyText, selected, sav
   const scheduleId = useId();
   const [collapsedDays, setCollapsedDays] = useState<Record<string, boolean>>({});
   return <div className={styles.schedules}>{classes.map(cls => {
-    const entries = [...entriesFor(cls)].sort((a, b) => a.date.localeCompare(b.date));
-    const dates = [...new Set(entries.map(entry => entry.date))];
-    const compact = dates.length > 0 && dates.every(date => collapsedDays[`${cls.id}:${date}`]);
+    const entries = [...entriesFor(cls)].sort((a, b) => a.date.localeCompare(b.date) || (a.startTime ?? '').localeCompare(b.startTime ?? ''));
+    // A teacher's exams the school has yet to give a day come first, apart from the days.
+    const toPlace = entries.filter(entry => entry.toPlace);
+    const dates = [...new Set(entries.filter(entry => !entry.toPlace).map(entry => entry.date))];
+    const groups = [...(toPlace.length ? [{ key: 'to-place', entries: toPlace }] : []), ...dates.map(date => ({ key: date, entries: entries.filter(entry => !entry.toPlace && entry.date === date) }))];
+    const compact = groups.length > 0 && groups.every(group => collapsedDays[`${cls.id}:${group.key}`]);
     const compactLabel = t(compact ? 'examPlanning.expandDays' : 'examPlanning.compactDays');
     return <section key={cls.id} className={styles.scheduleGroup} aria-label={`${t('examPlanning.schedule')} ${toOfficialClassName(cls.name)}`}>
       <div className={styles.sectionTitle}>
@@ -35,19 +38,19 @@ export function PlanningSchedule({ classes, entriesFor, emptyText, selected, sav
           <span className={styles.secondary}>{t('examPlanning.dayCount', { count: dates.length })}</span>
         </div>
         <div className={styles.sectionTools}>
-          {dates.length > 0 && <NButton type="button" variant="outline" size="sm" className={styles.scheduleAction} aria-pressed={compact} leftIcon={compact ? <ChevronsUpDown /> : <ChevronsDownUp />} onClick={() => setCollapsedDays(current => ({ ...current, ...Object.fromEntries(dates.map(date => [`${cls.id}:${date}`, !compact])) }))}>{compactLabel}</NButton>}
+          {groups.length > 0 && <NButton type="button" variant="outline" size="sm" className={styles.scheduleAction} aria-pressed={compact} leftIcon={compact ? <ChevronsUpDown /> : <ChevronsDownUp />} aria-label={compactLabel} title={compactLabel} onClick={() => setCollapsedDays(current => ({ ...current, ...Object.fromEntries(groups.map(group => [`${cls.id}:${group.key}`, !compact])) }))}><span className={styles.toolLabel}>{compactLabel}</span></NButton>}
           {canAdd(cls) && <NButton type="button" variant="outline" size="sm" className={styles.scheduleAction} disabled={saving} onClick={() => onAdd(cls)} leftIcon={<Plus />}>{t('examPlanning.addEntry')}</NButton>}
         </div>
       </div>
-      {!entries.length ? <p className={styles.empty}>{emptyText?.(cls) ?? t('examPlanning.emptyDescription')}</p> : dates.map(date => {
-        const dayEntries = entries.filter(entry => entry.date === date);
-        const dayKey = `${cls.id}:${date}`;
-        const contentId = `${scheduleId}-${cls.id}-${date}`;
+      {!entries.length ? <p className={styles.empty}>{emptyText?.(cls) ?? t('examPlanning.emptyTitle')}</p> : groups.map(({ key, entries: dayEntries }) => {
+        const dayKey = `${cls.id}:${key}`;
+        const contentId = `${scheduleId}-${cls.id}-${key}`;
         const collapsed = !!collapsedDays[dayKey];
-        return <section key={date} className={styles.day}>
+        const waiting = key === 'to-place';
+        return <section key={key} className={styles.day} data-to-place={waiting || undefined}>
           <h3 className={styles.dayHeading}>
             <button type="button" className={styles.dayTitle} aria-expanded={!collapsed} aria-controls={contentId} onClick={() => setCollapsedDays(current => ({ ...current, [dayKey]: !current[dayKey] }))}>
-              <span>{displayDate(date, { weekday: 'long', day: 'numeric', month: 'long' })}</span>
+              <span>{waiting ? t('examPlanning.toPlace') : displayDate(key, { weekday: 'long', day: 'numeric', month: 'long' })}</span>
               <span className={styles.dayTools}><span className={styles.secondary}>{t('examPlanning.subjectCount', { count: dayEntries.length })}</span><ChevronDown className={styles.dayChevron} aria-hidden="true" /></span>
             </button>
           </h3>

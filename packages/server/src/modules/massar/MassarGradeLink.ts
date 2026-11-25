@@ -1,4 +1,4 @@
-import { foldSubjectName, massarPlanningControls, type MassarAbsence, type MassarMark, type MassarSheetPart, type TestPart } from '@sms/contracts';
+import { examDaysOf, foldSubjectName, massarControlFor, massarControlsOfYear, type MassarControl, type MassarAbsence, type MassarMark, type MassarSheetPart, type TestPart } from '@sms/contracts';
 import { Service } from '../../najm';
 import { MassarGradeRepository } from './MassarGradeRepository';
 import { MassarValidator } from './MassarValidator';
@@ -13,20 +13,28 @@ type CellMark = { mark: number | null; absence: MassarAbsence };
 const round2 = (value: number) => Math.round(value * 100) / 100;
 const filled = (mark: CellMark | undefined) => !!mark && (mark.mark !== null || mark.absence === 'justified');
 
+/** The Contrôles Massar's marks follow: each sent to Massar, with its days and classes. */
+export type { MassarControl };
+
+/** The Contrôle a grid stands for: its semester and number, among the Contrôles its class sits in its subject. */
+export const controlOfSheet = (controls: readonly MassarControl[], sheet: { classId: string | null; subjectId: string | null; term: number; exam: number }) =>
+  massarControlFor(controls, sheet);
+
 /**
  * Which Planning exam a grid's column is: same School class, section and
- * subject, an exam dated in the Contrôle's month, and either the column's own
+ * subject, an exam dated in the Contrôle's days, and either the column's own
  * name (a primary part, "الإملاء") or, for a grid of one column (a collège
  * test), the subject's only exam that month. Anything less certain is left
  * unlinked rather than guessed.
  */
-export function linkCells(sheets: Sheet[], exams: Exam[], controls: ReturnType<typeof massarPlanningControls>): MassarGradeCell[] {
+export function linkCells(sheets: Sheet[], exams: Exam[], controls: readonly MassarControl[]): MassarGradeCell[] {
   const cells: MassarGradeCell[] = [];
   for (const sheet of sheets) {
     if (!sheet.classId || !sheet.sectionId || !sheet.subjectId) continue;
-    const month = controls.find(control => control.term === sheet.term && control.exam === sheet.exam)?.examFrom.slice(0, 7);
-    if (!month) continue;
-    const own = exams.filter(exam => exam.classId === sheet.classId && exam.sectionId === sheet.sectionId && exam.subjectId === sheet.subjectId && String(exam.date).startsWith(month));
+    const control = controlOfSheet(controls, sheet);
+    if (!control) continue;
+    const own = exams.filter(exam => exam.classId === sheet.classId && exam.sectionId === sheet.sectionId && exam.subjectId === sheet.subjectId
+      && String(exam.date).slice(0, 10) >= control.linkFrom && String(exam.date).slice(0, 10) <= control.linkTo);
     for (const component of sheet.components) {
       const named = own.filter(exam => foldSubjectName(exam.title) === foldSubjectName(component.name));
       const exam = named.length === 1 ? named[0] : sheet.components.length === 1 && own.length === 1 ? own[0] : undefined;
@@ -76,9 +84,14 @@ export function partTests(sheet: Pick<Sheet, 'components'>, cells: MassarGradeCe
 export class MassarGradeLink {
   constructor(private repository: MassarGradeRepository, private validator: MassarValidator) {}
 
+  /** The year's Contrôles sent to Massar: the saved ones, or Planning's months until one is saved. */
+  private async controls() {
+    return massarControlsOfYear(await this.repository.storedControls(), await this.repository.planningMonths(), examDaysOf(await this.repository.plannedExams()));
+  }
+
   private async cells(sheets: Sheet[], exams: Exam[]) {
     if (!sheets.length || !exams.length) return [];
-    return linkCells(sheets, exams, massarPlanningControls(await this.repository.planningMonths()));
+    return linkCells(sheets, exams, await this.controls());
   }
   private toSchool(mark: number, cell: MassarGradeCell) { return round2(mark / Number(cell.sheet.maxMark) * Number(cell.exam.totalMarks)); }
   private toMassar(value: number, cell: MassarGradeCell) { return round2(value / Number(cell.exam.totalMarks) * Number(cell.sheet.maxMark)); }
@@ -94,12 +107,12 @@ export class MassarGradeLink {
   async testParts(sheetId: string): Promise<MassarSheetPart[]> {
     const [sheet] = await this.repository.sheets({ sheetIds: [sheetId] });
     if (!sheet?.classId || !sheet.sectionId || !sheet.subjectId) return [];
-    const controls = massarPlanningControls(await this.repository.planningMonths());
-    const month = controls.find(control => control.term === sheet.term && control.exam === sheet.exam)?.examFrom.slice(0, 7);
-    if (!month) return [];
+    const controls = await this.controls();
+    const control = controlOfSheet(controls, sheet);
+    if (!control) return [];
     const [exams, assessments] = await Promise.all([
       this.repository.plannedExams({ classId: sheet.classId, sectionId: sheet.sectionId, subjectId: sheet.subjectId }),
-      this.repository.partAssessments({ sectionId: sheet.sectionId, subjectId: sheet.subjectId, month }),
+      this.repository.partAssessments({ sectionId: sheet.sectionId, subjectId: sheet.subjectId, from: control.linkFrom, to: control.linkTo }),
     ]);
     return partTests(sheet, linkCells([sheet], exams, controls), assessments);
   }

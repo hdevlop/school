@@ -4,7 +4,7 @@ import { isNextBuildPhase } from 'najm-next/env';
 import { FileCategory } from 'najm-storage';
 
 import { LANGUAGE_HEADER, schoolI18n } from '@sms/contracts/locales';
-import { isAdmin, isAuth } from '../auth';
+import { isAuth } from '../auth';
 import { db } from '../database/db';
 import { env } from '../env';
 import { schoolMcpYearHooks } from '../modules/academicYears/requestYear';
@@ -14,6 +14,7 @@ import { emailConfig } from './emailConfig';
 import { privateStorage } from './PrivateStorageGuard';
 import { ragConfig, ragStudioConfig } from './ragConfig';
 import { SchoolStorageValidator } from './SchoolStorageValidator';
+import { storageManage } from './StorageManageGuard';
 import { themeConfig } from './themeConfig';
 import { createValidationErrorFormatter } from './validationMessages';
 import { yearScopedModules } from './yearScope';
@@ -69,10 +70,11 @@ export const schoolServerOptions = () => ({
     validator: SchoolStorageValidator,
     enableCascadeDelete: true,
     // School uploads files through REST and its own services, so MCP file tools
-    // stay disabled. Signed-in users may serve files; only admins may manage them.
+    // stay disabled. Signed-in users may serve files; admins manage them, and
+    // a namespace in PERMISSION_MANAGED_NAMESPACES is managed by its permission.
     mcp: false,
     guards: [isAuth(), privateStorage()],
-    manageGuards: [isAdmin()],
+    manageGuards: [isAuth(), storageManage()],
   },
 }) satisfies NajmServerOptions;
 

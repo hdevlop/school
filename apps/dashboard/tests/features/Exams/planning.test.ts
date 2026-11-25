@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
-import { examPlanningMonths, examPlanningSemester, type ExamPlanningClass } from '@sms/contracts';
-import { examPlanningControlNumbers, examPlanningEntries, examPlanningRecords, initialPlanningMonth, mayPlanEntry, plannableInClass, planningMonthRange, planningTextLanguage, updatePlanningMonthDraft } from '@/features/Exams/planning/examPlanningModel';
+import { derivedExamControls, examPlanningMonths, examPlanningSemester, type ExamControl, type ExamPlanningClass } from '@sms/contracts';
+import { examControlLabel, examPlanningControlNumbers, teacherControls, examPlanningEntries, examPlanningRecords, initialPlanningMonth, mayPlanEntry, plannableInClass, controlClassGroups, controlDayCount, currentControl, periodControls, planningClassGroups, planningMonthRange, planningTextLanguage, updatePlanningMonthDraft } from '@/features/Exams/planning/examPlanningModel';
 
 const classes: ExamPlanningClass[] = [
   { id: 'ps', name: 'PS', visible: true, months: {} },
@@ -33,6 +33,9 @@ describe('exam planning dates and document selection', () => {
     expect(records[0].planning?.groups[0]).toEqual({ label: '', language: 'ar', lessons: ['الجملة الاسمية'] });
     expect(examPlanningRecords(classes, range, { cp: { '2026-11': [] } })).toEqual([]);
     expect(examPlanningRecords(classes, planningMonthRange('2027-02'))).toEqual([]);
+    // A teacher's exam the school has not given a day yet is left off the A4.
+    const waiting = { id: 'w', date: '2026-11-09', subject: 'Français', lessons: ['Le verbe'], toPlace: true as const };
+    expect(examPlanningRecords(classes, range, { cp: { '2026-11': [...classes[1].months['2026-11'], waiting] } })).toHaveLength(1);
   });
   it('filters both date endpoints inclusively across months and semesters', () => {
     const entry = classes[1].months['2026-11'][0];
@@ -74,18 +77,52 @@ describe('exam planning Contrôle numbers', () => {
     // A hidden class still makes December a Contrôle, as it does in Massar.
     { id: 'ce1', name: 'CE1', visible: false, months: { '2026-12': [{ id: 'b', date: '2026-12-14', subject: 'Maths', lessons: [] }] } },
   ];
+  // A year without saved Contrôles reads them from Planning's months, as before.
+  const derived = derivedExamControls(year.map(cls => ({ classId: cls.id, months: cls.months })));
+  const on = (date: string, classId = 'cp') => ({ date, class: { id: classId } });
 
-  it('numbers each semester month with exams in order, across every class', () => {
-    expect(examPlanningControlNumbers(year, ['2026-11-09'])).toEqual([1]);
-    expect(examPlanningControlNumbers(year, ['2026-12-14'])).toEqual([2]);
-    expect(examPlanningControlNumbers(year, ['2027-03-10'])).toEqual([1]);
-    expect(examPlanningControlNumbers(year, ['2026-11-09', '2026-12-14'])).toEqual([1, 2]);
+  it('numbers each semester month with exams in order, across every class, until a Contrôle is saved', () => {
+    expect(examPlanningControlNumbers(derived, [on('2026-11-09')])).toEqual([1]);
+    expect(examPlanningControlNumbers(derived, [on('2026-12-14', 'ce1')])).toEqual([2]);
+    expect(examPlanningControlNumbers(derived, [on('2027-03-10')])).toEqual([1]);
+    expect(examPlanningControlNumbers(derived, [on('2026-11-09'), on('2026-12-14', 'ce1')])).toEqual([1, 2]);
+    expect(examPlanningControlNumbers(derived, [on('2026-10-05')])).toEqual([]);
   });
 
-  it('counts unsaved months, and none for dates without exams', () => {
-    expect(examPlanningControlNumbers(year, ['2026-10-05'])).toEqual([]);
-    const drafts = { cp: { '2026-10': [{ id: 'd', date: '2026-10-05', subject: 'Arabe', lessons: [] }] } };
-    expect(examPlanningControlNumbers(year, ['2026-11-09'], drafts)).toEqual([2]);
+  it('numbers a saved Contrôle for the class of each exam, by the class\'s own Contrôles in date order', () => {
+    const saved: ExamControl[] = [
+      { id: 'nov', term: 1, dateFrom: '2026-11-09', dateTo: '2026-11-13', classIds: ['cp'], subjectIds: [] },
+      { id: 'dec', term: 1, dateFrom: '2026-12-14', dateTo: '2026-12-18', classIds: ['cp', 'ce1'], subjectIds: [] },
+    ];
+    expect(examPlanningControlNumbers(saved, [on('2026-11-09')])).toEqual([1]);
+    expect(examPlanningControlNumbers(saved, [on('2026-11-09', 'ce1')])).toEqual([]);
+    // December is CP's second Contrôle and CE1's first.
+    expect(examPlanningControlNumbers(saved, [on('2026-12-14')])).toEqual([2]);
+    expect(examPlanningControlNumbers(saved, [on('2026-12-14', 'ce1')])).toEqual([1]);
+  });
+
+  it('offers a teacher the Contrôles their classes sit, and every month-read one', () => {
+    const saved: ExamControl[] = [
+      { id: 'cp-only', term: 1, dateFrom: '2026-11-09', dateTo: '2026-11-13', classIds: ['cp'], subjectIds: [] },
+      { id: 'ce1-only', term: 1, dateFrom: '2026-11-16', dateTo: '2026-11-20', classIds: ['ce1'], subjectIds: [] },
+      { id: 'cp-maths', term: 1, dateFrom: '2026-11-23', dateTo: '2026-11-23', classIds: ['cp'], subjectIds: ['maths'] },
+    ];
+    expect(teacherControls(saved, ['cp']).map(control => control.id)).toEqual(['cp-only', 'cp-maths']);
+    // A Contrôle of a few subjects reaches only their teachers.
+    expect(teacherControls(saved, ['cp'], { cp: ['fr'] }).map(control => control.id)).toEqual(['cp-only']);
+    expect(teacherControls(saved, ['cp'], { cp: ['maths'] }).map(control => control.id)).toEqual(['cp-only', 'cp-maths']);
+    expect(teacherControls(derived, ['other']).length).toBe(derived.length);
+  });
+
+  it('names a Contrôle by its number and semester, for a teacher by their own classes\' number', () => {
+    const t = (key: string, params?: Record<string, unknown>) => `${key}${params ? JSON.stringify(params) : ''}`;
+    const saved: ExamControl[] = [
+      { id: 'nov', term: 1, dateFrom: '2026-11-09', dateTo: '2026-11-13', classIds: ['cp'], subjectIds: [] },
+      { id: 'dec', term: 1, dateFrom: '2026-12-14', dateTo: '2026-12-18', classIds: ['cp', 'ce1'], subjectIds: [] },
+    ];
+    expect(examControlLabel(saved, saved[0], t)).toBe('massar.flow.controlNumber{"exam":"1"} · massar.flow.semester{"term":1}');
+    expect(examControlLabel(saved, saved[1], t)).toBe('massar.flow.controlNumber{"exam":"1 / 2"} · massar.flow.semester{"term":1}');
+    expect(examControlLabel(saved, saved[1], t, ['ce1'])).toBe('massar.flow.controlNumber{"exam":"1"} · massar.flow.semester{"term":1}');
   });
 });
 
@@ -105,5 +142,55 @@ describe('what a teacher may plan', () => {
     expect(mayPlanEntry(allowed, subjects, 'اللغة العربية')).toBe(false);
     expect(mayPlanEntry(allowed, subjects, 'Robotique')).toBe(false);
     expect(mayPlanEntry(null, subjects, 'Robotique')).toBe(true);
+  });
+});
+
+describe('ticking a Contrôle\'s classes a cycle at a time', () => {
+  const primary = { id: 'p', name: 'Primaire', labels: { ar: 'الابتدائي' }, order: 1 };
+  const college = { id: 'c', name: 'Collège', labels: null, order: 2 };
+  const classes = [
+    { id: '1apic', cycle: college }, { id: '1apg', cycle: primary }, { id: '2apg', cycle: primary }, { id: 'loose', cycle: null }, { id: 'old' },
+  ];
+
+  it('groups the classes by cycle in the school\'s order, labelled in the reader\'s language, classes with none last', () => {
+    expect(planningClassGroups(classes, 'fr')).toEqual([
+      { id: 'p', label: 'Primaire', order: 1, classIds: ['1apg', '2apg'] },
+      { id: 'c', label: 'Collège', order: 2, classIds: ['1apic'] },
+      { id: null, label: null, order: Number.POSITIVE_INFINITY, classIds: ['loose', 'old'] },
+    ]);
+    expect(planningClassGroups(classes, 'ar')[0].label).toBe('الابتدائي');
+  });
+
+  it('shows a Contrôle\'s classes by cycle, a whole cycle as one, and counts its days', () => {
+    const groups = planningClassGroups(classes, 'fr');
+    expect(controlClassGroups(['2apg', '1apic', '1apg', 'elsewhere'], groups).map(({ id, whole, classIds }) => ({ id, whole, classIds }))).toEqual([
+      { id: 'p', whole: true, classIds: ['1apg', '2apg'] },
+      { id: 'c', whole: true, classIds: ['1apic'] },
+    ]);
+    expect(controlClassGroups(['2apg'], groups)[0]).toMatchObject({ id: 'p', whole: false, classIds: ['2apg'] });
+    expect([controlDayCount({ dateFrom: '2027-01-02', dateTo: '2027-01-08' }), controlDayCount({ dateFrom: '2026-11-09', dateTo: '2026-11-09' })]).toEqual([7, 1]);
+  });
+});
+
+describe('the period Planning shows', () => {
+  const at = (id: string, from: string, to: string, classIds: string[], subjectIds: string[] = []): ExamControl =>
+    ({ id, term: 1, dateFrom: from, dateTo: to, classIds, subjectIds });
+  const controls = [
+    at('dec', '2026-12-07', '2026-12-11', ['cp']), at('nov', '2026-11-09', '2026-11-13', ['cp', '1ac']),
+    at('maths', '2026-11-16', '2026-11-20', ['1ac'], ['maths']), at('fr', '2026-11-16', '2026-11-20', ['1ac'], ['fr']),
+  ];
+
+  it('is picked among the Contrôles, the picked class’s only, one per set of days', () => {
+    expect(periodControls(controls, null).map(control => control.id)).toEqual(['nov', 'fr', 'dec']);
+    expect(periodControls(controls, 'cp').map(control => control.id)).toEqual(['nov', 'dec']);
+    expect(periodControls(controls, '1ac').map(control => control.id)).toEqual(['nov', 'fr']);
+  });
+
+  it('opens on the Contrôle under way, else the next, else the last', () => {
+    const periods = periodControls(controls, null);
+    expect(currentControl(periods, '2026-11-18')?.id).toBe('fr');
+    expect(currentControl(periods, '2026-11-25')?.id).toBe('dec');
+    expect(currentControl(periods, '2027-03-01')?.id).toBe('dec');
+    expect(currentControl([], '2027-03-01')).toBeUndefined();
   });
 });

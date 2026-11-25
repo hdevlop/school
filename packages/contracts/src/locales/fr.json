@@ -144,6 +144,7 @@
       "massar": "Massar",
       "massar-marks": "Notes Massar",
       "exam-planning": "Planification des examens",
+      "desk-card-backgrounds": "Fonds des chevalets",
       "sub-subjects": "Sous-matières par niveau"
     },
     "errors": {
@@ -7245,17 +7246,12 @@
     "editPlanning": "Modifier le planning",
     "savedStatus": "Enregistré",
     "viewLabel": "Vue du planning",
-    "previousMonth": "Mois précédent",
-    "nextMonth": "Mois suivant",
     "noOwnExams": "Aucune de vos matières n’a d’examen sur cette période. Ajoutez-en un ; l’aperçu A4 montre tout le programme de la classe.",
     "control": "Contrôle",
     "noControlTitle": "Aucun contrôle planifié",
     "noControlDescription": "L’administration fixe les jours de chaque contrôle dans le planning. Ensuite, choisissez le contrôle ici et ajoutez vos matières.",
     "noTeachingClasses": "Vous n’enseignez aucune matière dans les classes du planning.",
     "subSubjects": "Sous-matières de cet examen",
-    "alreadyPlanned": "Déjà planifiées dans ce contrôle",
-    "pickSubSubjects": "Choisissez une matière et au moins une sous-matière non encore planifiée, et un jour du contrôle. Maximum : 40 leçons par sous-matière et 500 caractères par leçon.",
-    "scheduleNote": "L’administration fixe le jour et l’horaire de chaque examen. En attendant, un nouvel examen est placé au premier jour du contrôle.",
     "loadFailed": "Impossible de charger le planning des examens. Veuillez réessayer.",
     "paperFormat": "A4 portrait · Modèle de votre document",
     "previewTip": "Vérifiez les leçons, puis imprimez ou enregistrez le calendrier de la classe en PDF.",
@@ -7301,13 +7297,46 @@
     "chooseSubSubject": "Choisir une sous-matière",
     "noSubSubjects": "Aucune sous-matière",
     "time": "Horaire",
+    "myLessons": "Mes leçons",
+    "calendar": "Calendrier",
+    "readyCount": "{{count}}/{{total}} matières prêtes",
+    "ready": "Prête",
+    "addExamOf": "Ajouter un examen de {{subject}}",
+    "noLessons": "Aucune leçon",
+    "toPlace": "À placer",
+    "toPlaceBySchool": "L’administration fixera le jour et l’heure.",
+    "keepDay": "Garder ce jour",
     "teacherSubtitle": "Planifiez les examens des matières que vous enseignez dans vos classes.",
     "otherSubject": "Planifié pour une autre matière : seules les matières que vous enseignez dans cette classe peuvent être modifiées ici.",
     "errors": {
       "notAllowed": "Votre rôle ne permet pas de planifier les examens.",
       "notYourSubject": "Vous ne pouvez planifier que les matières que vous enseignez dans cette classe. Rechargez la planification : une autre matière a peut-être changé entre-temps.",
       "scheduleBySchool": "Seule l’administration fixe le jour et l’horaire d’un examen. Rechargez la planification puis enregistrez à nouveau vos matières et leçons.",
-      "controlNotOpen": "Ce contrôle n’est pas encore ouvert : l’administration doit d’abord planifier ses jours d’examen."
+      "controlNotOpen": "Ce contrôle n’est pas encore ouvert : l’administration doit d’abord planifier ses jours d’examen.",
+      "notYourClass": "Vous ne pouvez planifier que les classes que vous supervisez.",
+      "controls": {
+        "notFound": "Contrôle introuvable. Rechargez la page.",
+        "notYourClasses": "Vous ne pouvez ouvrir ou modifier un contrôle que pour les classes que vous supervisez.",
+        "unknownSubject": "Une de ces matières n’existe pas dans Matières.",
+        "unknownClass": "Une des classes choisies n’est pas une classe de cette année scolaire.",
+        "invalidDates": "Choisissez un premier et un dernier jour, le premier pas après le dernier.",
+        "outsideYear": "Les jours du contrôle doivent être dans cette année scolaire.",
+        "twoSemesters": "Les jours d’un contrôle doivent rester dans un seul semestre (septembre–janvier ou février–août).",
+        "noClasses": "Choisissez au moins une classe.",
+        "overlap": "Une de ces classes passe déjà un autre contrôle certains de ces jours."
+      }
+    },
+    "controls": {
+      "add": "Ouvrir un contrôle",
+      "edit": "Modifier le contrôle",
+      "week": "Semaine",
+      "noCycle": "Sans cycle",
+      "tickAll": "Tout cocher",
+      "untickAll": "Tout décocher",
+      "saved": "Contrôle enregistré",
+      "deleted": "Contrôle supprimé",
+      "saveFailed": "Impossible d’enregistrer le contrôle. Réessayez.",
+      "deleteWarning": "Supprimer ce contrôle ? Ses examens et leurs notes restent dans le Planning et les Examens."
     }
   },
   "insurance": {
