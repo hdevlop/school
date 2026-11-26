@@ -28,6 +28,7 @@ import HomeworkCard, { homeworkPlacementLabel } from './HomeworkCard';
 import HomeworkCompletionSheet from './HomeworkCompletionSheet';
 import HomeworkForm from './HomeworkForm';
 import { homeworkTones } from '../config/homeworkTones';
+import { NEWEST_FIRST, OLDEST_FIRST } from '../config/homeworkOrder';
 import { HomeworkMobileCard, HomeworkMobileCardSkeleton, HomeworkToneContext } from './HomeworkMobileCard';
 import { HomeworkMobileControls, HomeworkSearchButton } from './HomeworkMobileControls';
 import HomeworkMobileDetailsDialog from './HomeworkMobileDetailsDialog';
@@ -43,7 +44,11 @@ function HomeworkTable() {
   const yearKey = useViewingYearKey();
   const [search, setSearch] = useState('');
   const [subjectSelection, setSubjectSelection] = useState<{ yearKey: string; id: string }>();
-  const [newestFirst, setNewestFirst] = useState(true);
+  // Newest first, on every screen: what was given last is what a teacher looks for.
+  const [sorting, setSorting] = useState<NonNullable<NTableProps['sorting']>>(NEWEST_FIRST);
+  const byDate = sorting[0]?.id === 'date' ? sorting[0] : undefined;
+  const newestFirst = byDate?.desc ?? true;
+  const sortByDate = (newest: boolean) => setSorting(newest ? NEWEST_FIRST : OLDEST_FIRST);
   const [desktopMode, setDesktopMode] = useState<NonNullable<NTableProps['mode']>>('table');
   // The server lets a teacher write the homework of their own classes and
   // the school-wide roles any; monitors, supervisors and families only read.
@@ -56,7 +61,22 @@ function HomeworkTable() {
     mayWrite ? setFollowUp : undefined,
   );
   const scope = useClassSectionTableScope();
-  const { filters, matches } = scope;
+  const { matches } = scope;
+  const order = t('homework.mobile.sort');
+  // On a wider screen the order sits after the class and section filters; a column header still sorts.
+  const filters = useMemo(() => [...scope.filters, {
+    name: 'dateOrder',
+    type: 'select',
+    showIcon: false,
+    placeholder: order,
+    value: byDate ? (byDate.desc ? 'newest' : 'oldest') : '',
+    onChange: (value: string) => setSorting(value === 'oldest' ? OLDEST_FIRST : NEWEST_FIRST),
+    options: [
+      { value: 'newest', label: t('homework.mobile.newest') },
+      { value: 'oldest', label: t('homework.mobile.oldest') },
+    ],
+    className: 'w-full sm:w-36 xl:w-36',
+  }], [scope.filters, byDate, order, t]);
 
   const { homework, saveHomework, deleteHomework, error, isHomeworkLoading, isSaving, isDeleting } = useHomework({ enabled: !showMissed });
   const { records, isLoading: isMissedLoading, error: missedError } = useMissedHomework({ enabled: showMissed });
@@ -79,7 +99,6 @@ function HomeworkTable() {
         .some((value) => value && normalizeSearch(value).includes(query))),
   ), [homework, matches, query, subjectId]);
   const toneOf = useMemo(() => homeworkTones(homework ?? []), [homework]);
-  const sorting = useMemo(() => isPhone ? [{ id: 'date', desc: newestFirst }] : undefined, [isPhone, newestFirst]);
   const { openDialog, confirmDelete } = useDialog();
 
   const toggleView = () => {
@@ -197,9 +216,9 @@ function HomeworkTable() {
       </NPageHeader>
 
       {isPhone && <HomeworkMobileControls
-        filters={filters}
+        filters={scope.filters}
         homework={showMissed ? undefined : {
-          subjects, subjectId, newestFirst, onSort: setNewestFirst,
+          subjects, subjectId, newestFirst, onSort: sortByDate,
           onSubjectChange: (id) => setSubjectSelection({ yearKey, id }),
         }}
         count={countUnknown ? undefined : showMissed ? missedRows.length : rows.length}
@@ -214,7 +233,7 @@ function HomeworkTable() {
       {showMissed ? (
         <HomeworkFollowUpTable
           rows={missedRows}
-          filters={filters}
+          filters={scope.filters}
           hasSelection={scope.hasSelection}
           isPhone={isPhone}
           isLoading={isMissedLoading}
@@ -232,6 +251,7 @@ function HomeworkTable() {
         columns={columns}
         filters={isPhone ? undefined : filters}
         sorting={sorting}
+        onSortingChange={setSorting}
         showCheckbox={isPhone ? false : undefined}
         onCreate={mayWrite ? handleAddClick : undefined}
         onView={handleView}

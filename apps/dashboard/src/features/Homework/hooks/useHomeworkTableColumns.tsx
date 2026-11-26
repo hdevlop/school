@@ -5,6 +5,7 @@ import { useTranslation } from 'najm-i18n/react';
 import type { HomeworkCompletionStatus, HomeworkRow } from '@sms/contracts';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { COMPLETION_COLORS } from '../config/homeworkCompletion';
+import { compareHomeworkGiven } from '../config/homeworkOrder';
 import { homeworkPlacementLabel } from '../components/HomeworkCard';
 
 type Cell = { row: { original: HomeworkRow } };
@@ -71,6 +72,7 @@ export const useHomeworkTableColumns = (audience: 'staff' | 'parent' | 'student'
       accessorKey: 'date',
       header: t('homework.table.date'),
       enableSorting: true,
+      sortingFn: (left: { original: HomeworkRow }, right: { original: HomeworkRow }) => compareHomeworkGiven(left.original, right.original),
       cell: ({ row }: Cell) => <div className="text-sm">{displayDateOnly(row.original.date)}</div>,
     },
     {
