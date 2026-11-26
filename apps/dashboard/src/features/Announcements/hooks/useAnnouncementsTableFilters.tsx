@@ -28,9 +28,9 @@ export const useAnnouncementsTableFilters = (classFilter = '', onClassFilterChan
       placeholder: t('students.filters.filterByClass'),
       type: 'combobox',
       showIcon: false,
-      options: classes.map((item) => ({ value: item.id, label: item.name })),
+      options: [{ value: '__clear__', label: t('common.all') }, ...classes.map((item) => ({ value: item.id, label: item.name }))],
       value: classFilter,
-      onChange: onClassFilterChange,
+      onChange: (value: string) => onClassFilterChange?.(value === '__clear__' ? '' : value),
       className: 'w-full lg:w-48',
     },
     {

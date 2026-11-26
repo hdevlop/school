@@ -78,7 +78,7 @@ const RemindersPage: React.FC = () => {
       type: 'combobox',
       showIcon: false,
       placeholder: t('students.filters.filterByClass'),
-      options: classOptions,
+      options: [{ value: '__clear__', label: t('common.all') }, ...classOptions],
       value: classId,
       onChange: (value: string) => setPlacementFilter({
         yearKey, classId: value === '__clear__' ? '' : value, sectionId: '',
@@ -90,7 +90,7 @@ const RemindersPage: React.FC = () => {
       type: 'combobox',
       showIcon: false,
       placeholder: t('students.filters.filterBySection'),
-      options: sectionOptions,
+      options: [{ value: '__clear__', label: t('common.all') }, ...sectionOptions],
       value: sectionId,
       onChange: (value: string) => setPlacementFilter({
         yearKey, classId, sectionId: value === '__clear__' ? '' : value,

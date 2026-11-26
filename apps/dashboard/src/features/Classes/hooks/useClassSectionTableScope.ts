@@ -6,6 +6,11 @@ import { useSections } from '@/features/Sections/hooks/useSections';
 import { useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { matchesClassSection, type ScopedRow } from './classSectionScope';
 
+/** The "All" entry of the class and section filters; a sheet that lists its own "all" drops it. */
+export const SCOPE_ALL_OPTION = '__clear__';
+export const withoutScopeAllOption = <Option extends { value: string }>(options: readonly Option[]) =>
+  options.filter((option) => option.value !== SCOPE_ALL_OPTION);
+
 type NamedPlacement = {
   classId?: string | null;
   className?: string | null;
@@ -37,12 +42,12 @@ export function useClassSectionTableScope({ includeSection = true, placements }:
   const classId = chosenClassId || onlyClassId;
   const sectionId = selection.yearKey === yearKey ? selection.sectionId : '';
   const setClassId = useCallback((value: string) => setSelection({
-    yearKey, classId: value === '__clear__' ? '' : value, sectionId: '',
+    yearKey, classId: value === SCOPE_ALL_OPTION ? '' : value, sectionId: '',
   }), [yearKey]);
   const setSectionId = useCallback((value: string) => setSelection((current) => ({
     yearKey,
     classId: current.yearKey === yearKey ? current.classId : '',
-    sectionId: value === '__clear__' ? '' : value,
+    sectionId: value === SCOPE_ALL_OPTION ? '' : value,
   })), [yearKey]);
 
   useEffect(() => {
@@ -61,6 +66,9 @@ export function useClassSectionTableScope({ includeSection = true, placements }:
     }
   }, [classId, sectionId, sections, setSectionId]);
 
+  // A controlled filter gets no "All" from NTable, so it is listed here. A single-class viewer
+  // has none: clearing would come straight back to their one class.
+  const all = useMemo(() => ({ value: SCOPE_ALL_OPTION, label: t('common.all') }), [t]);
   const filters = useMemo(() => [
     {
       name: 'classScope',
@@ -69,9 +77,12 @@ export function useClassSectionTableScope({ includeSection = true, placements }:
       placeholder: t('students.table.class'),
       value: classId,
       onChange: setClassId,
-      options: [...(classes || [])]
-        .sort((left, right) => compareClassNames(left.name, right.name))
-        .map((item) => ({ value: item.id, label: item.name })),
+      options: [
+        ...(onlyClassId ? [] : [all]),
+        ...[...(classes || [])]
+          .sort((left, right) => compareClassNames(left.name, right.name))
+          .map((item) => ({ value: item.id, label: item.name })),
+      ],
       className: 'w-full sm:w-32 xl:w-32',
     },
     ...(includeSection ? [{
@@ -81,13 +92,13 @@ export function useClassSectionTableScope({ includeSection = true, placements }:
       placeholder: t('students.table.section'),
       value: sectionId,
       onChange: setSectionId,
-      options: (sections || [])
+      options: [all, ...(sections || [])
         .filter((item) => item.classId === classId)
-        .map((item) => ({ value: item.id, label: item.name })),
+        .map((item) => ({ value: item.id, label: item.name }))],
       disabled: !classId,
       className: 'w-full sm:w-28 xl:w-28',
     }] : []),
-  ], [t, classes, sections, classId, sectionId, setClassId, setSectionId, includeSection]);
+  ], [t, all, classes, sections, classId, onlyClassId, sectionId, setClassId, setSectionId, includeSection]);
 
   const matches = useCallback((row: ScopedRow) =>
     matchesClassSection(row, classId, sectionId), [classId, sectionId]);

@@ -8,7 +8,7 @@ import {
 import { useTranslation } from 'najm-i18n/react';
 import { HeaderSearchButton } from '@/components/HeaderSearchButton';
 import { FilterSummaryButton, MobileFilterField, MobileFilterSheet } from '@/components/MobileFilterSheet';
-import type { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
+import { withoutScopeAllOption, type useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import styles from './HomeworkMobile.module.css';
 
 /** The phone list's search, an icon in the top bar beside the actions menu. */
@@ -35,11 +35,12 @@ export function HomeworkMobileControls({ filters, homework, count, toggleButton,
   const subjectLabel = t('homework.table.subject');
   const newest = t('homework.mobile.newest');
   const oldest = t('homework.mobile.oldest');
-  const choices = filters.map((filter) => {
+  const choices = filters.map(({ options: listed, ...filter }) => {
+    const options = withoutScopeAllOption(listed);
     // Every section of the chosen class reads as their names (A, B, C), which says more than "all sections".
     const all = filter.name === 'classScope' ? t('homework.mobile.allClasses')
-      : filter.options.length ? filter.options.map((option) => option.label).join(', ') : t('homework.mobile.allSections');
-    return { ...filter, all, items: [{ value: '', label: all }, ...filter.options] };
+      : options.length ? options.map((option) => option.label).join(', ') : t('homework.mobile.allSections');
+    return { ...filter, all, items: [{ value: '', label: all }, ...options] };
   });
   const summary = choices.map(({ value, all, items }) => items.find((item) => item.value === value)?.label ?? all);
   const selectedSubject = homework?.subjects.find((subject) => subject.value === homework.subjectId);
