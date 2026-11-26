@@ -187,6 +187,64 @@ describe('Massar sheet workflow', () => {
     repository.planningMonths = async () => [{ classId: 'school-ready', months: { '2026-10': [{ date: '2026-10-20' }] } }];
     await expect(service.createRound({ term: 1, exam: 3 }, registrar)).rejects.toMatchObject({ status: 422 });
   });
+  it('opens each Contrôle Planning holds by itself, and gives each level its grids when its own Contrôle is planned', async () => {
+    const { service, repository } = fixture();
+    const components = [{ code: '1001', name: 'Synthetic' }];
+    const setup = { ...setupFixture(), year: { templateFileId: 'synthetic.xlsx' },
+      classes: [{ id: 'primary-class', name: '1APG-1', levelId: 'primary', classId: 'school-ready', unmatchedCodes: [] }, { id: 'college-class', name: '1APIC-1', levelId: 'college', classId: 'school-college', unmatchedCodes: [] }],
+      levels: [{ id: 'primary', kind: 'components' }, { id: 'college', kind: 'exam' }],
+      subjects: [{ id: 'primary-subject', levelId: 'primary', observedRounds: [], components, confirmed: true }, { id: 'college-subject', levelId: 'college', observedRounds: [{ term: 1, exam: 2, termLabel: 'Term', examLabel: 'Assessment 2', components }], components, confirmed: true }] };
+    // Both levels sat Contrôle 1 in October; collège sits its Contrôle 2 in November, primaire not yet.
+    const controls = [
+      { id: 'c1', term: 1, dateFrom: '2026-10-20', dateTo: '2026-10-23', classIds: ['school-ready', 'school-college'], subjectIds: [] },
+      { id: 'c2-college', term: 1, dateFrom: '2026-11-18', dateTo: '2026-11-20', classIds: ['school-college'], subjectIds: [] },
+    ];
+    const rounds: Array<{ id: string; term: number; exam: number; status: string; createdBy?: string | null; dueDate?: string | null }> = [];
+    const grids = new Set<string>();
+    Object.assign(repository, {
+      setup: async () => setup, activeRoster: async () => [], storedControls: async () => controls,
+      yearConfig: async () => ({ plan: { dates: [{ term: 1, exam: 2, dueDate: '2026-11-30' }] } }),
+      allRoundsForManagement: async () => rounds,
+      createRound: async (data: { term: number; exam: number; createdBy: string | null; dueDate: string | null }) => {
+        if (rounds.some(round => round.term === data.term && round.exam === data.exam)) return undefined;
+        const round = { ...data, id: `round-${data.term}-${data.exam}`, status: 'open' };
+        rounds.push(round);
+        return round;
+      },
+      createSheet: async (sheet: { roundId: string; massarClassId: string }) => { grids.add(`${sheet.roundId}:${sheet.massarClassId}`); },
+    });
+    await service.followPlanning({ actorId: 'supervisor' });
+    expect(rounds.map(round => [round.id, round.createdBy, round.dueDate])).toEqual([['round-1-1', 'supervisor', null], ['round-1-2', 'supervisor', '2026-11-30']]);
+    expect([...grids].sort()).toEqual(['round-1-1:college-class', 'round-1-1:primary-class', 'round-1-2:college-class']);
+    // Primaire's Contrôle 2 is planned in December: Contrôle 2 is already open, and its grid follows.
+    controls.push({ id: 'c2-primary', term: 1, dateFrom: '2026-12-09', dateTo: '2026-12-11', classIds: ['school-ready'], subjectIds: [] });
+    await service.followPlanning({ actorId: 'supervisor' });
+    expect(rounds).toHaveLength(2);
+    expect(grids.has('round-1-2:primary-class')).toBe(true);
+    // A closed Contrôle stays as it was.
+    grids.clear();
+    for (const round of rounds) round.status = 'closed';
+    controls.push({ id: 'c1-late', term: 1, dateFrom: '2026-10-26', dateTo: '2026-10-27', classIds: ['school-ready'], subjectIds: [] });
+    await service.followPlanning();
+    expect([...grids]).toEqual([]);
+  });
+  it('waits to open a collège Contrôle until the Massar files show it', async () => {
+    const { service, repository } = fixture();
+    const components = [{ code: '1001', name: 'Synthetic' }];
+    const setup = { ...setupFixture(), year: { templateFileId: 'synthetic.xlsx' },
+      classes: [{ id: 'college-class', name: '1APIC-1', levelId: 'college', classId: 'school-college', unmatchedCodes: [] }],
+      levels: [{ id: 'college', kind: 'exam' }],
+      subjects: [{ id: 'college-subject', levelId: 'college', observedRounds: [], components, confirmed: true }] };
+    const opened: number[] = [];
+    Object.assign(repository, { setup: async () => setup, activeRoster: async () => [], allRoundsForManagement: async () => [], createSheet: async () => {},
+      storedControls: async () => [
+        { id: 'c1', term: 1, dateFrom: '2026-10-20', dateTo: '2026-10-23', classIds: ['school-college'], subjectIds: [] },
+        { id: 'c2', term: 1, dateFrom: '2026-11-18', dateTo: '2026-11-20', classIds: ['school-college'], subjectIds: [] },
+      ],
+      createRound: async (data: { exam: number }) => { opened.push(data.exam); return { id: `round-${data.exam}`, ...data }; } });
+    await service.followPlanning();
+    expect(opened).toEqual([1]);
+  });
   it('saves due dates only for the Contrôles Planning holds, inside the year', async () => {
     const saved: unknown[] = [];
     const planService = (rounds: Array<{ term: number; exam: number }>, status = 'open') => {

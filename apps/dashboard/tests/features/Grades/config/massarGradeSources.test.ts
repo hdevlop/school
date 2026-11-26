@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import type { MassarGradeSource } from '@sms/contracts';
-import { examSourcesWithMassar, massarMarkFromGrade, massarSourceLabels } from '../../../../src/features/Grades/config/massarGradeSources';
+import { examSourcesWithMassar, massarMarkFromGrade, massarSourceLabels, startedContrôle } from '../../../../src/features/Grades/config/massarGradeSources';
 
 const component = (over: Partial<MassarGradeSource> = {}): MassarGradeSource => ({
   id: 'massar:sheet:1003', sheetId: 'sheet', componentCode: '1003', title: 'الإملاء',
@@ -32,5 +32,16 @@ describe('Massar components in Grades', () => {
     expect(massarMarkFromGrade('student', '1002', { marksObtained: '7.25' }).mark).toBe(7.25);
     expect(massarMarkFromGrade('student', '1003', { marksObtained: 8, status: 'missed' }))
       .toEqual({ studentId: 'student', componentCode: '1003', mark: null, absence: 'justified' });
+  });
+});
+
+describe('the Contrôle Notes opens on', () => {
+  // Contrôle 2 is open once planned, weeks before its exams: Notes stays on Contrôle 1 until then.
+  const options = [{ value: 'c1', day: '2026-11-02' }, { value: 'c2', day: '2026-12-02' }];
+  it('is the newest that has started, else the first', () => {
+    expect(startedContrôle(options, (option) => option.day, '2026-11-26')?.value).toBe('c1');
+    expect(startedContrôle(options, (option) => option.day, '2026-12-02')?.value).toBe('c2');
+    expect(startedContrôle(options, (option) => option.day, '2026-10-01')?.value).toBe('c1');
+    expect(startedContrôle([{ value: 'x', day: null }], (option) => option.day, '2026-11-26')?.value).toBe('x');
   });
 });

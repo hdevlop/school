@@ -27,6 +27,8 @@ export interface MassarGradeSource {
   classId: string; sectionId: string; subjectId: string; teacherId: string | null;
   totalMarks: number; term: number; exam: number; termLabel: string; examLabel: string;
   linkedExamId: string | null;
+  /** The first day this class sits the Contrôle in this subject, when Planning holds it: Notes opens the one that has started. */
+  examFrom?: string | null;
 }
 export interface MassarStudent { id: string; studentCode: string; name: string; dateOfBirth: string; massarStudentId: string | number | null; position: number }
 export interface MassarSheetRow {

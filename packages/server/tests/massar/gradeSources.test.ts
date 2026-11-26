@@ -11,7 +11,9 @@ describe('Massar grade sources', () => {
       subject: { subjectId: 'arabic' }, level: { maxMark: 10 }, teacherId: null,
       round: { term: 1, exam: 1, termLabel: 'Semester 1', examLabel: 'Contrôle 1' },
     };
-    const repository = { sheets: async () => [row, { ...row, sheet: { ...row.sheet, id: 'unmapped' }, cls: { ...row.cls, sectionId: null } }] };
+    const repository = { sheets: async () => [row, { ...row, sheet: { ...row.sheet, id: 'unmapped' }, cls: { ...row.cls, sectionId: null } }],
+      storedControls: async () => [{ id: 'c1', term: 1, dateFrom: '2026-11-02', dateTo: '2026-11-06', classIds: ['cp'], subjectIds: [] }],
+      planningMonths: async () => [], plannedExamDays: async () => [] };
     let requested: string[] = [];
     const link = { examLinks: async (sheetIds: string[]) => {
       requested = sheetIds;
@@ -25,5 +27,7 @@ describe('Massar grade sources', () => {
     expect(sources.filter(source => source.linkedExamId)).toEqual([expect.objectContaining({ componentCode: '2', linkedExamId: 'dictation-exam' })]);
     expect(new Set(sources.map(source => source.id)).size).toBe(6);
     expect(requested).toEqual(['owned-sheet', 'unmapped']);
+    // Notes opens the Contrôle that has started: each part says when its class sits it.
+    expect(sources.every(source => source.examFrom === '2026-11-02')).toBe(true);
   });
 });

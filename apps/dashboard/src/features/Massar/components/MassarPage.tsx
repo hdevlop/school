@@ -3,6 +3,7 @@ import { useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { FileUp, LayoutList, Printer, Upload } from 'lucide-react';
 import { NButton, NEmptyState, NSheet } from 'najm-kit';
+import { localDateInput } from 'najm-kit/format';
 import { useTranslation } from 'najm-i18n/react';
 import { useNThemeBrandingSlot } from 'najm-theme/react';
 import { toast } from 'sonner';
@@ -15,7 +16,7 @@ import { api } from '@/services/http';
 import { downloadMassar, massarPost, massarPut, useMassarAction, useMassarRead } from '../hooks/useMassar';
 import { useCollapsibleSide } from '../hooks/useCollapsibleSide';
 import { useStudentPicking } from '../hooks/useStudentPicking';
-import { classOrder, controlList, nextRound, progressPercent, sheetState, type PlannedRound } from '../config/massarModel';
+import { classOrder, controlList, nextRound, progressPercent, sheetState, startedRound, type PlannedRound } from '../config/massarModel';
 import { controlLabels } from '../config/controlLabels';
 import { buildMassarDocument, type MassarPaperOptions } from '../config/massarDocument';
 import { buildStudentStatementDocument } from '../config/studentStatementDocument';
@@ -80,7 +81,10 @@ function MassarContent() {
 
   // ── Derived: the round, its classes and the open sheet ────────────────────
   const rounds = [...(roundsQuery.data ?? [])].sort((a, b) => a.term - b.term || a.exam - b.exam);
-  const round = rounds.find(item => item.id === pickedRound) ?? rounds.at(-1);
+  // Contrôles open once planned: the page starts on the one whose exams have started.
+  const plannedDays = availability.data?.planned ?? [];
+  const round = rounds.find(item => item.id === pickedRound)
+    ?? startedRound(rounds, item => plannedDays.find(day => day.term === item.term && day.exam === item.exam)?.examFrom, localDateInput(new Date()));
   const sheetsQuery = useMassarRead<MassarSheetRow[]>(`/sheets?roundId=${encodeURIComponent(round?.id ?? '')}`, !!round, SHEETS_POLL_MS);
   const sheets = sheetsQuery.data ?? [];
   const setup = setupQuery.data;

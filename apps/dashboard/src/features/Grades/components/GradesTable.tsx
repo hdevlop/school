@@ -17,7 +17,8 @@ import { buildMassarDocument } from '@/features/Massar/config/massarDocument';
 import { printPlanningDocument } from '@/features/Assessments/planning/planningDocument';
 import { useGrades, useSourceGrades } from '../hooks/useGrades';
 import { useMassarGrades } from '../hooks/useMassarGrades';
-import { examSourcesWithMassar, massarMarkFromGrade, massarSourceLabels } from '../config/massarGradeSources';
+import { localDateInput } from 'najm-kit/format';
+import { examSourcesWithMassar, massarMarkFromGrade, massarSourceLabels, startedContrôle } from '../config/massarGradeSources';
 import { compareMassarOrder } from '@/features/Students/config/massarRosterOrder';
 import { studentListRead, useStudentsOnDate } from '@/features/Students/hooks/useStudents';
 import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
@@ -250,15 +251,19 @@ function GradesTableForYear() {
   const pickOptions = !isSheet ? sourceOptions : gridOnly ? contrôleOptions : sheetOptions;
   const selectSheetOption = useCallback((value: string) => setSourceId(sourceOfOption(value)), [sourceOfOption]);
 
-  // Nothing to pick: with Massar, the subject's newest Contrôle (the list runs
-  // oldest to newest, see examSourcesWithMassar), the one being filled in. A
+  // Nothing to pick: with Massar, the subject's newest Contrôle that has
+  // started (the list runs oldest to newest, see examSourcesWithMassar), the
+  // one being filled in: a Contrôle opens once planned, weeks ahead. A
   // desktop opens its grid straight away; a phone opens its first part, so the
   // list can count every part of it. Otherwise the only exam for this class,
   // section and subject.
   const opensNewestContrôle = !!massarParts?.length && !!subjectId;
+  const currentContrôle = useMemo(() => startedContrôle<{ value: string; label: string }>(contrôleOptions, (option) => (filteredSources
+    .find((item) => 'sheetId' in item && `${MASSAR_SHEET_OPTION}${item.sheetId}` === option.value) as { examFrom?: string | null } | undefined)?.examFrom, localDateInput(new Date())),
+  [contrôleOptions, filteredSources]);
   const defaultOption = !sectionId || isAllClasses ? ''
-    : gridOnly ? (subjectId ? contrôleOptions.at(-1)?.value ?? '' : '')
-      : opensNewestContrôle && contrôleOptions.length ? contrôleOptions.at(-1)!.value
+    : gridOnly ? (subjectId ? currentContrôle?.value ?? '' : '')
+      : opensNewestContrôle && currentContrôle ? currentContrôle.value
         : pickOptions.length === 1 ? pickOptions[0].value : '';
   const defaultSourceId = defaultOption ? sourceOfOption(defaultOption) : '';
   useEffect(() => {

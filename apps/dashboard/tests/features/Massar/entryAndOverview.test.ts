@@ -1,7 +1,7 @@
 import { expect, it } from 'bun:test';
 import type { MassarSheetDetail, MassarSheetRow } from '@sms/contracts';
 import { MassarDraft } from '@/features/Massar/config/MassarDraft';
-import { classState, controlList, dueState, nextCell, nextRound, overview, parseCell, pastedCells, sheetState } from '@/features/Massar/config/massarModel';
+import { classState, controlList, dueState, nextCell, nextRound, overview, parseCell, pastedCells, sheetState, startedRound } from '@/features/Massar/config/massarModel';
 import { massarPlanningControls } from '@sms/contracts';
 import { buildMassarDocument } from '@/features/Massar/config/massarDocument';
 
@@ -105,4 +105,15 @@ it('prints every selected sheet with marks and empty cells, escapes names and re
   expect((html.match(/<section class="sheet"/g) ?? [])).toHaveLength(2); expect(html).toContain('<td class="mark" dir="ltr">0.00</td><td class="mark" dir="ltr"></td>');
   expect(html).toContain('@page{size:A4 landscape;margin:0}');
   expect(html).toContain('&lt;Student&gt;'); expect(html).not.toContain('<script>'); expect(html).not.toContain('javascript:');
+});
+
+it('opens on the Contrôle whose exams have started, since Contrôles open as soon as they are planned', () => {
+  const rounds = [{ id: 'c2', term: 1, exam: 2 }, { id: 'c1', term: 1, exam: 1 }, { id: 'act', term: 1, exam: 4 }];
+  const firstDay = { c1: '2026-11-02', c2: '2026-12-02' } as Record<string, string>;
+  const day = (round: { id: string }) => firstDay[round.id];
+  expect(startedRound(rounds, day, '2026-11-26')?.id).toBe('c1');
+  expect(startedRound(rounds, day, '2026-12-02')?.id).toBe('c2');
+  // Nothing started yet: the first opened.
+  expect(startedRound(rounds, day, '2026-10-01')?.id).toBe('c1');
+  expect(startedRound([], day, '2026-11-26')).toBeUndefined();
 });

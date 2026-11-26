@@ -6,7 +6,8 @@ import {
   examDaysOf, massarControlFor, massarControlsOfYear, mergedMassarControls, withStatementDefaults,
   type MassarComponent, type MassarGradeSource, type MassarMark, type MassarSheetDetail, type MassarSheetParts, type MassarSheetRow, type MassarStudent,
 } from '@sms/contracts';
-import { Inject, LoggerService, Service, Transaction, TransactionService } from '../../najm';
+import { Inject, LoggerService, On, Service, Transaction, TransactionService } from '../../najm';
+import { EXAM_CONTROLS_CHANGED } from '../examPlanning/examPlanningEvents';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { StudentService } from '../students/StudentService';
@@ -74,6 +75,18 @@ const numericMarks = (marks: Awaited<ReturnType<MassarRepository['marks']>>): Ma
   marks.map(mark => ({ ...mark, mark: mark.mark === null ? null : Number(mark.mark) }));
 
 const sameRound = (a: RoundKey, b: RoundKey) => a.term === b.term && a.exam === b.exam;
+
+/**
+ * A confirmed subject must have shown this round in a file: a collège test
+ * after the first, or the integrated activities. One still to confirm simply
+ * gets no grid for it.
+ */
+const unverifiedRound = (setup: Pick<Setup, 'subjects' | 'levels'>, round: RoundKey) => setup.subjects.some(subject => {
+  if (!subject.confirmed) return false;
+  const level = setup.levels.find(item => item.id === subject.levelId)!;
+  const needsObservedRound = round.exam === 4 || (level.kind === 'exam' && round.exam > 1);
+  return needsObservedRound && !subject.observedRounds.some(observed => sameRound(observed, round));
+});
 
 /** The parts a subject's grid has in one round: what a file showed for that round, else the subject's own. */
 const roundComponents = (subject: Setup['subjects'][number], round: RoundKey) =>
@@ -412,8 +425,11 @@ export class MassarService {
 
     await this.applyModel();
     await this.refreshAssignments();
-    if (data.addMissingSheets) await this.addMissingSheets();
-    else await this.syncRosters();
+    if (data.addMissingSheets) {
+      // Files set up after Planning: the Contrôles it already holds open now.
+      await this.openPlannedRounds(actor.id);
+      await this.addMissingSheets();
+    } else await this.syncRosters();
 
     const importedMarks = await this.marksFromFiles(accepted.map(file => file.data), actor);
     await this.repository.consumePreview(preview.id);
@@ -787,6 +803,44 @@ export class MassarService {
     }
   }
 
+  /**
+   * Planning changed its Contrôles or exam days. Every Contrôle Planning
+   * holds opens by itself, with no one opening it in Massar, and the classes
+   * and subjects that now sit an open Contrôle get their grids: collège and
+   * primaire sit the same Massar Contrôle at different times, so each level's
+   * grids come when its own Contrôle is planned. Nothing is removed. A closed
+   * Contrôle stays as it was; reopening it adds them.
+   */
+  @On(EXAM_CONTROLS_CHANGED)
+  async followPlanning(change?: { actorId?: string | null }) {
+    if (this.year.status === 'closed' || !await this.repository.yearConfig()) return;
+    await this.repository.lock();
+    const opened = await this.openPlannedRounds(change?.actorId ?? null);
+    if (!opened && !(await this.repository.allRoundsForManagement()).some(round => round.status !== 'closed')) return;
+    await this.addMissingSheets();
+  }
+
+  /**
+   * Opens each ordinary Contrôle (1 to 3) Planning holds that Massar has not
+   * opened yet, with the plan's due date. A collège Contrôle the year's
+   * Massar files do not show yet waits for them, as opening it by hand
+   * would be refused. How many opened.
+   */
+  private async openPlannedRounds(createdBy: string | null) {
+    const setup = await this.repository.setup();
+    if (!setup.year || !setup.classes.length || !setup.subjects.length) return 0;
+    const [config, rounds, controls] = await Promise.all([this.repository.yearConfig(), this.repository.allRoundsForManagement(), this.massarControls()]);
+    let opened = 0;
+    for (const { term, exam } of mergedMassarControls(controls)) {
+      if (exam >= 4 || rounds.some(round => sameRound(round, { term, exam })) || unverifiedRound(setup, { term, exam })) continue;
+      const { labelsUnseen: _unseen, ...labels } = resolveRoundLabels(setup.subjects, term, exam);
+      if (!labels.termLabel || !labels.examLabel) continue;
+      const dueDate = config?.plan?.dates.find(date => sameRound(date, { term, exam }))?.dueDate ?? null;
+      if (await this.repository.createRound({ term, exam, dueDate, ...labels, createdBy })) opened += 1;
+    }
+    return opened;
+  }
+
   private async addMissingSheets() {
     await this.applyModel();
     const setup = await this.repository.setup();
@@ -858,14 +912,7 @@ export class MassarService {
     const setup = await this.repository.setup();
     if (!setup.year || !setup.classes.length || !setup.subjects.length) this.validator.refuse('setupRequired');
 
-    // A confirmed subject must have shown this round in a file; one still to confirm simply gets no grid for it.
-    const unverified = setup.subjects.some(subject => {
-      if (!subject.confirmed) return false;
-      const level = setup.levels.find(item => item.id === subject.levelId)!;
-      const needsObservedRound = data.exam === 4 || (level.kind === 'exam' && data.exam > 1);
-      return needsObservedRound && !subject.observedRounds.some(round => sameRound(round, data));
-    });
-    if (unverified) this.validator.refuse('unverifiedRound');
+    if (unverifiedRound(setup, data)) this.validator.refuse('unverifiedRound');
 
     // An ordinary Contrôle exists once Planning has its exams.
     if (data.exam < 4) {
@@ -1013,12 +1060,16 @@ export class MassarService {
   async gradeSources(): Promise<MassarGradeSource[]> {
     const rows = await this.repository.sheets();
     const links = await this.grades?.examLinks(rows.map(row => row.sheet.id)) ?? [];
+    const controls = await this.massarControls();
+    const merged = mergedMassarControls(controls);
     const cellKey = (sheetId: string, componentCode: string) => JSON.stringify([sheetId, componentCode]);
     const linked = new Map(links.map(cell => [cellKey(cell.sheet.id, cell.componentCode), cell.exam.id]));
 
     return rows.flatMap(({ sheet, cls, subject, level, round, teacherId }) => {
       const { classId, sectionId } = cls, subjectId = subject.subjectId;
       if (!classId || !sectionId || !subjectId) return [];
+      const examFrom = (massarControlFor(controls, { term: round.term, exam: round.exam, classId, subjectId })
+        ?? merged.find(control => sameRound(control, round)))?.examFrom ?? null;
       return sheet.components.map(component => ({
         id: `massar:${sheet.id}:${encodeURIComponent(component.code)}`,
         sheetId: sheet.id,
@@ -1034,6 +1085,7 @@ export class MassarService {
         termLabel: round.termLabel,
         examLabel: round.examLabel,
         linkedExamId: linked.get(cellKey(sheet.id, component.code)) ?? null,
+        examFrom,
       }));
     });
   }

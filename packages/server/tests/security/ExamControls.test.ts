@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { getGuardMetadata } from 'najm-guard';
 import { ExamPlanningController } from '../../src/modules/examPlanning/ExamPlanningController';
 import { ExamPlanningService } from '../../src/modules/examPlanning/ExamPlanningService';
+import { EXAM_CONTROLS_CHANGED } from '../../src/modules/examPlanning/examPlanningEvents';
 import type { ExamControl } from '@sms/contracts';
 import { examControlDto } from '../../src/modules/examPlanning/ExamPlanningDto';
 import rolePermissions from '../../src/modules/seed-data/admin/rolePermissions.json';
@@ -89,5 +90,15 @@ describe("a Contrôle read from Planning's months", () => {
     await expect(instance.updateControl('derived-1-9', input, actor)).rejects.toThrow('examPlanning.errors.controls.notFound');
     await instance.updateControl('derived-1-1', input, actor);
     await expect(instance.deleteControl('derived-1-2', actor)).rejects.toThrow('examPlanning.errors.controls.notFound');
+  });
+  // Massar opens a Contrôle once for the school; the level whose own comes later gets its grids from this.
+  it('tells Massar each time the Contrôles change, after the change', async () => {
+    const { instance, saved } = service();
+    const heard: Array<[string, number]> = [];
+    Object.assign(instance, { events: { emitAsync: async (event: string) => { heard.push([event, saved.length]); } } });
+    await instance.createControl({ ...input, dateFrom: '2027-01-11', dateTo: '2027-01-15' }, actor);
+    await instance.updateControl('saved-1', input, actor);
+    await instance.deleteControl('saved-1', actor);
+    expect(heard).toEqual([[EXAM_CONTROLS_CHANGED, 3], [EXAM_CONTROLS_CHANGED, 3], [EXAM_CONTROLS_CHANGED, 2]]);
   });
 });

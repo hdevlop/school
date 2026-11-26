@@ -100,6 +100,16 @@ export function nextCell(key: string, row: number, col: number, rows: number, co
  * Every Contrôle of the year in order: the opened ones (selectable), the next
  * planned one, and the later ones, shown with their date but not yet available.
  */
+/**
+ * The opened Contrôle a page shows first. Contrôles open as soon as Planning
+ * holds them, so the newest may still be weeks away: the newest whose exams
+ * have started (first day today or before), else the first opened.
+ */
+export function startedRound<R extends RoundKey>(rounds: readonly R[], firstDay: (round: NoInfer<R>) => string | null | undefined, today: string): R | undefined {
+  const sorted = [...rounds].sort(byOrder);
+  return sorted.filter(round => { const day = firstDay(round); return !!day && day <= today; }).at(-1) ?? sorted[0];
+}
+
 export function controlList<R extends MassarRound>(rounds: R[], planned: PlannedRound[]) {
   const next = nextRound(rounds, planned);
   const exams = (key: RoundKey) => { const found = planned.find(item => item.term === key.term && item.exam === key.exam); return { examFrom: found?.examFrom ?? null, examTo: found?.examTo ?? null }; };

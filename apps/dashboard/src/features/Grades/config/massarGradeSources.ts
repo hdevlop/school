@@ -9,6 +9,15 @@ export function examSourcesWithMassar<T extends { id: string }>(exams: T[], comp
   ];
 }
 
+/**
+ * The Contrôle Notes opens on, from a list running oldest to newest: the
+ * newest whose exams have started (first day today or before), else the
+ * first. A Contrôle opens once planned, so the newest may be weeks away.
+ */
+export function startedContrôle<T>(options: readonly T[], firstDay: (option: NoInfer<T>) => string | null | undefined, today: string): T | undefined {
+  return options.filter(option => { const day = firstDay(option); return !!day && day <= today; }).at(-1) ?? options[0];
+}
+
 /** Repeated components name their semester and control so marks cannot land in the wrong round. */
 export function massarSourceLabels(sources: MassarGradeSource[]) {
   const key = (source: MassarGradeSource) => JSON.stringify([source.classId, source.sectionId, source.subjectId, source.title]);

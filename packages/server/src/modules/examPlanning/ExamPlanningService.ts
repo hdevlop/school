@@ -1,6 +1,7 @@
 import { derivedExamControls, examControlTerm, monthEndOf, examPlanningMonths, planningDuration, resolveExamPlanningClasses, yearExamControls, type ExamControl, type ExamControlInput, type ExamPlanningEntry, type ExamPlanningJson } from '@sms/contracts';
-import { Err, I18n, Service, Transaction } from '../../najm';
+import { Err, EventService, Events, I18n, Service, Transaction } from '../../najm';
 import { Year } from '../academicYears/requestYear';
+import { EXAM_CONTROLS_CHANGED } from './examPlanningEvents';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { ExamPlanningRepository } from './ExamPlanningRepository';
 import type { SaveExamPlanningDto } from './ExamPlanningDto';
@@ -16,7 +17,17 @@ const outOf = (cls: { level: string | null; cycle: string | null }) => /coll|إ�
 export class ExamPlanningService {
   @Year() private readonly year!: ResolvedAcademicYear;
   @I18n() private t!: (key: string) => string;
+  @Events() private events?: EventService;
   constructor(private repository: ExamPlanningRepository, private subjectRepository: SubjectRepository, private subjectValidator: SubjectValidator, private validator: ExamPlanningValidator) {}
+
+  /**
+   * Massar follows, opening the Contrôles now planned (by `actorId`) and
+   * adding their grids: awaited, in this request's year and transaction, so a
+   * failure rolls the change back.
+   */
+  private async controlsChanged(actorId: string | null = null) {
+    await this.events?.emitAsync(EXAM_CONTROLS_CHANGED, { actorId });
+  }
 
   async getAll() {
     return (await this.repository.getAll()).map(row => ({ ...row, visible: row.visible ?? true, months: row.months ?? {} }));
@@ -32,6 +43,8 @@ export class ExamPlanningService {
     await this.validator.ensureMayChange(actor, classId, target.months[data.month] ?? [], data.entries);
     await this.repository.saveMonth(classId, data);
     await this.syncExams([classId]);
+    // A teacher's lessons move no exam; the school's exams number collège's fards.
+    if (actor.role !== 'teacher') await this.controlsChanged(actor.id);
     return this.getAll();
   }
 
@@ -41,6 +54,7 @@ export class ExamPlanningService {
     if (classIds.some(id => !classes.some(row => row.id === id))) Err(404, this.t('classes.errors.notFound'));
     await this.repository.saveVisibility(classes.map(row => row.id), classIds);
     await this.syncExams();
+    await this.controlsChanged();
     return this.getAll();
   }
 
@@ -55,6 +69,7 @@ export class ExamPlanningService {
     }
     await this.repository.importDocument(resolved.classes);
     await this.syncExams();
+    await this.controlsChanged();
     return this.getAll();
   }
 
@@ -112,6 +127,7 @@ export class ExamPlanningService {
     const others = await this.savedControls();
     this.validator.ensureControlValid(input, others, this.year.label, await this.repository.yearClassIds(), await this.subjectIds());
     await this.repository.insertControls([{ ...input, term: examControlTerm(input.dateFrom), createdBy: actor.id }]);
+    await this.controlsChanged(actor.id);
     return this.controls();
   }
 
@@ -127,6 +143,7 @@ export class ExamPlanningService {
       opened.push({ ...input, id: `new-${index}`, term: examControlTerm(input.dateFrom) });
     }
     await this.repository.insertControls(inputs.map(input => ({ ...input, term: examControlTerm(input.dateFrom), createdBy: actor.id })));
+    await this.controlsChanged(actor.id);
     return this.controls();
   }
 
@@ -153,6 +170,7 @@ export class ExamPlanningService {
     await this.validator.ensureMayManageControl(actor, existing.classIds, input.classIds);
     this.validator.ensureControlValid(input, stored.filter(control => control.id !== existing.id), this.year.label, await this.repository.yearClassIds(), await this.subjectIds());
     await this.repository.updateControl(existing.id, { ...input, term: examControlTerm(input.dateFrom) });
+    await this.controlsChanged(actor.id);
     return this.controls();
   }
 
@@ -166,6 +184,7 @@ export class ExamPlanningService {
     const { existing } = await this.storedControlFor(id);
     await this.validator.ensureMayManageControl(actor, existing.classIds);
     await this.repository.deleteControl(existing.id);
+    await this.controlsChanged(actor.id);
     return this.controls();
   }
 
