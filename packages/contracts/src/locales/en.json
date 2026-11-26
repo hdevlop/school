@@ -6245,6 +6245,16 @@
     }
   },
   "behaviorRewards": {
+    "certificates": {
+      "printOne": "Print certificate",
+      "printSelected": "Print certificates ({{count}} selected)",
+      "selectToPrint": "Select the students whose certificates you want to print.",
+      "first": "1st place",
+      "second": "2nd place",
+      "third": "3rd place",
+      "empty": "None of the selected rewards is a certificate with a place.",
+      "failed": "The certificates could not be printed."
+    },
     "table": {
       "recordCount": "{{count}} recognition records",
       "massarCode": "Massar code",
@@ -6286,7 +6296,10 @@
       "rewardTypePlaceholder": "Select a reward",
       "points": "Awarded points (0–100)",
       "rewardNote": "Reward note",
-      "rewardNotePlaceholder": "Add optional details about the recognition"
+      "rewardNotePlaceholder": "Add optional details about the recognition",
+      "certificatePlace": "Certificate place",
+      "certificatePlacePlaceholder": "Select a place",
+      "certificatePlaceRequired": "Choose the certificate's place"
     },
     "categories": {
       "academic_effort": "Academic effort",
@@ -6337,7 +6350,8 @@
       "notOwner": "Teachers can update only recognition they awarded",
       "deleteAdminOnly": "Only administrators can delete recognition records",
       "invalidBehaviorDate": "Behavior date is invalid",
-      "futureBehaviorDate": "Behavior date cannot be in the future"
+      "futureBehaviorDate": "Behavior date cannot be in the future",
+      "certificatePlaceRequired": "A certificate reward needs its place (1st, 2nd or 3rd)"
     }
   },
   "rewardTemplates": {

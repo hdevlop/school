@@ -1,7 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Award, CalendarClock, FileText, Gift, Star, UserRound } from 'lucide-react';
+import { Award, CalendarClock, FileBadge, FileText, Gift, Star, UserRound } from 'lucide-react';
+import { useWatch } from 'react-hook-form';
 import { FormInput, NForm, NFormSectionHeader } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
@@ -11,8 +12,29 @@ import { FormStudentCombobox } from '@/features/Students/components/StudentCombo
 import { toLocalDateTimeInput } from '../behaviorRewardConstants';
 import { useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYear';
-import { buildBehaviorRewardCategoryOptions, buildBehaviorRewardTypeOptions } from '../config/behaviorRewardOptions';
+import {
+  buildBehaviorRewardCategoryOptions,
+  buildBehaviorRewardCertificatePlaceOptions,
+  buildBehaviorRewardTypeOptions,
+} from '../config/behaviorRewardOptions';
 import { RewardTemplateGenerateButton } from '@/features/RewardTemplates/components/RewardTemplateGenerateButton';
+
+/** A certificate names its place, printed on it; the field shows only while the reward is a certificate. */
+function CertificatePlaceField() {
+  const { t } = useTranslation();
+  if (useWatch({ name: 'rewardType' }) !== 'certificate') return null;
+  return (
+    <FormInput
+      name="certificatePlace"
+      type="select"
+      icon={FileBadge}
+      formLabel={t('behaviorRewards.form.certificatePlace')}
+      placeholder={t('behaviorRewards.form.certificatePlacePlaceholder')}
+      items={buildBehaviorRewardCertificatePlaceOptions(t)}
+      required
+    />
+  );
+}
 
 const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any }) => {
   const { t } = useTranslation();
@@ -33,6 +55,7 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
     description: behaviorReward?.description || '',
     rewardType: behaviorReward?.rewardType || 'verbal_praise',
     points: behaviorReward?.points ?? 0,
+    certificatePlace: behaviorReward?.certificatePlace ?? null,
   };
 
   const handleSubmit = async (formData) => {
@@ -41,6 +64,7 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
       ...payload,
       behaviorAt: new Date(`${behaviorDate}T${behaviorTime}`).toISOString(),
       points: Number(formData.points || 0),
+      certificatePlace: payload.rewardType === 'certificate' ? payload.certificatePlace : null,
     });
   };
 
@@ -111,6 +135,8 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
             placeholder="0"
           />
         </div>
+
+        <CertificatePlaceField />
 
         {/* FormInput's label takes text only, so the bank's button sits over the end of its row. */}
         <div className="relative">

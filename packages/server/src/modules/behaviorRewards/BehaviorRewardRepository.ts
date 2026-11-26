@@ -54,6 +54,7 @@ export class BehaviorRewardRepository {
         rewardType: behaviorRewards.rewardType,
         points: behaviorRewards.points,
         rewardNote: behaviorRewards.rewardNote,
+        certificatePlace: behaviorRewards.certificatePlace,
         createdAt: behaviorRewards.createdAt,
         updatedAt: behaviorRewards.updatedAt,
         student: {

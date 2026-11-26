@@ -80,6 +80,13 @@ export class BehaviorRewardValidator {
     if (record.awardedBy !== actor.id) Err(403, this.bt('notOwner'));
   }
 
+  /** A certificate reward names its place; any other reward type holds none. */
+  certificatePlaceFor(rewardType: string, place: string | null | undefined) {
+    if (rewardType !== 'certificate') return null;
+    if (!place) Err(400, this.bt('certificatePlaceRequired'));
+    return place;
+  }
+
   ensureBehaviorDate(value: string) {
     if (!Number.isFinite(new Date(value).getTime())) Err(400, this.bt('invalidBehaviorDate'));
     if (isBehaviorRewardDateInFuture(value)) Err(400, this.bt('futureBehaviorDate'));

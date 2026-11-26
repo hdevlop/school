@@ -3362,6 +3362,16 @@
     }
   },
   "behaviorRewards": {
+    "certificates": {
+      "printOne": "Imprimer le certificat",
+      "printSelected": "Imprimer les certificats ({{count}} sélectionné(s))",
+      "selectToPrint": "Sélectionnez les élèves dont vous voulez imprimer le certificat.",
+      "first": "1ère place",
+      "second": "2ème place",
+      "third": "3ème place",
+      "empty": "Aucune des récompenses sélectionnées n’est un certificat avec une place.",
+      "failed": "Impossible d’imprimer les certificats."
+    },
     "table": {
       "recordCount": "{{count}} reconnaissances",
       "massarCode": "Code Massar",
@@ -3403,7 +3413,10 @@
       "rewardTypePlaceholder": "Sélectionner une récompense",
       "points": "Points attribués (0–100)",
       "rewardNote": "Note sur la récompense",
-      "rewardNotePlaceholder": "Ajouter des détails facultatifs sur la reconnaissance"
+      "rewardNotePlaceholder": "Ajouter des détails facultatifs sur la reconnaissance",
+      "certificatePlace": "Place du certificat",
+      "certificatePlacePlaceholder": "Sélectionner une place",
+      "certificatePlaceRequired": "Choisissez la place du certificat"
     },
     "categories": {
       "academic_effort": "Effort scolaire",
@@ -3454,7 +3467,8 @@
       "notOwner": "Un enseignant ne peut modifier que ses propres reconnaissances",
       "deleteAdminOnly": "Seuls les administrateurs peuvent supprimer une reconnaissance",
       "invalidBehaviorDate": "La date du comportement est invalide",
-      "futureBehaviorDate": "La date du comportement ne peut pas être future"
+      "futureBehaviorDate": "La date du comportement ne peut pas être future",
+      "certificatePlaceRequired": "Une récompense de type certificat doit indiquer sa place (1re, 2e ou 3e)"
     }
   },
   "rewardTemplates": {

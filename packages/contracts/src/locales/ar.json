@@ -2530,6 +2530,16 @@
     }
   },
   "behaviorRewards": {
+    "certificates": {
+      "printOne": "طباعة الشهادة",
+      "printSelected": "طباعة الشهادات ({{count}} محدد)",
+      "selectToPrint": "حدد التلاميذ الذين تريد طباعة شهاداتهم.",
+      "first": "المرتبة الأولى",
+      "second": "المرتبة الثانية",
+      "third": "المرتبة الثالثة",
+      "empty": "لا توجد بين المكافآت المحددة شهادة محددة الترتيب.",
+      "failed": "تعذّرت طباعة الشهادات."
+    },
     "table": {
       "recordCount": "{{count}} سجلات تقدير",
       "massarCode": "رقم مسار",
@@ -2571,7 +2581,10 @@
       "rewardTypePlaceholder": "اختر مكافأة",
       "points": "النقاط الممنوحة (0–100)",
       "rewardNote": "ملاحظة المكافأة",
-      "rewardNotePlaceholder": "أضف تفاصيل اختيارية عن التقدير"
+      "rewardNotePlaceholder": "أضف تفاصيل اختيارية عن التقدير",
+      "certificatePlace": "ترتيب الشهادة",
+      "certificatePlacePlaceholder": "اختر الترتيب",
+      "certificatePlaceRequired": "اختر ترتيب الشهادة"
     },
     "categories": {
       "academic_effort": "الجهد الدراسي",
@@ -2622,7 +2635,8 @@
       "notOwner": "يمكن للمعلم تعديل التقديرات التي منحها فقط",
       "deleteAdminOnly": "يمكن للمسؤولين فقط حذف سجلات التقدير",
       "invalidBehaviorDate": "تاريخ السلوك غير صالح",
-      "futureBehaviorDate": "لا يمكن أن يكون تاريخ السلوك في المستقبل"
+      "futureBehaviorDate": "لا يمكن أن يكون تاريخ السلوك في المستقبل",
+      "certificatePlaceRequired": "يجب تحديد ترتيب مكافأة الشهادة (الأول أو الثاني أو الثالث)"
     }
   },
   "rewardTemplates": {

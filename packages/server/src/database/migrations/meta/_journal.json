@@ -1023,6 +1023,13 @@
       "when": 1795429600443,
       "tag": "0145_desk_card_backgrounds_permission",
       "breakpoints": true
+    },
+    {
+      "idx": 146,
+      "version": "7",
+      "when": 1795429660443,
+      "tag": "0146_behavior_reward_certificate_place",
+      "breakpoints": true
     }
   ]
 }

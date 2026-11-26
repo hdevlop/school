@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
   behaviorRewardCategoryEnum,
+  behaviorRewardCertificatePlaceEnum,
   behaviorRewardTypeEnum,
 } from '../../shared/enums';
 
@@ -14,6 +15,8 @@ const behaviorRewardInput = z.object({
   points: z.number().int('Points must be an integer')
     .min(0, 'validationMessages.pointsRange').max(100, 'validationMessages.pointsRange'),
   rewardNote: z.string().trim().max(1000, 'Reward note is too long').nullable().optional(),
+  // Required with a `certificate` reward and dropped with any other; the service decides.
+  certificatePlace: behaviorRewardCertificatePlaceEnum.nullable().optional(),
 });
 
 export const createBehaviorRewardDto = behaviorRewardInput.extend({

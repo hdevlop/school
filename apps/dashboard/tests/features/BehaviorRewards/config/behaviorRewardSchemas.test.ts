@@ -2,6 +2,7 @@ import { describe, expect, it } from 'bun:test';
 import { schoolI18n } from '@sms/contracts/locales';
 import {
   BEHAVIOR_REWARD_CATEGORY_VALUES,
+  BEHAVIOR_REWARD_CERTIFICATE_PLACE_VALUES,
   BEHAVIOR_REWARD_TYPE_VALUES,
 } from '@sms/contracts';
 
@@ -27,8 +28,18 @@ describe('behaviorRewardSchema', () => {
       expect(behaviorRewardSchema.safeParse({ ...reward, category }).success).toBe(true);
     }
     for (const rewardType of BEHAVIOR_REWARD_TYPE_VALUES) {
-      expect(behaviorRewardSchema.safeParse({ ...reward, rewardType }).success).toBe(true);
+      expect(behaviorRewardSchema.safeParse({ ...reward, rewardType, certificatePlace: 'first' }).success).toBe(true);
     }
+  });
+
+  it('asks a certificate for its place, and no other reward type', () => {
+    const missing = behaviorRewardSchema.safeParse({ ...reward, rewardType: 'certificate' });
+    expect(missing.success).toBe(false);
+    expect(missing.error?.issues[0]).toMatchObject({ path: ['certificatePlace'], message: "Choose the certificate's place" });
+    for (const certificatePlace of BEHAVIOR_REWARD_CERTIFICATE_PLACE_VALUES) {
+      expect(behaviorRewardSchema.safeParse({ ...reward, rewardType: 'certificate', certificatePlace }).success).toBe(true);
+    }
+    expect(behaviorRewardSchema.safeParse({ ...reward, certificatePlace: null }).success).toBe(true);
   });
 
   it('coerces the points the number input submits as text', () => {

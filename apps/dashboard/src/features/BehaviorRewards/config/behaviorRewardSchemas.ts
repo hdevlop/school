@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
   BEHAVIOR_REWARD_CATEGORY_VALUES,
+  BEHAVIOR_REWARD_CERTIFICATE_PLACE_VALUES,
   BEHAVIOR_REWARD_TYPE_VALUES,
 } from '@sms/contracts';
 
@@ -32,6 +33,12 @@ export const createBehaviorRewardSchema = (t: T) => z.object({
     .min(0, t('validationMessages.pointsRange'))
     .max(100, t('validationMessages.pointsRange')),
   rewardNote: z.string().trim().max(1000, t('validationMessages.rewardNoteIsTooLong')).optional().nullable(),
+  // Asked only for a certificate: the place its printed certificate names.
+  certificatePlace: z.enum(BEHAVIOR_REWARD_CERTIFICATE_PLACE_VALUES).optional().nullable(),
+}).superRefine((data, ctx) => {
+  if (data.rewardType === 'certificate' && !data.certificatePlace) {
+    ctx.addIssue({ code: 'custom', path: ['certificatePlace'], message: t('behaviorRewards.form.certificatePlaceRequired') });
+  }
 });
 
 export type BehaviorRewardFormValues = z.input<ReturnType<typeof createBehaviorRewardSchema>>;

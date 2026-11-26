@@ -3,6 +3,7 @@
 import { PermissionButton } from '@/components/PermissionButton';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useMemo, useState } from 'react';
+import type { RowSelectionState } from '@tanstack/react-table';
 import { HeaderActionsMenu } from '@/components/HeaderActionsMenu';
 import { HeaderSearchButton, normalizeSearch } from '@/components/HeaderSearchButton';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
@@ -19,6 +20,7 @@ import BehaviorRewardCard from './BehaviorRewardCard';
 import BehaviorRewardsMobileFilters from './BehaviorRewardsMobileFilters';
 import { BehaviorRewardCardSkeleton } from '@/shared/CardSkeletons';
 import BehaviorRewardDetails, { type BehaviorRewardDetail } from './BehaviorRewardDetails';
+import { RewardCertificatesButton } from './RewardCertificatesButton';
 import BehaviorRewardForm from './BehaviorRewardForm';
 import { useBehaviorRewards } from '../hooks/useBehaviorRewards';
 import { useBehaviorRewardsTableColumns } from '../hooks/useBehaviorRewardsTableColumns';
@@ -31,6 +33,7 @@ const BehaviorRewardsTable = () => {
   // On a phone the search lives in the header, outside the table, so the page filters by it.
   const [search, setSearch] = useState('');
   const [viewing, setViewing] = useState<BehaviorRewardDetail | null>(null);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const query = isPhone ? normalizeSearch(search.trim()) : '';
   // Parents and students read their own or their children's records only.
   // School-wide roles delete any reward and a teacher the ones they gave (the server checks which);
@@ -53,6 +56,7 @@ const BehaviorRewardsTable = () => {
     isUpdating,
     isDeleting,
   } = useBehaviorRewards();
+  const canPrint = !isFamily && can('read:behavior-rewards') && !isAuthorizationError(error);
 
   const tableData = useMemo(() => (behaviorRewards || [])
     .filter(scope.matches)
@@ -84,10 +88,17 @@ const BehaviorRewardsTable = () => {
     }
     openDialog({
       title: t('behaviorRewards.dialogs.viewTitle'),
-      children: <BehaviorRewardDetails behaviorReward={reward} />,
+      children: <BehaviorRewardDetails behaviorReward={reward} canPrint={canPrint} />,
       showButtons: false,
     });
   };
+
+  const toggleRewardSelection = ({ id }: { id: string }) => setRowSelection((current) => {
+    const next = { ...current };
+    if (next[id]) delete next[id];
+    else next[id] = true;
+    return next;
+  });
 
   const handleEdit = (reward) => openDialog({
     title: t('behaviorRewards.dialogs.editTitle'),
@@ -148,6 +159,10 @@ const BehaviorRewardsTable = () => {
         responsiveSkeleton
         className="min-h-0 flex-1"
         data={tableData}
+        getRowId={(reward) => reward.id}
+        rowSelection={rowSelection}
+        onRowSelectionChange={setRowSelection}
+        headerSlot={canPrint ? <RewardCertificatesButton hasRows={tableData.length > 0 && !isBehaviorRewardsLoading} /> : undefined}
         columns={columns}
         filters={filters}
         inlinePhoneFilters={false}
@@ -168,7 +183,7 @@ const BehaviorRewardsTable = () => {
         isFilteredEmpty={hasSelection && (behaviorRewards?.length ?? 0) > 0 && tableData.length === 0}
         onCreate={isFamily ? undefined : handleCreate}
         onView={handleView}
-        onRowClick={isPhone ? handleView : undefined}
+        onRowClick={canPrint ? toggleRewardSelection : isPhone ? handleView : undefined}
         onEdit={isFamily ? undefined : handleEdit}
         onDelete={canDelete ? handleDelete : undefined}
         loading={isBehaviorRewardsLoading}
@@ -209,7 +224,7 @@ const BehaviorRewardsTable = () => {
       {viewing && (
         <NSheet open onOpenChange={(open) => { if (!open) setViewing(null); }} icon={FEATURE_ICONS.behaviorRewards}
           title={t('behaviorRewards.dialogs.viewTitle')} width={560}>
-          <BehaviorRewardDetails behaviorReward={viewing} />
+          <BehaviorRewardDetails behaviorReward={viewing} canPrint={canPrint} />
         </NSheet>
       )}
     </div>

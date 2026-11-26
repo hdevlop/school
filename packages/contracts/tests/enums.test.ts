@@ -18,6 +18,7 @@ const PERSISTED_ENUMS: Partial<Record<EnumKey, readonly string[]>> = {
   massarRoundStatus: ['open', 'exported', 'closed'],
   massarSheetKind: ['components', 'exam'],
   homeworkAttachmentKind: ['image', 'pdf'],
+  behaviorRewardCertificatePlace: ['first', 'second', 'third'],
   homeworkCompletionStatus: ['done', 'incomplete', 'not_done'],
   competencyLevel: ['not_acquired', 'beginning', 'in_progress', 'advanced', 'mastered'],
   visitRequestStatus: ['new', 'contacted', 'scheduled', 'closed'],
@@ -151,7 +152,7 @@ describe('shared enum contract', () => {
     // A new `pgEnum(...)` without an entry above would ship unpinned, so the
     // count is asserted rather than left to whoever adds the next one: fifty-one
     // pgEnums plus the yearly enrollment status CHECK constraint.
-    expect(Object.keys(PERSISTED_ENUMS)).toHaveLength(59);
+    expect(Object.keys(PERSISTED_ENUMS)).toHaveLength(60);
   });
 
   it('gives every enum at least one member', () => {

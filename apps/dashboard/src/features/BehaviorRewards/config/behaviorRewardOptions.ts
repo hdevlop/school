@@ -1,9 +1,11 @@
 import {
   BEHAVIOR_REWARD_CATEGORY_VALUES,
+  BEHAVIOR_REWARD_CERTIFICATE_PLACE_VALUES,
   BEHAVIOR_REWARD_TYPE_VALUES,
 } from '@sms/contracts';
 import type {
   BehaviorRewardCategory,
+  BehaviorRewardCertificatePlace,
   BehaviorRewardType,
 } from '@sms/contracts';
 
@@ -45,3 +47,9 @@ export const buildBehaviorRewardTypeOptions = (
   t: Translate,
 ): readonly EnumOption<BehaviorRewardType>[] =>
   optionsFromValues(BEHAVIOR_REWARD_TYPE_VALUES, t, BEHAVIOR_REWARD_TYPE_TRANSLATION_PREFIX);
+
+/** The place a certificate reward prints with, shown only when the reward type is `certificate`. */
+export const buildBehaviorRewardCertificatePlaceOptions = (
+  t: Translate,
+): readonly EnumOption<BehaviorRewardCertificatePlace>[] =>
+  optionsFromValues(BEHAVIOR_REWARD_CERTIFICATE_PLACE_VALUES, t, 'behaviorRewards.certificates');

@@ -4,7 +4,7 @@ import { useState, type ReactNode } from 'react';
 import { ComboboxInput, SelectInput, useTableStore, type NTableState } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { FilterSummaryButton, MobileFilterField, MobileFilterSheet } from '@/components/MobileFilterSheet';
-import type { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
+import { withoutScopeAllOption, type useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import type { useBehaviorRewardsTableFilters } from '../hooks/useBehaviorRewardsTableFilters';
 
 /** The search is an icon in the page header (see BehaviorRewardsTable), as on the homework list. */
@@ -29,14 +29,15 @@ export default function BehaviorRewardsMobileFilters({ columnFilters, rewardFilt
       value: typeof value === 'string' ? value : '',
       onChange: (next: string) => table?.getColumn(filter.name)?.setFilterValue(next || undefined),
     }];
-  })].map((filter) => {
+  })].map(({ options: listed, ...filter }) => {
+    const options = withoutScopeAllOption(listed);
     const sectionNames = filter.name === 'sectionScope'
-      ? filter.options.map((option) => option.label).join(', ')
+      ? options.map((option) => option.label).join(', ')
       : '';
-    const selected = filter.options.find((option) => option.value === filter.value);
+    const selected = options.find((option) => option.value === filter.value);
     return {
       ...filter,
-      items: [sectionNames ? { ...all, label: sectionNames } : all, ...filter.options],
+      items: [sectionNames ? { ...all, label: sectionNames } : all, ...options],
       summaryLabel: selected?.label ?? sectionNames,
     };
   });

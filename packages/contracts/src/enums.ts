@@ -177,6 +177,10 @@ export const BEHAVIOR_REWARD_TYPE_VALUES = [
 ] as const;
 export type BehaviorRewardType = (typeof BEHAVIOR_REWARD_TYPE_VALUES)[number];
 
+/** The place a `certificate` reward is printed with; other reward types hold none. */
+export const BEHAVIOR_REWARD_CERTIFICATE_PLACE_VALUES = ['first', 'second', 'third'] as const;
+export type BehaviorRewardCertificatePlace = (typeof BEHAVIOR_REWARD_CERTIFICATE_PLACE_VALUES)[number];
+
 export const DISCIPLINE_CATEGORY_VALUES = [
   'classroom_disruption',
   'disrespect',

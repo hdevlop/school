@@ -9,6 +9,7 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { rewardIcon } from '../behaviorRewardConstants';
 import { CategoryTile, PointsMark } from './BehaviorRewardTags';
 import { BehaviorRewardStudentIdentity } from './BehaviorRewardStudentIdentity';
+import { RewardCertificateButton } from './RewardCertificatesButton';
 
 export type BehaviorRewardDetail = {
   id: string;
@@ -20,6 +21,7 @@ export type BehaviorRewardDetail = {
   rewardType: BehaviorRewardType;
   points?: number | null;
   rewardNote?: string | null;
+  certificatePlace?: string | null;
   awardedByUser?: { name?: string | null } | null;
   behaviorAt: string;
   createdAt: string;
@@ -43,7 +45,10 @@ function RewardDetailField({ icon: Icon, label, children, className }: {
   );
 }
 
-export default function BehaviorRewardDetails({ behaviorReward: reward }: { behaviorReward: BehaviorRewardDetail }) {
+export default function BehaviorRewardDetails({ behaviorReward: reward, canPrint }: {
+  behaviorReward: BehaviorRewardDetail;
+  canPrint: boolean;
+}) {
   const { t } = useTranslation();
   const { displayDateTime } = useSchoolFormat();
   const description = reward.description?.trim();
@@ -54,6 +59,7 @@ export default function BehaviorRewardDetails({ behaviorReward: reward }: { beha
       <div className="min-w-0 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3.5">
         <BehaviorRewardStudentIdentity student={reward.student} updatedAt={reward.updatedAt} size="lg" />
       </div>
+      {canPrint && <RewardCertificateButton reward={reward} />}
 
       <section className="grid gap-2.5 rounded-xl border border-border/70 bg-card p-3">
         <h3 className="flex min-w-0 items-center gap-2.5 text-sm font-semibold">
@@ -66,6 +72,8 @@ export default function BehaviorRewardDetails({ behaviorReward: reward }: { beha
       <dl className="grid grid-cols-2 gap-2.5">
         <RewardDetailField icon={rewardIcon(reward.rewardType)} label={t('behaviorRewards.table.reward')}>
           {t(`behaviorRewards.rewardTypes.${reward.rewardType}`)}
+          {reward.rewardType === 'certificate' && reward.certificatePlace
+            && <> · {t(`behaviorRewards.certificates.${reward.certificatePlace}`)}</>}
         </RewardDetailField>
         <RewardDetailField icon={Star} label={t('behaviorRewards.table.points')}>
           <PointsMark points={reward.points} />

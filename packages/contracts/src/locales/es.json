@@ -2516,6 +2516,16 @@
     }
   },
   "behaviorRewards": {
+    "certificates": {
+      "printOne": "Imprimir certificado",
+      "printSelected": "Imprimir certificados ({{count}} seleccionados)",
+      "selectToPrint": "Selecciona los estudiantes cuyos certificados quieres imprimir.",
+      "first": "1.er puesto",
+      "second": "2.º puesto",
+      "third": "3.er puesto",
+      "empty": "Ninguna de las recompensas seleccionadas es un certificado con puesto.",
+      "failed": "No se pudieron imprimir los certificados."
+    },
     "table": {
       "recordCount": "{{count}} reconocimientos",
       "massarCode": "Código Massar",
@@ -2557,7 +2567,10 @@
       "rewardTypePlaceholder": "Seleccionar recompensa",
       "points": "Puntos otorgados (0–100)",
       "rewardNote": "Nota de recompensa",
-      "rewardNotePlaceholder": "Añade detalles opcionales sobre el reconocimiento"
+      "rewardNotePlaceholder": "Añade detalles opcionales sobre el reconocimiento",
+      "certificatePlace": "Puesto del certificado",
+      "certificatePlacePlaceholder": "Seleccionar puesto",
+      "certificatePlaceRequired": "Elige el puesto del certificado"
     },
     "categories": {
       "academic_effort": "Esfuerzo académico",
@@ -2608,7 +2621,8 @@
       "notOwner": "Los profesores solo pueden editar sus propios reconocimientos",
       "deleteAdminOnly": "Solo los administradores pueden eliminar reconocimientos",
       "invalidBehaviorDate": "La fecha de la conducta no es válida",
-      "futureBehaviorDate": "La fecha de la conducta no puede estar en el futuro"
+      "futureBehaviorDate": "La fecha de la conducta no puede estar en el futuro",
+      "certificatePlaceRequired": "Una recompensa de certificado debe indicar su puesto (1.º, 2.º o 3.º)"
     }
   },
   "rewardTemplates": {

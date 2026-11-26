@@ -15,6 +15,10 @@ export const behaviorRewardTypeDbEnum = pgEnum(
   'behavior_reward_type',
   getEnumValues('behaviorRewardType'),
 );
+export const behaviorRewardCertificatePlaceDbEnum = pgEnum(
+  'behavior_reward_certificate_place',
+  getEnumValues('behaviorRewardCertificatePlace'),
+);
 
 export const behaviorRewards = pgTable('behavior_rewards', {
   id: idField(),
@@ -30,6 +34,8 @@ export const behaviorRewards = pgTable('behavior_rewards', {
   rewardType: behaviorRewardTypeDbEnum('reward_type').notNull(),
   points: integer('points').notNull().default(0),
   rewardNote: text('reward_note'),
+  // Set only on a `certificate` reward: the place its printed certificate names.
+  certificatePlace: behaviorRewardCertificatePlaceDbEnum('certificate_place'),
   ...timestamps,
 }, (table) => [
   index('behavior_rewards_student_idx').on(table.studentId),

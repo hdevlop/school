@@ -62,6 +62,7 @@ export const alertPriorityEnum = createZodEnum('alertPriority');
 export const alertStatusEnum = createZodEnum('alertStatus');
 export const behaviorRewardCategoryEnum = createZodEnum('behaviorRewardCategory');
 export const behaviorRewardTypeEnum = createZodEnum('behaviorRewardType');
+export const behaviorRewardCertificatePlaceEnum = createZodEnum('behaviorRewardCertificatePlace');
 
 export const disciplineCategoryEnum = createZodEnum('disciplineCategory');
 export const disciplineSeverityEnum = createZodEnum('disciplineSeverity');

@@ -1,5 +1,6 @@
 import { Service } from '../../najm';
 import { pickProps } from '../../shared';
+import type { BehaviorRewardCertificatePlace } from '@sms/contracts';
 import type { CreateBehaviorRewardDto, UpdateBehaviorRewardDto } from './BehaviorRewardDto';
 import { BehaviorRewardRepository } from './BehaviorRewardRepository';
 import { BehaviorRewardValidator, type BehaviorRewardActor } from './BehaviorRewardValidator';
@@ -31,6 +32,7 @@ export class BehaviorRewardService {
 
   async create(data: CreateBehaviorRewardDto, actor: BehaviorRewardActor) {
     this.behaviorRewardValidator.ensureBehaviorDate(data.behaviorAt);
+    const certificatePlace = this.behaviorRewardValidator.certificatePlaceFor(data.rewardType, data.certificatePlace);
     const student = await this.behaviorRewardValidator.ensureStudentEligible(data.studentId, data.behaviorAt, actor);
 
     return this.behaviorRewardRepository.create({
@@ -41,6 +43,7 @@ export class BehaviorRewardService {
       rewardType: data.rewardType,
       points: data.points,
       rewardNote: data.rewardNote || null,
+      certificatePlace: certificatePlace as BehaviorRewardCertificatePlace | null,
       classId: student.classId,
       sectionId: student.sectionId,
       awardedBy: actor.id,
@@ -54,6 +57,12 @@ export class BehaviorRewardService {
     const updateData: Record<string, unknown> = pickProps(data, MUTABLE_FIELDS);
     if (data.behaviorAt) this.behaviorRewardValidator.ensureBehaviorDate(data.behaviorAt);
     if ('rewardNote' in data) updateData.rewardNote = data.rewardNote || null;
+    if (data.rewardType !== undefined || 'certificatePlace' in data) {
+      updateData.certificatePlace = this.behaviorRewardValidator.certificatePlaceFor(
+        data.rewardType ?? existing.rewardType,
+        'certificatePlace' in data ? data.certificatePlace : existing.certificatePlace,
+      );
+    }
 
     // The student or date decides the placement, and the date must stay in the selected year.
     if (data.studentId !== undefined || data.behaviorAt !== undefined) {

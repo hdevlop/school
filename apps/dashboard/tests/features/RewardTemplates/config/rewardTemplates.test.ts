@@ -73,7 +73,9 @@ describe('templatesFor', () => {
     const rewardSchema = createBehaviorRewardSchema(english);
     for (const entry of bank) {
       const filled = { studentId: 's', behaviorDate: '2026-02-01', behaviorTime: '09:30',
-        category: entry.category, rewardType: entry.rewardType, ...templateFormValues(entry) };
+        category: entry.category, rewardType: entry.rewardType, ...templateFormValues(entry),
+        // A template never picks a certificate's place; the teacher does, in the form.
+        ...(entry.rewardType === 'certificate' ? { certificatePlace: 'first' } : {}) };
       expect(rewardSchema.safeParse(filled).success).toBe(true);
     }
     expect(templateFormValues({ points: 0, description: null })).toEqual({ points: 0, description: '' });
