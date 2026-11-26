@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'bun:test';
+import { rewardBankFor } from '@sms/contracts/reward-bank';
 import { schoolI18n } from '@sms/contracts/locales';
 import {
   BEHAVIOR_REWARD_CATEGORY_VALUES,
@@ -6,7 +7,7 @@ import {
 } from '@sms/contracts';
 
 import { createRewardTemplateSchema } from '@/features/RewardTemplates/config/rewardTemplateSchemas';
-import { nextTemplate, templateFormValues, templatesFor, type RewardTemplate } from '@/features/RewardTemplates/config/rewardTemplateMatch';
+import { generateCandidates, nextTemplate, templateFormValues, templatesFor, type RewardTemplate } from '@/features/RewardTemplates/config/rewardTemplateMatch';
 import { createBehaviorRewardSchema } from '@/features/BehaviorRewards/config/behaviorRewardSchemas';
 
 // The English catalog, so a message a test reads proves its key exists.
@@ -79,5 +80,24 @@ describe('templatesFor', () => {
       expect(rewardSchema.safeParse(filled).success).toBe(true);
     }
     expect(templateFormValues({ points: 0, description: null })).toEqual({ points: 0, description: '' });
+  });
+});
+
+describe('what "generate" offers', () => {
+  const school = [
+    { id: 's1', title: 'Mot aux parents', category: 'academic_effort', rewardType: 'certificate', points: 15, description: 'Texte de l’école', active: true },
+    { id: 's2', title: 'Archivé', category: 'academic_effort', rewardType: 'certificate', points: 15, description: 'Ancien', active: false },
+  ] as const;
+  it("is the school's own bank first, then School's built-in rewards, each text once", () => {
+    const builtIn = rewardBankFor('academic_effort', 'certificate', 'fr');
+    const offered = generateCandidates([...school], builtIn, 'academic_effort', 'certificate');
+    expect(offered[0].id).toBe('s1');
+    expect(offered.slice(1).map((item) => item.id)).toEqual(builtIn.map((item) => item.id));
+    // A school that copied a built-in text into its bank sees it once.
+    const copied = [{ ...school[0], id: 's3', description: builtIn[0].description }];
+    expect(generateCandidates(copied, builtIn, 'academic_effort', 'certificate').filter((item) => item.description === builtIn[0].description)).toHaveLength(1);
+  });
+  it('works with an empty bank', () => {
+    expect(generateCandidates([], rewardBankFor('respect', 'badge', 'ar'), 'respect', 'badge')).toHaveLength(8);
   });
 });

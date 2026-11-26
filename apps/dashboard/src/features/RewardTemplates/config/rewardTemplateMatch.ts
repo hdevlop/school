@@ -24,6 +24,23 @@ export const templatesFor = <Template extends RewardTemplate>(
   .sort((a, b) => a.title.localeCompare(b.title));
 
 /**
+ * What "generate" cycles through: the school's own bank for the category and
+ * reward type first, then School's built-in rewards (`rewardBankFor` from
+ * `@sms/contracts/reward-bank`), so it works with an empty bank. A built-in
+ * text the school already copied into its bank is offered once.
+ */
+export const generateCandidates = <Template extends RewardTemplate>(
+  schoolTemplates: readonly Template[] | null | undefined,
+  builtIn: readonly RewardTemplate[],
+  category: string | null | undefined,
+  rewardType: string | null | undefined,
+): RewardTemplate[] => {
+  const own = templatesFor(schoolTemplates, category, rewardType);
+  const written = new Set(own.map((template) => (template.description ?? '').trim()));
+  return [...own, ...builtIn.filter((template) => !written.has((template.description ?? '').trim()))];
+};
+
+/**
  * The template a click on "generate" fills next: the one after the last one
  * filled, else after the one whose wording is already in the description,
  * else the first. It wraps, so clicking again keeps cycling through them.

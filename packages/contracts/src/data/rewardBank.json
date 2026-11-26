@@ -1,0 +1,1422 @@
+{
+  "points": {
+    "verbal_praise": 2,
+    "written_praise": 4,
+    "merit": 5,
+    "badge": 10,
+    "certificate": 20,
+    "privilege": 5,
+    "prize": 25,
+    "other": 5
+  },
+  "entries": [
+    {
+      "id": "academic_effort.1",
+      "category": "academic_effort",
+      "title": {
+        "fr": "Efforts réguliers",
+        "ar": "مجهود منتظم",
+        "en": "Steady effort",
+        "es": "Esfuerzo constante"
+      },
+      "description": {
+        "fr": "Efforts réguliers et belle motivation dans le travail scolaire, séance après séance.",
+        "ar": "مجهود منتظم وحماس واضح في العمل المدرسي، حصة بعد حصة.",
+        "en": "Steady effort and real motivation in schoolwork, lesson after lesson.",
+        "es": "Esfuerzo constante y gran motivación en el trabajo escolar, clase tras clase."
+      }
+    },
+    {
+      "id": "academic_effort.2",
+      "category": "academic_effort",
+      "title": {
+        "fr": "Persévérance",
+        "ar": "مثابرة",
+        "en": "Perseverance",
+        "es": "Perseverancia"
+      },
+      "description": {
+        "fr": "Persévérance remarquable face aux difficultés, sans jamais abandonner une tâche commencée.",
+        "ar": "مثابرة ملحوظة أمام الصعوبات، دون التخلي عن أي مهمة تم البدء فيها.",
+        "en": "Remarkable perseverance in the face of difficulty, never giving up on a task once started.",
+        "es": "Perseverancia notable ante las dificultades, sin abandonar nunca una tarea empezada."
+      }
+    },
+    {
+      "id": "academic_effort.3",
+      "category": "academic_effort",
+      "title": {
+        "fr": "Travail soigné",
+        "ar": "عمل متقن",
+        "en": "Careful work",
+        "es": "Trabajo cuidado"
+      },
+      "description": {
+        "fr": "Travail soigné et appliqué, avec une présentation claire des cahiers et des devoirs.",
+        "ar": "عمل متقن ومنظم، مع عرض واضح ونظيف للدفاتر والواجبات.",
+        "en": "Careful, diligent work, with neatly presented notebooks and homework.",
+        "es": "Trabajo cuidado y aplicado, con cuadernos y deberes bien presentados."
+      }
+    },
+    {
+      "id": "academic_effort.4",
+      "category": "academic_effort",
+      "title": {
+        "fr": "Devoirs toujours faits",
+        "ar": "إنجاز الواجبات بانتظام",
+        "en": "Homework always done",
+        "es": "Deberes siempre hechos"
+      },
+      "description": {
+        "fr": "Devoirs faits avec sérieux et rendus à temps tout au long de la période.",
+        "ar": "إنجاز الواجبات بجدية وتسليمها في الوقت المحدد طيلة الفترة.",
+        "en": "Homework done seriously and handed in on time throughout the period.",
+        "es": "Deberes hechos con seriedad y entregados a tiempo durante todo el periodo."
+      }
+    },
+    {
+      "id": "academic_effort.5",
+      "category": "academic_effort",
+      "title": {
+        "fr": "Révisions sérieuses",
+        "ar": "مراجعة جادة",
+        "en": "Serious revision",
+        "es": "Repaso serio"
+      },
+      "description": {
+        "fr": "Préparation sérieuse des contrôles grâce à des révisions régulières et bien organisées.",
+        "ar": "استعداد جاد للفروض بفضل مراجعة منتظمة ومنظمة.",
+        "en": "Serious preparation for tests through regular, well-organised revision.",
+        "es": "Preparación seria de los exámenes gracias a un repaso regular y bien organizado."
+      }
+    },
+    {
+      "id": "academic_effort.6",
+      "category": "academic_effort",
+      "title": {
+        "fr": "Curiosité intellectuelle",
+        "ar": "فضول معرفي",
+        "en": "Intellectual curiosity",
+        "es": "Curiosidad intelectual"
+      },
+      "description": {
+        "fr": "Curiosité et envie d'apprendre : pose des questions pertinentes et cherche à approfondir.",
+        "ar": "فضول ورغبة في التعلم: طرح أسئلة وجيهة والسعي إلى التعمق في الدروس.",
+        "en": "Curiosity and eagerness to learn: asks thoughtful questions and seeks to go further.",
+        "es": "Curiosidad y ganas de aprender: hace preguntas pertinentes y busca profundizar."
+      }
+    },
+    {
+      "id": "academic_effort.7",
+      "category": "academic_effort",
+      "title": {
+        "fr": "Concentration en classe",
+        "ar": "تركيز داخل القسم",
+        "en": "Focus in class",
+        "es": "Concentración en clase"
+      },
+      "description": {
+        "fr": "Grande concentration pendant les activités, avec une attention constante aux explications.",
+        "ar": "تركيز كبير أثناء الأنشطة وانتباه دائم للشروحات.",
+        "en": "Strong concentration during activities, with steady attention to explanations.",
+        "es": "Gran concentración durante las actividades y atención constante a las explicaciones."
+      }
+    },
+    {
+      "id": "academic_effort.8",
+      "category": "academic_effort",
+      "title": {
+        "fr": "Lecture assidue",
+        "ar": "حب القراءة",
+        "en": "Keen reader",
+        "es": "Lector asiduo"
+      },
+      "description": {
+        "fr": "Goût pour la lecture : lectures régulières à la maison et partage avec la classe.",
+        "ar": "حب للقراءة: مطالعة منتظمة في البيت ومشاركة ما قُرئ مع القسم.",
+        "en": "A love of reading: reads regularly at home and shares it with the class.",
+        "es": "Gusto por la lectura: lee con regularidad en casa y lo comparte con la clase."
+      }
+    },
+    {
+      "id": "classwork.1",
+      "category": "classwork",
+      "title": {
+        "fr": "Participation active",
+        "ar": "مشاركة فعالة",
+        "en": "Active participation",
+        "es": "Participación activa"
+      },
+      "description": {
+        "fr": "Participation active et pertinente aux échanges de la classe, avec des réponses réfléchies.",
+        "ar": "مشاركة فعالة وهادفة في نقاشات القسم، بأجوبة مدروسة.",
+        "en": "Active, relevant participation in class discussions, with thoughtful answers.",
+        "es": "Participación activa y pertinente en los intercambios de la clase, con respuestas pensadas."
+      }
+    },
+    {
+      "id": "classwork.2",
+      "category": "classwork",
+      "title": {
+        "fr": "Exercices réussis",
+        "ar": "تمارين ناجحة",
+        "en": "Exercises well done",
+        "es": "Ejercicios bien hechos"
+      },
+      "description": {
+        "fr": "Exercices de classe réalisés avec rigueur et justesse, dans le temps imparti.",
+        "ar": "إنجاز تمارين القسم بدقة وصواب في الوقت المحدد.",
+        "en": "Classroom exercises completed accurately and carefully, within the time given.",
+        "es": "Ejercicios de clase realizados con rigor y acierto, en el tiempo previsto."
+      }
+    },
+    {
+      "id": "classwork.3",
+      "category": "classwork",
+      "title": {
+        "fr": "Excellent exposé",
+        "ar": "عرض متميز",
+        "en": "Excellent presentation",
+        "es": "Excelente exposición"
+      },
+      "description": {
+        "fr": "Exposé bien préparé et présenté avec clarté et assurance devant la classe.",
+        "ar": "عرض محضّر بعناية ومقدَّم بوضوح وثقة أمام القسم.",
+        "en": "A well-prepared presentation delivered clearly and confidently to the class.",
+        "es": "Exposición bien preparada y presentada con claridad y seguridad ante la clase."
+      }
+    },
+    {
+      "id": "classwork.4",
+      "category": "classwork",
+      "title": {
+        "fr": "Passage au tableau",
+        "ar": "نجاح على السبورة",
+        "en": "At the board",
+        "es": "En la pizarra"
+      },
+      "description": {
+        "fr": "Passage au tableau réussi, avec une démarche bien expliquée à toute la classe.",
+        "ar": "إنجاز موفق على السبورة مع شرح واضح للخطوات لجميع التلاميذ.",
+        "en": "Did well at the board, explaining each step clearly to the whole class.",
+        "es": "Buena intervención en la pizarra, explicando con claridad el procedimiento a toda la clase."
+      }
+    },
+    {
+      "id": "classwork.5",
+      "category": "classwork",
+      "title": {
+        "fr": "Cahier exemplaire",
+        "ar": "دفتر نموذجي",
+        "en": "Model notebook",
+        "es": "Cuaderno ejemplar"
+      },
+      "description": {
+        "fr": "Cahier de classe complet, bien tenu et à jour : un modèle pour les camarades.",
+        "ar": "دفتر قسم كامل ومنظم ومحيَّن: نموذج يُحتذى به لدى الزملاء.",
+        "en": "A complete, well-kept, up-to-date class notebook: a model for classmates.",
+        "es": "Cuaderno de clase completo, ordenado y al día: un modelo para los compañeros."
+      }
+    },
+    {
+      "id": "classwork.6",
+      "category": "classwork",
+      "title": {
+        "fr": "Bonne écoute",
+        "ar": "إنصات جيد",
+        "en": "Good listening",
+        "es": "Buena escucha"
+      },
+      "description": {
+        "fr": "Écoute attentive des consignes et application rapide et juste dans le travail demandé.",
+        "ar": "إنصات جيد للتعليمات وتطبيقها بسرعة ودقة في العمل المطلوب.",
+        "en": "Listens carefully to instructions and applies them quickly and correctly.",
+        "es": "Escucha atenta de las consignas y aplicación rápida y correcta en el trabajo pedido."
+      }
+    },
+    {
+      "id": "classwork.7",
+      "category": "classwork",
+      "title": {
+        "fr": "Autonomie",
+        "ar": "استقلالية",
+        "en": "Independence",
+        "es": "Autonomía"
+      },
+      "description": {
+        "fr": "Belle autonomie dans le travail en classe, avec une bonne organisation personnelle.",
+        "ar": "استقلالية جيدة في العمل داخل القسم وتنظيم شخصي محكم.",
+        "en": "Works independently in class, with good personal organisation.",
+        "es": "Buena autonomía en el trabajo de clase, con una buena organización personal."
+      }
+    },
+    {
+      "id": "classwork.8",
+      "category": "classwork",
+      "title": {
+        "fr": "Résultats remarquables",
+        "ar": "نتائج متميزة",
+        "en": "Outstanding results",
+        "es": "Resultados destacados"
+      },
+      "description": {
+        "fr": "Résultats remarquables lors de l'évaluation, fruit d'un travail de qualité en classe.",
+        "ar": "نتائج متميزة في التقويم، ثمرة عمل جيد داخل القسم.",
+        "en": "Outstanding results in the assessment, the fruit of quality work in class.",
+        "es": "Resultados destacados en la evaluación, fruto de un trabajo de calidad en clase."
+      }
+    },
+    {
+      "id": "improvement.1",
+      "category": "improvement",
+      "title": {
+        "fr": "Nets progrès",
+        "ar": "تقدم واضح",
+        "en": "Clear progress",
+        "es": "Claro progreso"
+      },
+      "description": {
+        "fr": "Nets progrès depuis le début de la période, visibles dans les résultats comme dans le travail.",
+        "ar": "تقدم واضح منذ بداية الفترة، يظهر في النتائج وفي العمل.",
+        "en": "Clear progress since the start of the period, visible in results and in daily work.",
+        "es": "Claro progreso desde el inicio del periodo, visible en los resultados y en el trabajo."
+      }
+    },
+    {
+      "id": "improvement.2",
+      "category": "improvement",
+      "title": {
+        "fr": "Résultats en hausse",
+        "ar": "تحسن النتائج",
+        "en": "Results going up",
+        "es": "Resultados en alza"
+      },
+      "description": {
+        "fr": "Résultats en nette hausse par rapport au contrôle précédent : bravo pour les efforts fournis.",
+        "ar": "تحسن ملحوظ في النتائج مقارنة بالفرض السابق: تهانينا على المجهود المبذول.",
+        "en": "Results clearly up on the previous test: well done for the effort made.",
+        "es": "Resultados claramente mejores que en el examen anterior: enhorabuena por el esfuerzo."
+      }
+    },
+    {
+      "id": "improvement.3",
+      "category": "improvement",
+      "title": {
+        "fr": "Lecture améliorée",
+        "ar": "تحسن القراءة",
+        "en": "Better reading",
+        "es": "Lectura mejorada"
+      },
+      "description": {
+        "fr": "Lecture plus fluide et plus expressive, grâce à un entraînement régulier.",
+        "ar": "قراءة أكثر طلاقة وتعبيرا بفضل التدريب المنتظم.",
+        "en": "Reading is more fluent and expressive, thanks to regular practice.",
+        "es": "Lectura más fluida y expresiva gracias a una práctica regular."
+      }
+    },
+    {
+      "id": "improvement.4",
+      "category": "improvement",
+      "title": {
+        "fr": "Écriture plus soignée",
+        "ar": "خط أكثر إتقانا",
+        "en": "Neater handwriting",
+        "es": "Letra más cuidada"
+      },
+      "description": {
+        "fr": "Écriture et présentation beaucoup plus soignées qu'en début d'année.",
+        "ar": "خط وتنظيم أكثر إتقانا بكثير مقارنة مع بداية السنة.",
+        "en": "Handwriting and presentation much neater than at the start of the year.",
+        "es": "Letra y presentación mucho más cuidadas que a principios de curso."
+      }
+    },
+    {
+      "id": "improvement.5",
+      "category": "improvement",
+      "title": {
+        "fr": "Comportement amélioré",
+        "ar": "تحسن السلوك",
+        "en": "Improved behaviour",
+        "es": "Comportamiento mejorado"
+      },
+      "description": {
+        "fr": "Comportement en classe nettement amélioré, plus calme et plus attentif.",
+        "ar": "تحسن واضح في السلوك داخل القسم، بهدوء وانتباه أكبر.",
+        "en": "Classroom behaviour much improved, calmer and more attentive.",
+        "es": "Comportamiento en clase muy mejorado, más tranquilo y atento."
+      }
+    },
+    {
+      "id": "improvement.6",
+      "category": "improvement",
+      "title": {
+        "fr": "Confiance gagnée",
+        "ar": "ثقة متزايدة",
+        "en": "Growing confidence",
+        "es": "Más confianza"
+      },
+      "description": {
+        "fr": "Plus de confiance en soi : ose désormais participer et poser des questions.",
+        "ar": "ثقة أكبر بالنفس: مشاركة وطرح للأسئلة دون تردد.",
+        "en": "More self-confidence: now dares to take part and ask questions.",
+        "es": "Más confianza en sí: ahora se atreve a participar y a hacer preguntas."
+      }
+    },
+    {
+      "id": "improvement.7",
+      "category": "improvement",
+      "title": {
+        "fr": "Difficulté surmontée",
+        "ar": "تجاوز صعوبة",
+        "en": "Difficulty overcome",
+        "es": "Dificultad superada"
+      },
+      "description": {
+        "fr": "Difficulté surmontée dans une matière grâce à la persévérance et au travail personnel.",
+        "ar": "تجاوز صعوبة في مادة دراسية بفضل المثابرة والعمل الشخصي.",
+        "en": "Overcame a difficulty in a subject through perseverance and personal work.",
+        "es": "Dificultad superada en una asignatura gracias a la perseverancia y al trabajo personal."
+      }
+    },
+    {
+      "id": "improvement.8",
+      "category": "improvement",
+      "title": {
+        "fr": "Organisation améliorée",
+        "ar": "تحسن التنظيم",
+        "en": "Better organised",
+        "es": "Mejor organización"
+      },
+      "description": {
+        "fr": "Meilleure organisation : affaires complètes, devoirs notés et travail mieux planifié.",
+        "ar": "تنظيم أفضل: أدوات كاملة، واجبات مدونة وعمل مخطط له بشكل أحسن.",
+        "en": "Better organised: complete materials, homework noted down, work better planned.",
+        "es": "Mejor organización: material completo, deberes anotados y trabajo mejor planificado."
+      }
+    },
+    {
+      "id": "respect.1",
+      "category": "respect",
+      "title": {
+        "fr": "Politesse exemplaire",
+        "ar": "أدب نموذجي",
+        "en": "Exemplary politeness",
+        "es": "Cortesía ejemplar"
+      },
+      "description": {
+        "fr": "Politesse exemplaire envers les enseignants, le personnel et les camarades.",
+        "ar": "أدب نموذجي في التعامل مع الأساتذة والأطر والزملاء.",
+        "en": "Exemplary politeness towards teachers, staff and classmates.",
+        "es": "Cortesía ejemplar con los docentes, el personal y los compañeros."
+      }
+    },
+    {
+      "id": "respect.2",
+      "category": "respect",
+      "title": {
+        "fr": "Respect des règles",
+        "ar": "احترام القواعد",
+        "en": "Follows the rules",
+        "es": "Respeto de las normas"
+      },
+      "description": {
+        "fr": "Respect constant du règlement de la classe et de l'établissement.",
+        "ar": "احترام دائم لقواعد القسم والنظام الداخلي للمؤسسة.",
+        "en": "Consistently respects the class and school rules.",
+        "es": "Respeto constante del reglamento de la clase y del centro."
+      }
+    },
+    {
+      "id": "respect.3",
+      "category": "respect",
+      "title": {
+        "fr": "Respect d'autrui",
+        "ar": "احترام الآخرين",
+        "en": "Respect for others",
+        "es": "Respeto a los demás"
+      },
+      "description": {
+        "fr": "Attitude respectueuse et bienveillante envers chacun, sans moquerie ni exclusion.",
+        "ar": "سلوك محترم ولطيف مع الجميع، دون سخرية أو إقصاء.",
+        "en": "Respectful, kind attitude towards everyone, with no teasing or leaving anyone out.",
+        "es": "Actitud respetuosa y amable con todos, sin burlas ni exclusiones."
+      }
+    },
+    {
+      "id": "respect.4",
+      "category": "respect",
+      "title": {
+        "fr": "Soin du matériel",
+        "ar": "العناية بالأدوات",
+        "en": "Care for equipment",
+        "es": "Cuidado del material"
+      },
+      "description": {
+        "fr": "Soin du matériel scolaire et des locaux, laissés propres et rangés.",
+        "ar": "عناية بالأدوات المدرسية وبالفضاءات، وتركها نظيفة ومرتبة.",
+        "en": "Takes care of school equipment and rooms, leaving them clean and tidy.",
+        "es": "Cuidado del material escolar y de las instalaciones, que deja limpias y ordenadas."
+      }
+    },
+    {
+      "id": "respect.5",
+      "category": "respect",
+      "title": {
+        "fr": "Calme et maîtrise",
+        "ar": "هدوء وضبط النفس",
+        "en": "Calm and self-control",
+        "es": "Calma y autocontrol"
+      },
+      "description": {
+        "fr": "Calme et maîtrise de soi, même dans les situations de tension.",
+        "ar": "هدوء وضبط للنفس حتى في المواقف المتوترة.",
+        "en": "Stays calm and in control, even in tense situations.",
+        "es": "Calma y dominio de sí, incluso en situaciones de tensión."
+      }
+    },
+    {
+      "id": "respect.6",
+      "category": "respect",
+      "title": {
+        "fr": "Écoute des autres",
+        "ar": "الإنصات للآخرين",
+        "en": "Listens to others",
+        "es": "Escucha a los demás"
+      },
+      "description": {
+        "fr": "Écoute respectueuse de la parole des camarades, sans couper ni interrompre.",
+        "ar": "إنصات محترم لكلام الزملاء دون مقاطعة.",
+        "en": "Listens respectfully when classmates speak, without cutting in.",
+        "es": "Escucha respetuosa de los compañeros, sin cortar ni interrumpir."
+      }
+    },
+    {
+      "id": "respect.7",
+      "category": "respect",
+      "title": {
+        "fr": "Ponctualité respectueuse",
+        "ar": "الانضباط في الوقت",
+        "en": "Punctual and calm",
+        "es": "Puntual y tranquilo"
+      },
+      "description": {
+        "fr": "Arrivée à l'heure et entrée calme en classe, par respect pour le groupe.",
+        "ar": "الحضور في الوقت والدخول إلى القسم بهدوء احتراما للجماعة.",
+        "en": "Arrives on time and enters class calmly, out of respect for the group.",
+        "es": "Llega a la hora y entra en clase con calma, por respeto al grupo."
+      }
+    },
+    {
+      "id": "respect.8",
+      "category": "respect",
+      "title": {
+        "fr": "Langage correct",
+        "ar": "لغة لائقة",
+        "en": "Polite language",
+        "es": "Lenguaje correcto"
+      },
+      "description": {
+        "fr": "Langage toujours correct et respectueux, en classe comme dans la cour.",
+        "ar": "لغة لائقة ومحترمة دائما، داخل القسم وفي الساحة.",
+        "en": "Always uses polite, respectful language, in class and in the playground.",
+        "es": "Lenguaje siempre correcto y respetuoso, en clase y en el patio."
+      }
+    },
+    {
+      "id": "helpfulness.1",
+      "category": "helpfulness",
+      "title": {
+        "fr": "Aide aux camarades",
+        "ar": "مساعدة الزملاء",
+        "en": "Helps classmates",
+        "es": "Ayuda a los compañeros"
+      },
+      "description": {
+        "fr": "Aide spontanée aux camarades en difficulté, avec patience et gentillesse.",
+        "ar": "مساعدة تلقائية للزملاء المتعثرين، بصبر ولطف.",
+        "en": "Spontaneously helps classmates who struggle, with patience and kindness.",
+        "es": "Ayuda espontánea a los compañeros con dificultades, con paciencia y amabilidad."
+      }
+    },
+    {
+      "id": "helpfulness.2",
+      "category": "helpfulness",
+      "title": {
+        "fr": "Explications partagées",
+        "ar": "شرح للزملاء",
+        "en": "Explains to others",
+        "es": "Explicaciones compartidas"
+      },
+      "description": {
+        "fr": "Explications claires données à un camarade pour l'aider à comprendre une leçon.",
+        "ar": "شرح واضح لأحد الزملاء لمساعدته على فهم الدرس.",
+        "en": "Gave a classmate clear explanations to help them understand a lesson.",
+        "es": "Explicaciones claras a un compañero para ayudarle a entender una lección."
+      }
+    },
+    {
+      "id": "helpfulness.3",
+      "category": "helpfulness",
+      "title": {
+        "fr": "Accueil d'un nouvel élève",
+        "ar": "استقبال تلميذ جديد",
+        "en": "Welcomed a newcomer",
+        "es": "Acogida a un compañero nuevo"
+      },
+      "description": {
+        "fr": "Accueil chaleureux d'un nouvel élève, aidé à trouver sa place dans la classe.",
+        "ar": "استقبال حار لتلميذ جديد ومساعدته على الاندماج في القسم.",
+        "en": "Warmly welcomed a new pupil and helped them settle into the class.",
+        "es": "Acogida calurosa a un alumno nuevo, al que ayudó a integrarse en la clase."
+      }
+    },
+    {
+      "id": "helpfulness.4",
+      "category": "helpfulness",
+      "title": {
+        "fr": "Aide à l'enseignant",
+        "ar": "مساعدة الأستاذ",
+        "en": "Helps the teacher",
+        "es": "Ayuda al docente"
+      },
+      "description": {
+        "fr": "Aide précieuse apportée à l'enseignant pour préparer et ranger la classe.",
+        "ar": "مساعدة قيمة للأستاذ في تحضير القسم وترتيبه.",
+        "en": "Gave the teacher valuable help preparing and tidying the classroom.",
+        "es": "Ayuda valiosa al docente para preparar y ordenar el aula."
+      }
+    },
+    {
+      "id": "helpfulness.5",
+      "category": "helpfulness",
+      "title": {
+        "fr": "Partage du matériel",
+        "ar": "تقاسم الأدوات",
+        "en": "Shares materials",
+        "es": "Comparte su material"
+      },
+      "description": {
+        "fr": "Partage généreux de son matériel avec les camarades qui en manquaient.",
+        "ar": "تقاسم الأدوات بسخاء مع الزملاء الذين يحتاجون إليها.",
+        "en": "Generously shared materials with classmates who had none.",
+        "es": "Comparte con generosidad su material con los compañeros que lo necesitan."
+      }
+    },
+    {
+      "id": "helpfulness.6",
+      "category": "helpfulness",
+      "title": {
+        "fr": "Soutien bienveillant",
+        "ar": "دعم ومواساة",
+        "en": "Kind support",
+        "es": "Apoyo amable"
+      },
+      "description": {
+        "fr": "Soutien et réconfort apportés à un camarade dans un moment difficile.",
+        "ar": "دعم ومواساة لأحد الزملاء في لحظة صعبة.",
+        "en": "Offered support and comfort to a classmate at a difficult moment.",
+        "es": "Apoyo y consuelo a un compañero en un momento difícil."
+      }
+    },
+    {
+      "id": "helpfulness.7",
+      "category": "helpfulness",
+      "title": {
+        "fr": "Tutorat entre pairs",
+        "ar": "تأطير بين الأقران",
+        "en": "Peer tutoring",
+        "es": "Tutoría entre iguales"
+      },
+      "description": {
+        "fr": "Rôle de tuteur assuré avec sérieux pour faire progresser un camarade.",
+        "ar": "قيام بدور المؤطر بجدية لمساعدة أحد الزملاء على التقدم.",
+        "en": "Took on a tutoring role seriously to help a classmate make progress.",
+        "es": "Papel de tutor asumido con seriedad para hacer progresar a un compañero."
+      }
+    },
+    {
+      "id": "helpfulness.8",
+      "category": "helpfulness",
+      "title": {
+        "fr": "Toujours serviable",
+        "ar": "روح الخدمة",
+        "en": "Always helpful",
+        "es": "Siempre servicial"
+      },
+      "description": {
+        "fr": "Toujours prêt(e) à rendre service, en classe comme lors des activités.",
+        "ar": "استعداد دائم لتقديم الخدمة، داخل القسم وخلال الأنشطة.",
+        "en": "Always ready to help out, in class and during activities.",
+        "es": "Siempre dispuesto(a) a ayudar, en clase y durante las actividades."
+      }
+    },
+    {
+      "id": "leadership.1",
+      "category": "leadership",
+      "title": {
+        "fr": "Chef d'équipe",
+        "ar": "قائد فريق",
+        "en": "Team leader",
+        "es": "Jefe de equipo"
+      },
+      "description": {
+        "fr": "Groupe mené avec sens de l'organisation, en donnant la parole à chacun.",
+        "ar": "قيادة المجموعة بحس تنظيمي مع إعطاء الكلمة للجميع.",
+        "en": "Led the group with a sense of organisation, giving everyone a voice.",
+        "es": "Dirigió el grupo con sentido de la organización, dando la palabra a todos."
+      }
+    },
+    {
+      "id": "leadership.2",
+      "category": "leadership",
+      "title": {
+        "fr": "Délégué(e) engagé(e)",
+        "ar": "مندوب ملتزم",
+        "en": "Committed class rep",
+        "es": "Delegado comprometido"
+      },
+      "description": {
+        "fr": "Rôle de délégué(e) de classe assumé avec sérieux et sens de l'écoute.",
+        "ar": "قيام بدور مندوب القسم بجدية وحسن إنصات.",
+        "en": "Took the class representative role seriously, listening to everyone.",
+        "es": "Papel de delegado(a) de clase asumido con seriedad y capacidad de escucha."
+      }
+    },
+    {
+      "id": "leadership.3",
+      "category": "leadership",
+      "title": {
+        "fr": "Initiative",
+        "ar": "روح المبادرة",
+        "en": "Initiative",
+        "es": "Iniciativa"
+      },
+      "description": {
+        "fr": "Belle initiative pour proposer et lancer un projet utile à la classe.",
+        "ar": "مبادرة جميلة لاقتراح وإطلاق مشروع مفيد للقسم.",
+        "en": "Took the initiative to propose and launch a project useful to the class.",
+        "es": "Bonita iniciativa para proponer y poner en marcha un proyecto útil para la clase."
+      }
+    },
+    {
+      "id": "leadership.4",
+      "category": "leadership",
+      "title": {
+        "fr": "Exemple pour les autres",
+        "ar": "قدوة للآخرين",
+        "en": "A role model",
+        "es": "Ejemplo para los demás"
+      },
+      "description": {
+        "fr": "Attitude exemplaire qui entraîne les camarades vers le travail et le respect.",
+        "ar": "سلوك نموذجي يحفز الزملاء على العمل والاحترام.",
+        "en": "An exemplary attitude that draws classmates towards work and respect.",
+        "es": "Actitud ejemplar que anima a los compañeros al trabajo y al respeto."
+      }
+    },
+    {
+      "id": "leadership.5",
+      "category": "leadership",
+      "title": {
+        "fr": "Médiation réussie",
+        "ar": "وساطة ناجحة",
+        "en": "Peacemaker",
+        "es": "Mediación exitosa"
+      },
+      "description": {
+        "fr": "Conflit entre camarades apaisé avec calme et sens de la justice.",
+        "ar": "تهدئة خلاف بين الزملاء بهدوء وإحساس بالعدل.",
+        "en": "Calmly settled a disagreement between classmates with a sense of fairness.",
+        "es": "Calmó un conflicto entre compañeros con serenidad y sentido de la justicia."
+      }
+    },
+    {
+      "id": "leadership.6",
+      "category": "leadership",
+      "title": {
+        "fr": "Organisation d'activité",
+        "ar": "تنظيم نشاط",
+        "en": "Organised an activity",
+        "es": "Organización de una actividad"
+      },
+      "description": {
+        "fr": "Organisation réussie d'une activité de classe, du début à la fin.",
+        "ar": "تنظيم ناجح لنشاط داخل القسم من بدايته إلى نهايته.",
+        "en": "Successfully organised a class activity from start to finish.",
+        "es": "Organización exitosa de una actividad de clase, de principio a fin."
+      }
+    },
+    {
+      "id": "leadership.7",
+      "category": "leadership",
+      "title": {
+        "fr": "Prise de parole",
+        "ar": "تمثيل المجموعة",
+        "en": "Speaks for the group",
+        "es": "Portavoz del grupo"
+      },
+      "description": {
+        "fr": "Prise de parole claire et convaincante au nom du groupe.",
+        "ar": "تدخل واضح ومقنع باسم المجموعة.",
+        "en": "Spoke clearly and convincingly on behalf of the group.",
+        "es": "Intervención clara y convincente en nombre del grupo."
+      }
+    },
+    {
+      "id": "leadership.8",
+      "category": "leadership",
+      "title": {
+        "fr": "Motivation du groupe",
+        "ar": "تحفيز الجماعة",
+        "en": "Motivates the group",
+        "es": "Motiva al grupo"
+      },
+      "description": {
+        "fr": "Énergie positive qui motive le groupe et l'aide à atteindre son objectif.",
+        "ar": "طاقة إيجابية تحفز المجموعة وتساعدها على بلوغ هدفها.",
+        "en": "Positive energy that motivates the group and helps it reach its goal.",
+        "es": "Energía positiva que motiva al grupo y le ayuda a alcanzar su objetivo."
+      }
+    },
+    {
+      "id": "teamwork.1",
+      "category": "teamwork",
+      "title": {
+        "fr": "Bon esprit d'équipe",
+        "ar": "روح الفريق",
+        "en": "Great team spirit",
+        "es": "Buen espíritu de equipo"
+      },
+      "description": {
+        "fr": "Excellent esprit d'équipe pendant le travail de groupe, à l'écoute de chacun.",
+        "ar": "روح فريق ممتازة خلال العمل الجماعي، مع الإنصات للجميع.",
+        "en": "Excellent team spirit during group work, listening to everyone.",
+        "es": "Excelente espíritu de equipo en el trabajo en grupo, escuchando a cada uno."
+      }
+    },
+    {
+      "id": "teamwork.2",
+      "category": "teamwork",
+      "title": {
+        "fr": "Collaboration efficace",
+        "ar": "تعاون فعال",
+        "en": "Effective collaboration",
+        "es": "Colaboración eficaz"
+      },
+      "description": {
+        "fr": "Collaboration efficace qui a permis au groupe de réussir sa tâche.",
+        "ar": "تعاون فعال مكّن المجموعة من إنجاز مهمتها بنجاح.",
+        "en": "Effective collaboration that helped the group succeed in its task.",
+        "es": "Colaboración eficaz que permitió al grupo cumplir su tarea."
+      }
+    },
+    {
+      "id": "teamwork.3",
+      "category": "teamwork",
+      "title": {
+        "fr": "Partage des tâches",
+        "ar": "توزيع المهام",
+        "en": "Fair share of work",
+        "es": "Reparto de tareas"
+      },
+      "description": {
+        "fr": "Répartition équitable des tâches et part du travail assumée pleinement.",
+        "ar": "توزيع عادل للمهام وإنجاز كامل للجزء المطلوب.",
+        "en": "Shared tasks fairly and fully carried out their part of the work.",
+        "es": "Reparto equitativo de las tareas y su parte del trabajo cumplida plenamente."
+      }
+    },
+    {
+      "id": "teamwork.4",
+      "category": "teamwork",
+      "title": {
+        "fr": "Projet de groupe réussi",
+        "ar": "مشروع جماعي ناجح",
+        "en": "Successful group project",
+        "es": "Proyecto de grupo logrado"
+      },
+      "description": {
+        "fr": "Contribution de qualité à un projet de groupe présenté avec succès.",
+        "ar": "مساهمة متميزة في مشروع جماعي تم تقديمه بنجاح.",
+        "en": "A quality contribution to a group project that was presented successfully.",
+        "es": "Contribución de calidad a un proyecto de grupo presentado con éxito."
+      }
+    },
+    {
+      "id": "teamwork.5",
+      "category": "teamwork",
+      "title": {
+        "fr": "Écoute des idées",
+        "ar": "تقبل الأفكار",
+        "en": "Open to ideas",
+        "es": "Abierto a las ideas"
+      },
+      "description": {
+        "fr": "Ouverture aux idées des autres et recherche de solutions communes.",
+        "ar": "انفتاح على أفكار الآخرين والبحث عن حلول مشتركة.",
+        "en": "Open to others' ideas and looks for shared solutions.",
+        "es": "Apertura a las ideas de los demás y búsqueda de soluciones comunes."
+      }
+    },
+    {
+      "id": "teamwork.6",
+      "category": "teamwork",
+      "title": {
+        "fr": "Esprit sportif",
+        "ar": "روح رياضية",
+        "en": "Good sportsmanship",
+        "es": "Espíritu deportivo"
+      },
+      "description": {
+        "fr": "Esprit sportif et fair-play lors des activités d'éducation physique.",
+        "ar": "روح رياضية ولعب نظيف خلال أنشطة التربية البدنية.",
+        "en": "Good sportsmanship and fair play in physical education activities.",
+        "es": "Espíritu deportivo y juego limpio en las actividades de educación física."
+      }
+    },
+    {
+      "id": "teamwork.7",
+      "category": "teamwork",
+      "title": {
+        "fr": "Entraide dans le groupe",
+        "ar": "تآزر داخل المجموعة",
+        "en": "Helps the team",
+        "es": "Ayuda en el grupo"
+      },
+      "description": {
+        "fr": "Entraide constante au sein du groupe pour que personne ne reste en retrait.",
+        "ar": "تآزر دائم داخل المجموعة حتى لا يبقى أحد على الهامش.",
+        "en": "Constant mutual help within the group so that nobody is left behind.",
+        "es": "Ayuda constante dentro del grupo para que nadie se quede atrás."
+      }
+    },
+    {
+      "id": "teamwork.8",
+      "category": "teamwork",
+      "title": {
+        "fr": "Rôle bien tenu",
+        "ar": "دور منجز بإتقان",
+        "en": "Played their part",
+        "es": "Papel bien cumplido"
+      },
+      "description": {
+        "fr": "Rôle confié dans le groupe tenu avec sérieux et ponctualité.",
+        "ar": "القيام بالدور المسند داخل المجموعة بجدية وفي الوقت.",
+        "en": "Carried out the role given within the group seriously and on time.",
+        "es": "Papel asignado en el grupo cumplido con seriedad y puntualidad."
+      }
+    },
+    {
+      "id": "responsibility.1",
+      "category": "responsibility",
+      "title": {
+        "fr": "Mission bien remplie",
+        "ar": "مهمة منجزة",
+        "en": "Task well done",
+        "es": "Misión cumplida"
+      },
+      "description": {
+        "fr": "Mission confiée en classe remplie avec sérieux et fiabilité.",
+        "ar": "إنجاز المهمة المسندة داخل القسم بجدية وموثوقية.",
+        "en": "Carried out a classroom duty seriously and reliably.",
+        "es": "Misión encomendada en clase cumplida con seriedad y fiabilidad."
+      }
+    },
+    {
+      "id": "responsibility.2",
+      "category": "responsibility",
+      "title": {
+        "fr": "Matériel toujours complet",
+        "ar": "أدوات كاملة دائما",
+        "en": "Always equipped",
+        "es": "Material siempre completo"
+      },
+      "description": {
+        "fr": "Matériel scolaire toujours complet et en bon état.",
+        "ar": "أدوات مدرسية كاملة دائما وفي حالة جيدة.",
+        "en": "Always has complete school materials in good condition.",
+        "es": "Material escolar siempre completo y en buen estado."
+      }
+    },
+    {
+      "id": "responsibility.3",
+      "category": "responsibility",
+      "title": {
+        "fr": "Responsable de la classe",
+        "ar": "مسؤول عن القسم",
+        "en": "Class monitor",
+        "es": "Encargado de la clase"
+      },
+      "description": {
+        "fr": "Responsabilité de la classe (tableau, rangement, plantes) assurée chaque jour.",
+        "ar": "تحمل مسؤولية القسم (السبورة، الترتيب، النباتات) كل يوم.",
+        "en": "Took care of a class responsibility (board, tidying, plants) every day.",
+        "es": "Responsabilidad de la clase (pizarra, orden, plantas) asumida cada día."
+      }
+    },
+    {
+      "id": "responsibility.4",
+      "category": "responsibility",
+      "title": {
+        "fr": "Honnêteté",
+        "ar": "الصدق والأمانة",
+        "en": "Honesty",
+        "es": "Honestidad"
+      },
+      "description": {
+        "fr": "Honnêteté exemplaire : reconnaît ses erreurs et dit la vérité.",
+        "ar": "صدق وأمانة نموذجيان: الاعتراف بالأخطاء وقول الحقيقة.",
+        "en": "Exemplary honesty: owns up to mistakes and tells the truth.",
+        "es": "Honestidad ejemplar: reconoce sus errores y dice la verdad."
+      }
+    },
+    {
+      "id": "responsibility.5",
+      "category": "responsibility",
+      "title": {
+        "fr": "Objet trouvé rendu",
+        "ar": "إرجاع شيء ضائع",
+        "en": "Returned a lost item",
+        "es": "Objeto devuelto"
+      },
+      "description": {
+        "fr": "Objet trouvé rapporté spontanément, belle preuve d'honnêteté.",
+        "ar": "إرجاع شيء ضائع بشكل تلقائي، دليل جميل على الأمانة.",
+        "en": "Spontaneously handed in something found: a fine sign of honesty.",
+        "es": "Devolvió espontáneamente un objeto encontrado: una bonita muestra de honestidad."
+      }
+    },
+    {
+      "id": "responsibility.6",
+      "category": "responsibility",
+      "title": {
+        "fr": "Engagements tenus",
+        "ar": "الوفاء بالالتزامات",
+        "en": "Keeps commitments",
+        "es": "Compromisos cumplidos"
+      },
+      "description": {
+        "fr": "Engagements pris toujours tenus, dans les délais prévus.",
+        "ar": "الوفاء الدائم بالالتزامات في الآجال المحددة.",
+        "en": "Always keeps commitments, within the agreed deadlines.",
+        "es": "Cumple siempre sus compromisos, en los plazos previstos."
+      }
+    },
+    {
+      "id": "responsibility.7",
+      "category": "responsibility",
+      "title": {
+        "fr": "Communication avec la famille",
+        "ar": "التواصل مع الأسرة",
+        "en": "Home-school messages",
+        "es": "Comunicación con la familia"
+      },
+      "description": {
+        "fr": "Documents et messages transmis aux parents et rapportés signés à temps.",
+        "ar": "إيصال الوثائق والرسائل إلى الأولياء وإرجاعها موقعة في الوقت.",
+        "en": "Passed documents and messages on to parents and brought them back signed on time.",
+        "es": "Entregó documentos y mensajes a los padres y los devolvió firmados a tiempo."
+      }
+    },
+    {
+      "id": "responsibility.8",
+      "category": "responsibility",
+      "title": {
+        "fr": "Prise en charge de son travail",
+        "ar": "تدارك الدروس",
+        "en": "Catches up on work",
+        "es": "Recupera su trabajo"
+      },
+      "description": {
+        "fr": "Travail manqué rattrapé de sa propre initiative après une absence.",
+        "ar": "تدارك الدروس الفائتة بمبادرة شخصية بعد الغياب.",
+        "en": "Caught up on missed work on their own initiative after an absence.",
+        "es": "Recuperó por iniciativa propia el trabajo perdido tras una ausencia."
+      }
+    },
+    {
+      "id": "community_service.1",
+      "category": "community_service",
+      "title": {
+        "fr": "Action solidaire",
+        "ar": "عمل تضامني",
+        "en": "Charity action",
+        "es": "Acción solidaria"
+      },
+      "description": {
+        "fr": "Participation active à une action solidaire organisée par l'école.",
+        "ar": "مشاركة فعالة في مبادرة تضامنية نظمتها المؤسسة.",
+        "en": "Took an active part in a charity action organised by the school.",
+        "es": "Participación activa en una acción solidaria organizada por el centro."
+      }
+    },
+    {
+      "id": "community_service.2",
+      "category": "community_service",
+      "title": {
+        "fr": "Propreté de l'école",
+        "ar": "نظافة المؤسسة",
+        "en": "Keeps the school clean",
+        "es": "Limpieza del centro"
+      },
+      "description": {
+        "fr": "Engagement pour la propreté de la cour et des espaces communs.",
+        "ar": "انخراط في الحفاظ على نظافة الساحة والفضاءات المشتركة.",
+        "en": "Committed to keeping the playground and shared spaces clean.",
+        "es": "Compromiso con la limpieza del patio y de los espacios comunes."
+      }
+    },
+    {
+      "id": "community_service.3",
+      "category": "community_service",
+      "title": {
+        "fr": "Club et vie scolaire",
+        "ar": "الأندية والحياة المدرسية",
+        "en": "Clubs and school life",
+        "es": "Clubes y vida escolar"
+      },
+      "description": {
+        "fr": "Engagement remarquable dans un club ou une activité de la vie scolaire.",
+        "ar": "انخراط متميز في نادٍ أو نشاط من أنشطة الحياة المدرسية.",
+        "en": "Outstanding involvement in a club or school-life activity.",
+        "es": "Compromiso destacado en un club o actividad de la vida escolar."
+      }
+    },
+    {
+      "id": "community_service.4",
+      "category": "community_service",
+      "title": {
+        "fr": "Respect de l'environnement",
+        "ar": "حماية البيئة",
+        "en": "Cares for the environment",
+        "es": "Respeto al medio ambiente"
+      },
+      "description": {
+        "fr": "Gestes écologiques au quotidien : tri, économie d'eau et soin des plantations.",
+        "ar": "سلوكات بيئية يومية: الفرز، ترشيد الماء والعناية بالمغروسات.",
+        "en": "Everyday green habits: sorting waste, saving water, caring for plants.",
+        "es": "Gestos ecológicos diarios: separar residuos, ahorrar agua y cuidar las plantas."
+      }
+    },
+    {
+      "id": "community_service.5",
+      "category": "community_service",
+      "title": {
+        "fr": "Fête de l'école",
+        "ar": "حفل المؤسسة",
+        "en": "School event",
+        "es": "Fiesta del centro"
+      },
+      "description": {
+        "fr": "Aide précieuse à la préparation d'une fête ou d'un événement de l'école.",
+        "ar": "مساهمة قيمة في تحضير حفل أو تظاهرة بالمؤسسة.",
+        "en": "Gave valuable help preparing a school celebration or event.",
+        "es": "Ayuda valiosa en la preparación de una fiesta o un evento del centro."
+      }
+    },
+    {
+      "id": "community_service.6",
+      "category": "community_service",
+      "title": {
+        "fr": "Aide aux plus jeunes",
+        "ar": "مساعدة الصغار",
+        "en": "Looks after younger pupils",
+        "es": "Ayuda a los pequeños"
+      },
+      "description": {
+        "fr": "Accompagnement bienveillant des plus jeunes élèves pendant la récréation.",
+        "ar": "مرافقة لطيفة للتلاميذ الأصغر سنا خلال فترة الاستراحة.",
+        "en": "Kindly looked after younger pupils during break time.",
+        "es": "Acompañamiento amable de los alumnos más pequeños durante el recreo."
+      }
+    },
+    {
+      "id": "community_service.7",
+      "category": "community_service",
+      "title": {
+        "fr": "Collecte solidaire",
+        "ar": "حملة تضامنية",
+        "en": "Donation drive",
+        "es": "Colecta solidaria"
+      },
+      "description": {
+        "fr": "Contribution généreuse à une collecte de livres, de vêtements ou de fournitures.",
+        "ar": "مساهمة سخية في جمع الكتب أو الملابس أو الأدوات المدرسية.",
+        "en": "Contributed generously to a collection of books, clothes or school supplies.",
+        "es": "Contribución generosa a una colecta de libros, ropa o material escolar."
+      }
+    },
+    {
+      "id": "community_service.8",
+      "category": "community_service",
+      "title": {
+        "fr": "Citoyenneté",
+        "ar": "روح المواطنة",
+        "en": "Good citizenship",
+        "es": "Civismo"
+      },
+      "description": {
+        "fr": "Comportement citoyen et responsable lors des sorties et des activités extérieures.",
+        "ar": "سلوك مواطن ومسؤول خلال الخرجات والأنشطة الخارجية.",
+        "en": "Responsible, civic behaviour on outings and outdoor activities.",
+        "es": "Comportamiento cívico y responsable en las salidas y actividades exteriores."
+      }
+    },
+    {
+      "id": "excellent_attendance.1",
+      "category": "excellent_attendance",
+      "title": {
+        "fr": "Assiduité parfaite",
+        "ar": "مواظبة تامة",
+        "en": "Perfect attendance",
+        "es": "Asistencia perfecta"
+      },
+      "description": {
+        "fr": "Aucune absence durant toute la période : assiduité parfaite.",
+        "ar": "عدم تسجيل أي غياب طيلة الفترة: مواظبة تامة.",
+        "en": "Not a single absence during the whole period: perfect attendance.",
+        "es": "Ninguna ausencia durante todo el periodo: asistencia perfecta."
+      }
+    },
+    {
+      "id": "excellent_attendance.2",
+      "category": "excellent_attendance",
+      "title": {
+        "fr": "Toujours à l'heure",
+        "ar": "الحضور في الوقت دائما",
+        "en": "Always on time",
+        "es": "Siempre puntual"
+      },
+      "description": {
+        "fr": "Ponctualité exemplaire : toujours à l'heure en début de journée et après la récréation.",
+        "ar": "انضباط نموذجي في الوقت: الحضور دائما في الموعد صباحا وبعد الاستراحة.",
+        "en": "Exemplary punctuality: always on time in the morning and after break.",
+        "es": "Puntualidad ejemplar: siempre a la hora al empezar el día y después del recreo."
+      }
+    },
+    {
+      "id": "excellent_attendance.3",
+      "category": "excellent_attendance",
+      "title": {
+        "fr": "Présence régulière",
+        "ar": "حضور منتظم",
+        "en": "Regular attendance",
+        "es": "Asistencia regular"
+      },
+      "description": {
+        "fr": "Présence régulière et sérieuse en classe tout au long du mois.",
+        "ar": "حضور منتظم وجاد في القسم طيلة الشهر.",
+        "en": "Regular, committed attendance in class throughout the month.",
+        "es": "Asistencia regular y seria a clase durante todo el mes."
+      }
+    },
+    {
+      "id": "excellent_attendance.4",
+      "category": "excellent_attendance",
+      "title": {
+        "fr": "Assiduité au trimestre",
+        "ar": "مواظبة خلال الدورة",
+        "en": "Term attendance",
+        "es": "Asistencia del trimestre"
+      },
+      "description": {
+        "fr": "Assiduité remarquable sur tout le semestre, sans retard ni absence.",
+        "ar": "مواظبة متميزة طيلة الدورة، دون تأخر أو غياب.",
+        "en": "Outstanding attendance all term, with no lateness or absence.",
+        "es": "Asistencia destacada durante todo el semestre, sin retrasos ni ausencias."
+      }
+    },
+    {
+      "id": "excellent_attendance.5",
+      "category": "excellent_attendance",
+      "title": {
+        "fr": "Présence aux activités",
+        "ar": "حضور الأنشطة",
+        "en": "Attends activities",
+        "es": "Asistencia a las actividades"
+      },
+      "description": {
+        "fr": "Présence fidèle aux activités et au soutien scolaire proposés.",
+        "ar": "حضور دائم للأنشطة ولحصص الدعم المقترحة.",
+        "en": "Faithfully attends the activities and extra support sessions offered.",
+        "es": "Asistencia fiel a las actividades y al refuerzo escolar propuestos."
+      }
+    },
+    {
+      "id": "excellent_attendance.6",
+      "category": "excellent_attendance",
+      "title": {
+        "fr": "Retour après absence",
+        "ar": "عودة بعد غياب",
+        "en": "Back after absence",
+        "es": "Vuelta tras una ausencia"
+      },
+      "description": {
+        "fr": "Retour rapide et motivé après une absence justifiée, avec le travail rattrapé.",
+        "ar": "عودة سريعة ومتحمسة بعد غياب مبرر مع تدارك ما فات.",
+        "en": "Came back quickly and motivated after an excused absence, with work caught up.",
+        "es": "Vuelta rápida y motivada tras una ausencia justificada, con el trabajo recuperado."
+      }
+    },
+    {
+      "id": "excellent_attendance.7",
+      "category": "excellent_attendance",
+      "title": {
+        "fr": "Régularité exemplaire",
+        "ar": "انتظام نموذجي",
+        "en": "Never misses a lesson",
+        "es": "Regularidad ejemplar"
+      },
+      "description": {
+        "fr": "Régularité exemplaire qui permet de suivre chaque leçon sans interruption.",
+        "ar": "انتظام نموذجي يسمح بمتابعة كل الدروس دون انقطاع.",
+        "en": "Exemplary regularity that means every lesson is followed without a break.",
+        "es": "Regularidad ejemplar que permite seguir cada lección sin interrupción."
+      }
+    },
+    {
+      "id": "excellent_attendance.8",
+      "category": "excellent_attendance",
+      "title": {
+        "fr": "Ponctualité aux rendez-vous",
+        "ar": "الالتزام بالمواعيد",
+        "en": "Punctual for everything",
+        "es": "Puntual en todo"
+      },
+      "description": {
+        "fr": "Ponctualité aux contrôles, aux sorties et à tous les rendez-vous de la classe.",
+        "ar": "الالتزام بمواعيد الفروض والخرجات وكل مواعيد القسم.",
+        "en": "Punctual for tests, outings and every class appointment.",
+        "es": "Puntualidad en los exámenes, las salidas y todas las citas de la clase."
+      }
+    },
+    {
+      "id": "other.1",
+      "category": "other",
+      "title": {
+        "fr": "Félicitations",
+        "ar": "تهانينا",
+        "en": "Congratulations",
+        "es": "Enhorabuena"
+      },
+      "description": {
+        "fr": "Félicitations pour l'attitude positive et l'engagement montrés à l'école.",
+        "ar": "تهانينا على السلوك الإيجابي والانخراط داخل المؤسسة.",
+        "en": "Congratulations on the positive attitude and commitment shown at school.",
+        "es": "Enhorabuena por la actitud positiva y el compromiso mostrados en el centro."
+      }
+    },
+    {
+      "id": "other.2",
+      "category": "other",
+      "title": {
+        "fr": "Talent artistique",
+        "ar": "موهبة فنية",
+        "en": "Artistic talent",
+        "es": "Talento artístico"
+      },
+      "description": {
+        "fr": "Talent artistique remarquable dans une activité de dessin, de musique ou de théâtre.",
+        "ar": "موهبة فنية لافتة في نشاط الرسم أو الموسيقى أو المسرح.",
+        "en": "Remarkable artistic talent in drawing, music or drama.",
+        "es": "Talento artístico notable en dibujo, música o teatro."
+      }
+    },
+    {
+      "id": "other.3",
+      "category": "other",
+      "title": {
+        "fr": "Performance sportive",
+        "ar": "إنجاز رياضي",
+        "en": "Sporting achievement",
+        "es": "Logro deportivo"
+      },
+      "description": {
+        "fr": "Belle performance lors d'une compétition ou d'une rencontre sportive.",
+        "ar": "إنجاز جميل خلال منافسة أو لقاء رياضي.",
+        "en": "A fine performance in a sports competition or match.",
+        "es": "Bonita actuación en una competición o encuentro deportivo."
+      }
+    },
+    {
+      "id": "other.4",
+      "category": "other",
+      "title": {
+        "fr": "Concours réussi",
+        "ar": "تميز في مسابقة",
+        "en": "Competition success",
+        "es": "Éxito en un concurso"
+      },
+      "description": {
+        "fr": "Excellent classement à un concours, qui fait honneur à l'école.",
+        "ar": "ترتيب متميز في مسابقة يشرّف المؤسسة.",
+        "en": "An excellent ranking in a competition that does the school proud.",
+        "es": "Excelente clasificación en un concurso, que honra al centro."
+      }
+    },
+    {
+      "id": "other.5",
+      "category": "other",
+      "title": {
+        "fr": "Créativité",
+        "ar": "إبداع",
+        "en": "Creativity",
+        "es": "Creatividad"
+      },
+      "description": {
+        "fr": "Créativité et originalité remarquées dans un travail ou un projet.",
+        "ar": "إبداع وأصالة لافتان في عمل أو مشروع.",
+        "en": "Creativity and originality noticed in a piece of work or a project.",
+        "es": "Creatividad y originalidad destacadas en un trabajo o un proyecto."
+      }
+    },
+    {
+      "id": "other.6",
+      "category": "other",
+      "title": {
+        "fr": "Bonne humeur",
+        "ar": "روح مرحة",
+        "en": "Cheerful spirit",
+        "es": "Buen humor"
+      },
+      "description": {
+        "fr": "Bonne humeur et sourire qui contribuent à une ambiance agréable en classe.",
+        "ar": "روح مرحة وابتسامة تساهمان في جو لطيف داخل القسم.",
+        "en": "Good humour and a smile that make the class a pleasant place.",
+        "es": "Buen humor y sonrisa que contribuyen a un ambiente agradable en clase."
+      }
+    },
+    {
+      "id": "other.7",
+      "category": "other",
+      "title": {
+        "fr": "Récitation réussie",
+        "ar": "استظهار متقن",
+        "en": "Recitation",
+        "es": "Recitación lograda"
+      },
+      "description": {
+        "fr": "Récitation ou mémorisation réussie avec une très bonne diction.",
+        "ar": "استظهار أو حفظ متقن مع إلقاء جيد جدا.",
+        "en": "A successful recitation or piece learnt by heart, with very good diction.",
+        "es": "Recitación o memorización lograda con muy buena dicción."
+      }
+    },
+    {
+      "id": "other.8",
+      "category": "other",
+      "title": {
+        "fr": "Fierté de la classe",
+        "ar": "فخر القسم",
+        "en": "Pride of the class",
+        "es": "Orgullo de la clase"
+      },
+      "description": {
+        "fr": "Comportement et résultats qui font la fierté de la classe et de l'école.",
+        "ar": "سلوك ونتائج تجعل القسم والمؤسسة فخورين.",
+        "en": "Behaviour and results that make the class and the school proud.",
+        "es": "Comportamiento y resultados que enorgullecen a la clase y al centro."
+      }
+    }
+  ]
+}

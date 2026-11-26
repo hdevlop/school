@@ -12,6 +12,7 @@ import { createDisciplineSchemas } from '../config/disciplineSchemas';
 import { OTHER_LOCATION, buildDisciplineLocationOptions, isListedDisciplineLocation } from '../config/disciplineOptions';
 import { DISCIPLINE_CATEGORIES, DISCIPLINE_SEVERITIES, type DisciplineIncident } from '../disciplineConstants';
 import { useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { DisciplineDescriptionGenerateButton } from './DisciplineDescriptionGenerateButton';
 import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYear';
 
 const localParts = (value?: string) => {
@@ -85,7 +86,8 @@ export default function DisciplineForm({ incident, draft }: { incident?: Discipl
     ...dateParts,
     category: incident?.category || draft?.category || 'classroom_disruption',
     severity: incident?.severity || draft?.severity || 'medium',
-    location: incident?.location || '',
+    // Most incidents happen in class: a new one starts there; an edited one keeps what it holds.
+    location: incident?.id ? incident.location || '' : 'classroom',
     description: incident?.description || draft?.description || '',
   };
 
@@ -125,7 +127,11 @@ export default function DisciplineForm({ incident, draft }: { incident?: Discipl
           />
         </div>
         <IncidentLocationField />
-        <FormInput name="description" type="textarea" formLabel={t('discipline.form.description')} placeholder={t('discipline.form.descriptionPlaceholder')} icon={FileText} required />
+        {/* FormInput's label takes text only, so the generate button sits over the end of its row. */}
+        <div className="relative">
+          <FormInput name="description" type="textarea" formLabel={t('discipline.form.description')} placeholder={t('discipline.form.descriptionPlaceholder')} icon={FileText} required />
+          <DisciplineDescriptionGenerateButton className="absolute end-0 top-0" />
+        </div>
       </div>
     </NForm>
   );

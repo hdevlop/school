@@ -152,11 +152,39 @@ function PlanningContent() {
     setClass(classId); if (activeControl) setControl(activeControl.id);
     setDrafts(current => updatePlanningMonthDraft(current, cls, month, entries));
   };
-  // Removed from the month's draft, like an edit; saving the month makes it final.
+  /**
+   * The trash removes the exam at once, after a confirmation: it is not one
+   * more unsaved change, which the open exam's Cancel would bring back. An
+   * exam never saved only leaves the draft. The month's other unsaved changes
+   * stay unsaved.
+   */
   const deleteEntry = (cls: ExamPlanningClass, entry: ExamPlanningEntry) => {
     const month = entry.date.slice(0, 7);
-    updateEntries(cls, month, monthEntriesFor(cls, month).filter(item => item.id !== entry.id));
-    if (effectiveSelection?.entryId === entry.id) setSelected(null);
+    const saved = cls.months[month] ?? [];
+    const left = saved.filter(item => item.id !== entry.id);
+    const forget = () => {
+      setDrafts(current => {
+        const draft = current[cls.id]?.[month];
+        // Compared with the month as now saved, so a draft the deletion made equal is no longer unsaved.
+        return draft ? updatePlanningMonthDraft(current, { ...cls, months: { ...cls.months, [month]: left } }, month, draft.filter(item => item.id !== entry.id)) : current;
+      });
+      if (effectiveSelection?.entryId === entry.id) setSelected(null);
+    };
+    if (!saved.some(item => item.id === entry.id)) { forget(); return; }
+    confirmDelete({
+      title: t('common.delete'), warningText: t('examPlanning.deleteExamWarning'), cancelText: t('common.cancel'),
+      itemName: [entry.subject.trim(), toOfficialClassName(cls.name)].filter(Boolean).join(' · '), confirmText: t('common.delete'),
+      onConfirm: async () => {
+        setSavingDrafts(true);
+        try {
+          await save({ classId: cls.id, month, entries: left });
+          forget();
+          toast.success(t('examPlanning.examDeleted'));
+        } catch (failure) {
+          toast.error(isAuthorizationError(failure) && failure instanceof Error && failure.message ? failure.message : t('examPlanning.saveFailed'));
+        } finally { setSavingDrafts(false); }
+      },
+    });
   };
   const addEntry = (cls: ExamPlanningClass, subject = '') => {
     const date = today >= range.from && today <= range.to ? today : range.from;

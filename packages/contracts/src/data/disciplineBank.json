@@ -1,0 +1,1141 @@
+{
+  "entries": [
+    {
+      "id": "classroom_disruption.1",
+      "category": "classroom_disruption",
+      "severity": "low",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Bavardages répétés pendant la leçon malgré plusieurs rappels à l'ordre.",
+        "ar": "ثرثرة متكررة أثناء الدرس رغم عدة تنبيهات.",
+        "en": "Repeated chatting during the lesson despite several reminders.",
+        "es": "Charlas repetidas durante la clase a pesar de varios avisos."
+      }
+    },
+    {
+      "id": "classroom_disruption.2",
+      "category": "classroom_disruption",
+      "severity": "low",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Déplacements sans autorisation dans la classe pendant le travail.",
+        "ar": "تنقل داخل القسم دون إذن أثناء العمل.",
+        "en": "Moving around the classroom without permission during work time.",
+        "es": "Desplazamientos por el aula sin permiso durante el trabajo."
+      }
+    },
+    {
+      "id": "classroom_disruption.3",
+      "category": "classroom_disruption",
+      "severity": "medium",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Perturbation du cours par des bruits et des remarques déplacées, empêchant les camarades de travailler.",
+        "ar": "تشويش على الدرس بالضجيج والتعليقات غير اللائقة، مما منع الزملاء من العمل.",
+        "en": "Disrupted the lesson with noise and inappropriate remarks, stopping classmates from working.",
+        "es": "Interrupción de la clase con ruidos y comentarios fuera de lugar que impidieron trabajar a los compañeros."
+      }
+    },
+    {
+      "id": "classroom_disruption.4",
+      "category": "classroom_disruption",
+      "severity": "low",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Refus de se mettre au travail et absence de matériel malgré les consignes.",
+        "ar": "رفض الشروع في العمل وعدم إحضار الأدوات رغم التعليمات.",
+        "en": "Refused to start work and came without materials despite instructions.",
+        "es": "Se negó a ponerse a trabajar y no trajo el material pese a las consignas."
+      }
+    },
+    {
+      "id": "classroom_disruption.5",
+      "category": "classroom_disruption",
+      "severity": "medium",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Interruptions constantes de l'enseignant, rendant difficile le déroulement de la séance.",
+        "ar": "مقاطعة متكررة للأستاذ مما صعّب سير الحصة.",
+        "en": "Constantly interrupted the teacher, making the lesson hard to run.",
+        "es": "Interrupciones constantes al docente, que dificultaron el desarrollo de la sesión."
+      }
+    },
+    {
+      "id": "classroom_disruption.6",
+      "category": "classroom_disruption",
+      "severity": "medium",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Comportement agité qui a nécessité l'arrêt de l'activité à plusieurs reprises.",
+        "ar": "سلوك مضطرب استدعى إيقاف النشاط عدة مرات.",
+        "en": "Restless behaviour that meant the activity had to be stopped several times.",
+        "es": "Comportamiento agitado que obligó a detener la actividad en varias ocasiones."
+      }
+    },
+    {
+      "id": "classroom_disruption.7",
+      "category": "classroom_disruption",
+      "severity": "low",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Retard en classe et entrée bruyante qui a perturbé le début du cours.",
+        "ar": "تأخر عن القسم ودخول بضجيج شوّش على بداية الدرس.",
+        "en": "Arrived late and entered noisily, disrupting the start of the lesson.",
+        "es": "Llegó tarde y entró haciendo ruido, lo que perturbó el inicio de la clase."
+      }
+    },
+    {
+      "id": "classroom_disruption.8",
+      "category": "classroom_disruption",
+      "severity": "high",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Perturbation grave et persistante du cours, avec refus d'obéir aux consignes de l'enseignant.",
+        "ar": "تشويش خطير ومتواصل على الدرس، مع رفض الامتثال لتعليمات الأستاذ.",
+        "en": "Serious, persistent disruption of the lesson, refusing to follow the teacher's instructions.",
+        "es": "Interrupción grave y persistente de la clase, negándose a seguir las indicaciones del docente."
+      }
+    },
+    {
+      "id": "disrespect.1",
+      "category": "disrespect",
+      "severity": "medium",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Propos irrespectueux envers l'enseignant devant la classe.",
+        "ar": "كلام غير لائق في حق الأستاذ أمام القسم.",
+        "en": "Disrespectful words towards the teacher in front of the class.",
+        "es": "Palabras irrespetuosas hacia el docente delante de la clase."
+      }
+    },
+    {
+      "id": "disrespect.2",
+      "category": "disrespect",
+      "severity": "low",
+      "places": [],
+      "description": {
+        "fr": "Ton insolent et réponses déplacées lors d'une remarque de l'enseignant.",
+        "ar": "نبرة وقحة وأجوبة غير لائقة عند تنبيه الأستاذ.",
+        "en": "Insolent tone and inappropriate replies when the teacher made a remark.",
+        "es": "Tono insolente y respuestas fuera de lugar ante una observación del docente."
+      }
+    },
+    {
+      "id": "disrespect.3",
+      "category": "disrespect",
+      "severity": "medium",
+      "places": [],
+      "description": {
+        "fr": "Refus d'obéir à un membre du personnel et attitude provocatrice.",
+        "ar": "رفض الامتثال لأحد أطر المؤسسة وسلوك استفزازي.",
+        "en": "Refused to follow a staff member's instructions, with a provocative attitude.",
+        "es": "Se negó a obedecer a un miembro del personal, con actitud provocadora."
+      }
+    },
+    {
+      "id": "disrespect.4",
+      "category": "disrespect",
+      "severity": "medium",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Moqueries et insultes envers un camarade en classe.",
+        "ar": "سخرية وسب لأحد الزملاء داخل القسم.",
+        "en": "Mocked and insulted a classmate in class.",
+        "es": "Burlas e insultos hacia un compañero en clase."
+      }
+    },
+    {
+      "id": "disrespect.5",
+      "category": "disrespect",
+      "severity": "low",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Gestes impolis et attitude méprisante pendant la séance.",
+        "ar": "حركات غير مؤدبة وسلوك ينم عن الاستخفاف أثناء الحصة.",
+        "en": "Rude gestures and a contemptuous attitude during the lesson.",
+        "es": "Gestos maleducados y actitud despectiva durante la sesión."
+      }
+    },
+    {
+      "id": "disrespect.6",
+      "category": "disrespect",
+      "severity": "medium",
+      "places": [
+        "schoolyard"
+      ],
+      "description": {
+        "fr": "Langage grossier utilisé dans la cour à l'égard d'autres élèves.",
+        "ar": "استعمال كلام بذيء في الساحة تجاه تلاميذ آخرين.",
+        "en": "Used foul language towards other pupils in the playground.",
+        "es": "Lenguaje grosero hacia otros alumnos en el patio."
+      }
+    },
+    {
+      "id": "disrespect.7",
+      "category": "disrespect",
+      "severity": "high",
+      "places": [],
+      "description": {
+        "fr": "Insultes graves adressées à un membre du personnel de l'établissement.",
+        "ar": "سب خطير موجه إلى أحد أطر المؤسسة.",
+        "en": "Serious insults addressed to a member of school staff.",
+        "es": "Insultos graves dirigidos a un miembro del personal del centro."
+      }
+    },
+    {
+      "id": "disrespect.8",
+      "category": "disrespect",
+      "severity": "low",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Non-respect du tour de parole et remarques désobligeantes envers les camarades.",
+        "ar": "عدم احترام دور الكلام وتعليقات جارحة تجاه الزملاء.",
+        "en": "Did not wait their turn to speak and made hurtful remarks to classmates.",
+        "es": "No respetó el turno de palabra e hizo comentarios hirientes a los compañeros."
+      }
+    },
+    {
+      "id": "bullying.1",
+      "category": "bullying",
+      "severity": "high",
+      "places": [],
+      "description": {
+        "fr": "Moqueries répétées visant le même camarade, qui s'en trouve isolé et affecté.",
+        "ar": "سخرية متكررة تستهدف نفس الزميل، مما جعله معزولا ومتأثرا.",
+        "en": "Repeated mockery targeting the same classmate, who is left isolated and upset.",
+        "es": "Burlas repetidas dirigidas al mismo compañero, que queda aislado y afectado."
+      }
+    },
+    {
+      "id": "bullying.2",
+      "category": "bullying",
+      "severity": "high",
+      "places": [],
+      "description": {
+        "fr": "Mise à l'écart volontaire d'un camarade et incitation des autres à l'exclure.",
+        "ar": "إقصاء متعمد لأحد الزملاء وتحريض الآخرين على عزله.",
+        "en": "Deliberately left a classmate out and encouraged others to exclude them.",
+        "es": "Exclusión deliberada de un compañero e incitación a los demás a apartarlo."
+      }
+    },
+    {
+      "id": "bullying.3",
+      "category": "bullying",
+      "severity": "high",
+      "places": [
+        "schoolyard"
+      ],
+      "description": {
+        "fr": "Intimidation et menaces envers un élève plus jeune pendant la récréation.",
+        "ar": "تخويف وتهديد تلميذ أصغر سنا أثناء الاستراحة.",
+        "en": "Intimidated and threatened a younger pupil during break.",
+        "es": "Intimidación y amenazas a un alumno más pequeño durante el recreo."
+      }
+    },
+    {
+      "id": "bullying.4",
+      "category": "bullying",
+      "severity": "critical",
+      "places": [
+        "online"
+      ],
+      "description": {
+        "fr": "Messages blessants et humiliants envoyés à un camarade sur les réseaux sociaux.",
+        "ar": "إرسال رسائل جارحة ومهينة لأحد الزملاء عبر مواقع التواصل الاجتماعي.",
+        "en": "Sent hurtful, humiliating messages to a classmate on social media.",
+        "es": "Envío de mensajes hirientes y humillantes a un compañero en las redes sociales."
+      }
+    },
+    {
+      "id": "bullying.5",
+      "category": "bullying",
+      "severity": "high",
+      "places": [],
+      "description": {
+        "fr": "Surnoms humiliants donnés de manière répétée à un camarade.",
+        "ar": "إطلاق ألقاب مهينة بشكل متكرر على أحد الزملاء.",
+        "en": "Repeatedly called a classmate humiliating names.",
+        "es": "Apodos humillantes dirigidos repetidamente a un compañero."
+      }
+    },
+    {
+      "id": "bullying.6",
+      "category": "bullying",
+      "severity": "medium",
+      "places": [],
+      "description": {
+        "fr": "Pression exercée sur un camarade pour obtenir son goûter ou ses affaires.",
+        "ar": "الضغط على أحد الزملاء للحصول على لمجته أو أغراضه.",
+        "en": "Pressured a classmate into handing over their snack or belongings.",
+        "es": "Presión sobre un compañero para quitarle la merienda o sus cosas."
+      }
+    },
+    {
+      "id": "bullying.7",
+      "category": "bullying",
+      "severity": "critical",
+      "places": [],
+      "description": {
+        "fr": "Harcèlement répété malgré les avertissements, avec des conséquences sur la scolarité de la victime.",
+        "ar": "تحرش متكرر رغم التنبيهات، مع آثار على تمدرس الضحية.",
+        "en": "Repeated harassment despite warnings, affecting the victim's schooling.",
+        "es": "Acoso repetido pese a las advertencias, con consecuencias en la escolaridad de la víctima."
+      }
+    },
+    {
+      "id": "bullying.8",
+      "category": "bullying",
+      "severity": "high",
+      "places": [],
+      "description": {
+        "fr": "Diffusion de rumeurs blessantes au sujet d'un camarade.",
+        "ar": "نشر إشاعات جارحة حول أحد الزملاء.",
+        "en": "Spread hurtful rumours about a classmate.",
+        "es": "Difusión de rumores hirientes sobre un compañero."
+      }
+    },
+    {
+      "id": "fighting.1",
+      "category": "fighting",
+      "severity": "medium",
+      "places": [
+        "schoolyard"
+      ],
+      "description": {
+        "fr": "Bousculade et échange de coups avec un camarade dans la cour.",
+        "ar": "تدافع وتبادل للضرب مع أحد الزملاء في الساحة.",
+        "en": "Pushing and exchanging blows with a classmate in the playground.",
+        "es": "Empujones e intercambio de golpes con un compañero en el patio."
+      }
+    },
+    {
+      "id": "fighting.2",
+      "category": "fighting",
+      "severity": "high",
+      "places": [],
+      "description": {
+        "fr": "Bagarre ayant nécessité l'intervention du personnel pour séparer les élèves.",
+        "ar": "شجار استدعى تدخل الأطر للفصل بين التلاميذ.",
+        "en": "A fight that needed staff to step in and separate the pupils.",
+        "es": "Pelea que requirió la intervención del personal para separar a los alumnos."
+      }
+    },
+    {
+      "id": "fighting.3",
+      "category": "fighting",
+      "severity": "critical",
+      "places": [],
+      "description": {
+        "fr": "Coups portés à un camarade, ayant causé une blessure nécessitant des soins.",
+        "ar": "ضرب أحد الزملاء مما تسبب له في إصابة استدعت العلاج.",
+        "en": "Hit a classmate, causing an injury that needed treatment.",
+        "es": "Golpes a un compañero que le causaron una herida que necesitó atención."
+      }
+    },
+    {
+      "id": "fighting.4",
+      "category": "fighting",
+      "severity": "medium",
+      "places": [
+        "school_entrance",
+        "school_surroundings"
+      ],
+      "description": {
+        "fr": "Provocation physique à la sortie de l'école, ayant dégénéré en altercation.",
+        "ar": "استفزاز جسدي عند الخروج من المؤسسة تحول إلى عراك.",
+        "en": "Physical provocation at the school gate that turned into a scuffle.",
+        "es": "Provocación física a la salida del centro que acabó en un altercado."
+      }
+    },
+    {
+      "id": "fighting.5",
+      "category": "fighting",
+      "severity": "low",
+      "places": [
+        "schoolyard"
+      ],
+      "description": {
+        "fr": "Jeu brutal pendant la récréation, avec des gestes dangereux envers les camarades.",
+        "ar": "لعب عنيف أثناء الاستراحة مع حركات خطيرة تجاه الزملاء.",
+        "en": "Rough play at break, with dangerous moves towards classmates.",
+        "es": "Juego brusco en el recreo, con gestos peligrosos hacia los compañeros."
+      }
+    },
+    {
+      "id": "fighting.6",
+      "category": "fighting",
+      "severity": "high",
+      "places": [
+        "corridor"
+      ],
+      "description": {
+        "fr": "Agression physique envers un camarade dans les couloirs.",
+        "ar": "اعتداء جسدي على أحد الزملاء في الممرات.",
+        "en": "Physically attacked a classmate in the corridors.",
+        "es": "Agresión física a un compañero en los pasillos."
+      }
+    },
+    {
+      "id": "fighting.7",
+      "category": "fighting",
+      "severity": "medium",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Coups de pied et tirage de cheveux lors d'un conflit en classe.",
+        "ar": "ركل وشد للشعر خلال خلاف داخل القسم.",
+        "en": "Kicking and hair-pulling during a conflict in class.",
+        "es": "Patadas y tirones de pelo durante un conflicto en clase."
+      }
+    },
+    {
+      "id": "fighting.8",
+      "category": "fighting",
+      "severity": "high",
+      "places": [
+        "sports_area"
+      ],
+      "description": {
+        "fr": "Participation à une bagarre collective lors d'une activité sportive.",
+        "ar": "المشاركة في شجار جماعي خلال نشاط رياضي.",
+        "en": "Took part in a group fight during a sports activity.",
+        "es": "Participación en una pelea colectiva durante una actividad deportiva."
+      }
+    },
+    {
+      "id": "cheating.1",
+      "category": "cheating",
+      "severity": "medium",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Copie sur le voisin pendant le contrôle.",
+        "ar": "نقل من الزميل المجاور أثناء الفرض.",
+        "en": "Copied from a neighbour during the test.",
+        "es": "Copió del compañero de al lado durante el examen."
+      }
+    },
+    {
+      "id": "cheating.2",
+      "category": "cheating",
+      "severity": "high",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Utilisation d'une antisèche pendant l'évaluation.",
+        "ar": "استعمال ورقة غش أثناء التقويم.",
+        "en": "Used a cheat sheet during the assessment.",
+        "es": "Usó una chuleta durante la evaluación."
+      }
+    },
+    {
+      "id": "cheating.3",
+      "category": "cheating",
+      "severity": "high",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Utilisation du téléphone pour obtenir des réponses pendant le contrôle.",
+        "ar": "استعمال الهاتف للحصول على الأجوبة أثناء الفرض.",
+        "en": "Used a phone to get answers during the test.",
+        "es": "Usó el teléfono para obtener respuestas durante el examen."
+      }
+    },
+    {
+      "id": "cheating.4",
+      "category": "cheating",
+      "severity": "medium",
+      "places": [],
+      "description": {
+        "fr": "Devoir recopié sur celui d'un camarade et rendu comme un travail personnel.",
+        "ar": "نقل واجب أحد الزملاء وتقديمه كعمل شخصي.",
+        "en": "Copied a classmate's homework and handed it in as their own.",
+        "es": "Copió los deberes de un compañero y los entregó como propios."
+      }
+    },
+    {
+      "id": "cheating.5",
+      "category": "cheating",
+      "severity": "low",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Communication avec un camarade pendant l'évaluation malgré l'interdiction.",
+        "ar": "التواصل مع أحد الزملاء أثناء التقويم رغم المنع.",
+        "en": "Talked to a classmate during the assessment although it was forbidden.",
+        "es": "Se comunicó con un compañero durante la evaluación pese a la prohibición."
+      }
+    },
+    {
+      "id": "cheating.6",
+      "category": "cheating",
+      "severity": "medium",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Réponses soufflées à un camarade pendant le contrôle.",
+        "ar": "تلقين الأجوبة لأحد الزملاء أثناء الفرض.",
+        "en": "Whispered answers to a classmate during the test.",
+        "es": "Sopló respuestas a un compañero durante el examen."
+      }
+    },
+    {
+      "id": "cheating.7",
+      "category": "cheating",
+      "severity": "high",
+      "places": [],
+      "description": {
+        "fr": "Falsification d'une note ou d'une signature des parents.",
+        "ar": "تزوير نقطة أو توقيع أحد الأولياء.",
+        "en": "Forged a mark or a parent's signature.",
+        "es": "Falsificó una nota o la firma de los padres."
+      }
+    },
+    {
+      "id": "cheating.8",
+      "category": "cheating",
+      "severity": "medium",
+      "places": [],
+      "description": {
+        "fr": "Travail recopié depuis internet sans aucun effort personnel.",
+        "ar": "نقل عمل من الإنترنت دون أي مجهود شخصي.",
+        "en": "Copied work from the internet with no personal effort.",
+        "es": "Trabajo copiado de internet sin ningún esfuerzo personal."
+      }
+    },
+    {
+      "id": "vandalism.1",
+      "category": "vandalism",
+      "severity": "medium",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Inscriptions sur la table et le mur de la classe.",
+        "ar": "الكتابة على الطاولة وجدار القسم.",
+        "en": "Wrote on the desk and the classroom wall.",
+        "es": "Pintadas en la mesa y en la pared del aula."
+      }
+    },
+    {
+      "id": "vandalism.2",
+      "category": "vandalism",
+      "severity": "high",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Dégradation volontaire du matériel de la classe.",
+        "ar": "إتلاف متعمد لتجهيزات القسم.",
+        "en": "Deliberately damaged classroom equipment.",
+        "es": "Daño intencionado al material del aula."
+      }
+    },
+    {
+      "id": "vandalism.3",
+      "category": "vandalism",
+      "severity": "medium",
+      "places": [],
+      "description": {
+        "fr": "Livre de la bibliothèque abîmé et rendu dégradé.",
+        "ar": "إتلاف كتاب من المكتبة وإرجاعه في حالة سيئة.",
+        "en": "Damaged a library book and returned it spoilt.",
+        "es": "Estropeó un libro de la biblioteca y lo devolvió dañado."
+      }
+    },
+    {
+      "id": "vandalism.4",
+      "category": "vandalism",
+      "severity": "high",
+      "places": [
+        "restrooms"
+      ],
+      "description": {
+        "fr": "Dégradation des toilettes de l'établissement.",
+        "ar": "إتلاف مرافق المراحيض بالمؤسسة.",
+        "en": "Damaged the school toilets.",
+        "es": "Daños en los aseos del centro."
+      }
+    },
+    {
+      "id": "vandalism.5",
+      "category": "vandalism",
+      "severity": "medium",
+      "places": [],
+      "description": {
+        "fr": "Affaires d'un camarade abîmées volontairement.",
+        "ar": "إتلاف أغراض أحد الزملاء عمدا.",
+        "en": "Deliberately damaged a classmate's belongings.",
+        "es": "Estropeó a propósito las cosas de un compañero."
+      }
+    },
+    {
+      "id": "vandalism.6",
+      "category": "vandalism",
+      "severity": "low",
+      "places": [],
+      "description": {
+        "fr": "Déchets jetés au sol et refus de nettoyer.",
+        "ar": "رمي النفايات على الأرض ورفض التنظيف.",
+        "en": "Threw litter on the floor and refused to clean up.",
+        "es": "Tiró basura al suelo y se negó a limpiar."
+      }
+    },
+    {
+      "id": "vandalism.7",
+      "category": "vandalism",
+      "severity": "high",
+      "places": [],
+      "description": {
+        "fr": "Bris d'une vitre ou d'un équipement à la suite d'un comportement dangereux.",
+        "ar": "كسر زجاج نافذة أو تجهيز إثر سلوك خطير.",
+        "en": "Broke a window or a piece of equipment through dangerous behaviour.",
+        "es": "Rotura de un cristal o de un equipo por un comportamiento peligroso."
+      }
+    },
+    {
+      "id": "vandalism.8",
+      "category": "vandalism",
+      "severity": "critical",
+      "places": [],
+      "description": {
+        "fr": "Dégradation importante des locaux nécessitant des réparations.",
+        "ar": "إتلاف كبير للمرافق يستدعي الإصلاح.",
+        "en": "Major damage to the premises that needs repairs.",
+        "es": "Daños importantes en las instalaciones que requieren reparación."
+      }
+    },
+    {
+      "id": "uniform_violation.1",
+      "category": "uniform_violation",
+      "severity": "low",
+      "places": [],
+      "description": {
+        "fr": "Tenue non conforme au règlement de l'établissement.",
+        "ar": "هندام غير مطابق للنظام الداخلي للمؤسسة.",
+        "en": "Clothing that does not follow the school dress code.",
+        "es": "Vestimenta no conforme con el reglamento del centro."
+      }
+    },
+    {
+      "id": "uniform_violation.2",
+      "category": "uniform_violation",
+      "severity": "low",
+      "places": [],
+      "description": {
+        "fr": "Absence de la blouse ou de l'uniforme obligatoire.",
+        "ar": "عدم ارتداء الوزرة أو الزي الموحد الإلزامي.",
+        "en": "Came without the compulsory smock or uniform.",
+        "es": "No llevaba la bata o el uniforme obligatorio."
+      }
+    },
+    {
+      "id": "uniform_violation.3",
+      "category": "uniform_violation",
+      "severity": "low",
+      "places": [
+        "sports_area"
+      ],
+      "description": {
+        "fr": "Tenue de sport non apportée pour la séance d'éducation physique.",
+        "ar": "عدم إحضار البذلة الرياضية لحصة التربية البدنية.",
+        "en": "Did not bring sports kit for the PE lesson.",
+        "es": "No trajo la ropa de deporte para la clase de educación física."
+      }
+    },
+    {
+      "id": "uniform_violation.4",
+      "category": "uniform_violation",
+      "severity": "low",
+      "places": [],
+      "description": {
+        "fr": "Port de bijoux ou d'accessoires interdits par le règlement.",
+        "ar": "ارتداء حلي أو إكسسوارات يمنعها النظام الداخلي.",
+        "en": "Wore jewellery or accessories the rules forbid.",
+        "es": "Llevaba joyas o accesorios prohibidos por el reglamento."
+      }
+    },
+    {
+      "id": "uniform_violation.5",
+      "category": "uniform_violation",
+      "severity": "medium",
+      "places": [],
+      "description": {
+        "fr": "Uniforme non porté de manière répétée malgré les rappels.",
+        "ar": "عدم ارتداء الزي بشكل متكرر رغم التنبيهات.",
+        "en": "Repeatedly came without the uniform despite reminders.",
+        "es": "No llevó el uniforme en repetidas ocasiones pese a los avisos."
+      }
+    },
+    {
+      "id": "uniform_violation.6",
+      "category": "uniform_violation",
+      "severity": "low",
+      "places": [],
+      "description": {
+        "fr": "Tenue négligée et inadaptée au cadre scolaire.",
+        "ar": "هندام مهمل وغير ملائم للوسط المدرسي.",
+        "en": "Untidy clothing unsuited to school.",
+        "es": "Vestimenta descuidada e inadecuada para el entorno escolar."
+      }
+    },
+    {
+      "id": "uniform_violation.7",
+      "category": "uniform_violation",
+      "severity": "low",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Coiffure ou casquette non autorisée en classe.",
+        "ar": "تسريحة أو قبعة غير مسموح بها داخل القسم.",
+        "en": "Hairstyle or cap not allowed in class.",
+        "es": "Peinado o gorra no permitidos en clase."
+      }
+    },
+    {
+      "id": "uniform_violation.8",
+      "category": "uniform_violation",
+      "severity": "low",
+      "places": [
+        "school_entrance"
+      ],
+      "description": {
+        "fr": "Badge ou carte scolaire non porté à l'entrée de l'établissement.",
+        "ar": "عدم حمل الشارة أو البطاقة المدرسية عند الدخول إلى المؤسسة.",
+        "en": "Did not wear the school badge or card at the entrance.",
+        "es": "No llevaba la identificación o el carné escolar a la entrada del centro."
+      }
+    },
+    {
+      "id": "device_misuse.1",
+      "category": "device_misuse",
+      "severity": "low",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Téléphone utilisé en classe sans autorisation.",
+        "ar": "استعمال الهاتف داخل القسم دون إذن.",
+        "en": "Used a phone in class without permission.",
+        "es": "Usó el teléfono en clase sin permiso."
+      }
+    },
+    {
+      "id": "device_misuse.2",
+      "category": "device_misuse",
+      "severity": "medium",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Photos ou vidéos prises en classe sans autorisation.",
+        "ar": "التقاط صور أو فيديوهات داخل القسم دون إذن.",
+        "en": "Took photos or videos in class without permission.",
+        "es": "Hizo fotos o vídeos en clase sin autorización."
+      }
+    },
+    {
+      "id": "device_misuse.3",
+      "category": "device_misuse",
+      "severity": "high",
+      "places": [],
+      "description": {
+        "fr": "Diffusion sur internet d'images d'un camarade ou d'un enseignant sans leur accord.",
+        "ar": "نشر صور أحد الزملاء أو الأساتذة على الإنترنت دون موافقتهم.",
+        "en": "Posted images of a classmate or teacher online without their consent.",
+        "es": "Difundió en internet imágenes de un compañero o docente sin su consentimiento."
+      }
+    },
+    {
+      "id": "device_misuse.4",
+      "category": "device_misuse",
+      "severity": "low",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Jeux sur la tablette ou l'ordinateur au lieu de l'activité demandée.",
+        "ar": "اللعب على اللوحة الإلكترونية أو الحاسوب بدل النشاط المطلوب.",
+        "en": "Played games on a tablet or computer instead of doing the set activity.",
+        "es": "Jugó con la tableta o el ordenador en lugar de hacer la actividad pedida."
+      }
+    },
+    {
+      "id": "device_misuse.5",
+      "category": "device_misuse",
+      "severity": "low",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Écouteurs portés pendant le cours.",
+        "ar": "وضع السماعات أثناء الدرس.",
+        "en": "Wore earphones during the lesson.",
+        "es": "Llevaba auriculares durante la clase."
+      }
+    },
+    {
+      "id": "device_misuse.6",
+      "category": "device_misuse",
+      "severity": "medium",
+      "places": [
+        "computer_room"
+      ],
+      "description": {
+        "fr": "Accès à des sites non autorisés en salle informatique.",
+        "ar": "الولوج إلى مواقع غير مسموح بها في قاعة المعلوميات.",
+        "en": "Visited sites that are not allowed in the computer room.",
+        "es": "Accedió a sitios no autorizados en la sala de informática."
+      }
+    },
+    {
+      "id": "device_misuse.7",
+      "category": "device_misuse",
+      "severity": "medium",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Téléphone sonnant à plusieurs reprises et perturbant la séance.",
+        "ar": "رنين الهاتف عدة مرات مما شوّش على الحصة.",
+        "en": "Phone rang several times and disrupted the lesson.",
+        "es": "El teléfono sonó varias veces y perturbó la sesión."
+      }
+    },
+    {
+      "id": "device_misuse.8",
+      "category": "device_misuse",
+      "severity": "medium",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Matériel informatique de l'école utilisé de façon inappropriée.",
+        "ar": "استعمال غير لائق للعتاد المعلوماتي للمؤسسة.",
+        "en": "Misused the school's computer equipment.",
+        "es": "Uso inapropiado del material informático del centro."
+      }
+    },
+    {
+      "id": "prohibited_item.1",
+      "category": "prohibited_item",
+      "severity": "medium",
+      "places": [],
+      "description": {
+        "fr": "Objet interdit apporté à l'école et confisqué.",
+        "ar": "إحضار شيء ممنوع إلى المؤسسة وتمت مصادرته.",
+        "en": "Brought a forbidden item to school; it was confiscated.",
+        "es": "Trajo un objeto prohibido al centro, que fue requisado."
+      }
+    },
+    {
+      "id": "prohibited_item.2",
+      "category": "prohibited_item",
+      "severity": "critical",
+      "places": [],
+      "description": {
+        "fr": "Objet dangereux (cutter, couteau) trouvé dans le cartable.",
+        "ar": "العثور على أداة خطيرة (مشرط، سكين) في المحفظة.",
+        "en": "A dangerous item (box cutter, knife) found in the school bag.",
+        "es": "Se encontró un objeto peligroso (cúter, cuchillo) en la mochila."
+      }
+    },
+    {
+      "id": "prohibited_item.3",
+      "category": "prohibited_item",
+      "severity": "high",
+      "places": [],
+      "description": {
+        "fr": "Pétards ou produits dangereux apportés dans l'établissement.",
+        "ar": "إحضار مفرقعات أو مواد خطيرة إلى المؤسسة.",
+        "en": "Brought firecrackers or dangerous substances into school.",
+        "es": "Trajo petardos o productos peligrosos al centro."
+      }
+    },
+    {
+      "id": "prohibited_item.4",
+      "category": "prohibited_item",
+      "severity": "low",
+      "places": [
+        "classroom",
+        "laboratory",
+        "computer_room",
+        "library"
+      ],
+      "description": {
+        "fr": "Friandises ou boissons interdites consommées en classe.",
+        "ar": "تناول حلويات أو مشروبات ممنوعة داخل القسم.",
+        "en": "Ate sweets or drank drinks that are not allowed in class.",
+        "es": "Consumió golosinas o bebidas prohibidas en clase."
+      }
+    },
+    {
+      "id": "prohibited_item.5",
+      "category": "prohibited_item",
+      "severity": "medium",
+      "places": [],
+      "description": {
+        "fr": "Jeux ou cartes de collection apportés malgré l'interdiction.",
+        "ar": "إحضار ألعاب أو بطاقات تجميع رغم المنع.",
+        "en": "Brought games or trading cards despite the ban.",
+        "es": "Trajo juegos o cromos pese a la prohibición."
+      }
+    },
+    {
+      "id": "prohibited_item.6",
+      "category": "prohibited_item",
+      "severity": "critical",
+      "places": [],
+      "description": {
+        "fr": "Cigarettes ou substances interdites trouvées en possession de l'élève.",
+        "ar": "ضبط سجائر أو مواد ممنوعة بحوزة التلميذ(ة).",
+        "en": "Cigarettes or forbidden substances found in the pupil's possession.",
+        "es": "Se encontraron cigarrillos o sustancias prohibidas en posesión del alumno."
+      }
+    },
+    {
+      "id": "prohibited_item.7",
+      "category": "prohibited_item",
+      "severity": "medium",
+      "places": [],
+      "description": {
+        "fr": "Briquet ou allumettes apportés à l'école.",
+        "ar": "إحضار ولاعة أو أعواد ثقاب إلى المؤسسة.",
+        "en": "Brought a lighter or matches to school.",
+        "es": "Trajo un mechero o cerillas al centro."
+      }
+    },
+    {
+      "id": "prohibited_item.8",
+      "category": "prohibited_item",
+      "severity": "medium",
+      "places": [
+        "schoolyard"
+      ],
+      "description": {
+        "fr": "Objet de valeur apporté et échangé ou vendu dans la cour.",
+        "ar": "إحضار شيء ثمين ومبادلته أو بيعه في الساحة.",
+        "en": "Brought a valuable item and swapped or sold it in the playground.",
+        "es": "Trajo un objeto de valor y lo intercambió o vendió en el patio."
+      }
+    },
+    {
+      "id": "other.1",
+      "category": "other",
+      "severity": "low",
+      "places": [],
+      "description": {
+        "fr": "Non-respect des consignes de sécurité lors d'un déplacement.",
+        "ar": "عدم احترام تعليمات السلامة أثناء التنقل.",
+        "en": "Did not follow safety instructions while moving around.",
+        "es": "No respetó las normas de seguridad durante un desplazamiento."
+      }
+    },
+    {
+      "id": "other.2",
+      "category": "other",
+      "severity": "medium",
+      "places": [
+        "school_entrance",
+        "school_surroundings"
+      ],
+      "description": {
+        "fr": "Sortie de l'établissement sans autorisation.",
+        "ar": "مغادرة المؤسسة دون إذن.",
+        "en": "Left the school premises without permission.",
+        "es": "Salió del centro sin autorización."
+      }
+    },
+    {
+      "id": "other.3",
+      "category": "other",
+      "severity": "medium",
+      "places": [],
+      "description": {
+        "fr": "Absence au cours sans justification alors que l'élève était présent dans l'école.",
+        "ar": "التغيب عن الحصة دون مبرر رغم التواجد داخل المؤسسة.",
+        "en": "Skipped a lesson without reason while on the school premises.",
+        "es": "Faltó a clase sin justificación estando en el centro."
+      }
+    },
+    {
+      "id": "other.4",
+      "category": "other",
+      "severity": "low",
+      "places": [],
+      "description": {
+        "fr": "Mensonge à l'enseignant pour éviter un travail demandé.",
+        "ar": "الكذب على الأستاذ للتهرب من عمل مطلوب.",
+        "en": "Lied to the teacher to avoid set work.",
+        "es": "Mintió al docente para evitar un trabajo pedido."
+      }
+    },
+    {
+      "id": "other.5",
+      "category": "other",
+      "severity": "medium",
+      "places": [
+        "stairs",
+        "corridor"
+      ],
+      "description": {
+        "fr": "Comportement dangereux dans les escaliers ou les couloirs.",
+        "ar": "سلوك خطير في الأدراج أو الممرات.",
+        "en": "Dangerous behaviour on the stairs or in the corridors.",
+        "es": "Comportamiento peligroso en las escaleras o los pasillos."
+      }
+    },
+    {
+      "id": "other.6",
+      "category": "other",
+      "severity": "low",
+      "places": [
+        "school_bus"
+      ],
+      "description": {
+        "fr": "Comportement inapproprié dans le bus scolaire.",
+        "ar": "سلوك غير لائق داخل حافلة النقل المدرسي.",
+        "en": "Inappropriate behaviour on the school bus.",
+        "es": "Comportamiento inadecuado en el autobús escolar."
+      }
+    },
+    {
+      "id": "other.7",
+      "category": "other",
+      "severity": "low",
+      "places": [
+        "canteen"
+      ],
+      "description": {
+        "fr": "Gaspillage de nourriture et désordre à la cantine.",
+        "ar": "تبذير الطعام وإحداث الفوضى في المطعم المدرسي.",
+        "en": "Wasted food and caused disorder in the canteen.",
+        "es": "Desperdició comida y causó desorden en el comedor."
+      }
+    },
+    {
+      "id": "other.8",
+      "category": "other",
+      "severity": "high",
+      "places": [],
+      "description": {
+        "fr": "Comportement mettant en danger sa sécurité ou celle des autres.",
+        "ar": "سلوك يعرض سلامته أو سلامة الآخرين للخطر.",
+        "en": "Behaviour that put their own or others' safety at risk.",
+        "es": "Comportamiento que puso en peligro su seguridad o la de los demás."
+      }
+    }
+  ]
+}

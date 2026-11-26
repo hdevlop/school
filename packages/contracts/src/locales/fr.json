@@ -3503,7 +3503,8 @@
       "regenerate": "Régénérer",
       "generateHint": "Remplir les points et la description depuis la banque de récompenses",
       "filledFrom": "Depuis la banque : {{title}}. Cliquez à nouveau pour une autre.",
-      "noMatch": "La banque de récompenses n’a rien pour cette catégorie et ce type."
+      "noMatch": "La banque de récompenses n’a rien pour cette catégorie et ce type.",
+      "chooseFirst": "Choisissez d’abord une catégorie et un type de récompense"
     },
     "errors": {
       "notFound": "Récompense de la banque introuvable",
@@ -3992,7 +3993,11 @@
       "actionNote": "Détails de la mesure",
       "actionNotePlaceholder": "Détails facultatifs...",
       "resolutionNote": "Note de résolution",
-      "resolutionNotePlaceholder": "Expliquez comment l'incident a été résolu..."
+      "resolutionNotePlaceholder": "Expliquez comment l'incident a été résolu...",
+      "generate": "Générer",
+      "regenerate": "Régénérer",
+      "generateHint": "Remplir la description depuis la banque de l’école pour cette catégorie",
+      "generateChooseCategory": "Choisissez d’abord une catégorie"
     },
     "categories": {
       "classroom_disruption": "Perturbation en classe",
@@ -7347,7 +7352,9 @@
       "deleted": "Contrôle supprimé",
       "saveFailed": "Impossible d’enregistrer le contrôle. Réessayez.",
       "deleteWarning": "Supprimer ce contrôle ? Ses examens et leurs notes restent dans le Planning et les Examens."
-    }
+    },
+    "deleteExamWarning": "L’examen est retiré du planning tout de suite, avec ses leçons.",
+    "examDeleted": "Examen supprimé"
   },
   "insurance": {
     "title": "Assurance",

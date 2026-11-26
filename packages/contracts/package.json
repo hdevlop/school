@@ -15,6 +15,14 @@
       "types": "./src/birthplaces.ts",
       "default": "./src/birthplaces.ts"
     },
+    "./reward-bank": {
+      "types": "./src/rewardBank.ts",
+      "default": "./src/rewardBank.ts"
+    },
+    "./discipline-bank": {
+      "types": "./src/disciplineBank.ts",
+      "default": "./src/disciplineBank.ts"
+    },
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"

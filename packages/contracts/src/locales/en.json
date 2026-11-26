@@ -4943,7 +4943,11 @@
       "actionNote": "Action details",
       "actionNotePlaceholder": "Optional details about the action...",
       "resolutionNote": "Resolution note",
-      "resolutionNotePlaceholder": "Explain how the incident was resolved..."
+      "resolutionNotePlaceholder": "Explain how the incident was resolved...",
+      "generate": "Generate",
+      "regenerate": "Regenerate",
+      "generateHint": "Fill the description from School’s bank for this category",
+      "generateChooseCategory": "Choose a category first"
     },
     "categories": {
       "classroom_disruption": "Classroom disruption",
@@ -6386,7 +6390,8 @@
       "regenerate": "Regenerate",
       "generateHint": "Fill the points and description from the reward bank",
       "filledFrom": "From the reward bank: {{title}}. Click again for another.",
-      "noMatch": "The reward bank has nothing for this category and reward type."
+      "noMatch": "The reward bank has nothing for this category and reward type.",
+      "chooseFirst": "Choose a category and a reward type first"
     },
     "errors": {
       "notFound": "Bank reward not found",
@@ -7953,7 +7958,9 @@
       "deleted": "Contrôle removed",
       "saveFailed": "The Contrôle could not be saved. Try again.",
       "deleteWarning": "Remove this Contrôle? Its exams and their marks stay in Planning and Exams."
-    }
+    },
+    "deleteExamWarning": "The exam is removed from the planning now, with its lessons.",
+    "examDeleted": "Exam deleted"
   },
   "insurance": {
     "title": "Insurance",
