@@ -53,5 +53,6 @@ export const paidByRef = () => actionByRef('paid_by');
 export const genderEnum = pgEnum('gender', getEnumValues('gender'));
 export const attendanceStatusEnum = pgEnum('attendanceStatus', getEnumValues('attendanceStatus'));
 export const attendanceTypeEnum = pgEnum('attendanceType', getEnumValues('attendanceType'));
+export const attendanceSourceEnum = pgEnum('attendanceSource', getEnumValues('attendanceSource'));
 export const paymentMethodEnum = pgEnum('paymentMethod', getEnumValues('paymentMethod'));
 export const employmentTypeEnum = pgEnum('employmentType', getEnumValues('employmentType'));

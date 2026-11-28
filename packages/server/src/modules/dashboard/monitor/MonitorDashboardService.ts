@@ -4,7 +4,7 @@ import { SettingsRepository } from '../../settings/SettingsRepository';
 import { AcademicYearValidator } from '../../academicYears/AcademicYearValidator';
 import { PersonalNotificationRepository } from '../../notifications/NotificationRepository';
 import { getBusinessDateOverride } from '../../../shared/businessDate';
-import { schoolClock } from '../teacher/teacherDashboardMetrics';
+import { schoolClock } from '../../../shared/schoolClock';
 import { summarizeRegisters } from '../registerSummary';
 import { MonitorDashboardRepository } from './MonitorDashboardRepository';
 import { MonitorDashboardValidator } from './MonitorDashboardValidator';

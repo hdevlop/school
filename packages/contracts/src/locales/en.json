@@ -1625,6 +1625,10 @@
         "homeworkFiles": {
           "title": "Homework files",
           "description": "How much each teacher may store and how long a file is kept. The text of a homework is always kept."
+        },
+        "staffHours": {
+          "title": "Staff attendance (fingerprint)",
+          "description": "Permanent staff keep these fixed hours; a vacataire must scan before their first lesson."
         }
       },
       "generalTab": "System",
@@ -1678,7 +1682,8 @@
       "registeredCalendarLocked": "Registered year calendars require a reviewed correction",
       "activateThroughYears": "Activate the registered year through academic-year operations",
       "teachingDaysInUse": "Move or remove the lessons and supervision assigned to this day before changing teaching days.",
-      "invalidSchoolDay": "Set school hours that fit lunch and at least six teaching periods of five minutes."
+      "invalidSchoolDay": "Set school hours that fit lunch and at least six teaching periods of five minutes.",
+      "staffHoursOrder": "The staff arrival time must come before the departure time."
     },
     "system": {
       "title": "System Settings",
@@ -1719,7 +1724,10 @@
       "officialPhone2": "Phone 2",
       "officialPhone3": "Phone 3",
       "licenseNumber": "License number",
-      "licenseDate": "License date"
+      "licenseDate": "License date",
+      "staffArrivalTime": "Permanent staff: late after",
+      "staffDepartureTime": "Permanent staff: leave at",
+      "hourlyStaffLeadMinutes": "Vacataire: minutes before the lesson"
     },
     "academic": {
       "supervisorAssignmentHint": "Access is limited to the selected classes and their students, attendance, discipline and grades. Without assignments, no class data is accessible.",
@@ -3602,7 +3610,8 @@
       "noAssignmentsAdded": "No assignments added yet.",
       "emailHelp": "Use the teacher’s own email address. They will receive an activation link to choose their password.",
       "nameAr": "Name in Arabic",
-      "nameArPlaceholder": "الاسم الكامل"
+      "nameArPlaceholder": "الاسم الكامل",
+      "teacherType": "Teacher type"
     },
     "status": {
       "active": "Active",
@@ -3808,6 +3817,10 @@
       },
       "preview": "Preview",
       "printList": "Teachers list"
+    },
+    "teacherType": {
+      "monthly": "Permanent",
+      "hourly": "Vacataire"
     }
   },
   "drivers": {
@@ -7827,7 +7840,9 @@
     "duplicateTestPart": "Two questions have the same id.",
     "partLabelRequired": "Name the question.",
     "rewardTemplateTitleRequired": "Name is required",
-    "rewardTemplateTitleTooLong": "Name is too long (120 characters max)"
+    "rewardTemplateTitleTooLong": "Name is too long (120 characters max)",
+    "deviceUserIdInvalid": "A device user ID is letters and digits only.",
+    "hourlyStaffLeadInvalid": "Enter whole minutes from 0 to 60."
   },
   "academic": {
     "accountantAssignmentOptional": "Choose one or more cycles, or leave it empty for the whole school.",
@@ -8891,5 +8906,43 @@
     "viewTitle": "Missed homework — {{name}}",
     "incidentDescription": "Homework not done or incomplete this month ({{count}}): {{list}}.",
     "profileEmpty": "No missed homework this year."
+  },
+  "attendanceDevices": {
+    "title": "Fingerprint device",
+    "open": "Fingerprint device",
+    "errors": {
+      "deviceNotAllowed": "This device is not allowed to send attendance.",
+      "staffNotFound": "Staff member not found.",
+      "deviceUserIdTaken": "This device ID already belongs to {{name}}. Unlink it there first."
+    },
+    "success": {
+      "retrieved": "Device information retrieved.",
+      "linked": "Device ID saved."
+    },
+    "devices": {
+      "title": "Devices",
+      "noneConfigured": "No device is set up yet. Add the F18 serial number to the server settings, then on the device set Comm > Cloud Server to this site's address.",
+      "online": "Online",
+      "offline": "Offline",
+      "lastScan": "Last scan {{time}}",
+      "noScanYet": "No scan yet",
+      "lastContact": "last contact {{time}}",
+      "waiting": "set up, waiting for its first connection"
+    },
+    "people": {
+      "title": "Device IDs",
+      "unlinkedCount": "Not linked: {{count}}",
+      "help": "Each person has a user ID on the device. Choose who it belongs to. Permanent staff are late after the fixed arrival time in Settings; a vacataire is late if they scan less than the set minutes before their first lesson. Scans made before linking are counted as soon as you link.",
+      "emptyTitle": "No one on the device yet",
+      "emptyDescription": "Device IDs appear here after the first scan, or when the device sends its user list.",
+      "noDeviceName": "No name on the device",
+      "scans": "Scans: {{count}} · last {{time}}",
+      "noScans": "No scan yet",
+      "staffFor": "Staff member for device ID {{id}}",
+      "chooseStaff": "Choose a staff member",
+      "notLinked": "Not linked",
+      "rulePermanent": "Permanent",
+      "ruleVacataire": "Vacataire"
+    }
   }
 }

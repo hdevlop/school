@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { EMPLOYMENT_TYPE_VALUES, GENDER_VALUES, TEACHER_STATUS_VALUES } from '@sms/contracts';
+import { COMPENSATION_MODE_VALUES, EMPLOYMENT_TYPE_VALUES, GENDER_VALUES, TEACHER_STATUS_VALUES } from '@sms/contracts';
 import { classesWithoutSection } from './teacherAssignments';
 
 type T = (key: string) => string;
@@ -77,7 +77,10 @@ export const createTeacherSchemas = (t: T, { requireEmail = true } = {}) => {
     specialization: z.string().max(100, t('validationMessages.specializationTooLong')).optional(),
     yearsOfExperience: optionalNumberField(validNumber().int(t('validationMessages.mustBeAnInteger'))
       .min(0, t('validationMessages.yearsOfExperienceMustBeNonNegative'))),
+    // Permanent (monthly) or vacataire (hourly); the pay field follows it.
+    compensationMode: z.enum(COMPENSATION_MODE_VALUES).default('monthly'),
     salary: optionalNumberField(validNumber().positive(t('validationMessages.salaryMustBePositive'))),
+    hourlyRate: optionalNumberField(validNumber().positive(t('validationMessages.hourlyRateMustBePositive'))),
     hireDate: dateField,
     bankAccount: z.coerce.string().max(100, { message: t('validationMessages.bankAccountTooLong') }).optional(),
     employmentType: z.enum(EMPLOYMENT_TYPE_VALUES).optional(),

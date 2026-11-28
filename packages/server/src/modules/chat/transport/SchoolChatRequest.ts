@@ -5,7 +5,7 @@ import { Service } from '../../../najm';
 import { Year } from '../../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 import { SettingsRepository } from '../../settings/SettingsRepository';
-import { schoolClock } from '../../dashboard/teacher/teacherDashboardMetrics';
+import { schoolClock } from '../../../shared/schoolClock';
 import { getBusinessDateOverride } from '../../../shared/businessDate';
 import { answerLanguageInstruction } from '../replies/schoolAnswerLanguage';
 import { schoolDateRanges } from './schoolDateRanges';

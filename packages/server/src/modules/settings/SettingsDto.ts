@@ -75,6 +75,9 @@ const settingsSchema = z.object({
   gradingPeriods: num().int('Grading periods must be an integer').min(1, 'Grading periods must be at least 1').max(12, 'Grading periods cannot exceed 12').optional(),
   schoolStartTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Invalid start time format (HH:MM)').optional(),
   schoolEndTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Invalid end time format (HH:MM)').optional(),
+  staffArrivalTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'validationMessages.invalidStartTimeFormatHhMm').optional(),
+  staffDepartureTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'validationMessages.invalidEndTimeFormatHhMm').optional(),
+  hourlyStaffLeadMinutes: num().int('validationMessages.hourlyStaffLeadInvalid').min(0, 'validationMessages.hourlyStaffLeadInvalid').max(60, 'validationMessages.hourlyStaffLeadInvalid').optional(),
   lunchBreakDuration: num().int('Lunch break duration must be in minutes').min(15, 'Lunch break must be at least 15 minutes').max(120, 'Lunch break cannot exceed 120 minutes').optional(),
 
   maintenanceMode: z.boolean().optional(),

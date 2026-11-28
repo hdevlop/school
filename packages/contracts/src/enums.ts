@@ -117,6 +117,14 @@ export type AttendanceStatus = (typeof ATTENDANCE_STATUS_VALUES)[number];
 export const ATTENDANCE_TYPE_VALUES = ['student', 'staff'] as const;
 export type AttendanceType = (typeof ATTENDANCE_TYPE_VALUES)[number];
 
+/**
+ * Who wrote a staff mark: a person (`manual`), the fingerprint terminal's scan
+ * (`device`), or the end-of-day close that marks expected staff with no scan
+ * absent (`auto`). A scan replaces only `device` and `auto` marks.
+ */
+export const ATTENDANCE_SOURCE_VALUES = ['manual', 'device', 'auto'] as const;
+export type AttendanceSource = (typeof ATTENDANCE_SOURCE_VALUES)[number];
+
 export const PROFICIENCY_LEVEL_VALUES = ['beginner', 'intermediate', 'advanced', 'expert'] as const;
 export type ProficiencyLevel = (typeof PROFICIENCY_LEVEL_VALUES)[number];
 

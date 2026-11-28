@@ -48,6 +48,16 @@ export class SettingsValidator {
     }
   }
 
+  /** Permanent staff arrive before they leave: the day closes at the departure time. */
+  ensureStaffHours(hours: { staffArrivalTime?: string | null; staffDepartureTime?: string | null }) {
+    const minutes = (time?: string | null) => {
+      const [h, m] = (time ?? '').split(':').map(Number);
+      return h * 60 + m;
+    };
+    if (!hours.staffArrivalTime || !hours.staffDepartureTime) return;
+    if (!(minutes(hours.staffArrivalTime) < minutes(hours.staffDepartureTime))) Err(400, this.t('staffHoursOrder'));
+  }
+
   ensureYearSettingsUnchanged(data: UpdateSettingsDto, current: { startMonth: string; endMonth: string; currentAcademicYear: string }) {
     if ((data.startMonth !== undefined && data.startMonth !== current.startMonth) ||
       (data.endMonth !== undefined && data.endMonth !== current.endMonth)) {

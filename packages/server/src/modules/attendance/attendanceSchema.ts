@@ -2,7 +2,7 @@ import { usersTable as users } from '../../auth';
 import { sql } from 'drizzle-orm';
 import { date, index, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
 
-import { attendanceStatusEnum, attendanceTypeEnum, idField, timestamps } from '../../database/shared';
+import { attendanceSourceEnum, attendanceStatusEnum, attendanceTypeEnum, idField, timestamps } from '../../database/shared';
 import { students } from '../students/studentSchema';
 import { staff } from '../staff/staffSchema';
 import { teachers, teacherAssignments } from '../teachers/teacherSchema';
@@ -24,6 +24,9 @@ export const attendance = pgTable('attendance', {
   date: date('date').notNull(),
   status: attendanceStatusEnum('status').notNull().default('present'),
   arrivalTime: text('arrival_time'),
+  // A person's mark, a fingerprint scan, or the end-of-day close (ATTENDANCE_SOURCE_VALUES).
+  // A scan never replaces a person's mark.
+  source: attendanceSourceEnum('source').notNull().default('manual'),
   notes: text('notes'),
   markedBy: text('marked_by').references(() => users.id),
   lastUpdatedBy: text('last_updated_by').references(() => users.id),

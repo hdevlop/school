@@ -26,7 +26,7 @@ import { payslips } from '../financial/payroll/payrollSchema';
 import { routineDuties } from '../classRoutines/ClassRoutineSchema';
 import { getBusinessDateOnly } from '../../shared/businessDate';
 import { isCurrentAssignment } from './StaffAssignmentRepository';
-import { and, count, desc, eq, gte, inArray, isNull, lte, ne, notInArray, or, sql } from 'drizzle-orm';
+import { and, count, desc, eq, gte, inArray, isNotNull, isNull, lte, ne, notInArray, or, sql } from 'drizzle-orm';
 
 // Roles managed on their own dedicated page, excluded from the unified Staff list.
 const STAFF_LIST_EXCLUDED_ROLES = ['teacher'];
@@ -337,6 +337,65 @@ export class StaffRepository {
     if (!ids || ids.length === 0) return [];
     const rows = await this.buildQuery().where(inArray(staff.id, ids));
     return this.withAssignments(rows);
+  }
+
+  // ---------- fingerprint device PINs ----------
+
+  /** The staff members holding these device PINs, with what a scan needs to count. */
+  async getByDeviceUserIds(deviceUserIds: string[]) {
+    if (!deviceUserIds.length) return [];
+    return this.db.select({
+      id: staff.id,
+      deviceUserId: staff.deviceUserId,
+      status: staff.status,
+      hireDate: staff.hireDate,
+      endDate: staff.endDate,
+      compensationMode: staff.compensationMode,
+      teacherId: teachers.id,
+    })
+      .from(staff)
+      .leftJoin(teachers, eq(teachers.staffId, staff.id))
+      .where(inArray(staff.deviceUserId, deviceUserIds));
+  }
+
+  /** Every staff member holding a device PIN. */
+  async getLinkedToDevice() {
+    return this.db.select({ id: staff.id, name: staff.name, role: staff.role, compensationMode: staff.compensationMode, deviceUserId: staff.deviceUserId })
+      .from(staff)
+      .where(isNotNull(staff.deviceUserId));
+  }
+
+  async findNameById(id: string) {
+    const [row] = await this.db.select({ id: staff.id, name: staff.name })
+      .from(staff).where(eq(staff.id, id)).limit(1);
+    return row ?? null;
+  }
+
+  async findNameByDeviceUserId(deviceUserId: string) {
+    const [row] = await this.db.select({ id: staff.id, name: staff.name })
+      .from(staff).where(eq(staff.deviceUserId, deviceUserId)).limit(1);
+    return row ?? null;
+  }
+
+  async setDeviceUserId(id: string, deviceUserId: string) {
+    await this.db.update(staff).set({ deviceUserId }).where(eq(staff.id, id));
+  }
+
+  async clearDeviceUserId(deviceUserId: string) {
+    await this.db.update(staff).set({ deviceUserId: null }).where(eq(staff.deviceUserId, deviceUserId));
+  }
+
+  /** Active staff with a device PIN who work on `date` (hired, not yet left). */
+  async getOnDeviceWorkingOn(date: string) {
+    return this.db.select({ id: staff.id, teacherId: teachers.id, compensationMode: staff.compensationMode })
+      .from(staff)
+      .leftJoin(teachers, eq(teachers.staffId, staff.id))
+      .where(and(
+        isNotNull(staff.deviceUserId),
+        eq(staff.status, 'active'),
+        lte(staff.hireDate, date),
+        or(isNull(staff.endDate), gte(staff.endDate, date)),
+      ));
   }
 
   async getLinkedTeacher(staffId: string) {

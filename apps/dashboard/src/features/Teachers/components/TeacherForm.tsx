@@ -15,6 +15,7 @@ import {
   buildGenderOptions,
   buildEmploymentTypeOptionsFor,
   buildTeacherStatusOptionsFor,
+  buildTeacherTypeOptions,
 } from '../config/teacherOptions'
 import { AssignmentFormContent } from './BulkAssignmentForm'
 import { useWatch } from 'react-hook-form'
@@ -48,7 +49,9 @@ export const getTeacherPersonalDefaultValues = (teacher = null) => ({
 export const getTeacherProfessionalDefaultValues = (teacher = null) => ({
    specialization: teacher?.specialization ?? '',
    yearsOfExperience: teacher?.yearsOfExperience ?? 0,
+   compensationMode: teacher?.compensationMode === 'hourly' ? 'hourly' : 'monthly',
    salary: teacher?.salary ?? '',
+   hourlyRate: teacher?.hourlyRate ?? '',
    hireDate: teacher?.hireDate ?? new Date().toISOString().split('T')[0],
    bankAccount: teacher?.bankAccount ?? '',
    employmentType: teacher?.employmentType ?? 'fullTime',
@@ -288,6 +291,8 @@ export const ProfessionalInfoContent = () => {
    const { t } = useTranslation()
    const employmentType = useWatch({ name: 'employmentType' })
    const employmentTypeOptions = buildEmploymentTypeOptionsFor(t, employmentType)
+   const isVacataire = useWatch({ name: 'compensationMode' }) === 'hourly'
+   const teacherTypeOptions = useMemo(() => buildTeacherTypeOptions(t), [t])
 
    return (
       <>
@@ -321,13 +326,32 @@ export const ProfessionalInfoContent = () => {
                required={true}
             />
 
+            {/* Permanent or vacataire: also the rule the fingerprint device applies. */}
             <FormInput
-               name='salary'
-               type='number'
-               formLabel={t('teachers.form.salary')}
-               placeholder={t('teachers.form.salaryPlaceholder')}
-               icon={Wallet}
+               name='compensationMode'
+               type='select'
+               formLabel={t('teachers.form.teacherType')}
+               items={teacherTypeOptions}
+               icon={Briefcase}
+               required={true}
             />
+
+            {isVacataire ? (
+               <FormInput
+                  name='hourlyRate'
+                  type='number'
+                  formLabel={t('staff.form.hourlyRate')}
+                  icon={Wallet}
+               />
+            ) : (
+               <FormInput
+                  name='salary'
+                  type='number'
+                  formLabel={t('teachers.form.salary')}
+                  placeholder={t('teachers.form.salaryPlaceholder')}
+                  icon={Wallet}
+               />
+            )}
 
             <FormInput
                name='bankAccount'

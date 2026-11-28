@@ -1,5 +1,5 @@
-import { EMPLOYMENT_TYPE_VALUES, GENDER_VALUES, TEACHER_STATUS_VALUES } from '@sms/contracts';
-import type { EmploymentType, Gender, TeacherStatus } from '@sms/contracts';
+import { COMPENSATION_MODE_VALUES, EMPLOYMENT_TYPE_VALUES, GENDER_VALUES, TEACHER_STATUS_VALUES } from '@sms/contracts';
+import type { CompensationMode, EmploymentType, Gender, TeacherStatus } from '@sms/contracts';
 
 type Translate = (key: string, ...args: any[]) => string;
 
@@ -38,6 +38,14 @@ export const buildTeacherStatusOptions = (t: Translate): readonly EnumOption<Tea
 
 export const buildEmploymentTypeOptions = (t: Translate): readonly EnumOption<EmploymentType>[] =>
   optionsFromValues(EMPLOYMENT_TYPE_VALUES, t, EMPLOYMENT_TYPE_TRANSLATION_PREFIX);
+
+/**
+ * Permanent or vacataire: how a teacher is paid, which is also the rule their
+ * fingerprint scans follow (fixed hours, or before their first lesson).
+ */
+export const TEACHER_TYPE_TRANSLATION_PREFIX = 'teachers.teacherType';
+export const buildTeacherTypeOptions = (t: Translate): readonly EnumOption<CompensationMode>[] =>
+  optionsFromValues(COMPENSATION_MODE_VALUES, t, TEACHER_TYPE_TRANSLATION_PREFIX);
 
 /**
  * The same lists, keeping whatever an existing record already holds

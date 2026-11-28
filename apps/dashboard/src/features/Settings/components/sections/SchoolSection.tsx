@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react';
-import { Building2, CalendarDays, FileBadge, Mail, MapPin, Phone, Clock, Hamburger, Printer } from 'lucide-react';
+import { Building2, CalendarDays, FileBadge, Mail, MapPin, Phone, Clock, Fingerprint, Hamburger, Printer } from 'lucide-react';
 import { FormInput } from 'najm-kit';
 import { FormLocationInput } from 'najm-kit/location';
 
@@ -114,6 +114,34 @@ const SchoolSection: React.FC = () => {
           type="number"
           formLabel={t('settings.school.lunchBreakDuration')}
           icon={Hamburger}
+          required={true}
+        />
+      </SettingsGroup>
+
+      {/* The fingerprint device's rules: fixed hours for permanent staff, the
+          first lesson for a vacataire. */}
+      <SettingsGroup title={t('settings.editor.groups.staffHours.title')} description={t('settings.editor.groups.staffHours.description')} className="sm:grid-cols-3 sm:items-end">
+        <FormInput
+          name="staffArrivalTime"
+          type="time"
+          formLabel={t('settings.school.staffArrivalTime')}
+          icon={Fingerprint}
+          required={true}
+        />
+
+        <FormInput
+          name="staffDepartureTime"
+          type="time"
+          formLabel={t('settings.school.staffDepartureTime')}
+          icon={Clock}
+          required={true}
+        />
+
+        <FormInput
+          name="hourlyStaffLeadMinutes"
+          type="number"
+          formLabel={t('settings.school.hourlyStaffLeadMinutes')}
+          icon={Clock}
           required={true}
         />
       </SettingsGroup>

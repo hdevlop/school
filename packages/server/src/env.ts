@@ -79,6 +79,8 @@ const SOURCE = {
   VAPID_CONTACT_EMAIL: () => process.env.VAPID_CONTACT_EMAIL,
   FINANCIAL_CRON_SECRET: () => process.env.FINANCIAL_CRON_SECRET,
 
+  ATTENDANCE_DEVICE_SERIALS: () => process.env.ATTENDANCE_DEVICE_SERIALS,
+
   SEED_MODE: () => process.env.SEED_MODE,
   SCHOOL_SEED_LANDING: () => process.env.SCHOOL_SEED_LANDING,
   DEFAULT_USER_PASSWORD: () => process.env.DEFAULT_USER_PASSWORD,
@@ -263,6 +265,22 @@ export const env = {
     get vapidContact() { return text('VAPID_CONTACT_EMAIL'); },
     /** FINANCIAL_CRON_SECRET, as set: the financial reminder cron's shared secret. Unset refuses every call. */
     get financialCronSecret() { return rawEnv('FINANCIAL_CRON_SECRET') || undefined; },
+  },
+
+  attendance: {
+    /**
+     * ATTENDANCE_DEVICE_SERIALS: comma-separated serial numbers of the
+     * fingerprint terminals allowed to push scans to /iclock (Menu > System >
+     * Device Info on a ZKTeco). Unset refuses every device.
+     */
+    get deviceSerials(): string[] {
+      const value = text('ATTENDANCE_DEVICE_SERIALS');
+      if (!value) return [];
+      const serials = value.split(',').map((serial) => serial.trim()).filter(Boolean);
+      const malformed = serials.find((serial) => !/^[A-Za-z0-9_-]{1,64}$/u.test(serial));
+      if (malformed) throw new Error(`ATTENDANCE_DEVICE_SERIALS holds a malformed serial number: '${malformed}'`);
+      return serials;
+    },
   },
 
   seed: {

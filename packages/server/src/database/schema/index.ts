@@ -127,7 +127,12 @@ export {
   payslipStatusEnum,
 } from '../../modules/financial/payroll/payrollSchema';
 export { attendance, attendanceHistory } from '../../modules/attendance/attendanceSchema';
-export { attendanceTypeEnum } from '../shared';
+export { attendanceSourceEnum, attendanceTypeEnum } from '../shared';
+export {
+  attendanceDevices,
+  attendanceDevicePunches,
+  attendanceDeviceUsers,
+} from '../../modules/attendanceDevices/attendanceDeviceSchema';
 export {
   assessments,
   assessmentRef,

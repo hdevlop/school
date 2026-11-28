@@ -1415,6 +1415,10 @@
         "homeworkFiles": {
           "title": "Fichiers des devoirs",
           "description": "L’espace accordé à chaque enseignant et la durée de conservation d’un fichier. Le texte d’un devoir est toujours conservé."
+        },
+        "staffHours": {
+          "title": "Pointage du personnel (empreinte)",
+          "description": "Le personnel permanent garde ces horaires fixes ; un vacataire doit pointer avant son premier cours."
         }
       },
       "generalTab": "Système",
@@ -1540,7 +1544,8 @@
       "registeredCalendarLocked": "Le calendrier d'une année enregistrée ne peut être modifié que par une correction vérifiée",
       "activateThroughYears": "Activez l'année enregistrée depuis la gestion des années scolaires",
       "teachingDaysInUse": "Déplacez ou supprimez les cours et les surveillances de ce jour avant de modifier les jours de cours.",
-      "invalidSchoolDay": "Les horaires doivent permettre une pause déjeuner et au moins six périodes de cours de cinq minutes."
+      "invalidSchoolDay": "Les horaires doivent permettre une pause déjeuner et au moins six périodes de cours de cinq minutes.",
+      "staffHoursOrder": "L'heure d'arrivée du personnel doit précéder l'heure de sortie."
     },
     "notifications": {
       "title": "Paramètres de Notification",
@@ -1604,7 +1609,10 @@
       "officialPhone2": "Téléphone 2",
       "officialPhone3": "Téléphone 3",
       "licenseNumber": "Numéro d’autorisation",
-      "licenseDate": "Date d’autorisation"
+      "licenseDate": "Date d’autorisation",
+      "staffArrivalTime": "Permanents : en retard après",
+      "staffDepartureTime": "Permanents : sortie à",
+      "hourlyStaffLeadMinutes": "Vacataire : minutes avant le cours"
     },
     "calendarSystem": {
       "SEMESTER": "Semestre",
@@ -5648,7 +5656,8 @@
       "noAssignmentsAdded": "Aucune affectation ajoutée pour le moment.",
       "emailHelp": "Utilisez l’adresse e-mail personnelle de l’enseignant. Il recevra un lien d’activation pour choisir son mot de passe.",
       "nameAr": "Nom en arabe",
-      "nameArPlaceholder": "الاسم الكامل"
+      "nameArPlaceholder": "الاسم الكامل",
+      "teacherType": "Type d'enseignant"
     },
     "profile": {
       "table": {
@@ -5787,6 +5796,10 @@
       },
       "preview": "Aperçu",
       "printList": "Liste des enseignants"
+    },
+    "teacherType": {
+      "monthly": "Permanent",
+      "hourly": "Vacataire"
     }
   },
   "vehicleAssignments": {
@@ -7221,7 +7234,9 @@
     "duplicateTestPart": "Deux questions ont le même identifiant.",
     "partLabelRequired": "Nommez la question.",
     "rewardTemplateTitleRequired": "Le nom est obligatoire",
-    "rewardTemplateTitleTooLong": "Le nom est trop long (120 caractères max)"
+    "rewardTemplateTitleTooLong": "Le nom est trop long (120 caractères max)",
+    "deviceUserIdInvalid": "Un identifiant de pointeuse ne contient que des lettres et des chiffres.",
+    "hourlyStaffLeadInvalid": "Saisissez un nombre entier de minutes entre 0 et 60."
   },
   "academic": {
     "accountantAssignmentOptional": "Choisissez un ou plusieurs cycles, ou laissez vide pour toute l’école.",
@@ -8285,5 +8300,43 @@
     "viewTitle": "Devoirs manqués — {{name}}",
     "incidentDescription": "Devoirs non faits ou incomplets ce mois-ci ({{count}}) : {{list}}.",
     "profileEmpty": "Aucun devoir manqué cette année."
+  },
+  "attendanceDevices": {
+    "title": "Pointeuse",
+    "open": "Pointeuse",
+    "errors": {
+      "deviceNotAllowed": "Cet appareil n'est pas autorisé à envoyer des pointages.",
+      "staffNotFound": "Membre du personnel introuvable.",
+      "deviceUserIdTaken": "Cet identifiant de pointeuse appartient déjà à {{name}}. Retirez-le d'abord de sa fiche."
+    },
+    "success": {
+      "retrieved": "Informations de la pointeuse récupérées.",
+      "linked": "Identifiant de pointeuse enregistré."
+    },
+    "devices": {
+      "title": "Appareils",
+      "noneConfigured": "Aucune pointeuse n'est configurée. Ajoutez le numéro de série de la F18 dans les paramètres du serveur, puis sur l'appareil réglez Comm > Serveur Cloud sur l'adresse de ce site.",
+      "online": "En ligne",
+      "offline": "Hors ligne",
+      "lastScan": "Dernier pointage {{time}}",
+      "noScanYet": "Aucun pointage",
+      "lastContact": "dernier contact {{time}}",
+      "waiting": "configurée, en attente de sa première connexion"
+    },
+    "people": {
+      "title": "Identifiants de la pointeuse",
+      "unlinkedCount": "Non associés : {{count}}",
+      "help": "Chaque personne a un identifiant sur la pointeuse. Choisissez à qui il appartient. Les permanents sont en retard après l'heure d'arrivée fixée dans les paramètres ; un vacataire est en retard s'il pointe moins de minutes que prévu avant son premier cours. Les pointages faits avant l'association sont comptés dès que vous associez.",
+      "emptyTitle": "Personne sur la pointeuse pour le moment",
+      "emptyDescription": "Les identifiants apparaissent ici après le premier pointage, ou quand l'appareil envoie sa liste d'utilisateurs.",
+      "noDeviceName": "Pas de nom sur l'appareil",
+      "scans": "Pointages : {{count}} · dernier {{time}}",
+      "noScans": "Aucun pointage",
+      "staffFor": "Membre du personnel pour l'identifiant {{id}}",
+      "chooseStaff": "Choisir un membre du personnel",
+      "notLinked": "Non associé",
+      "rulePermanent": "Permanent",
+      "ruleVacataire": "Vacataire"
+    }
   }
 }

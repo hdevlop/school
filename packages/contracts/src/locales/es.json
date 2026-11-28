@@ -4800,6 +4800,10 @@
         "homeworkFiles": {
           "title": "Archivos de deberes",
           "description": "Cuánto puede guardar cada profesor y cuánto tiempo se conserva un archivo. El texto de los deberes se conserva siempre."
+        },
+        "staffHours": {
+          "title": "Asistencia del personal (huella)",
+          "description": "El personal fijo mantiene este horario; un profesor por horas debe fichar antes de su primera clase."
         }
       },
       "generalTab": "Sistema",
@@ -4824,7 +4828,8 @@
       "registeredCalendarLocked": "El calendario de un año registrado solo se modifica con una corrección revisada",
       "activateThroughYears": "Active el año registrado desde la gestión de años escolares",
       "teachingDaysInUse": "Mueva o elimine las clases y las supervisiones de este día antes de cambiar los días lectivos.",
-      "invalidSchoolDay": "El horario debe permitir el almuerzo y al menos seis clases de cinco minutos."
+      "invalidSchoolDay": "El horario debe permitir el almuerzo y al menos seis clases de cinco minutos.",
+      "staffHoursOrder": "La hora de llegada del personal debe ser anterior a la de salida."
     },
     "academic": {
       "supervisorAssignmentHint": "El acceso se limita a las clases seleccionadas, sus alumnos, asistencia, disciplina y notas. Sin asignaciones, no se puede acceder a datos de clases.",
@@ -4885,7 +4890,10 @@
       "officialPhone2": "Teléfono 2",
       "officialPhone3": "Teléfono 3",
       "licenseNumber": "Número de autorización",
-      "licenseDate": "Fecha de autorización"
+      "licenseDate": "Fecha de autorización",
+      "staffArrivalTime": "Personal fijo: tarde después de",
+      "staffDepartureTime": "Personal fijo: salida a las",
+      "hourlyStaffLeadMinutes": "Por horas: minutos antes de la clase"
     },
     "security": {
       "apiKey": "Clave API",
@@ -5547,7 +5555,8 @@
       "noAssignmentsAdded": "Aún no se han añadido asignaciones.",
       "emailHelp": "Usa el correo personal del profesor. Recibirá un enlace de activación para elegir su contraseña.",
       "nameAr": "Nombre en árabe",
-      "nameArPlaceholder": "الاسم الكامل"
+      "nameArPlaceholder": "الاسم الكامل",
+      "teacherType": "Tipo de profesor"
     },
     "profile": {
       "table": {
@@ -5686,6 +5695,10 @@
       },
       "preview": "Vista previa",
       "printList": "Lista de docentes"
+    },
+    "teacherType": {
+      "monthly": "Fijo",
+      "hourly": "Por horas"
     }
   },
   "vehicleAssignments": {
@@ -7120,7 +7133,9 @@
     "duplicateTestPart": "Dos preguntas tienen el mismo identificador.",
     "partLabelRequired": "Escribe la pregunta.",
     "rewardTemplateTitleRequired": "El nombre es obligatorio",
-    "rewardTemplateTitleTooLong": "El nombre es demasiado largo (máx. 120 caracteres)"
+    "rewardTemplateTitleTooLong": "El nombre es demasiado largo (máx. 120 caracteres)",
+    "deviceUserIdInvalid": "Un ID del dispositivo solo tiene letras y números.",
+    "hourlyStaffLeadInvalid": "Introduce minutos enteros entre 0 y 60."
   },
   "academic": {
     "accountantAssignmentOptional": "Elija uno o varios ciclos, o déjelo vacío para toda la escuela.",
@@ -8184,5 +8199,43 @@
     "viewTitle": "Tareas no hechas — {{name}}",
     "incidentDescription": "Tareas no hechas o incompletas este mes ({{count}}): {{list}}.",
     "profileEmpty": "Ninguna tarea no hecha este año."
+  },
+  "attendanceDevices": {
+    "title": "Lector de huellas",
+    "open": "Lector de huellas",
+    "errors": {
+      "deviceNotAllowed": "Este dispositivo no puede enviar asistencia.",
+      "staffNotFound": "Miembro del personal no encontrado.",
+      "deviceUserIdTaken": "Este ID del dispositivo ya pertenece a {{name}}. Desvincúlalo allí primero."
+    },
+    "success": {
+      "retrieved": "Información del dispositivo obtenida.",
+      "linked": "ID del dispositivo guardado."
+    },
+    "devices": {
+      "title": "Dispositivos",
+      "noneConfigured": "Aún no hay ningún dispositivo configurado. Añade el número de serie del F18 en la configuración del servidor y, en el dispositivo, pon Comm > Cloud Server con la dirección de este sitio.",
+      "online": "En línea",
+      "offline": "Sin conexión",
+      "lastScan": "Último fichaje {{time}}",
+      "noScanYet": "Sin fichajes aún",
+      "lastContact": "último contacto {{time}}",
+      "waiting": "configurado, esperando su primera conexión"
+    },
+    "people": {
+      "title": "IDs del dispositivo",
+      "unlinkedCount": "Sin vincular: {{count}}",
+      "help": "Cada persona tiene un ID en el dispositivo. Elige a quién pertenece. El personal fijo llega tarde después de la hora de llegada de la configuración; un profesor por horas llega tarde si ficha con menos minutos de antelación que los fijados antes de su primera clase. Los fichajes anteriores a la vinculación se cuentan en cuanto vinculas.",
+      "emptyTitle": "Nadie en el dispositivo todavía",
+      "emptyDescription": "Los IDs aparecen aquí tras el primer fichaje, o cuando el dispositivo envía su lista de usuarios.",
+      "noDeviceName": "Sin nombre en el dispositivo",
+      "scans": "Fichajes: {{count}} · último {{time}}",
+      "noScans": "Sin fichajes aún",
+      "staffFor": "Miembro del personal para el ID {{id}}",
+      "chooseStaff": "Elige un miembro del personal",
+      "notLinked": "Sin vincular",
+      "rulePermanent": "Fijo",
+      "ruleVacataire": "Por horas"
+    }
   }
 }

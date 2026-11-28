@@ -4,7 +4,7 @@ import { REGISTRAR_GRADE_BANDS, type RegistrarDashboardGrades, type RegistrarDas
 import { Injectable } from '../../../najm';
 import { SettingsRepository } from '../../settings/SettingsRepository';
 import { getBusinessDateOverride } from '../../../shared/businessDate';
-import { schoolClock } from '../teacher/teacherDashboardMetrics';
+import { schoolClock } from '../../../shared/schoolClock';
 import { SupervisorDashboardRepository } from '../supervisor/SupervisorDashboardRepository';
 import { Year } from '../../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';

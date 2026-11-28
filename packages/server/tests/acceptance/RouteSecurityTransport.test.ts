@@ -32,6 +32,8 @@ const { server } = await import('../../src/index');
 // branding; health probes; and cron triggers that check FINANCIAL_CRON_SECRET
 // themselves. Public school visit enquiries: POST /api/visit-requests. Public
 // teacher sign-ups, which create no account: POST /api/teacher-requests.
+// Fingerprint terminals (ADMS push, /api/iclock), which have no session and
+// are answered only for a serial listed in ATTENDANCE_DEVICE_SERIALS.
 const PUBLIC_ROUTES = [
   'POST /api/visit-requests',
   'POST /api/teacher-requests',
@@ -48,6 +50,10 @@ const PUBLIC_ROUTES = [
   'GET /api/health',
   'GET /api/health/ping',
   'GET /api/health/status',
+  'GET /api/iclock/cdata',
+  'GET /api/iclock/getrequest',
+  'POST /api/iclock/cdata',
+  'POST /api/iclock/devicecmd',
   'POST /api/auth/credential-setup/cancel',
   'POST /api/auth/credential-setup/change',
   'POST /api/auth/forgot-password',

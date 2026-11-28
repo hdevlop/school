@@ -39,6 +39,7 @@ const PERSISTED_ENUMS: Partial<Record<EnumKey, readonly string[]>> = {
   assignmentStatus: ['active', 'completed', 'cancelled'],
   attendanceStatus: ['present', 'absent', 'late'],
   attendanceType: ['student', 'staff'],
+  attendanceSource: ['manual', 'device', 'auto'],
   busStatus: ['active', 'inactive', 'maintenance', 'retired'],
   calendarSystem: ['SEMESTER', 'TRIMESTER', 'QUARTER'],
   compensationMode: ['monthly', 'hourly'],
@@ -152,7 +153,7 @@ describe('shared enum contract', () => {
     // A new `pgEnum(...)` without an entry above would ship unpinned, so the
     // count is asserted rather than left to whoever adds the next one: fifty-one
     // pgEnums plus the yearly enrollment status CHECK constraint.
-    expect(Object.keys(PERSISTED_ENUMS)).toHaveLength(60);
+    expect(Object.keys(PERSISTED_ENUMS)).toHaveLength(61);
   });
 
   it('gives every enum at least one member', () => {

@@ -1,6 +1,7 @@
 import { DEFAULT_TEACHING_DAYS } from '@sms/contracts/routines';
 import { monthsBetween } from '@sms/contracts/academic-years';
-import { addDays, ratePercent, toMinutes } from './teacher/teacherDashboardMetrics';
+import { addDays, toMinutes } from '../../shared/schoolClock';
+import { ratePercent } from './teacher/teacherDashboardMetrics';
 
 const KPI_ATTENDANCE_DAYS = 7;
 

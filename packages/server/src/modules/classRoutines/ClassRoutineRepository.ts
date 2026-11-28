@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, gt, inArray, isNull, lt, ne, or, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, gt, inArray, isNull, lt, max, min, ne, or, sql } from 'drizzle-orm';
 
 import { DB } from '../../database/db';
 import {
@@ -18,7 +18,7 @@ import { Repository } from '../../najm';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import type { RoutineListQuery } from './ClassRoutineDto';
-import { DEFAULT_TEACHING_DAYS } from '@sms/contracts/routines';
+import { DEFAULT_TEACHING_DAYS, type RoutineDay } from '@sms/contracts/routines';
 import { managesGrade } from '../staff/monitorScope';
 import { ScopeContext } from '../../auth';
 import { supervisesClass } from '../staff/supervisorScope';
@@ -170,6 +170,57 @@ export class ClassRoutineRepository {
         and section_assignment.teacher_id is not null
       order by section_assignment.created_at, section_assignment.id
       limit 1))`;
+  }
+
+  /**
+   * Each staff member's first start and last end on a weekday of `yearLabel`,
+   * from the lessons they teach (the lesson's teacher, as the timetable shows
+   * it) and the duties they hold, in each section's current timetable (draft
+   * or published). The year is named, not selected: the fingerprint device
+   * asks with no selected year, for the year of the scan's own date.
+   */
+  async getStaffDayPlan(yearLabel: string, weekday: RoutineDay) {
+    const current = and(
+      eq(routineSchedules.academicYear, yearLabel),
+      inArray(routineSchedules.status, ['draft', 'published']),
+      sql`${routineSchedules.activeDays} ? ${weekday}`,
+    );
+    const [lessons, duties] = await Promise.all([
+      this.db.select({
+        staffId: teachers.staffId,
+        firstStart: min(routinePeriods.startTime),
+        lastEnd: max(routinePeriods.endTime),
+      })
+        .from(routineEntries)
+        .innerJoin(routineSchedules, eq(routineEntries.scheduleId, routineSchedules.id))
+        .innerJoin(routinePeriods, eq(routineEntries.periodId, routinePeriods.id))
+        .leftJoin(teacherAssignments, eq(routineEntries.teacherAssignmentId, teacherAssignments.id))
+        .innerJoin(teachers, eq(teachers.id, this.lessonTeacherId()))
+        .where(and(current, eq(routineEntries.dayOfWeek, weekday)))
+        .groupBy(teachers.staffId),
+      this.db.select({
+        staffId: routineDuties.staffId,
+        firstStart: min(routinePeriods.startTime),
+        lastEnd: max(routinePeriods.endTime),
+      })
+        .from(routineDuties)
+        .innerJoin(routineSchedules, eq(routineDuties.scheduleId, routineSchedules.id))
+        .innerJoin(routinePeriods, eq(routineDuties.periodId, routinePeriods.id))
+        .where(and(current, eq(routineDuties.dayOfWeek, weekday)))
+        .groupBy(routineDuties.staffId),
+    ]);
+    const plan = new Map<string, { firstStart: string; lastEnd: string }>();
+    for (const row of [...lessons, ...duties]) {
+      if (!row.staffId || !row.firstStart || !row.lastEnd) continue;
+      const known = plan.get(row.staffId);
+      plan.set(row.staffId, known
+        ? {
+          firstStart: row.firstStart < known.firstStart ? row.firstStart : known.firstStart,
+          lastEnd: row.lastEnd > known.lastEnd ? row.lastEnd : known.lastEnd,
+        }
+        : { firstStart: row.firstStart, lastEnd: row.lastEnd });
+    }
+    return plan;
   }
 
   /** The assignment a new lesson takes by default: the same teacher lessonTeacherId reads. */

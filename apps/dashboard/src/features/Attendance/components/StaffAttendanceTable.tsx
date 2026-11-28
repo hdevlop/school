@@ -3,7 +3,9 @@
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { SchoolPageHeader as NPageHeader } from '@/components/SchoolPageHeader';
-import { NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { NButton, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { Fingerprint } from 'lucide-react';
+import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 
 import { useCallback, useMemo, useState } from 'react';
@@ -30,12 +32,20 @@ import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
 import { useViewingYearDate } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useSchoolToday } from '@/hooks/useSchoolFormat';
 import StaffAttendanceDetails from './StaffAttendanceDetails';
+import AttendanceDevicePanel from './AttendanceDevicePanel';
 import styles from './StudentAttendanceTable.module.css';
 
 function StaffAttendanceTable() {
   const { t } = useTranslation();
   const { can } = useViewerRole();
   const canEdit = can('update:staff-attendance');
+  const { openDialog } = useDialog();
+  const openDevices = () => openDialog({
+    title: t('attendanceDevices.title'),
+    children: <AttendanceDevicePanel canEdit={canEdit} />,
+    width: 'lg',
+    showButtons: false,
+  });
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('');
   const [selectedDate, setSelectedDate] = useViewingYearDate(useSchoolToday());
@@ -142,6 +152,9 @@ function StaffAttendanceTable() {
       >
         <NPageHeaderActions>
           <RosterStats stats={roster.stats} loading={isRosterLoading} className="lg:hidden" />
+          <NButton type="button" variant="outline" size="sm" onClick={openDevices} leftIcon={<Fingerprint className="h-4 w-4" />}>
+            {t('attendanceDevices.open')}
+          </NButton>
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
       </NPageHeader>

@@ -119,6 +119,9 @@ export class SettingsService {
       schoolStartTime: data.schoolStartTime || '08:00',
       schoolEndTime: data.schoolEndTime || '15:00',
       lunchBreakDuration: data.lunchBreakDuration || 30,
+      staffArrivalTime: data.staffArrivalTime || '08:15',
+      staffDepartureTime: data.staffDepartureTime || '15:45',
+      hourlyStaffLeadMinutes: data.hourlyStaffLeadMinutes ?? 5,
 
       // Maintenance & Backup Settings
       maintenanceMode: data.maintenanceMode ?? false,
@@ -136,6 +139,9 @@ export class SettingsService {
     this.settingsValidator.ensureYearSettingsUnchanged(data, current);
     if (data.schoolStartTime !== undefined || data.schoolEndTime !== undefined || data.lunchBreakDuration !== undefined) {
       this.settingsValidator.ensureSchoolDay({ ...current, ...data });
+    }
+    if (data.staffArrivalTime !== undefined || data.staffDepartureTime !== undefined) {
+      this.settingsValidator.ensureStaffHours({ ...current, ...data });
     }
     if (data.teachingDays !== undefined) {
       this.settingsValidator.ensureTeachingDaysKeepAssignments(

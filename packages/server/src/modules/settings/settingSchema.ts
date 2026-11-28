@@ -73,6 +73,13 @@ export const settings = pgTable('settings', {
   schoolStartTime: text('school_start_time').default('08:00'),
   schoolEndTime: text('school_end_time').default('15:00'),
   lunchBreakDuration: integer('lunch_break_duration').default(30),
+  // Fingerprint attendance. Permanent (monthly) staff keep fixed hours: a scan
+  // after the arrival time is late, and the day closes at the departure time.
+  // A vacataire (hourly) is late after their first lesson or duty minus the
+  // lead minutes, and is expected only on a day they teach.
+  staffArrivalTime: text('staff_arrival_time').notNull().default('08:15'),
+  staffDepartureTime: text('staff_departure_time').notNull().default('15:45'),
+  hourlyStaffLeadMinutes: integer('hourly_staff_lead_minutes').notNull().default(5),
   maintenanceMode: boolean('maintenance_mode').default(false),
   autoBackup: boolean('auto_backup').default(true),
   // Homework files share the disk with every installation on the host.

@@ -1037,6 +1037,13 @@
       "when": 1795804204289,
       "tag": "0147_behavior_reward_subject",
       "breakpoints": true
+    },
+    {
+      "idx": 148,
+      "version": "7",
+      "when": 1795804264289,
+      "tag": "0148_attendance_device",
+      "breakpoints": true
     }
   ]
 }

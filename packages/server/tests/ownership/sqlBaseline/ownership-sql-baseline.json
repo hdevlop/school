@@ -6422,179 +6422,6 @@
     }
    ]
   },
-  "b19a412f98845c8d": {
-   "statements": [
-    {
-     "sql": "insert into \"attendance\" (\"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\") values ($1, $2, $3, default, default, default, default, $4, $5, $6, default, default, default, default, default, default) returning \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\"",
-     "params": [
-      "new-1",
-      "student",
-      "student-1",
-      "year-old",
-      "2026-03-15",
-      "present"
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"attendance\".\"id\", \"attendance\".\"type\", \"attendance\".\"student_id\", \"attendance\".\"staff_id\", \"attendance\".\"teacher_id\", \"attendance\".\"teacher_assignment_id\", \"attendance\".\"section_id\", \"attendance\".\"academic_year_id\", \"attendance\".\"date\", \"attendance\".\"status\", \"attendance\".\"notes\", \"attendance\".\"arrival_time\", \"attendance\".\"marked_by\", \"attendance\".\"created_at\", \"attendance\".\"updated_at\", \"students\".\"id\", \"students\".\"student_code\", \"students\".\"name\", \"student_users\".\"image\", \"subjects\".\"id\", \"subjects\".\"name\", \"subjects\".\"code\", \"teachers\".\"id\", \"teacher_staff\".\"name\", \"teacher_users\".\"image\", \"attendance_staff\".\"id\", \"attendance_staff\".\"employee_code\", \"attendance_staff\".\"name\", \"staff_users\".\"image\", \"attendance_staff\".\"role\", \"attendance_staff\".\"department\", \"attendance_staff\".\"phone\", \"classes\".\"id\", \"classes\".\"name\", \"sections\".\"id\", \"sections\".\"name\", \"marked_by_users\".\"id\", \"marked_by_users\".\"email\", \"marked_by_users\".\"image\" from \"attendance\" left join \"students\" on \"attendance\".\"student_id\" = \"students\".\"id\" left join \"users\" \"student_users\" on \"students\".\"user_id\" = \"student_users\".\"id\" left join \"teacher_assignments\" on \"attendance\".\"teacher_assignment_id\" = \"teacher_assignments\".\"id\" left join \"teachers\" on (\"attendance\".\"teacher_id\" = \"teachers\".\"id\" or \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\") left join \"staff\" \"teacher_staff\" on \"teachers\".\"staff_id\" = \"teacher_staff\".\"id\" left join \"users\" \"teacher_users\" on \"teacher_staff\".\"user_id\" = \"teacher_users\".\"id\" left join \"staff\" \"attendance_staff\" on \"attendance\".\"staff_id\" = \"attendance_staff\".\"id\" left join \"users\" \"staff_users\" on \"attendance_staff\".\"user_id\" = \"staff_users\".\"id\" left join \"sections\" on \"sections\".\"id\" = COALESCE(\"attendance\".\"section_id\", \"teacher_assignments\".\"section_id\") left join \"subjects\" on \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\" left join \"classes\" on \"sections\".\"class_id\" = \"classes\".\"id\" left join \"users\" \"marked_by_users\" on \"attendance\".\"marked_by\" = \"marked_by_users\".\"id\" where ((\"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"staff\" \"_sc_staff_1\" on \"attendance\".\"staff_id\" = \"_sc_staff_1\".\"id\" where \"_sc_staff_1\".\"user_id\" = $1) or \"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"students\" \"_sc_students_1\" on \"attendance\".\"student_id\" = \"_sc_students_1\".\"id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_2\" on \"attendance\".\"section_id\" = \"_sc_teacher_assignments_2\".\"section_id\" inner join \"teachers\" \"_sc_teachers_3\" on \"_sc_teacher_assignments_2\".\"teacher_id\" = \"_sc_teachers_3\".\"id\" inner join \"staff\" \"_sc_staff_4\" on \"_sc_teachers_3\".\"staff_id\" = \"_sc_staff_4\".\"id\" where \"_sc_staff_4\".\"user_id\" = $2) or \"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"students\" \"_sc_students_1\" on \"attendance\".\"student_id\" = \"_sc_students_1\".\"id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_2\" on \"attendance\".\"teacher_assignment_id\" = \"_sc_teacher_assignments_2\".\"id\" inner join \"teachers\" \"_sc_teachers_3\" on \"_sc_teacher_assignments_2\".\"teacher_id\" = \"_sc_teachers_3\".\"id\" inner join \"staff\" \"_sc_staff_4\" on \"_sc_teachers_3\".\"staff_id\" = \"_sc_staff_4\".\"id\" where \"_sc_staff_4\".\"user_id\" = $3)) and \"attendance\".\"id\" = $4 and (\"attendance\".\"academic_year_id\" = $5 or (\"attendance\".\"academic_year_id\" is null and (\"attendance\".\"date\" >= $6 and \"attendance\".\"date\" <= $7)))) limit $8",
-     "params": [
-      "user-1",
-      "user-1",
-      "user-1",
-      "new-1",
-      "year-old",
-      "2025-09-01",
-      "2026-08-31",
-      1
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "54495f92c1994c77": {
-   "statements": [
-    {
-     "sql": "insert into \"attendance\" (\"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\") values ($1, $2, $3, default, default, default, default, $4, $5, $6, default, default, default, default, default, default) returning \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\"",
-     "params": [
-      "new-1",
-      "student",
-      "student-1",
-      "year-old",
-      "2026-03-15",
-      "present"
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"attendance\".\"id\", \"attendance\".\"type\", \"attendance\".\"student_id\", \"attendance\".\"staff_id\", \"attendance\".\"teacher_id\", \"attendance\".\"teacher_assignment_id\", \"attendance\".\"section_id\", \"attendance\".\"academic_year_id\", \"attendance\".\"date\", \"attendance\".\"status\", \"attendance\".\"notes\", \"attendance\".\"arrival_time\", \"attendance\".\"marked_by\", \"attendance\".\"created_at\", \"attendance\".\"updated_at\", \"students\".\"id\", \"students\".\"student_code\", \"students\".\"name\", \"student_users\".\"image\", \"subjects\".\"id\", \"subjects\".\"name\", \"subjects\".\"code\", \"teachers\".\"id\", \"teacher_staff\".\"name\", \"teacher_users\".\"image\", \"attendance_staff\".\"id\", \"attendance_staff\".\"employee_code\", \"attendance_staff\".\"name\", \"staff_users\".\"image\", \"attendance_staff\".\"role\", \"attendance_staff\".\"department\", \"attendance_staff\".\"phone\", \"classes\".\"id\", \"classes\".\"name\", \"sections\".\"id\", \"sections\".\"name\", \"marked_by_users\".\"id\", \"marked_by_users\".\"email\", \"marked_by_users\".\"image\" from \"attendance\" left join \"students\" on \"attendance\".\"student_id\" = \"students\".\"id\" left join \"users\" \"student_users\" on \"students\".\"user_id\" = \"student_users\".\"id\" left join \"teacher_assignments\" on \"attendance\".\"teacher_assignment_id\" = \"teacher_assignments\".\"id\" left join \"teachers\" on (\"attendance\".\"teacher_id\" = \"teachers\".\"id\" or \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\") left join \"staff\" \"teacher_staff\" on \"teachers\".\"staff_id\" = \"teacher_staff\".\"id\" left join \"users\" \"teacher_users\" on \"teacher_staff\".\"user_id\" = \"teacher_users\".\"id\" left join \"staff\" \"attendance_staff\" on \"attendance\".\"staff_id\" = \"attendance_staff\".\"id\" left join \"users\" \"staff_users\" on \"attendance_staff\".\"user_id\" = \"staff_users\".\"id\" left join \"sections\" on \"sections\".\"id\" = COALESCE(\"attendance\".\"section_id\", \"teacher_assignments\".\"section_id\") left join \"subjects\" on \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\" left join \"classes\" on \"sections\".\"class_id\" = \"classes\".\"id\" left join \"users\" \"marked_by_users\" on \"attendance\".\"marked_by\" = \"marked_by_users\".\"id\" where (\"attendance\".\"id\" in (select \"id\" from \"attendance\" where (\"attendance\".\"student_id\" is not null and (\n    exists (select 1 from sections managed_section\n    where managed_section.id = \"attendance\".\"section_id\" and exists (select 1 from classes managed_class\n    where managed_class.id = managed_section.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))\n    or (\"attendance\".\"section_id\" is null and exists (select 1 from student_enrollments managed_enrollment\n    join student_enrollment_placements managed_placement on managed_placement.enrollment_id = managed_enrollment.id\n    where managed_enrollment.student_id = \"attendance\".\"student_id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_placement.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $4\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $5)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $6)))))))) and \"attendance\".\"id\" = $7 and (\"attendance\".\"academic_year_id\" = $8 or (\"attendance\".\"academic_year_id\" is null and (\"attendance\".\"date\" >= $9 and \"attendance\".\"date\" <= $10)))) limit $11",
-     "params": [
-      "user-1",
-      "2026-03-15",
-      "2026-03-15",
-      "user-1",
-      "2026-03-15",
-      "2026-03-15",
-      "new-1",
-      "year-old",
-      "2025-09-01",
-      "2026-08-31",
-      1
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "15382c98455f93c3": {
-   "statements": [
-    {
-     "sql": "insert into \"attendance\" (\"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\") values ($1, $2, $3, default, default, default, default, $4, $5, $6, default, default, default, default, default, default) returning \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\"",
-     "params": [
-      "new-1",
-      "student",
-      "student-1",
-      "year-old",
-      "2026-03-15",
-      "present"
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"attendance\".\"id\", \"attendance\".\"type\", \"attendance\".\"student_id\", \"attendance\".\"staff_id\", \"attendance\".\"teacher_id\", \"attendance\".\"teacher_assignment_id\", \"attendance\".\"section_id\", \"attendance\".\"academic_year_id\", \"attendance\".\"date\", \"attendance\".\"status\", \"attendance\".\"notes\", \"attendance\".\"arrival_time\", \"attendance\".\"marked_by\", \"attendance\".\"created_at\", \"attendance\".\"updated_at\", \"students\".\"id\", \"students\".\"student_code\", \"students\".\"name\", \"student_users\".\"image\", \"subjects\".\"id\", \"subjects\".\"name\", \"subjects\".\"code\", \"teachers\".\"id\", \"teacher_staff\".\"name\", \"teacher_users\".\"image\", \"attendance_staff\".\"id\", \"attendance_staff\".\"employee_code\", \"attendance_staff\".\"name\", \"staff_users\".\"image\", \"attendance_staff\".\"role\", \"attendance_staff\".\"department\", \"attendance_staff\".\"phone\", \"classes\".\"id\", \"classes\".\"name\", \"sections\".\"id\", \"sections\".\"name\", \"marked_by_users\".\"id\", \"marked_by_users\".\"email\", \"marked_by_users\".\"image\" from \"attendance\" left join \"students\" on \"attendance\".\"student_id\" = \"students\".\"id\" left join \"users\" \"student_users\" on \"students\".\"user_id\" = \"student_users\".\"id\" left join \"teacher_assignments\" on \"attendance\".\"teacher_assignment_id\" = \"teacher_assignments\".\"id\" left join \"teachers\" on (\"attendance\".\"teacher_id\" = \"teachers\".\"id\" or \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\") left join \"staff\" \"teacher_staff\" on \"teachers\".\"staff_id\" = \"teacher_staff\".\"id\" left join \"users\" \"teacher_users\" on \"teacher_staff\".\"user_id\" = \"teacher_users\".\"id\" left join \"staff\" \"attendance_staff\" on \"attendance\".\"staff_id\" = \"attendance_staff\".\"id\" left join \"users\" \"staff_users\" on \"attendance_staff\".\"user_id\" = \"staff_users\".\"id\" left join \"sections\" on \"sections\".\"id\" = COALESCE(\"attendance\".\"section_id\", \"teacher_assignments\".\"section_id\") left join \"subjects\" on \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\" left join \"classes\" on \"sections\".\"class_id\" = \"classes\".\"id\" left join \"users\" \"marked_by_users\" on \"attendance\".\"marked_by\" = \"marked_by_users\".\"id\" where (\"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"students\" \"_sc_students_1\" on \"attendance\".\"student_id\" = \"_sc_students_1\".\"id\" inner join \"student_parents\" \"_sc_student_parents_2\" on \"_sc_students_1\".\"id\" = \"_sc_student_parents_2\".\"student_id\" inner join \"parents\" \"_sc_parents_3\" on \"_sc_student_parents_2\".\"parent_id\" = \"_sc_parents_3\".\"id\" where \"_sc_parents_3\".\"user_id\" = $1) and \"attendance\".\"id\" = $2 and (\"attendance\".\"academic_year_id\" = $3 or (\"attendance\".\"academic_year_id\" is null and (\"attendance\".\"date\" >= $4 and \"attendance\".\"date\" <= $5)))) limit $6",
-     "params": [
-      "user-1",
-      "new-1",
-      "year-old",
-      "2025-09-01",
-      "2026-08-31",
-      1
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "ebf1d5adac8bafd1": {
-   "statements": [
-    {
-     "sql": "insert into \"attendance\" (\"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\") values ($1, $2, $3, default, default, default, default, $4, $5, $6, default, default, default, default, default, default) returning \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\"",
-     "params": [
-      "new-1",
-      "student",
-      "student-1",
-      "year-old",
-      "2026-03-15",
-      "present"
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"attendance\".\"id\", \"attendance\".\"type\", \"attendance\".\"student_id\", \"attendance\".\"staff_id\", \"attendance\".\"teacher_id\", \"attendance\".\"teacher_assignment_id\", \"attendance\".\"section_id\", \"attendance\".\"academic_year_id\", \"attendance\".\"date\", \"attendance\".\"status\", \"attendance\".\"notes\", \"attendance\".\"arrival_time\", \"attendance\".\"marked_by\", \"attendance\".\"created_at\", \"attendance\".\"updated_at\", \"students\".\"id\", \"students\".\"student_code\", \"students\".\"name\", \"student_users\".\"image\", \"subjects\".\"id\", \"subjects\".\"name\", \"subjects\".\"code\", \"teachers\".\"id\", \"teacher_staff\".\"name\", \"teacher_users\".\"image\", \"attendance_staff\".\"id\", \"attendance_staff\".\"employee_code\", \"attendance_staff\".\"name\", \"staff_users\".\"image\", \"attendance_staff\".\"role\", \"attendance_staff\".\"department\", \"attendance_staff\".\"phone\", \"classes\".\"id\", \"classes\".\"name\", \"sections\".\"id\", \"sections\".\"name\", \"marked_by_users\".\"id\", \"marked_by_users\".\"email\", \"marked_by_users\".\"image\" from \"attendance\" left join \"students\" on \"attendance\".\"student_id\" = \"students\".\"id\" left join \"users\" \"student_users\" on \"students\".\"user_id\" = \"student_users\".\"id\" left join \"teacher_assignments\" on \"attendance\".\"teacher_assignment_id\" = \"teacher_assignments\".\"id\" left join \"teachers\" on (\"attendance\".\"teacher_id\" = \"teachers\".\"id\" or \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\") left join \"staff\" \"teacher_staff\" on \"teachers\".\"staff_id\" = \"teacher_staff\".\"id\" left join \"users\" \"teacher_users\" on \"teacher_staff\".\"user_id\" = \"teacher_users\".\"id\" left join \"staff\" \"attendance_staff\" on \"attendance\".\"staff_id\" = \"attendance_staff\".\"id\" left join \"users\" \"staff_users\" on \"attendance_staff\".\"user_id\" = \"staff_users\".\"id\" left join \"sections\" on \"sections\".\"id\" = COALESCE(\"attendance\".\"section_id\", \"teacher_assignments\".\"section_id\") left join \"subjects\" on \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\" left join \"classes\" on \"sections\".\"class_id\" = \"classes\".\"id\" left join \"users\" \"marked_by_users\" on \"attendance\".\"marked_by\" = \"marked_by_users\".\"id\" where (\"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"students\" \"_sc_students_1\" on \"attendance\".\"student_id\" = \"_sc_students_1\".\"id\" where \"_sc_students_1\".\"user_id\" = $1) and \"attendance\".\"id\" = $2 and (\"attendance\".\"academic_year_id\" = $3 or (\"attendance\".\"academic_year_id\" is null and (\"attendance\".\"date\" >= $4 and \"attendance\".\"date\" <= $5)))) limit $6",
-     "params": [
-      "user-1",
-      "new-1",
-      "year-old",
-      "2025-09-01",
-      "2026-08-31",
-      1
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "ad54c18952e12c80": {
-   "statements": [
-    {
-     "sql": "insert into \"attendance\" (\"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\") values ($1, $2, $3, default, default, default, default, $4, $5, $6, default, default, default, default, default, default) returning \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\"",
-     "params": [
-      "new-1",
-      "student",
-      "student-1",
-      "year-old",
-      "2026-03-15",
-      "present"
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"attendance\".\"id\", \"attendance\".\"type\", \"attendance\".\"student_id\", \"attendance\".\"staff_id\", \"attendance\".\"teacher_id\", \"attendance\".\"teacher_assignment_id\", \"attendance\".\"section_id\", \"attendance\".\"academic_year_id\", \"attendance\".\"date\", \"attendance\".\"status\", \"attendance\".\"notes\", \"attendance\".\"arrival_time\", \"attendance\".\"marked_by\", \"attendance\".\"created_at\", \"attendance\".\"updated_at\", \"students\".\"id\", \"students\".\"student_code\", \"students\".\"name\", \"student_users\".\"image\", \"subjects\".\"id\", \"subjects\".\"name\", \"subjects\".\"code\", \"teachers\".\"id\", \"teacher_staff\".\"name\", \"teacher_users\".\"image\", \"attendance_staff\".\"id\", \"attendance_staff\".\"employee_code\", \"attendance_staff\".\"name\", \"staff_users\".\"image\", \"attendance_staff\".\"role\", \"attendance_staff\".\"department\", \"attendance_staff\".\"phone\", \"classes\".\"id\", \"classes\".\"name\", \"sections\".\"id\", \"sections\".\"name\", \"marked_by_users\".\"id\", \"marked_by_users\".\"email\", \"marked_by_users\".\"image\" from \"attendance\" left join \"students\" on \"attendance\".\"student_id\" = \"students\".\"id\" left join \"users\" \"student_users\" on \"students\".\"user_id\" = \"student_users\".\"id\" left join \"teacher_assignments\" on \"attendance\".\"teacher_assignment_id\" = \"teacher_assignments\".\"id\" left join \"teachers\" on (\"attendance\".\"teacher_id\" = \"teachers\".\"id\" or \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\") left join \"staff\" \"teacher_staff\" on \"teachers\".\"staff_id\" = \"teacher_staff\".\"id\" left join \"users\" \"teacher_users\" on \"teacher_staff\".\"user_id\" = \"teacher_users\".\"id\" left join \"staff\" \"attendance_staff\" on \"attendance\".\"staff_id\" = \"attendance_staff\".\"id\" left join \"users\" \"staff_users\" on \"attendance_staff\".\"user_id\" = \"staff_users\".\"id\" left join \"sections\" on \"sections\".\"id\" = COALESCE(\"attendance\".\"section_id\", \"teacher_assignments\".\"section_id\") left join \"subjects\" on \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\" left join \"classes\" on \"sections\".\"class_id\" = \"classes\".\"id\" left join \"users\" \"marked_by_users\" on \"attendance\".\"marked_by\" = \"marked_by_users\".\"id\" where (\"attendance\".\"id\" = $1 and (\"attendance\".\"academic_year_id\" = $2 or (\"attendance\".\"academic_year_id\" is null and (\"attendance\".\"date\" >= $3 and \"attendance\".\"date\" <= $4)))) limit $5",
-     "params": [
-      "new-1",
-      "year-old",
-      "2025-09-01",
-      "2026-08-31",
-      1
-     ],
-     "method": "all"
-    }
-   ]
-  },
-  "9ab6ea45e0445c69": {
-   "statements": [
-    {
-     "sql": "insert into \"attendance\" (\"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\") values ($1, $2, $3, default, default, default, default, $4, $5, $6, default, default, default, default, default, default) returning \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\"",
-     "params": [
-      "new-1",
-      "student",
-      "student-1",
-      "year-old",
-      "2026-03-15",
-      "present"
-     ],
-     "method": "all"
-    },
-    {
-     "sql": "select \"attendance\".\"id\", \"attendance\".\"type\", \"attendance\".\"student_id\", \"attendance\".\"staff_id\", \"attendance\".\"teacher_id\", \"attendance\".\"teacher_assignment_id\", \"attendance\".\"section_id\", \"attendance\".\"academic_year_id\", \"attendance\".\"date\", \"attendance\".\"status\", \"attendance\".\"notes\", \"attendance\".\"arrival_time\", \"attendance\".\"marked_by\", \"attendance\".\"created_at\", \"attendance\".\"updated_at\", \"students\".\"id\", \"students\".\"student_code\", \"students\".\"name\", \"student_users\".\"image\", \"subjects\".\"id\", \"subjects\".\"name\", \"subjects\".\"code\", \"teachers\".\"id\", \"teacher_staff\".\"name\", \"teacher_users\".\"image\", \"attendance_staff\".\"id\", \"attendance_staff\".\"employee_code\", \"attendance_staff\".\"name\", \"staff_users\".\"image\", \"attendance_staff\".\"role\", \"attendance_staff\".\"department\", \"attendance_staff\".\"phone\", \"classes\".\"id\", \"classes\".\"name\", \"sections\".\"id\", \"sections\".\"name\", \"marked_by_users\".\"id\", \"marked_by_users\".\"email\", \"marked_by_users\".\"image\" from \"attendance\" left join \"students\" on \"attendance\".\"student_id\" = \"students\".\"id\" left join \"users\" \"student_users\" on \"students\".\"user_id\" = \"student_users\".\"id\" left join \"teacher_assignments\" on \"attendance\".\"teacher_assignment_id\" = \"teacher_assignments\".\"id\" left join \"teachers\" on (\"attendance\".\"teacher_id\" = \"teachers\".\"id\" or \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\") left join \"staff\" \"teacher_staff\" on \"teachers\".\"staff_id\" = \"teacher_staff\".\"id\" left join \"users\" \"teacher_users\" on \"teacher_staff\".\"user_id\" = \"teacher_users\".\"id\" left join \"staff\" \"attendance_staff\" on \"attendance\".\"staff_id\" = \"attendance_staff\".\"id\" left join \"users\" \"staff_users\" on \"attendance_staff\".\"user_id\" = \"staff_users\".\"id\" left join \"sections\" on \"sections\".\"id\" = COALESCE(\"attendance\".\"section_id\", \"teacher_assignments\".\"section_id\") left join \"subjects\" on \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\" left join \"classes\" on \"sections\".\"class_id\" = \"classes\".\"id\" left join \"users\" \"marked_by_users\" on \"attendance\".\"marked_by\" = \"marked_by_users\".\"id\" where (1 = 0 and \"attendance\".\"id\" = $1 and (\"attendance\".\"academic_year_id\" = $2 or (\"attendance\".\"academic_year_id\" is null and (\"attendance\".\"date\" >= $3 and \"attendance\".\"date\" <= $4)))) limit $5",
-     "params": [
-      "new-1",
-      "year-old",
-      "2025-09-01",
-      "2026-08-31",
-      1
-     ],
-     "method": "all"
-    }
-   ]
-  },
   "5a91b3434369d810": {
    "statements": [
     {
@@ -14732,73 +14559,6 @@
     }
    ]
   },
-  "d819314a4f976127": {
-   "statements": [
-    {
-     "sql": "select \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\" from \"attendance\" where \"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"staff\" \"_sc_staff_1\" on \"attendance\".\"staff_id\" = \"_sc_staff_1\".\"id\" where \"_sc_staff_1\".\"user_id\" = $1)",
-     "params": [
-      "user-1"
-     ],
-     "method": "scoped"
-    }
-   ]
-  },
-  "b47f6869bd0a535b": {
-   "statements": [
-    {
-     "sql": "select \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\" from \"attendance\" where \"attendance\".\"id\" in (select \"id\" from \"attendance\" where (\"attendance\".\"student_id\" is not null and (\n    exists (select 1 from sections managed_section\n    where managed_section.id = \"attendance\".\"section_id\" and exists (select 1 from classes managed_class\n    where managed_class.id = managed_section.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))\n    or (\"attendance\".\"section_id\" is null and exists (select 1 from student_enrollments managed_enrollment\n    join student_enrollment_placements managed_placement on managed_placement.enrollment_id = managed_enrollment.id\n    where managed_enrollment.student_id = \"attendance\".\"student_id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_placement.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $4\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $5)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $6))))))))",
-     "params": [
-      "user-1",
-      "2026-03-15",
-      "2026-03-15",
-      "user-1",
-      "2026-03-15",
-      "2026-03-15"
-     ],
-     "method": "scoped"
-    }
-   ]
-  },
-  "4630e3cceb009f8e": {
-   "statements": [
-    {
-     "sql": "select \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\" from \"attendance\" where \"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"students\" \"_sc_students_1\" on \"attendance\".\"student_id\" = \"_sc_students_1\".\"id\" inner join \"student_parents\" \"_sc_student_parents_2\" on \"_sc_students_1\".\"id\" = \"_sc_student_parents_2\".\"student_id\" inner join \"parents\" \"_sc_parents_3\" on \"_sc_student_parents_2\".\"parent_id\" = \"_sc_parents_3\".\"id\" where \"_sc_parents_3\".\"user_id\" = $1)",
-     "params": [
-      "user-1"
-     ],
-     "method": "scoped"
-    }
-   ]
-  },
-  "6e292bdab7608bb2": {
-   "statements": [
-    {
-     "sql": "select \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\" from \"attendance\" where \"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"students\" \"_sc_students_1\" on \"attendance\".\"student_id\" = \"_sc_students_1\".\"id\" where \"_sc_students_1\".\"user_id\" = $1)",
-     "params": [
-      "user-1"
-     ],
-     "method": "scoped"
-    }
-   ]
-  },
-  "ee80b2bcd060e0db": {
-   "statements": [
-    {
-     "sql": "select \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\" from \"attendance\"",
-     "params": [],
-     "method": "unscoped"
-    }
-   ]
-  },
-  "31b5dabccc59e1a7": {
-   "statements": [
-    {
-     "sql": "select \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\" from \"attendance\" where 1 = 0",
-     "params": [],
-     "method": "scoped"
-    }
-   ]
-  },
   "15f34775906ef482": {
    "statements": [
     {
@@ -14866,17 +14626,6 @@
     }
    ]
   },
-  "b538619174535da9": {
-   "statements": [
-    {
-     "sql": "select \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\" from \"attendance\" where \"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"students\" \"_sc_students_1\" on \"attendance\".\"student_id\" = \"_sc_students_1\".\"id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_2\" on \"attendance\".\"section_id\" = \"_sc_teacher_assignments_2\".\"section_id\" inner join \"teachers\" \"_sc_teachers_3\" on \"_sc_teacher_assignments_2\".\"teacher_id\" = \"_sc_teachers_3\".\"id\" inner join \"staff\" \"_sc_staff_4\" on \"_sc_teachers_3\".\"staff_id\" = \"_sc_staff_4\".\"id\" where \"_sc_staff_4\".\"user_id\" = $1)",
-     "params": [
-      "user-1"
-     ],
-     "method": "scoped"
-    }
-   ]
-  },
   "a34639e27373a838": {
    "statements": [
     {
@@ -14885,17 +14634,6 @@
       "user-1"
      ],
      "method": "subquery"
-    }
-   ]
-  },
-  "ff16aa08367480d0": {
-   "statements": [
-    {
-     "sql": "select \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\" from \"attendance\" where \"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"students\" \"_sc_students_1\" on \"attendance\".\"student_id\" = \"_sc_students_1\".\"id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_2\" on \"attendance\".\"teacher_assignment_id\" = \"_sc_teacher_assignments_2\".\"id\" inner join \"teachers\" \"_sc_teachers_3\" on \"_sc_teacher_assignments_2\".\"teacher_id\" = \"_sc_teachers_3\".\"id\" inner join \"staff\" \"_sc_staff_4\" on \"_sc_teachers_3\".\"staff_id\" = \"_sc_staff_4\".\"id\" where \"_sc_staff_4\".\"user_id\" = $1)",
-     "params": [
-      "user-1"
-     ],
-     "method": "scoped"
     }
    ]
   },
@@ -17124,6 +16862,268 @@
      "method": "all"
     }
    ]
+  },
+  "ac53fcf47b6a31a2": {
+   "statements": [
+    {
+     "sql": "insert into \"attendance\" (\"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\") values ($1, $2, $3, default, default, default, default, $4, $5, $6, default, default, default, default, default, default, default) returning \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\"",
+     "params": [
+      "new-1",
+      "student",
+      "student-1",
+      "year-old",
+      "2026-03-15",
+      "present"
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"attendance\".\"id\", \"attendance\".\"type\", \"attendance\".\"student_id\", \"attendance\".\"staff_id\", \"attendance\".\"teacher_id\", \"attendance\".\"teacher_assignment_id\", \"attendance\".\"section_id\", \"attendance\".\"academic_year_id\", \"attendance\".\"date\", \"attendance\".\"status\", \"attendance\".\"notes\", \"attendance\".\"arrival_time\", \"attendance\".\"marked_by\", \"attendance\".\"created_at\", \"attendance\".\"updated_at\", \"students\".\"id\", \"students\".\"student_code\", \"students\".\"name\", \"student_users\".\"image\", \"subjects\".\"id\", \"subjects\".\"name\", \"subjects\".\"code\", \"teachers\".\"id\", \"teacher_staff\".\"name\", \"teacher_users\".\"image\", \"attendance_staff\".\"id\", \"attendance_staff\".\"employee_code\", \"attendance_staff\".\"name\", \"staff_users\".\"image\", \"attendance_staff\".\"role\", \"attendance_staff\".\"department\", \"attendance_staff\".\"phone\", \"classes\".\"id\", \"classes\".\"name\", \"sections\".\"id\", \"sections\".\"name\", \"marked_by_users\".\"id\", \"marked_by_users\".\"email\", \"marked_by_users\".\"image\" from \"attendance\" left join \"students\" on \"attendance\".\"student_id\" = \"students\".\"id\" left join \"users\" \"student_users\" on \"students\".\"user_id\" = \"student_users\".\"id\" left join \"teacher_assignments\" on \"attendance\".\"teacher_assignment_id\" = \"teacher_assignments\".\"id\" left join \"teachers\" on (\"attendance\".\"teacher_id\" = \"teachers\".\"id\" or \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\") left join \"staff\" \"teacher_staff\" on \"teachers\".\"staff_id\" = \"teacher_staff\".\"id\" left join \"users\" \"teacher_users\" on \"teacher_staff\".\"user_id\" = \"teacher_users\".\"id\" left join \"staff\" \"attendance_staff\" on \"attendance\".\"staff_id\" = \"attendance_staff\".\"id\" left join \"users\" \"staff_users\" on \"attendance_staff\".\"user_id\" = \"staff_users\".\"id\" left join \"sections\" on \"sections\".\"id\" = COALESCE(\"attendance\".\"section_id\", \"teacher_assignments\".\"section_id\") left join \"subjects\" on \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\" left join \"classes\" on \"sections\".\"class_id\" = \"classes\".\"id\" left join \"users\" \"marked_by_users\" on \"attendance\".\"marked_by\" = \"marked_by_users\".\"id\" where ((\"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"staff\" \"_sc_staff_1\" on \"attendance\".\"staff_id\" = \"_sc_staff_1\".\"id\" where \"_sc_staff_1\".\"user_id\" = $1) or \"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"students\" \"_sc_students_1\" on \"attendance\".\"student_id\" = \"_sc_students_1\".\"id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_2\" on \"attendance\".\"section_id\" = \"_sc_teacher_assignments_2\".\"section_id\" inner join \"teachers\" \"_sc_teachers_3\" on \"_sc_teacher_assignments_2\".\"teacher_id\" = \"_sc_teachers_3\".\"id\" inner join \"staff\" \"_sc_staff_4\" on \"_sc_teachers_3\".\"staff_id\" = \"_sc_staff_4\".\"id\" where \"_sc_staff_4\".\"user_id\" = $2) or \"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"students\" \"_sc_students_1\" on \"attendance\".\"student_id\" = \"_sc_students_1\".\"id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_2\" on \"attendance\".\"teacher_assignment_id\" = \"_sc_teacher_assignments_2\".\"id\" inner join \"teachers\" \"_sc_teachers_3\" on \"_sc_teacher_assignments_2\".\"teacher_id\" = \"_sc_teachers_3\".\"id\" inner join \"staff\" \"_sc_staff_4\" on \"_sc_teachers_3\".\"staff_id\" = \"_sc_staff_4\".\"id\" where \"_sc_staff_4\".\"user_id\" = $3)) and \"attendance\".\"id\" = $4 and (\"attendance\".\"academic_year_id\" = $5 or (\"attendance\".\"academic_year_id\" is null and (\"attendance\".\"date\" >= $6 and \"attendance\".\"date\" <= $7)))) limit $8",
+     "params": [
+      "user-1",
+      "user-1",
+      "user-1",
+      "new-1",
+      "year-old",
+      "2025-09-01",
+      "2026-08-31",
+      1
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "7060d1fdcc0d1ce9": {
+   "statements": [
+    {
+     "sql": "insert into \"attendance\" (\"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\") values ($1, $2, $3, default, default, default, default, $4, $5, $6, default, default, default, default, default, default, default) returning \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\"",
+     "params": [
+      "new-1",
+      "student",
+      "student-1",
+      "year-old",
+      "2026-03-15",
+      "present"
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"attendance\".\"id\", \"attendance\".\"type\", \"attendance\".\"student_id\", \"attendance\".\"staff_id\", \"attendance\".\"teacher_id\", \"attendance\".\"teacher_assignment_id\", \"attendance\".\"section_id\", \"attendance\".\"academic_year_id\", \"attendance\".\"date\", \"attendance\".\"status\", \"attendance\".\"notes\", \"attendance\".\"arrival_time\", \"attendance\".\"marked_by\", \"attendance\".\"created_at\", \"attendance\".\"updated_at\", \"students\".\"id\", \"students\".\"student_code\", \"students\".\"name\", \"student_users\".\"image\", \"subjects\".\"id\", \"subjects\".\"name\", \"subjects\".\"code\", \"teachers\".\"id\", \"teacher_staff\".\"name\", \"teacher_users\".\"image\", \"attendance_staff\".\"id\", \"attendance_staff\".\"employee_code\", \"attendance_staff\".\"name\", \"staff_users\".\"image\", \"attendance_staff\".\"role\", \"attendance_staff\".\"department\", \"attendance_staff\".\"phone\", \"classes\".\"id\", \"classes\".\"name\", \"sections\".\"id\", \"sections\".\"name\", \"marked_by_users\".\"id\", \"marked_by_users\".\"email\", \"marked_by_users\".\"image\" from \"attendance\" left join \"students\" on \"attendance\".\"student_id\" = \"students\".\"id\" left join \"users\" \"student_users\" on \"students\".\"user_id\" = \"student_users\".\"id\" left join \"teacher_assignments\" on \"attendance\".\"teacher_assignment_id\" = \"teacher_assignments\".\"id\" left join \"teachers\" on (\"attendance\".\"teacher_id\" = \"teachers\".\"id\" or \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\") left join \"staff\" \"teacher_staff\" on \"teachers\".\"staff_id\" = \"teacher_staff\".\"id\" left join \"users\" \"teacher_users\" on \"teacher_staff\".\"user_id\" = \"teacher_users\".\"id\" left join \"staff\" \"attendance_staff\" on \"attendance\".\"staff_id\" = \"attendance_staff\".\"id\" left join \"users\" \"staff_users\" on \"attendance_staff\".\"user_id\" = \"staff_users\".\"id\" left join \"sections\" on \"sections\".\"id\" = COALESCE(\"attendance\".\"section_id\", \"teacher_assignments\".\"section_id\") left join \"subjects\" on \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\" left join \"classes\" on \"sections\".\"class_id\" = \"classes\".\"id\" left join \"users\" \"marked_by_users\" on \"attendance\".\"marked_by\" = \"marked_by_users\".\"id\" where (\"attendance\".\"id\" in (select \"id\" from \"attendance\" where (\"attendance\".\"student_id\" is not null and (\n    exists (select 1 from sections managed_section\n    where managed_section.id = \"attendance\".\"section_id\" and exists (select 1 from classes managed_class\n    where managed_class.id = managed_section.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))\n    or (\"attendance\".\"section_id\" is null and exists (select 1 from student_enrollments managed_enrollment\n    join student_enrollment_placements managed_placement on managed_placement.enrollment_id = managed_enrollment.id\n    where managed_enrollment.student_id = \"attendance\".\"student_id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_placement.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $4\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $5)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $6)))))))) and \"attendance\".\"id\" = $7 and (\"attendance\".\"academic_year_id\" = $8 or (\"attendance\".\"academic_year_id\" is null and (\"attendance\".\"date\" >= $9 and \"attendance\".\"date\" <= $10)))) limit $11",
+     "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
+      "new-1",
+      "year-old",
+      "2025-09-01",
+      "2026-08-31",
+      1
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "9bba1ff619ce51d1": {
+   "statements": [
+    {
+     "sql": "insert into \"attendance\" (\"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\") values ($1, $2, $3, default, default, default, default, $4, $5, $6, default, default, default, default, default, default, default) returning \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\"",
+     "params": [
+      "new-1",
+      "student",
+      "student-1",
+      "year-old",
+      "2026-03-15",
+      "present"
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"attendance\".\"id\", \"attendance\".\"type\", \"attendance\".\"student_id\", \"attendance\".\"staff_id\", \"attendance\".\"teacher_id\", \"attendance\".\"teacher_assignment_id\", \"attendance\".\"section_id\", \"attendance\".\"academic_year_id\", \"attendance\".\"date\", \"attendance\".\"status\", \"attendance\".\"notes\", \"attendance\".\"arrival_time\", \"attendance\".\"marked_by\", \"attendance\".\"created_at\", \"attendance\".\"updated_at\", \"students\".\"id\", \"students\".\"student_code\", \"students\".\"name\", \"student_users\".\"image\", \"subjects\".\"id\", \"subjects\".\"name\", \"subjects\".\"code\", \"teachers\".\"id\", \"teacher_staff\".\"name\", \"teacher_users\".\"image\", \"attendance_staff\".\"id\", \"attendance_staff\".\"employee_code\", \"attendance_staff\".\"name\", \"staff_users\".\"image\", \"attendance_staff\".\"role\", \"attendance_staff\".\"department\", \"attendance_staff\".\"phone\", \"classes\".\"id\", \"classes\".\"name\", \"sections\".\"id\", \"sections\".\"name\", \"marked_by_users\".\"id\", \"marked_by_users\".\"email\", \"marked_by_users\".\"image\" from \"attendance\" left join \"students\" on \"attendance\".\"student_id\" = \"students\".\"id\" left join \"users\" \"student_users\" on \"students\".\"user_id\" = \"student_users\".\"id\" left join \"teacher_assignments\" on \"attendance\".\"teacher_assignment_id\" = \"teacher_assignments\".\"id\" left join \"teachers\" on (\"attendance\".\"teacher_id\" = \"teachers\".\"id\" or \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\") left join \"staff\" \"teacher_staff\" on \"teachers\".\"staff_id\" = \"teacher_staff\".\"id\" left join \"users\" \"teacher_users\" on \"teacher_staff\".\"user_id\" = \"teacher_users\".\"id\" left join \"staff\" \"attendance_staff\" on \"attendance\".\"staff_id\" = \"attendance_staff\".\"id\" left join \"users\" \"staff_users\" on \"attendance_staff\".\"user_id\" = \"staff_users\".\"id\" left join \"sections\" on \"sections\".\"id\" = COALESCE(\"attendance\".\"section_id\", \"teacher_assignments\".\"section_id\") left join \"subjects\" on \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\" left join \"classes\" on \"sections\".\"class_id\" = \"classes\".\"id\" left join \"users\" \"marked_by_users\" on \"attendance\".\"marked_by\" = \"marked_by_users\".\"id\" where (\"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"students\" \"_sc_students_1\" on \"attendance\".\"student_id\" = \"_sc_students_1\".\"id\" inner join \"student_parents\" \"_sc_student_parents_2\" on \"_sc_students_1\".\"id\" = \"_sc_student_parents_2\".\"student_id\" inner join \"parents\" \"_sc_parents_3\" on \"_sc_student_parents_2\".\"parent_id\" = \"_sc_parents_3\".\"id\" where \"_sc_parents_3\".\"user_id\" = $1) and \"attendance\".\"id\" = $2 and (\"attendance\".\"academic_year_id\" = $3 or (\"attendance\".\"academic_year_id\" is null and (\"attendance\".\"date\" >= $4 and \"attendance\".\"date\" <= $5)))) limit $6",
+     "params": [
+      "user-1",
+      "new-1",
+      "year-old",
+      "2025-09-01",
+      "2026-08-31",
+      1
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "5d44a3bc24292a89": {
+   "statements": [
+    {
+     "sql": "insert into \"attendance\" (\"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\") values ($1, $2, $3, default, default, default, default, $4, $5, $6, default, default, default, default, default, default, default) returning \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\"",
+     "params": [
+      "new-1",
+      "student",
+      "student-1",
+      "year-old",
+      "2026-03-15",
+      "present"
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"attendance\".\"id\", \"attendance\".\"type\", \"attendance\".\"student_id\", \"attendance\".\"staff_id\", \"attendance\".\"teacher_id\", \"attendance\".\"teacher_assignment_id\", \"attendance\".\"section_id\", \"attendance\".\"academic_year_id\", \"attendance\".\"date\", \"attendance\".\"status\", \"attendance\".\"notes\", \"attendance\".\"arrival_time\", \"attendance\".\"marked_by\", \"attendance\".\"created_at\", \"attendance\".\"updated_at\", \"students\".\"id\", \"students\".\"student_code\", \"students\".\"name\", \"student_users\".\"image\", \"subjects\".\"id\", \"subjects\".\"name\", \"subjects\".\"code\", \"teachers\".\"id\", \"teacher_staff\".\"name\", \"teacher_users\".\"image\", \"attendance_staff\".\"id\", \"attendance_staff\".\"employee_code\", \"attendance_staff\".\"name\", \"staff_users\".\"image\", \"attendance_staff\".\"role\", \"attendance_staff\".\"department\", \"attendance_staff\".\"phone\", \"classes\".\"id\", \"classes\".\"name\", \"sections\".\"id\", \"sections\".\"name\", \"marked_by_users\".\"id\", \"marked_by_users\".\"email\", \"marked_by_users\".\"image\" from \"attendance\" left join \"students\" on \"attendance\".\"student_id\" = \"students\".\"id\" left join \"users\" \"student_users\" on \"students\".\"user_id\" = \"student_users\".\"id\" left join \"teacher_assignments\" on \"attendance\".\"teacher_assignment_id\" = \"teacher_assignments\".\"id\" left join \"teachers\" on (\"attendance\".\"teacher_id\" = \"teachers\".\"id\" or \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\") left join \"staff\" \"teacher_staff\" on \"teachers\".\"staff_id\" = \"teacher_staff\".\"id\" left join \"users\" \"teacher_users\" on \"teacher_staff\".\"user_id\" = \"teacher_users\".\"id\" left join \"staff\" \"attendance_staff\" on \"attendance\".\"staff_id\" = \"attendance_staff\".\"id\" left join \"users\" \"staff_users\" on \"attendance_staff\".\"user_id\" = \"staff_users\".\"id\" left join \"sections\" on \"sections\".\"id\" = COALESCE(\"attendance\".\"section_id\", \"teacher_assignments\".\"section_id\") left join \"subjects\" on \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\" left join \"classes\" on \"sections\".\"class_id\" = \"classes\".\"id\" left join \"users\" \"marked_by_users\" on \"attendance\".\"marked_by\" = \"marked_by_users\".\"id\" where (\"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"students\" \"_sc_students_1\" on \"attendance\".\"student_id\" = \"_sc_students_1\".\"id\" where \"_sc_students_1\".\"user_id\" = $1) and \"attendance\".\"id\" = $2 and (\"attendance\".\"academic_year_id\" = $3 or (\"attendance\".\"academic_year_id\" is null and (\"attendance\".\"date\" >= $4 and \"attendance\".\"date\" <= $5)))) limit $6",
+     "params": [
+      "user-1",
+      "new-1",
+      "year-old",
+      "2025-09-01",
+      "2026-08-31",
+      1
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "dbe1440304d905d6": {
+   "statements": [
+    {
+     "sql": "insert into \"attendance\" (\"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\") values ($1, $2, $3, default, default, default, default, $4, $5, $6, default, default, default, default, default, default, default) returning \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\"",
+     "params": [
+      "new-1",
+      "student",
+      "student-1",
+      "year-old",
+      "2026-03-15",
+      "present"
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"attendance\".\"id\", \"attendance\".\"type\", \"attendance\".\"student_id\", \"attendance\".\"staff_id\", \"attendance\".\"teacher_id\", \"attendance\".\"teacher_assignment_id\", \"attendance\".\"section_id\", \"attendance\".\"academic_year_id\", \"attendance\".\"date\", \"attendance\".\"status\", \"attendance\".\"notes\", \"attendance\".\"arrival_time\", \"attendance\".\"marked_by\", \"attendance\".\"created_at\", \"attendance\".\"updated_at\", \"students\".\"id\", \"students\".\"student_code\", \"students\".\"name\", \"student_users\".\"image\", \"subjects\".\"id\", \"subjects\".\"name\", \"subjects\".\"code\", \"teachers\".\"id\", \"teacher_staff\".\"name\", \"teacher_users\".\"image\", \"attendance_staff\".\"id\", \"attendance_staff\".\"employee_code\", \"attendance_staff\".\"name\", \"staff_users\".\"image\", \"attendance_staff\".\"role\", \"attendance_staff\".\"department\", \"attendance_staff\".\"phone\", \"classes\".\"id\", \"classes\".\"name\", \"sections\".\"id\", \"sections\".\"name\", \"marked_by_users\".\"id\", \"marked_by_users\".\"email\", \"marked_by_users\".\"image\" from \"attendance\" left join \"students\" on \"attendance\".\"student_id\" = \"students\".\"id\" left join \"users\" \"student_users\" on \"students\".\"user_id\" = \"student_users\".\"id\" left join \"teacher_assignments\" on \"attendance\".\"teacher_assignment_id\" = \"teacher_assignments\".\"id\" left join \"teachers\" on (\"attendance\".\"teacher_id\" = \"teachers\".\"id\" or \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\") left join \"staff\" \"teacher_staff\" on \"teachers\".\"staff_id\" = \"teacher_staff\".\"id\" left join \"users\" \"teacher_users\" on \"teacher_staff\".\"user_id\" = \"teacher_users\".\"id\" left join \"staff\" \"attendance_staff\" on \"attendance\".\"staff_id\" = \"attendance_staff\".\"id\" left join \"users\" \"staff_users\" on \"attendance_staff\".\"user_id\" = \"staff_users\".\"id\" left join \"sections\" on \"sections\".\"id\" = COALESCE(\"attendance\".\"section_id\", \"teacher_assignments\".\"section_id\") left join \"subjects\" on \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\" left join \"classes\" on \"sections\".\"class_id\" = \"classes\".\"id\" left join \"users\" \"marked_by_users\" on \"attendance\".\"marked_by\" = \"marked_by_users\".\"id\" where (\"attendance\".\"id\" = $1 and (\"attendance\".\"academic_year_id\" = $2 or (\"attendance\".\"academic_year_id\" is null and (\"attendance\".\"date\" >= $3 and \"attendance\".\"date\" <= $4)))) limit $5",
+     "params": [
+      "new-1",
+      "year-old",
+      "2025-09-01",
+      "2026-08-31",
+      1
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "83e43837ae83242d": {
+   "statements": [
+    {
+     "sql": "insert into \"attendance\" (\"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\") values ($1, $2, $3, default, default, default, default, $4, $5, $6, default, default, default, default, default, default, default) returning \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\"",
+     "params": [
+      "new-1",
+      "student",
+      "student-1",
+      "year-old",
+      "2026-03-15",
+      "present"
+     ],
+     "method": "all"
+    },
+    {
+     "sql": "select \"attendance\".\"id\", \"attendance\".\"type\", \"attendance\".\"student_id\", \"attendance\".\"staff_id\", \"attendance\".\"teacher_id\", \"attendance\".\"teacher_assignment_id\", \"attendance\".\"section_id\", \"attendance\".\"academic_year_id\", \"attendance\".\"date\", \"attendance\".\"status\", \"attendance\".\"notes\", \"attendance\".\"arrival_time\", \"attendance\".\"marked_by\", \"attendance\".\"created_at\", \"attendance\".\"updated_at\", \"students\".\"id\", \"students\".\"student_code\", \"students\".\"name\", \"student_users\".\"image\", \"subjects\".\"id\", \"subjects\".\"name\", \"subjects\".\"code\", \"teachers\".\"id\", \"teacher_staff\".\"name\", \"teacher_users\".\"image\", \"attendance_staff\".\"id\", \"attendance_staff\".\"employee_code\", \"attendance_staff\".\"name\", \"staff_users\".\"image\", \"attendance_staff\".\"role\", \"attendance_staff\".\"department\", \"attendance_staff\".\"phone\", \"classes\".\"id\", \"classes\".\"name\", \"sections\".\"id\", \"sections\".\"name\", \"marked_by_users\".\"id\", \"marked_by_users\".\"email\", \"marked_by_users\".\"image\" from \"attendance\" left join \"students\" on \"attendance\".\"student_id\" = \"students\".\"id\" left join \"users\" \"student_users\" on \"students\".\"user_id\" = \"student_users\".\"id\" left join \"teacher_assignments\" on \"attendance\".\"teacher_assignment_id\" = \"teacher_assignments\".\"id\" left join \"teachers\" on (\"attendance\".\"teacher_id\" = \"teachers\".\"id\" or \"teacher_assignments\".\"teacher_id\" = \"teachers\".\"id\") left join \"staff\" \"teacher_staff\" on \"teachers\".\"staff_id\" = \"teacher_staff\".\"id\" left join \"users\" \"teacher_users\" on \"teacher_staff\".\"user_id\" = \"teacher_users\".\"id\" left join \"staff\" \"attendance_staff\" on \"attendance\".\"staff_id\" = \"attendance_staff\".\"id\" left join \"users\" \"staff_users\" on \"attendance_staff\".\"user_id\" = \"staff_users\".\"id\" left join \"sections\" on \"sections\".\"id\" = COALESCE(\"attendance\".\"section_id\", \"teacher_assignments\".\"section_id\") left join \"subjects\" on \"teacher_assignments\".\"subject_id\" = \"subjects\".\"id\" left join \"classes\" on \"sections\".\"class_id\" = \"classes\".\"id\" left join \"users\" \"marked_by_users\" on \"attendance\".\"marked_by\" = \"marked_by_users\".\"id\" where (1 = 0 and \"attendance\".\"id\" = $1 and (\"attendance\".\"academic_year_id\" = $2 or (\"attendance\".\"academic_year_id\" is null and (\"attendance\".\"date\" >= $3 and \"attendance\".\"date\" <= $4)))) limit $5",
+     "params": [
+      "new-1",
+      "year-old",
+      "2025-09-01",
+      "2026-08-31",
+      1
+     ],
+     "method": "all"
+    }
+   ]
+  },
+  "76c3c58017e80500": {
+   "statements": [
+    {
+     "sql": "select \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\" from \"attendance\" where \"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"staff\" \"_sc_staff_1\" on \"attendance\".\"staff_id\" = \"_sc_staff_1\".\"id\" where \"_sc_staff_1\".\"user_id\" = $1)",
+     "params": [
+      "user-1"
+     ],
+     "method": "scoped"
+    }
+   ]
+  },
+  "fccd915b4762c67f": {
+   "statements": [
+    {
+     "sql": "select \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\" from \"attendance\" where \"attendance\".\"id\" in (select \"id\" from \"attendance\" where (\"attendance\".\"student_id\" is not null and (\n    exists (select 1 from sections managed_section\n    where managed_section.id = \"attendance\".\"section_id\" and exists (select 1 from classes managed_class\n    where managed_class.id = managed_section.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $1\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $2)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $3))))\n    or (\"attendance\".\"section_id\" is null and exists (select 1 from student_enrollments managed_enrollment\n    join student_enrollment_placements managed_placement on managed_placement.enrollment_id = managed_enrollment.id\n    where managed_enrollment.student_id = \"attendance\".\"student_id\"\n      and exists (select 1 from classes managed_class\n    where managed_class.id = managed_placement.class_id and exists (select 1 from monitor_assignments managed_grade\n    join staff manager on manager.id = managed_grade.staff_id\n    where manager.user_id = $4\n      and managed_grade.class_name = managed_class.name\n      and managed_grade.status = 'active'\n      and (managed_grade.start_date is null or managed_grade.start_date <= $5)\n      and (managed_grade.end_date is null or managed_grade.end_date >= $6))))))))",
+     "params": [
+      "user-1",
+      "2026-03-15",
+      "2026-03-15",
+      "user-1",
+      "2026-03-15",
+      "2026-03-15"
+     ],
+     "method": "scoped"
+    }
+   ]
+  },
+  "194ec0732e553379": {
+   "statements": [
+    {
+     "sql": "select \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\" from \"attendance\" where \"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"students\" \"_sc_students_1\" on \"attendance\".\"student_id\" = \"_sc_students_1\".\"id\" inner join \"student_parents\" \"_sc_student_parents_2\" on \"_sc_students_1\".\"id\" = \"_sc_student_parents_2\".\"student_id\" inner join \"parents\" \"_sc_parents_3\" on \"_sc_student_parents_2\".\"parent_id\" = \"_sc_parents_3\".\"id\" where \"_sc_parents_3\".\"user_id\" = $1)",
+     "params": [
+      "user-1"
+     ],
+     "method": "scoped"
+    }
+   ]
+  },
+  "40dc32adff88037b": {
+   "statements": [
+    {
+     "sql": "select \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\" from \"attendance\" where \"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"students\" \"_sc_students_1\" on \"attendance\".\"student_id\" = \"_sc_students_1\".\"id\" where \"_sc_students_1\".\"user_id\" = $1)",
+     "params": [
+      "user-1"
+     ],
+     "method": "scoped"
+    }
+   ]
+  },
+  "e9807261f81f413f": {
+   "statements": [
+    {
+     "sql": "select \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\" from \"attendance\"",
+     "params": [],
+     "method": "unscoped"
+    }
+   ]
+  },
+  "316d2e5942fd24d9": {
+   "statements": [
+    {
+     "sql": "select \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\" from \"attendance\" where 1 = 0",
+     "params": [],
+     "method": "scoped"
+    }
+   ]
+  },
+  "e81682c83d701722": {
+   "statements": [
+    {
+     "sql": "select \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\" from \"attendance\" where \"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"students\" \"_sc_students_1\" on \"attendance\".\"student_id\" = \"_sc_students_1\".\"id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_2\" on \"attendance\".\"section_id\" = \"_sc_teacher_assignments_2\".\"section_id\" inner join \"teachers\" \"_sc_teachers_3\" on \"_sc_teacher_assignments_2\".\"teacher_id\" = \"_sc_teachers_3\".\"id\" inner join \"staff\" \"_sc_staff_4\" on \"_sc_teachers_3\".\"staff_id\" = \"_sc_staff_4\".\"id\" where \"_sc_staff_4\".\"user_id\" = $1)",
+     "params": [
+      "user-1"
+     ],
+     "method": "scoped"
+    }
+   ]
+  },
+  "4be30e9884881b85": {
+   "statements": [
+    {
+     "sql": "select \"id\", \"type\", \"student_id\", \"staff_id\", \"teacher_id\", \"teacher_assignment_id\", \"section_id\", \"academic_year_id\", \"date\", \"status\", \"arrival_time\", \"source\", \"notes\", \"marked_by\", \"last_updated_by\", \"created_at\", \"updated_at\" from \"attendance\" where \"attendance\".\"id\" in (select \"attendance\".\"id\" from \"attendance\" inner join \"students\" \"_sc_students_1\" on \"attendance\".\"student_id\" = \"_sc_students_1\".\"id\" inner join \"teacher_assignments\" \"_sc_teacher_assignments_2\" on \"attendance\".\"teacher_assignment_id\" = \"_sc_teacher_assignments_2\".\"id\" inner join \"teachers\" \"_sc_teachers_3\" on \"_sc_teacher_assignments_2\".\"teacher_id\" = \"_sc_teachers_3\".\"id\" inner join \"staff\" \"_sc_staff_4\" on \"_sc_teachers_3\".\"staff_id\" = \"_sc_staff_4\".\"id\" where \"_sc_staff_4\".\"user_id\" = $1)",
+     "params": [
+      "user-1"
+     ],
+     "method": "scoped"
+    }
+   ]
   }
  },
  "cases": {
@@ -17925,20 +17925,20 @@
   "repository:attendance getToday|role:custom-role": "360c54a8ddf6c4ee",
   "repository:attendance getToday|anonymous": "360c54a8ddf6c4ee",
   "repository:attendance getToday|outside-request": "b7c21b7f65eeb03e",
-  "repository:attendance create|role:teacher": "b19a412f98845c8d",
-  "repository:attendance create|role:monitor": "54495f92c1994c77",
-  "repository:attendance create|role:parent": "15382c98455f93c3",
-  "repository:attendance create|role:student": "ebf1d5adac8bafd1",
-  "repository:attendance create|role:admin": "ad54c18952e12c80",
-  "repository:attendance create|role:principal": "ad54c18952e12c80",
-  "repository:attendance create|role:accounting": "ad54c18952e12c80",
-  "repository:attendance create|role:secretary": "ad54c18952e12c80",
-  "repository:attendance create|role:driver": "ad54c18952e12c80",
-  "repository:attendance create|role:assistant": "ad54c18952e12c80",
-  "repository:attendance create|role:supervisor": "ad54c18952e12c80",
-  "repository:attendance create|role:custom-role": "9ab6ea45e0445c69",
-  "repository:attendance create|anonymous": "9ab6ea45e0445c69",
-  "repository:attendance create|outside-request": "ad54c18952e12c80",
+  "repository:attendance create|role:teacher": "ac53fcf47b6a31a2",
+  "repository:attendance create|role:monitor": "7060d1fdcc0d1ce9",
+  "repository:attendance create|role:parent": "9bba1ff619ce51d1",
+  "repository:attendance create|role:student": "5d44a3bc24292a89",
+  "repository:attendance create|role:admin": "dbe1440304d905d6",
+  "repository:attendance create|role:principal": "dbe1440304d905d6",
+  "repository:attendance create|role:accounting": "dbe1440304d905d6",
+  "repository:attendance create|role:secretary": "dbe1440304d905d6",
+  "repository:attendance create|role:driver": "dbe1440304d905d6",
+  "repository:attendance create|role:assistant": "dbe1440304d905d6",
+  "repository:attendance create|role:supervisor": "dbe1440304d905d6",
+  "repository:attendance create|role:custom-role": "83e43837ae83242d",
+  "repository:attendance create|anonymous": "83e43837ae83242d",
+  "repository:attendance create|outside-request": "dbe1440304d905d6",
   "repository:behavior rewards getAll|role:teacher": "5a91b3434369d810",
   "repository:behavior rewards getAll|role:monitor": "13b37a600caa0753",
   "repository:behavior rewards getAll|role:parent": "d45e9c482db99b01",
@@ -19471,20 +19471,20 @@
   "ownedIds:AssessmentGuards.AssessmentForPlacedStudent|role:assistant": "316d3618459afaba",
   "ownedIds:AssessmentGuards.AssessmentForPlacedStudent|role:supervisor": "316d3618459afaba",
   "ownedIds:AssessmentGuards.AssessmentForPlacedStudent|role:custom-role": "c5d3c65620c02589",
-  "token:AttendanceGuards.Attendance|role:teacher": "d819314a4f976127",
-  "token:AttendanceGuards.Attendance|role:monitor": "b47f6869bd0a535b",
-  "token:AttendanceGuards.Attendance|role:parent": "4630e3cceb009f8e",
-  "token:AttendanceGuards.Attendance|role:student": "6e292bdab7608bb2",
-  "token:AttendanceGuards.Attendance|role:admin": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.Attendance|role:principal": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.Attendance|role:accounting": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.Attendance|role:secretary": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.Attendance|role:driver": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.Attendance|role:assistant": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.Attendance|role:supervisor": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.Attendance|role:custom-role": "31b5dabccc59e1a7",
-  "token:AttendanceGuards.Attendance|anonymous": "31b5dabccc59e1a7",
-  "token:AttendanceGuards.Attendance|outside-request": "ee80b2bcd060e0db",
+  "token:AttendanceGuards.Attendance|role:teacher": "76c3c58017e80500",
+  "token:AttendanceGuards.Attendance|role:monitor": "fccd915b4762c67f",
+  "token:AttendanceGuards.Attendance|role:parent": "194ec0732e553379",
+  "token:AttendanceGuards.Attendance|role:student": "40dc32adff88037b",
+  "token:AttendanceGuards.Attendance|role:admin": "e9807261f81f413f",
+  "token:AttendanceGuards.Attendance|role:principal": "e9807261f81f413f",
+  "token:AttendanceGuards.Attendance|role:accounting": "e9807261f81f413f",
+  "token:AttendanceGuards.Attendance|role:secretary": "e9807261f81f413f",
+  "token:AttendanceGuards.Attendance|role:driver": "e9807261f81f413f",
+  "token:AttendanceGuards.Attendance|role:assistant": "e9807261f81f413f",
+  "token:AttendanceGuards.Attendance|role:supervisor": "e9807261f81f413f",
+  "token:AttendanceGuards.Attendance|role:custom-role": "316d2e5942fd24d9",
+  "token:AttendanceGuards.Attendance|anonymous": "316d2e5942fd24d9",
+  "token:AttendanceGuards.Attendance|outside-request": "e9807261f81f413f",
   "ownedIds:AttendanceGuards.Attendance|role:teacher": "15f34775906ef482",
   "ownedIds:AttendanceGuards.Attendance|role:monitor": "f9a95380815e4ad4",
   "ownedIds:AttendanceGuards.Attendance|role:parent": "b5f6c258993b523c",
@@ -19497,20 +19497,20 @@
   "ownedIds:AttendanceGuards.Attendance|role:assistant": "edb002d8dae7d7a7",
   "ownedIds:AttendanceGuards.Attendance|role:supervisor": "edb002d8dae7d7a7",
   "ownedIds:AttendanceGuards.Attendance|role:custom-role": "623b5eab28967643",
-  "token:AttendanceGuards.AttendanceInTaughtSection|role:teacher": "b538619174535da9",
-  "token:AttendanceGuards.AttendanceInTaughtSection|role:monitor": "31b5dabccc59e1a7",
-  "token:AttendanceGuards.AttendanceInTaughtSection|role:parent": "31b5dabccc59e1a7",
-  "token:AttendanceGuards.AttendanceInTaughtSection|role:student": "31b5dabccc59e1a7",
-  "token:AttendanceGuards.AttendanceInTaughtSection|role:admin": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.AttendanceInTaughtSection|role:principal": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.AttendanceInTaughtSection|role:accounting": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.AttendanceInTaughtSection|role:secretary": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.AttendanceInTaughtSection|role:driver": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.AttendanceInTaughtSection|role:assistant": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.AttendanceInTaughtSection|role:supervisor": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.AttendanceInTaughtSection|role:custom-role": "31b5dabccc59e1a7",
-  "token:AttendanceGuards.AttendanceInTaughtSection|anonymous": "31b5dabccc59e1a7",
-  "token:AttendanceGuards.AttendanceInTaughtSection|outside-request": "ee80b2bcd060e0db",
+  "token:AttendanceGuards.AttendanceInTaughtSection|role:teacher": "e81682c83d701722",
+  "token:AttendanceGuards.AttendanceInTaughtSection|role:monitor": "316d2e5942fd24d9",
+  "token:AttendanceGuards.AttendanceInTaughtSection|role:parent": "316d2e5942fd24d9",
+  "token:AttendanceGuards.AttendanceInTaughtSection|role:student": "316d2e5942fd24d9",
+  "token:AttendanceGuards.AttendanceInTaughtSection|role:admin": "e9807261f81f413f",
+  "token:AttendanceGuards.AttendanceInTaughtSection|role:principal": "e9807261f81f413f",
+  "token:AttendanceGuards.AttendanceInTaughtSection|role:accounting": "e9807261f81f413f",
+  "token:AttendanceGuards.AttendanceInTaughtSection|role:secretary": "e9807261f81f413f",
+  "token:AttendanceGuards.AttendanceInTaughtSection|role:driver": "e9807261f81f413f",
+  "token:AttendanceGuards.AttendanceInTaughtSection|role:assistant": "e9807261f81f413f",
+  "token:AttendanceGuards.AttendanceInTaughtSection|role:supervisor": "e9807261f81f413f",
+  "token:AttendanceGuards.AttendanceInTaughtSection|role:custom-role": "316d2e5942fd24d9",
+  "token:AttendanceGuards.AttendanceInTaughtSection|anonymous": "316d2e5942fd24d9",
+  "token:AttendanceGuards.AttendanceInTaughtSection|outside-request": "e9807261f81f413f",
   "ownedIds:AttendanceGuards.AttendanceInTaughtSection|role:teacher": "a34639e27373a838",
   "ownedIds:AttendanceGuards.AttendanceInTaughtSection|role:monitor": "623b5eab28967643",
   "ownedIds:AttendanceGuards.AttendanceInTaughtSection|role:parent": "623b5eab28967643",
@@ -19523,20 +19523,20 @@
   "ownedIds:AttendanceGuards.AttendanceInTaughtSection|role:assistant": "edb002d8dae7d7a7",
   "ownedIds:AttendanceGuards.AttendanceInTaughtSection|role:supervisor": "edb002d8dae7d7a7",
   "ownedIds:AttendanceGuards.AttendanceInTaughtSection|role:custom-role": "623b5eab28967643",
-  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:teacher": "ff16aa08367480d0",
-  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:monitor": "31b5dabccc59e1a7",
-  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:parent": "31b5dabccc59e1a7",
-  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:student": "31b5dabccc59e1a7",
-  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:admin": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:principal": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:accounting": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:secretary": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:driver": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:assistant": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:supervisor": "ee80b2bcd060e0db",
-  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:custom-role": "31b5dabccc59e1a7",
-  "token:AttendanceGuards.AttendanceUnderOwnAssignment|anonymous": "31b5dabccc59e1a7",
-  "token:AttendanceGuards.AttendanceUnderOwnAssignment|outside-request": "ee80b2bcd060e0db",
+  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:teacher": "4be30e9884881b85",
+  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:monitor": "316d2e5942fd24d9",
+  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:parent": "316d2e5942fd24d9",
+  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:student": "316d2e5942fd24d9",
+  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:admin": "e9807261f81f413f",
+  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:principal": "e9807261f81f413f",
+  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:accounting": "e9807261f81f413f",
+  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:secretary": "e9807261f81f413f",
+  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:driver": "e9807261f81f413f",
+  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:assistant": "e9807261f81f413f",
+  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:supervisor": "e9807261f81f413f",
+  "token:AttendanceGuards.AttendanceUnderOwnAssignment|role:custom-role": "316d2e5942fd24d9",
+  "token:AttendanceGuards.AttendanceUnderOwnAssignment|anonymous": "316d2e5942fd24d9",
+  "token:AttendanceGuards.AttendanceUnderOwnAssignment|outside-request": "e9807261f81f413f",
   "ownedIds:AttendanceGuards.AttendanceUnderOwnAssignment|role:teacher": "389ec321c5f11f97",
   "ownedIds:AttendanceGuards.AttendanceUnderOwnAssignment|role:monitor": "623b5eab28967643",
   "ownedIds:AttendanceGuards.AttendanceUnderOwnAssignment|role:parent": "623b5eab28967643",

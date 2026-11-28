@@ -1,5 +1,5 @@
 import { Repository } from '../../najm';
-import { and, eq, gte, inArray, lte, or, desc, asc, sql, count, type SQL } from 'drizzle-orm';
+import { and, eq, gte, inArray, isNull, lte, ne, or, desc, asc, sql, count, type SQL } from 'drizzle-orm';
 import { events, eventParticipants, users, classes, sections } from '../../database/schema';
 import { DB } from '../../database/db';
 import { Owned, type OwnedWhere, ownedIds } from '../../auth';
@@ -323,6 +323,23 @@ export class EventRepository {
     await this.db.delete(eventParticipants)
       .where(eq(eventParticipants.id, id));
     return { success: true };
+  }
+
+  /**
+   * Whether a holiday that is not cancelled covers `date`. School-wide and
+   * unscoped: the fingerprint device's end-of-day close asks it with no
+   * reader and no selected year.
+   */
+  async isHolidayOn(date: string) {
+    const [row] = await this.db.select({ id: events.id }).from(events)
+      .where(and(
+        eq(events.type, 'holiday'),
+        or(isNull(events.status), ne(events.status, 'cancelled')),
+        lte(events.startDate, date),
+        gte(events.endDate, date),
+      ))
+      .limit(1);
+    return Boolean(row);
   }
 
   async checkParticipantExists(eventId: string, participantId: string) {

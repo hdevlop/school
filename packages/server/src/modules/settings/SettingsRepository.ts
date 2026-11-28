@@ -76,6 +76,9 @@ const publicSettings = {
   schoolStartTime: settings.schoolStartTime,
   schoolEndTime: settings.schoolEndTime,
   lunchBreakDuration: settings.lunchBreakDuration,
+  staffArrivalTime: settings.staffArrivalTime,
+  staffDepartureTime: settings.staffDepartureTime,
+  hourlyStaffLeadMinutes: settings.hourlyStaffLeadMinutes,
 
   // Timestamps
   createdAt: settings.createdAt,
@@ -162,6 +165,18 @@ export class SettingsRepository {
   async updateActiveRoutineDays(academicYear: string, days: RoutineDay[]) {
     await this.db.update(routineSchedules).set({ activeDays: days, updatedAt: sql`CURRENT_TIMESTAMP` })
       .where(this.activeRoutines(academicYear));
+  }
+
+  /** What staff attendance from the fingerprint device reads: the school's clock and day. */
+  async getStaffAttendanceDay() {
+    const [row] = await this.db.select({
+      timeZone: settings.timeZone,
+      arrivalTime: settings.staffArrivalTime,
+      departureTime: settings.staffDepartureTime,
+      hourlyLeadMinutes: settings.hourlyStaffLeadMinutes,
+      teachingDays: settings.teachingDays,
+    }).from(settings).orderBy(desc(settings.createdAt)).limit(1);
+    return row ?? null;
   }
 
   async deleteAll() {

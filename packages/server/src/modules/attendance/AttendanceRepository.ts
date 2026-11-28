@@ -6,6 +6,7 @@ import { DB } from '../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
 import { inReportingYear, type ReportingYear } from '../academicYears/academicRecordYear';
 import { monthsBetween } from '@sms/contracts/academic-years';
+import type { AttendanceSource, AttendanceStatus } from '@sms/contracts';
 import { Attendance, AttendanceInTaughtSection, AttendanceUnderOwnAssignment } from './AttendanceGuards';
 import { getBusinessDateOnly } from '../../shared/businessDate';
 import { Year } from '../academicYears/requestYear';
@@ -223,6 +224,7 @@ export class AttendanceRepository {
         status: item.status as 'present' | 'absent' | 'late',
         notes: item.notes ?? null,
         arrivalTime: item.arrivalTime ?? null,
+        source: 'manual' as const,
         markedBy: userId,
       })))
       .onConflictDoUpdate({
@@ -235,6 +237,8 @@ export class AttendanceRepository {
           arrivalTime: sql`case when ${inArray(attendance.staffId, items.filter(item => item.arrivalTime !== undefined).map(item => item.staffId))}
             then excluded.arrival_time else ${attendance.arrivalTime} end`,
           academicYearId: sql`excluded.academic_year_id`,
+          // A person's save makes the mark theirs: a later scan no longer replaces it.
+          source: 'manual',
           lastUpdatedBy: userId,
           updatedAt: sql`CURRENT_TIMESTAMP`,
         },
@@ -247,7 +251,8 @@ export class AttendanceRepository {
   async update(id, attendanceData) {
     const [updatedAttendance] = await this.db
       .update(attendance)
-      .set(attendanceData)
+      // A person's edit makes the mark theirs: a later scan no longer replaces it.
+      .set({ ...attendanceData, source: 'manual' })
       .where(and(eq(attendance.id, id), inYear(this.year)))
       .returning();
 
@@ -483,4 +488,68 @@ export class AttendanceRepository {
     await this.db.delete(attendance);
   }
 
+  // ========================================
+  // FINGERPRINT DEVICE MARKS
+  // ========================================
+  // A device request carries no session and no selected year, so these reads
+  // and writes are neither owned nor year-scoped: each names the year found
+  // for the scan's own date. Only AttendanceDeviceService calls them, after it
+  // has checked the device's serial number.
+
+  async getStaffMarksOn(staffIds: string[], date: string): Promise<StaffMark[]> {
+    if (!staffIds.length) return [];
+    const rows = await this.db.select({
+      id: attendance.id,
+      staffId: attendance.staffId,
+      status: attendance.status,
+      source: attendance.source,
+      arrivalTime: attendance.arrivalTime,
+    })
+      .from(attendance)
+      .where(and(eq(attendance.type, 'staff'), inArray(attendance.staffId, staffIds), eq(attendance.date, date)));
+    return rows.filter((row): row is StaffMark => row.staffId !== null);
+  }
+
+  /** Inserts device and close marks; a mark a person saved meanwhile stays. */
+  async insertDeviceStaffMarks(rows: DeviceStaffMark[]) {
+    if (!rows.length) return 0;
+    const saved = await this.db.insert(attendance)
+      .values(rows.map((row) => ({ ...row, type: 'staff' as const })))
+      .onConflictDoNothing()
+      .returning({ id: attendance.id });
+    return saved.length;
+  }
+
+  /**
+   * Replaces a scan's or the close's mark with a scan's, recording the status
+   * change. Never a person's mark: `source` is checked again in the update.
+   */
+  async replaceDeviceStaffMark(mark: StaffMark, next: { status: 'present' | 'late'; arrivalTime: string }) {
+    const [updated] = await this.db.update(attendance)
+      .set({ status: next.status, arrivalTime: next.arrivalTime, source: 'device', updatedAt: sql`CURRENT_TIMESTAMP` })
+      .where(and(eq(attendance.id, mark.id), inArray(attendance.source, ['device', 'auto'])))
+      .returning({ id: attendance.id });
+    if (updated && mark.status !== next.status) {
+      await this.createHistory({ attendanceId: mark.id, oldStatus: mark.status, newStatus: next.status, note: 'device' });
+    }
+    return Boolean(updated);
+  }
+
 }
+
+export type StaffMark = {
+  id: string;
+  staffId: string;
+  status: AttendanceStatus;
+  source: AttendanceSource;
+  arrivalTime: string | null;
+};
+
+export type DeviceStaffMark = {
+  staffId: string;
+  academicYearId: string;
+  date: string;
+  status: AttendanceStatus;
+  arrivalTime: string | null;
+  source: Exclude<AttendanceSource, 'manual'>;
+};

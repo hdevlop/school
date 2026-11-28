@@ -16,17 +16,19 @@ import { getBusinessDateOverride } from '../../../shared/businessDate';
 import { TeacherDashboardRepository, type AttendanceScope } from './TeacherDashboardRepository';
 import {
   addDays,
-  awaitsGrading,
   datesBetween,
+  schoolClock,
+  toClockTime,
+  type SchoolClock,
+} from '../../../shared/schoolClock';
+import {
+  awaitsGrading,
   entriesOn,
   hasRegister,
   rankAssessments,
   ratePercent,
-  schoolClock,
   sessionStatus,
-  toClockTime,
   type Register,
-  type SchoolClock,
 } from './teacherDashboardMetrics';
 
 type DashboardUser = { id: string; role?: string };

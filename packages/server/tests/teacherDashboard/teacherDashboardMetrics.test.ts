@@ -1,14 +1,11 @@
 import { describe, expect, it } from 'bun:test';
+import { addDays, datesBetween, schoolClock, weekdayOf } from '../../src/shared/schoolClock';
 import {
-  addDays,
-  datesBetween,
   entriesOn,
   hasRegister,
   rankAssessments,
   ratePercent,
-  schoolClock,
   sessionStatus,
-  weekdayOf,
 } from '../../src/modules/dashboard/teacher/teacherDashboardMetrics';
 
 describe('school clock', () => {

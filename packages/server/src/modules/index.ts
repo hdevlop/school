@@ -19,6 +19,7 @@ export * from './sections';
 export * from './classes';
 export * from './classRoutines';
 export * from './attendance';
+export * from './attendanceDevices';
 export * from './discipline';
 export * from './assessments';
 export * from './homework';

@@ -13,6 +13,8 @@ export const staff = pgTable('staff', {
   id: idField(),
   userId: userRef('set null').unique(),
   employeeCode: text('employee_code').notNull().unique(),
+  /** The user ID this person has on the fingerprint terminal (its PIN); scans under it mark their attendance. */
+  deviceUserId: text('device_user_id').unique(),
   name: text('name').notNull(),
   /** The name written in Arabic (محمد العلوي), for what School prints in Arabic. */
   nameAr: text('name_ar'),

@@ -135,6 +135,12 @@ export const createSettingsSchemas = (t: T) => {
     schoolStartTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, t('validationMessages.invalidStartTimeFormatHhMm')).default('08:00'),
     schoolEndTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, t('validationMessages.invalidEndTimeFormatHhMm')).default('15:00'),
     lunchBreakDuration: numberField(z.number({ error: t('validationMessages.mustBeAValidNumber') }).int(t('validationMessages.lunchBreakDurationMustBeInMinutes')).min(15, t('validationMessages.lunchBreakMustBeAtLeast15Minutes')).max(120, t('validationMessages.lunchBreakCannotExceed120Minutes'))).default(30),
+    // Fingerprint attendance: permanent staff are late after the arrival time and
+    // the day closes at the departure time; a vacataire is due this many minutes
+    // before their first lesson.
+    staffArrivalTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, t('validationMessages.invalidStartTimeFormatHhMm')).default('08:15'),
+    staffDepartureTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, t('validationMessages.invalidEndTimeFormatHhMm')).default('15:45'),
+    hourlyStaffLeadMinutes: numberField(z.number({ error: t('validationMessages.mustBeAValidNumber') }).int(t('validationMessages.hourlyStaffLeadInvalid')).min(0, t('validationMessages.hourlyStaffLeadInvalid')).max(60, t('validationMessages.hourlyStaffLeadInvalid'))).default(5),
   });
 
   /**

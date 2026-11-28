@@ -7,7 +7,7 @@ import { COMPETENCY_LEVEL_VALUES } from './competencies';
  * Generic lookup over every shared tuple, for the places that need to reach an
  * enum by key: Drizzle column definitions and the server's Zod adapter.
  *
- * It lives apart from `index.ts` on purpose. This object names all seventy-two
+ * It lives apart from `index.ts` on purpose. This object names all seventy-three
  * tuples, so anything importing it keeps all of them alive — in a browser
  * bundle that is every domain's strings on every page that needed one enum.
  * The dashboard imports named tuples from `@sms/contracts`; only the server
@@ -49,6 +49,7 @@ export const enumValues = {
   gradeStatus: values.GRADE_STATUS_VALUES,
   attendanceStatus: values.ATTENDANCE_STATUS_VALUES,
   attendanceType: values.ATTENDANCE_TYPE_VALUES,
+  attendanceSource: values.ATTENDANCE_SOURCE_VALUES,
   proficiencyLevel: values.PROFICIENCY_LEVEL_VALUES,
   dayOfWeek: values.DAY_OF_WEEK_VALUES,
   alertType: values.ALERT_TYPE_VALUES,
