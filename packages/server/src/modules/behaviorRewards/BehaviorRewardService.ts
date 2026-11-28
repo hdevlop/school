@@ -34,6 +34,7 @@ export class BehaviorRewardService {
     this.behaviorRewardValidator.ensureBehaviorDate(data.behaviorAt);
     const certificatePlace = this.behaviorRewardValidator.certificatePlaceFor(data.rewardType, data.certificatePlace);
     const student = await this.behaviorRewardValidator.ensureStudentEligible(data.studentId, data.behaviorAt, actor);
+    const subjectId = await this.behaviorRewardValidator.subjectFor(data.subjectId);
 
     return this.behaviorRewardRepository.create({
       studentId: data.studentId,
@@ -44,6 +45,7 @@ export class BehaviorRewardService {
       points: data.points,
       rewardNote: data.rewardNote || null,
       certificatePlace: certificatePlace as BehaviorRewardCertificatePlace | null,
+      subjectId,
       classId: student.classId,
       sectionId: student.sectionId,
       awardedBy: actor.id,
@@ -57,6 +59,7 @@ export class BehaviorRewardService {
     const updateData: Record<string, unknown> = pickProps(data, MUTABLE_FIELDS);
     if (data.behaviorAt) this.behaviorRewardValidator.ensureBehaviorDate(data.behaviorAt);
     if ('rewardNote' in data) updateData.rewardNote = data.rewardNote || null;
+    if ('subjectId' in data) updateData.subjectId = await this.behaviorRewardValidator.subjectFor(data.subjectId);
     if (data.rewardType !== undefined || 'certificatePlace' in data) {
       updateData.certificatePlace = this.behaviorRewardValidator.certificatePlaceFor(
         data.rewardType ?? existing.rewardType,

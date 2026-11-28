@@ -35,6 +35,8 @@ export const createBehaviorRewardSchema = (t: T) => z.object({
   rewardNote: z.string().trim().max(1000, t('validationMessages.rewardNoteIsTooLong')).optional().nullable(),
   // Asked only for a certificate: the place its printed certificate names.
   certificatePlace: z.enum(BEHAVIOR_REWARD_CERTIFICATE_PLACE_VALUES).optional().nullable(),
+  // A subject id, or NO_REWARD_SUBJECT for a behavior outside a lesson; the form sends null for it.
+  subjectId: z.string().optional().nullable(),
 }).superRefine((data, ctx) => {
   if (data.rewardType === 'certificate' && !data.certificatePlace) {
     ctx.addIssue({ code: 'custom', path: ['certificatePlace'], message: t('behaviorRewards.form.certificatePlaceRequired') });

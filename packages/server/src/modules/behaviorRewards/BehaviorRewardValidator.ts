@@ -87,6 +87,13 @@ export class BehaviorRewardValidator {
     return place;
   }
 
+  /** The subject a reward names, when it names one: none is kept as none. */
+  async subjectFor(subjectId: string | null | undefined) {
+    if (!subjectId) return null;
+    if (!await this.behaviorRewardRepository.subjectExists(subjectId)) Err(404, this.bt('subjectNotFound'));
+    return subjectId;
+  }
+
   ensureBehaviorDate(value: string) {
     if (!Number.isFinite(new Date(value).getTime())) Err(400, this.bt('invalidBehaviorDate'));
     if (isBehaviorRewardDateInFuture(value)) Err(400, this.bt('futureBehaviorDate'));

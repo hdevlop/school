@@ -17,6 +17,8 @@ const behaviorRewardInput = z.object({
   rewardNote: z.string().trim().max(1000, 'Reward note is too long').nullable().optional(),
   // Required with a `certificate` reward and dropped with any other; the service decides.
   certificatePlace: behaviorRewardCertificatePlaceEnum.nullable().optional(),
+  // Optional: the subject the behavior was in; none for one outside a lesson.
+  subjectId: z.string().trim().nullable().optional(),
 });
 
 export const createBehaviorRewardDto = behaviorRewardInput.extend({

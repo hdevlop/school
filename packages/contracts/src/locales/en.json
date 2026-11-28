@@ -6270,7 +6270,8 @@
       "behaviorDate": "Behavior date",
       "awardedBy": "Awarded by",
       "createdAt": "Created",
-      "updatedAt": "Updated"
+      "updatedAt": "Updated",
+      "subject": "Subject"
     },
     "filters": {
       "search": "Search student, code, or description...",
@@ -6278,7 +6279,9 @@
       "category": "Behavior category",
       "rewardType": "Reward type",
       "class": "Class",
-      "section": "Section"
+      "section": "Section",
+      "subject": "Subject",
+      "noSubject": "No subject"
     },
     "form": {
       "behaviorSection": "Positive behavior",
@@ -6303,7 +6306,9 @@
       "rewardNotePlaceholder": "Add optional details about the recognition",
       "certificatePlace": "Certificate place",
       "certificatePlacePlaceholder": "Select a place",
-      "certificatePlaceRequired": "Choose the certificate's place"
+      "certificatePlaceRequired": "Choose the certificate's place",
+      "subject": "Subject",
+      "subjectPlaceholder": "None (outside a lesson)"
     },
     "categories": {
       "academic_effort": "Academic effort",
@@ -6355,7 +6360,8 @@
       "deleteAdminOnly": "Only administrators can delete recognition records",
       "invalidBehaviorDate": "Behavior date is invalid",
       "futureBehaviorDate": "Behavior date cannot be in the future",
-      "certificatePlaceRequired": "A certificate reward needs its place (1st, 2nd or 3rd)"
+      "certificatePlaceRequired": "A certificate reward needs its place (1st, 2nd or 3rd)",
+      "subjectNotFound": "Subject not found"
     }
   },
   "rewardTemplates": {

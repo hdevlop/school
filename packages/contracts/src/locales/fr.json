@@ -3383,7 +3383,8 @@
       "behaviorDate": "Date du comportement",
       "awardedBy": "Attribué par",
       "createdAt": "Créé le",
-      "updatedAt": "Mis à jour le"
+      "updatedAt": "Mis à jour le",
+      "subject": "Matière"
     },
     "filters": {
       "search": "Rechercher un élève, un code ou une description...",
@@ -3391,7 +3392,9 @@
       "category": "Catégorie de comportement",
       "rewardType": "Type de récompense",
       "class": "Classe",
-      "section": "Section"
+      "section": "Section",
+      "subject": "Matière",
+      "noSubject": "Sans matière"
     },
     "form": {
       "behaviorSection": "Comportement positif",
@@ -3416,7 +3419,9 @@
       "rewardNotePlaceholder": "Ajouter des détails facultatifs sur la reconnaissance",
       "certificatePlace": "Place du certificat",
       "certificatePlacePlaceholder": "Sélectionner une place",
-      "certificatePlaceRequired": "Choisissez la place du certificat"
+      "certificatePlaceRequired": "Choisissez la place du certificat",
+      "subject": "Matière",
+      "subjectPlaceholder": "Aucune (hors cours)"
     },
     "categories": {
       "academic_effort": "Effort scolaire",
@@ -3468,7 +3473,8 @@
       "deleteAdminOnly": "Seuls les administrateurs peuvent supprimer une reconnaissance",
       "invalidBehaviorDate": "La date du comportement est invalide",
       "futureBehaviorDate": "La date du comportement ne peut pas être future",
-      "certificatePlaceRequired": "Une récompense de type certificat doit indiquer sa place (1re, 2e ou 3e)"
+      "certificatePlaceRequired": "Une récompense de type certificat doit indiquer sa place (1re, 2e ou 3e)",
+      "subjectNotFound": "Matière introuvable"
     }
   },
   "rewardTemplates": {

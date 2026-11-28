@@ -2537,7 +2537,8 @@
       "behaviorDate": "Fecha de conducta",
       "awardedBy": "Otorgado por",
       "createdAt": "Creado",
-      "updatedAt": "Actualizado"
+      "updatedAt": "Actualizado",
+      "subject": "Asignatura"
     },
     "filters": {
       "search": "Buscar estudiante, código o descripción...",
@@ -2545,7 +2546,9 @@
       "category": "Categoría de conducta",
       "rewardType": "Tipo de recompensa",
       "class": "Clase",
-      "section": "Sección"
+      "section": "Sección",
+      "subject": "Asignatura",
+      "noSubject": "Sin asignatura"
     },
     "form": {
       "behaviorSection": "Conducta positiva",
@@ -2570,7 +2573,9 @@
       "rewardNotePlaceholder": "Añade detalles opcionales sobre el reconocimiento",
       "certificatePlace": "Puesto del certificado",
       "certificatePlacePlaceholder": "Seleccionar puesto",
-      "certificatePlaceRequired": "Elige el puesto del certificado"
+      "certificatePlaceRequired": "Elige el puesto del certificado",
+      "subject": "Asignatura",
+      "subjectPlaceholder": "Ninguna (fuera de clase)"
     },
     "categories": {
       "academic_effort": "Esfuerzo académico",
@@ -2622,7 +2627,8 @@
       "deleteAdminOnly": "Solo los administradores pueden eliminar reconocimientos",
       "invalidBehaviorDate": "La fecha de la conducta no es válida",
       "futureBehaviorDate": "La fecha de la conducta no puede estar en el futuro",
-      "certificatePlaceRequired": "Una recompensa de certificado debe indicar su puesto (1.º, 2.º o 3.º)"
+      "certificatePlaceRequired": "Una recompensa de certificado debe indicar su puesto (1.º, 2.º o 3.º)",
+      "subjectNotFound": "Asignatura no encontrada"
     }
   },
   "rewardTemplates": {

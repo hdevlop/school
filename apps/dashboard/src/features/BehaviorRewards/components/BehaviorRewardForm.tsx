@@ -1,8 +1,8 @@
 'use client';
 
-import { useMemo } from 'react';
-import { Award, CalendarClock, FileBadge, FileText, Gift, Star, UserRound } from 'lucide-react';
-import { useWatch } from 'react-hook-form';
+import { useEffect, useMemo } from 'react';
+import { Award, BookOpen, CalendarClock, FileBadge, FileText, Gift, Star, UserRound } from 'lucide-react';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { FormInput, NForm, NFormSectionHeader } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
@@ -16,8 +16,51 @@ import {
   buildBehaviorRewardCategoryOptions,
   buildBehaviorRewardCertificatePlaceOptions,
   buildBehaviorRewardTypeOptions,
+  buildRewardSubjectOptions,
+  NO_REWARD_SUBJECT,
 } from '../config/behaviorRewardOptions';
 import { RewardTemplateGenerateButton } from '@/features/RewardTemplates/components/RewardTemplateGenerateButton';
+import { useSubjects } from '@/features/Subjects/hooks/useSubjects';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
+import { useOwnTeaching } from '@/features/Homework/hooks/useOwnTeaching';
+import { taughtSubjectIds } from '@/features/Homework/config/homeworkTeaching';
+
+type PlacedStudent = { id: string; classId?: string | null; sectionId?: string | null };
+
+/**
+ * The subject the behavior was in, optional. A teacher's subjects for the
+ * pupil's section come first, and a new reward from a teacher who teaches the
+ * pupil one subject starts on it.
+ */
+function RewardSubjectField({ students, isNew }: { students: readonly PlacedStudent[]; isNew: boolean }) {
+  const { t } = useTranslation();
+  const { role } = useViewerRole();
+  const own = useOwnTeaching(role === 'teacher');
+  const { subjects, isSubjectsLoading } = useSubjects();
+  const { getFieldState, setValue } = useFormContext();
+  const studentId = useWatch({ name: 'studentId' });
+  const student = students.find((item) => item.id === studentId);
+  const taught = useMemo(() => (own.assignments && student?.classId
+    ? taughtSubjectIds(own.assignments, student.classId, student.sectionId ? [student.sectionId] : [])
+    : own.assignments ? taughtSubjectIds(own.assignments, '', []) : null), [own.assignments, student?.classId, student?.sectionId]);
+  const items = useMemo(() => buildRewardSubjectOptions(subjects || [], taught, t), [subjects, taught, t]);
+  const only = taught?.size === 1 ? [...taught][0] : null;
+  useEffect(() => {
+    if (isNew && only && student && !getFieldState('subjectId').isDirty) setValue('subjectId', only);
+  }, [isNew, only, student, getFieldState, setValue]);
+
+  return (
+    <FormInput
+      name="subjectId"
+      type="combobox"
+      icon={BookOpen}
+      formLabel={t('behaviorRewards.form.subject')}
+      placeholder={t('behaviorRewards.form.subjectPlaceholder')}
+      items={items}
+      disabled={isSubjectsLoading || own.isLoading}
+    />
+  );
+}
 
 /** A certificate names its place, printed on it; the field shows only while the reward is a certificate. */
 function CertificatePlaceField() {
@@ -56,6 +99,7 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
     rewardType: behaviorReward?.rewardType || 'verbal_praise',
     points: behaviorReward?.points ?? 0,
     certificatePlace: behaviorReward?.certificatePlace ?? null,
+    subjectId: behaviorReward?.subject?.id || behaviorReward?.subjectId || NO_REWARD_SUBJECT,
   };
 
   const handleSubmit = async (formData) => {
@@ -65,6 +109,7 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
       behaviorAt: new Date(`${behaviorDate}T${behaviorTime}`).toISOString(),
       points: Number(formData.points || 0),
       certificatePlace: payload.rewardType === 'certificate' ? payload.certificatePlace : null,
+      subjectId: payload.subjectId && payload.subjectId !== NO_REWARD_SUBJECT ? payload.subjectId : null,
     });
   };
 
@@ -106,6 +151,8 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
             required
           />
         </div>
+
+        <RewardSubjectField students={activeStudents} isNew={!behaviorReward?.id} />
 
         <FormInput
           name="category"

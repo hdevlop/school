@@ -55,7 +55,7 @@ export default function BehaviorRewardsMobileFilters({ columnFilters, rewardFilt
             const Input = type === 'combobox' ? ComboboxInput : SelectInput;
             // Class and section share a row; each reward filter takes its own.
             return (
-              <div key={name} className={name === 'category' || name === 'rewardType' ? 'col-span-2' : undefined}>
+              <div key={name} className={name === 'category' || name === 'rewardType' || name === 'subject' ? 'col-span-2' : undefined}>
                 <MobileFilterField label={placeholder}>
                   <Input value={value} onChange={onChange} items={items} placeholder={placeholder} ariaLabel={placeholder}
                     disabled={disabled || items.length === 1} showIcon={false} bordered={bordered} className="w-full min-w-0" />

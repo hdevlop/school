@@ -16,11 +16,11 @@ import { useAcademicYearOptions, useViewingAcademicYear } from '@/features/Acade
 import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYear';
 import { eligibleAssessmentTeachers } from '@/features/Assessments/config/assessmentTeachers';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
-import { useTeacherOverview } from '@/features/Dashboard/hooks/useTeacherDashboard';
 import { createHomeworkSchema, type HomeworkSubmitValues } from '../config/homeworkSchemas';
-import { taughtClassIds, taughtSectionIds, taughtSubjectIds, type TeachingAssignment } from '../config/homeworkTeaching';
+import { taughtClassIds, taughtSectionIds, taughtSubjectIds } from '../config/homeworkTeaching';
 import { liveAttachments } from '../config/homeworkFiles';
 import type { HomeworkSave } from '../hooks/useHomework';
+import { useOwnTeaching, type OwnTeaching } from '../hooks/useOwnTeaching';
 import HomeworkFilePicker from './HomeworkFilePicker';
 
 // Only the teachers who teach the subject in every chosen section: the
@@ -53,23 +53,6 @@ const HomeworkTeacherSelect = () => {
     />
   );
 };
-
-type OwnTeaching = { assignments: TeachingAssignment[] | null; isLoading: boolean };
-
-// A teacher posts only where they teach. Other roles get `null`: every class,
-// section and subject, narrowed afterwards by the teacher select.
-function useOwnTeaching(isTeacher: boolean): OwnTeaching {
-  const { data: overview, isLoading: isOverviewLoading } = useTeacherOverview(undefined, isTeacher);
-  const { teachers, isTeachersLoading } = useTeachers({ enabled: isTeacher });
-  return useMemo(() => {
-    if (!isTeacher) return { assignments: null, isLoading: false };
-    const self = (teachers || []).find((teacher: any) => teacher.id === overview?.teacher?.id);
-    return {
-      assignments: Array.isArray(self?.assignments) ? self.assignments : [],
-      isLoading: isOverviewLoading || isTeachersLoading,
-    };
-  }, [isTeacher, teachers, overview, isOverviewLoading, isTeachersLoading]);
-}
 
 const HomeworkSubjectSelect = ({ own, wide }: { own: OwnTeaching; wide: boolean }) => {
   const { t } = useTranslation();

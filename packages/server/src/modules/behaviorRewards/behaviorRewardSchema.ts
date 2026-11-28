@@ -6,6 +6,7 @@ import { getEnumValues } from '../../shared/enums';
 import { classRef } from '../classes/classSchema';
 import { sectionRef } from '../sections/sectionSchema';
 import { studentRef } from '../students/studentSchema';
+import { subjectRef } from '../subjects/subjectSchema';
 
 export const behaviorRewardCategoryDbEnum = pgEnum(
   'behavior_reward_category',
@@ -36,6 +37,8 @@ export const behaviorRewards = pgTable('behavior_rewards', {
   rewardNote: text('reward_note'),
   // Set only on a `certificate` reward: the place its printed certificate names.
   certificatePlace: behaviorRewardCertificatePlaceDbEnum('certificate_place'),
+  // The subject the behavior was in, when it was in one; deleting the subject keeps the reward.
+  subjectId: subjectRef('set null'),
   ...timestamps,
 }, (table) => [
   index('behavior_rewards_student_idx').on(table.studentId),
@@ -43,4 +46,5 @@ export const behaviorRewards = pgTable('behavior_rewards', {
   index('behavior_rewards_category_idx').on(table.category),
   index('behavior_rewards_reward_type_idx').on(table.rewardType),
   index('behavior_rewards_behavior_at_idx').on(table.behaviorAt),
+  index('behavior_rewards_subject_idx').on(table.subjectId),
 ]);

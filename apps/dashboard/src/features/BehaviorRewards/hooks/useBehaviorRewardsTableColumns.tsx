@@ -3,6 +3,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { CategoryLabel, CategoryTile, PointsMark, RewardChip } from '../components/BehaviorRewardTags';
 import { BehaviorRewardStudentIdentity } from '../components/BehaviorRewardStudentIdentity';
+import { rewardSubjectValue } from '../config/behaviorRewardOptions';
 
 import { exportLabel } from '@/shared/tableExport';
 export const useBehaviorRewardsTableColumns = () => {
@@ -55,6 +56,18 @@ export const useBehaviorRewardsTableColumns = () => {
           </div>
         </div>
       ),
+    },
+    {
+      id: 'subject',
+      // Sorts and exports by name; the subject filter matches the subject itself, or "none".
+      accessorFn: (row: { subject?: { name?: string | null } | null }) => row.subject?.name ?? '',
+      filterFn: (row: { original: Parameters<typeof rewardSubjectValue>[0] }, _id: string, value: unknown) =>
+        !value || rewardSubjectValue(row.original) === value,
+      size: 150,
+      header: t('behaviorRewards.table.subject'),
+      cell: ({ row }) => row.original.subject?.name
+        ? <span className="block max-w-36 truncate text-sm" title={row.original.subject.name}><bdi>{row.original.subject.name}</bdi></span>
+        : <span className="text-muted-foreground">—</span>,
     },
     {
       accessorKey: 'rewardType',

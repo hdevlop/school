@@ -40,14 +40,19 @@ export function HomeworkMobileControls({ filters, homework, count, toggleButton,
     // Every section of the chosen class reads as their names (A, B, C), which says more than "all sections".
     const all = filter.name === 'classScope' ? t('homework.mobile.allClasses')
       : options.length ? options.map((option) => option.label).join(', ') : t('homework.mobile.allSections');
-    return { ...filter, all, items: [{ value: '', label: all }, ...options] };
+    return { ...filter, items: [{ value: '', label: all }, ...options] };
   });
-  const summary = choices.map(({ value, all, items }) => items.find((item) => item.value === value)?.label ?? all);
+  // The summary names only what was chosen, so it stays one short line beside the buttons: "Tous" when nothing is.
+  const summary = choices.flatMap(({ value, items }) => {
+    const label = value ? items.find((item) => item.value === value)?.label : undefined;
+    return label ? [label] : [];
+  });
   const selectedSubject = homework?.subjects.find((subject) => subject.value === homework.subjectId);
   if (selectedSubject) summary.push(selectedSubject.label);
+  if (!summary.length) summary.push(t('common.all'));
 
   return (
-    <section aria-label={t('common.table.filterRegion')} className="grid shrink-0 gap-2 md:hidden">
+    <section aria-label={t('common.table.filterRegion')} className="grid min-w-0 shrink-0 grid-cols-1 gap-2 md:hidden">
       <div className="flex items-center gap-2">
         <FilterSummaryButton parts={summary} onOpen={() => setFiltersOpen(true)} />
         {toggleButton}

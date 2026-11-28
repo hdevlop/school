@@ -5,6 +5,7 @@ import {
   sections,
   staff,
   students,
+  subjects,
   teacherAssignments,
   teachers,
   users,
@@ -55,6 +56,7 @@ export class BehaviorRewardRepository {
         points: behaviorRewards.points,
         rewardNote: behaviorRewards.rewardNote,
         certificatePlace: behaviorRewards.certificatePlace,
+        subjectId: behaviorRewards.subjectId,
         createdAt: behaviorRewards.createdAt,
         updatedAt: behaviorRewards.updatedAt,
         student: {
@@ -68,6 +70,7 @@ export class BehaviorRewardRepository {
         },
         class: { id: classes.id, name: classes.name },
         section: { id: sections.id, name: sections.name },
+        subject: { id: subjects.id, name: subjects.name },
         awardedByUser: {
           id: awardingUsers.id,
           name: awardingUsers.name,
@@ -81,6 +84,7 @@ export class BehaviorRewardRepository {
       .innerJoin(classes, eq(behaviorRewards.classId, classes.id))
       .innerJoin(sections, eq(behaviorRewards.sectionId, sections.id))
       .innerJoin(awardingUsers, eq(behaviorRewards.awardedBy, awardingUsers.id))
+      .leftJoin(subjects, eq(behaviorRewards.subjectId, subjects.id))
       .where(this.readCondition(...filters));
   }
 
@@ -96,6 +100,11 @@ export class BehaviorRewardRepository {
   /** The student's class and section on the behavior's day; see `studentPlacementOn`. */
   async getStudentPlacementOn(studentId: string, behaviorAt: string) {
     return studentPlacementOn(this.db, studentId, behaviorAt, this.year);
+  }
+
+  async subjectExists(subjectId: string) {
+    const [subject] = await this.db.select({ id: subjects.id }).from(subjects).where(eq(subjects.id, subjectId)).limit(1);
+    return Boolean(subject);
   }
 
   async isTeacherAssignedToSection(userId: string, sectionId: string) {

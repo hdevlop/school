@@ -3,10 +3,13 @@ import { useTranslation } from 'najm-i18n/react';
 import {
   buildBehaviorRewardCategoryOptions,
   buildBehaviorRewardTypeOptions,
+  buildRewardSubjectFilterOptions,
 } from '../config/behaviorRewardOptions';
 
-export const useBehaviorRewardsTableFilters = () => {
-  const { t } = useTranslation();
+/** `rewards` lists the subjects the subject filter offers: those the rewards name. */
+export const useBehaviorRewardsTableFilters = (rewards: Parameters<typeof buildRewardSubjectFilterOptions>[0] = []) => {
+  const { t, language } = useTranslation();
+  const subjectOptions = useMemo(() => buildRewardSubjectFilterOptions(rewards, t, language), [rewards, t, language]);
 
   return useMemo(() => [
     {
@@ -29,5 +32,12 @@ export const useBehaviorRewardsTableFilters = () => {
       showIcon: false,
       options: buildBehaviorRewardTypeOptions(t),
     },
-  ], [t]);
+    {
+      name: 'subject',
+      placeholder: t('behaviorRewards.filters.subject'),
+      type: 'select',
+      showIcon: false,
+      options: subjectOptions,
+    },
+  ], [t, subjectOptions]);
 };

@@ -42,8 +42,6 @@ const BehaviorRewardsTable = () => {
   const canDelete = (isSchoolWide || role === 'teacher') && can('delete:behavior-rewards');
   const columns = useBehaviorRewardsTableColumns();
   const scope = useClassSectionTableScope();
-  const rewardFilters = useBehaviorRewardsTableFilters();
-  const filters = useMemo(() => [...rewardFilters, ...scope.filters], [rewardFilters, scope.filters]);
   const { openDialog, confirmDelete } = useDialog();
   const {
     behaviorRewards,
@@ -56,6 +54,8 @@ const BehaviorRewardsTable = () => {
     isUpdating,
     isDeleting,
   } = useBehaviorRewards();
+  const rewardFilters = useBehaviorRewardsTableFilters(behaviorRewards);
+  const filters = useMemo(() => [...rewardFilters, ...scope.filters], [rewardFilters, scope.filters]);
   const canPrint = !isFamily && can('read:behavior-rewards') && !isAuthorizationError(error);
 
   const tableData = useMemo(() => (behaviorRewards || [])
@@ -168,7 +168,7 @@ const BehaviorRewardsTable = () => {
         inlinePhoneFilters={false}
         classNames={{
           header: 'max-md:[&_[data-ntable-mobile-toolbar]]:hidden',
-          content: '[&_table]:min-w-[80rem]',
+          content: '[&_table]:min-w-[88rem]',
           tableHeader: '[&_th:last-child]:w-12',
         }}
         renderToolbar={isPhone ? ({ columnFilters }) => (

@@ -1,7 +1,7 @@
 'use client';
 
 import type { ComponentProps, ReactNode } from 'react';
-import { CalendarClock, School, Star, UserRound, type LucideIcon } from 'lucide-react';
+import { BookOpen, CalendarClock, School, Star, UserRound, type LucideIcon } from 'lucide-react';
 import { cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import type { BehaviorRewardCategory, BehaviorRewardType } from '@sms/contracts';
@@ -16,6 +16,7 @@ export type BehaviorRewardDetail = {
   student?: ComponentProps<typeof BehaviorRewardStudentIdentity>['student'];
   class?: { name?: string | null } | null;
   section?: { name?: string | null } | null;
+  subject?: { id?: string | null; name?: string | null } | null;
   category: BehaviorRewardCategory;
   description?: string | null;
   rewardType: BehaviorRewardType;
@@ -84,7 +85,10 @@ export default function BehaviorRewardDetails({ behaviorReward: reward, canPrint
         <RewardDetailField icon={CalendarClock} label={t('behaviorRewards.table.behaviorDate')}>
           <time dateTime={reward.behaviorAt} className="tabular-nums"><bdi>{displayDateTime(reward.behaviorAt)}</bdi></time>
         </RewardDetailField>
-        <RewardDetailField icon={UserRound} label={t('behaviorRewards.table.awardedBy')} className="col-span-2">
+        <RewardDetailField icon={BookOpen} label={t('behaviorRewards.table.subject')}>
+          <bdi>{reward.subject?.name || t('behaviorRewards.filters.noSubject')}</bdi>
+        </RewardDetailField>
+        <RewardDetailField icon={UserRound} label={t('behaviorRewards.table.awardedBy')}>
           <bdi>{reward.awardedByUser?.name || '—'}</bdi>
         </RewardDetailField>
       </dl>
